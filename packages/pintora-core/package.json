@@ -1,0 +1,16 @@
+{
+	"name": "@pintora/core",
+	"version": "0.0.1",
+	"description": "Awesome functions",
+	"main": "lib/index.js",
+	"types": "lib/index.d.ts",
+	"keywords": [],
+	"author": "hikerpigwinnie@gmail.com",
+	"license": "MIT",
+	"dependencies": {
+		"@types/node": "^14.11.8"
+	},
+	"devDependencies": {
+		"typescript": "4.2.4"
+	}
+}
