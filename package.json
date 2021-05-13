@@ -4,6 +4,7 @@
   "scripts": {
     "clean": "rimraf \"packages/**/lib\"",
     "compile": "lerna run compile",
+    "watch": "lerna run watch",
     "prettier": "prettier \"*.{js,json,yml,md}\" \"packages/**/*\"",
     "format": "npm run prettier -- --write",
     "format:check": "npm run prettier -- --check",
