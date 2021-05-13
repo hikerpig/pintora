@@ -1,4 +1,4 @@
-import { IDiagram } from './type'
+import { IDiagram } from "./type"
 
 class Registry {
   diagrams: Record<string, IDiagram> = {}
@@ -7,11 +7,11 @@ class Registry {
     if (this.diagrams[name]) {
       console.warn(`[pintora] duplicate diagram: ${name}`)
     }
-    this.diagrams[name] = diagram;
+    this.diagrams[name] = diagram
   }
 
   detectDiagram(text: string) {
-    let diagram = this.diagrams['sequenceDiagram'] // default
+    let diagram = this.diagrams["sequenceDiagram"] // default
     for (const d of Object.values(this.diagrams)) {
       if (d.pattern.test(text)) {
         diagram = d

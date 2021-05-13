@@ -1,21 +1,21 @@
 {
-	"name": "@pintora/diagrams",
-	"version": "0.0.1",
-	"description": "Core diagrams",
-	"main": "lib/index.js",
-	"types": "lib/index.d.ts",
-	"keywords": [],
-	"author": "hikerpigwinnie@gmail.com",
-	"license": "MIT",
-	"scripts": {
-		"compile": "tsc",
-		"watch": "tsc -w"
-	},
-	"dependencies": {
-		"@pintora/core": "*",
-		"@types/node": "^14.11.8"
-	},
-	"devDependencies": {
-		"typescript": "4.2.4"
-	}
+  "name": "@pintora/diagrams",
+  "version": "0.0.1",
+  "description": "Core diagrams",
+  "main": "lib/index.js",
+  "types": "lib/index.d.ts",
+  "keywords": [],
+  "author": "hikerpigwinnie@gmail.com",
+  "license": "MIT",
+  "scripts": {
+    "compile": "tsc",
+    "watch": "tsc -w"
+  },
+  "dependencies": {
+    "@pintora/core": "*",
+    "@types/node": "^14.11.8"
+  },
+  "devDependencies": {
+    "typescript": "4.2.4"
+  }
 }

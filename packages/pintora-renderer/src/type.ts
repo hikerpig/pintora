@@ -1,12 +1,12 @@
 // Graphics
-export interface Mark<A=any> {
-  type: 'rect' | 'circle' | 'group',
+export interface Mark<A = any> {
+  type: "rect" | "circle" | "group"
   attr: A
   style: any
 }
 
 export interface Group extends Mark {
-  type: 'group'
+  type: "group"
   children: Mark[]
 }
 

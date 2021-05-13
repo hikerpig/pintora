@@ -1,7 +1,7 @@
 {
-  "name": "@pintora/core",
+  "name": "@pintora/renderer",
   "version": "0.0.1",
-  "description": "Awesome functions",
+  "description": "Pintora's default renderer",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
   "keywords": [],
@@ -12,6 +12,7 @@
     "watch": "tsc -w"
   },
   "dependencies": {
+    "@pintora/core": "*",
     "@types/node": "^14.11.8"
   },
   "devDependencies": {

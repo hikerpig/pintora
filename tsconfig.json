@@ -2,7 +2,7 @@
   "compilerOptions": {
     "incremental": true,
     "target": "es2019",
-    "module": "commonjs",
+    "module": "es6",
     "declaration": true,
     "sourceMap": true,
     "composite": true,
