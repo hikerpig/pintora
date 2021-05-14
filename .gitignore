@@ -1,3 +1,5 @@
+# project
+packages/**/*/parser/*.js
 
 # Created by https://www.gitignore.io/api/node
 

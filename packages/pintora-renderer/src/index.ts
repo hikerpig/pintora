@@ -1,7 +1,7 @@
-import pintora, { IDiagram } from "@pintora/core"
+import pintora, { IDiagram, GraphicsIR } from "@pintora/core"
 
-type SequenceDiagramIR = {}
+// export * from './type'
 
-// pintora.registerDiagram('sequenceDiagram', {
-//   pattern: /^\s*sequenceDiagram/,
-// })
+export function render(ir: GraphicsIR, opts: { container: any }) {
+  console.log('TBD, render', pintora)
+}
