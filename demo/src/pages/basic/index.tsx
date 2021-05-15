@@ -9,7 +9,10 @@ init()
 const testSequenceDiagram = `
 sequenceDiagram
     User->>+Pintora: render this
+    Note right of User: Text in note
+    activate Pintora
     Pintora-->>User: your figure here
+    deactivate Pintora
 `
 
 export default function Basic() {

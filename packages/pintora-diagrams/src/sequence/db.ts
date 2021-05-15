@@ -56,8 +56,8 @@ export type Actor = {
 }
 
 export interface Message extends WrappedText {
-  from: ParsedRelation
-  to: Maybe<ParsedRelation>
+  from: string
+  to: string
   text: string
   wrap: any
   answer?: any
@@ -118,7 +118,7 @@ class SequenceDB {
     this.prevActorId = id
   }
 
-  addMessage(idFrom: ParsedRelation, idTo: ParsedRelation, message: Message, answer: any) {
+  addMessage(idFrom: string, idTo: string, message: Message, answer: any) {
     this.messages.push({
       from: idFrom,
       to: idTo,
@@ -129,8 +129,8 @@ class SequenceDB {
   }
 
   addSignal(
-    from: ParsedRelation,
-    to: Maybe<ParsedRelation>,
+    from: { actor: string },
+    to: { actor: string },
     message: WrappedText = { text: '', wrap: false },
     messageType: LINETYPE,
   ) {
@@ -150,8 +150,8 @@ class SequenceDB {
       }
     }
     this.messages.push({
-      from,
-      to,
+      from: from.actor,
+      to: to.actor,
       text: message.text || '',
       wrap: (message.wrap === undefined && this.wrapEnabled) || !!message.wrap,
       type: messageType,
@@ -159,9 +159,9 @@ class SequenceDB {
     return true
   }
 
-  addNote(actor: ParsedRelation, placement: any, message: ParsedDescription) {
+  addNote(actor: string, placement: any, message: ParsedDescription) {
     const note: Note = {
-      actor: actor.actor,
+      actor: actor,
       placement,
       text: message.text,
       wrap: (message.wrap === undefined && this.wrapEnabled) || !!message.wrap,
@@ -294,12 +294,12 @@ const activationCount = (db: SequenceDB, part: string) => {
   let count = 0
   for (i = 0; i < db.messages.length; i++) {
     if (db.messages[i].type === LINETYPE.ACTIVE_START) {
-      if (db.messages[i].from.actor === part) {
+      if (db.messages[i].from === part) {
         count++
       }
     }
     if (db.messages[i].type === LINETYPE.ACTIVE_END) {
-      if (db.messages[i].from.actor === part) {
+      if (db.messages[i].from === part) {
         count--
       }
     }
@@ -328,12 +328,12 @@ type ApplyParam =
     }
   | {
       type: 'activeStart' | 'activeEnd'
-      actor: { actor: string }
+      actor: { type: string; actor: string }
       signalType: LINETYPE
     }
   | {
       type: 'addNote'
-      actor: ParsedRelation
+      actor: string
       placement: PLACEMENT
       text: WrappedText
     }

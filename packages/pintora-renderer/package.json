@@ -12,6 +12,7 @@
     "watch": "tsc -w"
   },
   "dependencies": {
+    "@antv/g": "^3.4.10",
     "@pintora/core": "*",
     "@types/node": "^14.11.8"
   },

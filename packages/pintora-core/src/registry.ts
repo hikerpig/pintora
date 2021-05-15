@@ -1,11 +1,12 @@
 import { IDiagram } from "./type"
+import { logger } from './logger'
 
 class Registry {
   diagrams: Record<string, IDiagram> = {}
 
   registerDiagram(name: string, diagram: IDiagram) {
     if (this.diagrams[name]) {
-      console.warn(`[pintora] duplicate diagram: ${name}`)
+      logger.warn(`[pintora] duplicate diagram: ${name}`)
     }
     this.diagrams[name] = diagram
   }
@@ -13,7 +14,7 @@ class Registry {
   detectDiagram(text: string) {
     let diagram = this.diagrams["sequenceDiagram"] // default
     for (const d of Object.values(this.diagrams)) {
-      console.log('test d with text', d)
+      // console.log('test d with text', d)
       if (d.pattern.test(text)) {
         diagram = d
         break

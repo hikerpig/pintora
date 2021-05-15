@@ -837,9 +837,8 @@ if (typeof module !== 'undefined' && require.main === module) {
 
 
 export const setYY = v => {
-    console.log('set yy', v)
     sequenceDiagram.yy = v
-  }
-  export function parse() {
+}
+export function parse() {
     return sequenceDiagram.parse.apply(sequenceDiagram, arguments)
-  }
+}

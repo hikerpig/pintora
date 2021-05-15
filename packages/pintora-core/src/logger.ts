@@ -55,7 +55,8 @@ export const setLogLevel = function (input: string | number = 'fatal') {
 }
 
 const format = (level: any) => {
-  const d = new Date()
-  const time = `${d.getSeconds()}.${d.getMilliseconds()}`
-  return `%c${time} : ${level} : `
+  // const d = new Date()
+  // const time = `${d.getSeconds()}.${d.getMilliseconds()}`
+  // return `%c${time} : ${level} : `
+  return `%c${level}: `
 }

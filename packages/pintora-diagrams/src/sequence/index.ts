@@ -7,7 +7,24 @@ import * as PARSER from './parser/sequenceDiagram'
 // PARSER.Parser.yy = yy
 PARSER.setYY(yy)
 
-export const sequenceDiagram: IDiagram<SequenceDiagramIR> = {
+export type SequenceConf = {
+  width: number
+  height: number
+  mirrorActors: boolean
+  actorMargin: number
+  boxMargin: number
+  activationWidth: number
+
+  messageFontFamily: string
+  messageFontSize: number
+  messageFontWeight: number | string
+}
+
+export {
+  SequenceDiagramIR
+}
+
+export const sequenceDiagram: IDiagram<SequenceDiagramIR, SequenceConf> = {
   pattern: /^\s*sequenceDiagram/,
   parser: {
     parse(text, config) {
