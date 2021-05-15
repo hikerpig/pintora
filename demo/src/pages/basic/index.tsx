@@ -1,7 +1,10 @@
 import React, { useEffect, useRef } from 'react'
-import pintora from '@pintora/core'
-import '@pintora/diagrams'
+import pintora, { setLogLevel } from '@pintora/core'
+import { init } from '@pintora/diagrams'
 import { render } from "@pintora/renderer"
+
+setLogLevel('debug')
+init()
 
 const testSequenceDiagram = `
 sequenceDiagram

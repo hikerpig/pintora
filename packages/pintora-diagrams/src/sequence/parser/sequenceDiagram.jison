@@ -56,7 +56,7 @@
 "autonumber" 			                                        return 'autonumber';
 ","                                                             return ',';
 ";"                                                             return 'NEWLINE';
-[^\+\->:\n,;]+((?!(\-x|\-\-x|\-\)|\-\-\)))[\-]*[^\+\->:\n,;]+)*             { yytext = yytext.trim(); return 'ACTOR'; }
+[^\+\->:\n,;]+((?!(\-x|\-\-x|\-\)|\-\-\)))[\-]*[^\+\->:\n,;]+)*  { yytext = yytext.trim(); return 'ACTOR'; }
 "->>"                                                           return 'SOLID_ARROW';
 "-->>"                                                          return 'DOTTED_ARROW';
 "->"                                                            return 'SOLID_OPEN_ARROW';
@@ -216,20 +216,20 @@ text2
   : TXT {$$ = yy.parseMessage($1.trim().substring(1)) }
   ;
 
-openDirective
-  : open_directive { yy.parseDirective('%%{', 'open_directive'); }
-  ;
+// openDirective
+//   : open_directive { yy.parseDirective('%%{', 'open_directive'); }
+//   ;
 
-typeDirective
-  : type_directive { yy.parseDirective($1, 'type_directive'); }
-  ;
+// typeDirective
+//   : type_directive { yy.parseDirective($1, 'type_directive'); }
+//   ;
 
-argDirective
-  : arg_directive { $1 = $1.trim().replace(/'/g, '"'); yy.parseDirective($1, 'arg_directive'); }
-  ;
+// argDirective
+//   : arg_directive { $1 = $1.trim().replace(/'/g, '"'); yy.parseDirective($1, 'arg_directive'); }
+//   ;
 
-closeDirective
-  : close_directive { yy.parseDirective('}%%', 'close_directive', 'sequence'); }
-  ;
+// closeDirective
+//   : close_directive { yy.parseDirective('}%%', 'close_directive', 'sequence'); }
+//   ;
 
 %%

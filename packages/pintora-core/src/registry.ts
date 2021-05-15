@@ -13,6 +13,7 @@ class Registry {
   detectDiagram(text: string) {
     let diagram = this.diagrams["sequenceDiagram"] // default
     for (const d of Object.values(this.diagrams)) {
+      console.log('test d with text', d)
       if (d.pattern.test(text)) {
         diagram = d
         break

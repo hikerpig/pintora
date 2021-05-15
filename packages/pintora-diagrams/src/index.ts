@@ -1,7 +1,6 @@
 import pintora, { IDiagram } from "@pintora/core"
+import { sequenceDiagram } from './sequence'
 
-type SequenceDiagramIR = {}
-
-// pintora.registerDiagram('sequenceDiagram', {
-//   pattern: /^\s*sequenceDiagram/,
-// })
+export function init() {
+  pintora.registerDiagram('sequenceDiagram', sequenceDiagram)
+}

@@ -3,6 +3,13 @@ import { IDiagram, GraphicsIR } from './type'
 
 export * from './type'
 
+import { logger, setLogLevel } from './logger'
+
+export {
+  logger,
+  setLogLevel
+}
+
 type RenderOptions = {
   container: HTMLElement
   render(ir: GraphicsIR, opts: { container: HTMLElement }): void
@@ -17,10 +24,9 @@ const pintora = {
   renderTo(text: string, opts: RenderOptions) {
     const { container, onDraw, onError } = opts
     const diagram = registry.detectDiagram(text)
-    console.log('render to', diagram)
     if (!diagram) {
-      const errMessage = '[pintora] new diagram detected'
-      console.warn(errMessage)
+      const errMessage = `[pintora] no diagram detected with input: ${text.slice(0, 30)}`
+      logger.warn(errMessage)
       onError && onError(errMessage)
       return
     }
