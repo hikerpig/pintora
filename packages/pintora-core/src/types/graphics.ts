@@ -7,7 +7,7 @@ export interface Figure {
 export interface GraphicsIR extends Figure {}
 
 export interface IMark {
-  attr: MarkAttrs
+  attrs?: MarkAttrs
   class?: string
 }
 

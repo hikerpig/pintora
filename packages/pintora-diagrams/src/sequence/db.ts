@@ -60,6 +60,7 @@ export interface Message extends WrappedText {
   to: string
   text: string
   wrap: any
+  id?: string
   answer?: any
   type?: LINETYPE
   placement?: any
@@ -129,11 +130,17 @@ class SequenceDB {
   }
 
   addSignal(
-    from: { actor: string },
-    to: { actor: string },
+    from: { actor: string } | string,
+    to: { actor: string } | string,
     message: WrappedText = { text: '', wrap: false },
     messageType: LINETYPE,
   ) {
+    if (typeof from === 'string') {
+      from = { actor: from }
+    }
+    if (typeof to === 'string') {
+      to = { actor: to }
+    }
     if (messageType === LINETYPE.ACTIVE_END) {
       const cnt = activationCount(this, from.actor)
       if (cnt < 1) {
@@ -151,7 +158,7 @@ class SequenceDB {
     }
     this.messages.push({
       from: from.actor,
-      to: to.actor,
+      to: to ? to.actor: '',
       text: message.text || '',
       wrap: (message.wrap === undefined && this.wrapEnabled) || !!message.wrap,
       type: messageType,

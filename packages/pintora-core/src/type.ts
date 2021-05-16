@@ -8,6 +8,7 @@ export interface IDiagram<D = any, Config = any> {
   artist: IDiagramArtist<D, Config>
   db?: any
   configKey?: string
+  clear(): void
   // setConfig,
 }
 

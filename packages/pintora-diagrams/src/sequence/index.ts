@@ -3,25 +3,14 @@ import yy, { db, SequenceDiagramIR } from './db'
 import artist from './artist'
 // import { Parser } from './parser/sequenceDiagram'
 import * as PARSER from './parser/sequenceDiagram'
+import { SequenceConf} from './config'
 
 // PARSER.Parser.yy = yy
 PARSER.setYY(yy)
 
-export type SequenceConf = {
-  width: number
-  height: number
-  mirrorActors: boolean
-  actorMargin: number
-  boxMargin: number
-  activationWidth: number
-
-  messageFontFamily: string
-  messageFontSize: number
-  messageFontWeight: number | string
-}
-
 export {
-  SequenceDiagramIR
+  SequenceDiagramIR,
+  SequenceConf
 }
 
 export const sequenceDiagram: IDiagram<SequenceDiagramIR, SequenceConf> = {
@@ -34,4 +23,7 @@ export const sequenceDiagram: IDiagram<SequenceDiagramIR, SequenceConf> = {
   },
   artist,
   db,
+  clear() {
+    db.clear()
+  }
 }

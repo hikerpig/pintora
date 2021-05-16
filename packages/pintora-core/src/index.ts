@@ -31,6 +31,7 @@ const pintora = {
       return
     }
 
+    diagram.clear()
     const diagramIR = diagram.parser.parse(text)
     const graphicIR = diagram.artist.draw(diagramIR)
 

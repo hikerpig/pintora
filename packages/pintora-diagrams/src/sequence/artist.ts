@@ -1,25 +1,19 @@
 import { GraphicsIR, IDiagramArtist, logger } from '@pintora/core'
 import { Mark, MarkAttrs, Rect, Group, Text } from '@pintora/core/lib/type'
 import { db, SequenceDiagramIR, LINETYPE, Message, PLACEMENT, Actor } from './db'
-import type { SequenceConf } from './index'
+import { SequenceConf, defaultConfig } from './config'
 
 let conf: SequenceConf = {
-  mirrorActors: true,
-  width: 80,
-  height: 50,
-  actorMargin: 10,
-  boxMargin: 10,
-  activationWidth: 10,
+  ...defaultConfig,
+}
 
-  messageFontSize: 16,
-  messageFontFamily: 'menlo, sans-serif',
-  messageFontWeight: 400,
+type DrawResult<T extends Mark = Mark> = {
+  mark: T
 }
 
 const sequenceArtist: IDiagramArtist<SequenceDiagramIR> = {
   draw(ir, config?) {
     // conf = configApi.getConfig().sequence
-    db.clear()
     // db.setWrap(conf.wrap)
     model.init()
     logger.debug(`C:${JSON.stringify(conf, null, 2)}`)
@@ -30,7 +24,7 @@ const sequenceArtist: IDiagramArtist<SequenceDiagramIR> = {
 
     const rootMark: Group = {
       type: 'group',
-      attr: {},
+      attrs: {},
       children: [],
     }
 
@@ -38,11 +32,15 @@ const sequenceArtist: IDiagramArtist<SequenceDiagramIR> = {
       mark: rootMark,
     }
 
+    actorKeys.forEach((key) => {
+      model.actorAttrsMap.set(key, {})
+    })
+
     const maxMessageWidthPerActor = getMaxMessageWidthPerActor(ir)
-    // conf.height = calculateActorMargins(actors, maxMessageWidthPerActor)
+    conf.height = calculateActorMargins(actors, maxMessageWidthPerActor)
 
     const { marks: actorRects } = drawActors(ir, actorKeys, 0)
-    const loopWidths = calculateLoopBounds(messages, actors, maxMessageWidthPerActor)
+    const loopWidths = calculateLoopBounds(messages, actors)
     rootMark.children.push(...actorRects)
 
     // // The arrow head definition is attached to the svg once
@@ -146,10 +144,14 @@ const sequenceArtist: IDiagramArtist<SequenceDiagramIR> = {
         //   break
         default:
           try {
-            msgModel = msg.msgModel // FI
+            msgModel = model.msgModelMap.get(msg.id) // FI
+            if (!msgModel) {
+              console.warn('no msgModel for', msg)
+              return
+            }
             msgModel.starty = model.verticalPos
             msgModel.sequenceIndex = sequenceIndex
-            drawMessage(ir, msgModel)
+            rootMark.children.push(drawMessage(ir, msgModel).mark)
             model.messageMarks.push(msgModel)
           } catch (e) {
             logger.error('error while drawing message', e)
@@ -230,6 +232,7 @@ class Model {
   }
   verticalPos: number
   actorAttrsMap = new Map<string, MarkAttrs>()
+  msgModelMap = new Map<string, MessageModel>()
   messageMarks: Text[]
 
   init() {
@@ -248,6 +251,8 @@ class Model {
   }
   clear() {
     this.actorAttrsMap.clear()
+    this.msgModelMap.clear()
+    this.messageMarks = []
   }
   updateVal(obj, key, val, fun) {
     if (typeof obj[key] === 'undefined') {
@@ -316,7 +321,7 @@ class Model {
       .map(function (activation) {
         return activation.actor
       })
-      .lastIndexOf(message.from.actor)
+      .lastIndexOf(message.from)
     return this.activations.splice(lastActorActivationIdx, 1)[0]
   }
   createLoop(title = { message: undefined, wrap: false, width: undefined }, fill) {
@@ -372,6 +377,20 @@ const actorActivations = function (actor: string) {
     return activation.actor === actor
   })
 }
+
+const activationBounds = function(actor: string) {
+  // handle multiple stacked activations for same actor
+  const actorAttrs = model.actorAttrsMap.get(actor);
+  const activations = actorActivations(actor);
+
+  const left = activations.reduce(function(acc, activation) {
+    return Math.min(acc, activation.startx);
+  }, actorAttrs.x + actorAttrs.width / 2);
+  const right = activations.reduce(function(acc, activation) {
+    return Math.max(acc, activation.stopx);
+  }, actorAttrs.x + actorAttrs.width / 2);
+  return [left, right];
+};
 
 // export const bounds = {
 //   verticalPos: 0,
@@ -464,149 +483,159 @@ const messageFont = (cnf: SequenceConf) => {
   }
 }
 
+// TODO: this should be implemented by style config
+const actorFont = messageFont
+
+function splitBreaks(text) {
+  return text.split('\n')
+}
+
 /**
  * Draws a message
  */
-const drawMessage = function (ir: SequenceDiagramIR, msgModel) {
+const drawMessage = function (ir: SequenceDiagramIR, msgModel): DrawResult<Group> {
   model.bumpVerticalPos(10)
-  const { startx, stopx, starty, message, type, sequenceIndex } = msgModel
-  const lines = common.splitBreaks(message).length
-  let textDims = utils.calculateTextDimensions(message, messageFont(conf))
+  const { startx, stopx, starty, text, type, sequenceIndex } = msgModel
+  const lines = splitBreaks(text).length
+  let textDims = utils.calculateTextDimensions(text, messageFont(conf))
   const lineHeight = textDims.height / lines
   msgModel.height += lineHeight
 
   model.bumpVerticalPos(lineHeight)
-  const t: Text
-  const textObj = svgDraw.getTextObj()
-  textObj.x = startx
-  textObj.y = starty + 10
-  textObj.width = stopx - startx
-  textObj.class = 'messageText'
-  textObj.dy = '1em'
-  textObj.text = message
-  textObj.fontFamily = conf.messageFontFamily
-  textObj.fontSize = conf.messageFontSize
-  textObj.fontWeight = conf.messageFontWeight
-  textObj.anchor = conf.messageAlign
-  textObj.valign = conf.messageAlign
-  textObj.textMargin = conf.wrapPadding
-  textObj.tspan = false
+  const tAttrs: Text['attrs'] = {
+    text: '',
+  }
 
-  drawText(g, textObj)
+  tAttrs.x = startx
+  tAttrs.y = starty + 10
+  tAttrs.width = stopx - startx
+  tAttrs.class = 'messageText'
+  tAttrs.dy = '1em'
+  tAttrs.text = text
+  tAttrs.fontFamily = conf.messageFontFamily
+  tAttrs.fontSize = conf.messageFontSize
+  tAttrs.fontWeight = conf.messageFontWeight as any
+  // tAttrs.anchor = conf.messageAlign
+  // tAttrs.valign = conf.messageAlign
+  tAttrs.textMargin = conf.wrapPadding
+  tAttrs.tspan = false
 
   let totalOffset = textDims.height - 10
 
   let textWidth = textDims.width
 
-  let line, lineStarty
-  if (startx === stopx) {
-    lineStarty = model.getVerticalPos() + totalOffset
-    if (conf.rightAngles) {
-      line = g
-        .append('path')
-        .attr(
-          'd',
-          `M  ${startx},${lineStarty} H ${startx + Math.max(conf.width / 2, textWidth / 2)} V ${
-            lineStarty + 25
-          } H ${startx}`,
-        )
-    } else {
-      totalOffset += conf.boxMargin
+  let lineStarty
+  let line: any = {}
+  const { verticalPos } = model
+  // TODO: Draw the line
+  // if (startx === stopx) {
+  //   lineStarty = model.verticalPos + totalOffset
+  //   totalOffset += conf.boxMargin
 
-      lineStarty = model.getVerticalPos() + totalOffset
-      line = g
-        .append('path')
-        .attr(
-          'd',
-          'M ' +
-            startx +
-            ',' +
-            lineStarty +
-            ' C ' +
-            (startx + 60) +
-            ',' +
-            (lineStarty - 10) +
-            ' ' +
-            (startx + 60) +
-            ',' +
-            (lineStarty + 30) +
-            ' ' +
-            startx +
-            ',' +
-            (lineStarty + 20),
-        )
-    }
+  //   lineStarty = model.verticalPos + totalOffset
+  //   line = g
+  //     .append('path')
+  //     .attr(
+  //       'd',
+  //       'M ' +
+  //         startx +
+  //         ',' +
+  //         lineStarty +
+  //         ' C ' +
+  //         (startx + 60) +
+  //         ',' +
+  //         (lineStarty - 10) +
+  //         ' ' +
+  //         (startx + 60) +
+  //         ',' +
+  //         (lineStarty + 30) +
+  //         ' ' +
+  //         startx +
+  //         ',' +
+  //         (lineStarty + 20),
+  //     )
 
-    totalOffset += 30
-    const dx = Math.max(textWidth / 2, conf.width / 2)
-    model.insert(
-      startx - dx,
-      model.getVerticalPos() - 10 + totalOffset,
-      stopx + dx,
-      model.getVerticalPos() + 30 + totalOffset,
-    )
-  } else {
-    totalOffset += conf.boxMargin
-    lineStarty = model.getVerticalPos() + totalOffset
-    line = g.append('line')
-    line.attr('x1', startx)
-    line.attr('y1', lineStarty)
-    line.attr('x2', stopx)
-    line.attr('y2', lineStarty)
-    model.insert(startx, lineStarty - 10, stopx, lineStarty)
-  }
+  //   totalOffset += 30
+  //   const dx = Math.max(textWidth / 2, conf.width / 2)
+  //   model.insert(
+  //     startx - dx,
+  //     verticalPos - 10 + totalOffset,
+  //     stopx + dx,
+  //     verticalPos + 30 + totalOffset,
+  //   )
+  // } else {
+  //   totalOffset += conf.boxMargin
+  //   lineStarty = verticalPos + totalOffset
+  //   line = g.append('line')
+  //   line.attr('x1', startx)
+  //   line.attr('y1', lineStarty)
+  //   line.attr('x2', stopx)
+  //   line.attr('y2', lineStarty)
+  //   model.insert(startx, lineStarty - 10, stopx, lineStarty)
+  // }
+
   // Make an SVG Container
   // Draw the line
-  if (
-    type === LINETYPE.DOTTED ||
-    type === LINETYPE.DOTTED_CROSS ||
-    type === LINETYPE.DOTTED_POINT ||
-    type === LINETYPE.DOTTED_OPEN
-  ) {
-    line.style('stroke-dasharray', '3, 3')
-    line.attr('class', 'messageLine1')
-  } else {
-    line.attr('class', 'messageLine0')
-  }
+  // if (
+  //   type === LINETYPE.DOTTED ||
+  //   type === LINETYPE.DOTTED_CROSS ||
+  //   type === LINETYPE.DOTTED_POINT ||
+  //   type === LINETYPE.DOTTED_OPEN
+  // ) {
+  //   line.style('stroke-dasharray', '3, 3')
+  //   line.attr('class', 'messageLine1')
+  // } else {
+  //   line.attr('class', 'messageLine0')
+  // }
 
   let url = ''
-  if (conf.arrowMarkerAbsolute) {
-    url = window.location.protocol + '//' + window.location.host + window.location.pathname + window.location.search
-    url = url.replace(/\(/g, '\\(')
-    url = url.replace(/\)/g, '\\)')
-  }
+  // if (conf.arrowMarkerAbsolute) {
+  //   url = window.location.protocol + '//' + window.location.host + window.location.pathname + window.location.search
+  //   url = url.replace(/\(/g, '\\(')
+  //   url = url.replace(/\)/g, '\\)')
+  // }
 
-  line.attr('stroke-width', 2)
-  line.attr('stroke', 'none') // handled by theme/css anyway
-  line.style('fill', 'none') // remove any fill colour
-  if (type === LINETYPE.SOLID || type === LINETYPE.DOTTED) {
-    line.attr('marker-end', 'url(' + url + '#arrowhead)')
-  }
-  if (type === LINETYPE.SOLID_POINT || type === LINETYPE.DOTTED_POINT) {
-    line.attr('marker-end', 'url(' + url + '#filled-head)')
-  }
+  // line.attr('stroke-width', 2)
+  // line.attr('stroke', 'none') // handled by theme/css anyway
+  // line.style('fill', 'none') // remove any fill colour
+  // if (type === LINETYPE.SOLID || type === LINETYPE.DOTTED) {
+  //   line.attr('marker-end', 'url(' + url + '#arrowhead)')
+  // }
+  // if (type === LINETYPE.SOLID_POINT || type === LINETYPE.DOTTED_POINT) {
+  //   line.attr('marker-end', 'url(' + url + '#filled-head)')
+  // }
 
-  if (type === LINETYPE.SOLID_CROSS || type === LINETYPE.DOTTED_CROSS) {
-    line.attr('marker-end', 'url(' + url + '#crosshead)')
-  }
+  // if (type === LINETYPE.SOLID_CROSS || type === LINETYPE.DOTTED_CROSS) {
+  //   line.attr('marker-end', 'url(' + url + '#crosshead)')
+  // }
 
-  // add node number
-  if (sequenceDb.showSequenceNumbers() || conf.showSequenceNumbers) {
-    line.attr('marker-start', 'url(' + url + '#sequencenumber)')
-    g.append('text')
-      .attr('x', startx)
-      .attr('y', lineStarty + 4)
-      .attr('font-family', 'sans-serif')
-      .attr('font-size', '12px')
-      .attr('text-anchor', 'middle')
-      .attr('textLength', '16px')
-      .attr('class', 'sequenceNumber')
-      .text(sequenceIndex)
-  }
+  // // add node number
+  // if (sequenceDb.showSequenceNumbers() || conf.showSequenceNumbers) {
+  //   line.attr('marker-start', 'url(' + url + '#sequencenumber)')
+  //   g.append('text')
+  //     .attr('x', startx)
+  //     .attr('y', lineStarty + 4)
+  //     .attr('font-family', 'sans-serif')
+  //     .attr('font-size', '12px')
+  //     .attr('text-anchor', 'middle')
+  //     .attr('textLength', '16px')
+  //     .attr('class', 'sequenceNumber')
+  //     .text(sequenceIndex)
+  // }
   model.bumpVerticalPos(totalOffset)
   msgModel.height += totalOffset
   msgModel.stopy = msgModel.starty + msgModel.height
   model.insert(msgModel.fromBounds, msgModel.starty, msgModel.toBounds, msgModel.stopy)
+
+  return {
+    mark: {
+      type: 'group',
+      children: [{
+        type: 'text',
+        attrs: tAttrs
+      }]
+    }
+  }
 }
 
 export const drawActors = function (ir: SequenceDiagramIR, actorKeys: string[], verticalPos = 0): { marks: Mark[] } {
@@ -641,7 +670,7 @@ export const drawActors = function (ir: SequenceDiagramIR, actorKeys: string[], 
     marks.push({
       type: 'rect',
       class: 'actor',
-      attr: attrs,
+      attrs: attrs,
     })
     model.actorAttrsMap.set(key, attrs)
   }
@@ -734,82 +763,212 @@ const getMaxMessageWidthPerActor = function (ir: SequenceDiagramIR) {
   return maxMessageWidthPerActor
 }
 
-const calculateLoopBounds = function (messages, actors) {
+/**
+ * This will calculate the optimal margin for each given actor, for a given
+ * actor->messageWidth map.
+ *
+ * An actor's margin is determined by the width of the actor, the width of the
+ * largest message that originates from it, and the configured conf.actorMargin.
+ *
+ * @param actors - The actors map to calculate margins for
+ * @param actorToMessageWidth - A map of actor key -> max message width it holds
+ */
+ const calculateActorMargins = function(actors: SequenceDiagramIR['actors'], actorToMessageWidth) {
+  let maxHeight = 0;
+  Object.keys(actors).forEach(prop => {
+    const actorAttrs = model.actorAttrsMap.get(prop)
+    const actor = actors[prop];
+    // if (actor.wrap) {
+    //   actor.description = utils.wrapLabel(
+    //     actor.description,
+    //     conf.width - 2 * conf.wrapPadding,
+    //     actorFont(conf)
+    //   );
+    // }
+    const actDims = utils.calculateTextDimensions(actor.description, actorFont(conf));
+    if (!(actor && actorAttrs)) {
+      debugger
+    }
+    actorAttrs.width = actor.wrap
+      ? conf.width
+      : Math.max(conf.width, actDims.width + 2 * conf.wrapPadding);
+
+    actorAttrs.height = actor.wrap ? Math.max(actDims.height, conf.height) : conf.height;
+    maxHeight = Math.max(maxHeight, actorAttrs.height);
+  });
+
+  for (let actorKey in actorToMessageWidth) {
+    const actor = actors[actorKey];
+    const actorAttrs = model.actorAttrsMap.get(actorKey)
+
+    if (!actor) {
+      continue;
+    }
+
+    const nextActorAttrs = model.actorAttrsMap.get(actor.nextActorId);
+
+    // No need to space out an actor that doesn't have a next link
+    if (!nextActorAttrs) {
+      continue;
+    }
+
+    const messageWidth = actorToMessageWidth[actorKey];
+    const actorWidth = messageWidth + conf.actorMargin - actorAttrs.width / 2 - nextActorAttrs.width / 2;
+
+    actorAttrs.margin = Math.max(actorWidth, conf.actorMargin);
+  }
+
+  return Math.max(maxHeight, conf.height);
+};
+
+// interface MessageModel extends Message {
+//   msgModel?: any
+// }
+
+type MessageModel = any
+
+const buildMessageModel = function (msg: Message, actors): MessageModel {
+  // const msgModel: MessageModel = {
+  //   ...msg,
+  // }
+  const msgDims = utils.calculateTextDimensions(msg.text, messageFont(conf))
+  let process = false
+  if (
+    [
+      LINETYPE.SOLID_OPEN,
+      LINETYPE.DOTTED_OPEN,
+      LINETYPE.SOLID,
+      LINETYPE.DOTTED,
+      LINETYPE.SOLID_CROSS,
+      LINETYPE.DOTTED_CROSS,
+      LINETYPE.SOLID_POINT,
+      LINETYPE.DOTTED_POINT,
+    ].includes(msg.type)
+  ) {
+    process = true
+  }
+  if (!process) {
+    return {
+      width: msgDims.width,
+      height: msgDims.height,
+      startx: 0,
+      starty: 0,
+      text: msg.text,
+      typ: msg.type,
+    }
+  }
+  const fromBounds = activationBounds(msg.from)
+  const toBounds = activationBounds(msg.to)
+  const fromIdx = fromBounds[0] <= toBounds[0] ? 1 : 0
+  const toIdx = fromBounds[0] < toBounds[0] ? 0 : 1
+  const allBounds = fromBounds.concat(toBounds)
+  const boundedWidth = Math.abs(toBounds[toIdx] - fromBounds[fromIdx])
+  // if (msg.wrap && msgModel.text) {
+  //   msgModel.msgModel = utils.wrapLabel(
+  //     msg.text,
+  //     Math.max(boundedWidth + 2 * conf.wrapPadding, conf.width),
+  //     messageFont(conf),
+  //   )
+  // }
+
+  return {
+    width: Math.max(
+      msg.wrap ? 0 : msgDims.width + 2 * conf.wrapPadding,
+      boundedWidth + 2 * conf.wrapPadding,
+      conf.width,
+    ),
+    height: 0,
+    startx: fromBounds[fromIdx],
+    stopx: toBounds[toIdx],
+    starty: 0,
+    stopy: 0,
+    text: msg.text,
+    type: msg.type,
+    wrap: msg.wrap,
+    fromBounds: Math.min.apply(null, allBounds),
+    toBounds: Math.max.apply(null, allBounds),
+  } as MessageModel
+}
+
+const calculateLoopBounds = function (messages: Message[], actors: SequenceDiagramIR['actors']) {
   const loops = {}
   const stack = []
-  let current, noteModel, msgModel
+  let current, noteModel
+  let msgModel: MessageModel
 
   messages.forEach(function (msg) {
     msg.id = utils.makeid(10)
-    switch (msg.type) {
-      case LINETYPE.LOOP_START:
-      case LINETYPE.ALT_START:
-      case LINETYPE.OPT_START:
-      case LINETYPE.PAR_START:
-        stack.push({
-          id: msg.id,
-          msg: msg.message,
-          from: Number.MAX_SAFE_INTEGER,
-          to: Number.MIN_SAFE_INTEGER,
-          width: 0,
-        })
-        break
-      case LINETYPE.ALT_ELSE:
-      case LINETYPE.PAR_AND:
-        if (msg.message) {
-          current = stack.pop()
-          loops[current.id] = current
-          loops[msg.id] = current
-          stack.push(current)
-        }
-        break
-      case LINETYPE.LOOP_END:
-      case LINETYPE.ALT_END:
-      case LINETYPE.OPT_END:
-      case LINETYPE.PAR_END:
-        current = stack.pop()
-        loops[current.id] = current
-        break
-      case LINETYPE.ACTIVE_START:
-        {
-          const actorRect = actors[msg.from ? msg.from.actor : msg.to.actor]
-          const stackedSize = actorActivations(msg.from ? msg.from.actor : msg.to.actor).length
-          const x = actorRect.x + actorRect.width / 2 + ((stackedSize - 1) * conf.activationWidth) / 2
-          const toAdd = {
-            startx: x,
-            stopx: x + conf.activationWidth,
-            actor: msg.from.actor,
-            enabled: true,
-          }
-          model.activations.push(toAdd)
-        }
-        break
-      case LINETYPE.ACTIVE_END:
-        {
-          const lastActorActivationIdx = model.activations.map(a => a.actor).lastIndexOf(msg.from.actor)
-          delete model.activations.splice(lastActorActivationIdx, 1)[0]
-        }
-        break
-    }
+    // switch (msg.type) {
+    //   case LINETYPE.LOOP_START:
+    //   case LINETYPE.ALT_START:
+    //   case LINETYPE.OPT_START:
+    //   case LINETYPE.PAR_START:
+    //     stack.push({
+    //       id: msg.id,
+    //       msg: msg.text,
+    //       from: Number.MAX_SAFE_INTEGER,
+    //       to: Number.MIN_SAFE_INTEGER,
+    //       width: 0,
+    //     })
+    //     break
+    //   case LINETYPE.ALT_ELSE:
+    //   case LINETYPE.PAR_AND:
+    //     if (msg.message) {
+    //       current = stack.pop()
+    //       loops[current.id] = current
+    //       loops[msg.id] = current
+    //       stack.push(current)
+    //     }
+    //     break
+    //   case LINETYPE.LOOP_END:
+    //   case LINETYPE.ALT_END:
+    //   case LINETYPE.OPT_END:
+    //   case LINETYPE.PAR_END:
+    //     current = stack.pop()
+    //     loops[current.id] = current
+    //     break
+    //   case LINETYPE.ACTIVE_START:
+    //     {
+    //       const actorRect = actors[msg.from ? msg.from.actor : msg.to.actor]
+    //       const stackedSize = actorActivations(msg.from ? msg.from.actor : msg.to.actor).length
+    //       const x = actorRect.x + actorRect.width / 2 + ((stackedSize - 1) * conf.activationWidth) / 2
+    //       const toAdd = {
+    //         startx: x,
+    //         stopx: x + conf.activationWidth,
+    //         actor: msg.from.actor,
+    //         enabled: true,
+    //       }
+    //       model.activations.push(toAdd)
+    //     }
+    //     break
+    //   case LINETYPE.ACTIVE_END:
+    //     {
+    //       const lastActorActivationIdx = model.activations.map(a => a.actor).lastIndexOf(msg.from.actor)
+    //       delete model.activations.splice(lastActorActivationIdx, 1)[0]
+    //     }
+    //     break
+    // }
     const isNote = msg.placement !== undefined
     if (isNote) {
-      noteModel = buildNoteModel(msg, actors)
-      msg.noteModel = noteModel
-      stack.forEach(stk => {
-        current = stk
-        current.from = Math.min(current.from, noteModel.startx)
-        current.to = Math.max(current.to, noteModel.startx + noteModel.width)
-        current.width = Math.max(current.width, Math.abs(current.from - current.to)) - conf.labelBoxWidth
-      })
+      // noteModel = buildNoteModel(msg, actors)
+      // msg.noteModel = noteModel
+      // stack.forEach(stk => {
+      //   current = stk
+      //   current.from = Math.min(current.from, noteModel.startx)
+      //   current.to = Math.max(current.to, noteModel.startx + noteModel.width)
+      //   current.width = Math.max(current.width, Math.abs(current.from - current.to)) - conf.labelBoxWidth
+      // })
     } else {
       msgModel = buildMessageModel(msg, actors)
-      msg.msgModel = msgModel
+      console.log('built msgModel', msgModel)
+      model.msgModelMap.set(msg.id, msgModel)
+
       if (msgModel.startx && msgModel.stopx && stack.length > 0) {
         stack.forEach(stk => {
           current = stk
           if (msgModel.startx === msgModel.stopx) {
-            let from = actors[msg.from]
-            let to = actors[msg.to]
+            let from = model.actorAttrsMap.get(msg.from)
+            let to = model.actorAttrsMap.get(msg.to)
             current.from = Math.min(from.x - msgModel.width / 2, from.x - from.width / 2, current.from)
             current.to = Math.max(to.x + msgModel.width / 2, to.x + from.width / 2, current.to)
             current.width = Math.max(current.width, Math.abs(current.to - current.from)) - conf.labelBoxWidth
@@ -823,7 +982,7 @@ const calculateLoopBounds = function (messages, actors) {
     }
   })
   model.activations = []
-  log.debug('Loop type widths:', loops)
+  logger.debug('Loop type widths:', loops)
   return loops
 }
 
