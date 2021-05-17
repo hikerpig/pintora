@@ -11,6 +11,7 @@ sequenceDiagram
     User->>+Pintora: render this
     Note right of User: Text in note
     activate Pintora
+    Note over User,Pintora: Note on Pintora
     Pintora-->>User: your figure here
     deactivate Pintora
 `
@@ -27,6 +28,10 @@ export default function Basic() {
         render(ir, opts)
       }
     })
+
+    return () => {
+      if (containerRef.current) containerRef.current.innerHTML = ''
+    }
   })
 
   return (

@@ -5,7 +5,6 @@ import Basic from './pages/basic';
 function App() {
   return (
     <div className="App">
-      <header className="App-header"></header>
       <Basic />
     </div>
   )

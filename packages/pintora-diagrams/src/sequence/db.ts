@@ -67,7 +67,7 @@ export interface Message extends WrappedText {
 }
 
 export interface Note extends WrappedText {
-  actor: string
+  actor: string | string[]
   placement: any
 }
 
@@ -166,7 +166,7 @@ class SequenceDB {
     return true
   }
 
-  addNote(actor: string, placement: any, message: ParsedDescription) {
+  addNote(actor: string | string[], placement: any, message: ParsedDescription) {
     const note: Note = {
       actor: actor,
       placement,
@@ -174,15 +174,19 @@ class SequenceDB {
       wrap: (message.wrap === undefined && this.wrapEnabled) || !!message.wrap,
     }
 
+    const fromActor = Array.isArray(actor) ? actor[0]: actor
+    const toActor = Array.isArray(actor) ? actor[1]: actor
+
     this.notes.push(note)
     this.messages.push({
-      from: actor,
-      to: actor,
+      from: fromActor,
+      to: toActor,
       text: message.text,
       wrap: (message.wrap === undefined && this.wrapEnabled) || !!message.wrap,
       type: LINETYPE.NOTE,
       placement: placement,
     })
+    // console.warn('addNote, message', actor, this.messages[this.messages.length - 1])
   }
 
   setTitle(titleWrap: WrappedText) {
@@ -276,15 +280,15 @@ class SequenceDB {
         case 'setTitle':
           db.setTitle(param.text)
           break
-        // case 'parStart':
-        //   addSignal(undefined, undefined, param.parText, param.signalType)
-        //   break
-        // case 'and':
-        //   addSignal(undefined, undefined, param.parText, param.signalType)
-        //   break
-        // case 'parEnd':
-        //   addSignal(undefined, undefined, undefined, param.signalType)
-        //   break
+        case 'parStart':
+          db.addSignal(undefined, undefined, param.parText, param.signalType)
+          break
+        case 'and':
+          db.addSignal(undefined, undefined, param.parText, param.signalType)
+          break
+        case 'parEnd':
+          db.addSignal(undefined, undefined, undefined, param.signalType)
+          break
       }
     }
   }
@@ -340,7 +344,7 @@ type ApplyParam =
     }
   | {
       type: 'addNote'
-      actor: string
+      actor: string | string[]
       placement: PLACEMENT
       text: WrappedText
     }
@@ -354,6 +358,20 @@ type ApplyParam =
   | {
       type: 'setTitle'
       text: WrappedText
+    }
+  | {
+      type: 'parStart'
+      signalType: LINETYPE
+      parText: WrappedText
+    }
+  | {
+      type: 'and'
+      signalType: LINETYPE
+      parText: WrappedText
+    }
+  | {
+      type: 'parEnd'
+      signalType: LINETYPE
     }
 
 export {

@@ -1,7 +1,9 @@
-export type Mark = Rect | Group | Text
+export type Mark = Rect | Group | Text | Line | Marker
 
 export interface Figure {
   mark: Mark
+  width: number
+  height: number
 }
 
 export interface GraphicsIR extends Figure {}
@@ -9,6 +11,7 @@ export interface GraphicsIR extends Figure {}
 export interface IMark {
   attrs?: MarkAttrs
   class?: string
+  transform?: Matrix
 }
 
 export interface Rect extends IMark {
@@ -23,6 +26,26 @@ export interface Group extends IMark {
 export interface Text extends IMark {
   type: 'text'
   attrs: MarkAttrs & { text: string }
+}
+
+export interface Line extends IMark {
+  type: 'line'
+  attrs: MarkAttrs & { x1: number; x2: number; y1: number; y2: number }
+}
+
+type MarkerSymbol = 'square' | 'circle' | 'diamond' | 'triangle' | 'triangle-down'
+
+export interface Marker extends IMark {
+  type: 'marker'
+  attrs: MarkAttrs & { symbol: MarkerSymbol }
+}
+
+export type MarkType = Mark['type']
+
+export interface MarkTypeMap {
+  rect: Rect
+  group: Group
+  text: Text
 }
 
 export type BBox = {
@@ -118,3 +141,6 @@ export type MarkAttrs = {
   lineHeight?: number
   [key: string]: any
 }
+
+// TODO: transform
+type Matrix = any
