@@ -25,7 +25,13 @@ export default function Basic() {
     pintora.renderTo(testSequenceDiagram, {
       container: containerRef.current,
       render(ir, opts) {
-        render(ir, opts)
+        render(ir, {
+          // renderer: 'canvas',
+          onRender(renderer: any) {
+            ;(window as any).pintoraRenderer = renderer
+          },
+          ...opts,
+        })
       }
     })
 
