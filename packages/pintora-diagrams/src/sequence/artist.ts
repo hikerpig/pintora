@@ -1,6 +1,23 @@
-import { GraphicsIR, IDiagramArtist, logger } from '@pintora/core'
-import { Mark, MarkAttrs, Rect, Group, Text, Point, Line, Marker } from '@pintora/core/lib/type'
-import { safeAssign } from '@pintora/core/lib/util'
+import {
+  GraphicsIR,
+  IDiagramArtist,
+  logger,
+  Mark,
+  MarkAttrs,
+  Rect,
+  Group,
+  Text,
+  Point,
+  Line,
+  Marker,
+  safeAssign,
+  mat3,
+  createMat3,
+  createRotateAtPoint,
+  leftRotate,
+  transform,
+  translate,
+} from '@pintora/core'
 import { db, SequenceDiagramIR, LINETYPE, Message, PLACEMENT, Note } from './db'
 import { SequenceConf, defaultConfig, PALETTE } from './config'
 import { getBaseNote } from './artist-util'
@@ -201,8 +218,7 @@ const sequenceArtist: IDiagramArtist<SequenceDiagramIR> = {
       })
     }
 
-    // configureSvgSize(diagram, height, width, conf.useMaxWidth)
-
+    rootMark.matrix = mat3.fromTranslation(mat3.create(), [conf.diagramMarginX, conf.diagramMarginY])
     // const extraVertForTitle = title ? 40 : 0
     // diagram.attr(
     //   'viewBox',
@@ -344,7 +360,7 @@ class Model {
   endActivation(message: Message) {
     // find most recent activation for given actor
     const lastActorActivationIdx = this.activations
-      .map((activation) => {
+      .map(activation => {
         return activation.actor
       })
       .lastIndexOf(message.from)
@@ -590,7 +606,12 @@ const drawMessage = function (ir: SequenceDiagramIR, msgModel: MessageModel): Dr
   //   line.attr('class', 'messageLine0')
   // }
 
-  // TODO: line type arrow style
+  // TODO: arrowFactory, with direction angle from x axis, implemented by path
+  const isRightArrow = stopx > startx
+  const arrowRad = isRightArrow ? 0 : -Math.PI
+  const rotateMatrix = createRotateAtPoint(lineAttrs.x2 - 1, lineAttrs.y2 + 1, arrowRad - Math.PI / 6)
+  const arrowMatrix = transform(rotateMatrix, [['t', 10 * (isRightArrow ? -0.8: 1), 0]])
+  // console.warn('arrowMatrix', arrowMatrix)
   const arrowhead: Marker = {
     type: 'marker',
     attrs: {
@@ -600,6 +621,7 @@ const drawMessage = function (ir: SequenceDiagramIR, msgModel: MessageModel): Dr
       symbol: 'triangle',
       fill: lineAttrs.stroke,
     },
+    matrix: arrowMatrix as any,
   }
   // console.log('arrowhead', arrowhead.attrs, msgModel)
 
@@ -819,7 +841,7 @@ export const drawActors = function (
 }
 
 function drawActivationTo(mark: Group, data: ActivationData) {
-  const rectAttrs = getBaseNote();
+  const rectAttrs = getBaseNote()
   safeAssign(rectAttrs, {
     x: data.startx,
     y: data.starty,

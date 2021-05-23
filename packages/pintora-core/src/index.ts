@@ -5,6 +5,8 @@ export * from './type'
 
 import { logger, setLogLevel } from './logger'
 
+export * from './util'
+
 export {
   logger,
   setLogLevel

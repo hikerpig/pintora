@@ -12,6 +12,7 @@
     "watch": "tsc -w"
   },
   "dependencies": {
+    "@antv/matrix-util": "^3.0.4",
     "@types/node": "^14.11.8"
   },
   "devDependencies": {

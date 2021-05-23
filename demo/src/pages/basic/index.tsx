@@ -2,6 +2,7 @@ import React, { useEffect, useRef } from 'react'
 import pintora, { setLogLevel } from '@pintora/core'
 import { init } from '@pintora/diagrams'
 import { render } from "@pintora/renderer"
+import './index.css'
 
 setLogLevel('debug')
 init()

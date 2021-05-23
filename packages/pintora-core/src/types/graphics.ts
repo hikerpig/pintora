@@ -1,3 +1,5 @@
+import { mat3 } from '@antv/matrix-util'
+
 export type Mark = Rect | Group | Text | Line | Marker
 
 export interface Figure {
@@ -11,7 +13,8 @@ export interface GraphicsIR extends Figure {}
 export interface IMark {
   attrs?: MarkAttrs
   class?: string
-  transform?: Matrix
+  /** for transform */
+  matrix?: Matrix | number[]
 }
 
 export interface Rect extends IMark {
@@ -77,6 +80,8 @@ export type ElementAttrs = {
   [key: string]: any
 }
 
+type PathCommand = object
+
 /**
  * Common mark attrs, borrowed from @antv/g
  */
@@ -108,7 +113,7 @@ export type MarkAttrs = {
    */
   lineDash?: number[] | null
   /** Path 路径 */
-  path?: string | object[]
+  path?: string | PathCommand[]
   /** 图形坐标点 */
   points?: object[]
   /** 宽度 */
@@ -143,4 +148,4 @@ export type MarkAttrs = {
 }
 
 // TODO: transform
-type Matrix = any
+type Matrix = mat3

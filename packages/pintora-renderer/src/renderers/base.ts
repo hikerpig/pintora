@@ -1,6 +1,6 @@
 import { IDiagram, GraphicsIR, Mark, MarkType, MarkAttrs, MarkTypeMap } from "@pintora/core"
 import { IGroup, ShapeCfg } from '@antv/g-base'
-import { AbstractShape, AbstractCanvas, CanvasCfg, AbstractGroup } from '@antv/g-base'
+import { AbstractShape, AbstractCanvas, CanvasCfg, IShape } from '@antv/g-base'
 import { IRenderer } from '../type'
 import { Stack } from '../util'
 
@@ -70,34 +70,36 @@ export abstract class BaseRenderer implements IRenderer {
     const actions = {
       addToCurrentGroup(mark: Mark) {
         const group = groupStack.top()
-        if (group) {
-          const shape = group.addShape(mark.type, {
-            attrs: mark.attrs as any
-          })
+        const container = group || gcvs
+        const shape = container.addShape(mark.type, {
+          attrs: mark.attrs as any
+        })
           // console.log('new shape', shape, mark.attrs)
+        return shape
+      },
+      applyMarkPostProcess(mark: Mark, shape: IShape | IGroup) {
+        if (mark.matrix) {
+          shape.setMatrix(mark.matrix as number[])
         }
-      }
+      },
     }
 
     traverseScene(this.ir.mark, {
       group: {
         enter(mark) {
-          // const group = gcvs.addGroup(Group)
-          const group = gcvs.addGroup()
+          const prevGroup = groupStack.top()
+          const container = prevGroup || gcvs
+          const group = container.addGroup()
           groupStack.push(group)
+          actions.applyMarkPostProcess(mark, group)
         },
         exit() {
           groupStack.pop()
         }
       },
-      rect(mark) {
-        actions.addToCurrentGroup(mark)
-      },
-      text(mark) {
-        actions.addToCurrentGroup(mark)
-      },
       default(mark) {
-        actions.addToCurrentGroup(mark)
+        const shape = actions.addToCurrentGroup(mark)
+        actions.applyMarkPostProcess(mark, shape)
       },
     }, actions)
   }
