@@ -19,6 +19,7 @@
     "typescript": "4.2.4"
   },
   "workspaces": [
-    "./packages/*"
+    "./packages/*",
+    "./demo"
   ]
 }
