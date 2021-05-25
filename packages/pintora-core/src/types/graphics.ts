@@ -1,6 +1,6 @@
 import { mat3 } from '@antv/matrix-util'
 
-export type Mark = Rect | Group | Text | Line | Marker
+export type Mark = Rect | Group | Text | Line | Marker | Path
 
 export interface Figure {
   mark: Mark
@@ -43,6 +43,11 @@ export interface Marker extends IMark {
   attrs: MarkAttrs & { symbol: MarkerSymbol }
 }
 
+export interface Path extends IMark {
+  type: 'path'
+  attrs: MarkAttrs & { path: string | (PathCommand[]) }
+}
+
 export type MarkType = Mark['type']
 
 export interface MarkTypeMap {
@@ -80,7 +85,9 @@ export type ElementAttrs = {
   [key: string]: any
 }
 
-type PathCommand = object
+type BinaryCommandType = 'M' | 'L'
+
+export type PathCommand = [BinaryCommandType, number, number] | ['Z']
 
 /**
  * Common mark attrs, borrowed from @antv/g
@@ -113,7 +120,7 @@ export type MarkAttrs = {
    */
   lineDash?: number[] | null
   /** Path 路径 */
-  path?: string | PathCommand[]
+  path?: string | (PathCommand[])
   /** 图形坐标点 */
   points?: object[]
   /** 宽度 */

@@ -20,7 +20,7 @@ import {
 } from '@pintora/core'
 import { db, SequenceDiagramIR, LINETYPE, Message, PLACEMENT, Note } from './db'
 import { SequenceConf, defaultConfig, PALETTE } from './config'
-import { getBaseNote } from './artist-util'
+import { getBaseNote, drawArrowTo } from './artist-util'
 
 let conf: SequenceConf = {
   ...defaultConfig,
@@ -164,7 +164,7 @@ const sequenceArtist: IDiagramArtist<SequenceDiagramIR> = {
               return
             }
             msgModel.starty = model.verticalPos
-            console.log('msgModel starty', msgModel, model.verticalPos)
+            // console.log('msgModel starty', msgModel, model.verticalPos)
             msgModel.sequenceIndex = sequenceIndex
             rootMark.children.push(drawMessage(ir, msgModel).mark)
             model.messageMarks.push(msgModel)
@@ -609,21 +609,10 @@ const drawMessage = function (ir: SequenceDiagramIR, msgModel: MessageModel): Dr
   // TODO: arrowFactory, with direction angle from x axis, implemented by path
   const isRightArrow = stopx > startx
   const arrowRad = isRightArrow ? 0 : -Math.PI
-  const rotateMatrix = createRotateAtPoint(lineAttrs.x2 - 1, lineAttrs.y2 + 1, arrowRad - Math.PI / 6)
-  const arrowMatrix = transform(rotateMatrix, [['t', 10 * (isRightArrow ? -0.8: 1), 0]])
-  // console.warn('arrowMatrix', arrowMatrix)
-  const arrowhead: Marker = {
-    type: 'marker',
-    attrs: {
-      x: lineAttrs.x2,
-      y: lineAttrs.y2,
-      r: 6,
-      symbol: 'triangle',
-      fill: lineAttrs.stroke,
-    },
-    matrix: arrowMatrix as any,
-  }
-  // console.log('arrowhead', arrowhead.attrs, msgModel)
+  const arrowhead = drawArrowTo({ x: lineAttrs.x2, y: lineAttrs.y2 }, 10, arrowRad, {
+    fill: lineAttrs.stroke,
+  })
+  // console.log('arrowhead', arrowhead.attrs, lineAttrs)
 
   // if (type === LINETYPE.SOLID || type === LINETYPE.DOTTED) {
   //   line.attr('marker-end', 'url(' + url + '#arrowhead)')
@@ -659,6 +648,7 @@ const drawMessage = function (ir: SequenceDiagramIR, msgModel: MessageModel): Dr
   return {
     mark: {
       type: 'group',
+      class: 'message',
       children: [
         {
           type: 'line',

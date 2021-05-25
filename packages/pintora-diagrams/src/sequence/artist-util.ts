@@ -1,4 +1,4 @@
-import { Mark, MarkAttrs, Rect, Group, Text, Point } from '@pintora/core/lib/type'
+import { Mark, MarkAttrs, Rect, Group, Text, Point, Path, PathCommand, createRotateAtPoint } from '@pintora/core'
 import { PALETTE } from './config'
 
 export function getBaseText(): Text['attrs'] {
@@ -20,5 +20,29 @@ export const getBaseNote = function (): Rect['attrs'] {
     height: 50,
     rx: 0,
     ry: 0,
+  }
+}
+
+/**
+ * Will point to dest
+ */
+export function drawArrowTo(dest: Point, baseLength: number, rad: number, attrs?: Partial<MarkAttrs>): Path {
+  const { x, y } = dest
+  const xOffset = (baseLength / 2) * Math.tan(Math.PI / 3)
+  const p: PathCommand[] = [
+    ['M', x - xOffset, y - baseLength / 2], // top
+    ['L', x - xOffset, y + baseLength / 2], // bottom
+    ['L', x, y], // right
+    ['Z'],
+  ]
+
+  const matrix = createRotateAtPoint(x, y, rad)
+  return {
+    type: 'path',
+    matrix,
+    attrs: {
+      ...(attrs || {}),
+      path: p,
+    },
   }
 }
