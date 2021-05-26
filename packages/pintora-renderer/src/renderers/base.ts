@@ -65,6 +65,7 @@ export abstract class BaseRenderer implements IRenderer {
     if (!gcvs) return
 
     gcvs.clear()
+    const self = this
 
     const groupStack = new Stack<IGroup>()
     const actions = {
@@ -72,9 +73,10 @@ export abstract class BaseRenderer implements IRenderer {
         const group = groupStack.top()
         const container = group || gcvs
         const shape = container.addShape(mark.type, {
-          attrs: mark.attrs as any
+          attrs: mark.attrs as any,
         })
-          // console.log('new shape', shape, mark.attrs)
+        self.onShapeAdd(shape, mark)
+        // console.log('new shape', el, shape, mark.attrs)
         return shape
       },
       applyMarkPostProcess(mark: Mark, shape: IShape | IGroup) {
@@ -103,6 +105,8 @@ export abstract class BaseRenderer implements IRenderer {
       },
     }, actions)
   }
+
+  protected onShapeAdd(shape: IShape, mark: Mark) {}
 
   render() {
     this.renderGCanvas()
