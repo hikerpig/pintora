@@ -12,13 +12,8 @@ import {
   Path,
   safeAssign,
   mat3,
-  createMat3,
-  createRotateAtPoint,
-  leftRotate,
-  transform,
-  translate,
 } from '@pintora/core'
-import { db, SequenceDiagramIR, LINETYPE, Message, PLACEMENT, Note, WrappedText } from './db'
+import { db, SequenceDiagramIR, LINETYPE, Message, PLACEMENT, WrappedText } from './db'
 import { SequenceConf, defaultConfig, PALETTE } from './config'
 import { getBaseNote, drawArrowTo, drawCrossTo, getBaseText, makeMark, makeLoopLabelBox } from './artist-util'
 
@@ -61,17 +56,23 @@ const sequenceArtist: IDiagramArtist<SequenceDiagramIR> = {
     model.maxMessageWidthPerActor = maxMessageWidthPerActor
     conf.actorHeight = calculateActorMargins(actors, maxMessageWidthPerActor)
 
-    const { marks: actorRects } = drawActors(ir, actorKeys, { verticalPos: 0 })
+    const { marks: actorMarks } = drawActors(ir, actorKeys, { verticalPos: 0 })
     const loopWidths = calculateLoopBounds(messages, actors)
-    rootMark.children.push(...actorRects)
+    rootMark.children.push(...actorMarks)
 
+    const activationGroup = makeMark('group', {}, {
+      children: [],
+      class: 'activations'
+    })
+    // push this group early so it won't lay on top of other messages
+    rootMark.children.push(activationGroup)
     function activeEnd(msg: Message, verticalPos) {
       const activationData = model.endActivation(msg)
       if (activationData.starty + 18 > verticalPos) {
         activationData.starty = verticalPos - 6
         verticalPos += 12
       }
-      drawActivationTo(rootMark, activationData)
+      drawActivationTo(activationGroup, activationData)
 
       model.insert(activationData.startx, verticalPos - 10, activationData.stopx, verticalPos)
     }
@@ -92,17 +93,21 @@ const sequenceArtist: IDiagramArtist<SequenceDiagramIR> = {
         case LINETYPE.ACTIVE_END:
           activeEnd(msg, model.verticalPos)
           break
-        // case LINETYPE.LOOP_START:
-        //   adjustLoopHeightForWrap(loopWidths, msg, conf.boxMargin, conf.boxMargin + conf.boxTextMargin, message =>
-        //     model.newLoop(message),
-        //   )
-        //   break
-        // case LINETYPE.LOOP_END:
-        //   loopModel = model.endLoop()
-        //   svgDraw.drawLoop(diagram, loopModel, 'loop', conf)
-        //   model.bumpVerticalPos(loopModel.stopy - model.verticalPos)
-        //   model.models.addLoop(loopModel)
-        //   break
+        case LINETYPE.LOOP_START:
+          adjustLoopHeightForWrap(
+            loopWidths,
+            msg,
+            conf.boxMargin,
+            conf.boxMargin + conf.boxTextMargin,
+            ({ message, width }) => model.newLoop(message, width),
+          )
+          break
+        case LINETYPE.LOOP_END:
+          loopModel = model.endLoop()
+          drawLoopTo(rootMark, loopModel, 'loop', conf)
+          model.bumpVerticalPos(loopModel.stopy - model.verticalPos)
+          model.loops.push(loopModel)
+          break
         // case LINETYPE.RECT_START:
         //   adjustLoopHeightForWrap(loopWidths, msg, conf.boxMargin, conf.boxMargin, message =>
         //     model.newLoop(undefined, message.message),
@@ -115,8 +120,12 @@ const sequenceArtist: IDiagramArtist<SequenceDiagramIR> = {
         //   model.bumpVerticalPos(loopModel.stopy - model.getVerticalPos())
         //   break
         case LINETYPE.OPT_START:
-          adjustLoopHeightForWrap(loopWidths, msg, conf.boxMargin, conf.boxMargin + conf.boxTextMargin, ({message, width}) =>
-            model.newLoop(message, width)
+          adjustLoopHeightForWrap(
+            loopWidths,
+            msg,
+            conf.boxMargin,
+            conf.boxMargin + conf.boxTextMargin,
+            ({ message, width }) => model.newLoop(message, width),
           )
           break
         case LINETYPE.OPT_END:
@@ -150,13 +159,21 @@ const sequenceArtist: IDiagramArtist<SequenceDiagramIR> = {
           model.loops.push(loopModel)
           break
         case LINETYPE.PAR_START:
-          adjustLoopHeightForWrap(loopWidths, msg, conf.boxMargin, conf.boxMargin + conf.boxTextMargin, ({message, width}) =>
-            model.newLoop(message, width)
+          adjustLoopHeightForWrap(
+            loopWidths,
+            msg,
+            conf.boxMargin,
+            conf.boxMargin + conf.boxTextMargin,
+            ({ message, width }) => model.newLoop(message, width),
           )
           break
         case LINETYPE.PAR_AND:
-          adjustLoopHeightForWrap(loopWidths, msg, conf.boxMargin + conf.boxTextMargin, conf.boxMargin, ({message, width}) =>
-            model.addSectionToLoop(message, width)
+          adjustLoopHeightForWrap(
+            loopWidths,
+            msg,
+            conf.boxMargin + conf.boxTextMargin,
+            conf.boxMargin,
+            ({ message, width }) => model.addSectionToLoop(message, width),
           )
           break
         case LINETYPE.PAR_END:
@@ -584,45 +601,57 @@ const drawMessage = function (ir: SequenceDiagramIR, msgModel: MessageModel): Dr
     lineWidth: 2,
   }
   const { verticalPos } = model
-  // TODO: Draw the line
+
+  let isLineLoop = false
+
+  let lineMark
   if (startx === stopx) {
-    // TODO: draw path
+    isLineLoop = true
     lineStarty = model.verticalPos + totalOffset
     totalOffset += conf.boxMargin
 
     lineStarty = model.verticalPos + totalOffset
+    const lineEndy = lineStarty + 20
+
+    const linePath =
+      'M ' +
+      startx +
+      ',' +
+      lineStarty +
+      ' C ' +
+      (startx + 60) +
+      ',' +
+      (lineStarty - 10) +
+      ' ' +
+      (startx + 60) +
+      ',' +
+      (lineStarty + 30) +
+      ' ' +
+      startx +
+      ',' +
+      lineEndy
+
+
     safeAssign(lineAttrs, {
+      path: linePath,
       x1: startx,
-      x2: startx + 60,
-      y1: lineStarty,
-      y2: lineStarty + 20,
+      x2: stopx,
+      y2: lineEndy,
+    })
+    lineMark = makeMark(
+      'path',
+      lineAttrs as any,
+      { class: 'message__line' },
+    )
+
+    safeAssign(tAttrs, {
+      x: startx,
     })
 
-    // line = g
-    //   .append('path')
-    //   .attr(
-    //     'd',
-    //     'M ' +
-    //       startx +
-    //       ',' +
-    //       lineStarty +
-    //       ' C ' +
-    //       (startx + 60) +
-    //       ',' +
-    //       (lineStarty - 10) +
-    //       ' ' +
-    //       (startx + 60) +
-    //       ',' +
-    //       (lineStarty + 30) +
-    //       ' ' +
-    //       startx +
-    //       ',' +
-    //       (lineStarty + 20),
-    //   )
-
-    // totalOffset += 30
-    // const dx = Math.max(textWidth / 2, conf.actorWidth / 2)
-    // model.insert(startx - dx, verticalPos - 10 + totalOffset, stopx + dx, verticalPos + 30 + totalOffset)
+    const offsetBump = 20
+    totalOffset += offsetBump
+    const dx = Math.max(textDims.width / 2, conf.actorWidth / 2)
+    model.insert(startx - dx, verticalPos - 10 + totalOffset, stopx + dx, verticalPos + offsetBump + totalOffset)
   } else {
     // totalOffset += conf.boxMrgin
     lineStarty = verticalPos + totalOffset
@@ -632,6 +661,11 @@ const drawMessage = function (ir: SequenceDiagramIR, msgModel: MessageModel): Dr
       y1: lineStarty,
       y2: lineStarty,
     })
+    lineMark = {
+      type: 'line',
+      attrs: lineAttrs,
+      class: 'message__line',
+    }
     model.insert(startx, lineStarty - 10, stopx, lineStarty)
   }
 
@@ -666,7 +700,7 @@ const drawMessage = function (ir: SequenceDiagramIR, msgModel: MessageModel): Dr
   if (type === LINETYPE.SOLID_CROSS || type === LINETYPE.DOTTED_CROSS) {
     lineEndType = LineEndType.CROSS
     const crossOffset = 5
-    const crossCenterX = lineAttrs.x2 + crossOffset * (isRightArrow ?  -1: 1)
+    const crossCenterX = lineAttrs.x2 + crossOffset * (isRightArrow ? -1 : 1)
     lineEndMark = drawCrossTo({ x: crossCenterX, y: lineAttrs.y2 }, 10, arrowRad, {
       stroke: lineAttrs.stroke,
       lineWidth: 2,
@@ -681,15 +715,19 @@ const drawMessage = function (ir: SequenceDiagramIR, msgModel: MessageModel): Dr
   let numberMark: Group
   // add node number
   if (db.showSequenceNumbers || conf.showSequenceNumbers) {
-    const numberTextMark = makeMark('text', {
-      ...getBaseText(),
-      text: sequenceIndex.toString(),
-      x: startx,
-      y: lineStarty,
-      textAlign: 'center',
-      textBaseline: 'middle',
-      fill: '#fff',
-    }, { class: 'sequence-number' })
+    const numberTextMark = makeMark(
+      'text',
+      {
+        ...getBaseText(),
+        text: sequenceIndex.toString(),
+        x: startx,
+        y: lineStarty,
+        textAlign: 'center',
+        textBaseline: 'middle',
+        fill: '#fff',
+      },
+      { class: 'sequence-number' },
+    )
     const circleMark = makeMark('marker', {
       symbol: 'circle',
       x: startx,
@@ -698,32 +736,31 @@ const drawMessage = function (ir: SequenceDiagramIR, msgModel: MessageModel): Dr
       fill: PALETTE.normalDark,
       stroke: PALETTE.normalDark,
     })
-    numberMark = makeMark('group', {}, {
-      children: [circleMark, numberTextMark]
-    })
+    numberMark = makeMark(
+      'group',
+      {},
+      {
+        children: [circleMark, numberTextMark],
+      },
+    )
   }
   // console.log('bumpVerticalPos , totalOffset', totalOffset)
   model.bumpVerticalPos(totalOffset)
   msgModel.height += totalOffset
   msgModel.stopy = msgModel.starty + msgModel.height
   model.insert(msgModel.fromBound, msgModel.starty, msgModel.toBound, msgModel.stopy)
-  // model.insert(msgModel.startx, msgModel.starty, msgModel.stopx, msgModel.stopy)
 
   return {
     mark: {
       type: 'group',
       class: 'message',
       children: [
-        {
-          type: 'line',
-          attrs: lineAttrs,
-          class: 'message__line',
-        },
+        lineMark,
         lineEndMark,
         {
           type: 'text',
           attrs: tAttrs,
-          class: 'message__text'
+          class: 'message__text',
         },
         numberMark,
       ].filter(o => Boolean(o)) as Mark[],
@@ -907,7 +944,7 @@ function drawActivationTo(mark: Group, data: ActivationData) {
 }
 
 function drawLoopTo(mark: Group, loopModel: LoopModel, labelText: string, conf: SequenceConf) {
-  // console.log('draw loop', labelText, loopModel)
+  console.log('draw loop', labelText, loopModel)
   const loopLineColor = PALETTE.purple
   const group = makeMark('group', {}, { children: [], class: 'loop' })
   function drawLoopLine(startx: number, starty: number, stopx: number, stopy: number) {
@@ -932,9 +969,9 @@ function drawLoopTo(mark: Group, loopModel: LoopModel, labelText: string, conf: 
   drawLoopLine(startx, stopy, stopx, stopy)
   drawLoopLine(startx, starty, startx, stopy)
   if (loopModel.sections) {
-    loopModel.sections.forEach(function(item) {
+    loopModel.sections.forEach(function (item) {
       drawLoopLine(startx, item.y, loopModel.stopx, item.y)
-    });
+    })
   }
 
   const {
@@ -962,8 +999,7 @@ function drawLoopTo(mark: Group, loopModel: LoopModel, labelText: string, conf: 
   const labelTextMark = makeMark('text', tAttrs, { class: 'label-text' })
 
   const labelTextSize = utils.calculateTextDimensions(labelText, messageFont(conf))
-  const labelWidth = Math.max(labelTextSize.width + 2 * boxTextMargin, labelBoxWidth
-    )
+  const labelWidth = Math.max(labelTextSize.width + 2 * boxTextMargin, labelBoxWidth)
   const labelHeight = Math.max(labelTextSize.height + 2 * boxTextMargin, labelBoxHeight)
 
   const labelWrap = makeLoopLabelBox({ x: startx, y: starty }, labelWidth, labelHeight, 5)
@@ -974,39 +1010,47 @@ function drawLoopTo(mark: Group, loopModel: LoopModel, labelText: string, conf: 
 
   const loopWidth = stopx - startx
 
-  const titleMark = makeMark('text', {
-    text: loopModel.title,
-    x: startx + loopWidth / 2 + labelBoxWidth / 2,
-    y: starty + boxTextMargin,
-    textBaseline: 'top',
-    textAlign: 'center',
-    fontFamily,
-    fontSize,
-    fontWeight,
-    fill: textColor,
-  }, { class: 'loop__title' })
+  const titleMark = makeMark(
+    'text',
+    {
+      text: loopModel.title,
+      x: startx + loopWidth / 2 + labelBoxWidth / 2,
+      y: starty + boxTextMargin,
+      textBaseline: 'top',
+      textAlign: 'center',
+      fontFamily,
+      fontSize,
+      fontWeight,
+      fill: textColor,
+    },
+    { class: 'loop__title' },
+  )
   group.children.push(labelWrap, labelTextMark, titleMark)
 
   if (loopModel.sectionTitles) {
-    loopModel.sectionTitles.forEach(function(item, idx) {
+    loopModel.sectionTitles.forEach(function (item, idx) {
       if (item.text) {
-        const sectionTitleMark = makeMark('text', {
-          ...getBaseText(),
-          text: item.text,
-          x: startx + loopWidth / 2,
-          y: loopModel.sections[idx].y + boxTextMargin,
-          textAlign: 'center',
-          textBaseline: 'top',
-          fontFamily,
-          fontSize,
-          fontWeight,
-          fill: conf.messageTextColor,
-        }, { class: 'loop__title' })
+        const sectionTitleMark = makeMark(
+          'text',
+          {
+            ...getBaseText(),
+            text: item.text,
+            x: startx + loopWidth / 2,
+            y: loopModel.sections[idx].y + boxTextMargin,
+            textAlign: 'center',
+            textBaseline: 'top',
+            fontFamily,
+            fontSize,
+            fontWeight,
+            fill: conf.messageTextColor,
+          },
+          { class: 'loop__title' },
+        )
         let { height: sectionHeight } = utils.calculateTextDimensions(item.text, messageFont(conf))
-        loopModel.sections[idx].height += sectionHeight - (boxMargin + boxTextMargin);
+        loopModel.sections[idx].height += sectionHeight - (boxMargin + boxTextMargin)
         group.children.push(sectionTitleMark)
       }
-    });
+    })
   }
 
   mark.children.push(group)

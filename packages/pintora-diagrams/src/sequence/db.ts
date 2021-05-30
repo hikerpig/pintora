@@ -258,12 +258,12 @@ class SequenceDB {
         case 'addMessage':
           db.addSignal(param.from, param.to, param.msg, param.signalType)
           break
-        // case 'loopStart':
-        //   db.addSignal(undefined, undefined, param.loopText, param.signalType)
-        //   break
-        // case 'loopEnd':
-        //   addSignal(undefined, undefined, undefined, param.signalType)
-        //   break
+        case 'loopStart':
+          db.addSignalWithoutActor(param.loopText, param.signalType)
+          break
+        case 'loopEnd':
+          db.addSignalWithoutActor(undefined, param.signalType)
+          break
         // case 'rectStart':
         //   addSignal(undefined, undefined, param.color, param.signalType)
         //   break
@@ -379,6 +379,15 @@ type ApplyParam =
     }
   | {
       type: 'optEnd'
+      signalType: LINETYPE
+    }
+  | {
+      type: 'loopStart'
+      loopText: WrappedText
+      signalType: LINETYPE
+    }
+  | {
+      type: 'loopEnd'
       signalType: LINETYPE
     }
   | {

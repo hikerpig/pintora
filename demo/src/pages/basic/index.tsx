@@ -12,6 +12,9 @@ sequenceDiagram
     autonumber
     User->>+Pintora: render this
     activate Pintora
+    loop Check input
+      Pintora-->>Pintora: Has input changed?
+    end
     Pintora-->>User: your figure here
     deactivate Pintora
     Note over User,Pintora: Note over

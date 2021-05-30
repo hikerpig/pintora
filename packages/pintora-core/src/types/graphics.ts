@@ -96,9 +96,11 @@ export type ElementAttrs = {
   [key: string]: any
 }
 
-type BinaryCommandType = 'M' | 'm' | 'L' | 'l'
+type BinaryCommandType = 'M' | 'm' | 'L' | 'l' | 'C' | 'c'
 
-export type PathCommand = [BinaryCommandType, number, number] | ['Z']
+type SingleCommandType = 'Z' | 'd'
+
+export type PathCommand = [BinaryCommandType, number, number] | [SingleCommandType]
 
 /**
  * Common mark attrs, borrowed from @antv/g
