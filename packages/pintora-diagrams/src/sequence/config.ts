@@ -1,15 +1,39 @@
 import { MarkAttrs } from '@pintora/core'
 
+// dracula
+// export const PALETTE = {
+//   normalDark: '#282a36',
+//   neutralGray: '#f8f8f2',
+//   cyan: '#8be9fd',
+//   green: '#50fa7b',
+//   orange: '#ffb86c',
+//   pink: '#ff79c6',
+//   purple: '#bd93f9',
+//   red: '#ff5555',
+//   yellow: '#f1fa8c'
+// }
+
+// ayu light
 export const PALETTE = {
-  normalDark: '#282a36',
+  normalDark: '#3b4044',
   neutralGray: '#f8f8f2',
-  cyan: '#8be9fd',
-  green: '#50fa7b',
-  orange: '#ffb86c',
-  pink: '#ff79c6',
-  purple: '#bd93f9',
-  red: '#ff5555',
-  yellow: '#f1fa8c'
+  cyan: '#55b4d4',
+  green: '#9c0',
+  orange: 'hsl(31deg 97% 68%)',
+  pink: '#f07171',
+  purple: '#af71d0',
+  red: '#e45649',
+  yellow: '#f5f1be'
+}
+
+export interface ITheme {
+  textColor: string
+  primaryColor: string
+}
+
+export const THEME: ITheme = {
+  textColor: PALETTE.normalDark,
+  primaryColor: PALETTE.orange,
 }
 
 export type SequenceConf = {
@@ -34,9 +58,10 @@ export type SequenceConf = {
   labelBoxWidth: number
   labelBoxHeight: number
 
+  loopLineColor: string
+
   actorStyle: Partial<MarkAttrs>
   actorTextColor: string
-
 
   showSequenceNumbers: boolean
 }
@@ -63,9 +88,11 @@ export const defaultConfig: SequenceConf = {
   labelBoxWidth: 50,
   labelBoxHeight: 20,
 
+  loopLineColor: PALETTE.orange,
+
   actorStyle: {
-    fill: PALETTE.pink,
-    stroke: PALETTE.normalDark,
+    fill: THEME.primaryColor,
+    stroke: THEME.textColor,
   },
   actorTextColor: PALETTE.normalDark,
 

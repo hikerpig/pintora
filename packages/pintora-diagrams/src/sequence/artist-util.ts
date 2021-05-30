@@ -61,8 +61,6 @@ export function drawCrossTo(dest: Point, baseLength: number, rad: number, attrs?
     ['L', x - offset, y + offset],
   ]
 
-  console.log('drawCross', dest, p)
-
   const matrix = createRotateAtPoint(x, y, rad)
   return {
     type: 'path',

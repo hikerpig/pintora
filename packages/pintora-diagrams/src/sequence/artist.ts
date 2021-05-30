@@ -944,8 +944,8 @@ function drawActivationTo(mark: Group, data: ActivationData) {
 }
 
 function drawLoopTo(mark: Group, loopModel: LoopModel, labelText: string, conf: SequenceConf) {
-  console.log('draw loop', labelText, loopModel)
-  const loopLineColor = PALETTE.purple
+  // console.log('draw loop', labelText, loopModel)
+  const loopLineColor = conf.loopLineColor
   const group = makeMark('group', {}, { children: [], class: 'loop' })
   function drawLoopLine(startx: number, starty: number, stopx: number, stopy: number) {
     const line = makeMark(
