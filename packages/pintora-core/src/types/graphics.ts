@@ -1,6 +1,6 @@
 import { mat3 } from '@antv/matrix-util'
 
-export type Mark = Rect | Group | Text | Line | Marker | Path
+export type Mark = Rect | Group | Text | Line | Polygon | Marker | Path
 
 export interface Figure {
   mark: Mark
@@ -36,6 +36,11 @@ export interface Line extends IMark {
   attrs: MarkAttrs & { x1: number; x2: number; y1: number; y2: number }
 }
 
+export interface Polygon extends IMark {
+  type: 'polygon'
+  attrs: MarkAttrs & { points: PointTuple[] }
+}
+
 type MarkerSymbol = 'square' | 'circle' | 'diamond' | 'triangle' | 'triangle-down'
 
 export interface Marker extends IMark {
@@ -54,6 +59,9 @@ export interface MarkTypeMap {
   rect: Rect
   group: Group
   text: Text
+  path: Path
+  line: Line
+  polygon: Polygon
 }
 
 export type BBox = {
@@ -79,13 +87,15 @@ export type Point = {
   y: number
 }
 
+export type PointTuple = [number, number]
+
 type ColorType = string | null
 
 export type ElementAttrs = {
   [key: string]: any
 }
 
-type BinaryCommandType = 'M' | 'L'
+type BinaryCommandType = 'M' | 'm' | 'L' | 'l'
 
 export type PathCommand = [BinaryCommandType, number, number] | ['Z']
 
@@ -122,7 +132,7 @@ export type MarkAttrs = {
   /** Path 路径 */
   path?: string | (PathCommand[])
   /** 图形坐标点 */
-  points?: object[]
+  points?: PointTuple[]
   /** 宽度 */
   width?: number
   /** 高度 */

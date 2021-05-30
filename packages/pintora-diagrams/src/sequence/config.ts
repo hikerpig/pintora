@@ -24,16 +24,19 @@ export type SequenceConf = {
   activationWidth: number
   diagramMarginX: number
   diagramMarginY: number
+  boxTextMargin: number;
 
   messageFontFamily: string
   messageFontSize: number
-  messageFontWeight: number | string
+  messageFontWeight: MarkAttrs['fontWeight']
   messageTextColor: string
   wrapPadding: number
   labelBoxWidth: number
+  labelBoxHeight: number
 
   actorStyle: Partial<MarkAttrs>
   actorTextColor: string
+
 
   showSequenceNumbers: boolean
 }
@@ -50,6 +53,7 @@ export const defaultConfig: SequenceConf = {
   activationWidth: 10,
   diagramMarginX: 10,
   diagramMarginY: 10,
+  boxTextMargin: 5,
 
   messageFontSize: 16,
   messageFontFamily: 'menlo, sans-serif',
@@ -57,6 +61,7 @@ export const defaultConfig: SequenceConf = {
   messageTextColor: PALETTE.normalDark,
   wrapPadding: 10,
   labelBoxWidth: 50,
+  labelBoxHeight: 20,
 
   actorStyle: {
     fill: PALETTE.pink,

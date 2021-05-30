@@ -3,7 +3,7 @@ import { logger } from '@pintora/core'
 type OrNull<T> = T | null
 type Maybe<T> = T | undefined
 
-interface WrappedText {
+export interface WrappedText {
   text: string
   wrap: boolean
 }
@@ -166,6 +166,17 @@ class SequenceDB {
     return true
   }
 
+  addSignalWithoutActor(message: WrappedText = { text: '', wrap: false }, messageType: LINETYPE) {
+    this.messages.push({
+      from: undefined,
+      to: undefined,
+      text: message.text || '',
+      wrap: (message.wrap === undefined && this.wrapEnabled) || !!message.wrap,
+      type: messageType,
+    })
+    return true
+  }
+
   addNote(actor: string | string[], placement: any, message: ParsedDescription) {
     const note: Note = {
       actor: actor,
@@ -230,7 +241,7 @@ class SequenceDB {
   setWrap(v: boolean) {}
 
   apply(param: ApplyParam | ApplyParam[]) {
-    logger.info('apply', param)
+    logger.debug('apply', param)
     if (param instanceof Array) {
       param.forEach(item => {
         this.apply(item)
@@ -262,32 +273,32 @@ class SequenceDB {
         // case 'rectEnd':
         //   addSignal(undefined, undefined, undefined, param.signalType)
         //   break
-        // case 'optStart':
-        //   addSignal(undefined, undefined, param.optText, param.signalType)
-        //   break
-        // case 'optEnd':
-        //   addSignal(undefined, undefined, undefined, param.signalType)
-        //   break
-        // case 'altStart':
-        //   addSignal(undefined, undefined, param.altText, param.signalType)
-        //   break
-        // case 'else':
-        //   addSignal(undefined, undefined, param.altText, param.signalType)
-        //   break
-        // case 'altEnd':
-        //   addSignal(undefined, undefined, undefined, param.signalType)
-        //   break
+        case 'optStart':
+          db.addSignalWithoutActor(param.optText, param.signalType)
+          break
+        case 'optEnd':
+          db.addSignalWithoutActor(undefined, param.signalType)
+          break
+        case 'altStart':
+          db.addSignalWithoutActor(param.altText, param.signalType)
+          break
+        case 'else':
+          db.addSignalWithoutActor(param.altText, param.signalType)
+          break
+        case 'altEnd':
+          db.addSignalWithoutActor(undefined, param.signalType)
+          break
         case 'setTitle':
           db.setTitle(param.text)
           break
         case 'parStart':
-          db.addSignal(undefined, undefined, param.parText, param.signalType)
+          db.addSignalWithoutActor(param.parText, param.signalType)
           break
         case 'and':
-          db.addSignal(undefined, undefined, param.parText, param.signalType)
+          db.addSignalWithoutActor(param.parText, param.signalType)
           break
         case 'parEnd':
-          db.addSignal(undefined, undefined, undefined, param.signalType)
+          db.addSignalWithoutActor(undefined, param.signalType)
           break
       }
     }
@@ -371,6 +382,29 @@ type ApplyParam =
     }
   | {
       type: 'parEnd'
+      signalType: LINETYPE
+    }
+  | {
+      type: 'optStart'
+      signalType: LINETYPE
+      optText: WrappedText
+    }
+  | {
+      type: 'optEnd'
+      signalType: LINETYPE
+    }
+  | {
+      type: 'altStart'
+      signalType: LINETYPE
+      altText: WrappedText
+    }
+  | {
+      type: 'else'
+      signalType: LINETYPE
+      altText: WrappedText
+    }
+  | {
+      type: 'altEnd'
       signalType: LINETYPE
     }
 

@@ -10,11 +10,20 @@ init()
 const testSequenceDiagram = `
 sequenceDiagram
     User->>+Pintora: render this
-    Note right of User: Text in note
     activate Pintora
-    Note over User,Pintora: Note on Pintora
     Pintora-->>User: your figure here
     deactivate Pintora
+    Note over User,Pintora: Note over
+    Note right of User: Note aside actor
+`
+const lineExample = `
+sequenceDiagram
+    John-->>Alice: Line example 1
+    John--xAlice: Line example 2
+    John-xAlice: Line example 3
+    John-)Alice: Line example 4
+    John--)Alice: Line example 5
+    John->Alice: Line example 6
 `
 
 export default function Basic() {
