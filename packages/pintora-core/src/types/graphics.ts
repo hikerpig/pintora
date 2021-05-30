@@ -62,6 +62,7 @@ export interface MarkTypeMap {
   path: Path
   line: Line
   polygon: Polygon
+  marker: Marker
 }
 
 export type BBox = {

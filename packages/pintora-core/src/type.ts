@@ -2,6 +2,11 @@ import { GraphicsIR } from './types/graphics'
 
 export * from './types/graphics'
 
+export {
+  Maybe,
+  OrNull,
+} from './types/helper'
+
 export interface IDiagram<D = any, Config = any> {
   pattern: RegExp
   parser: IDiagramParser<D, Config>

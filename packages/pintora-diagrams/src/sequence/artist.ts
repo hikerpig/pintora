@@ -678,19 +678,30 @@ const drawMessage = function (ir: SequenceDiagramIR, msgModel: MessageModel): Dr
     }
   }
 
-  // // add node number
-  // if (sequenceDb.showSequenceNumbers() || conf.showSequenceNumbers) {
-  //   line.attr('marker-start', 'url(' + url + '#sequencenumber)')
-  //   g.append('text')
-  //     .attr('x', startx)
-  //     .attr('y', lineStarty + 4)
-  //     .attr('font-family', 'sans-serif')
-  //     .attr('font-size', '12px')
-  //     .attr('text-anchor', 'middle')
-  //     .attr('textLength', '16px')
-  //     .attr('class', 'sequenceNumber')
-  //     .text(sequenceIndex)
-  // }
+  let numberMark: Group
+  // add node number
+  if (db.showSequenceNumbers || conf.showSequenceNumbers) {
+    const numberTextMark = makeMark('text', {
+      ...getBaseText(),
+      text: sequenceIndex.toString(),
+      x: startx,
+      y: lineStarty,
+      textAlign: 'center',
+      textBaseline: 'middle',
+      fill: '#fff',
+    }, { class: 'sequence-number' })
+    const circleMark = makeMark('marker', {
+      symbol: 'circle',
+      x: startx,
+      y: lineStarty,
+      r: 8,
+      fill: PALETTE.normalDark,
+      stroke: PALETTE.normalDark,
+    })
+    numberMark = makeMark('group', {}, {
+      children: [circleMark, numberTextMark]
+    })
+  }
   // console.log('bumpVerticalPos , totalOffset', totalOffset)
   model.bumpVerticalPos(totalOffset)
   msgModel.height += totalOffset
@@ -714,6 +725,7 @@ const drawMessage = function (ir: SequenceDiagramIR, msgModel: MessageModel): Dr
           attrs: tAttrs,
           class: 'message__text'
         },
+        numberMark,
       ].filter(o => Boolean(o)) as Mark[],
     },
   }
@@ -744,12 +756,6 @@ const drawNoteTo = function (noteModel: NoteModel, container: Group) {
     attrs: rectAttrs,
   }
 
-  // let g = elem.append('g');
-  // const rectElem = svgDraw.drawRect(g, rect);
-  // textObj.anchor = conf.noteAlign;
-  // textObj.textMargin = conf.noteMargin;
-  // textObj.valign = conf.noteAlign;
-
   const textAttrs: Text['attrs'] = { fill: conf.actorTextColor, text: noteModel.text, ...(noteFont(conf) as any) }
   safeAssign(textAttrs, {
     x: noteModel.startx + noteModel.width / 2,
@@ -763,13 +769,11 @@ const drawNoteTo = function (noteModel: NoteModel, container: Group) {
     type: 'text',
     attrs: textAttrs,
   }
-  // let textElem = drawText(g, textObj);
 
   model.bumpVerticalPos(textHeight + 2 * conf.noteMargin)
   noteModel.stopy = noteModel.starty + textHeight + 2 * conf.noteMargin
   noteModel.stopx = noteModel.startx + rectAttrs.width
   model.insert(noteModel.startx, noteModel.starty, noteModel.stopx, noteModel.stopy)
-  // bounds.models.addNote(noteModel);
   const mark: Group = {
     type: 'group',
     class: 'note',
@@ -903,7 +907,7 @@ function drawActivationTo(mark: Group, data: ActivationData) {
 }
 
 function drawLoopTo(mark: Group, loopModel: LoopModel, labelText: string, conf: SequenceConf) {
-  console.log('draw loop', labelText, loopModel)
+  // console.log('draw loop', labelText, loopModel)
   const loopLineColor = PALETTE.purple
   const group = makeMark('group', {}, { children: [], class: 'loop' })
   function drawLoopLine(startx: number, starty: number, stopx: number, stopy: number) {

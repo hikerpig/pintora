@@ -9,6 +9,7 @@ init()
 
 const testSequenceDiagram = `
 sequenceDiagram
+    autonumber
     User->>+Pintora: render this
     activate Pintora
     Pintora-->>User: your figure here

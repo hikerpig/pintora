@@ -1,7 +1,4 @@
-import { logger } from '@pintora/core'
-
-type OrNull<T> = T | null
-type Maybe<T> = T | undefined
+import { logger, OrNull } from '@pintora/core'
 
 export interface WrappedText {
   text: string
@@ -329,18 +326,9 @@ const activationCount = (db: SequenceDB, part: string) => {
   return count
 }
 
-// export const getActorKeys = function () {
-//   return Object.keys(actors)
-// }
-
-// export const enableSequenceNumbers = function () {
-//   sequenceNumbersEnabled = true
-// }
-// export const showSequenceNumbers = () => sequenceNumbersEnabled
-
-// export const setWrap = function (wrapSetting) {
-//   wrapEnabled = wrapSetting
-// }
+export function enableSequenceNumbers() {
+  db.showSequenceNumbers = true;
+}
 
 type ApplyParam =
   | {
@@ -417,12 +405,10 @@ export default {
   addMessage: db.addMessage,
   addSignal: db.addSignal,
   // setWrap,
-  // enableSequenceNumbers,
-  // showSequenceNumbers,
+  enableSequenceNumbers,
   // getActorKeys,
   // getTitle,
   // getTitleWrapped,
-  // clear,
   parseMessage: db.parseMessage,
   LINETYPE,
   ARROWTYPE,
