@@ -2,7 +2,7 @@ import { GraphicsIR } from '@pintora/core'
 import { IRenderer } from './type'
 import { makeRenderer, RendererType } from './renderers'
 
-type RenderOptions = {
+export type RenderOptions = {
   container: any
   renderer?: RendererType
   onRender?(renderer: IRenderer): void
