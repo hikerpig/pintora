@@ -223,6 +223,7 @@ class SequenceDB {
   clear() {
     this.actors = {}
     this.messages = []
+    this.showSequenceNumbers = false
   }
 
   getDiagramIR(): SequenceDiagramIR {

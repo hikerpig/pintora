@@ -1,11 +1,8 @@
 import React, { useCallback } from 'react'
 import { useDispatch, connect } from 'react-redux'
-import { init } from '@pintora/diagrams'
 import slice, { State, actions } from 'src/live-editor/redux/slice'
 import PintoraPreview from 'src/components/PintoraPreview'
 import './Preview.less'
-
-init()
 
 interface Props {
   previewCode: string

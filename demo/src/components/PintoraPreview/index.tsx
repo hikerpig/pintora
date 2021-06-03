@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from 'react'
-import pintora, { setLogLevel } from '@pintora/core'
-import { render, RenderOptions } from "@pintora/renderer"
+import { RenderOptions } from '@pintora/renderer'
+import pintora from '@pintora/standalone'
 import './PintoraPreview.less'
 
 interface Props {
@@ -17,15 +17,10 @@ export default function PintoraPreview(props: Props) {
 
     pintora.renderTo(code, {
       container: containerRef.current,
-      render(ir, opts) {
-        render(ir, {
-          renderer,
-          onRender(renderer: any) {
-            ;(window as any).pintoraRenderer = renderer
-          },
-          ...opts,
-        })
-      }
+      renderer,
+      onRender(renderer: any) {
+        ;(window as any).pintoraRenderer = renderer
+      },
     })
 
     return () => {

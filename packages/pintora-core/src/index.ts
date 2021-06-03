@@ -12,10 +12,7 @@ export {
   setLogLevel
 }
 
-type RenderOptions = {
-  container: HTMLElement
-  render(ir: GraphicsIR, opts: { container: HTMLElement }): void
-  onDraw?(): void
+type DrawOptions = {
   onError?(message: string): void
 }
 
@@ -23,8 +20,8 @@ const pintora = {
   registerDiagram(name: string, diagram: IDiagram) {
     registry.registerDiagram(name, diagram)
   },
-  renderTo(text: string, opts: RenderOptions) {
-    const { container, onDraw, onError } = opts
+  parseAndDraw(text: string, opts: DrawOptions) {
+    const { onError } = opts
     const diagram = registry.detectDiagram(text)
     if (!diagram) {
       const errMessage = `[pintora] no diagram detected with input: ${text.slice(0, 30)}`
@@ -37,7 +34,10 @@ const pintora = {
     const diagramIR = diagram.parser.parse(text)
     const graphicIR = diagram.artist.draw(diagramIR)
 
-    opts.render(graphicIR, { container })
+    return {
+      diagramIR,
+      graphicIR,
+    }
   },
 }
 
