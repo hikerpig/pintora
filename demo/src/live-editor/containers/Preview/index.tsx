@@ -26,6 +26,7 @@ const Preview = ({ previewCode, previewConfig }: Props) => {
             <select value={previewConfig.renderer} onChange={onRendererChange}>
               <option value="svg">svg</option>
               <option value="canvas">canvas</option>
+              <option value="skiaCanvas">skia-canvas</option>
             </select>
           </div>
         </div>

@@ -8,7 +8,9 @@ export interface Figure {
   height: number
 }
 
-export interface GraphicsIR extends Figure {}
+export interface GraphicsIR extends Figure {
+  bgColor?: string
+}
 
 export interface IMark {
   attrs?: MarkAttrs

@@ -19,7 +19,7 @@ export const PALETTE = {
   neutralGray: '#f8f8f2',
   cyan: '#55b4d4',
   green: '#9c0',
-  orange: 'hsl(31deg 97% 68%)',
+  orange: '#fdb05e',
   pink: '#f07171',
   purple: '#af71d0',
   red: '#e45649',

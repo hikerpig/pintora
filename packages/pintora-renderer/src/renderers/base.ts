@@ -1,12 +1,12 @@
-import { IDiagram, GraphicsIR, Mark, MarkType, MarkAttrs, MarkTypeMap } from "@pintora/core"
+import { GraphicsIR, Mark, MarkType, MarkAttrs, MarkTypeMap } from "@pintora/core"
 import { IGroup, ShapeCfg } from '@antv/g-base'
-import { AbstractShape, AbstractCanvas, CanvasCfg, IShape } from '@antv/g-base'
+import { AbstractCanvas, CanvasCfg, IShape } from '@antv/g-base'
 import { IRenderer } from '../type'
 import { Stack } from '../util'
 
 type Visitor<T extends Mark, Actions=any> = {
-  enter(mark: T, actions?: any): boolean | void
-  exit?(mark: T, actions?: any): void
+  enter(mark: T, actions?: Actions): boolean | void
+  exit?(mark: T, actions?: Actions): void
 }
 type VisitorInput<T extends Mark> = Visitor<T> | Visitor<T>['enter']
 
@@ -60,12 +60,31 @@ export abstract class BaseRenderer implements IRenderer {
     return this
   }
 
+  getRootElement() {
+    if (!this.gcvs) return
+    return this.gcvs.cfg.el
+  }
+
+  protected addBgShape() {
+    if (this.ir.bgColor) {
+      this.gcvs?.addShape('rect', {
+        attrs: {
+          width: this.ir.width,
+          height: this.ir.height,
+          fill: this.ir.bgColor,
+        }
+      })
+    }
+  }
+
   protected renderGCanvas() {
     const gcvs = this.gcvs
     if (!gcvs) return
 
     gcvs.clear()
     const self = this
+
+    this.addBgShape()
 
     const groupStack = new Stack<IGroup>()
     const actions = {
@@ -111,5 +130,4 @@ export abstract class BaseRenderer implements IRenderer {
   render() {
     this.renderGCanvas()
   }
-
 }

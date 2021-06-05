@@ -5,6 +5,15 @@
   "version": "0.2.0",
   "configurations": [
     {
+      "name": "Launch pintora cli",
+      "program": "${workspaceFolder}/packages/pintora-cli/bin/pintora",
+      "request": "launch",
+      "skipFiles": [
+        "<node_internals>/**"
+      ],
+      "type": "pwa-node"
+    },
+    {
       "type": "pwa-chrome",
       "request": "launch",
       "name": "Open pintora demo",

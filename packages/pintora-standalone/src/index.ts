@@ -1,6 +1,6 @@
-import pintora from '@pintora/core'
+import pintora, { GraphicsIR } from '@pintora/core'
 import { sequenceDiagram } from '@pintora/diagrams'
-import { render, RenderOptions } from '@pintora/renderer'
+import { render, RenderOptions, BaseRenderer, rendererRegistry } from '@pintora/renderer'
 
 function initDiagrams() {
   pintora.registerDiagram('sequenceDiagram', sequenceDiagram)
@@ -10,6 +10,7 @@ initDiagrams()
 
 interface RenderToOptions extends RenderOptions {
   onError?(message: string): void
+  enhanceGraphicIR?(ir: GraphicsIR): GraphicsIR
 }
 
 const pintoraStandalone = {
@@ -25,8 +26,18 @@ const pintoraStandalone = {
 
     const drawResult = pintoraStandalone.parseAndDraw(code, options)
 
-    render(drawResult.graphicIR, options)
+    let graphicIR = drawResult.graphicIR
+    if (options.enhanceGraphicIR) graphicIR = options.enhanceGraphicIR(graphicIR)
+
+    render(graphicIR, options)
   },
 }
+
+export {
+  BaseRenderer,
+  rendererRegistry
+}
+
+export { pintoraStandalone }
 
 export default pintoraStandalone
