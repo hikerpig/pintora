@@ -17,7 +17,7 @@
     "lib"
   ],
   "bin": {
-    "pintora": "./bin/pintora.js"
+    "pintora": "./bin/pintora"
   },
   "publishConfig": {
     "access": "public"

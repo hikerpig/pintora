@@ -3,10 +3,6 @@ import { pintoraStandalone } from '@pintora/standalone'
 import { JSDOM } from 'jsdom'
 import { implForWrapper } from 'jsdom/lib/jsdom/living/generated/utils'
 import { Canvas } from 'canvas'
-// import { rendererRegistry } from '@pintora/renderer'
-// import { NodeCanvasRenderer } from './NodeCanvasRenderer'
-
-// rendererRegistry.register('nodeCanvas', NodeCanvasRenderer)
 
 const sequenceExample = `sequenceDiagram
   autonumber
