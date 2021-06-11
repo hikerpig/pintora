@@ -6,6 +6,7 @@
     "compile": "npx lerna run compile",
     "compile:browser": "npx lerna run compile --ignore @pintora/cli",
     "watch": "npx lerna run watch --parallel",
+    "watch:browser": "npx lerna run watch --parallel --ignore @pintora/cli",
     "demo:dev": "cd demo && npm run dev",
     "prettier": "prettier \"*.{js,json,yml,md}\" \"packages/**/*\"",
     "format": "npm run prettier -- --write",

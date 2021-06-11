@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { useDispatch, useStore, Provider } from 'react-redux'
+import { Provider } from 'react-redux'
 import Header from './components/Header'
 import Editor from './components/Editor'
 import Preview from './containers/Preview'
@@ -11,9 +11,9 @@ function App() {
     <Provider store={store}>
       <div className="App min-h-screen min-w-screen flex flex-col">
         <Header></Header>
-        <div className="container App__content flex">
+        <div className="App__content flex">
           <Editor />
-          <Preview />
+          <Preview className="App__preview" />
         </div>
       </div>
     </Provider>

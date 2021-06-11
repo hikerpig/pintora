@@ -13,7 +13,7 @@ export {
 }
 
 type DrawOptions = {
-  onError?(message: string): void
+  onError?(error: Error): void
 }
 
 const pintora = {
@@ -26,7 +26,7 @@ const pintora = {
     if (!diagram) {
       const errMessage = `[pintora] no diagram detected with input: ${text.slice(0, 30)}`
       logger.warn(errMessage)
-      onError && onError(errMessage)
+      onError && onError(new Error(errMessage))
       return
     }
 

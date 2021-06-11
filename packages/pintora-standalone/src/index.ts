@@ -9,7 +9,7 @@ function initDiagrams() {
 initDiagrams()
 
 interface RenderToOptions extends RenderOptions {
-  onError?(message: string): void
+  onError?(error: Error): void
   enhanceGraphicIR?(ir: GraphicsIR): GraphicsIR
 }
 
@@ -24,12 +24,20 @@ const pintoraStandalone = {
       ctn = container
     }
 
-    const drawResult = pintoraStandalone.parseAndDraw(code, options)
+    let drawResult: ReturnType<typeof pintoraStandalone.parseAndDraw>
+    try {
+      drawResult = pintoraStandalone.parseAndDraw(code, options)
+    } catch (error) {
+      const onError = options.onError || console.warn
+      onError(error)
+    }
 
-    let graphicIR = drawResult.graphicIR
-    if (options.enhanceGraphicIR) graphicIR = options.enhanceGraphicIR(graphicIR)
+    if (drawResult) {
+      let graphicIR = drawResult.graphicIR
+      if (options.enhanceGraphicIR) graphicIR = options.enhanceGraphicIR(graphicIR)
 
-    render(graphicIR, options)
+      render(graphicIR, options)
+    }
   },
 }
 

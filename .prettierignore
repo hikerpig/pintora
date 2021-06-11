@@ -1,2 +1,4 @@
 lib/
 *.tsbuildinfo
+
+package-lock.json
