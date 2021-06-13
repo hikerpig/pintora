@@ -2,3 +2,5 @@ lib/
 *.tsbuildinfo
 
 package-lock.json
+
+packages/**/*/parser/*.[tj]s

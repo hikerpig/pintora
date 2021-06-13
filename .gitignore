@@ -1,6 +1,7 @@
 # project
-packages/**/*/parser/*.js
+packages/**/*/parser/*.[tj]s
 demo/dist/
+.idea/
 
 # Created by https://www.gitignore.io/api/node
 

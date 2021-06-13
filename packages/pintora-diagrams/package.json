@@ -9,13 +9,21 @@
   "license": "MIT",
   "scripts": {
     "compile": "tsc",
-    "watch": "tsc -w"
+    "watch": "tsc -w",
+    "test": "jest",
+    "gen-parser": "echo 'gen parser'"
   },
   "dependencies": {
-    "@pintora/core": "*",
-    "@types/node": "^14.11.8"
+    "@pintora/core": "*"
   },
   "devDependencies": {
+    "@types/jest": "^26.0.23",
+    "@types/nearley": "^2.11.1",
+    "@types/node": "^14.11.8",
+    "babel-jest": "^27.0.2",
+    "esbuild-jest": "^0.5.0",
+    "jest": "^27.0.4",
+    "nearley": "^2.20.1",
     "typescript": "4.2.4"
   }
 }
