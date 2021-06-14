@@ -2,8 +2,7 @@ import { IDiagram } from '@pintora/core'
 import db, { ErDiagramIR } from './db'
 import artist from './artist'
 import { parse } from './parser'
-
-type ErConf = {}
+import { ErConf } from './config'
 
 export { ErDiagramIR, ErConf }
 

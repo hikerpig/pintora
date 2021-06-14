@@ -11,6 +11,7 @@
     "compile": "tsc",
     "watch": "tsc -w",
     "test": "jest",
+    "prepare": "./scripts/build-grammar.sh",
     "gen-parser": "echo 'gen parser'"
   },
   "dependencies": {
