@@ -1,4 +1,9 @@
 {
   "packages": ["packages/*", "demo"],
-  "version": "0.0.0"
+  "npmClient": "lerna",
+  "command": {
+    "bootstrap": {
+      "npmClientArgs": ["--no-package-lock"]
+    }
+  }, "version": "0.0.0"
 }
