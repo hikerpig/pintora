@@ -1,6 +1,6 @@
 import React from 'react'
 import { setLogLevel } from '@pintora/core'
-import { EXAMPLES } from 'src/data/examples'
+import { EXAMPLES } from '@pintora/test-shared'
 import PintoraPreview from 'src/components/PintoraPreview'
 import './index.css'
 

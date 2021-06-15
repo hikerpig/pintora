@@ -12,6 +12,7 @@
     "@pintora/core": "*",
     "@pintora/renderer": "*",
     "@pintora/standalone": "*",
+    "@pintora/test-shared": "*",
     "@reduxjs/toolkit": "^1.5.1",
     "classnames": "^2.3.1",
     "monaco-editor": "^0.24.0",

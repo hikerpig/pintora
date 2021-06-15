@@ -34,7 +34,7 @@ const MonacoEditor = (props: Props) => {
   const wrapperRef = useRef<HTMLDivElement>()
   const editorRef = useRef<monaco.editor.IStandaloneCodeEditor>()
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (!wrapperRef.current) return
 
     let editor = editorRef.current
@@ -54,6 +54,7 @@ const MonacoEditor = (props: Props) => {
     if (editorModel) {
       editorModel.onDidChangeContent((e) => {
         const newCode = editorModel.getLinesContent().join('\n')
+        if (newCode === code) return
         onCodeChange(newCode)
       })
     }
@@ -65,6 +66,14 @@ const MonacoEditor = (props: Props) => {
       }
     }
   }, [])
+
+  useEffect(() => {
+    const editor = editorRef.current
+    if (editor) {
+      const currentCode = editor.getValue()
+      if (currentCode !== code) editor.setValue(code)
+    }
+  }, [code])
 
   return <div className="MonacoEditor" ref={wrapperRef as any}></div>
 }

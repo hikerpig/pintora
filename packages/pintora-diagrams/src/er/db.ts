@@ -10,18 +10,23 @@ export enum Identification {
   IDENTIFYING = 'IDENTIFYING',
 }
 
-type Entity = {
-  attributes: any[]
+export type Attribute = {
+  attributeType: string
+  attributeName: string
 }
 
-type Relationship = {
+export type Entity = {
+  attributes: Attribute[]
+}
+
+export type Relationship = {
   entityA: string
   roleA: string
   entityB: string
   relSpec: RelSpec
 }
 
-type RelSpec = {
+export type RelSpec = {
   cardA: Cardinality
   cardB: Cardinality
   relType: Identification
@@ -61,8 +66,9 @@ class ErDb {
       relationships: this.relationships,
     }
   }
-  addAttributes() {
-    console.log('addAttributes', arguments)
+  addAttributes(name: string, attributes: Attribute[]) {
+    const entity = this.addEntity(name)
+    entity.attributes.push(...attributes)
   }
   clear() {
     this.entities = {}

@@ -6,8 +6,5 @@
     "strict": false,
     "checkJs": false,
     "allowJs": true
-  },
-  "include": [
-    "./src/**/*"
-  ]
+  }
 }

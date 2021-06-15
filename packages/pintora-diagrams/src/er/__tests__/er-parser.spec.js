@@ -10,6 +10,10 @@ describe('er parser', () => {
   CUSTOMER ||--o{ ORDER : places
   ORDER ||--|{ LINE-ITEM : contains
   CUSTOMER }|..|{ DELIVERY-ADDRESS : uses
+  ORDER {
+    string id
+    Date date
+}
   `
   it('just works', () => {
     parse(example)

@@ -4,7 +4,6 @@ let lexer = moo.compile({
   NEWLINE: { match: /\n/, lineBreaks: true },
   SPACE: {match: /\s+/, lineBreaks: true},
   WORD: /\"[^"]*\"/,
-  // WORD: /\"[A-Za-z0-9\-_]*\"/,
   ZERO_OR_ONE: /\|o|o\|/,
   ZERO_OR_MORE: /\}o|o\{/,
   ONE_OR_MORE: /\}\||\|\{/,
@@ -13,6 +12,8 @@ let lexer = moo.compile({
   IDENTIFYING: /\-\-/,
   ALPHANUM: /[A-Za-z][A-Za-z0-9\-_]*/,
   COLON: /:/,
+  LEFT_BRACE: /\{/,
+  RIGHT_BRACE: /\}/,
 })
 
 let yy
@@ -52,13 +53,11 @@ statement ->
         yy.addRelationship(tv(d[0]), tv(d[8]), tv(d[4]), d[2])
       }
     %}
-  | entityName "{" attributes "}"
+  | entityName _ "{" _ attributes _ "}"
     {%
       function(d) {
-        console.log('detected block');
         yy.addEntity(tv(d[0]));
-        yy.addAttributes(d[0], d[2]);
-        /* console.log('handled block'); */
+        yy.addAttributes(tv(d[0]), d[4]);
       }
     %}
   | entityName "{":? "}":? {% (d) => yy.addEntity(tv(d[0])) %}
@@ -87,18 +86,15 @@ entityName ->
     %ALPHANUM {% id %}
 
 attributes ->
-      attribute
-    | attribute attributes
+      attribute {% id %}
+    | attribute __ attributes {% (d) => [d[0]].concat(d[2]) %}
 
 attribute ->
-      attributeType attributeName {% (d) => { return { attributeType: d[0], attributeName: d[1] } } %}
+      attributeType __ attributeName {% (d) => { return { attributeType: tv(d[0]), attributeName: tv(d[2]) } } %}
 
-# FIXME: implement ATTRIBUTE_WORD inside `{}` block
-attributeType ->
-      ATTRIBUTE_WORD
+attributeType -> %ALPHANUM {% id %}
 
-attributeName ->
-      ATTRIBUTE_WORD
+attributeName -> %ALPHANUM {% id %}
 
 relSpec ->
       cardinality relType cardinality {%

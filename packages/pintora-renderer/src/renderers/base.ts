@@ -112,6 +112,7 @@ export abstract class BaseRenderer implements IRenderer {
           const container = prevGroup || gcvs
           const group = container.addGroup()
           groupStack.push(group)
+          self.onShapeAdd(group, mark)
           actions.applyMarkPostProcess(mark, group)
         },
         exit() {
@@ -125,7 +126,7 @@ export abstract class BaseRenderer implements IRenderer {
     }, actions)
   }
 
-  protected onShapeAdd(shape: IShape, mark: Mark) {}
+  protected onShapeAdd(shape: IShape | IGroup, mark: Mark) {}
 
   render() {
     this.renderGCanvas()

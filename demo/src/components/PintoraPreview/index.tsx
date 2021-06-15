@@ -25,7 +25,8 @@ export default function PintoraPreview(props: Props) {
         setErrorMessage(null)
       },
       onError(error) {
-        setErrorMessage(error.message)
+        console.error(error)
+        setErrorMessage(error.stack || error.message)
       },
     })
 

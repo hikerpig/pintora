@@ -1,6 +1,6 @@
 import { mat3 } from '@antv/matrix-util'
 
-export type Mark = Rect | Group | Text | Line | Polygon | Marker | Path
+export type Mark = Group | Rect | Circle | Ellipse | Text | Line | Polygon | Marker | Path
 
 export interface Figure {
   mark: Mark
@@ -19,13 +19,32 @@ export interface IMark {
   matrix?: Matrix | number[]
 }
 
+export interface Group extends IMark {
+  type: 'group'
+  children: Mark[]
+}
+
 export interface Rect extends IMark {
   type: 'rect'
 }
 
-export interface Group extends IMark {
-  type: 'group'
-  children: Mark[]
+export interface Circle extends IMark {
+  type: 'circle'
+  attrs: MarkAttrs & {
+    x: number
+    y: number
+    r: number
+  }
+}
+
+export interface Ellipse extends IMark {
+  type: 'ellipse'
+  attrs: MarkAttrs & {
+    cx: number
+    cy: number
+    rx: number
+    ry: number
+  }
 }
 
 export interface Text extends IMark {
@@ -58,8 +77,10 @@ export interface Path extends IMark {
 export type MarkType = Mark['type']
 
 export interface MarkTypeMap {
-  rect: Rect
   group: Group
+  rect: Rect
+  circle: Circle
+  ellipse: Ellipse
   text: Text
   path: Path
   line: Line

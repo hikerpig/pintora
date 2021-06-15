@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
-import { EXAMPLES } from 'src/data/examples'
+import { EXAMPLES } from '@pintora/test-shared'
 
 export type State = {
   editor: {

@@ -20,5 +20,8 @@
       "src/*": ["./src/*"]
     }
   },
-  "include": ["./src"]
+  "include": ["./src"],
+  "exclude": [
+    "./dist/**/*"
+  ] 
 }

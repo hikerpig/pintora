@@ -15,7 +15,11 @@
     "gen-parser": "echo 'gen parser'"
   },
   "dependencies": {
-    "@pintora/core": "*"
+    "@pintora/core": "*",
+    "@pintora/graphlib": "2.2.1",
+    "@pintora/dagre": "0.8.8",
+    "ngraph.graph": "^19.1.0",
+    "webcola": "^3.4.0"
   },
   "devDependencies": {
     "@types/jest": "^26.0.23",

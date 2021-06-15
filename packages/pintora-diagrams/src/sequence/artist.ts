@@ -16,6 +16,7 @@ import {
 import { db, SequenceDiagramIR, LINETYPE, Message, PLACEMENT, WrappedText } from './db'
 import { SequenceConf, defaultConfig, PALETTE } from './config'
 import { getBaseNote, drawArrowTo, drawCrossTo, getBaseText, makeMark, makeLoopLabelBox } from './artist-util'
+import { calculateTextDimensions, makeid } from '../util/text-util'
 
 let conf: SequenceConf = {
   ...defaultConfig,
@@ -501,49 +502,13 @@ function adjustLoopHeightForWrap(
     msg.wrap = true
 
     // const lines = common.splitBreaks(msg.message).length;
-    const textDims = utils.calculateTextDimensions(msg.text, textConf)
+    const textDims = calculateTextDimensions(msg.text, textConf)
     const totalOffset = Math.max(textDims.height, conf.labelBoxHeight)
     heightAdjust = postMargin + totalOffset
     logger.debug(`yOffset: ${totalOffset} - ${msg.text}`)
   }
   addLoopFn({ message: msg, width: loopWidth })
   model.bumpVerticalPos(heightAdjust)
-}
-
-interface IFont {
-  fontFamily: string
-  fontSize: number
-  fontWeight: number | string
-}
-
-const CHARACTERS = '0123456789abcdef'
-function makeid(length: number) {
-  let result = ''
-  let CHARACTERSLength = CHARACTERS.length
-  for (let i = 0; i < length; i++) {
-    result += CHARACTERS.charAt(Math.floor(Math.random() * CHARACTERSLength))
-  }
-  return result
-}
-
-// TODO: this should be implemented in the core package, here is just a simple mock
-const utils = {
-  makeid,
-  calculateTextDimensions(text: string, font: IFont) {
-    const lines = text.split('\n')
-    let width = 0
-    let height = 0
-    lines.forEach((line, i) => {
-      const w = line.length * 14
-      width = Math.max(w, width)
-      height += 14 + (i === 0 ? 0 : 8)
-    })
-    // console.log('calculateTextDimensions', text, width, height)
-    return {
-      width,
-      height,
-    }
-  },
 }
 
 const messageFont = (cnf: SequenceConf) => {
@@ -569,7 +534,7 @@ const drawMessage = function (ir: SequenceDiagramIR, msgModel: MessageModel): Dr
   model.bumpVerticalPos(conf.boxMargin)
   const { startx, stopx, starty, text, fromBound, type, sequenceIndex } = msgModel
   const linesCount = splitBreaks(text).length
-  const textDims = utils.calculateTextDimensions(text, messageFont(conf))
+  const textDims = calculateTextDimensions(text, messageFont(conf))
   // const textWidth = textDims.width
   const lineHeight = textDims.height / linesCount
 
@@ -776,7 +741,7 @@ const drawMessage = function (ir: SequenceDiagramIR, msgModel: MessageModel): Dr
 const drawNoteTo = function (noteModel: NoteModel, container: Group) {
   model.bumpVerticalPos(conf.boxMargin)
 
-  const textDims = utils.calculateTextDimensions(noteModel.text, noteFont(conf))
+  const textDims = calculateTextDimensions(noteModel.text, noteFont(conf))
   const textHeight = textDims.height
   noteModel.height = textHeight + 2 * conf.noteMargin
   noteModel.starty = model.verticalPos
@@ -998,7 +963,7 @@ function drawLoopTo(mark: Group, loopModel: LoopModel, labelText: string, conf: 
   })
   const labelTextMark = makeMark('text', tAttrs, { class: 'label-text' })
 
-  const labelTextSize = utils.calculateTextDimensions(labelText, messageFont(conf))
+  const labelTextSize = calculateTextDimensions(labelText, messageFont(conf))
   const labelWidth = Math.max(labelTextSize.width + 2 * boxTextMargin, labelBoxWidth)
   const labelHeight = Math.max(labelTextSize.height + 2 * boxTextMargin, labelBoxHeight)
 
@@ -1046,7 +1011,7 @@ function drawLoopTo(mark: Group, loopModel: LoopModel, labelText: string, conf: 
           },
           { class: 'loop__title' },
         )
-        let { height: sectionHeight } = utils.calculateTextDimensions(item.text, messageFont(conf))
+        let { height: sectionHeight } = calculateTextDimensions(item.text, messageFont(conf))
         loopModel.sections[idx].height += sectionHeight - (boxMargin + boxTextMargin)
         group.children.push(sectionTitleMark)
       }
@@ -1091,7 +1056,7 @@ const getMaxMessageWidthPerActor = function (ir: SequenceDiagramIR) {
       // let wrappedMessage = msg.wrap
       //   ? utils.wrapLabel(msg.message, conf.width - 2 * conf.wrapPadding, textFont)
       //   : msg.message;
-      const messageDimensions = utils.calculateTextDimensions(wrappedMessage, textFont)
+      const messageDimensions = calculateTextDimensions(wrappedMessage, textFont)
       const messageWidth = messageDimensions.width + 2 * conf.wrapPadding
 
       /*
@@ -1160,7 +1125,7 @@ const calculateActorMargins = function (actors: SequenceDiagramIR['actors'], act
     //     actorFont(conf)
     //   );
     // }
-    const actDims = utils.calculateTextDimensions(actor.description, actorFont(conf))
+    const actDims = calculateTextDimensions(actor.description, actorFont(conf))
     actorAttrs.width = actor.wrap ? conf.actorHeight : Math.max(conf.actorWidth, actDims.width + 2 * conf.wrapPadding)
 
     actorAttrs.height = actor.wrap ? Math.max(actDims.height, conf.actorHeight) : conf.actorHeight
@@ -1206,7 +1171,7 @@ type MessageModel = {
 }
 
 const buildMessageModel = function (msg: Message): MessageModel {
-  const msgDims = utils.calculateTextDimensions(msg.text, messageFont(conf))
+  const msgDims = calculateTextDimensions(msg.text, messageFont(conf))
   let process = false
   if (
     [
@@ -1290,11 +1255,11 @@ const buildNoteModel = function (msg: Message, actors: SequenceDiagramIR['actors
   let stopx = toActorAttr.x
   let shouldWrap = msg.wrap && msg.text
 
-  // let textDimensions = utils.calculateTextDimensions(
+  // let textDimensions = calculateTextDimensions(
   //   shouldWrap ? utils.wrapLabel(msg.message, conf.width, noteFont(conf)) : msg.message,
   //   noteFont(conf)
   // );
-  let textDimensions = utils.calculateTextDimensions(msg.text, noteFont(conf))
+  let textDimensions = calculateTextDimensions(msg.text, noteFont(conf))
   // console.log('build note model, textDims', textDimensions)
   let noteModel: NoteModel = {
     width: shouldWrap ? conf.noteWidth : Math.max(conf.noteWidth, textDimensions.width + 2 * conf.noteMargin),
@@ -1316,7 +1281,7 @@ const buildNoteModel = function (msg: Message, actors: SequenceDiagramIR['actors
       : Math.max(fromActorAttr.width / 2 + toActorAttr.width / 2, textDimensions.width + 2 * conf.noteMargin)
     noteModel.startx = startx - noteModel.width + (fromActorAttr.width - conf.actorMargin) / 2
   } else if (msg.to === msg.from) {
-    textDimensions = utils.calculateTextDimensions(
+    textDimensions = calculateTextDimensions(
       // shouldWrap
       //   ? utils.wrapLabel(msg.text, Math.max(conf.noteWidth, actors[msg.from].width), noteFont(conf))
       //   : msg.text,
@@ -1355,7 +1320,7 @@ const calculateLoopBounds = function (messages: Message[], actors: SequenceDiagr
   let msgModel: MessageModel
 
   messages.forEach(function (msg) {
-    msg.id = utils.makeid(10)
+    msg.id = makeid(10)
     switch (msg.type) {
       case LINETYPE.LOOP_START:
       case LINETYPE.ALT_START:

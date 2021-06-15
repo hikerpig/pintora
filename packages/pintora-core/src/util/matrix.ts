@@ -6,6 +6,10 @@ export function createMat3() {
   return mat3.create() as number[]
 }
 
+export function createTranslation(x: number, y = 0) {
+  return mat3.fromTranslation(mat3.create(), [x, y])
+}
+
 export const transform = ext.transform
 
 export const translate = ext.leftTranslate

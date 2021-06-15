@@ -1,7 +1,7 @@
 import React, { useCallback } from 'react'
 import MonacoEditor from './MonacoEditor'
 import { useDispatch, connect } from 'react-redux'
-import slice, { State, actions } from 'src/live-editor/redux/slice'
+import { State, actions } from 'src/live-editor/redux/slice'
 import './Editor.less'
 
 interface Props {

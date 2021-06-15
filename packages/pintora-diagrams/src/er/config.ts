@@ -1,3 +1,5 @@
+import { PALETTE } from '../util/theme'
+
 export type ErConf = {
   diagramPadding: number
   layoutDirection: string
@@ -8,8 +10,9 @@ export type ErConf = {
 
   entityPadding: number
 
-  stroke: 'gray'
-  fill: 'honeydew'
+  stroke: string
+  fill: string
+  edgeColor: string
 
   fontSize: number
 
@@ -20,14 +23,17 @@ export const defaultConfig: ErConf = {
   diagramPadding: 20,
   layoutDirection: 'TB',
 
-  minEntityWidth: 100,
+  minEntityWidth: 90,
 
   minEntityHeight: 75,
 
   entityPadding: 15,
 
-  stroke: 'gray',
-  fill: 'honeydew',
+  // stroke: '#FF9900',
+  stroke: PALETTE.normalDark,
+  fill: PALETTE.orange,
+  // fill: 'transparent', // for debugging markers
+  edgeColor: PALETTE.normalDark,
 
   fontSize: 12,
 

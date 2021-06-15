@@ -42,6 +42,22 @@ sequenceDiagram
     John->Alice: Line example 6
 `)
 
+export const erExample: DiagramExample = {
+  name: 'ER Diagram',
+  description: 'Sample for erDiagram',
+  code: stripStartEmptyLines(`
+erDiagram
+  CUSTOMER ||--o{ ORDER : places
+  ORDER ||--|{ LINE-ITEM : contains
+  CUSTOMER }|..|{ DELIVERY-ADDRESS : uses
+  ORDER {
+    int orderNumber
+    string deliveryAddress
+  }
+`),
+}
+
 export const EXAMPLES = {
   sequence: sequenceExample,
+  er: erExample,
 }

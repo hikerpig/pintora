@@ -1,9 +1,11 @@
 import pintora, { GraphicsIR } from '@pintora/core'
-import { sequenceDiagram } from '@pintora/diagrams'
+import { DIAGRAMS } from '@pintora/diagrams'
 import { render, RenderOptions, BaseRenderer, rendererRegistry } from '@pintora/renderer'
 
 function initDiagrams() {
-  pintora.registerDiagram('sequenceDiagram', sequenceDiagram)
+  Object.keys(DIAGRAMS).forEach((name) => {
+    pintora.registerDiagram(name, DIAGRAMS[name])
+  })
 }
 
 initDiagrams()
