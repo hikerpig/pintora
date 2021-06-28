@@ -12,11 +12,12 @@ import {
   Path,
   safeAssign,
   mat3,
+  calculateTextDimensions,
+  makeid,
 } from '@pintora/core'
 import { db, SequenceDiagramIR, LINETYPE, Message, PLACEMENT, WrappedText } from './db'
 import { SequenceConf, defaultConfig, PALETTE } from './config'
 import { getBaseNote, drawArrowTo, drawCrossTo, getBaseText, makeMark, makeLoopLabelBox } from './artist-util'
-import { calculateTextDimensions, makeid } from '../util/text-util'
 
 let conf: SequenceConf = {
   ...defaultConfig,
