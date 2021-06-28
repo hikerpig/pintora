@@ -68,3 +68,6 @@ jspm_packages/
 lib/
 
 *.tsbuildinfo
+
+# Local Netlify folder
+.netlify
