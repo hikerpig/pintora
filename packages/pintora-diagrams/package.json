@@ -17,9 +17,7 @@
   "dependencies": {
     "@pintora/core": "*",
     "@pintora/dagre": "0.8.8",
-    "@pintora/graphlib": "2.2.1",
-    "ngraph.graph": "^19.1.0",
-    "webcola": "^3.4.0"
+    "@pintora/graphlib": "2.2.1"
   },
   "devDependencies": {
     "@types/jest": "^26.0.23",
