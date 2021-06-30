@@ -1,5 +1,7 @@
-const lightCodeTheme = require('prism-react-renderer/themes/github');
-const darkCodeTheme = require('prism-react-renderer/themes/dracula');
+const path = require('path')
+
+const lightCodeTheme = require('prism-react-renderer/themes/github')
+const darkCodeTheme = require('prism-react-renderer/themes/dracula')
 
 const SITE_URL = 'https://pintorajs.netlify.app'
 
@@ -18,7 +20,7 @@ module.exports = {
     navbar: {
       title: 'Pintora',
       logo: {
-        alt: 'Pintor Logo',
+        alt: 'Pintora Logo',
         src: 'img/logo.svg',
       },
       items: [
@@ -29,7 +31,7 @@ module.exports = {
           label: 'Tutorial',
         },
         // {to: '/blog', label: 'Blog', position: 'left'},
-        {to: `${SITE_URL}/live-editor`, label: 'Live Editor', position: 'right'},
+        { to: `${SITE_URL}/live-editor`, label: 'Live Editor', position: 'right' },
         {
           href: 'https://github.com/hikerpig/pintora',
           label: 'GitHub',
@@ -89,8 +91,7 @@ module.exports = {
       {
         docs: {
           sidebarPath: require.resolve('./sidebars.js'),
-          editUrl:
-            'https://github.com/hikerpig/pintora/edit/master/website/',
+          editUrl: 'https://github.com/hikerpig/pintora/edit/master/website/',
         },
         theme: {
           customCss: require.resolve('./src/css/custom.css'),
@@ -98,4 +99,19 @@ module.exports = {
       },
     ],
   ],
-};
+  themes: [
+    require.resolve('./plugins/docusaurus-theme-pintora/index.js'),
+  ],
+  plugins: [
+    [
+      'docusaurus-plugin-module-alias',
+      {
+        alias: {
+          '@components': path.resolve(__dirname, 'src/components'),
+        },
+      },
+    ],
+    'docusaurus-plugin-less',
+    require.resolve('./plugins/webpack5-plugin'),
+  ],
+}

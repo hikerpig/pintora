@@ -2,5 +2,7 @@
 sidebar_position: 1
 ---
 
-# Tutorial Intro
+# Intro
+
+Pintora is a javascript text-to-diagrams library that runs in both browser and node.js.
 
