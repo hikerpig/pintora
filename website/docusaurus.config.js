@@ -8,7 +8,7 @@ const SITE_URL = 'https://pintorajs.netlify.app'
 /** @type {import('@docusaurus/types').DocusaurusConfig} */
 module.exports = {
   title: 'Pintora',
-  tagline: 'Dinosaurs are cool',
+  tagline: 'An extensible text-to-diagrams library that works in both browser and node.js',
   url: SITE_URL,
   baseUrl: '/',
   onBrokenLinks: 'throw',

@@ -11,12 +11,24 @@ import './App.css'
 function App() {
   useEffect(() => {
     const params = new URLSearchParams(location.search)
-    const exampleName = params.get('example')
-    if (exampleName) {
-      const example = (EXAMPLES as any)[exampleName]
-      if (example) {
-        store.dispatch(actions.updateEditorCode({ code: example.code, syncToPreview: true }))
+    let code: string = ''
+    const encodedCode = params.get('code')
+    if (encodedCode) {
+      code = atob(encodedCode)
+      const newParams = new URLSearchParams(params)
+      newParams.delete('code')
+      history.replaceState(null, '', `?${newParams.toString()}`)
+    } else if (params.has('example')) {
+      const exampleName = params.get('example')
+      if (exampleName) {
+        const example = (EXAMPLES as any)[exampleName]
+        if (example) {
+          code = (EXAMPLES as any)[exampleName]
+        }
       }
+    }
+    if (code) {
+      store.dispatch(actions.updateEditorCode({ code, syncToPreview: true }))
     }
   }, [])
 
