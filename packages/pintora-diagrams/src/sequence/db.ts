@@ -194,7 +194,7 @@ class SequenceDB {
       type: LINETYPE.NOTE,
       placement: placement,
     })
-    // console.warn('addNote, message', actor, this.messages[this.messages.length - 1])
+    // console.log('addNote, message', actor, this.messages[this.messages.length - 1])
   }
 
   setTitle(titleWrap: WrappedText) {
@@ -239,12 +239,13 @@ class SequenceDB {
   setWrap(v: boolean) {}
 
   apply(param: ApplyParam | ApplyParam[]) {
-    logger.debug('apply', param)
+    if (!param) return
     if (param instanceof Array) {
       param.forEach(item => {
         this.apply(item)
       })
     } else {
+      logger.debug('apply', param)
       switch (param.type) {
         case 'addActor':
           db.addActor(param.actor, param.actor, param.description)

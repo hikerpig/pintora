@@ -1,0 +1,272 @@
+@{%
+import * as moo from 'moo'
+
+const LETTER_REGEXP = /[a-zA-Z]/;
+const isCharLetter= (char) => LETTER_REGEXP.test(char);
+
+// from moo issue: https://github.com/no-context/moo/issues/117
+function textToCaseInsensitiveRegex(text) {
+  const regexSource = text.split('').map((char) => {
+    if (isCharLetter(char)) {
+      return `[${char.toLowerCase()}${char.toUpperCase()}]`;
+    }
+
+    return char;
+  });
+
+  return new RegExp(regexSource.join(''));
+};
+
+let lexer = moo.states({
+  main: {
+    NEWLINE: { match: /\n/, lineBreaks: true },
+    SPACE: {match: /\s+/, lineBreaks: true},
+    AUTONUMBER: /autonumber/,
+    TITLE: /title/,
+    END: /end/,
+    SOLID_ARROW: /->>/,
+    DOTTED_ARROW: /-->>/,
+    SOLID_OPEN_ARROW: /->/,
+    DOTTED_OPEN_ARROW: /-->/,
+    SOLID_CROSS: /\-x/,
+    DOTTED_CROSS: /\-\-x/,
+    SOLID_POINT: /\-[\)]/,
+    DOTTED_POINT: /\-\-[\)]/,
+    _BOX: [
+      { match: textToCaseInsensitiveRegex('loop'), push: 'line', type: () => 'LOOP' },
+      { match: textToCaseInsensitiveRegex('opt'), push: 'line', type: () => 'OPT' },
+      { match: textToCaseInsensitiveRegex('alt'), push: 'line', type: () => 'ALT' },
+      { match: textToCaseInsensitiveRegex('else'), push: 'line', type: () => 'ELSE' },
+      { match: textToCaseInsensitiveRegex('par'), push: 'line', type: () => 'PAR' },
+      { match: textToCaseInsensitiveRegex('and'), push: 'line', type: () => 'AND' },
+    ],
+    PLUS: /\+/,
+    MINUS: /-/,
+    COMMA: /,/,
+    COLON: { match: /:/, push: 'line' },
+    NOTE: textToCaseInsensitiveRegex('note'),
+    _PLACEMENT: [
+      { match: /left\sof/, type: () => 'LEFT_OF' },
+      { match: /right\sof/, type: () => 'RIGHT_OF' },
+    ],
+    WORD: /(?:[a-zA-Z0-9_])+/,
+    OTHER: /.+/,
+  },
+  line: {
+    REST_OF_LINE: { match: /[^#\n;]+/, pop: 1 },
+  }
+})
+
+let yy
+
+export function setYY(v) {
+  yy = v
+}
+
+// token value
+function tv(token) {
+  return token.value
+}
+
+%}
+
+@preprocessor typescript
+@lexer lexer
+@builtin "string.ne"
+@builtin "whitespace.ne"
+
+start -> __ start
+	| "sequenceDiagram" document {%
+      function(d) {
+        yy.apply(d[1])
+        return d[1]
+      }
+    %}
+
+document -> null
+  | document line {%
+    (d) => {
+        // console.log('[doc line]', d)
+        return d[1]
+      }
+    %}
+
+line ->
+	  %SPACE:* statement {% (d) => {
+      // console.log('[line]', d)
+      return d[1]
+    } %}
+	| %NEWLINE
+
+statement ->
+	  "participant" actor "AS" %REST_OF_LINE %NEWLINE {%
+      function(d) {
+        yy.parseMessaage(d[3])
+        return d[1] 
+      }
+    %}
+	| "participant" _ actor %NEWLINE {% (d) => d[2] %}
+	| signal %NEWLINE {% (d) => d[0] %}
+	| %AUTONUMBER %NEWLINE {% (d) => yy.enableSequenceNumbers() %}
+	| "activate" _ actor %NEWLINE {%
+      function(d) {
+        return {
+          type: 'activeStart', signalType: yy.LINETYPE.ACTIVE_START, actor: d[2]
+        }
+      }
+    %}
+	| "deactivate" _ actor %NEWLINE {%
+      function(d) {
+        return {
+          type: 'activeEnd', signalType: yy.LINETYPE.ACTIVE_END, actor: d[2]
+        }
+      }
+    %}
+	| note_statement %NEWLINE {% (d) => d[0] %}
+	| %TITLE textWithColon %NEWLINE {% (d) => ({ type:'setTitle', text: d[1] }) %}
+	| %LOOP %REST_OF_LINE document _ %END {%
+      function(d) {
+        // console.log('[loop]', d)
+        const loopText = yy.parseMessage(tv(d[1]))
+        const result = [
+          {type: 'loopStart', loopText, signalType: yy.LINETYPE.LOOP_START},
+          d[2],
+          {type: 'loopEnd', loopText, signalType: yy.LINETYPE.LOOP_END },
+        ]
+        return result
+      }
+    %}
+	# {
+	# 	$3.unshift({type: 'rectStart', color:yy.parseMessage($2), signalType: yy.LINETYPE.RECT_START });
+	# 	$3.push({type: 'rectEnd', color:yy.parseMessage($2), signalType: yy.LINETYPE.RECT_END });
+	# 	$$=$3;}
+	| %OPT %REST_OF_LINE document _ %END {%
+      function(d) {
+        // console.log('[opt]', d)
+        const optText = yy.parseMessage(tv(d[1]))
+        const result = [
+          {type: 'optStart', optText, signalType: yy.LINETYPE.OPT_START},
+          d[2],
+          {type: 'optEnd', optText, signalType: yy.LINETYPE.OPT_END },
+        ]
+        return result
+      }
+    %}
+	| %ALT %REST_OF_LINE else_sections _ %END {%
+    function(d) {
+      // console.log('[alt]')
+      const altText = yy.parseMessage(tv(d[1]))
+      const result = [
+        {type: 'altStart', altText, signalType: yy.LINETYPE.ALT_START},
+        d[2],
+        {type: 'altEnd', altText, signalType: yy.LINETYPE.ALT_END },
+      ]
+      return result
+    }
+  %}
+	| %PAR %REST_OF_LINE par_sections _ %END {%
+    function(d) {
+      const parText = yy.parseMessage(tv(d[1]))
+      const result = [
+        {type: 'parStart', parText, signalType: yy.LINETYPE.PAR_START},
+        d[2],
+        {type: 'parEnd', parText, signalType: yy.LINETYPE.PAR_END },
+      ]
+      return {}
+    }
+  %}
+
+signaltype ->
+	  %SOLID_OPEN_ARROW  {% (d) => yy.LINETYPE.SOLID_OPEN %}
+	| %DOTTED_OPEN_ARROW {% (d) => yy.LINETYPE.DOTTED_OPEN %}
+	| %SOLID_ARROW       {% (d) => yy.LINETYPE.SOLID %}
+	| %DOTTED_ARROW      {% (d) => yy.LINETYPE.DOTTED %}
+	| %SOLID_CROSS       {% (d) => yy.LINETYPE.SOLID_CROSS %}
+	| %DOTTED_CROSS      {% (d) => yy.LINETYPE.DOTTED_CROSS %}
+	| %SOLID_POINT       {% (d) => yy.LINETYPE.SOLID_POINT %}
+	| %DOTTED_POINT      {% (d) => yy.LINETYPE.DOTTED_POINT %}
+
+signal ->
+	  actor signaltype %PLUS actor _ textWithColon {%
+      function(d) {
+        return [
+          d[0], d[3],
+          {type: 'addMessage', from: d[0].actor, to: d[3].actor, signalType: d[1], msg: d[5]},
+          {type: 'activeStart', signalType: yy.LINETYPE.ACTIVE_START, actor: d[3]}
+        ]
+      }
+    %}
+	| actor signaltype %MINUS actor _ textWithColon {%
+      function(d) {
+        return [
+          d[0], d[3],
+          {type: 'addMessage', from: d[0].actor, to: d[3].actor, signalType: d[1], msg: d[5]},
+          {type: 'activeEnd', signalType: yy.LINETYPE.ACTIVE_END, actor: d[3]}
+        ]
+      }
+    %}
+	| actor signaltype actor _ textWithColon {%
+      function(d) {
+        // console.log('got message', d)
+        return [
+          d[0], d[2],
+          {type: 'addMessage', from: d[0].actor, to: d[2].actor, signalType: d[1], msg: d[4]},
+        ]
+      }
+    %}
+
+actor -> %WORD {% (d) => {
+  // console.log('got actor', d)
+  return ({ type: 'addActor', actor: tv(d[0]) })
+} %}
+
+textWithColon -> %COLON _ %REST_OF_LINE {%
+  function(d) {
+    return yy.parseMessage(tv(d[2]).trim())
+  }
+%}
+
+placement ->
+	  %LEFT_OF  {% (d) => yy.PLACEMENT.LEFTOF %}
+	| %RIGHT_OF {% (d) => yy.PLACEMENT.RIGHTOF %}
+
+note_statement ->
+	  %NOTE _ placement _ actor _ textWithColon {%
+      function(d) {
+        return [d[4], { type:'addNote', placement: d[2], actor: d[4].actor, text: d[6] }]
+      }
+    %}
+	| %NOTE _ "over" _ actor_pair _ textWithColon {%
+      function(d) {
+        // console.log('[note over]', d)
+        const actors = [d[4][0].actor, d[4][1].actor]
+        return [
+          d[4], {type:'addNote', placement: yy.PLACEMENT.OVER, actor: actors, text: d[6]}
+        ]
+      }
+    %}
+
+actor_pair -> actor %COMMA actor {% (d) => ([d[0], d[2]]) %}
+	| actor {% id %}
+
+else_sections -> document
+	| document _ %ELSE %REST_OF_LINE else_sections {%
+    function(d) {
+      // console.log('[else_sections]', d)
+      return d[0].concat([
+        {type: 'else', altText: yy.parseMessage(tv(d[3])), signalType: yy.LINETYPE.ALT_ELSE},
+        d[4],
+      ])
+    }
+  %}
+
+par_sections ->
+	  document
+	| document _ %AND %REST_OF_LINE par_sections {%
+    function(d) {
+      return d[0].concat([
+        {type: 'and', altText: yy.parseMessage(tv(d[3])), signalType: yy.LINETYPE.PAR_AND},
+        d[4],
+      ])
+    }
+  %}

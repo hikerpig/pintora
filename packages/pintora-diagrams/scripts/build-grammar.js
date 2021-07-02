@@ -1,7 +1,10 @@
 const shellExec = require('shell-exec')
 const path = require('path')
 
-const grammarFiles = [{ input: 'src/er/parser/erDiagram.ne', output: 'src/er/parser/erDiagram.ts' }]
+const grammarFiles = [
+  { input: 'src/er/parser/erDiagram.ne', output: 'src/er/parser/erDiagram.ts' },
+  { input: 'src/sequence/parser/sequenceDiagram.ne', output: 'src/sequence/parser/sequenceDiagram.ts' },
+]
 
 grammarFiles.forEach(({ input, output }) => {
   shellExec(`npx nearleyc ${path.join(__dirname, '..', input)} -o ${path.join(__dirname, '..', output)}`)
