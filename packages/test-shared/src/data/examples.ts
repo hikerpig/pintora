@@ -19,8 +19,12 @@ sequenceDiagram
   end
   Pintora-->>User: your figure here
   deactivate Pintora
-  Note over User,Pintora: Note over
-  Note right of User: Note aside actor
+  @note over User,Pintora: note over
+  @note right of User: note aside actor
+  @note right of User
+  multiline note
+  is possible
+  @end_note
 `),
 }
 

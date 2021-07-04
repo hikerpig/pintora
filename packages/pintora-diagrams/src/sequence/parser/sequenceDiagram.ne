@@ -22,8 +22,12 @@ let lexer = moo.states({
     NEWLINE: { match: /\n/, lineBreaks: true },
     SPACE: {match: /\s+/, lineBreaks: true},
     AUTONUMBER: /autonumber/,
-    TITLE: /title/,
-    END: /end/,
+    TITLE: 'title',
+    // END_NOTE: textToCaseInsensitiveRegex('end note'),
+    // END: /end/,
+    START_NOTE: textToCaseInsensitiveRegex('@note'),
+    END_NOTE: textToCaseInsensitiveRegex('@end_note'),
+    BACKQUOTED_TEXT: /`[^`]*`/,
     SOLID_ARROW: /->>/,
     DOTTED_ARROW: /-->>/,
     SOLID_OPEN_ARROW: /->/,
@@ -44,17 +48,16 @@ let lexer = moo.states({
     MINUS: /-/,
     COMMA: /,/,
     COLON: { match: /:/, push: 'line' },
-    NOTE: textToCaseInsensitiveRegex('note'),
     _PLACEMENT: [
       { match: /left\sof/, type: () => 'LEFT_OF' },
       { match: /right\sof/, type: () => 'RIGHT_OF' },
     ],
-    WORD: /(?:[a-zA-Z0-9_])+/,
-    OTHER: /.+/,
+    WORD: { match: /(?:[a-zA-Z0-9_])+/ },
+    // OTHER: /.+/,
   },
   line: {
     REST_OF_LINE: { match: /[^#\n;]+/, pop: 1 },
-  }
+  },
 })
 
 let yy
@@ -122,12 +125,15 @@ statement ->
         }
       }
     %}
-	| note_statement %NEWLINE {% (d) => d[0] %}
+	| note_statement {% (d) => {
+    // console.log('[note_a]', d)
+    return d[0]
+  } %}
 	| %TITLE textWithColon %NEWLINE {% (d) => ({ type:'setTitle', text: d[1] }) %}
-	| %LOOP %REST_OF_LINE document _ %END {%
+	| %LOOP %REST_OF_LINE document _ "end" {%
       function(d) {
         // console.log('[loop]', d)
-        const loopText = yy.parseMessage(tv(d[1]))
+        const loopText = yy.parseMessage(tv(d[1]) || '')
         const result = [
           {type: 'loopStart', loopText, signalType: yy.LINETYPE.LOOP_START},
           d[2],
@@ -140,7 +146,7 @@ statement ->
 	# 	$3.unshift({type: 'rectStart', color:yy.parseMessage($2), signalType: yy.LINETYPE.RECT_START });
 	# 	$3.push({type: 'rectEnd', color:yy.parseMessage($2), signalType: yy.LINETYPE.RECT_END });
 	# 	$$=$3;}
-	| %OPT %REST_OF_LINE document _ %END {%
+	| %OPT %REST_OF_LINE document _ "end" {%
       function(d) {
         // console.log('[opt]', d)
         const optText = yy.parseMessage(tv(d[1]))
@@ -152,7 +158,7 @@ statement ->
         return result
       }
     %}
-	| %ALT %REST_OF_LINE else_sections _ %END {%
+	| %ALT %REST_OF_LINE else_sections _ "end" {%
     function(d) {
       // console.log('[alt]')
       const altText = yy.parseMessage(tv(d[1]))
@@ -164,7 +170,7 @@ statement ->
       return result
     }
   %}
-	| %PAR %REST_OF_LINE par_sections _ %END {%
+	| %PAR %REST_OF_LINE par_sections _ "end" {%
     function(d) {
       const parText = yy.parseMessage(tv(d[1]))
       const result = [
@@ -226,19 +232,39 @@ textWithColon -> %COLON _ %REST_OF_LINE {%
   }
 %}
 
+multilineNoteText ->
+    (%WORD|%SPACE|%NEWLINE):* %END_NOTE {%
+      function(d) {
+        // console.log('[multiline text]', d)
+        const v = d[0].map(l => {
+          return l.map(o => tv(o))
+        }).join('')
+        return v
+      }
+    %}
+
 placement ->
 	  %LEFT_OF  {% (d) => yy.PLACEMENT.LEFTOF %}
 	| %RIGHT_OF {% (d) => yy.PLACEMENT.RIGHTOF %}
 
 note_statement ->
-	  %NOTE _ placement _ actor _ textWithColon {%
+	  ("note"|%START_NOTE) _ placement _ actor _ textWithColon %NEWLINE {%
       function(d) {
+        // console.log('[note one]\n', d[5])
         return [d[4], { type:'addNote', placement: d[2], actor: d[4].actor, text: d[6] }]
       }
     %}
-	| %NOTE _ "over" _ actor_pair _ textWithColon {%
+	| ("note"|%START_NOTE) _ placement _ actor multilineNoteText {%
       function(d) {
-        // console.log('[note over]', d)
+        // console.log('[note multi]\n', d[5])
+        const text = d[5]
+        const message = yy.parseMessage(text)
+        return [message, { type:'addNote', placement: d[2], actor: d[4].actor, text: message }]
+      }
+    %}
+	| ("note"|%START_NOTE) _ "over" _ actor_pair _ textWithColon %NEWLINE {%
+      function(d) {
+        // console.log('[note over]\n', d[5])
         const actors = [d[4][0].actor, d[4][1].actor]
         return [
           d[4], {type:'addNote', placement: yy.PLACEMENT.OVER, actor: actors, text: d[6]}

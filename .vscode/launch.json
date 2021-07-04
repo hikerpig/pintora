@@ -5,6 +5,24 @@
   "version": "0.2.0",
   "configurations": [
     {
+      "type": "node",
+      "name": "vscode-jest-tests",
+      "request": "launch",
+      "program": "${workspaceFolder}/node_modules/.bin/jest",
+      "args": [
+        "--runInBand",
+        "--watchAll=false",
+        "${fileBasenameNoExtension}"
+      ],
+      "cwd": "${workspaceFolder}/packages/pintora-diagrams",
+      "console": "integratedTerminal",
+      "internalConsoleOptions": "neverOpen",
+      "disableOptimisticBPs": true,
+      "windows": {
+        "program": "${workspaceFolder}/node_modules/jest/bin/jest"
+      }
+    },
+    {
       "name": "Launch pintora cli",
       "program": "${workspaceFolder}/packages/pintora-cli/bin/pintora",
       "request": "launch",
