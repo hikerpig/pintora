@@ -7,6 +7,24 @@ describe('sequence parser', () => {
     db.clear()
   })
 
+  it('can parse unicode chars', () => {
+    const backquoteExample = stripStartEmptyLines(`
+sequenceDiagram
+  autonumber
+  User->>+Pintora: 帮我画张时序图
+  activate Pintora
+  alt DSL 正确
+    Pintora->>User: 返回绘制好的图表
+  else DSL 有误
+    Pintora->>User: 返回报错信息
+  end
+  deactivate Pintora`)
+    parse(backquoteExample)
+    const result = db.getDiagramIR()
+    expect(result.messages.length).toBeGreaterThan(0)
+    // console.log(result.messages)
+  })
+
   it('can parse singleline note', () => {
     const backquoteExample = `sequenceDiagram
     @note right of User: singleline note
@@ -37,5 +55,4 @@ sequenceDiagram
       text: 'aaa note\n  bbb',
     })
   })
-
 })

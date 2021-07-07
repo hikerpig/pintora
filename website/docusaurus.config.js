@@ -16,6 +16,10 @@ module.exports = {
   favicon: 'img/favicon.ico',
   organizationName: 'hikerpig', // Usually your GitHub org/user name.
   projectName: 'pintora', // Usually your repo name.
+  i18n: {
+    defaultLocale: 'en',
+    locales: ['en', 'zh-CN']
+  },
   themeConfig: {
     navbar: {
       title: 'Pintora',

@@ -1,0 +1,18 @@
+{
+  "title": {
+    "message": "Pintora",
+    "description": "The title in the navbar"
+  },
+  "item.label.Tutorial": {
+    "message": "教程",
+    "description": "Navbar item with label Tutorial"
+  },
+  "item.label.Live Editor": {
+    "message": "在线编辑器",
+    "description": "Navbar item with label Live Editor"
+  },
+  "item.label.GitHub": {
+    "message": "GitHub",
+    "description": "Navbar item with label GitHub"
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "version.label": {
+    "message": "Next",
+    "description": "The label for version current"
+  },
+  "sidebar.tutorialSidebar.category.Diagrams": {
+    "message": "图表语法",
+    "description": "The label for category Diagrams in sidebar tutorialSidebar"
+  }
+}

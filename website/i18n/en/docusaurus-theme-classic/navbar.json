@@ -1,0 +1,18 @@
+{
+  "title": {
+    "message": "Pintora",
+    "description": "The title in the navbar"
+  },
+  "item.label.Tutorial": {
+    "message": "Tutorial",
+    "description": "Navbar item with label Tutorial"
+  },
+  "item.label.Live Editor": {
+    "message": "Live Editor",
+    "description": "Navbar item with label Live Editor"
+  },
+  "item.label.GitHub": {
+    "message": "GitHub",
+    "description": "Navbar item with label GitHub"
+  }
+}
