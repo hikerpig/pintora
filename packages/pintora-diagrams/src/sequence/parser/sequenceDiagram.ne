@@ -161,28 +161,34 @@ statement ->
       }
     %}
 	| %ALT %REST_OF_LINE else_sections _ "end" {%
-    function(d) {
-      // console.log('[alt]')
-      const altText = yy.parseMessage(tv(d[1]))
-      const result = [
-        {type: 'altStart', altText, signalType: yy.LINETYPE.ALT_START},
-        d[2],
-        {type: 'altEnd', altText, signalType: yy.LINETYPE.ALT_END },
-      ]
-      return result
-    }
+      function(d) {
+        // console.log('[alt]')
+        const altText = yy.parseMessage(tv(d[1]))
+        const result = [
+          {type: 'altStart', altText, signalType: yy.LINETYPE.ALT_START},
+          d[2],
+          {type: 'altEnd', altText, signalType: yy.LINETYPE.ALT_END },
+        ]
+        return result
+      }
   %}
 	| %PAR %REST_OF_LINE par_sections _ "end" {%
-    function(d) {
-      const parText = yy.parseMessage(tv(d[1]))
-      const result = [
-        {type: 'parStart', parText, signalType: yy.LINETYPE.PAR_START},
-        d[2],
-        {type: 'parEnd', parText, signalType: yy.LINETYPE.PAR_END },
-      ]
-      return {}
-    }
-  %}
+      function(d) {
+        const parText = yy.parseMessage(tv(d[1]))
+        const result = [
+          {type: 'parStart', parText, signalType: yy.LINETYPE.PAR_START},
+          d[2],
+          {type: 'parEnd', parText, signalType: yy.LINETYPE.PAR_END },
+        ]
+        return {}
+      }
+    %}
+  | "==" __ (%WORD | %SPACE):+ __ "==" {%
+      function(d) {
+        const text = d[2].map(o => tv(o[0])).join('').trim()
+        return { type: 'addDivider', text, signalType: yy.LINETYPE.DIVIDER }
+      }
+    %}
 
 signaltype ->
 	  %SOLID_OPEN_ARROW  {% (d) => yy.LINETYPE.SOLID_OPEN %}

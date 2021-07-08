@@ -1,4 +1,4 @@
-import { MarkAttrs } from '@pintora/core'
+import { Mark, MarkAttrs } from '@pintora/core'
 import { PALETTE } from '../util/theme'
 
 export {
@@ -42,6 +42,8 @@ export type SequenceConf = {
   actorStyle: Partial<MarkAttrs>
   actorTextColor: string
 
+  dividerFontWeight: MarkAttrs['fontWeight']
+
   showSequenceNumbers: boolean
 }
 
@@ -74,6 +76,8 @@ export const defaultConfig: SequenceConf = {
     stroke: THEME.textColor,
   },
   actorTextColor: PALETTE.normalDark,
+
+  dividerFontWeight: 600,
 
   showSequenceNumbers: false,
 }

@@ -14,6 +14,7 @@ import {
   mat3,
   calculateTextDimensions,
   makeid,
+  IFont,
 } from '@pintora/core'
 import { db, SequenceDiagramIR, LINETYPE, Message, PLACEMENT, WrappedText } from './db'
 import { SequenceConf, defaultConfig, PALETTE } from './config'
@@ -110,17 +111,6 @@ const sequenceArtist: IDiagramArtist<SequenceDiagramIR> = {
           model.bumpVerticalPos(loopModel.stopy - model.verticalPos)
           model.loops.push(loopModel)
           break
-        // case LINETYPE.RECT_START:
-        //   adjustLoopHeightForWrap(loopWidths, msg, conf.boxMargin, conf.boxMargin, message =>
-        //     model.newLoop(undefined, message.message),
-        //   )
-        //   break
-        // case LINETYPE.RECT_END:
-        //   loopModel = model.endLoop()
-        //   svgDraw.drawBackgroundRect(diagram, loopModel)
-        //   model.models.addLoop(loopModel)
-        //   model.bumpVerticalPos(loopModel.stopy - model.getVerticalPos())
-        //   break
         case LINETYPE.OPT_START:
           adjustLoopHeightForWrap(
             loopWidths,
@@ -183,6 +173,11 @@ const sequenceArtist: IDiagramArtist<SequenceDiagramIR> = {
           drawLoopTo(rootMark, loopModel, 'par', conf)
           model.bumpVerticalPos(loopModel.stopy - model.verticalPos)
           model.loops.push(loopModel)
+          break
+        case LINETYPE.DIVIDER:
+          msgModel = model.dividerMap.get(msg.id)
+          drawDividerTo(msgModel, rootMark)
+          // model.bumpVerticalPos(msgModel.stopy - model.verticalPos)
           break
         default:
           try {
@@ -309,6 +304,7 @@ class Model {
   maxMessageWidthPerActor: { [key: string]: number } = {}
   noteModelMap = new Map<string, MessageModel>()
   loops: LoopModel[]
+  dividerMap = new Map<string, MessageModel>()
 
   init() {
     this.sequenceItems = []
@@ -332,6 +328,7 @@ class Model {
     this.messageMarks = []
     this.maxMessageWidthPerActor = {}
     this.noteModelMap.clear()
+    this.dividerMap.clear()
   }
   updateVal(obj, key, val, fun) {
     if (typeof obj[key] === 'undefined') {
@@ -536,7 +533,6 @@ const drawMessage = function (ir: SequenceDiagramIR, msgModel: MessageModel): Dr
   const { startx, stopx, starty, text, fromBound, type, sequenceIndex } = msgModel
   const linesCount = splitBreaks(text).length
   const textDims = calculateTextDimensions(text, messageFont(conf))
-  // const textWidth = textDims.width
   const lineHeight = textDims.height / linesCount
 
   model.bumpVerticalPos(lineHeight)
@@ -732,6 +728,69 @@ const drawMessage = function (ir: SequenceDiagramIR, msgModel: MessageModel): Dr
       ].filter(o => Boolean(o)) as Mark[],
     },
   }
+}
+
+function drawDividerTo(divider: MessageModel, container: Group) {
+  model.bumpVerticalPos(conf.boxMargin)
+  const dividerTextFont = {
+    ...messageFont(conf),
+    fontWeight: conf.dividerFontWeight,
+  }
+
+  const bounds = model.getBounds()
+  const starty = model.verticalPos
+  const startx = bounds.startx
+
+  const { width, height } = divider
+
+  const padding = conf.wrapPadding
+
+  const rectWidth = width + conf.wrapPadding * 2
+  const rectX = startx + (bounds.stopx - rectWidth) / 2
+
+  const rect = makeMark('rect', {
+    x: rectX,
+    y: starty,
+    width: rectWidth,
+    height: height + conf.wrapPadding * 2,
+    fill: '#DDD',
+    stroke: 'black',
+    lineWidth: 2,
+  })
+
+  const textMark = makeMark('text', {
+    text: divider.text,
+    fill: conf.actorTextColor,
+    x: rectX + width / 2 + padding,
+    y: starty + height / 2 + padding,
+    textAlign: 'center',
+    textBaseline: 'middle',
+    ...dividerTextFont,
+  })
+
+  const lineGap = 3
+  const line1Y = starty + rect.attrs.height / 2 - lineGap / 2
+  const line2Y = line1Y + lineGap
+  const line1 = makeMark('line', {
+    x1: 0,
+    y1: line1Y,
+    x2: bounds.stopx,
+    y2: line1Y,
+    stroke: 'black',
+  })
+  const line2 = makeMark('line', {
+    ...line1.attrs,
+    y1: line2Y,
+    y2: line2Y,
+  })
+
+  const g = makeMark('group', {}, {
+    children: [line1, line2, rect, textMark],
+    class: 'divider'
+  })
+  container.children.push(g)
+
+  model.bumpVerticalPos(conf.boxMargin + 2 * padding)
 }
 
 /**
@@ -1247,7 +1306,7 @@ type NoteModel = {
   toBound?: number
 }
 
-const buildNoteModel = function (msg: Message, actors: SequenceDiagramIR['actors']) {
+const buildNoteModel = function (msg: Message) {
   // console.log('build note model', msg)
   const fromActorAttr = model.actorAttrsMap.get(msg.from)
   const toActorAttr = model.actorAttrsMap.get(msg.to)
@@ -1338,10 +1397,9 @@ const calculateLoopBounds = function (messages: Message[], actors: SequenceDiagr
       case LINETYPE.ALT_ELSE:
       case LINETYPE.PAR_AND:
         if (msg.text) {
-          current = stack.pop()
+          current = stack[stack.length - 1]
           loops[current.id] = current
           loops[msg.id] = current
-          stack.push(current)
         }
         break
       case LINETYPE.LOOP_END:
@@ -1378,7 +1436,7 @@ const calculateLoopBounds = function (messages: Message[], actors: SequenceDiagr
     }
     const isNote = msg.placement !== undefined
     if (isNote) {
-      noteModel = buildNoteModel(msg, actors)
+      noteModel = buildNoteModel(msg)
       model.noteModelMap.set(msg.id, noteModel)
       stack.forEach(stk => {
         current = stk
@@ -1386,6 +1444,9 @@ const calculateLoopBounds = function (messages: Message[], actors: SequenceDiagr
         current.to = Math.max(current.to, noteModel.startx + noteModel.width)
         current.width = Math.max(current.width, Math.abs(current.from - current.to)) - conf.labelBoxWidth
       })
+    } else if (msg.type === LINETYPE.DIVIDER) {
+      const dividerModel = buildMessageModel(msg)
+      model.dividerMap.set(msg.id, dividerModel)
     } else {
       msgModel = buildMessageModel(msg)
       model.msgModelMap.set(msg.id, msgModel)
@@ -1412,5 +1473,6 @@ const calculateLoopBounds = function (messages: Message[], actors: SequenceDiagr
   logger.debug('Loop type widths:', loops)
   return loops
 }
+
 
 export default sequenceArtist

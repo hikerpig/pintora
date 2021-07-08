@@ -25,6 +25,7 @@ sequenceDiagram
   multiline note
   is possible
   @end_note
+  == Divider ==
 `),
 }
 

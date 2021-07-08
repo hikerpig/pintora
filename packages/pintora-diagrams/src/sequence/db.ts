@@ -31,6 +31,7 @@ export enum LINETYPE {
   RECT_END = 23,
   SOLID_POINT = 24,
   DOTTED_POINT = 25,
+  DIVIDER = 26,
 }
 
 export const ARROWTYPE = {
@@ -300,6 +301,9 @@ class SequenceDB {
         case 'parEnd':
           db.addSignalWithoutActor(undefined, param.signalType)
           break
+        case 'addDivider':
+          db.addSignalWithoutActor({ text: param.text, wrap: false }, param.signalType)
+          break
       }
     }
   }
@@ -406,6 +410,11 @@ type ApplyParam =
   | {
       type: 'altEnd'
       signalType: LINETYPE
+    }
+  | {
+      type: 'addDivider'
+      signalType: LINETYPE
+      text: string
     }
 
 export {

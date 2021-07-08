@@ -55,4 +55,20 @@ sequenceDiagram
       text: 'aaa note\n  bbb',
     })
   })
+
+  it('can parse divider', () => {
+    const example = stripStartEmptyLines(`
+sequenceDiagram
+  Alice-->Bob: hello
+  == 1 second later ==
+  Bob-->Alice: hello there
+    `)
+    parse(example)
+    const result = db.getDiagramIR()
+    expect(result.messages.length).toEqual(3)
+    expect(result.messages[1]).toMatchObject({
+      text: '1 second later',
+    })
+  })
+
 })
