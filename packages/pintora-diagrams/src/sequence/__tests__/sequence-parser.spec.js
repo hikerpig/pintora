@@ -11,12 +11,12 @@ describe('sequence parser', () => {
     const backquoteExample = stripStartEmptyLines(`
 sequenceDiagram
   autonumber
-  User->>+Pintora: 帮我画张时序图
+  用户->>+Pintora: 帮我画张时序图
   activate Pintora
   alt DSL 正确
-    Pintora->>User: 返回绘制好的图表
+    Pintora->>用户: 返回绘制好的图表
   else DSL 有误
-    Pintora->>User: 返回报错信息
+    Pintora->>用户: 返回报错信息
   end
   deactivate Pintora`)
     parse(backquoteExample)

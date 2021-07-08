@@ -5,5 +5,18 @@ title: Sequence Diagram
 ```pintora play
 sequenceDiagram
   autonumber
-  User->>+Pintora: render this
+  用户->>+Pintora: 帮我画张时序图（图表 DSL）
+  activate Pintora
+  Pintora->>Pintora: 解析 DSL，绘制图像
+  alt DSL 正确
+    Pintora->>用户: 返回绘制好的图表
+  else DSL 有误
+    Pintora->>用户: 返回报错信息
+  end
+  deactivate Pintora
+  @note left of Pintora
+  渲染目标不同，结果媒介会有所不同
+  1. 浏览器，可直接渲染到页面上 svg / canvas
+  2. Node.js，默认 canvas，输出 PNG 位图
+  @end_note
 ```

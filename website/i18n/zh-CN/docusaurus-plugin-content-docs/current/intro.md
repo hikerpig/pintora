@@ -10,19 +10,6 @@ Pintora 是一个可在浏览器和 Node.js 环境下运行的 Javascript 文字
 
 通过标准化的图形展示，表达复杂的思想结构和意图，一图胜千言。
 
-```pintora
-sequenceDiagram
-  autonumber
-  User->>+Pintora: 帮我画张时序图
-  activate Pintora
-  alt DSL 正确
-    Pintora->>User: 返回绘制好的图表
-  else DSL 有误
-    Pintora->>User: 返回报错信息
-  end
-  deactivate Pintora
-```
-
 ## 特性
 
 - 在浏览器端，支持 SVG 和 Canvas 输出
@@ -37,6 +24,7 @@ sequenceDiagram
 
 ## 实现你自己的图表
 
-通过合理的分层和抽象，为图表作者需要实现的 text-to-diagram 过程建立一套从 DSL 解析到图形绘制的简化工具链。
+Pintora 通过合理的分层和抽象，为图表作者建立一套从 DSL 解析到图形绘制的简化工具链。
 
-- 可以基于 pintora 提供的图形表示格式 (GraphicsIR) 构建自己的图表渲染逻辑
+- 可使用任意 parser 库实现 DSL 解析，推荐使用 Nearley.js
+- 可基于 pintora 提供的图形表示格式 (GraphicsIR) 构建自己的图表渲染逻辑
