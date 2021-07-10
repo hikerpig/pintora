@@ -259,7 +259,7 @@ class SequenceDB {
         case 'addNote':
           db.addNote(param.actor, param.placement, param.text)
           break
-        case 'addMessage':
+        case 'addSignal':
           db.addSignal(param.from, param.to, param.msg, param.signalType)
           break
         case 'loopStart':
@@ -355,7 +355,7 @@ type ApplyParam =
       text: WrappedText
     }
   | {
-      type: 'addMessage'
+      type: 'addSignal'
       from: { actor: string }
       to: { actor: string }
       msg: WrappedText
@@ -427,9 +427,6 @@ export default {
   addSignal: db.addSignal,
   // setWrap,
   enableSequenceNumbers,
-  // getActorKeys,
-  // getTitle,
-  // getTitleWrapped,
   parseMessage: db.parseMessage,
   LINETYPE,
   ARROWTYPE,

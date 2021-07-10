@@ -38,7 +38,6 @@ enum LineEndType {
 const sequenceArtist: IDiagramArtist<SequenceDiagramIR> = {
   draw(ir, config?) {
     // conf = configApi.getConfig().sequence
-    // db.setWrap(conf.wrap)
     model.init()
     logger.debug(`C:${JSON.stringify(conf, null, 2)}`)
 
@@ -177,7 +176,6 @@ const sequenceArtist: IDiagramArtist<SequenceDiagramIR> = {
         case LINETYPE.DIVIDER:
           msgModel = model.dividerMap.get(msg.id)
           drawDividerTo(msgModel, rootMark)
-          // model.bumpVerticalPos(msgModel.stopy - model.verticalPos)
           break
         default:
           try {
@@ -189,7 +187,7 @@ const sequenceArtist: IDiagramArtist<SequenceDiagramIR> = {
             msgModel.starty = model.verticalPos
             // console.log('msgModel starty', msgModel, model.verticalPos)
             msgModel.sequenceIndex = sequenceIndex
-            rootMark.children.push(drawMessage(ir, msgModel).mark)
+            rootMark.children.push(drawMessage(msgModel).mark)
             model.messageMarks.push(msgModel)
           } catch (e) {
             logger.error('error while drawing message', e)
@@ -318,7 +316,6 @@ class Model {
     }
     this.verticalPos = 0
     this.loops = []
-    // setConf(db.getConfig())
   }
   clear() {
     this.activations = []
@@ -528,7 +525,7 @@ function splitBreaks(text) {
 /**
  * Draws a message
  */
-const drawMessage = function (ir: SequenceDiagramIR, msgModel: MessageModel): DrawResult<Group> {
+const drawMessage = function (msgModel: MessageModel): DrawResult<Group> {
   model.bumpVerticalPos(conf.boxMargin)
   const { startx, stopx, starty, text, fromBound, type, sequenceIndex } = msgModel
   const linesCount = splitBreaks(text).length
@@ -854,7 +851,6 @@ export const drawActors = function (
   actorKeys: string[],
   opts: DrawActorsOptions,
 ): { marks: Mark[] } {
-  // console.log('drawActors', verticalPos)
   // Draw the actors
   let prevWidth = 0
   let prevMargin = 0
@@ -873,7 +869,11 @@ export const drawActors = function (
     } else {
       attrs = model.actorAttrsMap.get(key) || { ...conf.actorStyle }
     }
-    const textAttrs: Text['attrs'] = { fill: conf.actorTextColor, text: actor.name, ...(actorFont(conf) as any) }
+    const textAttrs: Text['attrs'] = {
+      fill: conf.actorTextColor,
+      text: actor.description,
+      ...(actorFont(conf) as any)
+    }
 
     // Add some rendering data to the object
     safeAssign(attrs, {

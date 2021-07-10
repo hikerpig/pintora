@@ -2,6 +2,16 @@
 title: Sequence Diagram
 ---
 
+> 序列图（Sequence Diagram），亦称为循序图、时序图，是一种UML行为图。描述物件在时间序列中的交叉作用。序列图会描绘在此情境下有关的物件，以及此物件和其他物件交换讯息的顺序。
+> <cite><a href="https://www.wikiwand.com/zh-hans/%E6%97%B6%E5%BA%8F%E5%9B%BE">维基百科</a></cite>
+
+时序图基于 Mermaid 8.9 ，并加上了一些新的语法。
+
+- [多行注释](#给消息添加注释)
+- [分隔符](#分隔符)
+
+## 简单示意
+
 ```pintora play
 sequenceDiagram
   autonumber
@@ -9,9 +19,9 @@ sequenceDiagram
   activate Pintora
   Pintora->>Pintora: 解析 DSL，绘制图像
   alt DSL 正确
-    Pintora->>用户: 返回绘制好的图表
+    Pintora->>用户: 返回绘制好的图表
   else DSL 有误
-    Pintora->>用户: 返回报错信息
+    Pintora->>用户: 返回报错信息
   end
   deactivate Pintora
   @note left of Pintora
@@ -19,4 +29,59 @@ sequenceDiagram
   1. 浏览器，可直接渲染到页面上 svg / canvas
   2. Node.js，默认 canvas，输出 PNG 位图
   @end_note
+```
+
+## 消息样式
+
+可使用标记给消息指定不同的线和箭头的样式
+
+| 标记   | 描述            |
+| ------ | -------         |
+| ->     | 无箭头实线      |
+| -->    | 无箭头虚线      |
+| ->>    | 有箭头的实线    |
+| -->>   | 有箭头的虚线    |
+| -x     | 终点为 x 的实线 |
+| --x    | 终点为 x 的虚线 |
+
+```pintora play
+sequenceDiagram
+  John->Alice: Line example 1
+  John-->Alice: Line example 2
+  John->>Alice: Line example 3
+  John-->>Alice: Line example 4
+  John-xAlice: Line example 5
+  John--xAlice: Line example 6
+```
+
+## 给消息添加注释
+
+在消息后面添加 `@note`，以及带上方位指示词和参与者来添加便签样式的注释。
+
+1. 方位词 `left of` 和 `right of` 表示在参与者的左/右添加注释
+1. 方位词 `over` 和用 `,` 分隔的参与者名字列表，表示注释横跨参与者
+1. 可添加多行注释，在结尾使用 `@end_note` 结束
+
+```pintora play
+sequenceDiagram
+  Frida-->>Georgia: Flowers are beautiful
+  @note over Frida,Georgia: Painters
+  @note right of Georgia: Right
+  @note left of Georgia
+  multiline
+  note
+  @end_note
+```
+
+## 分隔符
+
+可使用 `== 描述词 ==` 来画出分隔符，给图表分块。注意 `=` 和描述词之间的空格不可少。
+
+```pintora play
+sequenceDiagram
+  Frida->>Georgia: 你画的花很美
+  == 一段时间后 ==
+  Georgia->>Frida: 你的自画像很有特色
+  == 另一段时间后 ==
+  Frida-->>Frida: 花在我身上很美
 ```

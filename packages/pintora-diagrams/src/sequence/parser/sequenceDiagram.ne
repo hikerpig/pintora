@@ -23,8 +23,7 @@ let lexer = moo.states({
     SPACE: {match: /\s+/, lineBreaks: true},
     AUTONUMBER: /autonumber/,
     TITLE: 'title',
-    // END_NOTE: textToCaseInsensitiveRegex('end note'),
-    // END: /end/,
+    PARTICIPANT: 'participant',
     START_NOTE: textToCaseInsensitiveRegex('@note'),
     END_NOTE: textToCaseInsensitiveRegex('@end_note'),
     BACKQUOTED_TEXT: /`[^`]*`/,
@@ -54,8 +53,6 @@ let lexer = moo.states({
     ],
     // WORD: { match: /(?:[a-zA-Z0-9_])+/, fallback: true },
     WORD: { match: /(?:[a-zA-Z0-9_]\p{Unified_Ideograph})+/, fallback: true },
-    // WORD: { match: /(?:[^\s\t\n\-@:])+/, fallback: true },
-    // OTHER: /.+/,
   },
   line: {
     REST_OF_LINE: { match: /[^#\n;]+/, pop: 1 },
@@ -98,20 +95,24 @@ document -> null
 
 line ->
 	  %SPACE:* statement {% (d) => {
-      // console.log('[line]', d)
+      // console.log('[line]', JSON.stringify(d))
       return d[1]
     } %}
 	| %NEWLINE
 
 statement ->
-	  "participant" actor "AS" %REST_OF_LINE %NEWLINE {%
+	  %PARTICIPANT __ actor __ "as" __ %WORD %NEWLINE {%
       function(d) {
-        yy.parseMessaage(d[3])
-        return d[1] 
+        d[2].description = yy.parseMessage(tv(d[6]))
+        return d[2]
       }
     %}
-	| "participant" _ actor %NEWLINE {% (d) => d[2] %}
-	| signal %NEWLINE {% (d) => d[0] %}
+	| %PARTICIPANT __ actor %NEWLINE {%
+      function(d) {
+        return d[2]
+      }
+    %}
+	| signal %NEWLINE {% id %}
 	| %AUTONUMBER %NEWLINE {% (d) => yy.enableSequenceNumbers() %}
 	| "activate" _ actor %NEWLINE {%
       function(d) {
@@ -144,10 +145,6 @@ statement ->
         return result
       }
     %}
-	# {
-	# 	$3.unshift({type: 'rectStart', color:yy.parseMessage($2), signalType: yy.LINETYPE.RECT_START });
-	# 	$3.push({type: 'rectEnd', color:yy.parseMessage($2), signalType: yy.LINETYPE.RECT_END });
-	# 	$$=$3;}
 	| %OPT %REST_OF_LINE document _ "end" {%
       function(d) {
         // console.log('[opt]', d)
@@ -205,7 +202,7 @@ signal ->
       function(d) {
         return [
           d[0], d[3],
-          {type: 'addMessage', from: d[0].actor, to: d[3].actor, signalType: d[1], msg: d[5]},
+          {type: 'addSignal', from: d[0].actor, to: d[3].actor, signalType: d[1], msg: d[5]},
           {type: 'activeStart', signalType: yy.LINETYPE.ACTIVE_START, actor: d[3]}
         ]
       }
@@ -214,7 +211,7 @@ signal ->
       function(d) {
         return [
           d[0], d[3],
-          {type: 'addMessage', from: d[0].actor, to: d[3].actor, signalType: d[1], msg: d[5]},
+          {type: 'addSignal', from: d[0].actor, to: d[3].actor, signalType: d[1], msg: d[5]},
           {type: 'activeEnd', signalType: yy.LINETYPE.ACTIVE_END, actor: d[3]}
         ]
       }
@@ -224,13 +221,12 @@ signal ->
         // console.log('got message', d)
         return [
           d[0], d[2],
-          {type: 'addMessage', from: d[0].actor, to: d[2].actor, signalType: d[1], msg: d[4]},
+          {type: 'addSignal', from: d[0].actor, to: d[2].actor, signalType: d[1], msg: d[4]},
         ]
       }
     %}
 
 actor -> %WORD {% (d) => {
-  // console.log('got actor', d)
   return ({ type: 'addActor', actor: tv(d[0]) })
 } %}
 

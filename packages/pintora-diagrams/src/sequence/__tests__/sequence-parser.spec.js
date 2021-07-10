@@ -61,8 +61,7 @@ sequenceDiagram
 sequenceDiagram
   Alice-->Bob: hello
   == 1 second later ==
-  Bob-->Alice: hello there
-    `)
+  Bob-->Alice: hello there`)
     parse(example)
     const result = db.getDiagramIR()
     expect(result.messages.length).toEqual(3)
@@ -71,4 +70,24 @@ sequenceDiagram
     })
   })
 
+  it('can parse participant', () => {
+    const example = stripStartEmptyLines(`
+sequenceDiagram
+  participant A as Alice
+  participant B as Bob
+  A-->B: hello
+  `)
+    parse(example)
+    const result = db.getDiagramIR()
+    expect(result.actors['A']).toMatchObject({
+      description: 'Alice',
+    })
+    expect(result.actors['B']).toMatchObject({
+      description: 'Bob',
+    })
+    expect(result.messages[0]).toMatchObject({
+      from: 'A',
+      to: 'B',
+    })
+  })
 })

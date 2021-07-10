@@ -34,6 +34,10 @@ module.exports = {
           position: 'left',
           label: 'Tutorial',
         },
+        {
+          type: 'localeDropdown',
+          position: 'right',
+        },
         // {to: '/blog', label: 'Blog', position: 'left'},
         { to: `${SITE_URL}/live-editor`, label: 'Live Editor', position: 'right' },
         {

@@ -11,8 +11,8 @@
     "compile": "tsc",
     "watch": "tsc -w",
     "test": "jest",
-    "prepare": "node ./scripts/build-grammar.js",
-    "gen-parser": "echo 'gen parser'"
+    "prepare": "npm run gen-parser",
+    "gen-parser": "node ./scripts/build-grammar.js"
   },
   "dependencies": {
     "@pintora/core": "*",
