@@ -2,12 +2,28 @@ import { resolve } from 'path'
 import { defineConfig } from 'vite'
 import reactRefresh from '@vitejs/plugin-react-refresh'
 import tsconfigPaths from 'vite-tsconfig-paths'
+import { VitePWA } from 'vite-plugin-pwa'
 
 const monacoPrefix = `monaco-editor/esm/vs`
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  plugins: [reactRefresh(), tsconfigPaths()],
+  plugins: [reactRefresh(), tsconfigPaths(), VitePWA({
+    manifest: {
+      name: 'Pintora Live Editor',
+      short_name: 'Pintora',
+      description: 'Live editor for pintora text-to-diagram library',
+      start_url: '/demo/live-editor/',
+      scope: '/demo',
+      icons: [{
+        src: '/demo/img/logo.svg',
+        sizes: 'any'
+      }]
+    },
+    strategies: 'injectManifest',
+    workbox: {
+    }
+  })],
   base: '/demo/',
   build: {
     rollupOptions: {
@@ -17,10 +33,6 @@ export default defineConfig({
       },
       output: {
         manualChunks: {
-          jsonWorker: [`${monacoPrefix}/language/json/json.worker`],
-          cssWorker: [`${monacoPrefix}/language/css/css.worker`],
-          htmlWorker: [`${monacoPrefix}/language/html/html.worker`],
-          tsWorker: [`${monacoPrefix}/language/typescript/ts.worker`],
           editorWorker: [`${monacoPrefix}/editor/editor.worker`],
         },
       }

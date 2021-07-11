@@ -30,6 +30,7 @@
     "tailwindcss": "*",
     "typescript": "^4.1.2",
     "vite": "^2.3.0",
+    "vite-plugin-pwa": "^0.8.1",
     "vite-tsconfig-paths": "^3.3.13"
   }
 }
