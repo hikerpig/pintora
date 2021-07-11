@@ -12,7 +12,8 @@
     "prettier": "prettier \"*.{js,json,yml,md}\" \"packages/**/*\"",
     "format": "npm run prettier -- --write",
     "format:check": "npm run prettier -- --check",
-    "lint": "npm run format:check"
+    "lint": "npm run format:check",
+    "build-site": "sh ./scripts/build-site.sh"
   },
   "devDependencies": {
     "lerna": "^4.0.0",
@@ -22,6 +23,7 @@
   },
   "workspaces": [
     "./packages/*",
+    "./website",
     "./demo"
   ]
 }
