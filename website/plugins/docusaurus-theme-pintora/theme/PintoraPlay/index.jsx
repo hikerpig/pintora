@@ -3,7 +3,7 @@ import pintora from '@pintora/standalone'
 import { stripStartEmptyLines } from '@pintora/test-shared'
 import './PintoraPlay.less'
 
-const PINTORA_LIVE_EDITOR_URL = 'https://pintorajs.netlify.app/live-editor/'
+const PINTORA_LIVE_EDITOR_URL = 'https://pintorajs.netlify.app/demo/live-editor/'
 
 const PintoraPlay = (props) => {
   // console.log('[PintoraPlay] props', props)

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react'
+import React, { useEffect, useRef } from 'react'
 import * as monaco from 'monaco-editor'
 import editorWorker from 'monaco-editor/esm/vs/editor/editor.worker?worker'
 import jsonWorker from 'monaco-editor/esm/vs/language/json/json.worker?worker'
@@ -54,7 +54,8 @@ const MonacoEditor = (props: Props) => {
     if (editorModel) {
       editorModel.onDidChangeContent((e) => {
         const newCode = editorModel.getLinesContent().join('\n')
-        if (newCode === code) return
+        // console.log('on change')
+        if (!e.changes.length) return
         onCodeChange(newCode)
       })
     }
@@ -71,6 +72,7 @@ const MonacoEditor = (props: Props) => {
     const editor = editorRef.current
     if (editor) {
       const currentCode = editor.getValue()
+      // console.log('currentCode == code', currentCode == code)
       if (currentCode !== code) editor.setValue(code)
     }
   }, [code])

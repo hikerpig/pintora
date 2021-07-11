@@ -1,4 +1,23 @@
 .Header {
-  height: 50px;
+  height: var(--demo-header-height);
   box-sizing: border-box;
+}
+
+.Header__brand {
+  height: 100%;
+  font-weight: bold;
+  font-size: 14px;
+}
+
+.Header__logo {
+  height: 100%;
+  margin-right: 0.5rem;
+}
+
+.Header__link {
+  margin-left: 1rem;
+}
+
+.Header__link:hover {
+  text-decoration: underline;
 }

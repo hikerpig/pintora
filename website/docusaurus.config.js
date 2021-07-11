@@ -59,29 +59,25 @@ module.exports = {
             },
           ],
         },
-        // {
-        //   title: 'Community',
-        //   items: [
-        //     {
-        //       label: 'Stack Overflow',
-        //       href: 'https://stackoverflow.com/questions/tagged/docusaurus',
-        //     },
-        //     {
-        //       label: 'Discord',
-        //       href: 'https://discordapp.com/invite/docusaurus',
-        //     },
-        //     {
-        //       label: 'Twitter',
-        //       href: 'https://twitter.com/docusaurus',
-        //     },
-        //   ],
-        // },
+        {
+          title: 'Community',
+          items: [
+            // {
+            //   label: 'Stack Overflow',
+            //   href: 'https://stackoverflow.com/questions/tagged/pintora',
+            // },
+            {
+              label: 'Discord',
+              href: 'https://discord.gg/S3PQ6776Mq',
+            },
+          ],
+        },
         {
           title: 'More',
           items: [
             {
               label: 'GitHub',
-              href: 'https://github.com/facebook/docusaurus',
+              href: 'https://github.com/hikerpig/pintora',
             },
           ],
         },

@@ -4,6 +4,9 @@
 # Production
 /build
 
+# live editor and others
+static/demo
+
 # Generated files
 .docusaurus
 .cache-loader
