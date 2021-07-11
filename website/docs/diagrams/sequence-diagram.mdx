@@ -2,8 +2,59 @@
 title: Sequence Diagram
 ---
 
+> A sequence diagram shows object interactions arranged in time sequence. It depicts the objects involved in the scenario and the sequence of messages exchanged between the objects needed to carry out the functionality of the scenario.
+> <cite><a href="https://en.wikipedia.org/wiki/Sequence_diagram">Wikipidia</a></cite>
+
+The syntax is based on Mermaid 8.9, with some other good stuff:
+
+- [Multiline Note](#multiline-note)
+- [Divider](#divider)
+
+## A Simple Demo
+
 ```pintora play
 sequenceDiagram
   autonumber
-  User->>+Pintora: render this
+  User->>+Pintora: Draw me a sequence diagram（with DSL）
+  activate Pintora
+  Pintora->>Pintora: Parse DSL, draw diagram
+  alt DSL is correct
+    Pintora->>User: Return the drawn diagram
+  else DSL is incorrect
+    Pintora->>User: Return error message
+  end
+  deactivate Pintora
+  @note left of Pintora
+  Different output formats according to render targets
+  1. In browser side. output SVG or Canvas
+  2. In Node.js side. output PNG file
+  @end_note
+```
+
+## Multiline Note
+
+Add `@note`, placement, and participant names after message to add a note.
+
+```pintora play
+sequenceDiagram
+  Frida-->>Georgia: Flowers are beautiful
+  @note over Frida,Georgia: Painters
+  @note right of Georgia: Right
+  @note left of Georgia
+  multiline
+  note
+  @end_note
+```
+
+## Divider
+
+You can split a diagram using `== description ==` to divide your diagram into different parts. Please keep in mind that the space between `=` and description is required.
+
+```pintora play
+sequenceDiagram
+  Frida->>Georgia: I like your paintings about flowers
+  == Some days after ==
+  Georgia->>Frida: I like your portraits
+  == Some days after ==
+  Frida-->>Frida: I like flowers on my hair, too
 ```

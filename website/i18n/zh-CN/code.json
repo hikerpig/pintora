@@ -162,5 +162,21 @@
   "theme.common.skipToMainContent": {
     "message": "Skip to main content",
     "description": "The skip to content label used for accessibility, allowing to rapidly navigate to main content with keyboard tab/enter navigation"
+  },
+  "homepage.get_started": {
+    "message": "开始",
+    "description": "Get started"
+  },
+  "site.description": {
+    "message": "Pintora 是一个可在浏览器和 Node.js 环境下运行的文字转示意图库",
+    "description": "Site description"
+  },
+  "homepage.tagline_1": {
+    "message": "一个具有高度可扩展性的文字转示意图库，可运行在浏览器和 Node.js。",
+    "description": "Homepage banner tagline 1"
+  },
+  "homepage.tagline_2": {
+    "message": "通过直观文字和标准化的图形展示，表达复杂的思想结构和意图，一图胜千言。",
+    "description": "Homepage banner tagline 2"
   }
 }

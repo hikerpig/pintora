@@ -162,5 +162,21 @@
   "theme.common.skipToMainContent": {
     "message": "Skip to main content",
     "description": "The skip to content label used for accessibility, allowing to rapidly navigate to main content with keyboard tab/enter navigation"
+  },
+  "homepage.get_started": {
+    "message": "Get Started",
+    "description": "Get started"
+  },
+  "site.description": {
+    "message": "Pintora is a javascript text-to-diagrams library that works in both browser and node.js",
+    "description": "Site description"
+  },
+  "homepage.tagline_1": {
+    "message": "An extensible text-to-diagrams library that works in both browser and node.js",
+    "description": "Homepage banner tagline 1"
+  },
+  "homepage.tagline_2": {
+    "message": "Expressing your thoughts in a diagram is better than a thousand words. You can create diagrams with intuitive text.",
+    "description": "Homepage banner tagline 2"
   }
 }
