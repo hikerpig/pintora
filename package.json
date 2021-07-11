@@ -9,6 +9,7 @@
     "watch:browser": "npx lerna run watch --parallel --ignore @pintora/cli",
     "prepare": "lerna run prepare",
     "demo:dev": "cd demo && npm run dev",
+    "website:dev": "cd website && npm run start",
     "prettier": "prettier \"*.{js,json,yml,md}\" \"packages/**/*\"",
     "format": "npm run prettier -- --write",
     "format:check": "npm run prettier -- --check",

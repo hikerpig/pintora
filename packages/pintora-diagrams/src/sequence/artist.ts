@@ -225,34 +225,31 @@ const sequenceArtist: IDiagramArtist<SequenceDiagramIR> = {
     }
 
     const width = box.stopx - box.startx + 2 * conf.diagramMarginX
+    const extraVertForTitle = title ? 20: 0
+    height += extraVertForTitle
 
     if (title) {
+      const titleFont = actorFont(conf)
       rootMark.children.push({
         type: 'text',
         attrs: {
           text: title,
-          x: (box.stopx - box.startx) / 2,
-          y: 0,
-          // x: (box.stopx - box.startx) / 2 - 2 * conf.diagramMarginX,
-          // y: -25,
+          x: box.startx + (box.stopx - box.startx) / 2,
+          y: -10,
+          ...titleFont,
+          fill: conf.actorTextColor,
+          textAlign: 'center',
+          fontWeight: 'bold'
         },
+        class: 'sequence__title'
       })
     }
 
-    rootMark.matrix = mat3.fromTranslation(mat3.create(), [conf.diagramMarginX, conf.diagramMarginY])
-    // const extraVertForTitle = title ? 40 : 0
-    // diagram.attr(
-    //   'viewBox',
-    //   box.startx -
-    //     conf.diagramMarginX +
-    //     ' -' +
-    //     (conf.diagramMarginY + extraVertForTitle) +
-    //     ' ' +
-    //     width +
-    //     ' ' +
-    //     (height + extraVertForTitle),
-    // )
-    // logger.debug(`bounds models:`, model.models)
+    const leftPad = Math.abs(Math.min(0, box.startx)) // to compensate negative stopx
+    rootMark.matrix = mat3.fromTranslation(mat3.create(), [
+      conf.diagramMarginX + leftPad,
+      conf.diagramMarginY + extraVertForTitle,
+    ])
 
     const graphicsIR: GraphicsIR = {
       mark: rootMark,
@@ -309,10 +306,10 @@ class Model {
     this.messageMarks = []
     this.clear()
     this.data = {
-      startx: undefined,
-      stopx: undefined,
-      starty: undefined,
-      stopy: undefined,
+      startx: 0,
+      stopx: 0,
+      starty: 0,
+      stopy: 0,
     }
     this.verticalPos = 0
     this.loops = []
@@ -337,7 +334,7 @@ class Model {
   updateBounds(startx, starty, stopx, stopy) {
     const _self = this
     let cnt = 0
-    function updateFn(type?) {
+    function updateFn(type?: string) {
       return function updateItemBounds(item) {
         cnt++
         // The loop sequenceItems is a stack so the biggest margins in the beginning of the sequenceItems
@@ -363,9 +360,9 @@ class Model {
     this.activations.forEach(updateFn('activation'))
   }
   insert(startx: number, starty: number, stopx: number, stopy) {
-    const _startx = Math.min(startx, stopx)
+    const _startx = Math.min(startx, stopx, this.data.startx)
     const _stopx = Math.max(startx, stopx)
-    const _starty = Math.min(starty, stopy)
+    const _starty = Math.min(starty, stopy, this.data.starty)
     const _stopy = Math.max(starty, stopy)
 
     // const hasUndefined = [startx, starty, stopx, stopy].some(v => v == undefined)
@@ -707,7 +704,7 @@ const drawMessage = function (msgModel: MessageModel): DrawResult<Group> {
   model.bumpVerticalPos(totalOffset)
   msgModel.height += totalOffset
   msgModel.stopy = msgModel.starty + msgModel.height
-  model.insert(msgModel.fromBound, msgModel.starty, msgModel.toBound, msgModel.stopy)
+  model.insert(msgModel.fromBound - textDims.width / 2, msgModel.starty, msgModel.toBound, msgModel.stopy)
 
   return {
     mark: {

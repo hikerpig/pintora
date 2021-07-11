@@ -4,11 +4,11 @@ sidebar_position: 1
 
 # Intro
 
-Pintora is a javascript text-to-diagrams library that works in both browser and node.js.
+Pintora is a javascript text-to-diagrams library that works in both browser and Node.js.
 
 Expressing your thoughts in a diagram is better than a thousand words. With the help of pintora.js, you can create diagrams with intuitive text.
 
-Heavily inspired by [Mermaid.js](https://mermaid-js.github.io/mermaid/#/) and [PlantUML](https://plantuml.com/).js.
+Heavily inspired by [Mermaid.js](https://mermaid-js.github.io/mermaid/#/) and [PlantUML](https://plantuml.com/).
 
 ## Features
 
