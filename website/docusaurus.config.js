@@ -16,6 +16,7 @@ module.exports = {
   favicon: 'img/favicon.ico',
   organizationName: 'hikerpig', // Usually your GitHub org/user name.
   projectName: 'pintora', // Usually your repo name.
+  trailingSlash: false,
   i18n: {
     defaultLocale: 'en',
     locales: ['en', 'zh-CN']
@@ -38,8 +39,7 @@ module.exports = {
           type: 'localeDropdown',
           position: 'right',
         },
-        // {to: '/blog', label: 'Blog', position: 'left'},
-        { to: `${SITE_URL}/live-editor`, label: 'Live Editor', position: 'right' },
+        { to: `${SITE_URL}/demo/live-editor`, label: 'Live Editor', position: 'right' },
         {
           href: 'https://github.com/hikerpig/pintora',
           label: 'GitHub',
