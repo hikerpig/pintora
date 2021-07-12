@@ -6,15 +6,18 @@ import { VitePWA } from 'vite-plugin-pwa'
 
 const monacoPrefix = `monaco-editor/esm/vs`
 
+const BASE = '/demo/'
+
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [reactRefresh(), tsconfigPaths(), VitePWA({
+    base: BASE,
     manifest: {
       name: 'Pintora Live Editor',
       short_name: 'Pintora',
       description: 'Live editor for pintora text-to-diagram library',
       start_url: '/demo/live-editor/',
-      scope: '/demo',
+      scope: '/demo/',
       icons: [{
         src: '/demo/img/logo.svg',
         sizes: 'any'
@@ -24,7 +27,7 @@ export default defineConfig({
     workbox: {
     }
   })],
-  base: '/demo/',
+  base: BASE,
   build: {
     rollupOptions: {
       input: {
