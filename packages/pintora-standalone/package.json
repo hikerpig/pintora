@@ -29,7 +29,7 @@
   },
   "scripts": {
     "compile": "microbundle --no-sourcemap --external none -f umd,esm",
-    "watch": "microbundle --no-compress --no-sourcemap --no-compress -f umd,esm watch",
+    "watch": "microbundle --no-compress --no-sourcemap --external none -f umd,esm watch",
     "dev:umd": "microbundle --no-compress --external none --no-sourcemap -f umd",
     "gen-types": "tsc --decalration"
   },

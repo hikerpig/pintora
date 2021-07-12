@@ -1,60 +1,76 @@
+import * as path from 'path'
 import * as fs from 'fs'
-import { pintoraStandalone } from '@pintora/standalone'
-import { JSDOM } from 'jsdom'
-import { implForWrapper } from 'jsdom/lib/jsdom/living/generated/utils'
-import { Canvas } from 'canvas'
+import * as mime from 'mime-types'
+import yargs from 'yargs'
+import consola from 'consola'
+import { render, SUPPORTED_MIME_TYPES } from './render'
 
-const sequenceExample = `sequenceDiagram
-  autonumber
-  User->>+Pintora: render this
-  activate Pintora
-  loop Check input
-    Pintora-->>Pintora: Has input changed?
-  end
-  Pintora-->>User: your figure here
-  deactivate Pintora
-  Note over User,Pintora: Note over
-  Note right of User: Note aside actor
-`
+const CWD = process.cwd()
 
-const dom = new JSDOM('<!DOCTYPE html><body></body>')
-const document = dom.window.document
-const container = document.createElement('div')
-container.id = 'pintora-container'
+type Config = {
+  backgroundColor: string
+}
 
-// setup the env for renderer
-global.window = dom.window as any
-global.document = document
+const defaultConfig: Config = {
+  backgroundColor: '#FFF'
+}
 
-;(dom.window as any).devicePixelRatio = 2
+type CliRenderArgs = {
+  source: string
+  output?: string
+  /** config file path */
+  config?: string
+  pixelRatio?: string
+}
 
-// test
-pintoraStandalone.renderTo(sequenceExample, {
-  container,
-  renderer: 'canvas',
-  // enhanceGraphicIR(ir) {
-  //   if (!ir.bgColor) ir.bgColor = '#fff'
-  //   return ir
-  // },
-  onRender(renderer) {
-    setTimeout(() => {
-      saveCanvas(renderer.getRootElement() as HTMLCanvasElement)
-      process.exit(0)
-    }, 300)
-  },
-  onError(e) {
-    console.error('onError', e)
-  },
-})
+yargs
+  .command({
+    command: 'render <source>',
+    describe: 'Render DSL to diagram image',
+    builder: {
+      output: {
+        alias: 'O',
+        describe: 'Output file path',
+      },
+      config: {
+        alias: 'C',
+        describe: 'Config file path',
+      },
+    },
+    handler: handleRenderCommand,
+  })
+  .help()
+  .showHelpOnFail(true).argv
 
-function saveCanvas(canvas: HTMLCanvasElement) {
-  // currently jsdom only support node-canvas,
-  // and this is it's not-so-stable method for getting the underlying node-canvas instance
-  const wrapper = implForWrapper(canvas)
-  const nodeCanvas: Canvas = wrapper._canvas
-  const context = nodeCanvas.getContext('2d')
-  context.quality = 'best'
-  context.patternQuality = 'best'
-  const buf = nodeCanvas.toBuffer('image/png')
-  fs.writeFileSync('./output.png', buf)
+async function handleRenderCommand(args: CliRenderArgs) {
+  if (!args.output) {
+    const sourceBasename = path.basename(args.source)
+    const nameWithoutExt = sourceBasename.slice(0, -path.extname(sourceBasename).length)
+    args.output = `${nameWithoutExt}.png`
+  }
+  const devicePixelRatio = args.pixelRatio ? parseFloat(args.pixelRatio): null
+  const code = fs.readFileSync(path.resolve(CWD, args.source)).toString()
+
+  const mimeType = mime.contentType(args.output)
+  if (!(mimeType && SUPPORTED_MIME_TYPES.includes(mimeType))) {
+    const ext = path.extname(args.output)
+    const supportedExts = SUPPORTED_MIME_TYPES.map((t) => {
+      return `.${mime.extension(t)}`
+    })
+    consola.error(`Error, output ext '${ext}' is not supported. Please try ${supportedExts.join('/')}`)
+    return
+  }
+  const config = {...defaultConfig}
+  const buf = await render({
+    code,
+    devicePixelRatio,
+    mimeType,
+    backgroundColor: config.backgroundColor || defaultConfig.backgroundColor,
+  })
+  if (!buf) {
+    consola.error(`Error during generating image`)
+    return
+  }
+  fs.writeFileSync(args.output, buf)
+  consola.success(`Render success, saved to ${args.output}`)
 }
