@@ -3,7 +3,7 @@ const path = require('path')
 const lightCodeTheme = require('prism-react-renderer/themes/github')
 const darkCodeTheme = require('prism-react-renderer/themes/dracula')
 
-const SITE_URL = 'https://pintorajs.netlify.app'
+const SITE_URL = process.env.SITE_URL || 'https://pintorajs.netlify.app'
 
 /** @type {import('@docusaurus/types').DocusaurusConfig} */
 module.exports = {
