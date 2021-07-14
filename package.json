@@ -14,7 +14,8 @@
     "format": "npm run prettier -- --write",
     "format:check": "npm run prettier -- --check",
     "lint": "npm run format:check",
-    "build-site": "sh ./scripts/build-site.sh"
+    "build-site": "sh ./scripts/build-site.sh",
+    "vercel-build": "npx lerna bootstrap --hoist && npm run compile:browser && npm run build-site"
   },
   "devDependencies": {
     "lerna": "^4.0.0",
