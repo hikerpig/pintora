@@ -30,7 +30,7 @@
   "scripts": {
     "compile": "microbundle --no-sourcemap --external none -f umd,esm",
     "watch": "microbundle --no-compress --no-sourcemap --external none -f umd,esm watch",
-    "dev:umd": "microbundle --no-compress --external none --no-sourcemap -f umd",
+    "dev-demo:esm": "microbundle --no-compress --no-sourcemap -f esm watch",
     "gen-types": "tsc --decalration"
   },
   "bugs": {

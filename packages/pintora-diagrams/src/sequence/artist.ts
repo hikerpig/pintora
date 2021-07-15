@@ -59,13 +59,17 @@ const sequenceArtist: IDiagramArtist<SequenceDiagramIR> = {
     conf.actorHeight = calculateActorMargins(actors, maxMessageWidthPerActor)
 
     const { marks: actorMarks } = drawActors(ir, actorKeys, { verticalPos: 0 })
-    const loopWidths = calculateLoopBounds(messages, actors)
+    const loopWidths = calculateLoopBounds(messages)
     rootMark.children.push(...actorMarks)
 
-    const activationGroup = makeMark('group', {}, {
-      children: [],
-      class: 'activations'
-    })
+    const activationGroup = makeMark(
+      'group',
+      {},
+      {
+        children: [],
+        class: 'activations',
+      },
+    )
     // push this group early so it won't lay on top of other messages
     rootMark.children.push(activationGroup)
     function activeEnd(msg: Message, verticalPos) {
@@ -188,7 +192,6 @@ const sequenceArtist: IDiagramArtist<SequenceDiagramIR> = {
             // console.log('msgModel starty', msgModel, model.verticalPos)
             msgModel.sequenceIndex = sequenceIndex
             rootMark.children.push(drawMessage(msgModel).mark)
-            model.messageMarks.push(msgModel)
           } catch (e) {
             logger.error('error while drawing message', e)
           }
@@ -225,7 +228,7 @@ const sequenceArtist: IDiagramArtist<SequenceDiagramIR> = {
     }
 
     const width = box.stopx - box.startx + 2 * conf.diagramMarginX
-    const extraVertForTitle = title ? 20: 0
+    const extraVertForTitle = title ? 40 : 0
     height += extraVertForTitle
 
     if (title) {
@@ -235,15 +238,17 @@ const sequenceArtist: IDiagramArtist<SequenceDiagramIR> = {
         attrs: {
           text: title,
           x: box.startx + (box.stopx - box.startx) / 2,
-          y: -10,
+          y: -20,
           ...titleFont,
           fill: conf.actorTextColor,
           textAlign: 'center',
-          fontWeight: 'bold'
+          fontWeight: 'bold',
         },
-        class: 'sequence__title'
+        class: 'sequence__title',
       })
     }
+
+    model.emitBoundsFinish()
 
     const leftPad = Math.abs(Math.min(0, box.startx)) // to compensate negative stopx
     rootMark.matrix = mat3.fromTranslation(mat3.create(), [
@@ -282,28 +287,32 @@ type LoopModel = {
   sectionTitles?: any[]
 }
 
+type SequenceDiagramBounds = {
+  startx: number
+  stopx: number
+  starty: number
+  stopy: number
+}
+
+type OnBoundsFinishCallback = (opts: { bounds: SequenceDiagramBounds }) => void
+
 class Model {
   sequenceItems: LoopModel[]
   activations: ActivationData[] = []
-  data: {
-    startx: number
-    stopx: number
-    starty: number
-    stopy: number
-  }
+  data: SequenceDiagramBounds
   verticalPos: number
   actorAttrsMap = new Map<string, MarkAttrs>()
   msgModelMap = new Map<string, MessageModel>()
   actorLineMarkMap = new Map<string, Line>()
-  messageMarks: Text[]
   maxMessageWidthPerActor: { [key: string]: number } = {}
   noteModelMap = new Map<string, MessageModel>()
   loops: LoopModel[]
   dividerMap = new Map<string, MessageModel>()
 
+  private onBoundsFinishCbs: Array<OnBoundsFinishCallback>
+
   init() {
     this.sequenceItems = []
-    this.messageMarks = []
     this.clear()
     this.data = {
       startx: 0,
@@ -313,16 +322,17 @@ class Model {
     }
     this.verticalPos = 0
     this.loops = []
+    this.onBoundsFinishCbs = []
   }
   clear() {
     this.activations = []
     this.actorAttrsMap.clear()
     this.actorLineMarkMap.clear()
     this.msgModelMap.clear()
-    this.messageMarks = []
     this.maxMessageWidthPerActor = {}
     this.noteModelMap.clear()
     this.dividerMap.clear()
+    this.onBoundsFinishCbs = []
   }
   updateVal(obj, key, val, fun) {
     if (typeof obj[key] === 'undefined') {
@@ -360,12 +370,12 @@ class Model {
     this.activations.forEach(updateFn('activation'))
   }
   insert(startx: number, starty: number, stopx: number, stopy) {
-    const _startx = Math.min(startx, stopx, this.data.startx)
+    // console.log('insert', startx, starty, stopx, stopy)
+    const _startx = Math.min(startx, stopx)
     const _stopx = Math.max(startx, stopx)
-    const _starty = Math.min(starty, stopy, this.data.starty)
+    const _starty = Math.min(starty, stopy)
     const _stopy = Math.max(starty, stopy)
 
-    // const hasUndefined = [startx, starty, stopx, stopy].some(v => v == undefined)
     // if (hasUndefined) {
     //   console.warn('has undefined', arguments)
     //   // debugger
@@ -451,6 +461,18 @@ class Model {
 
     const loopsHeight = this.loops.reduce((acc, h) => acc + h.height, 0)
     return actorHeight + messagesHeight + notesHeight + loopsHeight
+  }
+
+  /**
+   * Some elements (such as dividers) can only decide their horizontal position after bounds are calculated
+   **/
+  onBoundsFinish(cb: OnBoundsFinishCallback) {
+    this.onBoundsFinishCbs.push(cb)
+  }
+  emitBoundsFinish() {
+    this.onBoundsFinishCbs.forEach(cb => {
+      cb({ bounds: this.data })
+    })
   }
 }
 
@@ -587,18 +609,13 @@ const drawMessage = function (msgModel: MessageModel): DrawResult<Group> {
       ',' +
       lineEndy
 
-
     safeAssign(lineAttrs, {
       path: linePath,
       x1: startx,
       x2: stopx,
       y2: lineEndy,
     })
-    lineMark = makeMark(
-      'path',
-      lineAttrs as any,
-      { class: 'message__line' },
-    )
+    lineMark = makeMark('path', lineAttrs as any, { class: 'message__line' })
 
     safeAssign(tAttrs, {
       x: startx,
@@ -704,7 +721,8 @@ const drawMessage = function (msgModel: MessageModel): DrawResult<Group> {
   model.bumpVerticalPos(totalOffset)
   msgModel.height += totalOffset
   msgModel.stopy = msgModel.starty + msgModel.height
-  model.insert(msgModel.fromBound - textDims.width / 2, msgModel.starty, msgModel.toBound, msgModel.stopy)
+  // model.insert(msgModel.fromBound - textDims.width / 2, msgModel.starty, msgModel.toBound, msgModel.stopy)
+  model.insert(msgModel.fromBound, msgModel.starty, msgModel.toBound, msgModel.stopy)
 
   return {
     mark: {
@@ -778,13 +796,27 @@ function drawDividerTo(divider: MessageModel, container: Group) {
     y2: line2Y,
   })
 
-  const g = makeMark('group', {}, {
-    children: [line1, line2, rect, textMark],
-    class: 'divider'
-  })
+  const g = makeMark(
+    'group',
+    {},
+    {
+      children: [line1, line2, rect, textMark],
+      class: 'divider',
+    },
+  )
   container.children.push(g)
 
   model.bumpVerticalPos(conf.boxMargin + 2 * padding)
+
+  model.onBoundsFinish(({ bounds }) => {
+    const newRectX = bounds.startx + bounds.stopx / 2
+    const xOffset = newRectX - rectX
+    safeAssign(rect.attrs, { x: newRectX })
+    safeAssign(textMark.attrs, { x: textMark.attrs.x + xOffset })
+
+    safeAssign(line1.attrs, { x1: bounds.startx })
+    safeAssign(line2.attrs, { x1: bounds.startx })
+  })
 }
 
 /**
@@ -869,7 +901,7 @@ export const drawActors = function (
     const textAttrs: Text['attrs'] = {
       fill: conf.actorTextColor,
       text: actor.description,
-      ...(actorFont(conf) as any)
+      ...(actorFont(conf) as any),
     }
 
     // Add some rendering data to the object
@@ -1370,9 +1402,9 @@ const buildNoteModel = function (msg: Message) {
   return noteModel
 }
 
-const calculateLoopBounds = function (messages: Message[], actors: SequenceDiagramIR['actors']) {
+const calculateLoopBounds = function (messages: Message[]) {
   const loops = {}
-  const stack = []
+  const stack = [] // elements inside current loop
   let current, noteModel
   let msgModel: MessageModel
 
@@ -1470,6 +1502,5 @@ const calculateLoopBounds = function (messages: Message[], actors: SequenceDiagr
   logger.debug('Loop type widths:', loops)
   return loops
 }
-
 
 export default sequenceArtist

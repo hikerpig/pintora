@@ -91,8 +91,6 @@ class SequenceDB {
   titleWrapped: boolean = false
   wrapEnabled = false
   showSequenceNumbers = false
-  LINETYPE = LINETYPE
-  PLACEMENT = PLACEMENT
 
   addActor(id: string, name: string, description: ParsedDescription) {
     // Don't allow description nulling
@@ -222,6 +220,7 @@ class SequenceDB {
   }
 
   clear() {
+    this.title = ''
     this.actors = {}
     this.messages = []
     this.notes = []
