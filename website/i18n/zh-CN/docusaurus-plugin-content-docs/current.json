@@ -6,5 +6,9 @@
   "sidebar.tutorialSidebar.category.Diagrams": {
     "message": "图表语法",
     "description": "The label for category Diagrams in sidebar tutorialSidebar"
+  },
+  "sidebar.tutorialSidebar.category.Getting Started": {
+    "message": "开始使用",
+    "description": "The label for category Getting Started in sidebar tutorialSidebar"
   }
 }

@@ -172,11 +172,11 @@
     "description": "Site description"
   },
   "homepage.tagline_1": {
-    "message": "An extensible text-to-diagrams library that works in both browser and node.js",
+    "message": "An extensible text-to-diagrams library that works in both browser and node.js.",
     "description": "Homepage banner tagline 1"
   },
   "homepage.tagline_2": {
-    "message": "Expressing your thoughts in a diagram is better than a thousand words. You can create diagrams with intuitive text.",
+    "message": "Expressing your thoughts in a diagram is better than a thousand words.",
     "description": "Homepage banner tagline 2"
   }
 }
