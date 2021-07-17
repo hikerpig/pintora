@@ -16,26 +16,42 @@ const defaultConfig: Config = {
 }
 
 type CliRenderArgs = {
-  source: string
+  input: string
   output?: string
   /** config file path */
-  config?: string
+  // config?: string
   pixelRatio?: string
+  backgroundColor?: string
 }
 
 yargs
   .command({
-    command: 'render <source>',
+    command: 'render',
     describe: 'Render DSL to diagram image',
     builder: {
+      input: {
+        alias: 'i',
+        describe: 'Input file path',
+        required: true,
+      },
       output: {
-        alias: 'O',
+        alias: 'o',
         describe: 'Output file path',
       },
-      config: {
-        alias: 'C',
-        describe: 'Config file path',
+      'pixel-ratio': {
+        alias: 'p',
+        default: 2,
+        describe: 'Pixel ratio',
       },
+      'background-color': {
+        alias: 'b',
+        default: '#fff',
+        describe: 'Background color',
+      },
+      // config: {
+      //   alias: 'c',
+      //   describe: 'Config file path',
+      // },
     },
     handler: handleRenderCommand,
   })
@@ -43,13 +59,14 @@ yargs
   .showHelpOnFail(true).argv
 
 async function handleRenderCommand(args: CliRenderArgs) {
+  // consola.log('args', args)
   if (!args.output) {
-    const sourceBasename = path.basename(args.source)
+    const sourceBasename = path.basename(args.input)
     const nameWithoutExt = sourceBasename.slice(0, -path.extname(sourceBasename).length)
     args.output = `${nameWithoutExt}.png`
   }
   const devicePixelRatio = args.pixelRatio ? parseFloat(args.pixelRatio): null
-  const code = fs.readFileSync(path.resolve(CWD, args.source)).toString()
+  const code = fs.readFileSync(path.resolve(CWD, args.input)).toString()
 
   const mimeType = mime.contentType(args.output)
   if (!(mimeType && SUPPORTED_MIME_TYPES.includes(mimeType))) {
@@ -65,7 +82,7 @@ async function handleRenderCommand(args: CliRenderArgs) {
     code,
     devicePixelRatio,
     mimeType,
-    backgroundColor: config.backgroundColor || defaultConfig.backgroundColor,
+    backgroundColor: args.backgroundColor || config.backgroundColor,
   })
   if (!buf) {
     consola.error(`Error during generating image`)
