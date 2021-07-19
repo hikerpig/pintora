@@ -28,8 +28,8 @@
     "url": "git+https://github.com/hikerpig/pintora.git"
   },
   "scripts": {
-    "compile": "microbundle --no-sourcemap --external none -f umd,esm",
-    "watch": "microbundle --no-compress --no-sourcemap --external none -f umd,esm watch",
+    "compile": "microbundle --no-sourcemap --external none --name pintora -f umd,esm",
+    "watch": "microbundle --no-compress --no-sourcemap --external none --name pintora -f umd,esm watch",
     "dev-demo:esm": "microbundle --no-compress --no-sourcemap -f esm watch",
     "gen-types": "tsc --decalration"
   },

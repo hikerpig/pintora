@@ -3,12 +3,15 @@ import { DIAGRAMS } from '@pintora/diagrams'
 import { render, RenderOptions, BaseRenderer, rendererRegistry } from '@pintora/renderer'
 
 function initDiagrams() {
-  Object.keys(DIAGRAMS).forEach((name) => {
+  Object.keys(DIAGRAMS).forEach(name => {
     pintora.registerDiagram(name, DIAGRAMS[name])
   })
 }
-
 initDiagrams()
+
+type InitBrowserOptions = {
+  startOnLoad?: boolean
+}
 
 interface RenderToOptions extends RenderOptions {
   onError?(error: Error): void
@@ -41,12 +44,32 @@ const pintoraStandalone = {
       render(graphicIR, options)
     }
   },
+  /**
+   * Init in browser
+   */
+  initBrowser(options: InitBrowserOptions = {}) {
+    // if (options.startOnLoad) {
+    // }
+
+    const selector = '.pintora'
+    const containers = document.querySelectorAll(selector)
+    containers.forEach((container: HTMLDivElement) => {
+      pintoraStandalone.renderContentOf(container)
+    })
+  },
+  renderContentOf(container: HTMLDivElement) {
+    const wrapper = document.createElement('div')
+    wrapper.classList.add('pintora-wrapper')
+    container.style.display = 'none'
+
+    container.parentNode.insertBefore(wrapper, container)
+    pintoraStandalone.renderTo(container.innerText, {
+      container: wrapper,
+    })
+  },
 }
 
-export {
-  BaseRenderer,
-  rendererRegistry
-}
+export { BaseRenderer, rendererRegistry }
 
 export { pintoraStandalone }
 
