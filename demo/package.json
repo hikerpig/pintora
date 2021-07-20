@@ -1,6 +1,6 @@
 {
   "name": "pintora-demo",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "private": true,
   "scripts": {
     "dev": "vite --port 3001",
@@ -9,10 +9,10 @@
     "serve": "vite preview"
   },
   "dependencies": {
-    "@pintora/core": "*",
-    "@pintora/renderer": "*",
-    "@pintora/standalone": "*",
-    "@pintora/test-shared": "*",
+    "@pintora/core": "^0.0.1",
+    "@pintora/renderer": "^0.0.1",
+    "@pintora/standalone": "^0.0.1",
+    "@pintora/test-shared": "^0.0.1",
     "@reduxjs/toolkit": "^1.5.1",
     "classnames": "^2.3.1",
     "monaco-editor": "^0.24.0",

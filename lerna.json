@@ -1,8 +1,16 @@
 {
-  "packages": ["packages/*", "demo", "website"],
+  "packages": [
+    "packages/*",
+    "demo",
+    "website"
+  ],
   "command": {
     "bootstrap": {
-      "npmClientArgs": ["--no-package-lock", "--legacy-peer-deps"]
+      "npmClientArgs": [
+        "--no-package-lock",
+        "--legacy-peer-deps"
+      ]
     }
-  }, "version": "0.0.0"
+  },
+  "version": "0.0.1"
 }

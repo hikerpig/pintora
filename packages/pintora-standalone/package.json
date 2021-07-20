@@ -1,6 +1,6 @@
 {
   "name": "@pintora/standalone",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "A standalone version of pintora that has all the default diagrams",
   "keywords": [
     "pintora"
@@ -37,9 +37,9 @@
     "url": "https://github.com/hikerpig/pintora/issues"
   },
   "dependencies": {
-    "@pintora/core": "*",
-    "@pintora/diagrams": "*",
-    "@pintora/renderer": "*"
+    "@pintora/core": "^0.0.1",
+    "@pintora/diagrams": "^0.0.1",
+    "@pintora/renderer": "^0.0.1"
   },
   "devDependencies": {
     "@types/node": "^14.11.8",
@@ -47,4 +47,3 @@
     "typescript": "4.2.4"
   }
 }
-
