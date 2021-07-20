@@ -18,7 +18,23 @@ const PintoraPlay = (props) => {
     pintora.renderTo(code, {
       container: containerRef.current,
       renderer,
-      onRender() {
+      onRender(renderer) {
+        try {
+          const irWidth = renderer.ir.width
+          const containerWidth = containerRef.current.clientWidth
+          if (irWidth > containerWidth) {
+            /** @type {SVGSVGElement | HTMLCanvasElement}  */
+            const element = renderer.gcvs.getCanvas().cfg.el
+            if (element) {
+              const scale = containerWidth / irWidth
+              element.style.transform = `scale(${scale})`
+              element.style.transformOrigin = 'top left'
+            }
+          }
+        } catch (error) {
+          console.error('error during resizing g canvas element', error)
+        }
+
         setErrorMessage(null)
       },
       onError(error) {
@@ -33,7 +49,7 @@ const PintoraPlay = (props) => {
   }, [code, renderer])
 
   const onOpenInEditorClick = useCallback(() => {
-    const encoded = btoa(code)
+    const encoded = btoa(unescape(encodeURIComponent(code)))
     const url = `${PINTORA_LIVE_EDITOR_URL}?code=${encoded}`
     window.open(url, '_blank')
   }, [code])

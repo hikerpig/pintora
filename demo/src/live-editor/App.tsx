@@ -14,7 +14,7 @@ function App() {
     let code: string = ''
     const encodedCode = params.get('code')
     if (encodedCode) {
-      code = atob(encodedCode)
+      code = decodeURIComponent(atob(encodedCode))
       const newParams = new URLSearchParams(params)
       newParams.delete('code')
       history.replaceState(null, '', `?${newParams.toString()}`)
