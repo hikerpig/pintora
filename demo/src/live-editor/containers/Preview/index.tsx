@@ -28,8 +28,7 @@ const Preview = ({ previewCode, previewConfig, className }: Props) => {
 
   return (
     <div className={cls}>
-      <PintoraPreview code={previewCode} renderer={previewConfig.renderer} />
-      <div className="Preview__bottom">
+      <div className="Preview__toolbar">
         <div className="px-2 py-1">
           <div className="section">
             <label>Renderer:</label>
@@ -40,6 +39,7 @@ const Preview = ({ previewCode, previewConfig, className }: Props) => {
           </div>
         </div>
       </div>
+      <PintoraPreview code={previewCode} renderer={previewConfig.renderer} />
     </div>
   )
 }

@@ -28,7 +28,6 @@ const MonacoEditor = (props: Props) => {
       value: code,
       language: 'pintora',
       minimap: { enabled: false },
-      lineNumbers: 'off',
       lineDecorationsWidth: 0,
       automaticLayout: true,
       fontSize: 15,
