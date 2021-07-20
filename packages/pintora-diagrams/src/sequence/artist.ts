@@ -809,10 +809,11 @@ function drawDividerTo(divider: MessageModel, container: Group) {
   model.bumpVerticalPos(conf.boxMargin + 2 * padding)
 
   model.onBoundsFinish(({ bounds }) => {
-    const newRectX = bounds.startx + bounds.stopx / 2
-    const xOffset = newRectX - rectX
+    const boundWidth = Math.abs(bounds.stopx - bounds.startx)
+    const newCenterX = bounds.startx + boundWidth / 2
+    const newRectX = newCenterX - rect.attrs.width / 2
     safeAssign(rect.attrs, { x: newRectX })
-    safeAssign(textMark.attrs, { x: textMark.attrs.x + xOffset })
+    safeAssign(textMark.attrs, { x: newCenterX })
 
     safeAssign(line1.attrs, { x1: bounds.startx })
     safeAssign(line2.attrs, { x1: bounds.startx })
