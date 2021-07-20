@@ -186,11 +186,13 @@ const drawAttributes = (group: Group, entityText: Text, attributes: Entity['attr
       // Position the type of the attribute
       nodePair.type.matrix = mat3.fromTranslation(mat3.create(), [widthPadding, alignY])
 
+      const attributeFill = conf.attributeFill
+
       // Insert a rectangle for the type
       const typeRect = makeMark(
         'rect',
         {
-          fill: conf.fill,
+          fill: attributeFill,
           stroke: conf.stroke,
           x: entityText.attrs.x,
           y: heightOffset,
@@ -207,7 +209,7 @@ const drawAttributes = (group: Group, entityText: Text, attributes: Entity['attr
       const nameRect = makeMark(
         'rect',
         {
-          fill: conf.fill,
+          fill: attributeFill,
           stroke: conf.stroke,
           x: typeRect.attrs.x + typeRect.attrs.width,
           y: heightOffset,

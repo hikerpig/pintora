@@ -10,10 +10,10 @@ let lexer = moo.compile({
   ONLY_ONE: /\|\|/,
   NON_IDENTIFYING: /\.\.|\.\-|\-\./,
   IDENTIFYING: /\-\-/,
-  ALPHANUM: /[A-Za-z][A-Za-z0-9\-_]*/,
   COLON: /:/,
   LEFT_BRACE: /\{/,
   RIGHT_BRACE: /\}/,
+  VALID_TEXT: { match: /(?:[a-zA-Z0-9_]\p{Unified_Ideograph})+/, fallback: true },
 })
 
 let yy
@@ -40,7 +40,7 @@ document -> null
   | document line
 
 line ->
-    _ statement
+    %SPACE:* statement
 	| %NEWLINE
 
 statement ->
@@ -50,7 +50,7 @@ statement ->
       function(d) {
         yy.addEntity(tv(d[0]));
         yy.addEntity(tv(d[4]));
-        yy.addRelationship(tv(d[0]), tv(d[8]), tv(d[4]), d[2])
+        yy.addRelationship(tv(d[0]), d[8], tv(d[4]), d[2])
       }
     %}
   | entityName _ "{" _ attributes _ "}"
@@ -63,27 +63,8 @@ statement ->
   | entityName "{":? "}":? {% (d) => yy.addEntity(tv(d[0])) %}
   | entityName {% (d) => yy.addEntity(tv(d[0])) %}
 
-# FIXME: directive for inline config, this should be common rule
-directive -> "open_directive"
-
-# directive ->
-#     openDirective typeDirective closeDirective %NEWLINE
-#   | openDirective typeDirective ':' argDirective closeDirective %NEWLINE
-
-# openDirective ->
-#     open_directive {% yy.parseDirective('%%{', 'open_directive'); %}
-
-# typeDirective ->
-#     type_directive { yy.parseDirective($1, 'type_directive'); }
-
-# argDirective ->
-#     arg_directive { $1 = $1.trim().replace(/'/g, '"'); yy.parseDirective($1, 'arg_directive'); }
-
-# closeDirective ->
-#     close_directive { yy.parseDirective('}%%', 'close_directive', 'er'); }
-
 entityName ->
-    %ALPHANUM {% id %}
+    %VALID_TEXT {% id %}
 
 attributes ->
       attribute {% id %}
@@ -92,9 +73,9 @@ attributes ->
 attribute ->
       attributeType __ attributeName {% (d) => { return { attributeType: tv(d[0]), attributeName: tv(d[2]) } } %}
 
-attributeType -> %ALPHANUM {% id %}
+attributeType -> %VALID_TEXT {% id %}
 
-attributeName -> %ALPHANUM {% id %}
+attributeName -> %VALID_TEXT {% id %}
 
 relSpec ->
       cardinality relType cardinality {%
@@ -116,6 +97,8 @@ relType ->
     | %IDENTIFYING                  {% (d) => yy.Identification.IDENTIFYING %}
 
 role ->
-      %WORD       {% (d) => d[0].replace(/"/g, '') %}
-    | %ALPHANUM   {% id %}
+      %WORD {% (d) => {
+        return tv(d[0]).replace(/"/g, '')
+      } %}
+    | %VALID_TEXT {% (d) => tv(d[0]) %}
 

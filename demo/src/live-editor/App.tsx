@@ -19,11 +19,11 @@ function App() {
       newParams.delete('code')
       history.replaceState(null, '', `?${newParams.toString()}`)
     } else if (params.has('example')) {
-      const exampleName = params.get('example')
+      const exampleName: keyof typeof EXAMPLES = params.get('example') as any
       if (exampleName) {
-        const example = (EXAMPLES as any)[exampleName]
+        const example = EXAMPLES[exampleName]
         if (example) {
-          code = (EXAMPLES as any)[exampleName]
+          code = EXAMPLES[exampleName].code
         }
       }
     }

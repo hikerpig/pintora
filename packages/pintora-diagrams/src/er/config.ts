@@ -13,6 +13,7 @@ export type ErConf = {
   stroke: string
   fill: string
   edgeColor: string
+  attributeFill: string
 
   fontSize: number
 
@@ -34,6 +35,7 @@ export const defaultConfig: ErConf = {
   fill: PALETTE.orange,
   // fill: 'transparent', // for debugging markers
   edgeColor: PALETTE.normalDark,
+  attributeFill: '#fffbf9',
 
   fontSize: 12,
 
