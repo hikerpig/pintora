@@ -8,7 +8,7 @@ const PINTORA_LIVE_EDITOR_URL = 'https://pintorajs.netlify.app/demo/live-editor/
 const PintoraPlay = (props) => {
   // console.log('[PintoraPlay] props', props)
   const code = stripStartEmptyLines(props.code)
-  const containerRef = useRef()
+  const containerRef = useRef<HTMLElement>()
   const renderer = 'svg'
   const [errorMessage, setErrorMessage] = useState('')
 
@@ -18,13 +18,12 @@ const PintoraPlay = (props) => {
     pintora.renderTo(code, {
       container: containerRef.current,
       renderer,
-      onRender(renderer) {
+      onRender(renderer: any) {
         try {
           const irWidth = renderer.ir.width
           const containerWidth = containerRef.current.clientWidth
           if (irWidth > containerWidth) {
-            /** @type {SVGSVGElement | HTMLCanvasElement}  */
-            const element = renderer.gcvs.getCanvas().cfg.el
+            const element: SVGSVGElement | HTMLCanvasElement = renderer.gcvs.getCanvas().cfg.el
             if (element) {
               const scale = containerWidth / irWidth
               element.style.transform = `scale(${scale})`
