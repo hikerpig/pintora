@@ -9,11 +9,17 @@ const SITE_URL = process.env.SITE_URL || 'https://pintorajs.netlify.app'
 module.exports = {
   title: 'Pintora',
   tagline: 'An extensible text-to-diagrams library that works in both browser and node.js',
+  customFields: {
+    keywords: [
+      'diagram as code',
+      'text tot diagram',
+    ],
+  },
   url: SITE_URL,
   baseUrl: '/',
   onBrokenLinks: 'throw',
   onBrokenMarkdownLinks: 'warn',
-  favicon: 'img/favicon.ico',
+  favicon: '/img/logo.svg',
   organizationName: 'hikerpig', // Usually your GitHub org/user name.
   projectName: 'pintora', // Usually your repo name.
   trailingSlash: false,

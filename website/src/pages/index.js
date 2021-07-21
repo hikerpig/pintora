@@ -42,11 +42,12 @@ export default function Home() {
   const { siteConfig } = useDocusaurusContext()
   return (
     <Layout
-      title={`${siteConfig.title}`}
+      title="Home"
       description={translate({
         message: 'site.description',
         description: 'Site description',
       })}
+      keywords={siteConfig.customFields.keywords}
     >
       <HomepageHeader />
       <main>
