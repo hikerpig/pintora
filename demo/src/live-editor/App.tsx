@@ -14,7 +14,11 @@ function App() {
     let code: string = ''
     const encodedCode = params.get('code')
     if (encodedCode) {
-      code = decodeURIComponent(atob(encodedCode))
+      try {
+        code = unescape(atob(decodeURIComponent(encodedCode)))
+      } catch (error) {
+        console.error('[live-editor] error when decoding code in url', error)
+      }
       const newParams = new URLSearchParams(params)
       newParams.delete('code')
       history.replaceState(null, '', `?${newParams.toString()}`)

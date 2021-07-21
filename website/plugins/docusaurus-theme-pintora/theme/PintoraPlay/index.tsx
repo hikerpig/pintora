@@ -8,7 +8,7 @@ const PINTORA_LIVE_EDITOR_URL = '/demo/live-editor/'
 const PintoraPlay = (props) => {
   // console.log('[PintoraPlay] props', props)
   const code = stripStartEmptyLines(props.code)
-  const containerRef = useRef<HTMLElement>()
+  const containerRef = useRef<HTMLDivElement>()
   const renderer = 'svg'
   const [errorMessage, setErrorMessage] = useState('')
 
@@ -48,7 +48,7 @@ const PintoraPlay = (props) => {
   }, [code, renderer])
 
   const onOpenInEditorClick = useCallback(() => {
-    const encoded = btoa(unescape(encodeURIComponent(code)))
+    const encoded = encodeURIComponent(btoa(escape(code)))
     const url = `${PINTORA_LIVE_EDITOR_URL}?code=${encoded}`
     window.open(url, '_blank')
   }, [code])
