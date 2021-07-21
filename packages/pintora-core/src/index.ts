@@ -6,6 +6,7 @@ export * from './type'
 import { logger, setLogLevel } from './logger'
 
 export * from './util'
+import { encodeForUrl, decodeCodeInUrl } from './util'
 
 export {
   logger,
@@ -38,6 +39,10 @@ const pintora = {
       diagramIR,
       graphicIR,
     }
+  },
+  util: {
+    encodeForUrl,
+    decodeCodeInUrl,
   },
 }
 

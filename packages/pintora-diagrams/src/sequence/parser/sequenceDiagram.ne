@@ -1,21 +1,6 @@
 @{%
 import * as moo from 'moo'
-
-const LETTER_REGEXP = /[a-zA-Z]/;
-const isCharLetter= (char) => LETTER_REGEXP.test(char);
-
-// from moo issue: https://github.com/no-context/moo/issues/117
-function textToCaseInsensitiveRegex(text) {
-  const regexSource = text.split('').map((char) => {
-    if (isCharLetter(char)) {
-      return `[${char.toLowerCase()}${char.toUpperCase()}]`;
-    }
-
-    return char;
-  });
-
-  return new RegExp(regexSource.join(''));
-};
+import { tv, textToCaseInsensitiveRegex, VALID_TEXT_REGEXP } from '../../util/parser-shared'
 
 let lexer = moo.states({
   main: {
@@ -51,8 +36,7 @@ let lexer = moo.states({
       { match: /left\sof/, type: () => 'LEFT_OF' },
       { match: /right\sof/, type: () => 'RIGHT_OF' },
     ],
-    // WORD: { match: /(?:[a-zA-Z0-9_])+/, fallback: true },
-    WORD: { match: /(?:[a-zA-Z0-9_]\p{Unified_Ideograph})+/, fallback: true },
+    WORD: { match: VALID_TEXT_REGEXP, fallback: true },
   },
   line: {
     REST_OF_LINE: { match: /[^#\n;]+/, pop: 1 },
@@ -64,12 +48,6 @@ let yy
 export function setYY(v) {
   yy = v
 }
-
-// token value
-function tv(token) {
-  return token.value
-}
-
 %}
 
 @preprocessor typescript

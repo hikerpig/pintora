@@ -48,7 +48,8 @@ const PintoraPlay = (props) => {
   }, [code, renderer])
 
   const onOpenInEditorClick = useCallback(() => {
-    const encoded = encodeURIComponent(btoa(escape(code)))
+    // const encoded = encodeURIComponent(btoa(escape(code)))
+    const encoded = pintora.util.encodeForUrl(code)
     const url = `${PINTORA_LIVE_EDITOR_URL}?code=${encoded}`
     window.open(url, '_blank')
   }, [code])

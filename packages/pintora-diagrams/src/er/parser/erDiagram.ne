@@ -1,5 +1,7 @@
 @{%
 import * as moo from 'moo'
+import { tv, VALID_TEXT_REGEXP } from '../../util/parser-shared'
+
 let lexer = moo.compile({
   NEWLINE: { match: /\n/, lineBreaks: true },
   SPACE: {match: /\s+/, lineBreaks: true},
@@ -13,7 +15,7 @@ let lexer = moo.compile({
   COLON: /:/,
   LEFT_BRACE: /\{/,
   RIGHT_BRACE: /\}/,
-  VALID_TEXT: { match: /(?:[a-zA-Z0-9_]\p{Unified_Ideograph})+/, fallback: true },
+  VALID_TEXT: { match: VALID_TEXT_REGEXP, fallback: true },
 })
 
 let yy
@@ -21,12 +23,6 @@ let yy
 export function setYY(v) {
   yy = v
 }
-
-// token value
-function tv(token) {
-  return token.value
-}
-
 %}
 
 @preprocessor typescript

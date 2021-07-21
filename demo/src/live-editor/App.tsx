@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react'
 import { Provider } from 'react-redux'
+import pintora from '@pintora/standalone'
 import { EXAMPLES } from '@pintora/test-shared'
 import Header from './components/Header'
 import Editor from './components/Editor'
@@ -15,7 +16,8 @@ function App() {
     const encodedCode = params.get('code')
     if (encodedCode) {
       try {
-        code = unescape(atob(decodeURIComponent(encodedCode)))
+        // code = unescape(atob(decodeURIComponent(encodedCode)))
+        code = pintora.util.decodeCodeInUrl(encodedCode)
       } catch (error) {
         console.error('[live-editor] error when decoding code in url', error)
       }
