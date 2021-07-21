@@ -22,7 +22,7 @@ module.exports = {
   favicon: '/img/logo.svg',
   organizationName: 'hikerpig', // Usually your GitHub org/user name.
   projectName: 'pintora', // Usually your repo name.
-  trailingSlash: false,
+  trailingSlash: true,
   i18n: {
     defaultLocale: 'en',
     locales: ['en', 'zh-CN']
