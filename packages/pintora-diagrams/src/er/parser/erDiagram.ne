@@ -31,10 +31,10 @@ export function setYY(v) {
 @builtin "whitespace.ne"
 
 program -> "erDiagram" document
-
-document -> null
-  | document line
-
+ 
+ document -> null
+   | document line
+ 
 line ->
     %SPACE:* statement
 	| %NEWLINE
@@ -97,4 +97,3 @@ role ->
         return tv(d[0]).replace(/"/g, '')
       } %}
     | %VALID_TEXT {% (d) => tv(d[0]) %}
-

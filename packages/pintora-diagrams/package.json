@@ -16,7 +16,7 @@
   },
   "dependencies": {
     "@pintora/core": "^0.0.1",
-    "@pintora/dagre": "0.8.8",
+    "@pintora/dagre": "^0.9.0",
     "@pintora/graphlib": "2.2.1"
   },
   "devDependencies": {

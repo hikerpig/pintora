@@ -1,0 +1,85 @@
+---
+title: Component Diagram
+---
+
+> In Unified Modeling Language (UML), a component diagram depicts how components are wired together to form larger components or software systems. They are used to illustrate the structure of arbitrarily complex systems.
+> <cite><a href="https://en.wikipedia.org/wiki/Component_diagram">Wikipidia</a></cite>
+
+## Components and Interfaces
+
+You can define a component in multiple ways, inside brackets or with the `component` keyword.
+
+Interface can be defined using the `()` symbol, or the `interface` keyword.
+
+And you can define an alias, using the `as` keyword. This alias will be used later, when defining relations.
+
+```pintora play
+componentDiagram
+  component comp1
+  [comp2]
+  [component 3] as comp3
+  component comp4 [
+    This component has
+    long description
+  ]
+
+  interface "interf 1"
+  () "interf 2"
+  () "interf 3" as interf3
+```
+
+## Relations
+
+Relations between elements are made using combinations of dotted line (..), straight line (--), and arrows (-->) symbols.
+
+```pintora play
+componentDiagram
+  DataQuery -- [Component]
+  [Component] ..> HTTP : use
+```
+
+## Grouping
+
+You can use several keywords to group components and interfaces together:
+- `package`
+- `node`
+- `folder`
+- `frame`
+- `cloud`
+- `database`
+- `rectangle`
+- `component`
+
+```pintora play
+componentDiagram
+
+package "Some Group" {
+  [First Component]
+  HTTP -- [First Component]
+  [Another Component]
+}
+
+node "Other Groups" {
+  [Second Component]
+  FTP -- [Second Component]
+  [First Component] --> FTP
+}
+
+cloud "Cloud" {
+  [Example 1]
+}
+
+database "MySql" {
+  folder "This is my folder" {
+    [Folder 3]
+  }
+  frame "Foo" {
+    [Frame 4]
+  }
+}
+
+[Another Component] --> [Example 1]
+[Example 1] --> [Folder 3]
+[Folder 3] --> [Frame 4]
+```
+

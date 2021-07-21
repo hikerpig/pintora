@@ -1,4 +1,4 @@
-import { Mark, MarkAttrs, Rect, MarkTypeMap, Text, Point, Path, PathCommand, createRotateAtPoint, PointTuple } from '@pintora/core'
+import { Mark, MarkAttrs, Rect, MarkTypeMap, Text, Point, Path, PathCommand, createRotateAtPoint, PointTuple, TSize } from '@pintora/core'
 import { PALETTE } from './theme'
 
 export function getBaseText(): Text['attrs'] {
@@ -71,5 +71,22 @@ export function makeMark<T extends keyof MarkTypeMap, M extends MarkTypeMap[T]>(
 }
 
 export function calcDirection(start: Point, end: Point) {
-  return Math.atan((end.y - start.y) / (end.x - start.x))
+  const r = Math.atan((end.y - start.y) / (end.x - start.x))
+  if (end.y > start.y && end.x < start.x) {
+    return r + Math.PI
+  }
+  return r
+}
+
+export function makeLabelBg(labelDims: TSize, center: Point, attrs: Partial<Rect['attrs']> = {}) {
+  const labelBg = makeMark('rect', {
+    x: center.x - labelDims.width / 2,
+    y: center.y - labelDims.height / 2,
+    width: labelDims.width,
+    height: labelDims.height,
+    fill: '#fff',
+    opacity: 0.85,
+    ...attrs,
+  }, { class: 'label-bg' })
+  return labelBg
 }

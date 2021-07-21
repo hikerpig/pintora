@@ -1,6 +1,6 @@
 import { mat3 } from '@antv/matrix-util'
 
-export type Mark = Group | Rect | Circle | Ellipse | Text | Line | Polygon | Marker | Path
+export type Mark = Group | Rect | Circle | Ellipse | Text | Line | PolyLine | Polygon | Marker | Path
 
 export interface Figure {
   mark: Mark
@@ -57,6 +57,11 @@ export interface Line extends IMark {
   attrs: MarkAttrs & { x1: number; x2: number; y1: number; y2: number }
 }
 
+export interface PolyLine extends IMark {
+  type: 'polyline'
+  attrs: MarkAttrs & { points: PointTuple[] }
+}
+
 export interface Polygon extends IMark {
   type: 'polygon'
   attrs: MarkAttrs & { points: PointTuple[] }
@@ -84,6 +89,7 @@ export interface MarkTypeMap {
   text: Text
   path: Path
   line: Line
+  polyline: PolyLine
   polygon: Polygon
   marker: Marker
 }

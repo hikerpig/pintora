@@ -173,8 +173,43 @@ erDiagram
 `),
 }
 
+export const componentExample: DiagramExample = {
+  name: 'Component Diagram',
+  description: 'Sample for a componentDiagram',
+  code: stripStartEmptyLines(`
+componentDiagram
+  package "@pintora/core" {
+    () GraphicsIR
+    () IRenderer
+    () IDiagram
+    [Diagram Registry] as registry
+  }
+  package "@pintora/diagrams" {
+    [...Multiple Diagrams...] as diagrams
+    [diagrams]
+    [diagrams] --> IDiagram : implements
+  }
+  package "@pintora/renderer" {
+    () "render()" as renderFn
+    [SVGRender]
+    [CanvasRender]
+    [SVGRender] --> IRenderer : implements
+    [CanvasRender] --> IRenderer : implements
+    IRenderer ..> GraphicsIR : accepts
+  }
+  package "@pintora/standalone" {
+    [standalone]
+  }
+  [IDiagram] --> GraphicsIR : generate
+  [standalone] --> registry : register all of @pintora/diagrams
+  [standalone] --> [@pintora/diagrams] : import
+  [standalone] --> renderFn : call with GraphicsIR
+  `),
+}
+
 export const EXAMPLES = {
   sequence: sequenceExample,
   er: erExample,
   erLarge: erLargeExample,
+  component: componentExample,
 }

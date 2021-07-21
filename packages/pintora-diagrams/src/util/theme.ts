@@ -13,6 +13,7 @@
 
 // ayu light
 export const PALETTE = {
+  white: '#fff',
   normalDark: '#3b4044',
   neutralGray: '#f8f8f2',
   cyan: '#55b4d4',

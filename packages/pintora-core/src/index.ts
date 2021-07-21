@@ -1,5 +1,5 @@
 import { registry } from './registry'
-import { IDiagram, GraphicsIR } from './type'
+import { IDiagram } from './type'
 
 export * from './type'
 

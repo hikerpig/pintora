@@ -21,3 +21,4 @@ Heavily inspired by [Mermaid.js](https://mermaid-js.github.io/mermaid/#/) and [P
 
 - [Sequence Diagram](./diagrams/sequence-diagram)
 - Entity Diagram
+- [Component Diagram](./diagrams/component-diagram)

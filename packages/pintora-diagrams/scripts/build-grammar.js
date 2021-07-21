@@ -4,6 +4,7 @@ const path = require('path')
 const grammarFiles = [
   { input: 'src/er/parser/erDiagram.ne', output: 'src/er/parser/erDiagram.ts' },
   { input: 'src/sequence/parser/sequenceDiagram.ne', output: 'src/sequence/parser/sequenceDiagram.ts' },
+  { input: 'src/component/parser/componentDiagram.ne', output: 'src/component/parser/componentDiagram.ts' },
 ]
 
 grammarFiles.forEach(({ input, output }) => {
