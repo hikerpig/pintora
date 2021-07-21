@@ -90,4 +90,16 @@ sequenceDiagram
       to: 'B',
     })
   })
+
+  it('can parse multiline message', () => {
+    const example = stripStartEmptyLines(`
+sequenceDiagram
+  A-->B: hello\\nthere
+  `)
+    parse(example)
+    const result = db.getDiagramIR()
+    expect(result.messages[0]).toMatchObject({
+      text: 'hello\nthere',
+    })
+  })
 })

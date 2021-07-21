@@ -204,8 +204,8 @@ class SequenceDB {
   parseMessage(str: string) {
     const _str = str.trim()
     const message = {
-      text: _str.replace(/^[:]?(?:no)?wrap:/, '').trim(),
-      wrap: _str.match(/^[:]?wrap:/) !== null ? true : _str.match(/^[:]?nowrap:/) !== null ? false : undefined,
+      text: _str.replace(/\\n/, '\n'),
+      wrap: false,
     }
     logger.debug('parseMessage:', message)
     return message
