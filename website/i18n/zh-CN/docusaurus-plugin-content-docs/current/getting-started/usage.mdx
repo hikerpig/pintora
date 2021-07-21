@@ -1,0 +1,69 @@
+---
+title: 使用方法
+---
+
+## Browser
+
+使用 CDN 上的 UMD 版本:
+
+```html
+<script src="https://cdn.jsdelivr.net/npm/@pintora/standalone/lib/pintora-standalone.umd.js"></script>
+
+<script>
+  pintora.default.initBrowser();
+</script>
+```
+
+import { CodePen, Gist } from 'mdx-embed';
+
+一个 CodePen 的例子:
+
+<CodePen codePenId="zYwdMZj" tabs={['html', 'result']} clickToRun={true} />
+
+## CLI
+
+@pintora/cli 是一个 Node.js 下的命令行程序，可快速生成图片。
+
+全局安装:
+
+```
+npm i -g @pintora/cli
+```
+
+使用 `pintora --help` 看帮助信息:
+
+```bash
+pintora [command]
+
+Commands:
+  pintora render  Render DSL to diagram image
+
+Options:
+  --version  Show version number                                       [boolean]
+  --help     Show help                                                 [boolean]
+```
+
+### pintora render
+
+```
+pintora render
+
+Render DSL to diagram image
+
+选项：
+      --version           显示版本号                                        [布尔]
+      --help              显示帮助信息                                      [布尔]
+  -i, --input             Input file path                                 [必需]
+  -o, --output            Output file path
+  -p, --pixel-ratio       Pixel ratio                                [默认值: 2]
+  -b, --background-color  Background color                      [默认值: "#fff"]
+```
+
+几个例子:
+
+```
+pintora render -i ../test-shared/example-files/sequence.pintora -o sequence.png
+
+# 可以通过 -b 设置背景色
+pintora render -i ../test-shared/example-files/sequence-2.pintora -b "#FAFAFA" -o sequence-2.jpg
+```
