@@ -1,9 +1,8 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react'
 import pintora from '@pintora/standalone'
 import { stripStartEmptyLines } from '@pintora/test-shared'
+import { PINTORA_LIVE_EDITOR_URL } from '../../../../src/const'
 import './PintoraPlay.less'
-
-const PINTORA_LIVE_EDITOR_URL = '/demo/live-editor/'
 
 const PintoraPlay = (props) => {
   // console.log('[PintoraPlay] props', props)

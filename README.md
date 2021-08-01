@@ -8,7 +8,19 @@ Expressing your thoughts in a diagram is better than a thousand words. With the 
 
 Heavily inspired by [Mermaid.js](https://mermaid-js.github.io/mermaid/#/) and [PlantUML](https://plantuml.com/).
 
-Check the online [documentation and demo](http://pintorajs.netlify.app/).
+## ✨ Features
+
+- In browser side, output SVG or Canvas.
+- In Node.js side, output PNG/JPG file.
+- \[Planning\] Modular and composable, load specific diagram implementaions only when needed, keep the core code lightweight.
+- Highly extensible, provide a plugin system for diagram developer to write and distribute their own diagrams.
+
+### Diagram types
+
+- Sequence Diagram
+- Entity Diagram
+
+Check the online [documentation and demo](http://pintorajs.vercel.app/) for more details.
 
 🚧 This project is currently under active development, if you have good thoughts or feature requests, please feel free to [start a new discussion](https://github.com/hikerpig/pintora/discussions).
 

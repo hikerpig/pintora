@@ -19,6 +19,6 @@ Heavily inspired by [Mermaid.js](https://mermaid-js.github.io/mermaid/#/) and [P
 
 ## Diagram types
 
-- [Sequence Diagram](./diagrams/sequence-diagram)
+- [Sequence Diagram](./diagrams/sequence-diagram.mdx)
 - Entity Diagram
 - [Component Diagram](./diagrams/component-diagram)

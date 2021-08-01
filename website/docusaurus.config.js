@@ -3,7 +3,7 @@ const path = require('path')
 const lightCodeTheme = require('prism-react-renderer/themes/github')
 const darkCodeTheme = require('prism-react-renderer/themes/dracula')
 
-const SITE_URL = process.env.SITE_URL || 'https://pintorajs.netlify.app'
+const SITE_URL = process.env.SITE_URL || 'https://pintorajs.vercel.app'
 
 /** @type {import('@docusaurus/types').DocusaurusConfig} */
 module.exports = {
@@ -22,7 +22,7 @@ module.exports = {
   favicon: '/img/logo.svg',
   organizationName: 'hikerpig', // Usually your GitHub org/user name.
   projectName: 'pintora', // Usually your repo name.
-  trailingSlash: false,
+  trailingSlash: true,
   i18n: {
     defaultLocale: 'en',
     locales: ['en', 'zh-CN']

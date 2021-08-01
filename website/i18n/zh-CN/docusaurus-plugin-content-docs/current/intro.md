@@ -18,7 +18,7 @@ Pintora 是一个可在浏览器和 Node.js 环境下运行的文字转示意图
 
 ## 支持图表
 
-- [时序图 Sequence Diagram](./diagrams/sequence-diagram)
+- [时序图 Sequence Diagram](./diagrams/sequence-diagram.mdx)
 - ER 图
 
 ## 实现你自己的图表
