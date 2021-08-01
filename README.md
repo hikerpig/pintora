@@ -19,6 +19,7 @@ Heavily inspired by [Mermaid.js](https://mermaid-js.github.io/mermaid/#/) and [P
 
 - Sequence Diagram
 - Entity Diagram
+- Component Diagram
 
 Check the online [documentation and demo](http://pintorajs.vercel.app/) for more details.
 
@@ -28,6 +29,6 @@ Check the online [documentation and demo](http://pintorajs.vercel.app/) for more
 
 - [x] Sequence Diagram and Entity Relationship Diagram
 - [x] Pintora node.js cli
-- [ ] PlantUML style Component diagram
+- [x] PlantUML style Component diagram
 - [ ] Load diagram implementation and canvas renderer only when needed
 - [ ] Theme config
