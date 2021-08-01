@@ -1,5 +1,4 @@
 import React, { useCallback } from 'react'
-import { useDispatch } from 'react-redux'
 import { EXAMPLES } from '@pintora/test-shared'
 import { actions } from 'src/live-editor/redux/slice'
 import Buttons from 'src/live-editor/components/Buttons'
@@ -9,11 +8,9 @@ import './Examples.less'
 interface ExamplesProps {}
 
 const Examples = ({}: ExamplesProps) => {
-  const dispatch = useDispatch()
   const onExampleClick = useCallback((e: any) => {
     const key = e.currentTarget.dataset.key
     const example = (EXAMPLES as any)[key]
-      console.log('has example', key, example)
     if (example) {
       store.dispatch(actions.updateEditorCode({ code: example.code, syncToPreview: true }))
     }

@@ -1,14 +1,16 @@
 import { GraphicsIR, IDiagramArtist, logger, Group, Text, mat3, safeAssign, createTranslation, Point, calculateTextDimensions } from '@pintora/core'
 import { ErDiagramIR, Identification, Entity, Relationship } from './db'
-import { ErConf, conf } from './config'
+import { ErConf, getConf } from './config'
 import { createLayoutGraph, getGraphBounds, LayoutGraph } from '../util/graph'
 import { makeMark, getBaseText, calcDirection } from '../util/artist-util'
 import dagre from '@pintora/dagre'
-import { PALETTE } from '../util/theme'
 import { drawMarkerTo } from './artist-util'
+
+let conf: ErConf
 
 const erArtist: IDiagramArtist<ErDiagramIR, ErConf> = {
   draw(ir, config) {
+    conf = getConf()
     // Now we have to construct the diagram in a specific way:
     // ---
     // 1. Create all the entities in the svg node at 0,0, but with the correct dimensions (allowing for text content)
@@ -469,7 +471,7 @@ const drawRelationshipFromLayout = function (group: Group, rel: Relationship, g:
       textBaseline: 'middle',
       x: labelX,
       y: labelY,
-      fill: PALETTE.normalDark,
+      fill: conf.textColor,
       fontSize: conf.fontSize,
     },
     { class: 'er__relationship-label' },

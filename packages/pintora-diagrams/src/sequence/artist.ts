@@ -14,11 +14,16 @@ import {
   mat3,
   calculateTextDimensions,
   makeid,
-  IFont,
+  configApi,
 } from '@pintora/core'
 import { db, SequenceDiagramIR, LINETYPE, Message, PLACEMENT, WrappedText } from './db'
-import { SequenceConf, conf, PALETTE } from './config'
+import { SequenceConf, getConf } from './config'
 import { getBaseNote, drawArrowTo, drawCrossTo, getBaseText, makeMark, makeLoopLabelBox } from './artist-util'
+import { ITheme } from '../util/themes/base'
+import { DiagramsConf } from '../type'
+
+let conf: SequenceConf
+let theme: ITheme
 
 type DrawResult<T extends Mark = Mark> = {
   mark: T
@@ -33,7 +38,8 @@ enum LineEndType {
 
 const sequenceArtist: IDiagramArtist<SequenceDiagramIR> = {
   draw(ir, config?) {
-    // conf = configApi.getConfig().sequence
+    conf = getConf()
+    theme = (configApi.getConfig() as DiagramsConf).core.themeVariables
     model.init()
     logger.debug(`C:${JSON.stringify(conf, null, 2)}`)
 
@@ -697,13 +703,14 @@ const drawMessage = function (msgModel: MessageModel): DrawResult<Group> {
       },
       { class: 'sequence-number' },
     )
+    const circleColor = conf.actorTextColor
     const circleMark = makeMark('marker', {
       symbol: 'circle',
       x: startx,
       y: lineStarty,
       r: 8,
-      fill: PALETTE.normalDark,
-      stroke: PALETTE.normalDark,
+      fill: circleColor,
+      stroke: circleColor,
     })
     numberMark = makeMark(
       'group',
@@ -828,7 +835,7 @@ const drawNoteTo = function (noteModel: NoteModel, container: Group) {
   const textHeight = textDims.height
   noteModel.height = textHeight + 2 * conf.noteMargin
   noteModel.starty = model.verticalPos
-  const rectAttrs = getBaseNote()
+  const rectAttrs = getBaseNote(theme)
   safeAssign(rectAttrs, {
     x: noteModel.startx,
     y: noteModel.starty,
@@ -931,7 +938,7 @@ export const drawActors = function (
           x2: actorCenter.x,
           y1: attrs.y,
           y2: 2000,
-          stroke: PALETTE.normalDark,
+          stroke: conf.actorLineColor,
         },
       }
       model.actorLineMarkMap.set(key, lineMark)
@@ -978,13 +985,13 @@ export const drawActors = function (
 }
 
 function drawActivationTo(mark: Group, data: ActivationData) {
-  const rectAttrs = getBaseNote()
+  const rectAttrs = getBaseNote(theme)
   safeAssign(rectAttrs, {
     x: data.startx,
     y: data.starty,
     width: data.stopx - data.startx,
     height: model.verticalPos - data.starty,
-    fill: PALETTE.neutralGray,
+    fill: conf.activationBackground,
   })
   const rect: Rect = {
     type: 'rect',

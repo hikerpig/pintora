@@ -1,19 +1,21 @@
-import { Mark, MarkAttrs } from '@pintora/core'
+import { MarkAttrs } from '@pintora/core'
 import { PALETTE } from '../util/theme'
+import { configApi, safeAssign } from '@pintora/core'
+import { DiagramsConf } from '../type'
 
-export {
-  PALETTE
-}
+// export {
+//   PALETTE
+// }
 
-export interface ITheme {
-  textColor: string
-  primaryColor: string
-}
+// export interface ITheme {
+//   textColor: string
+//   primaryColor: string
+// }
 
-export const THEME: ITheme = {
-  textColor: PALETTE.normalDark,
-  primaryColor: PALETTE.orange,
-}
+// export const THEME: ITheme = {
+//   textColor: PALETTE.normalDark,
+//   primaryColor: PALETTE.orange,
+// }
 
 export type SequenceConf = {
   actorWidth: number
@@ -41,6 +43,9 @@ export type SequenceConf = {
 
   actorStyle: Partial<MarkAttrs>
   actorTextColor: string
+  actorLineColor: string
+
+  activationBackground: string
 
   dividerFontWeight: MarkAttrs['fontWeight']
 
@@ -72,10 +77,14 @@ export const defaultConfig: SequenceConf = {
   loopLineColor: PALETTE.orange,
 
   actorStyle: {
-    fill: THEME.primaryColor,
-    stroke: THEME.textColor,
+    fill: PALETTE.orange,
+    stroke: PALETTE.normalDark,
   },
   actorTextColor: PALETTE.normalDark,
+  actorLineColor: PALETTE.normalDark,
+
+
+  activationBackground: PALETTE.neutralGray,
 
   dividerFontWeight: 600,
 
@@ -84,4 +93,21 @@ export const defaultConfig: SequenceConf = {
 
 export const conf: SequenceConf = {
   ...defaultConfig,
+}
+
+export function getConf() {
+  const globalConfig: DiagramsConf = configApi.getConfig()
+  const t = globalConfig.core.themeVariables
+  safeAssign(conf, {
+    actorStyle: {
+      fill: t.primaryColor,
+      stroke: t.textColor,
+    },
+    messageTextColor: t.textColor,
+    loopLineColor: t.primaryColor,
+    actorTextColor: t.textColor,
+    activationBackground: t.lightBackground,
+  })
+  Object.assign(conf, globalConfig.sequence || {})
+  return conf
 }

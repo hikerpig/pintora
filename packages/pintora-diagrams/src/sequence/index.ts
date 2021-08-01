@@ -22,7 +22,7 @@ export const sequenceDiagram: IDiagram<SequenceDiagramIR, SequenceConf> = {
   clear() {
     db.clear()
   },
-  setConfig(c) {
-    Object.assign(conf, c)
-  }
+  // setConfig(c) {
+  //   Object.assign(conf, c)
+  // }
 }

@@ -2,15 +2,16 @@ import { registry } from './registry'
 import { IDiagram } from './type'
 
 export * from './type'
-
 import { logger, setLogLevel } from './logger'
+import configApi from './config'
 
 export * from './util'
 import { encodeForUrl, decodeCodeInUrl } from './util'
 
 export {
   logger,
-  setLogLevel
+  setLogLevel,
+  configApi,
 }
 
 type DrawOptions = {
@@ -18,6 +19,7 @@ type DrawOptions = {
 }
 
 const pintora = {
+  configApi,
   registerDiagram(name: string, diagram: IDiagram) {
     registry.registerDiagram(name, diagram)
   },
@@ -43,7 +45,6 @@ const pintora = {
       graphicIR,
     }
   },
-  setConfig() {},
   util: {
     encodeForUrl,
     decodeCodeInUrl,

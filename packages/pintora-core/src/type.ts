@@ -14,7 +14,7 @@ export interface IDiagram<D = any, Config = any> {
   db?: any
   configKey?: string
   clear(): void
-  setConfig(): void
+  // setConfig(): void
 }
 
 export interface IDiagramParser<D, Config = any> {

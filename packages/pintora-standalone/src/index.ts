@@ -1,5 +1,5 @@
-import pintora, { GraphicsIR, IDiagram } from '@pintora/core'
-import { DIAGRAMS } from '@pintora/diagrams'
+import pintora, { configApi, GraphicsIR } from '@pintora/core'
+import { DIAGRAMS, DiagramsConf, THEMES } from '@pintora/diagrams'
 import { render, RenderOptions, BaseRenderer, rendererRegistry } from '@pintora/renderer'
 
 function initDiagrams() {
@@ -12,16 +12,6 @@ initDiagrams()
 type InitBrowserOptions = {
   startOnLoad?: boolean
 }
-
-type DiagramsType = typeof DIAGRAMS
-type InspectConfType<T> = T extends IDiagram<infer D, infer C> ? C: any;
-
-type DiagramConf = {
-  component: InspectConfType<DiagramsType['componentDiagram']>
-  er: InspectConfType<DiagramsType['erDiagram']>
-  sequence: InspectConfType<DiagramsType['sequenceDiagram']>
-}
-
 interface RenderToOptions extends RenderOptions {
   onError?(error: Error): void
   enhanceGraphicIR?(ir: GraphicsIR): GraphicsIR
@@ -76,13 +66,12 @@ const pintoraStandalone = {
       container: wrapper,
     })
   },
-
-  setConfig(conf: DiagramConf) {
-    for (const [key, c] of Object.entries(conf)) {
-      const diagram = pintora.getDiagram(key)
-      if (diagram) {
-        diagram.setConfig(c)
-      }
+  setConfig(c: DiagramsConf) {
+    configApi.setConfig(c)
+    if (c.core?.theme) {
+      const conf = configApi.getConfig<DiagramsConf>()
+      const themeConfig = THEMES[c.core.theme]
+      if (themeConfig) conf.core.themeVariables = themeConfig
     }
   },
 }

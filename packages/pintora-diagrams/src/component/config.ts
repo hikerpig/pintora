@@ -1,4 +1,6 @@
 import { PALETTE } from '../util/theme'
+import { configApi, safeAssign } from '@pintora/core'
+import { DiagramsConf } from '../type'
 
 export type ComponentConf = {
   diagramPadding: number
@@ -38,4 +40,19 @@ export const defaultConfig: ComponentConf = {
 
 export const conf: ComponentConf = {
   ...defaultConfig,
+}
+
+export function getConf() {
+  const globalConfig: DiagramsConf = configApi.getConfig()
+  const t = globalConfig.core.themeVariables
+  safeAssign(conf, {
+    componentBackground: t.secondaryColor,
+    componentBorderColor: t.primaryColor,
+    groupBackground: t.groupBackground,
+    groupBorderColor: t.primaryBorderColor,
+    relationLineColor: t.primaryColor,
+    textColor: t.textColor,
+  })
+  Object.assign(conf, globalConfig.component || {})
+  return conf
 }

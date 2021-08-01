@@ -1,4 +1,6 @@
+import { DiagramsConf } from '../type'
 import { PALETTE } from '../util/theme'
+import { configApi, safeAssign } from '@pintora/core'
 
 export type ErConf = {
   diagramPadding: number
@@ -13,6 +15,8 @@ export type ErConf = {
   fill: string
   edgeColor: string
   attributeFill: string
+
+  textColor: string
 
   fontSize: number
 
@@ -35,6 +39,8 @@ export const defaultConfig: ErConf = {
   edgeColor: PALETTE.normalDark,
   attributeFill: '#fffbf9',
 
+  textColor: PALETTE.normalDark,
+
   fontSize: 12,
 
   useMaxWidth: true,
@@ -42,4 +48,18 @@ export const defaultConfig: ErConf = {
 
 export const conf: ErConf = {
   ...defaultConfig,
+}
+
+export function getConf() {
+  const globalConfig: DiagramsConf = configApi.getConfig()
+  const t = globalConfig.core.themeVariables
+  safeAssign(conf, {
+    stroke: t.primaryBorderColor,
+    fill: t.primaryColor,
+    edgeColor: t.primaryColor,
+    textColor: t.textColor,
+    attributeFill: t.lightestBackground || conf.attributeFill,
+  })
+  Object.assign(conf, globalConfig.er || {})
+  return conf
 }

@@ -1,6 +1,6 @@
 import { Rect, Point, PointTuple } from '@pintora/core'
-import { PALETTE } from './config'
 import { makeMark, getBaseText, drawArrowTo, drawCrossTo } from '../util/artist-util'
+import { ITheme } from '../util/themes/base'
 
 export {
   makeMark,
@@ -9,12 +9,12 @@ export {
   drawCrossTo,
 }
 
-export const getBaseNote = function (): Rect['attrs'] {
+export const getBaseNote = function (theme: ITheme): Rect['attrs'] {
   return {
     x: 0,
     y: 0,
-    fill: PALETTE.yellow,
-    stroke: PALETTE.normalDark,
+    fill: theme.noteBackground || theme.groupBackground,
+    stroke: theme.primaryBorderColor,
     width: 50,
     anchor: 'start',
     height: 50,

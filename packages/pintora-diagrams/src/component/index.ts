@@ -2,7 +2,7 @@ import { IDiagram } from '@pintora/core'
 import db, { ComponentDiagramIR } from './db'
 import artist from './artist'
 import { parse } from './parser'
-import { ComponentConf, conf } from './config'
+import { ComponentConf } from './config'
 
 export { ComponentConf, ComponentDiagramIR }
 
@@ -20,9 +20,9 @@ export const componentDiagram: IDiagram<ComponentDiagramIR, ComponentConf> = {
   clear() {
     db.clear()
   },
-  setConfig(c) {
-    Object.assign(conf, c)
-  }
+  // setConfig(c) {
+  //   Object.assign(conf, c)
+  // }
 }
 
 export default componentDiagram

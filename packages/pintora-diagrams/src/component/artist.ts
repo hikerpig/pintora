@@ -9,15 +9,16 @@ import {
   logger,
   Rect,
   TSize,
-  Point,
   getPointAt,
 } from '@pintora/core'
 import { ComponentDiagramIR, LineType, Relationship } from './db'
-import { ComponentConf, conf } from './config'
+import { ComponentConf, getConf } from './config'
 import { createLayoutGraph, getGraphBounds, LayoutEdge, LayoutGraph, LayoutNode } from '../util/graph'
 import { makeMark, drawArrowTo, calcDirection, makeLabelBg } from '../util/artist-util'
 import dagre from '@pintora/dagre'
 import { Edge } from '@pintora/graphlib'
+
+let conf: ComponentConf
 
 function getEdgeName(relationship: Relationship) {
   return `${relationship.from.name}_${relationship.to.name}_${relationship.message}`
@@ -30,8 +31,9 @@ type EdgeData = {
 }
 
 const componentArtist: IDiagramArtist<ComponentDiagramIR, ComponentConf> = {
-  draw(ir, config) {
+  draw(ir) {
     // logger.info('[artist] component', ir)
+    conf = getConf()
 
     const rootMark: Group = {
       type: 'group',
