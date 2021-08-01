@@ -14,7 +14,11 @@ export function calculateTextDimensions(text: string, font?: IFont) {
     // console.log('line metric', line, lineMetric)
     const w = lineMetric.width
     width = Math.max(w, width)
-    height += fontSize + (i === 0 ? 0 : 8)
+    let lineHeight = fontSize
+    if ('actualBoundingBoxDescent' in lineMetric) {
+      lineHeight = lineMetric.actualBoundingBoxAscent + lineMetric.actualBoundingBoxDescent
+    }
+    height += lineHeight
   })
   // console.log('calculateTextDimensions', text, width, height)
   return {
