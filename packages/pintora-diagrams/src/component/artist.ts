@@ -13,15 +13,11 @@ import {
   getPointAt,
 } from '@pintora/core'
 import { ComponentDiagramIR, LineType, Relationship } from './db'
-import { ComponentConf, defaultConfig } from './config'
+import { ComponentConf, conf } from './config'
 import { createLayoutGraph, getGraphBounds, LayoutEdge, LayoutGraph, LayoutNode } from '../util/graph'
 import { makeMark, drawArrowTo, calcDirection, makeLabelBg } from '../util/artist-util'
 import dagre from '@pintora/dagre'
 import { Edge } from '@pintora/graphlib'
-
-let conf: ComponentConf = {
-  ...defaultConfig,
-}
 
 function getEdgeName(relationship: Relationship) {
   return `${relationship.from.name}_${relationship.to.name}_${relationship.message}`

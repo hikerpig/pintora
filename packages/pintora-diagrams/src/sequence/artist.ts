@@ -17,12 +17,8 @@ import {
   IFont,
 } from '@pintora/core'
 import { db, SequenceDiagramIR, LINETYPE, Message, PLACEMENT, WrappedText } from './db'
-import { SequenceConf, defaultConfig, PALETTE } from './config'
+import { SequenceConf, conf, PALETTE } from './config'
 import { getBaseNote, drawArrowTo, drawCrossTo, getBaseText, makeMark, makeLoopLabelBox } from './artist-util'
-
-let conf: SequenceConf = {
-  ...defaultConfig,
-}
 
 type DrawResult<T extends Mark = Mark> = {
   mark: T

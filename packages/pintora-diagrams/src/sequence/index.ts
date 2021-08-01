@@ -2,7 +2,7 @@ import { IDiagram } from "@pintora/core"
 import { db, SequenceDiagramIR } from './db'
 import artist from './artist'
 import { parse } from './parser'
-import { SequenceConf} from './config'
+import { SequenceConf, conf } from './config'
 
 export {
   SequenceDiagramIR,
@@ -21,5 +21,8 @@ export const sequenceDiagram: IDiagram<SequenceDiagramIR, SequenceConf> = {
   db,
   clear() {
     db.clear()
+  },
+  setConfig(c) {
+    Object.assign(conf, c)
   }
 }

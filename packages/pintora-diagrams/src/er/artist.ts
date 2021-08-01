@@ -1,15 +1,11 @@
 import { GraphicsIR, IDiagramArtist, logger, Group, Text, mat3, safeAssign, createTranslation, Point, calculateTextDimensions } from '@pintora/core'
 import { ErDiagramIR, Identification, Entity, Relationship } from './db'
-import { ErConf, defaultConfig } from './config'
+import { ErConf, conf } from './config'
 import { createLayoutGraph, getGraphBounds, LayoutGraph } from '../util/graph'
 import { makeMark, getBaseText, calcDirection } from '../util/artist-util'
 import dagre from '@pintora/dagre'
 import { PALETTE } from '../util/theme'
 import { drawMarkerTo } from './artist-util'
-
-let conf: ErConf = {
-  ...defaultConfig,
-}
 
 const erArtist: IDiagramArtist<ErDiagramIR, ErConf> = {
   draw(ir, config) {

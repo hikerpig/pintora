@@ -1,4 +1,4 @@
-import pintora, { GraphicsIR } from '@pintora/core'
+import pintora, { GraphicsIR, IDiagram } from '@pintora/core'
 import { DIAGRAMS } from '@pintora/diagrams'
 import { render, RenderOptions, BaseRenderer, rendererRegistry } from '@pintora/renderer'
 
@@ -11,6 +11,15 @@ initDiagrams()
 
 type InitBrowserOptions = {
   startOnLoad?: boolean
+}
+
+type DiagramsType = typeof DIAGRAMS
+type InspectConfType<T> = T extends IDiagram<infer D, infer C> ? C: any;
+
+type DiagramConf = {
+  component: InspectConfType<DiagramsType['componentDiagram']>
+  er: InspectConfType<DiagramsType['erDiagram']>
+  sequence: InspectConfType<DiagramsType['sequenceDiagram']>
 }
 
 interface RenderToOptions extends RenderOptions {
@@ -66,6 +75,15 @@ const pintoraStandalone = {
     pintoraStandalone.renderTo(container.innerText, {
       container: wrapper,
     })
+  },
+
+  setConfig(conf: DiagramConf) {
+    for (const [key, c] of Object.entries(conf)) {
+      const diagram = pintora.getDiagram(key)
+      if (diagram) {
+        diagram.setConfig(c)
+      }
+    }
   },
 }
 

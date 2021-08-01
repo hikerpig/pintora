@@ -35,3 +35,7 @@ export const defaultConfig: ComponentConf = {
 
   interfaceSize: 16,
 }
+
+export const conf: ComponentConf = {
+  ...defaultConfig,
+}

@@ -21,6 +21,9 @@ const pintora = {
   registerDiagram(name: string, diagram: IDiagram) {
     registry.registerDiagram(name, diagram)
   },
+  getDiagram(name: string) {
+    return registry.getDiagram(name)
+  },
   parseAndDraw(text: string, opts: DrawOptions) {
     const { onError } = opts
     const diagram = registry.detectDiagram(text)
@@ -40,6 +43,7 @@ const pintora = {
       graphicIR,
     }
   },
+  setConfig() {},
   util: {
     encodeForUrl,
     decodeCodeInUrl,

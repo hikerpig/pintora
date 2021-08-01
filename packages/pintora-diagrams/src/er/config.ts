@@ -29,7 +29,6 @@ export const defaultConfig: ErConf = {
 
   entityPadding: 15,
 
-  // stroke: '#FF9900',
   stroke: PALETTE.normalDark,
   fill: PALETTE.orange,
   // fill: 'transparent', // for debugging markers
@@ -39,4 +38,8 @@ export const defaultConfig: ErConf = {
   fontSize: 12,
 
   useMaxWidth: true,
+}
+
+export const conf: ErConf = {
+  ...defaultConfig,
 }

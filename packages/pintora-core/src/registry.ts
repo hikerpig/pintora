@@ -22,6 +22,10 @@ class Registry {
     }
     return diagram
   }
+
+  getDiagram(name: string) {
+    return this.diagrams[name]
+  }
 }
 
 export const registry = new Registry()

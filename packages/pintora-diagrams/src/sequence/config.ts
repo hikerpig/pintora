@@ -82,3 +82,6 @@ export const defaultConfig: SequenceConf = {
   showSequenceNumbers: false,
 }
 
+export const conf: SequenceConf = {
+  ...defaultConfig,
+}
