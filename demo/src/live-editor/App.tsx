@@ -5,9 +5,17 @@ import { EXAMPLES } from '@pintora/test-shared'
 import Header from './components/Header'
 import Editor from './components/Editor'
 import Preview from './containers/Preview'
+import Panel from './components/Panel'
+import Examples from './containers/Examples'
+import Actions from './containers/Actions'
 import store from './redux/store'
 import { actions } from 'src/live-editor/redux/slice'
 import './App.css'
+
+const EDITOR_TABS = [
+  { key: 'code', label: 'Code' },
+  { key: 'config', label: 'Config' },
+]
 
 function App() {
   useEffect(() => {
@@ -39,11 +47,25 @@ function App() {
 
   return (
     <Provider store={store}>
-      <div className="App min-h-screen min-w-screen flex flex-col">
+      <div className="App min-h-screen min-w-screen flex flex-col" data-theme="bumblebee">
         <Header></Header>
         <div className="App__content flex">
-          <Editor />
-          <Preview className="App__preview" />
+          <div className="App__left">
+            <Panel title="Editor">
+              <Editor />
+            </Panel>
+            <Panel title="Examples">
+              <Examples />
+            </Panel>
+            <Panel title="Actions">
+              <Actions />
+            </Panel>
+          </div>
+          <div className="App__right">
+            <Panel title="Preview">
+              <Preview className="App__preview" />
+            </Panel>
+          </div>
         </div>
       </div>
     </Provider>

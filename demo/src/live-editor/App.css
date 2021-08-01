@@ -2,6 +2,14 @@
   height: calc(100vh - var(--demo-header-height));
 }
 
-.App__preview {
+.App__left {
+  min-width: 40vw;
+  width: 45vw;
+  height: 100%;
+}
+
+.App__right {
   max-width: 60vw;
+  flex-grow: 1;
+  margin-left: 1em;
 }
