@@ -1,6 +1,6 @@
 {
   "name": "@pintora/renderer",
-  "version": "0.1.0-alpha.0",
+  "version": "0.1.0-alpha.1",
   "description": "Pintora's default renderer",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
@@ -14,7 +14,7 @@
   "dependencies": {
     "@antv/g-canvas": "^0.5.10",
     "@antv/g-svg": "^0.5.6",
-    "@pintora/core": "^0.1.0-alpha.0",
+    "@pintora/core": "^0.1.0-alpha.1",
     "@types/node": "^14.11.8"
   },
   "devDependencies": {
