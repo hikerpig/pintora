@@ -25,6 +25,7 @@ export default defineConfig({
     },
     strategies: 'injectManifest',
     workbox: {
+      skipWaiting: true,
     }
   })],
   base: BASE,

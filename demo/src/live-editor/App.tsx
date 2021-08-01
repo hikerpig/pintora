@@ -16,7 +16,6 @@ function App() {
     const encodedCode = params.get('code')
     if (encodedCode) {
       try {
-        // code = unescape(atob(decodeURIComponent(encodedCode)))
         code = pintora.util.decodeCodeInUrl(encodedCode)
       } catch (error) {
         console.error('[live-editor] error when decoding code in url', error)
