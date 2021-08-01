@@ -48,8 +48,8 @@ const componentArtist: IDiagramArtist<ComponentDiagramIR, ComponentConf> = {
       directed: true,
       compound: true,
     }).setGraph({
-      marginx: 10,
-      marginy: 10,
+      marginx: conf.diagramPadding,
+      marginy: conf.diagramPadding,
       nodesep: 20,
       edgesep: 20,
       ranksep: 80,
@@ -67,7 +67,7 @@ const componentArtist: IDiagramArtist<ComponentDiagramIR, ComponentConf> = {
     dagre.layout(g, {
       // debugTiming: true,
     })
-    ;(window as any).graph = g
+    // ;(window as any).graph = g
 
     adjustMarkInGraph(g)
 
@@ -179,7 +179,7 @@ function drawInterfacesTo(parentMark: Group, ir: ComponentDiagramIR, g: LayoutGr
     const outerWidth = Math.max(interfaceSize, labelDims.width)
     const nodeHeight = interfaceSize + labelDims.height
     g.setNode(id, {
-      width: outerWidth,
+      width: interfaceSize,
       height: nodeHeight,
       id,
       outerWidth,
@@ -269,6 +269,7 @@ function drawRelationshipsTo(parentMark: Group, ir: ComponentDiagramIR, g: Layou
       {
         points: [],
         stroke: conf.relationLineColor,
+        lineCap: 'round',
       },
       { class: 'component__rel-line' },
     )

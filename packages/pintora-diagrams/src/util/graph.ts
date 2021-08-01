@@ -7,6 +7,11 @@ export function createLayoutGraph(opts?: GraphOptions) {
   return new Graph(opts)
 }
 
+type DagreGraphOpts = {
+  marginx?: number
+  marginy?: number
+}
+
 export function getGraphBounds(g: LayoutGraph): Bounds {
   let left = 0
   let right = 0
@@ -16,19 +21,24 @@ export function getGraphBounds(g: LayoutGraph): Bounds {
     const node: LayoutNode = g.node(k)
     left = Math.min(node.x, left)
     const width = node.outerWidth || node.width
-    right = Math.max(node.x + width, right)
+    // assuming the node is positioned with anchor point centered
+    right = Math.max(node.x + width / 2, right)
     top = Math.min(node.y, top)
     const height = node.outerHeight || node.height
-    bottom = Math.max(node.y + height, bottom)
+    bottom = Math.max(node.y + height / 2, bottom)
   })
+
+  const graphOpts: DagreGraphOpts = g.graph() as any
+  const marginx = graphOpts.marginx || 0
+  const marginy = graphOpts.marginy || 0
 
   return {
     left,
     right,
     top,
     bottom,
-    width: right - left,
-    height: bottom - top,
+    width: right - left + marginx,
+    height: bottom - top + marginy,
   }
 }
 

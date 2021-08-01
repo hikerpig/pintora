@@ -58,7 +58,6 @@ const erArtist: IDiagramArtist<ErDiagramIR, ErConf> = {
     const relationships = addRelationships(ir.relationships, g)
 
     dagre.layout(g, {})
-    ;(window as any).g = g
 
     // Adjust the positions of the entities so that they adhere to the layout
     adjustEntities(g)

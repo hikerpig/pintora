@@ -1,6 +1,8 @@
 import { PALETTE } from '../util/theme'
 
 export type ComponentConf = {
+  diagramPadding: number
+
   componentPadding: number
   componentBackground: string
   componentBorderColor: string
@@ -17,6 +19,8 @@ export type ComponentConf = {
 }
 
 export const defaultConfig: ComponentConf = {
+  diagramPadding: 15,
+
   componentPadding: 15,
   componentBackground: PALETTE.yellow,
   componentBorderColor: PALETTE.orange,

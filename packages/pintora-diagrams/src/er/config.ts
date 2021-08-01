@@ -5,7 +5,6 @@ export type ErConf = {
   layoutDirection: string
 
   minEntityWidth: number
-
   minEntityHeight: number
 
   entityPadding: number
