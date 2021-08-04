@@ -11,10 +11,11 @@ import editorWorker from 'monaco-editor/esm/vs/editor/editor.worker?worker'
 interface Props {
   code: string
   onCodeChange(code: string): void
+  editorOptions: Partial<monaco.editor.IStandaloneEditorConstructionOptions>
 }
 
 const MonacoEditor = (props: Props) => {
-  const { code, onCodeChange, } = props
+  const { code, onCodeChange, editorOptions, } = props
   const wrapperRef = useRef<HTMLDivElement>()
   const editorRef = useRef<monaco.editor.IStandaloneCodeEditor>()
 
@@ -26,12 +27,13 @@ const MonacoEditor = (props: Props) => {
 
     editor = monaco.editor.create(wrapperRef.current, {
       value: code,
-      language: 'pintora',
       minimap: { enabled: false },
       lineDecorationsWidth: 0,
       automaticLayout: true,
       fontSize: 15,
       theme: 'vs-dark',
+      tabSize: 2,
+      ...editorOptions,
     })
     const editorModel = editor.getModel()
     if (editorModel) {

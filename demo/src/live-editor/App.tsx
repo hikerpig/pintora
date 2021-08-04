@@ -1,9 +1,10 @@
-import React, { useEffect } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { Provider } from 'react-redux'
 import pintora from '@pintora/standalone'
 import { EXAMPLES } from '@pintora/test-shared'
 import Header from './components/Header'
-import Editor from './components/Editor'
+import Editor from './containers/Editor'
+import ConfigEditor from './containers/ConfigEditor'
 import Preview from './containers/Preview'
 import Panel from './components/Panel'
 import Examples from './containers/Examples'
@@ -45,14 +46,19 @@ function App() {
     }
   }, [])
 
+  const onEditorTabChange = useCallback((tab: string) => {
+    store.dispatch(actions.setCurrentEditor({ editor: tab }))
+  }, [])
+
   return (
     <Provider store={store}>
       <div className="App min-h-screen min-w-screen flex flex-col" data-theme="bumblebee">
         <Header></Header>
         <div className="App__content flex">
           <div className="App__left">
-            <Panel title="Editor">
+            <Panel title="Editor" tabs={EDITOR_TABS} onCurrentTabChange={onEditorTabChange}>
               <Editor />
+              <ConfigEditor />
             </Panel>
             <Panel title="Examples">
               <Examples />

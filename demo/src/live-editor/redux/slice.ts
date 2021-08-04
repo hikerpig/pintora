@@ -1,8 +1,13 @@
-import { createSlice, PayloadAction } from '@reduxjs/toolkit'
+import { createSlice, DeepPartial, PayloadAction } from '@reduxjs/toolkit'
 import { EXAMPLES } from '@pintora/test-shared'
+import { DiagramsConf } from '@pintora/standalone'
 
 export type State = {
+  currentEditor: 'code' | 'config'
   editor: {
+    code: string
+  }
+  configEditor: {
     code: string
   }
   preview: {
@@ -13,9 +18,19 @@ export type State = {
   }
 }
 
+const DEFAULT_CONFIG: DeepPartial<DiagramsConf> = {
+  core: {
+    theme: 'default',
+  },
+}
+
 const initialState: State = {
+  currentEditor: 'code',
   editor: {
     code: EXAMPLES.sequence.code,
+  },
+  configEditor: {
+    code: JSON.stringify(DEFAULT_CONFIG, null, 2),
   },
   preview: {
     code: EXAMPLES.sequence.code,
@@ -35,6 +50,14 @@ const appSlice = createSlice({
       if (syncToPreview) {
         state.preview.code = code
       }
+    },
+    updateConfigCode(state, action: PayloadAction<{ code: string }>) {
+      const { code } = action.payload
+      state.configEditor.code = code
+    },
+    setCurrentEditor(state, action: PayloadAction<{ editor: string }>) {
+      const { editor } = action.payload
+      state.currentEditor = editor as any
     },
     updatePreviewConfig(state, action: PayloadAction<Partial<State['preview']['config']>>) {
       Object.assign(state.preview.config, action.payload)

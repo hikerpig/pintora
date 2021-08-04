@@ -76,7 +76,7 @@ const pintoraStandalone = {
   },
 }
 
-export { BaseRenderer, rendererRegistry }
+export { BaseRenderer, rendererRegistry, DiagramsConf }
 
 export { pintoraStandalone }
 
