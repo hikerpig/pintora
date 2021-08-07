@@ -3,6 +3,19 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.1.0-alpha.2](https://github.com/hikerpig/pintora/compare/v0.1.0-alpha.1...v0.1.0-alpha.2) (2021-08-07)
+
+
+### Features
+
+* **pintora-demo:** ConfigEditor in live-editor ([973f07b](https://github.com/hikerpig/pintora/commit/973f07baf282fe0e13df37cf75a0e71d0d70a321))
+* **pintora-demo:** sync config to preview ([c8a9392](https://github.com/hikerpig/pintora/commit/c8a939200b69de8826ccb6973db96ce4b94250f5))
+* **pintora-diagrams:** adjust diagram colors with dark theme ([72d3720](https://github.com/hikerpig/pintora/commit/72d37207f6e125ba354997b956d53c6d0e3528eb))
+
+
+
+
+
 # [0.1.0-alpha.1](https://github.com/hikerpig/pintora/compare/v0.1.0-alpha.0...v0.1.0-alpha.1) (2021-08-01)
 
 
