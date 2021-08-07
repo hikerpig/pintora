@@ -1,4 +1,4 @@
-import { createSlice, DeepPartial, PayloadAction } from '@reduxjs/toolkit'
+import { createSlice, DeepPartial, Draft, PayloadAction } from '@reduxjs/toolkit'
 import { EXAMPLES } from '@pintora/test-shared'
 import { DiagramsConf } from '@pintora/standalone'
 
@@ -12,9 +12,11 @@ export type State = {
   }
   preview: {
     code: string
+    autoSync: boolean
     config: {
       renderer: 'svg' | 'canvas'
     }
+    pintoraConfig: DeepPartial<DiagramsConf>
   }
 }
 
@@ -34,10 +36,21 @@ const initialState: State = {
   },
   preview: {
     code: EXAMPLES.sequence.code,
+    autoSync: true,
     config: {
       renderer: 'svg',
     },
+    pintoraConfig: {},
   },
+}
+
+function syncPreviewPintoraConfig(state: Draft<State>, code: string) {
+  try {
+    const pintoraConfig = JSON.parse(code)
+    state.preview.pintoraConfig = pintoraConfig
+  } catch (error) {
+    console.warn('Error when parsing state.configEditor.code')
+  }
 }
 
 const appSlice = createSlice({
@@ -47,13 +60,16 @@ const appSlice = createSlice({
     updateEditorCode(state, action: PayloadAction<{ code: string; syncToPreview?: boolean }>) {
       const { code, syncToPreview } = action.payload
       state.editor.code = code
-      if (syncToPreview) {
+      if (syncToPreview || state.preview.autoSync) {
         state.preview.code = code
       }
     },
-    updateConfigCode(state, action: PayloadAction<{ code: string }>) {
-      const { code } = action.payload
+    updateConfigCode(state, action: PayloadAction<{ code: string; syncToPreview?: boolean }>) {
+      const { code, syncToPreview } = action.payload
       state.configEditor.code = code
+      if (syncToPreview || state.preview.autoSync) {
+        syncPreviewPintoraConfig(state, state.configEditor.code)
+      }
     },
     setCurrentEditor(state, action: PayloadAction<{ editor: string }>) {
       const { editor } = action.payload
@@ -61,6 +77,13 @@ const appSlice = createSlice({
     },
     updatePreviewConfig(state, action: PayloadAction<Partial<State['preview']['config']>>) {
       Object.assign(state.preview.config, action.payload)
+    },
+    updateAutoSync(state, action: PayloadAction<boolean>) {
+      state.preview.autoSync = action.payload
+    },
+    refreshPreview(state) {
+      state.preview.code = state.editor.code
+      syncPreviewPintoraConfig(state, state.configEditor.code)
     },
   },
 })

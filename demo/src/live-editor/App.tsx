@@ -1,22 +1,16 @@
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useCallback, useEffect } from 'react'
 import { Provider } from 'react-redux'
 import pintora from '@pintora/standalone'
 import { EXAMPLES } from '@pintora/test-shared'
 import Header from './components/Header'
-import Editor from './containers/Editor'
-import ConfigEditor from './containers/ConfigEditor'
 import Preview from './containers/Preview'
 import Panel from './components/Panel'
 import Examples from './containers/Examples'
 import Actions from './containers/Actions'
+import EditorPanel from './containers/EditorPanel'
 import store from './redux/store'
 import { actions } from 'src/live-editor/redux/slice'
 import './App.css'
-
-const EDITOR_TABS = [
-  { key: 'code', label: 'Code' },
-  { key: 'config', label: 'Config' },
-]
 
 function App() {
   useEffect(() => {
@@ -46,20 +40,13 @@ function App() {
     }
   }, [])
 
-  const onEditorTabChange = useCallback((tab: string) => {
-    store.dispatch(actions.setCurrentEditor({ editor: tab }))
-  }, [])
-
   return (
     <Provider store={store}>
       <div className="App min-h-screen min-w-screen flex flex-col" data-theme="bumblebee">
         <Header></Header>
         <div className="App__content flex">
           <div className="App__left">
-            <Panel title="Editor" tabs={EDITOR_TABS} onCurrentTabChange={onEditorTabChange}>
-              <Editor />
-              <ConfigEditor />
-            </Panel>
+            <EditorPanel />
             <Panel title="Examples">
               <Examples />
             </Panel>

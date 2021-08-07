@@ -3,7 +3,6 @@ import MonacoEditor from 'src/live-editor/components/MonacoEditor'
 import { useDispatch, connect } from 'react-redux'
 import { State, actions } from 'src/live-editor/redux/slice'
 import './Editor.less'
-import classNames from 'classnames'
 
 interface Props {
   editorCode: string
@@ -19,7 +18,7 @@ function Editor(props: Props) {
   const dispatch = useDispatch()
 
   const onCodeChange = useCallback((code) => {
-    dispatch(actions.updateEditorCode({ code, syncToPreview: true }))
+    dispatch(actions.updateEditorCode({ code }))
   }, [])
  
   const style = {

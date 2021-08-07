@@ -1,8 +1,8 @@
 import React, { useCallback } from 'react'
+import { useDebounceCallback } from '@react-hook/debounce'
 import MonacoEditor from 'src/live-editor/components/MonacoEditor'
 import { useDispatch, connect } from 'react-redux'
 import { State, actions } from 'src/live-editor/redux/slice'
-// import './Editor.less'
 
 interface Props {
   editorCode: string
@@ -17,16 +17,21 @@ function ConfigEditor(props: Props) {
   const { editorCode, show } = props
   const dispatch = useDispatch()
 
-  const onCodeChange = useCallback((code) => {
-    dispatch(actions.updateConfigCode({ code }))
-  }, [])
- 
+  const onCodeChange = useDebounceCallback(
+    useCallback(code => {
+      dispatch(actions.updateConfigCode({ code }))
+    }, []),
+    500,
+  )
+
   const style = {
-    display: show ? 'flex': 'none',
+    display: show ? 'flex' : 'none',
   }
-  return <div className="ConfigEditor Editor" style={style}>
-    <MonacoEditor code={editorCode} onCodeChange={onCodeChange} editorOptions={CONFIG_EDITOR_OPTIONS}></MonacoEditor>
-  </div>
+  return (
+    <div className="ConfigEditor Editor" style={style}>
+      <MonacoEditor code={editorCode} onCodeChange={onCodeChange} editorOptions={CONFIG_EDITOR_OPTIONS} />
+    </div>
+  )
 }
 
 export default connect((state: State) => {

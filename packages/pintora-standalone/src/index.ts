@@ -70,8 +70,15 @@ const pintoraStandalone = {
     configApi.setConfig(c)
     if (c.core?.theme) {
       const conf = configApi.getConfig<DiagramsConf>()
+      const newConf = {
+        ...conf,
+      }
       const themeConfig = THEMES[c.core.theme]
-      if (themeConfig) conf.core.themeVariables = themeConfig
+      if (themeConfig) {
+        newConf.core = newConf.core || {} as any
+        newConf.core.themeVariables = themeConfig
+      }
+      configApi.setConfig(newConf)
     }
   },
 }

@@ -1,3 +1,5 @@
+import deepmerge from 'deepmerge'
+
 let config = {}
 
 const configApi = {
@@ -5,7 +7,7 @@ const configApi = {
     return config as T
   },
   setConfig<T=any>(c: Partial<T>) {
-    Object.assign(config, c)
+    config = deepmerge(config, c)
   },
 }
 

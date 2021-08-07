@@ -1,9 +1,13 @@
 import React, { useEffect, useRef } from 'react'
 import * as monaco from 'monaco-editor'
 import editorWorker from 'monaco-editor/esm/vs/editor/editor.worker?worker'
+import JsonWorker from 'monaco-editor/esm/vs/language/json/json.worker?worker';
 
 ;(self as any).MonacoEnvironment = {
   getWorker(_: string, label: string) {
+    if (label === 'json') {
+      return new JsonWorker();
+    }
     return new editorWorker()
   },
 }

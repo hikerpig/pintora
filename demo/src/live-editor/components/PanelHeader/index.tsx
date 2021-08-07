@@ -8,14 +8,15 @@ export type TabItem = {
 
 export type Tabs = TabItem[]
 
-interface PanelHeaderProps {
+export interface PanelHeaderProps {
   title: string
   tabs: Tabs | undefined
   currentTab: string | undefined
   setCurrentTab(key: string): void
+  appendix?: JSX.Element
 }
 
-const PanelHeader = ({ title, tabs, currentTab, setCurrentTab }: PanelHeaderProps) => {
+const PanelHeader = ({ title, tabs, currentTab, setCurrentTab, appendix }: PanelHeaderProps) => {
   const onClickTab = useCallback(
     (key: string) => {
       setCurrentTab(key)
@@ -30,7 +31,8 @@ const PanelHeader = ({ title, tabs, currentTab, setCurrentTab }: PanelHeaderProp
           tabs.map(tabItem => {
             return (
               <a
-                className={`tab tab-lifted ${currentTab === tabItem.key ? 'tab-active' : ''}`}
+                className={`tab tab-bordered ${currentTab === tabItem.key ? 'tab-active' : ''}`}
+                key={tabItem.key}
                 onClick={() => onClickTab(tabItem.key)}
               >
                 {tabItem.label}
@@ -38,6 +40,7 @@ const PanelHeader = ({ title, tabs, currentTab, setCurrentTab }: PanelHeaderProp
             )
           })}
       </div>
+      {appendix && <div className="PanelHeader__appendix flex items-center">{appendix}</div> }
     </div>
   )
 }

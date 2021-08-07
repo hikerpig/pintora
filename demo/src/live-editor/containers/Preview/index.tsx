@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react'
+import React, { useCallback, useEffect } from 'react'
 import classnames from 'classnames'
 import { useDispatch, connect } from 'react-redux'
 import { State, actions } from 'src/live-editor/redux/slice'
@@ -9,9 +9,10 @@ interface Props {
   previewCode: string
   previewConfig: State['preview']['config']
   className?: string
+  pintoraConfig?: any
 }
 
-const Preview = ({ previewCode, previewConfig, className }: Props) => {
+const Preview = ({ previewCode, previewConfig, pintoraConfig, className }: Props) => {
   const dispatch = useDispatch()
 
   const onRendererChange = useCallback(
@@ -45,7 +46,7 @@ const Preview = ({ previewCode, previewConfig, className }: Props) => {
           </div> */}
         </div>
       </div>
-      <PintoraPreview code={previewCode} renderer={previewConfig.renderer} />
+      <PintoraPreview code={previewCode} renderer={previewConfig.renderer} pintoraConfig={pintoraConfig} />
     </div>
   )
 }
@@ -54,6 +55,7 @@ const connector = connect((state: State) => {
   return {
     previewCode: state.preview.code,
     previewConfig: state.preview.config,
+    pintoraConfig: state.preview.pintoraConfig,
   }
 })(Preview)
 

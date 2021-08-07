@@ -6,16 +6,24 @@ import './PintoraPreview.less'
 interface Props {
   code: string
   renderer?: RenderOptions['renderer']
+  pintoraConfig?: any
   onError?(error: Error): void
 }
 
 export default function PintoraPreview(props: Props) {
-  const { code, renderer, onError } = props
+  const { code, renderer, pintoraConfig, onError } = props
   const containerRef = useRef<HTMLDivElement>()
   const [errorMessage, setErrorMessage] = useState<string | null>('')
 
   useEffect(() => {
     if (!containerRef.current) return
+    if (pintoraConfig) {
+      try {
+        pintora.setConfig(pintoraConfig || {})
+      } catch (error) {
+        console.warn('error in setConfig', error)
+      }
+    }
 
     pintora.renderTo(code, {
       container: containerRef.current,
@@ -27,13 +35,14 @@ export default function PintoraPreview(props: Props) {
       onError(error) {
         console.error(error)
         setErrorMessage(error.stack || error.message)
+        if (onError) onError(error)
       },
     })
 
     return () => {
       if (containerRef.current) containerRef.current.innerHTML = ''
     }
-  }, [code, renderer])
+  }, [code, renderer, pintoraConfig])
 
   return (
     <div className="PintoraPreview">
