@@ -18,6 +18,8 @@ export type ErConf = {
 
   textColor: string
 
+  labelBackground: string
+
   fontSize: number
 
   useMaxWidth: boolean
@@ -41,6 +43,8 @@ export const defaultConfig: ErConf = {
 
   textColor: PALETTE.normalDark,
 
+  labelBackground: PALETTE.white,
+
   fontSize: 12,
 
   useMaxWidth: true,
@@ -58,6 +62,7 @@ export function getConf() {
     fill: t.primaryColor,
     edgeColor: t.primaryColor,
     textColor: t.textColor,
+    labelBackground: t.canvasBackground || t.background1,
     attributeFill: t.lightestBackground || conf.attributeFill,
   })
   Object.assign(conf, globalConfig.er || {})

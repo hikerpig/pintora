@@ -290,7 +290,7 @@ function drawRelationshipsTo(parentMark: Group, ir: ComponentDiagramIR, g: Layou
         },
         { class: 'component__rel-text' },
       )
-      relTextBg = makeLabelBg(labelDims, { x: 0, y: 0 })
+      relTextBg = makeLabelBg(labelDims, { x: 0, y: 0 }, { fill: conf.labelBackground })
     }
 
     const shouldDrawArrow = r.line.lineType !== LineType.STRAIGHT

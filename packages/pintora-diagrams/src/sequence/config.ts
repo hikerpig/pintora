@@ -45,6 +45,8 @@ export type SequenceConf = {
   actorTextColor: string
   actorLineColor: string
 
+  noteTextColor: string
+
   activationBackground: string
 
   dividerFontWeight: MarkAttrs['fontWeight']
@@ -83,6 +85,7 @@ export const defaultConfig: SequenceConf = {
   actorTextColor: PALETTE.normalDark,
   actorLineColor: PALETTE.normalDark,
 
+  noteTextColor: PALETTE.normalDark,
 
   activationBackground: PALETTE.neutralGray,
 
@@ -101,12 +104,14 @@ export function getConf() {
   safeAssign(conf, {
     actorStyle: {
       fill: t.primaryColor,
-      stroke: t.textColor,
+      stroke: t.primaryBorderColor,
     },
     messageTextColor: t.textColor,
     loopLineColor: t.primaryColor,
     actorTextColor: t.textColor,
-    activationBackground: t.lightBackground,
+    actorLineColor: t.primaryLineColor,
+    noteTextColor: t.noteTextColor || t.textColor,
+    activationBackground: t.background1,
   })
   Object.assign(conf, globalConfig.sequence || {})
   return conf

@@ -690,6 +690,7 @@ const drawMessage = function (msgModel: MessageModel): DrawResult<Group> {
   let numberMark: Group
   // add node number
   if (db.showSequenceNumbers || conf.showSequenceNumbers) {
+    // sequence circle and text is the reversed version of actorStyle
     const numberTextMark = makeMark(
       'text',
       {
@@ -699,11 +700,11 @@ const drawMessage = function (msgModel: MessageModel): DrawResult<Group> {
         y: lineStarty,
         textAlign: 'center',
         textBaseline: 'middle',
-        fill: '#fff',
+        fill: conf.actorStyle.fill,
       },
       { class: 'sequence-number' },
     )
-    const circleColor = conf.actorTextColor
+    const circleColor = conf.actorStyle.stroke
     const circleMark = makeMark('marker', {
       symbol: 'circle',
       x: startx,
@@ -768,8 +769,8 @@ function drawDividerTo(divider: MessageModel, container: Group) {
     y: starty,
     width: rectWidth,
     height: height + conf.wrapPadding * 2,
-    fill: '#DDD',
-    stroke: 'black',
+    fill: conf.activationBackground,
+    stroke: conf.actorStyle.stroke,
     lineWidth: 2,
   })
 
@@ -791,7 +792,7 @@ function drawDividerTo(divider: MessageModel, container: Group) {
     y1: line1Y,
     x2: bounds.stopx,
     y2: line1Y,
-    stroke: 'black',
+    stroke: conf.actorLineColor,
   })
   const line2 = makeMark('line', {
     ...line1.attrs,
@@ -848,7 +849,7 @@ const drawNoteTo = function (noteModel: NoteModel, container: Group) {
     attrs: rectAttrs,
   }
 
-  const textAttrs: Text['attrs'] = { fill: conf.actorTextColor, text: noteModel.text, ...(noteFont(conf) as any) }
+  const textAttrs: Text['attrs'] = { fill: conf.noteTextColor, text: noteModel.text, ...(noteFont(conf) as any) }
   safeAssign(textAttrs, {
     x: noteModel.startx + noteModel.width / 2,
     y: noteModel.starty + noteModel.height / 2,

@@ -2,19 +2,28 @@ import { ITheme } from './base'
 import { DRACULA } from './palette'
 
 export class ThemeDark implements ITheme {
+  isDark = true
+  schemeOppsiteTheme = 'default'
+
   primaryColor = DRACULA.pink
   secondaryColor = DRACULA.purple
   teritaryColor = DRACULA.cyan
 
-  textColor = DRACULA.normalDark
+  primaryLineColor = DRACULA.white
+  secondaryLineColor = DRACULA.white
+
+  textColor = DRACULA.white
   primaryTextColor = DRACULA.normalDark
   secondaryTextColor = DRACULA.normalDark
   teritaryTextColor = DRACULA.normalDark
 
-  primaryBorderColor = DRACULA.normalDark
-  secondaryBorderColor = DRACULA.neutralGray
+  primaryBorderColor = DRACULA.white
+  secondaryBorderColor = DRACULA.normalDark
 
-  groupBackground = '#fff'
-  lightBackground = DRACULA.neutralGray
+  canvasBackground = DRACULA.normalDark
+  groupBackground = DRACULA.normalDark
+  background1 = '#555'
+
+  noteTextColor = DRACULA.normalDark
   noteBackground = DRACULA.yellow
 }

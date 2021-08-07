@@ -39,6 +39,11 @@ const pintoraStandalone = {
     if (drawResult) {
       let graphicIR = drawResult.graphicIR
       if (options.enhanceGraphicIR) graphicIR = options.enhanceGraphicIR(graphicIR)
+      if (!graphicIR.bgColor) {
+        const conf = configApi.getConfig<DiagramsConf>()
+        const canvasBackground = conf.core.themeVariables?.canvasBackground
+        if (canvasBackground) graphicIR.bgColor = canvasBackground
+      }
 
       render(graphicIR, options)
     }
@@ -70,9 +75,7 @@ const pintoraStandalone = {
     configApi.setConfig(c)
     if (c.core?.theme) {
       const conf = configApi.getConfig<DiagramsConf>()
-      const newConf = {
-        ...conf,
-      }
+      const newConf = { ...conf, }
       const themeConfig = THEMES[c.core.theme]
       if (themeConfig) {
         newConf.core = newConf.core || {} as any

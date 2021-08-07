@@ -1,4 +1,4 @@
-import { Mark, MarkAttrs, Rect, MarkTypeMap, Text, Point, Path, PathCommand, createRotateAtPoint, PointTuple, TSize } from '@pintora/core'
+import {  MarkAttrs, Rect, MarkTypeMap, Text, Point, Path, PathCommand, createRotateAtPoint, TSize } from '@pintora/core'
 import { PALETTE } from './theme'
 
 export function getBaseText(): Text['attrs'] {

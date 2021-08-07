@@ -2,7 +2,7 @@ import { GraphicsIR, IDiagramArtist, logger, Group, Text, mat3, safeAssign, crea
 import { ErDiagramIR, Identification, Entity, Relationship } from './db'
 import { ErConf, getConf } from './config'
 import { createLayoutGraph, getGraphBounds, LayoutGraph } from '../util/graph'
-import { makeMark, getBaseText, calcDirection } from '../util/artist-util'
+import { makeMark, getBaseText, calcDirection, makeLabelBg } from '../util/artist-util'
 import dagre from '@pintora/dagre'
 import { drawMarkerTo } from './artist-util'
 
@@ -478,15 +478,7 @@ const drawRelationshipFromLayout = function (group: Group, rel: Relationship, g:
   )
 
   const labelDims = calculateTextDimensions(rel.roleA, { fontSize: conf.fontSize, fontFamily: 'sans-serif', fontWeight: 400 })
-  const labelBg = makeMark('rect', {
-    id: `#${labelId}`,
-    x: labelX - labelDims.width / 2,
-    y: labelY - labelDims.height / 2,
-    width: labelDims.width,
-    height: labelDims.height,
-    fill: '#fff',
-    opacity: 0.85,
-  })
+  const labelBg = makeLabelBg(labelDims, { x: labelX, y: labelY }, { id: `#${labelId}`, fill: conf.labelBackground })
 
   const insertingMarks = [linePath, labelBg, labelMark, startMarker, endMarker].filter(o => !!o)
 

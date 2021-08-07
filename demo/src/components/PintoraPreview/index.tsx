@@ -28,6 +28,11 @@ export default function PintoraPreview(props: Props) {
     pintora.renderTo(code, {
       container: containerRef.current,
       renderer,
+      // enhanceGraphicIR(ir) {
+      //   const backgroundColor = '#282a36'
+      //   if (backgroundColor && !ir.bgColor) ir.bgColor = backgroundColor
+      //   return ir
+      // },
       onRender(renderer: any) {
         ;(window as any).pintoraRenderer = renderer
         setErrorMessage(null)

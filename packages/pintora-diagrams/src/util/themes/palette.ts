@@ -14,8 +14,8 @@ export const AYU_LIGHT = {
 
 // dracula
 export const DRACULA = {
+  white: '#f8f8f2',
   normalDark: '#282a36',
-  neutralGray: '#f8f8f2',
   cyan: '#8be9fd',
   green: '#50fa7b',
   orange: '#ffb86c',

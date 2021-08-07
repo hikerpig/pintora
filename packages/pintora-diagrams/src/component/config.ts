@@ -17,6 +17,8 @@ export type ComponentConf = {
   fontSize: number
   lineWidth: number
 
+  labelBackground: string
+
   interfaceSize: number
 }
 
@@ -35,6 +37,8 @@ export const defaultConfig: ComponentConf = {
   fontSize: 14,
   lineWidth: 2,
 
+  labelBackground: PALETTE.white,
+
   interfaceSize: 16,
 }
 
@@ -51,6 +55,7 @@ export function getConf() {
     groupBackground: t.groupBackground,
     groupBorderColor: t.primaryBorderColor,
     relationLineColor: t.primaryColor,
+    labelBackground: t.canvasBackground || t.background1,
     textColor: t.textColor,
   })
   Object.assign(conf, globalConfig.component || {})

@@ -2,9 +2,14 @@ import { ITheme } from './base'
 import { AYU_LIGHT } from './palette'
 
 export class ThemeDefault implements ITheme {
+  schemeOppsiteTheme = 'dark'
+
   primaryColor = AYU_LIGHT.orange
   secondaryColor = AYU_LIGHT.yellow
   teritaryColor = AYU_LIGHT.purple
+
+  primaryLineColor = AYU_LIGHT.normalDark
+  secondaryLineColor = AYU_LIGHT.normalDark
 
   textColor = AYU_LIGHT.normalDark
   primaryTextColor = AYU_LIGHT.normalDark
@@ -15,7 +20,7 @@ export class ThemeDefault implements ITheme {
   secondaryBorderColor = AYU_LIGHT.neutralGray
 
   groupBackground = AYU_LIGHT.white
-  lightBackground = AYU_LIGHT.neutralGray
+  background1 = AYU_LIGHT.neutralGray
 
   noteBackground = AYU_LIGHT.yellow
 }
