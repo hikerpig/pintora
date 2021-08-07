@@ -42,6 +42,10 @@ module.exports = {
           label: 'Tutorial',
         },
         {
+          type: 'search',
+          position: 'right',
+        },
+        {
           type: 'localeDropdown',
           position: 'right',
         },
@@ -93,6 +97,9 @@ module.exports = {
     prism: {
       theme: lightCodeTheme,
       darkTheme: darkCodeTheme,
+    },
+    colorMode: {
+      respectPrefersColorScheme: true,
     },
   },
   presets: [

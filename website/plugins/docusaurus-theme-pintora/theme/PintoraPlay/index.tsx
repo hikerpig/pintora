@@ -1,4 +1,5 @@
-import React, { useState, useEffect, useRef, useCallback } from 'react'
+import React, { useState, useEffect, useRef, useCallback, useLayoutEffect } from 'react'
+import useThemeContext from '@theme/hooks/useThemeContext';
 import pintora from '@pintora/standalone'
 import { stripStartEmptyLines } from '@pintora/test-shared'
 import { PINTORA_LIVE_EDITOR_URL } from '../../../../src/const'
@@ -10,9 +11,16 @@ const PintoraPlay = (props) => {
   const containerRef = useRef<HTMLDivElement>()
   const renderer = 'svg'
   const [errorMessage, setErrorMessage] = useState('')
+  const {isDarkTheme} = useThemeContext();
 
   useEffect(() => {
     if (!containerRef.current) return
+
+    pintora.setConfig({
+      core: {
+        theme: isDarkTheme ? 'dark': 'default'
+      }
+    } as any)
 
     pintora.renderTo(code, {
       container: containerRef.current,
@@ -44,7 +52,7 @@ const PintoraPlay = (props) => {
     return () => {
       if (containerRef.current) containerRef.current.innerHTML = ''
     }
-  }, [code, renderer])
+  }, [code, renderer, isDarkTheme])
 
   const onOpenInEditorClick = useCallback(() => {
     // const encoded = encodeURIComponent(btoa(escape(code)))

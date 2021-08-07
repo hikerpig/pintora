@@ -71,7 +71,7 @@ const pintoraStandalone = {
       container: wrapper,
     })
   },
-  setConfig(c: DiagramsConf) {
+  setConfig(c: Partial<DiagramsConf>) {
     configApi.setConfig(c)
     if (c.core?.theme) {
       const conf = configApi.getConfig<DiagramsConf>()
