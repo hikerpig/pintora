@@ -3,28 +3,10 @@ import { PALETTE } from '../util/theme'
 import { configApi, safeAssign } from '@pintora/core'
 import { DiagramsConf } from '../type'
 
-// export {
-//   PALETTE
-// }
-
-// export interface ITheme {
-//   textColor: string
-//   primaryColor: string
-// }
-
-// export const THEME: ITheme = {
-//   textColor: PALETTE.normalDark,
-//   primaryColor: PALETTE.orange,
-// }
-
 export type SequenceConf = {
-  actorWidth: number
-  actorHeight: number
-  actorMargin: number
   noteWidth: number
   noteHeight: number
   noteMargin: number
-  mirrorActors: boolean
   boxMargin: number
   activationWidth: number
   diagramMarginX: number
@@ -39,9 +21,17 @@ export type SequenceConf = {
   labelBoxWidth: number
   labelBoxHeight: number
 
+  /** color of loop box's border */
   loopLineColor: string
 
-  actorStyle: Partial<MarkAttrs>
+  /** if the actor should also appear in the bottom of the diagram, default is true */
+  mirrorActors: boolean
+  actorWidth: number
+  actorHeight: number
+  actorMargin: number
+
+  actorBackground: string
+  actorBorderColor: string
   actorTextColor: string
   actorLineColor: string
 
@@ -55,10 +45,6 @@ export type SequenceConf = {
 }
 
 export const defaultConfig: SequenceConf = {
-  mirrorActors: true,
-  actorWidth: 80,
-  actorHeight: 50,
-  actorMargin: 10,
   noteWidth: 80,
   noteHeight: 50,
   noteMargin: 10,
@@ -78,10 +64,12 @@ export const defaultConfig: SequenceConf = {
 
   loopLineColor: PALETTE.orange,
 
-  actorStyle: {
-    fill: PALETTE.orange,
-    stroke: PALETTE.normalDark,
-  },
+  mirrorActors: true,
+  actorWidth: 80,
+  actorHeight: 50,
+  actorMargin: 10,
+  actorBackground: PALETTE.orange,
+  actorBorderColor: PALETTE.normalDark,
   actorTextColor: PALETTE.normalDark,
   actorLineColor: PALETTE.normalDark,
 
@@ -100,12 +88,10 @@ export const conf: SequenceConf = {
 
 export function getConf() {
   const globalConfig: DiagramsConf = configApi.getConfig()
-  const t = globalConfig.core.themeVariables
+  const t = globalConfig.themeConfig.themeVariables
   safeAssign(conf, {
-    actorStyle: {
-      fill: t.primaryColor,
-      stroke: t.primaryBorderColor,
-    },
+    actorBackground: t.primaryColor,
+    actorBorderColor: t.primaryBorderColor,
     messageTextColor: t.textColor,
     loopLineColor: t.primaryColor,
     actorTextColor: t.textColor,

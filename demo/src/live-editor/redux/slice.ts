@@ -21,7 +21,7 @@ export type State = {
 }
 
 const DEFAULT_CONFIG: DeepPartial<DiagramsConf> = {
-  core: {
+  themeConfig: {
     theme: 'default',
   },
 }

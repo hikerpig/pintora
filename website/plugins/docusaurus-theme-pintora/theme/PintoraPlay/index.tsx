@@ -17,7 +17,7 @@ const PintoraPlay = (props) => {
     if (!containerRef.current) return
 
     pintora.setConfig({
-      core: {
+      themeConfig: {
         theme: isDarkTheme ? 'dark': 'default'
       }
     } as any)

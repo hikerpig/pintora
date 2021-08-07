@@ -48,7 +48,7 @@ export const conf: ComponentConf = {
 
 export function getConf() {
   const globalConfig: DiagramsConf = configApi.getConfig()
-  const t = globalConfig.core.themeVariables
+  const t = globalConfig.themeConfig.themeVariables
   safeAssign(conf, {
     componentBackground: t.secondaryColor,
     componentBorderColor: t.primaryColor,

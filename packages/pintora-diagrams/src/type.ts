@@ -1,15 +1,15 @@
-import { SequenceDiagramIR } from './sequence'
-import { ErDiagramIR } from './er'
-import { ComponentDiagramIR } from './component'
+import { SequenceConf } from './sequence'
+import { ErConf } from './er'
+import { ComponentConf } from './component'
 import { ITheme } from './util/themes/base'
 
 export type DiagramsConf = {
-  core: {
+  themeConfig: {
     theme: string
     darkTheme?: string
     themeVariables: ITheme
   }
-  component: ComponentDiagramIR
-  er: ErDiagramIR
-  sequence: SequenceDiagramIR
+  component: ComponentConf
+  er: ErConf
+  sequence: SequenceConf
 }

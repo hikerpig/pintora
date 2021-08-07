@@ -56,7 +56,7 @@ export const conf: ErConf = {
 
 export function getConf() {
   const globalConfig: DiagramsConf = configApi.getConfig()
-  const t = globalConfig.core.themeVariables
+  const t = globalConfig.themeConfig.themeVariables
   safeAssign(conf, {
     stroke: t.primaryBorderColor,
     fill: t.primaryColor,

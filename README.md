@@ -30,5 +30,5 @@ Check the online [documentation and demo](http://pintorajs.vercel.app/) for more
 - [x] Sequence Diagram and Entity Relationship Diagram
 - [x] Pintora node.js cli
 - [x] PlantUML style Component diagram
+- [x] Theme config
 - [ ] Load diagram implementation and canvas renderer only when needed
-- [ ] Theme config

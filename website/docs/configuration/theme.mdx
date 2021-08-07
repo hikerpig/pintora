@@ -1,0 +1,110 @@
+---
+title: Theme
+---
+
+Pintora has some builtin themes. Check the [Live Editor](https://pintorajs.vercel.app/demo/live-editor) to experiment each theme's look.
+
+- `default`, default light theme, based on Ayu Light palette.
+- `dark`, dark theme, based on Dracula palette.
+
+You can set theme through the `setConfig` method.
+
+```js
+pintora.default.setConfig({
+  themeConfig: {
+    theme: 'dark'
+  }
+})
+```
+
+## Define and apply a new theme
+
+At first glance, a theme is an object that fits to the `ITheme` interface.
+
+```ts
+interface ITheme {
+  /**
+   * Indicate if this is a dark theme, if not specified, will be treat as a light theme
+   */
+  isDark?: boolean
+  /**
+   * While toggling between light/dark theme, will switch to this if this is specified
+   */
+  schemeOppsiteTheme?: string
+
+  primaryColor: string
+  secondaryColor: string
+  teritaryColor: string
+
+  primaryLineColor: string
+  secondaryLineColor: string
+
+  primaryBorderColor: string
+  secondaryBorderColor: string
+
+  textColor: string
+  primaryTextColor: string
+  secondaryTextColor: string
+  teritaryTextColor: string
+
+  canvasBackground?: string
+  groupBackground: string
+  background1: string
+  lightestBackground?: string
+
+  noteTextColor?: string
+  noteBackground?: string
+}
+```
+
+For example, the default theme:
+
+```ts
+// ayu light
+export const AYU_LIGHT = {
+  white: '#fff',
+  normalDark: '#3b4044',
+  neutralGray: '#f8f8f2',
+  cyan: '#55b4d4',
+  green: '#9c0',
+  orange: '#fdb05e',
+  pink: '#f07171',
+  purple: '#af71d0',
+  red: '#e45649',
+  yellow: '#f5f1be'
+}
+
+export class ThemeDefault implements ITheme {
+  schemeOppsiteTheme = 'dark'
+
+  primaryColor = AYU_LIGHT.orange
+  secondaryColor = AYU_LIGHT.yellow
+  teritaryColor = AYU_LIGHT.purple
+
+  primaryLineColor = AYU_LIGHT.normalDark
+  secondaryLineColor = AYU_LIGHT.normalDark
+
+  textColor = AYU_LIGHT.normalDark
+  primaryTextColor = AYU_LIGHT.normalDark
+  secondaryTextColor = AYU_LIGHT.normalDark
+  teritaryTextColor = AYU_LIGHT.normalDark
+
+  primaryBorderColor = AYU_LIGHT.normalDark
+  secondaryBorderColor = AYU_LIGHT.neutralGray
+
+  groupBackground = AYU_LIGHT.white
+  background1 = AYU_LIGHT.neutralGray
+
+  noteBackground = AYU_LIGHT.yellow
+}
+```
+
+You can override the `themeVariables`:
+
+```ts
+pintora.default.setConfig({
+  themeConfig: {
+    themeVariables: { ...yourThemeObject }
+  }
+})
+```

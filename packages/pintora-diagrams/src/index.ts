@@ -8,7 +8,7 @@ import THEMES from './util/themes/index'
 export { DiagramsConf, THEMES }
 
 configApi.setConfig<DiagramsConf>({
-  core: {
+  themeConfig: {
     theme: 'default',
     darkTheme: 'dark',
     themeVariables: THEMES.default,

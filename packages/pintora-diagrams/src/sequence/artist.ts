@@ -39,7 +39,7 @@ enum LineEndType {
 const sequenceArtist: IDiagramArtist<SequenceDiagramIR> = {
   draw(ir, config?) {
     conf = getConf()
-    theme = (configApi.getConfig() as DiagramsConf).core.themeVariables
+    theme = (configApi.getConfig() as DiagramsConf).themeConfig.themeVariables
     model.init()
     logger.debug(`C:${JSON.stringify(conf, null, 2)}`)
 
@@ -53,7 +53,7 @@ const sequenceArtist: IDiagramArtist<SequenceDiagramIR> = {
       children: [],
     }
     actorKeys.forEach(key => {
-      model.actorAttrsMap.set(key, { ...conf.actorStyle })
+      model.actorAttrsMap.set(key, { fill: conf.actorBackground, stroke: conf.actorBorderColor })
     })
 
     const maxMessageWidthPerActor = getMaxMessageWidthPerActor(ir)
@@ -700,11 +700,11 @@ const drawMessage = function (msgModel: MessageModel): DrawResult<Group> {
         y: lineStarty,
         textAlign: 'center',
         textBaseline: 'middle',
-        fill: conf.actorStyle.fill,
+        fill: conf.actorBackground,
       },
       { class: 'sequence-number' },
     )
-    const circleColor = conf.actorStyle.stroke
+    const circleColor = conf.actorBorderColor
     const circleMark = makeMark('marker', {
       symbol: 'circle',
       x: startx,
@@ -770,7 +770,7 @@ function drawDividerTo(divider: MessageModel, container: Group) {
     width: rectWidth,
     height: height + conf.wrapPadding * 2,
     fill: conf.activationBackground,
-    stroke: conf.actorStyle.stroke,
+    stroke: conf.actorBorderColor,
     lineWidth: 2,
   })
 
@@ -901,7 +901,7 @@ export const drawActors = function (
     if (isMirror) {
       attrs = { ...model.actorAttrsMap.get(key) }
     } else {
-      attrs = model.actorAttrsMap.get(key) || { ...conf.actorStyle }
+      attrs = model.actorAttrsMap.get(key) || { fill: conf.actorBackground, stroke: conf.actorBorderColor }
     }
     const textAttrs: Text['attrs'] = {
       fill: conf.actorTextColor,
@@ -1063,7 +1063,7 @@ function drawLoopTo(mark: Group, loopModel: LoopModel, labelText: string, conf: 
 
   const labelWrap = makeLoopLabelBox({ x: startx, y: starty }, labelWidth, labelHeight, 5)
   safeAssign(labelWrap.attrs, {
-    fill: conf.actorStyle.fill,
+    fill: conf.actorBackground,
     stroke: loopLineColor,
   })
 
