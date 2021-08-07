@@ -1,7 +1,6 @@
 import pintora, { configApi, GraphicsIR } from '@pintora/core'
 import { DIAGRAMS, DiagramsConf, THEMES } from '@pintora/diagrams'
 import { render, RenderOptions, BaseRenderer, rendererRegistry } from '@pintora/renderer'
-import { version } from '../package.json'
 
 function initDiagrams() {
   Object.keys(DIAGRAMS).forEach(name => {
@@ -37,7 +36,6 @@ const CLASSES = {
 
 const pintoraStandalone = {
   ...pintora,
-  version,
   renderTo(code: string, options: RenderToOptions) {
     const { container } = options
     let ctn: HTMLDivElement
