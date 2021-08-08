@@ -1,4 +1,4 @@
-import { IDiagram } from "./type"
+import { IDiagram } from './type'
 import { logger } from './logger'
 
 class Registry {
@@ -12,7 +12,7 @@ class Registry {
   }
 
   detectDiagram(text: string) {
-    let diagram = this.diagrams["sequenceDiagram"] // default
+    let diagram = this.diagrams['sequenceDiagram'] // default
     for (const d of Object.values(this.diagrams)) {
       // console.log('test d with text', d)
       if (d.pattern.test(text)) {

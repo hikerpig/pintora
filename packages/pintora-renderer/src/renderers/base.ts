@@ -33,6 +33,8 @@ function traverseScene<Actions=any>(mark: Mark, visitors: Partial<Visitors> & { 
     mark.children.forEach((child) => {
       traverseScene(child, visitors, actions)
     })
+  } else if (mark.type === 'symbol') {
+    traverseScene(mark.mark, visitors, actions)
   }
   if (visitorExit) {
     visitorExit(mark as any, actions)
@@ -117,6 +119,11 @@ export abstract class BaseRenderer implements IRenderer {
         },
         exit() {
           groupStack.pop()
+        }
+      },
+      symbol: {
+        enter(mark) {
+          // prevent entering default visitor
         }
       },
       default(mark) {

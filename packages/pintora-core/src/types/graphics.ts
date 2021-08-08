@@ -1,6 +1,6 @@
 import { mat3 } from '@antv/matrix-util'
 
-export type Mark = Group | Rect | Circle | Ellipse | Text | Line | PolyLine | Polygon | Marker | Path
+export type Mark = Group | Rect | Circle | Ellipse | Text | Line | PolyLine | Polygon | Marker | Path | GSymbol
 
 export interface Figure {
   mark: Mark
@@ -12,11 +12,19 @@ export interface GraphicsIR extends Figure {
   bgColor?: string
 }
 
+export type TransformPolicy = 'stretch' | 'fixed' | 'scale'
+
 export interface IMark {
   attrs?: MarkAttrs
   class?: string
   /** for transform */
   matrix?: Matrix | number[]
+  /** come in handy when a symbol needs to be adjusted to fit new position and size */
+  transformPolicies?: Partial<{
+    h: TransformPolicy
+    v: TransformPolicy
+    all: TransformPolicy
+  }>
 }
 
 export interface Group extends IMark {
@@ -76,7 +84,7 @@ export interface Marker extends IMark {
 
 export interface Path extends IMark {
   type: 'path'
-  attrs: MarkAttrs & { path: string | (PathCommand[]) }
+  attrs: MarkAttrs & { path: string | PathCommand[] }
 }
 
 export type MarkType = Mark['type']
@@ -92,6 +100,7 @@ export interface MarkTypeMap {
   polyline: PolyLine
   polygon: Polygon
   marker: Marker
+  symbol: GSymbol
 }
 
 export type BBox = {
@@ -125,11 +134,32 @@ export type ElementAttrs = {
   [key: string]: any
 }
 
-type BinaryCommandType = 'M' | 'm' | 'L' | 'l' | 'C' | 'c'
+// https://developer.mozilla.org/en-US/docs/Web/SVG/Tutorial/Paths
+type BinaryCommandType = 'M' | 'm' | 'L' | 'l'
 
 type SingleCommandType = 'Z' | 'd'
 
-export type PathCommand = [BinaryCommandType, number, number] | [SingleCommandType]
+// A rx ry x-axis-rotation large-arc-flag sweep-flag x y
+type ArcCommandType = 'A' | 'a'
+
+// C x1 y1, x2 y2, x y
+type CurveCommandType = 'C' | 'c'
+
+export type PathCommand =
+  | [BinaryCommandType, number, number]
+  | [SingleCommandType]
+  | [ArcCommandType, ...number[]]
+  | [CurveCommandType, number, number, number, number, number, number]
+
+export type Bounds = ClientRect
+
+export interface GSymbol extends IMark {
+  type: 'symbol'
+  mark: Group
+  symbolBounds: Bounds
+  /** usually is the center of the symbol */
+  anchorPoint: Point
+}
 
 /**
  * Common mark attrs, borrowed from @antv/g
@@ -162,7 +192,7 @@ export type MarkAttrs = {
    */
   lineDash?: number[] | null
   /** Path 路径 */
-  path?: string | (PathCommand[])
+  path?: string | PathCommand[]
   /** 图形坐标点 */
   points?: PointTuple[]
   /** 宽度 */

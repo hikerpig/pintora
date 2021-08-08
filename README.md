@@ -13,7 +13,7 @@ Heavily inspired by [Mermaid.js](https://mermaid-js.github.io/mermaid/#/) and [P
 - In browser side, output SVG or Canvas.
 - In Node.js side, output PNG/JPG file.
 - \[Planning\] Modular and composable, load specific diagram implementaions only when needed, keep the core code lightweight.
-- Highly extensible, provide a plugin system for diagram developer to write and distribute their own diagrams.
+- \[Planning\] Highly extensible, provide a plugin system for diagram developer to write and distribute their own diagrams.
 
 ### Diagram types
 
@@ -31,4 +31,6 @@ Check the online [documentation and demo](http://pintorajs.vercel.app/) for more
 - [x] Pintora node.js cli
 - [x] PlantUML style Component diagram
 - [x] Theme config
+- [ ] PlantUML style activity diagram, or Mermaid's flowchart
+- [ ] PlantUML style deploy diagram
 - [ ] Load diagram implementation and canvas renderer only when needed

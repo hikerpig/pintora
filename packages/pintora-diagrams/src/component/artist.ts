@@ -6,14 +6,16 @@ import {
   safeAssign,
   calculateTextDimensions,
   PointTuple,
-  logger,
   Rect,
   TSize,
   getPointAt,
+  symbolRegistry,
+  GSymbol,
+  mat3,
 } from '@pintora/core'
 import { ComponentDiagramIR, LineType, Relationship } from './db'
 import { ComponentConf, getConf } from './config'
-import { createLayoutGraph, getGraphBounds, LayoutEdge, LayoutGraph, LayoutNode } from '../util/graph'
+import { createLayoutGraph, getGraphBounds, LayoutEdge, LayoutGraph, LayoutNode, LayoutNodeOption } from '../util/graph'
 import { makeMark, drawArrowTo, calcDirection, makeLabelBg } from '../util/artist-util'
 import dagre from '@pintora/dagre'
 import { Edge } from '@pintora/graphlib'
@@ -46,11 +48,9 @@ const componentArtist: IDiagramArtist<ComponentDiagramIR, ComponentConf> = {
       directed: true,
       compound: true,
     }).setGraph({
-      marginx: conf.diagramPadding,
-      marginy: conf.diagramPadding,
       nodesep: 20,
       edgesep: 20,
-      ranksep: 80,
+      ranksep: 60,
     })
 
     drawComponentsTo(rootMark, ir, g)
@@ -71,8 +71,14 @@ const componentArtist: IDiagramArtist<ComponentDiagramIR, ComponentConf> = {
 
     const gBounds = getGraphBounds(g)
 
-    const width = gBounds.width
-    const height = gBounds.height
+    const pad = conf.diagramPadding
+    rootMark.matrix = mat3.fromTranslation(mat3.create(), [
+      -Math.min(0, gBounds.left) + pad,
+      -Math.min(0, gBounds.top) + pad,
+    ])
+
+    const width = gBounds.width + pad * 2
+    const height = gBounds.height + pad * 2
 
     return {
       mark: rootMark,
@@ -176,7 +182,7 @@ function drawInterfacesTo(parentMark: Group, ir: ComponentDiagramIR, g: LayoutGr
 
     const outerWidth = Math.max(interfaceSize, labelDims.width)
     const nodeHeight = interfaceSize + labelDims.height
-    g.setNode(id, {
+    const layoutNode: LayoutNodeOption = {
       width: interfaceSize,
       height: nodeHeight,
       id,
@@ -186,24 +192,43 @@ function drawInterfacesTo(parentMark: Group, ir: ComponentDiagramIR, g: LayoutGr
         safeAssign(circleMark.attrs, { x, y: y - labelDims.height / 2 + 2 })
         safeAssign(textMark.attrs, { x, y: y + 2 })
       },
-    })
+    }
+    g.setNode(id, layoutNode)
+
+    if (labelDims.width > interfaceSize) {
+      const dummyBoxId = `${id}_pad`
+      layoutNode.dummyBoxId = dummyBoxId
+      g.setNode(dummyBoxId, {
+        width: labelDims.width,
+        height: nodeHeight,
+        isDummy: true
+      })
+    }
   }
 }
 
 function drawGroupsTo(parentMark: Group, ir: ComponentDiagramIR, g: LayoutGraph) {
   for (const cGroup of Object.values(ir.groups)) {
     const groupId = cGroup.name
+    const groupType = cGroup.groupType
     // console.log('[draw] group', cGroup)
-    const rectMark = makeMark(
-      'rect',
-      {
-        fill: conf.groupBackground,
-        stroke: conf.groupBorderColor,
-        lineWidth: conf.lineWidth,
-        radius: 2,
-      },
-      { class: 'component__group-rect' },
-    )
+
+    let bgMark: Rect | GSymbol
+    if (symbolRegistry.get(groupType)) {
+      // wait till onLayout
+    } else {
+      bgMark = makeMark(
+        'rect',
+        {
+          fill: conf.groupBackground,
+          stroke: conf.groupBorderColor,
+          lineWidth: conf.lineWidth,
+          radius: 2,
+        },
+        { class: 'component__group-rect' },
+      )
+    }
+
     const groupLabel = cGroup.label || cGroup.name
     const labelMark = makeMark(
       'text',
@@ -235,16 +260,43 @@ function drawGroupsTo(parentMark: Group, ir: ComponentDiagramIR, g: LayoutGraph)
         const { x, y, width, height } = data
         const containerWidth = Math.max(width, labelTextDims.width + 10)
         // console.log('[group] onLayout', data, 'containerWidth', containerWidth)
-        safeAssign(rectMark.attrs, { x: x - containerWidth / 2, y: y - height / 2, width: containerWidth, height })
+        if (bgMark && bgMark.type === 'rect') {
+          safeAssign(bgMark.attrs, { x: x - containerWidth / 2, y: y - height / 2, width: containerWidth, height })
+          group.children.unshift(bgMark)
+        } else {
+          bgMark = symbolRegistry.create(groupType, {
+            contentArea: data,
+            attrs: {
+              fill: conf.groupBackground,
+              stroke: conf.groupBorderColor,
+              lineWidth: conf.lineWidth,
+            },
+          })
+          if (bgMark) {
+            // console.log('bgMark', groupId, bgMark, 'bounds', bgMark.symbolBounds)
+            const node: LayoutNode = g.node(groupId)
+            node.outerTop = bgMark.symbolBounds.top + y
+            node.outerBottom = bgMark.symbolBounds.bottom + y
+            node.outerLeft = bgMark.symbolBounds.left + x
+            node.outerRight = bgMark.symbolBounds.right + x
+            node.outerHeight = bgMark.symbolBounds.height
+            node.outerWidth = bgMark.symbolBounds.width
+            group.children.unshift(bgMark)
+          }
+        }
         safeAssign(labelMark.attrs, { x, y: y - height / 2 + labelTextDims.height + 5 })
         safeAssign(typeMark.attrs, { x: x - containerWidth / 2 + 2, y: y + height / 2 - 2 })
       },
     })
     for (const child of cGroup.children) {
       if ('name' in child) {
-        const childNode = g.node(child.name)
+        const childNode: LayoutNodeOption = g.node(child.name)
         if (childNode) {
           g.setParent(childNode.id, groupId)
+          if (childNode.dummyBoxId) {
+            g.setParent(childNode.id, childNode.dummyBoxId)
+            g.setParent(childNode.dummyBoxId, groupId)
+          }
         }
       }
     }
@@ -253,7 +305,7 @@ function drawGroupsTo(parentMark: Group, ir: ComponentDiagramIR, g: LayoutGraph)
       'group',
       {},
       {
-        children: [rectMark, labelMark, typeMark],
+        children: [labelMark, typeMark],
       },
     )
     parentMark.children.unshift(group)
@@ -304,8 +356,8 @@ function drawRelationshipsTo(parentMark: Group, ir: ComponentDiagramIR, g: Layou
         const points = data.points.map(p => [p.x, p.y]) as PointTuple[]
         lineMark.attrs.points = points
         if (relText) {
-          // const anchorPoint = data.points[data.points.length - 2]
-          const anchorPoint = getPointAt(data.points, 0.5, true)
+          // do not choose 0.5, otherwise label would probably cover other nodes
+          const anchorPoint = getPointAt(data.points, 0.4, true)
           safeAssign(relText.attrs, { x: anchorPoint.x + labelDims.width / 2, y: anchorPoint.y })
           safeAssign(relTextBg.attrs, { x: anchorPoint.x, y: anchorPoint.y - labelDims.height / 2 })
         }

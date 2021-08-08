@@ -259,17 +259,6 @@ const drawEntities = function (rootMark: Group, ir: ErDiagramIR, graph: LayoutGr
     // which then determines the size of the rectangle
     const textId = 'entity-' + id
 
-    // const textNode = groupNode
-    //   .append('text')
-    //   .attr('class', 'er entityLabel')
-    //   .attr('id', textId)
-    //   .attr('x', 0)
-    //   .attr('y', 0)
-    //   .attr('dominant-baseline', 'middle')
-    //   .attr('text-anchor', 'middle')
-    //   // .attr('style', 'font-family: ' + getConfig().fontFamily + '; font-size: ' + conf.fontSize + 'px')
-    //   .text(id)
-
     const textMark = makeMark(
       'text',
       {
@@ -312,8 +301,6 @@ const drawEntities = function (rootMark: Group, ir: ErDiagramIR, graph: LayoutGr
       width: entityWidth,
       height: entityHeight,
       id,
-      x: 0,
-      y: 0,
       onLayout(data) {
         const x = Math.floor(data.x)
         const y = Math.floor(data.y)

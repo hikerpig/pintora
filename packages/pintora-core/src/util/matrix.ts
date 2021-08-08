@@ -16,6 +16,8 @@ export const translate = ext.leftTranslate
 
 export const leftRotate = ext.leftRotate
 
+export const leftScale = ext.leftScale
+
 /**
  * 以任意点 (x, y) 为中心旋转元素
  * @param {number} radian 旋转角度(弧度值)

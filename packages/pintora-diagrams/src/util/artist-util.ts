@@ -1,5 +1,9 @@
-import {  MarkAttrs, Rect, MarkTypeMap, Text, Point, Path, PathCommand, createRotateAtPoint, TSize } from '@pintora/core'
+import { MarkAttrs, Rect, Text, Point, Path, PathCommand, createRotateAtPoint, TSize, makeMark } from '@pintora/core'
 import { PALETTE } from './theme'
+
+export {
+  makeMark,
+}
 
 export function getBaseText(): Text['attrs'] {
   return {
@@ -56,18 +60,6 @@ export function drawCrossTo(dest: Point, baseLength: number, rad: number, attrs?
       path: p,
     },
   }
-}
-
-export function makeMark<T extends keyof MarkTypeMap, M extends MarkTypeMap[T]>(
-  type: T,
-  attrs: M['attrs'],
-  other?: Partial<M>,
-) {
-  return {
-    type,
-    ...(other || {}),
-    attrs,
-  } as M
 }
 
 export function calcDirection(start: Point, end: Point) {

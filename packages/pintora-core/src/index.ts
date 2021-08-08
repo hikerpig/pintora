@@ -6,12 +6,16 @@ import { logger, setLogLevel } from './logger'
 import configApi from './config'
 
 export * from './util'
-import { encodeForUrl, decodeCodeInUrl } from './util'
+import { encodeForUrl, decodeCodeInUrl, makeMark } from './util'
+import { symbolRegistry, SymbolDef, SymbolStyleAttrs } from './symbol-registry'
 
 export {
   logger,
   setLogLevel,
   configApi,
+  symbolRegistry,
+  SymbolDef,
+  SymbolStyleAttrs,
 }
 
 type DrawOptions = {
@@ -48,7 +52,9 @@ const pintora = {
   util: {
     encodeForUrl,
     decodeCodeInUrl,
+    makeMark,
   },
+  symbolRegistry,
 }
 
 export default pintora

@@ -12,14 +12,17 @@ export type TRect = {
   height: number
 }
 
+/**
+ * fields are the same with TRect, but usually x,y is the center of the rect
+ */
+export type ContentArea = TRect
+
 export function getCenterPoint(rect: TRect) {
   return {
     x: rect.x + rect.width / 2,
     y: rect.y + rect.height / 2,
   }
 }
-
-export type Bounds = ClientRect
 
 export function getDistance(a: Point, b: Point) {
   return Math.sqrt(Math.pow(b.x - a.x, 2) + Math.pow(b.y - a.y, 2))

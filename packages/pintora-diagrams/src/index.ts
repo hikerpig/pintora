@@ -4,6 +4,7 @@ import { erDiagram, ErDiagramIR } from './er'
 import { componentDiagram, ComponentDiagramIR } from './component'
 import { DiagramsConf } from './type'
 import THEMES from './util/themes/index'
+import './util/symbols'
 
 export { DiagramsConf, THEMES }
 
