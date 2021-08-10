@@ -1,6 +1,6 @@
 const path = require('path')
 
-const lightCodeTheme = require('prism-react-renderer/themes/github')
+const lightCodeTheme = require('prism-react-renderer/themes/palenight')
 const darkCodeTheme = require('prism-react-renderer/themes/dracula')
 
 const SITE_URL = process.env.SITE_URL || 'https://pintorajs.vercel.app'
