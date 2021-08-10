@@ -10,6 +10,7 @@ import Actions from './containers/Actions'
 import EditorPanel from './containers/EditorPanel'
 import store from './redux/store'
 import { actions } from 'src/live-editor/redux/slice'
+import { DEMO_BASE_URL } from '../const'
 import './App.css'
 
 function App() {
@@ -38,7 +39,24 @@ function App() {
     if (code) {
       store.dispatch(actions.updateEditorCode({ code, syncToPreview: true }))
     }
+
   }, [])
+
+  const onOpenPreviewPage = useCallback(() => {
+    try {
+      const state = store.getState()
+      const previewCode = state.preview.code
+      const encodedCode = pintora.util.encodeForUrl(previewCode)
+      const encodedPintoraConfig = pintora.util.encodeForUrl(JSON.stringify(state.preview.pintoraConfig))
+      window.open(`${DEMO_BASE_URL}preview/?code=${encodedCode}&config=${encodedPintoraConfig}`)
+    } catch (error) {
+    }
+  }, [])
+  const previewHeaderSuffix = (
+    <div>
+      <button className="btn btn-primary btn-xs" onClick={onOpenPreviewPage}>Open preview page</button>
+    </div>
+  )
 
   return (
     <Provider store={store}>
@@ -55,7 +73,7 @@ function App() {
             </Panel>
           </div>
           <div className="App__right">
-            <Panel title="Preview">
+            <Panel title="Preview" headerAppendix={previewHeaderSuffix}>
               <Preview className="App__preview" />
             </Panel>
           </div>
