@@ -248,11 +248,13 @@ function drawGroupsTo(parentMark: Group, ir: ComponentDiagramIR, g: LayoutGraph)
         text: typeText,
         fill: conf.textColor,
         fontSize: conf.fontSize,
+        textBaseline: 'hanging', // have to hack a little, otherwise label will collide with rect border in downloaded svg
       },
       { class: 'component__type' },
     )
 
     const labelTextDims = calculateTextDimensions(groupLabel)
+    const typeTextDims = calculateTextDimensions(typeText)
 
     g.setNode(groupId, {
       id: groupId,
@@ -285,7 +287,7 @@ function drawGroupsTo(parentMark: Group, ir: ComponentDiagramIR, g: LayoutGraph)
           }
         }
         safeAssign(labelMark.attrs, { x, y: y - height / 2 + labelTextDims.height + 5 })
-        safeAssign(typeMark.attrs, { x: x - containerWidth / 2 + 2, y: y + height / 2 - 2 })
+        safeAssign(typeMark.attrs, { x: x - containerWidth / 2 + 2, y: y + height / 2 - 2 - typeTextDims.height })
       },
     })
     for (const child of cGroup.children) {
