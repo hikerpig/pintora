@@ -701,6 +701,7 @@ const drawMessage = function (msgModel: MessageModel): DrawResult<Group> {
         textAlign: 'center',
         textBaseline: 'middle',
         fill: conf.actorBackground,
+        fontWeight: 'bold',
       },
       { class: 'sequence-number' },
     )
@@ -776,7 +777,7 @@ function drawDividerTo(divider: MessageModel, container: Group) {
 
   const textMark = makeMark('text', {
     text: divider.text,
-    fill: conf.actorTextColor,
+    fill: conf.dividerTextColor,
     x: rectX + width / 2 + padding,
     y: starty + height / 2 + padding,
     textAlign: 'center',

@@ -40,6 +40,7 @@ export type SequenceConf = {
   activationBackground: string
 
   dividerFontWeight: MarkAttrs['fontWeight']
+  dividerTextColor: string
 
   showSequenceNumbers: boolean
 }
@@ -78,6 +79,7 @@ export const defaultConfig: SequenceConf = {
   activationBackground: PALETTE.neutralGray,
 
   dividerFontWeight: 600,
+  dividerTextColor: PALETTE.normalDark,
 
   showSequenceNumbers: false,
 }
@@ -94,10 +96,11 @@ export function getConf() {
     actorBorderColor: t.primaryBorderColor,
     messageTextColor: t.textColor,
     loopLineColor: t.primaryColor,
-    actorTextColor: t.textColor,
+    actorTextColor: t.primaryTextColor,
     actorLineColor: t.primaryLineColor,
     noteTextColor: t.noteTextColor || t.textColor,
     activationBackground: t.background1,
+    dividerTextColor: t.secondaryTextColor,
   })
   Object.assign(conf, globalConfig.sequence || {})
   return conf

@@ -14,7 +14,7 @@ export class ThemeDark implements ITheme {
 
   textColor = DRACULA.white
   primaryTextColor = DRACULA.normalDark
-  secondaryTextColor = DRACULA.normalDark
+  secondaryTextColor = DRACULA.white
   teritaryTextColor = DRACULA.normalDark
 
   primaryBorderColor = DRACULA.white
