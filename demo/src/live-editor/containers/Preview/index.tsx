@@ -12,15 +12,38 @@ interface Props {
   pintoraConfig?: any
 }
 
+interface NearlyError extends Error {
+  token: {
+    line: number
+    col: number
+    offset: number
+  }
+}
+
 const Preview = ({ previewCode, previewConfig, pintoraConfig, className }: Props) => {
   const dispatch = useDispatch()
 
-  const onRendererChange = useCallback(
+  const handleRendererChange = useCallback(
     (e: any) => {
       dispatch(actions.updatePreviewConfig({ renderer: e.target.value as any }))
     },
     [previewConfig],
   )
+
+  const handleError = useCallback((error: NearlyError) => {
+    if (error.token) {
+      const errorInfo = {
+        line: error.token.line,
+        col: error.token.col,
+        message: error.message,
+      }
+      dispatch(actions.updateEditorError({ errorInfo }))
+    }
+  }, [])
+
+  const handleSuccess = useCallback(() => {
+    dispatch(actions.updateEditorError({ errorInfo: null }))
+  }, [])
 
   const cls = classnames({
     Preview: true,
@@ -36,7 +59,11 @@ const Preview = ({ previewCode, previewConfig, pintoraConfig, className }: Props
         <div className="px-2 py-1">
           <div className="section">
             <label>Renderer:</label>
-            <select className="select select-bordered select-secondary select-sm w-full max-w-xs" value={previewConfig.renderer} onChange={onRendererChange}>
+            <select
+              className="select select-bordered select-secondary select-sm w-full max-w-xs"
+              value={previewConfig.renderer}
+              onChange={handleRendererChange}
+            >
               <option value="svg">svg</option>
               <option value="canvas">canvas</option>
             </select>
@@ -46,7 +73,13 @@ const Preview = ({ previewCode, previewConfig, pintoraConfig, className }: Props
           </div> */}
         </div>
       </div>
-      <PintoraPreview code={previewCode} renderer={previewConfig.renderer} pintoraConfig={pintoraConfig} />
+      <PintoraPreview
+        code={previewCode}
+        renderer={previewConfig.renderer}
+        pintoraConfig={pintoraConfig}
+        onError={handleError}
+        onSuccess={handleSuccess}
+      />
     </div>
   )
 }

@@ -1,11 +1,13 @@
 import { createSlice, DeepPartial, Draft, PayloadAction } from '@reduxjs/toolkit'
 import { EXAMPLES } from '@pintora/test-shared'
 import { DiagramsConf } from '@pintora/standalone'
+import { ErrorInfo } from 'src/live-editor/type'
 
 export type State = {
   currentEditor: 'code' | 'config'
   editor: {
     code: string
+    error: ErrorInfo | null
   }
   configEditor: {
     code: string
@@ -30,6 +32,7 @@ const initialState: State = {
   currentEditor: 'code',
   editor: {
     code: EXAMPLES.sequence.code,
+    error: null,
   },
   configEditor: {
     code: JSON.stringify(DEFAULT_CONFIG, null, 2),
@@ -63,6 +66,10 @@ const appSlice = createSlice({
       if (syncToPreview || state.preview.autoSync) {
         state.preview.code = code
       }
+    },
+    updateEditorError(state, action: PayloadAction<{ errorInfo: ErrorInfo | null }>){
+      const { errorInfo } = action.payload
+      state.editor.error = errorInfo
     },
     updateConfigCode(state, action: PayloadAction<{ code: string; syncToPreview?: boolean }>) {
       const { code, syncToPreview } = action.payload

@@ -8,10 +8,11 @@ interface Props {
   renderer?: RenderOptions['renderer']
   pintoraConfig?: any
   onError?(error: Error): void
+  onSuccess?(): void
 }
 
 export default function PintoraPreview(props: Props) {
-  const { code, renderer, pintoraConfig, onError } = props
+  const { code, renderer, pintoraConfig, onError, onSuccess } = props
   const containerRef = useRef<HTMLDivElement>()
   const [errorMessage, setErrorMessage] = useState<string | null>('')
 
@@ -36,6 +37,7 @@ export default function PintoraPreview(props: Props) {
       onRender(renderer: any) {
         ;(window as any).pintoraRenderer = renderer
         setErrorMessage(null)
+        if (onSuccess) onSuccess()
       },
       onError(error) {
         console.error(error)

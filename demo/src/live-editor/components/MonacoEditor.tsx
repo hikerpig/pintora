@@ -2,6 +2,7 @@ import React, { useEffect, useRef } from 'react'
 import * as monaco from 'monaco-editor'
 import editorWorker from 'monaco-editor/esm/vs/editor/editor.worker?worker'
 import JsonWorker from 'monaco-editor/esm/vs/language/json/json.worker?worker';
+import { ErrorInfo } from 'src/live-editor/type'
 
 ;(self as any).MonacoEnvironment = {
   getWorker(_: string, label: string) {
@@ -16,10 +17,11 @@ interface Props {
   code: string
   onCodeChange(code: string): void
   editorOptions: Partial<monaco.editor.IStandaloneEditorConstructionOptions>
+  errorInfo?: ErrorInfo | null
 }
 
 const MonacoEditor = (props: Props) => {
-  const { code, onCodeChange, editorOptions, } = props
+  const { code, onCodeChange, editorOptions, errorInfo } = props
   const wrapperRef = useRef<HTMLDivElement>()
   const editorRef = useRef<monaco.editor.IStandaloneCodeEditor>()
 
@@ -65,6 +67,26 @@ const MonacoEditor = (props: Props) => {
       if (currentCode !== code) editor.setValue(code)
     }
   }, [code])
+
+  useEffect(() => {
+    const editor = editorRef.current
+    if (!editor) return
+    const model = editor.getModel()
+    if (model) {
+      if (errorInfo) {
+        monaco.editor.setModelMarkers(model, 'pintora', [{
+          startLineNumber: errorInfo.line,
+          startColumn: errorInfo.col,
+          endLineNumber: errorInfo.line,
+          endColumn: errorInfo.col,
+          message: errorInfo.message,
+          severity: monaco.MarkerSeverity.Error,
+        }])
+      } else {
+        monaco.editor.setModelMarkers(model, 'pintora', [])
+      }
+    }
+  }, [errorInfo])
 
   return <div className="MonacoEditor" ref={wrapperRef as any}></div>
 }
