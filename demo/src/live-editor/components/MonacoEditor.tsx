@@ -3,6 +3,7 @@ import * as monaco from 'monaco-editor'
 import editorWorker from 'monaco-editor/esm/vs/editor/editor.worker?worker'
 import JsonWorker from 'monaco-editor/esm/vs/language/json/json.worker?worker';
 import { ErrorInfo } from 'src/live-editor/type'
+import './monaco/monaco-language-pintora'
 
 ;(self as any).MonacoEnvironment = {
   getWorker(_: string, label: string) {
