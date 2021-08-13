@@ -1,10 +1,13 @@
 {
   "name": "@pintora/diagrams",
   "version": "0.1.0-alpha.3",
-  "description": "Core diagrams",
+  "description": "Core diagrams of pintora",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
-  "keywords": [],
+  "keywords": [
+    "pintora",
+    "diagrams"
+  ],
   "author": "hikerpigwinnie@gmail.com",
   "license": "MIT",
   "scripts": {
@@ -16,8 +19,9 @@
   },
   "dependencies": {
     "@pintora/core": "^0.1.0-alpha.3",
-    "@pintora/dagre": "^0.9.0",
-    "@pintora/graphlib": "2.2.1"
+    "@pintora/dagre": "^0.10.0-alpha.0",
+    "@pintora/graphlib": "2.2.1",
+    "nearley": "^2.20.1"
   },
   "devDependencies": {
     "@types/jest": "^26.0.23",
@@ -26,7 +30,6 @@
     "babel-jest": "^27.0.2",
     "esbuild-jest": "^0.5.0",
     "jest": "^27.0.4",
-    "nearley": "^2.20.1",
     "shell-exec": "^1.0.2",
     "typescript": "4.2.4"
   }

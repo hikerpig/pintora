@@ -54,6 +54,8 @@ export interface LayoutNodeOption {
   outerRight?: number
   outerTop?: number
   outerBottom?: number
+  marginl?: number
+  marginr?: number
   /**
    * Sometimes we need a dummy box to hold content area for a given node,
    *   for a node, this is it's dummy box's id.

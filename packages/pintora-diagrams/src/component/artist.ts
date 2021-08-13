@@ -196,13 +196,9 @@ function drawInterfacesTo(parentMark: Group, ir: ComponentDiagramIR, g: LayoutGr
     g.setNode(id, layoutNode)
 
     if (labelDims.width > interfaceSize) {
-      const dummyBoxId = `${id}_pad`
-      layoutNode.dummyBoxId = dummyBoxId
-      g.setNode(dummyBoxId, {
-        width: labelDims.width,
-        height: nodeHeight,
-        isDummy: true
-      })
+      const marginH = (labelDims.width - interfaceSize) / 2
+      layoutNode.marginl = marginH
+      layoutNode.marginr = marginH
     }
   }
 }
@@ -214,7 +210,8 @@ function drawGroupsTo(parentMark: Group, ir: ComponentDiagramIR, g: LayoutGraph)
     // console.log('[draw] group', cGroup)
 
     let bgMark: Rect | GSymbol
-    if (symbolRegistry.get(groupType)) {
+    let symbolDef = symbolRegistry.get(groupType)
+    if (symbolDef) {
       // wait till onLayout
     } else {
       bgMark = makeMark(
@@ -256,8 +253,19 @@ function drawGroupsTo(parentMark: Group, ir: ComponentDiagramIR, g: LayoutGraph)
     const labelTextDims = calculateTextDimensions(groupLabel)
     const typeTextDims = calculateTextDimensions(typeText)
 
+    let nodeMargin = {}
+    if (symbolDef && symbolDef.symbolMargin) {
+      Object.assign(nodeMargin, {
+        marginl: symbolDef.symbolMargin.left,
+        marginr: symbolDef.symbolMargin.right,
+        margint: symbolDef.symbolMargin.top,
+        marginb: symbolDef.symbolMargin.bottom,
+      })
+    }
+
     g.setNode(groupId, {
       id: groupId,
+      ...nodeMargin,
       onLayout(data: LayoutNode) {
         const { x, y, width, height } = data
         const containerWidth = Math.max(width, labelTextDims.width + 10)
@@ -277,10 +285,10 @@ function drawGroupsTo(parentMark: Group, ir: ComponentDiagramIR, g: LayoutGraph)
           if (bgMark) {
             // console.log('bgMark', groupId, bgMark, 'bounds', bgMark.symbolBounds)
             const node: LayoutNode = g.node(groupId)
-            node.outerTop = bgMark.symbolBounds.top + y
-            node.outerBottom = bgMark.symbolBounds.bottom + y
-            node.outerLeft = bgMark.symbolBounds.left + x
-            node.outerRight = bgMark.symbolBounds.right + x
+            // node.outerTop = bgMark.symbolBounds.top + y
+            // node.outerBottom = bgMark.symbolBounds.bottom + y
+            // node.outerLeft = bgMark.symbolBounds.left + x
+            // node.outerRight = bgMark.symbolBounds.right + x
             node.outerHeight = bgMark.symbolBounds.height
             node.outerWidth = bgMark.symbolBounds.width
             group.children.unshift(bgMark)
@@ -295,6 +303,7 @@ function drawGroupsTo(parentMark: Group, ir: ComponentDiagramIR, g: LayoutGraph)
         const childNode: LayoutNodeOption = g.node(child.name)
         if (childNode) {
           g.setParent(childNode.id, groupId)
+
           if (childNode.dummyBoxId) {
             g.setParent(childNode.id, childNode.dummyBoxId)
             g.setParent(childNode.dummyBoxId, groupId)

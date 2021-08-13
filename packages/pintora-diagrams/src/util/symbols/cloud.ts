@@ -3,9 +3,16 @@ import { makeMark } from '../artist-util'
 
 pintora.symbolRegistry.register('cloud', {
   type: 'factory',
+  // symbolMargin: {
+  //   left: 0,
+  //   right: 20,
+  //   top: 20,
+  //   bottom: 0,
+  // },
   factory({ width, height, x, y }) {
-    const rx = width * 5 / 6
+    const halfWidth = width / 2
     const ry = height / 2
+    const rx = halfWidth + ry / Math.sqrt(3)
     // hexagon
     const mark = makeMark(
       'group',
@@ -16,11 +23,11 @@ pintora.symbolRegistry.register('cloud', {
             lineJoin: 'round',
             path: [
               ['M', x - rx, y],
-              ['l', rx / 3, -ry],
-              ['l', rx * 4 / 3, 0],
-              ['l', rx / 3, ry],
-              ['l', -rx / 3, ry],
-              ['l', -rx * 4 / 3, 0],
+              ['l', rx - halfWidth, -ry],
+              ['l', width, 0],
+              ['l', rx - halfWidth, ry],
+              ['l', halfWidth - rx, ry],
+              ['l', -width, 0],
               ['Z'],
             ],
           }),
@@ -28,7 +35,7 @@ pintora.symbolRegistry.register('cloud', {
       },
     )
 
-    const outerWidth = rx * 2
+    const outerWidth = rx
     const outerHeight = height
     const sym = makeMark(
       'symbol',

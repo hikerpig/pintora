@@ -3,7 +3,9 @@
   "version": "0.1.0-alpha.3",
   "description": "A standalone version of pintora that has all the default diagrams",
   "keywords": [
-    "pintora"
+    "pintora",
+    "diagrams",
+    "text-to-diagrams"
   ],
   "author": "hikerpig <hikerpigwinnie@gmail.com>",
   "homepage": "https://github.com/hikerpig/pintora#readme",
