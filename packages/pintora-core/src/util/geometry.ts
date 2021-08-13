@@ -12,6 +12,15 @@ export type TRect = {
   height: number
 }
 
+export type MarginValue = string | number
+
+export type MarginObject = {
+  left: MarginValue
+  right: MarginValue
+  top: MarginValue
+  bottom: MarginValue
+}
+
 /**
  * fields are the same with TRect, but usually x,y is the center of the rect
  */

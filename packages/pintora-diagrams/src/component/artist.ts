@@ -214,7 +214,8 @@ function drawGroupsTo(parentMark: Group, ir: ComponentDiagramIR, g: LayoutGraph)
     // console.log('[draw] group', cGroup)
 
     let bgMark: Rect | GSymbol
-    if (symbolRegistry.get(groupType)) {
+    let symbolDef = symbolRegistry.get(groupType)
+    if (symbolDef) {
       // wait till onLayout
     } else {
       bgMark = makeMark(
@@ -256,8 +257,19 @@ function drawGroupsTo(parentMark: Group, ir: ComponentDiagramIR, g: LayoutGraph)
     const labelTextDims = calculateTextDimensions(groupLabel)
     const typeTextDims = calculateTextDimensions(typeText)
 
+    let nodeMargin = {}
+    if (symbolDef && symbolDef.symbolMargin) {
+      Object.assign(nodeMargin, {
+        marginl: symbolDef.symbolMargin.left,
+        marginr: symbolDef.symbolMargin.right,
+        margint: symbolDef.symbolMargin.top,
+        marginb: symbolDef.symbolMargin.bottom,
+      })
+    }
+
     g.setNode(groupId, {
       id: groupId,
+      ...nodeMargin,
       onLayout(data: LayoutNode) {
         const { x, y, width, height } = data
         const containerWidth = Math.max(width, labelTextDims.width + 10)
@@ -295,10 +307,12 @@ function drawGroupsTo(parentMark: Group, ir: ComponentDiagramIR, g: LayoutGraph)
         const childNode: LayoutNodeOption = g.node(child.name)
         if (childNode) {
           g.setParent(childNode.id, groupId)
-          if (childNode.dummyBoxId) {
-            g.setParent(childNode.id, childNode.dummyBoxId)
-            g.setParent(childNode.dummyBoxId, groupId)
-          }
+
+          // TODO: should enable this, and assign all `node.margin*`s
+          // if (childNode.dummyBoxId) {
+          //   g.setParent(childNode.id, childNode.dummyBoxId)
+          //   g.setParent(childNode.dummyBoxId, groupId)
+          // }
         }
       }
     }

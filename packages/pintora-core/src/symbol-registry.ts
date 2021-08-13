@@ -1,13 +1,14 @@
 import { Group, GSymbol, MarkAttrs } from './types/graphics'
 import { logger } from './logger'
 import { cloneMark } from './util/mark'
-import { ContentArea } from './util'
+import { ContentArea, MarginObject } from './util'
 
 /** Definition of graphic symbol prototype */
 export type SymbolPrototypeDef = {
   type: 'prototype'
   symbol: GSymbol
   styleMark?: StyleMarkFunction
+  symbolMargin?: Partial<MarginObject>
 }
 
 /** Definition of graphic symbol factory */
@@ -20,6 +21,7 @@ export type SymbolFactoryDef = {
    */
   factory(contentArea: ContentArea): GSymbol
   styleMark?: StyleMarkFunction
+  symbolMargin?: Partial<MarginObject>
 }
 
 type StyleMarkFunction = (mark: Group, def: SymbolDef, attrs: SymbolStyleAttrs) => void

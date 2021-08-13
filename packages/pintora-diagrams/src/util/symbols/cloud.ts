@@ -3,6 +3,12 @@ import { makeMark } from '../artist-util'
 
 pintora.symbolRegistry.register('cloud', {
   type: 'factory',
+  symbolMargin: {
+    left: 20,
+    right: 20,
+    top: 40,
+    bottom: 30,
+  },
   factory({ width, height, x, y }) {
     const rx = width * 5 / 6
     const ry = height / 2

@@ -34,6 +34,28 @@ function App() {
         if (example) {
           code = EXAMPLES[exampleName].code
         }
+        code = `
+        componentDiagram
+        package "@pintora/core" {
+          () GraphicsIR
+          () IRenderer
+          () IDiagram
+          [Diagram Registry] as registry
+        }
+        cloud "@pintora/diagrams" {
+          [...Multiple Diagrams...] as diagrams
+          [diagrams]
+          [diagrams] --> IDiagram : implements
+        }
+        cloud "@pintora/renderer" {
+          () "render()" as renderFn
+          [SVGRender]
+          [CanvasRender]
+          [SVGRender] --> IRenderer : implements
+          [CanvasRender] --> IRenderer : implements
+          IRenderer ..> GraphicsIR : accepts
+        }
+        `
       }
     }
     if (code) {
