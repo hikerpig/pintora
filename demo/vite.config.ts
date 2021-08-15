@@ -12,6 +12,7 @@ const BASE = '/demo/'
 export default defineConfig({
   plugins: [reactRefresh(), tsconfigPaths(), VitePWA({
     base: BASE,
+    registerType: 'autoUpdate',
     manifest: {
       name: 'Pintora Live Editor',
       short_name: 'Pintora',
@@ -25,7 +26,6 @@ export default defineConfig({
     },
     strategies: 'injectManifest',
     workbox: {
-      skipWaiting: true,
     }
   })],
   base: BASE,
@@ -40,7 +40,10 @@ export default defineConfig({
         manualChunks: {
           editorWorker: [`${monacoPrefix}/editor/editor.worker`],
         },
-      }
+        entryFileNames: `assets/[name].js`,
+        chunkFileNames: `assets/[name].js`,
+        assetFileNames: `assets/[name].[ext]`
+      },
     },
   },
 })
