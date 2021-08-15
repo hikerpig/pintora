@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.1.0-alpha.4](https://github.com/hikerpig/pintora/compare/v0.1.0-alpha.3...v0.1.0-alpha.4) (2021-08-15)
+
+
+### Features
+
+* **pintora-demo:** add '/demo/preview/?code=' page ([d5dce94](https://github.com/hikerpig/pintora/commit/d5dce944b3e2ed6ec081a0ff29e72ed1d00efb98))
+* **pintora-demo:** add error hint to editor ([8f82d11](https://github.com/hikerpig/pintora/commit/8f82d1182cc796a9e8dec10081784e8424d30add))
+
+
+
+
+
 # [0.1.0-alpha.3](https://github.com/hikerpig/pintora/compare/v0.1.0-alpha.2...v0.1.0-alpha.3) (2021-08-07)
 
 
