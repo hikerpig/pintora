@@ -1,4 +1,4 @@
-# Pintora
+# @pintora/standalone
 
 <p align='center'>
   <img width="140" src="https://raw.githubusercontent.com/hikerpig/pintora/master/demo/public/img/logo.svg" alt="pintora" />
@@ -12,6 +12,8 @@
 </p>
 
 <br>
+
+This is a standalone version of pintora that has all the diagrams pre-bundled.
 
 Pintora is a javascript text-to-diagrams library that works in both browser and Node.js.
 
@@ -33,15 +35,3 @@ Heavily inspired by [Mermaid.js](https://mermaid-js.github.io/mermaid/#/) and [P
 - Component Diagram
 
 Check the online [documentation and demo](http://pintorajs.vercel.app/) for more details.
-
-🚧 This project is currently under active development, if you have good thoughts or feature requests, please feel free to [start a new discussion](https://github.com/hikerpig/pintora/discussions).
-
-## Roadmap
-
-- [x] Sequence Diagram and Entity Relationship Diagram
-- [x] Pintora node.js cli
-- [x] PlantUML style Component diagram
-- [x] Theme config
-- [ ] PlantUML style activity diagram, or Mermaid's flowchart
-- [ ] PlantUML style deploy diagram
-- [ ] Load diagram implementation and canvas renderer only when needed
