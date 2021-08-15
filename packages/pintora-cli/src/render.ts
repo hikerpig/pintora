@@ -44,7 +44,7 @@ export function render(opts: CLIRenderOptions) {
         setTimeout(() => {
           const buf = getBuf(renderer.getRootElement() as HTMLCanvasElement)
           resolve(buf)
-        }, 300)
+        }, 20)
       },
       onError(e) {
         console.error('onError', e)
