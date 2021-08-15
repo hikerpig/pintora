@@ -7,20 +7,6 @@ describe('er parser', () => {
     db.clear()
   })
 
-  const example = `erDiagram
-  CUSTOMER ||--o{ ORDER : places
-  ORDER ||--|{ LINE-ITEM : contains
-  CUSTOMER }|..|{ DELIVERY-ADDRESS : uses
-  ORDER {
-    string id
-    Date date
-}
-  `
-  it('just works', () => {
-    parse(example)
-    // console.log(db.getDiagramIR())
-  })
-
   it('will parse message inside quotes', () => {
     const example = stripStartEmptyLines(`
 erDiagram
@@ -36,5 +22,32 @@ erDiagram
     parse(example)
     const ir = db.getDiagramIR()
     expect(ir.entities['artists']).toBeTruthy()
+  })
+
+  it('will parse attribute key', () => {
+    const example = `erDiagram
+    ORDER {
+      int orderNumber PK
+      string deliveryAddress
+    }
+    `
+    parse(example)
+    const ir = db.getDiagramIR()
+    // console.log(JSON.stringify(ir, null, 2))
+    expect(ir.entities).toMatchObject({
+      ORDER: {
+        attributes: [
+          {
+            attributeType: 'int',
+            attributeName: 'orderNumber',
+            attributeKey: 'PK',
+          },
+          {
+            attributeType: 'string',
+            attributeName: 'deliveryAddress',
+          },
+        ],
+      },
+    })
   })
 })

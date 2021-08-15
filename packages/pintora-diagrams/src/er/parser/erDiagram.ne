@@ -63,11 +63,18 @@ entityName ->
     %VALID_TEXT {% id %}
 
 attributes ->
-      attribute {% id %}
-    | attribute __ attributes {% (d) => [d[0]].concat(d[2]) %}
+      attribute {% (d) => [d[0]] %}
+    | attribute __ attributes {% (d) => {
+        return [d[0]].concat(d[2]) }
+      %}
 
 attribute ->
-      attributeType __ attributeName {% (d) => { return { attributeType: tv(d[0]), attributeName: tv(d[2]) } } %}
+      attributeType __ attributeName __ %VALID_TEXT _ %NEWLINE {%
+        function(d) {
+          return { attributeType: tv(d[0]), attributeName: tv(d[2]), attributeKey: tv(d[4]) } 
+        }
+      %}
+    | attributeType __ attributeName _ %NEWLINE {% (d) => { return { attributeType: tv(d[0]), attributeName: tv(d[2]) } } %}
 
 attributeType -> %VALID_TEXT {% id %}
 

@@ -3,6 +3,7 @@ export enum Cardinality {
   ZERO_OR_MORE = 'ZERO_OR_MORE',
   ONE_OR_MORE = 'ONE_OR_MORE',
   ONLY_ONE = 'ONLY_ONE',
+  MORE = 'MORE',
 }
 
 export enum Identification {
@@ -13,6 +14,7 @@ export enum Identification {
 export type Attribute = {
   attributeType: string
   attributeName: string
+  attributeKey?: string
 }
 
 export type Entity = {

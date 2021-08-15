@@ -1,7 +1,8 @@
 import { Mark, Bounds, Point } from '@pintora/core'
 import { Graph, Edge, GraphOptions } from '@pintora/graphlib'
+import { GraphData } from '@pintora/dagre/dist/types/type'
 
-export interface LayoutGraph extends Graph<LayoutNodeOption> {
+export interface LayoutGraph extends Graph<LayoutNodeOption, any, GraphData> {
 }
 
 export function createLayoutGraph(opts?: GraphOptions) {
@@ -19,7 +20,7 @@ export function getGraphBounds(g: LayoutGraph): Bounds {
   let top = 0
   let bottom = 0
   g.nodes().forEach((k) => {
-    const node: LayoutNode = g.node(k)
+    const node: LayoutNode = g.node(k) as any
     // left = Math.min(node.x, left)
     left = Math.min(node.outerLeft || node.x, left)
     const width = node.outerWidth || node.width

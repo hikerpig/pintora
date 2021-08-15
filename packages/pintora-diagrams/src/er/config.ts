@@ -9,7 +9,9 @@ export type ErConf = {
   minEntityWidth: number
   minEntityHeight: number
 
-  entityPadding: number
+  entityPaddingX: number
+  entityPaddingY: number
+  borderRadius: number
 
   stroke: string
   fill: string
@@ -26,14 +28,17 @@ export type ErConf = {
 }
 
 export const defaultConfig: ErConf = {
-  diagramPadding: 20,
+  diagramPadding: 15,
   layoutDirection: 'TB',
 
   minEntityWidth: 90,
 
-  minEntityHeight: 75,
+  minEntityHeight: 50,
 
-  entityPadding: 15,
+  entityPaddingX: 15,
+  entityPaddingY: 15,
+
+  borderRadius: 2,
 
   stroke: PALETTE.normalDark,
   fill: PALETTE.orange,
@@ -45,7 +50,7 @@ export const defaultConfig: ErConf = {
 
   labelBackground: PALETTE.white,
 
-  fontSize: 12,
+  fontSize: 14,
 
   useMaxWidth: true,
 }
@@ -60,7 +65,7 @@ export function getConf() {
   safeAssign(conf, {
     stroke: t.primaryBorderColor,
     fill: t.primaryColor,
-    edgeColor: t.primaryColor,
+    edgeColor: t.primaryLineColor,
     textColor: t.textColor,
     labelBackground: t.canvasBackground || t.background1,
     attributeFill: t.lightestBackground || conf.attributeFill,

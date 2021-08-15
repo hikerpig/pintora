@@ -1,7 +1,19 @@
-import { GraphicsIR, IDiagramArtist, logger, Group, Text, mat3, safeAssign, createTranslation, Point, calculateTextDimensions } from '@pintora/core'
+import {
+  GraphicsIR,
+  IDiagramArtist,
+  Group,
+  Text,
+  mat3,
+  safeAssign,
+  createTranslation,
+  Point,
+  calculateTextDimensions,
+  getPointAt,
+  Rect,
+} from '@pintora/core'
 import { ErDiagramIR, Identification, Entity, Relationship } from './db'
 import { ErConf, getConf } from './config'
-import { createLayoutGraph, getGraphBounds, LayoutGraph } from '../util/graph'
+import { createLayoutGraph, getGraphBounds, LayoutGraph, LayoutNode } from '../util/graph'
 import { makeMark, getBaseText, calcDirection, makeLabelBg } from '../util/artist-util'
 import dagre from '@pintora/dagre'
 import { drawMarkerTo } from './artist-util'
@@ -38,19 +50,15 @@ const erArtist: IDiagramArtist<ErDiagramIR, ErConf> = {
     })
       .setGraph({
         rankdir: conf.layoutDirection,
-        marginx: 20,
-        marginy: 20,
-        nodesep: 100,
-        edgesep: 100,
+        nodesep: 80,
+        edgesep: 80,
         ranksep: 100,
       })
       .setDefaultEdgeLabel(function () {
         return {}
       })
 
-    // Draw the entities (at 0,0), returning the first svg node that got
-    // inserted - this represents the insertion point for relationship paths
-    const entityMarks = drawEntities(rootMark, ir, g)
+    drawEntities(rootMark, ir, g)
 
     // Add all the relationships to the graph
     const relationships = addRelationships(ir.relationships, g)
@@ -71,23 +79,30 @@ const erArtist: IDiagramArtist<ErDiagramIR, ErConf> = {
     })
     rootMark.children.unshift(relationsGroup)
 
-    const padding = conf.diagramPadding
-    rootMark.matrix = createTranslation(padding, padding)
-
     const gBounds = getGraphBounds(g)
     // console.log('bounds', gBounds)
 
-    const width = gBounds.width
-    const height = gBounds.height
+    const pad = conf.diagramPadding
+    rootMark.matrix = mat3.fromTranslation(mat3.create(), [
+      -Math.min(0, gBounds.left) + pad,
+      -Math.min(0, gBounds.top) + pad,
+    ])
 
-    // configureSvgSize(svg, height, width, conf.useMaxWidth)
-    // svg.attr('viewBox', `${svgBounds.x - padding} ${svgBounds.y - padding} ${width} ${height}`)
+    const width = gBounds.width + pad * 2
+    const height = gBounds.height + pad * 2
+
     return {
       mark: rootMark,
       width,
       height,
     } as GraphicsIR
   },
+}
+
+type AttributePair = {
+  type: Text
+  name: Text
+  key?: Text
 }
 
 /**
@@ -98,21 +113,40 @@ const erArtist: IDiagramArtist<ErDiagramIR, ErConf> = {
  * @return the bounding box of the entity, after attributes have been added
  */
 const drawAttributes = (group: Group, entityText: Text, attributes: Entity['attributes']) => {
-  const heightPadding = conf.entityPadding / 3 // Padding internal to attribute boxes
-  const widthPadding = conf.entityPadding / 3 // Ditto
+  const attribPaddingY = conf.entityPaddingY / 2 // Padding internal to attribute boxes
+  const attribPaddingX = conf.entityPaddingX / 2 // Ditto
   const attrFontSize = conf.fontSize * 0.85
   const labelBBox = entityText.attrs
-  const attributeNodes: { type: Text; name: Text }[] = [] // Intermediate storage for attribute nodes created so that we can do a second pass
+  const attributeNodes: AttributePair[] = [] // Intermediate storage for attribute nodes created so that we can do a second pass
   let maxTypeWidth = 0
   let maxNameWidth = 0
-  let cumulativeHeight = labelBBox.height + heightPadding * 2
+  let maxKeyWidth = 0
+  let cumulativeHeight = labelBBox.height + attribPaddingY * 2
   let attrNum = 1
+  const hasKeyAttribute = attributes.some(item => Boolean(item.attributeKey))
 
   const attributeGroup = makeMark('group', {}, { children: [] })
   group.children.push(attributeGroup)
 
   attributes.forEach(item => {
     const attrPrefix = `${entityText.attrs.id}-attr-${attrNum}`
+
+    let keyText: Text
+    if (item.attributeKey) {
+      keyText = makeMark(
+        'text',
+        {
+          ...calculateTextDimensions(item.attributeKey),
+          ...getBaseText(),
+          text: item.attributeKey,
+          id: `${attrPrefix}-key`,
+          textAlign: 'left',
+          textBaseline: 'middle',
+          fontSize: attrFontSize,
+        },
+        { class: 'er__entity-label' },
+      )
+    }
 
     const typeText = makeMark(
       'text',
@@ -141,89 +175,133 @@ const drawAttributes = (group: Group, entityText: Text, attributes: Entity['attr
       { class: 'er__entity-label' },
     )
 
+    if (item.attributeKey) attributeGroup.children.push(keyText)
     attributeGroup.children.push(typeText, nameText)
 
     // Keep a reference to the nodes so that we can iterate through them later
-    attributeNodes.push({ type: typeText, name: nameText })
+    attributeNodes.push({ type: typeText, name: nameText, key: keyText })
 
+    if (item.attributeKey) {
+      maxKeyWidth = Math.max(maxKeyWidth, keyText.attrs.width)
+    }
     maxTypeWidth = Math.max(maxTypeWidth, typeText.attrs.width)
     maxNameWidth = Math.max(maxNameWidth, nameText.attrs.width)
 
-    cumulativeHeight += Math.max(typeText.attrs.height, nameText.attrs.height) + heightPadding * 2
+    cumulativeHeight +=
+      Math.max(typeText.attrs.height, nameText.attrs.height, keyText?.attrs.height || 0) + attribPaddingY * 2
     attrNum += 1
   })
 
+  const paddingXCount = hasKeyAttribute ? 6: 4
   // Calculate the new bounding box of the overall entity, now that attributes have been added
   const bBox = {
     width: Math.max(
       conf.minEntityWidth,
-      Math.max(labelBBox.width + conf.entityPadding * 2, maxTypeWidth + maxNameWidth + widthPadding * 4),
+      Math.max(
+        labelBBox.width + conf.entityPaddingX * 2,
+        maxTypeWidth + maxNameWidth + maxKeyWidth + attribPaddingX * paddingXCount,
+      ),
     ),
     height:
       attributes.length > 0
         ? cumulativeHeight
-        : Math.max(conf.minEntityHeight, labelBBox.height + conf.entityPadding * 2),
+        : Math.max(conf.minEntityHeight, labelBBox.height + conf.entityPaddingY * 2),
   }
 
-  // There might be some spare width for padding out attributes if the entity name is very long
-  const spareWidth = Math.max(0, bBox.width - (maxTypeWidth + maxNameWidth) - widthPadding * 4)
-
   if (attributes.length > 0) {
+    const nodeXOffsets: Record<keyof AttributePair, number> = {
+      key: 0,
+      type: maxKeyWidth,
+      name: maxKeyWidth + maxTypeWidth + 2 * attribPaddingX,
+    }
+    if (hasKeyAttribute) {
+      nodeXOffsets.type += 2 * attribPaddingX
+      nodeXOffsets.name += 2 * attribPaddingX
+    }
+
     // Position the entity label near the top of the entity bounding box
-    entityText.matrix = mat3.fromTranslation(mat3.create(), [bBox.width / 2, heightPadding + labelBBox.height / 2])
+    entityText.matrix = mat3.fromTranslation(mat3.create(), [bBox.width / 2, attribPaddingY + labelBBox.height / 2])
 
     // Add rectangular boxes for the attribute types/names
-    let heightOffset = labelBBox.height + heightPadding * 2 // Start at the bottom of the entity label
+    let heightOffset = labelBBox.height + attribPaddingY * 2 // Start at the bottom of the entity label
     let attribStyle = 'attributeBoxOdd' // We will flip the style on alternate rows to achieve a banded effect
 
+    const attributeFill = conf.attributeFill
+
+    function makeAttribLabelRect(attrs: Partial<Rect['attrs']>) {
+      return makeMark('rect', {
+        fill: attributeFill,
+        stroke: conf.stroke,
+        ...attrs,
+      })
+    }
+
     attributeNodes.forEach(nodePair => {
+      const rowSegs: Text[] = []
+      if (nodePair.key) {
+        rowSegs.push(nodePair.key)
+      }
+      rowSegs.push(nodePair.type)
+      rowSegs.push(nodePair.name)
+
+      const rowTextHeight = rowSegs.reduce((out, mark) => Math.max(out, mark.attrs.height), 0)
+      const rowHeight = rowTextHeight + attribPaddingY * 2
       // Calculate the alignment y co-ordinate for the type/name of the attribute
-      const alignY = heightOffset + heightPadding + Math.max(nodePair.type.attrs.height, nodePair.name.attrs.height) / 2
+      const alignY = heightOffset + attribPaddingY + rowTextHeight / 2
 
-      // Position the type of the attribute
-      nodePair.type.matrix = mat3.fromTranslation(mat3.create(), [widthPadding, alignY])
-
-      const attributeFill = conf.attributeFill
-
-      // Insert a rectangle for the type
-      const typeRect = makeMark(
-        'rect',
-        {
-          fill: attributeFill,
-          stroke: conf.stroke,
+      if (nodePair.key) {
+        const keyRect = makeAttribLabelRect({
           x: entityText.attrs.x,
           y: heightOffset,
-          width: maxTypeWidth + widthPadding * 2 + spareWidth / 2,
-          height: nodePair.type.attrs.height + heightPadding * 2,
-        },
-        { class: attribStyle },
-      )
+          width: maxKeyWidth + attribPaddingX * 2,
+          height: rowHeight,
+        })
+        attributeGroup.children.unshift(keyRect)
+        nodePair.key.matrix = mat3.fromTranslation(mat3.create(), [nodeXOffsets.key + attribPaddingX, alignY])
+      }
+
+      // Position the type of the attribute
+      nodePair.type.matrix = mat3.fromTranslation(mat3.create(), [nodeXOffsets.type + attribPaddingX, alignY])
+
+      // Insert a rectangle for the type
+      const typeRect = makeAttribLabelRect({
+        x: entityText.attrs.x + nodeXOffsets.type,
+        y: heightOffset,
+        width: maxTypeWidth + attribPaddingX * 2,
+        height: rowHeight,
+      })
 
       // Position the name of the attribute
-      nodePair.name.matrix = mat3.fromTranslation(mat3.create(), [typeRect.attrs.width + widthPadding, alignY])
+      nodePair.name.matrix = mat3.fromTranslation(mat3.create(), [nodeXOffsets.name + attribPaddingX, alignY])
 
       // Insert a rectangle for the name
-      const nameRect = makeMark(
-        'rect',
-        {
-          fill: attributeFill,
-          stroke: conf.stroke,
-          x: typeRect.attrs.x + typeRect.attrs.width,
-          y: heightOffset,
-          width: maxNameWidth + widthPadding * 2 + spareWidth / 2,
-          height: nodePair.name.attrs.height + heightPadding * 2,
-        },
-        { class: attribStyle },
-      )
+      const nameRect = makeAttribLabelRect({
+        x: entityText.attrs.x + nodeXOffsets.name,
+        y: heightOffset,
+        width: maxNameWidth + attribPaddingX * 2,
+        height: rowHeight,
+      })
 
       // Increment the height offset to move to the next row
-      heightOffset += Math.max(nodePair.name.attrs.height, nodePair.name.attrs.height) + heightPadding * 2
+      heightOffset += Math.max(nodePair.name.attrs.height, nodePair.name.attrs.height) + attribPaddingY * 2
 
       // Flip the attribute style for row banding
       attribStyle = attribStyle == 'attributeBoxOdd' ? 'attributeBoxEven' : 'attributeBoxOdd'
 
       attributeGroup.children.unshift(typeRect, nameRect)
     })
+
+    if (hasKeyAttribute) {
+      // a background rect for key column
+      const entityLabelOuterHeight = labelBBox.height + attribPaddingY * 2
+      const keyColBgRect = makeAttribLabelRect({
+        x: entityText.attrs.x,
+        y: entityText.attrs.y + entityLabelOuterHeight,
+        width: maxKeyWidth + attribPaddingX * 2,
+        height: cumulativeHeight - entityLabelOuterHeight,
+      })
+      attributeGroup.children.unshift(keyColBgRect)
+    }
   } else {
     // Ensure the entity box is a decent size without any attributes
     bBox.height = Math.max(conf.minEntityHeight, cumulativeHeight)
@@ -268,6 +346,7 @@ const drawEntities = function (rootMark: Group, ir: ErDiagramIR, graph: LayoutGr
         id: textId,
         textAlign: 'center',
         textBaseline: 'middle',
+        fontWeight: 'bold',
       },
       { class: 'er__entity-label' },
     )
@@ -281,6 +360,7 @@ const drawEntities = function (rootMark: Group, ir: ErDiagramIR, graph: LayoutGr
         stroke: conf.stroke,
         x: 0,
         y: 0,
+        radius: conf.borderRadius,
       },
       { class: 'er__entity-box' },
     )
@@ -329,7 +409,7 @@ const drawEntities = function (rootMark: Group, ir: ErDiagramIR, graph: LayoutGr
 
 const adjustEntities = function (graph: LayoutGraph) {
   graph.nodes().forEach(function (v) {
-    const nodeData = graph.node(v)
+    const nodeData: LayoutNode = graph.node(v) as any
     if (nodeData) {
       // console.log('adjustEntities, graph node: ', nodeData)
       if (nodeData.onLayout) {
@@ -401,25 +481,18 @@ const drawRelationshipFromLayout = function (group: Group, rel: Relationship, g:
   const linePath = makeMark('path', {
     path: [
       ['M', startPoint.x, startPoint.y],
-      ...restPoints.map((point) => {
+      ...restPoints.map(point => {
         return ['L', point.x, point.y] as any
-      })
+      }),
     ],
     stroke: conf.edgeColor,
+    lineJoin: 'round',
   })
 
   // with dashes if necessary
   if (rel.relSpec.relType === Identification.NON_IDENTIFYING) {
-    linePath.attrs.lineDash = [8, 8]
+    linePath.attrs.lineDash = [4, 4]
   }
-
-  // TODO: Understand this better
-  // let url = ''
-  // if (conf.arrowMarkerAbsolute) {
-  //   url = window.location.protocol + '//' + window.location.host + window.location.pathname + window.location.search
-  //   url = url.replace(/\(/g, '\\(')
-  //   url = url.replace(/\)/g, '\\)')
-  // }
 
   // Decide which start and end markers it needs. It may be possible to be more concise here
   // by reversing a start marker to make an end marker...but this will do for now
@@ -439,12 +512,10 @@ const drawRelationshipFromLayout = function (group: Group, rel: Relationship, g:
 
   // Now label the relationship
 
-  // // Find the half-way point
-  // const len = svgPath.node().getTotalLength()
-  // const labelPoint = svgPath.node().getPointAtLength(len * 0.5)
-
-  const labelX = restPoints[0].x
-  const labelY = restPoints[0].y
+  // Find the half-way point
+  const labelPoint = getPointAt(edge.points, 0.4, true)
+  const labelX = labelPoint.x
+  const labelY = labelPoint.y
 
   // Append a text node containing the label
   const labelId = 'rel' + relCnt
@@ -464,7 +535,11 @@ const drawRelationshipFromLayout = function (group: Group, rel: Relationship, g:
     { class: 'er__relationship-label' },
   )
 
-  const labelDims = calculateTextDimensions(rel.roleA, { fontSize: conf.fontSize, fontFamily: 'sans-serif', fontWeight: 400 })
+  const labelDims = calculateTextDimensions(rel.roleA, {
+    fontSize: conf.fontSize,
+    fontFamily: 'sans-serif',
+    fontWeight: 400,
+  })
   const labelBg = makeLabelBg(labelDims, { x: labelX, y: labelY }, { id: `#${labelId}`, fill: conf.labelBackground })
 
   const insertingMarks = [linePath, labelBg, labelMark, startMarker, endMarker].filter(o => !!o)

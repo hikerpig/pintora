@@ -284,7 +284,7 @@ function drawGroupsTo(parentMark: Group, ir: ComponentDiagramIR, g: LayoutGraph)
           })
           if (bgMark) {
             // console.log('bgMark', groupId, bgMark, 'bounds', bgMark.symbolBounds)
-            const node: LayoutNode = g.node(groupId)
+            const node: LayoutNode = g.node(groupId) as any
             // node.outerTop = bgMark.symbolBounds.top + y
             // node.outerBottom = bgMark.symbolBounds.bottom + y
             // node.outerLeft = bgMark.symbolBounds.left + x
@@ -402,7 +402,7 @@ function drawRelationshipsTo(parentMark: Group, ir: ComponentDiagramIR, g: Layou
 const adjustMarkInGraph = function (graph: LayoutGraph) {
   // console.log('adjustMarkInGraphNodes', graph)
   graph.nodes().forEach(function (v) {
-    const nodeData = graph.node(v)
+    const nodeData: LayoutNode = graph.node(v) as any
     if (nodeData) {
       if (nodeData.onLayout) {
         nodeData.onLayout(nodeData)

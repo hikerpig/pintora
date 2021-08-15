@@ -43,7 +43,7 @@ erDiagram
   ORDER ||--|{ LINE-ITEM : contains
   CUSTOMER }|..|{ DELIVERY-ADDRESS : uses
   ORDER {
-    int orderNumber
+    int orderNumber PK
     string deliveryAddress
   }
 `),
@@ -154,7 +154,6 @@ erDiagram
   artists ||--o{ albums : "foreign key"
 
   employees ||--o{ customers : "foreign key"
-  employees ||--o{ employees : "foreign key"
 
   genres ||--o{ tracks : "foreign key"
 
