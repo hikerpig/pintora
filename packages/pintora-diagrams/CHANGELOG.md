@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.1.0-alpha.5](https://github.com/hikerpig/pintora/compare/v0.1.0-alpha.4...v0.1.0-alpha.5) (2021-08-16)
+
+
+### Bug Fixes
+
+* **pintora-diagrams:** calcDirection ([ee55d14](https://github.com/hikerpig/pintora/commit/ee55d143fb7876186b1140e4502b1282a7804e6d))
+
+
+
+
+
 # [0.1.0-alpha.4](https://github.com/hikerpig/pintora/compare/v0.1.0-alpha.3...v0.1.0-alpha.4) (2021-08-15)
 
 
