@@ -63,9 +63,12 @@ export function drawCrossTo(dest: Point, baseLength: number, rad: number, attrs?
 }
 
 export function calcDirection(start: Point, end: Point) {
-  const r = Math.atan((end.y - start.y) / (end.x - start.x))
-  if (end.y > start.y && end.x < start.x) {
-    return r + Math.PI
+  const ox = end.x - start.x
+  const oy = end.y - start.y
+
+  let r = Math.atan(oy / ox)
+  if (ox * oy < 0) {
+    r = r + Math.PI
   }
   return r
 }

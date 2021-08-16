@@ -504,7 +504,7 @@ const drawRelationshipFromLayout = function (group: Group, rel: Relationship, g:
     id: `${edge.name}-end`,
   })
 
-  const startDirection = calcDirection(secondPoint, startPoint) + Math.PI // backward
+  const startDirection = calcDirection(secondPoint, startPoint) // backward
   const startMarker = drawMarkerTo(startPoint, rel.relSpec.cardB, startDirection, {
     stroke: conf.stroke,
     id: `${edge.name}-start`,
