@@ -1,10 +1,11 @@
 import pintora, { configApi, GraphicsIR } from '@pintora/core'
+export * from '@pintora/core'
 import { DIAGRAMS, DiagramsConf, THEMES } from '@pintora/diagrams'
 import { render, RenderOptions, BaseRenderer, rendererRegistry } from '@pintora/renderer'
 
 function initDiagrams() {
   Object.keys(DIAGRAMS).forEach(name => {
-    pintora.registerDiagram(name, DIAGRAMS[name])
+    pintora.diagramRegistry.registerDiagram(name, DIAGRAMS[name])
   })
 }
 initDiagrams()
@@ -115,6 +116,6 @@ const pintoraStandalone = {
 
 export { BaseRenderer, rendererRegistry, DiagramsConf }
 
-export { pintoraStandalone }
+export { pintoraStandalone } // for @pintora/cli
 
 export default pintoraStandalone

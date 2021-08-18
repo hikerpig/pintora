@@ -1,5 +1,4 @@
-import { registry } from './registry'
-import { IDiagram } from './type'
+import { diagramRegistry } from './diagram-registry'
 
 export * from './type'
 import { logger, setLogLevel } from './logger'
@@ -24,15 +23,10 @@ type DrawOptions = {
 
 const pintora = {
   configApi,
-  registerDiagram(name: string, diagram: IDiagram) {
-    registry.registerDiagram(name, diagram)
-  },
-  getDiagram(name: string) {
-    return registry.getDiagram(name)
-  },
+  diagramRegistry,
   parseAndDraw(text: string, opts: DrawOptions) {
     const { onError } = opts
-    const diagram = registry.detectDiagram(text)
+    const diagram = diagramRegistry.detectDiagram(text)
     if (!diagram) {
       const errMessage = `[pintora] no diagram detected with input: ${text.slice(0, 30)}`
       logger.warn(errMessage)

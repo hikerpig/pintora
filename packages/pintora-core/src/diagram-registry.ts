@@ -1,7 +1,6 @@
 import { IDiagram } from './type'
 import { logger } from './logger'
-
-class Registry {
+export class DiagramRegistry {
   diagrams: Record<string, IDiagram> = {}
 
   registerDiagram(name: string, diagram: IDiagram) {
@@ -28,4 +27,4 @@ class Registry {
   }
 }
 
-export const registry = new Registry()
+export const diagramRegistry = new DiagramRegistry()
