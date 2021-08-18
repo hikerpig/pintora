@@ -19,7 +19,4 @@ export const erDiagram: IDiagram<ErDiagramIR, ErConf> = {
   clear() {
     db.clear()
   },
-  // setConfig(c) {
-  //   Object.assign(conf, c)
-  // }
 }

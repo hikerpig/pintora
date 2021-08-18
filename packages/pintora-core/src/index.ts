@@ -6,7 +6,7 @@ import { logger, setLogLevel } from './logger'
 import configApi from './config'
 
 export * from './util'
-import { encodeForUrl, decodeCodeInUrl, makeMark } from './util'
+import { encodeForUrl, decodeCodeInUrl, makeMark, calculateTextDimensions } from './util'
 import { symbolRegistry, SymbolDef, SymbolStyleAttrs } from './symbol-registry'
 
 export {
@@ -53,6 +53,7 @@ const pintora = {
     encodeForUrl,
     decodeCodeInUrl,
     makeMark,
+    calculateTextDimensions,
   },
   symbolRegistry,
 }

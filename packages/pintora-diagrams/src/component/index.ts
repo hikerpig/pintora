@@ -20,9 +20,6 @@ export const componentDiagram: IDiagram<ComponentDiagramIR, ComponentConf> = {
   clear() {
     db.clear()
   },
-  // setConfig(c) {
-  //   Object.assign(conf, c)
-  // }
 }
 
 export default componentDiagram
