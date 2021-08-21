@@ -18,7 +18,7 @@ export const sequenceDiagram: IDiagram<SequenceDiagramIR, SequenceConf> = {
     }
   },
   artist,
-  db,
+  configKey: 'sequence',
   clear() {
     db.clear()
   },

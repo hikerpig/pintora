@@ -14,18 +14,10 @@ Pintora 是一个可在浏览器和 Node.js 环境下运行的文字转示意图
 - 在浏览器端，支持 SVG 和 Canvas 输出
 - 在 Node.js 端，支持输出 PNG/JPG 位图
 - \[计划中\] 具有高度的可组合性，按需加载图表类型，核心代码可控制在较轻量级
-- 具有高度的可扩展性，开发者可扩展自己的图表，作为插件接入，详情请见 [实现你自己的图表](#实现你自己的图表)
+- 具有高度的可扩展性，开发者可扩展自己的图表，作为插件接入，详情请见 [实现你自己的图表](./advanced/write-a-custom-diagram.md)
 
 ## 支持图表
 
 - [时序图 Sequence Diagram](./diagrams/sequence-diagram.mdx)
-- ER 图
-
-## 实现你自己的图表
-
-TBD
-
-<!-- Pintora 通过合理的分层和抽象，为图表作者建立一套从 DSL 解析到图形绘制的简化工具链。
-
-- 可使用任意 parser 库实现 DSL 解析，推荐使用 Nearley.js
-- 可基于 pintora 提供的图形表示格式 (GraphicsIR) 构建自己的图表渲染逻辑 -->
+- [Entity Relationship Diagram](./diagrams/er-diagram.mdx)
+- [组件图 Component Diagram](./diagrams/component-diagram.mdx)

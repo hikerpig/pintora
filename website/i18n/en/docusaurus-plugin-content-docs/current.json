@@ -6,5 +6,21 @@
   "sidebar.tutorialSidebar.category.Diagrams": {
     "message": "Diagrams",
     "description": "The label for category Diagrams in sidebar tutorialSidebar"
+  },
+  "sidebar.tutorialSidebar.category.Getting Started": {
+    "message": "Getting Started",
+    "description": "The label for category Getting Started in sidebar tutorialSidebar"
+  },
+  "sidebar.tutorialSidebar.category.Diagram Syntax": {
+    "message": "Diagram Syntax",
+    "description": "The label for category Diagram Syntax in sidebar tutorialSidebar"
+  },
+  "sidebar.tutorialSidebar.category.Configuration": {
+    "message": "Configuration",
+    "description": "The label for category Configuration in sidebar tutorialSidebar"
+  },
+  "sidebar.tutorialSidebar.category.Advanced": {
+    "message": "Advanced",
+    "description": "The label for category Advanced in sidebar tutorialSidebar"
   }
 }

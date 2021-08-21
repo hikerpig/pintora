@@ -3,12 +3,20 @@
     "message": "Next",
     "description": "The label for version current"
   },
-  "sidebar.tutorialSidebar.category.Diagrams": {
-    "message": "图表语法",
-    "description": "The label for category Diagrams in sidebar tutorialSidebar"
-  },
   "sidebar.tutorialSidebar.category.Getting Started": {
     "message": "开始使用",
     "description": "The label for category Getting Started in sidebar tutorialSidebar"
+  },
+  "sidebar.tutorialSidebar.category.Diagram Syntax": {
+    "message": "图表语法",
+    "description": "The label for category Diagram Syntax in sidebar tutorialSidebar"
+  },
+  "sidebar.tutorialSidebar.category.Configuration": {
+    "message": "Configuration",
+    "description": "The label for category Configuration in sidebar tutorialSidebar"
+  },
+  "sidebar.tutorialSidebar.category.Advanced": {
+    "message": "进阶内容",
+    "description": "The label for category Advanced in sidebar tutorialSidebar"
   }
 }

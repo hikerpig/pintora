@@ -15,7 +15,7 @@ export const erDiagram: IDiagram<ErDiagramIR, ErConf> = {
     },
   },
   artist,
-  db,
+  configKey: 'er',
   clear() {
     db.clear()
   },

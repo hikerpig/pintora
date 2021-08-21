@@ -16,7 +16,7 @@ export const componentDiagram: IDiagram<ComponentDiagramIR, ComponentConf> = {
     },
   },
   artist,
-  db,
+  configKey: 'component',
   clear() {
     db.clear()
   },

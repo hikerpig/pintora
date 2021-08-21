@@ -108,6 +108,7 @@ module.exports = {
       {
         docs: {
           sidebarPath: require.resolve('./sidebars.js'),
+          sidebarCollapsed: false,
           editUrl: 'https://github.com/hikerpig/pintora/edit/master/website/',
         },
         theme: {
