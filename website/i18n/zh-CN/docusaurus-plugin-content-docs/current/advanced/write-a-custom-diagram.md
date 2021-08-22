@@ -2,12 +2,16 @@
 title: 实现你自己的图表
 ---
 
-在实现自定义图表之前，请先了解 Pintora 的[技术简介](./technical-brief.md)。
-
 此教程将尝试给 Pintora 扩展一个 Mermaid.js 风格的饼图。
+
+![pie chart example](/img/docs/pie.svg)
 
 :::info
 你可于 github 查看[此教程的代码](https://github.com/hikerpig/pintora-diagram-pie-chart)。
+:::
+
+:::tip
+在实现自定义图表之前，请先了解 Pintora 的[技术简介](./technical-brief.md)。
 :::
 
 ## 基本语法和 DiagramIR
