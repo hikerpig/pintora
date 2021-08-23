@@ -4,9 +4,6 @@ title: 技术简介
 
 Pintora 通过合理的分层和抽象，为图表作者建立一套从 DSL 解析到图形绘制的简化工具链。
 
-<!-- - 可使用任意 parser 库实现 DSL 解析，推荐使用 Nearley.js
-- 可基于 Pintora 提供的图形表示格式 (GraphicsIR) 构建自己的图表渲染逻辑 -->
-
 ## 工作流程和数据
 
 Pintora 的工作流程和数据如下所示，
