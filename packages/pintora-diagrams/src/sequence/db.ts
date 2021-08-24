@@ -73,6 +73,13 @@ type ParsedRelation = {
   actor: string
 }
 
+const GROUP_TYPE_CONFIGS: Record<string, { startSignalType: LINETYPE, endSignalType: LINETYPE }> = {
+  loop: { startSignalType: LINETYPE.LOOP_START, endSignalType: LINETYPE.LOOP_END },
+  par: { startSignalType: LINETYPE.PAR_START, endSignalType: LINETYPE.PAR_END },
+  opt: { startSignalType: LINETYPE.OPT_START, endSignalType: LINETYPE.OPT_END },
+  alt: { startSignalType: LINETYPE.ALT_START, endSignalType: LINETYPE.ALT_END },
+}
+
 export type SequenceDiagramIR = {
   messages: Message[]
   notes: Note[]
@@ -173,6 +180,18 @@ class SequenceDB {
     return true
   }
 
+  addGroupStart(groupType: string, text: WrappedText) {
+    const groupConfig = GROUP_TYPE_CONFIGS[groupType]
+    if (!groupConfig) return
+    this.addSignalWithoutActor(text, groupConfig.startSignalType)
+  }
+
+  addGroupEnd(groupType: string) {
+    const groupConfig = GROUP_TYPE_CONFIGS[groupType]
+    if (!groupConfig) return
+    this.addSignalWithoutActor(undefined, groupConfig.endSignalType)
+  }
+
   addNote(actor: string | string[], placement: any, message: ParsedDescription) {
     const note: Note = {
       actor: actor,
@@ -261,11 +280,11 @@ class SequenceDB {
         case 'addSignal':
           db.addSignal(param.from, param.to, param.msg, param.signalType)
           break
-        case 'loopStart':
-          db.addSignalWithoutActor(param.loopText, param.signalType)
+        case 'groupStart':
+          db.addGroupStart(param.groupType, param.text)
           break
-        case 'loopEnd':
-          db.addSignalWithoutActor(undefined, param.signalType)
+        case 'groupEnd':
+          db.addGroupEnd(param.groupType)
           break
         // case 'rectStart':
         //   addSignal(undefined, undefined, param.color, param.signalType)
@@ -273,32 +292,11 @@ class SequenceDB {
         // case 'rectEnd':
         //   addSignal(undefined, undefined, undefined, param.signalType)
         //   break
-        case 'optStart':
-          db.addSignalWithoutActor(param.optText, param.signalType)
-          break
-        case 'optEnd':
-          db.addSignalWithoutActor(undefined, param.signalType)
-          break
-        case 'altStart':
-          db.addSignalWithoutActor(param.altText, param.signalType)
-          break
-        case 'else':
-          db.addSignalWithoutActor(param.altText, param.signalType)
-          break
-        case 'altEnd':
-          db.addSignalWithoutActor(undefined, param.signalType)
-          break
         case 'setTitle':
           db.setTitle(param.text)
           break
-        case 'parStart':
-          db.addSignalWithoutActor(param.parText, param.signalType)
-          break
         case 'and':
           db.addSignalWithoutActor(param.parText, param.signalType)
-          break
-        case 'parEnd':
-          db.addSignalWithoutActor(undefined, param.signalType)
           break
         case 'addDivider':
           db.addSignalWithoutActor({ text: param.text, wrap: false }, param.signalType)
@@ -365,9 +363,13 @@ type ApplyParam =
       text: WrappedText
     }
   | {
-      type: 'parStart'
-      signalType: LINETYPE
-      parText: WrappedText
+      type: 'groupStart'
+      groupType: string
+      text: WrappedText
+    }
+  | {
+      type: 'groupEnd'
+      groupType: string
     }
   | {
       type: 'and'
@@ -375,40 +377,9 @@ type ApplyParam =
       parText: WrappedText
     }
   | {
-      type: 'parEnd'
-      signalType: LINETYPE
-    }
-  | {
-      type: 'optStart'
-      signalType: LINETYPE
-      optText: WrappedText
-    }
-  | {
-      type: 'optEnd'
-      signalType: LINETYPE
-    }
-  | {
-      type: 'loopStart'
-      loopText: WrappedText
-      signalType: LINETYPE
-    }
-  | {
-      type: 'loopEnd'
-      signalType: LINETYPE
-    }
-  | {
-      type: 'altStart'
-      signalType: LINETYPE
-      altText: WrappedText
-    }
-  | {
       type: 'else'
       signalType: LINETYPE
       altText: WrappedText
-    }
-  | {
-      type: 'altEnd'
-      signalType: LINETYPE
     }
   | {
       type: 'addDivider'

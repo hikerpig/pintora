@@ -79,6 +79,7 @@ sequenceDiagram
   `)
     parse(example)
     const result = db.getDiagramIR()
+    // console.log('result', JSON.stringify(result, null, 2))
     expect(result.actors['A']).toMatchObject({
       description: 'Alice',
     })
@@ -101,5 +102,35 @@ sequenceDiagram
     expect(result.messages[0]).toMatchObject({
       text: 'hello\nthere',
     })
+  })
+
+  it('keywords can appear in messages', () => {
+    const example = stripStartEmptyLines(`
+sequenceDiagram
+  A-->B: participant and title
+  A-->B: parser is not 'par'
+  `)
+    parse(example)
+    const result = db.getDiagramIR()
+    expect(result.messages[0]).toMatchObject({
+      text: 'participant and title',
+    })
+  })
+
+  it('group', () => {
+    const example = stripStartEmptyLines(`
+sequenceDiagram
+  par DSL 正确
+    A-->B: inside group
+  end
+  `)
+    parse(example)
+    const result = db.getDiagramIR()
+    // console.log(JSON.stringify(result, null, 2))
+    const messageList = result.messages.map(o => o.text)
+    expect(messageList.slice(0, 2)).toMatchObject([
+      'DSL 正确',
+      'inside group'
+    ])
   })
 })

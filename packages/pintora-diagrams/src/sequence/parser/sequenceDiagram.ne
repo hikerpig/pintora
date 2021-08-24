@@ -6,9 +6,6 @@ let lexer = moo.states({
   main: {
     NEWLINE: { match: /\n/, lineBreaks: true },
     SPACE: {match: /\s+/, lineBreaks: true},
-    AUTONUMBER: /autonumber/,
-    TITLE: 'title',
-    PARTICIPANT: 'participant',
     START_NOTE: textToCaseInsensitiveRegex('@note'),
     END_NOTE: textToCaseInsensitiveRegex('@end_note'),
     BACKQUOTED_TEXT: /`[^`]*`/,
@@ -20,14 +17,6 @@ let lexer = moo.states({
     DOTTED_CROSS: /\-\-x/,
     SOLID_POINT: /\-[\)]/,
     DOTTED_POINT: /\-\-[\)]/,
-    _BOX: [
-      { match: textToCaseInsensitiveRegex('loop'), push: 'line', type: () => 'LOOP' },
-      { match: textToCaseInsensitiveRegex('opt'), push: 'line', type: () => 'OPT' },
-      { match: textToCaseInsensitiveRegex('alt'), push: 'line', type: () => 'ALT' },
-      { match: textToCaseInsensitiveRegex('else'), push: 'line', type: () => 'ELSE' },
-      { match: textToCaseInsensitiveRegex('par'), push: 'line', type: () => 'PAR' },
-      { match: textToCaseInsensitiveRegex('and'), push: 'line', type: () => 'AND' },
-    ],
     PLUS: /\+/,
     MINUS: /-/,
     COMMA: /,/,
@@ -66,32 +55,32 @@ start -> __ start
 document -> null
   | document line {%
     (d) => {
-        // console.log('[doc line]', d)
+        // console.log('[doc line]', d[1])
         return d[1]
       }
     %}
 
 line ->
 	  %SPACE:* statement {% (d) => {
-      // console.log('[line]', JSON.stringify(d))
+      // console.log('[line]', JSON.stringify(d[1], null, 2))
       return d[1]
     } %}
 	| %NEWLINE
 
 statement ->
-	  %PARTICIPANT __ actor __ "as" __ %WORD %NEWLINE {%
+	  "participant" __ actor __ "as" __ %WORD _ %NEWLINE {%
       function(d) {
         d[2].description = yy.parseMessage(tv(d[6]))
         return d[2]
       }
     %}
-	| %PARTICIPANT __ actor %NEWLINE {%
+	| "participant" __ actor %NEWLINE {%
       function(d) {
         return d[2]
       }
     %}
 	| signal %NEWLINE {% id %}
-	| %AUTONUMBER %NEWLINE {% (d) => yy.enableSequenceNumbers() %}
+	| "autonumber" %NEWLINE {% (d) => yy.enableSequenceNumbers() %}
 	| "activate" _ actor %NEWLINE {%
       function(d) {
         return {
@@ -110,58 +99,53 @@ statement ->
     // console.log('[note_a]', d)
     return d[0]
   } %}
-	| %TITLE textWithColon %NEWLINE {% (d) => ({ type:'setTitle', text: d[1] }) %}
-	| %LOOP %REST_OF_LINE document _ "end" {%
+	| "title" textWithColon %NEWLINE {% (d) => ({ type:'setTitle', text: d[1] }) %}
+	| ("loop"|"opt") words %NEWLINE document _ "end" {%
       function(d) {
-        // console.log('[loop]', d)
-        const loopText = yy.parseMessage(tv(d[1]) || '')
+        const groupType = tv(d[0][0])
+        const text = yy.parseMessage(d[1])
         const result = [
-          {type: 'loopStart', loopText, signalType: yy.LINETYPE.LOOP_START},
-          d[2],
-          {type: 'loopEnd', loopText, signalType: yy.LINETYPE.LOOP_END },
+          {type: 'groupStart', text, groupType },
+          d[3],
+          {type: 'groupEnd', groupType },
         ]
         return result
       }
     %}
-	| %OPT %REST_OF_LINE document _ "end" {%
+	| ("par") words %NEWLINE par_sections _ "end" {%
       function(d) {
-        // console.log('[opt]', d)
-        const optText = yy.parseMessage(tv(d[1]))
+        const groupType = tv(d[0][0])
+        const text = yy.parseMessage(d[1])
         const result = [
-          {type: 'optStart', optText, signalType: yy.LINETYPE.OPT_START},
-          d[2],
-          {type: 'optEnd', optText, signalType: yy.LINETYPE.OPT_END },
+          {type: 'groupStart', text, groupType },
+          d[3],
+          {type: 'groupEnd', groupType },
         ]
         return result
       }
     %}
-	| %ALT %REST_OF_LINE else_sections _ "end" {%
+	| ("alt") words %NEWLINE else_sections _ "end" {%
       function(d) {
-        // console.log('[alt]')
-        const altText = yy.parseMessage(tv(d[1]))
+        const groupType = tv(d[0][0])
+        const text = yy.parseMessage(d[1])
         const result = [
-          {type: 'altStart', altText, signalType: yy.LINETYPE.ALT_START},
-          d[2],
-          {type: 'altEnd', altText, signalType: yy.LINETYPE.ALT_END },
+          {type: 'groupStart', text, groupType },
+          d[3],
+          {type: 'groupEnd', groupType },
         ]
         return result
-      }
-  %}
-	| %PAR %REST_OF_LINE par_sections _ "end" {%
-      function(d) {
-        const parText = yy.parseMessage(tv(d[1]))
-        const result = [
-          {type: 'parStart', parText, signalType: yy.LINETYPE.PAR_START},
-          d[2],
-          {type: 'parEnd', parText, signalType: yy.LINETYPE.PAR_END },
-        ]
-        return {}
       }
     %}
   | "==" __ (%WORD | %SPACE):+ __ "==" {%
       function(d) {
         const text = d[2].map(o => tv(o[0])).join('').trim()
         return { type: 'addDivider', text, signalType: yy.LINETYPE.DIVIDER }
+      }
+    %}
+
+words -> (%WORD | %SPACE):+ {%
+      function(d) {
+        return d[0].map(a => a[0]).map(o => tv(o)).join('')
       }
     %}
 
@@ -258,23 +242,23 @@ actor_pair -> actor %COMMA actor {% (d) => ([d[0], d[2]]) %}
 	| actor {% id %}
 
 else_sections -> document
-	| document _ %ELSE %REST_OF_LINE else_sections {%
+	| document _ "else" words %NEWLINE else_sections {%
     function(d) {
       // console.log('[else_sections]', d)
       return d[0].concat([
-        {type: 'else', altText: yy.parseMessage(tv(d[3])), signalType: yy.LINETYPE.ALT_ELSE},
-        d[4],
+        {type: 'else', altText: yy.parseMessage(d[3]), signalType: yy.LINETYPE.ALT_ELSE},
+        d[5],
       ])
     }
   %}
 
 par_sections ->
 	  document
-	| document _ %AND %REST_OF_LINE par_sections {%
+	| document _ "and" words %NEWLINE par_sections {%
     function(d) {
       return d[0].concat([
-        {type: 'and', altText: yy.parseMessage(tv(d[3])), signalType: yy.LINETYPE.PAR_AND},
-        d[4],
+        {type: 'and', altText: yy.parseMessage(d[3]), signalType: yy.LINETYPE.PAR_AND},
+        d[5],
       ])
     }
   %}
