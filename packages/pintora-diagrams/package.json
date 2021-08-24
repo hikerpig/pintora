@@ -1,6 +1,6 @@
 {
   "name": "@pintora/diagrams",
-  "version": "0.1.0-alpha.6",
+  "version": "0.1.0-alpha.7",
   "description": "Core diagrams of pintora",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
@@ -18,7 +18,7 @@
     "gen-parser": "node ./scripts/build-grammar.js"
   },
   "dependencies": {
-    "@pintora/core": "^0.1.0-alpha.6",
+    "@pintora/core": "^0.1.0-alpha.7",
     "@pintora/dagre": "^0.10.0-alpha.0",
     "@pintora/graphlib": "2.2.2",
     "nearley": "^2.20.1"

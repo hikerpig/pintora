@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.1.0-alpha.7](https://github.com/hikerpig/pintora/compare/v0.1.0-alpha.6...v0.1.0-alpha.7) (2021-08-24)
+
+
+### Bug Fixes
+
+* [sequenceDiagram] lower lexer priority to make messages more tolerant ([c9dadfd](https://github.com/hikerpig/pintora/commit/c9dadfdc9261f7f11882b976f9e18531cb7a460e))
+
+
+
+
+
 # [0.1.0-alpha.6](https://github.com/hikerpig/pintora/compare/v0.1.0-alpha.5...v0.1.0-alpha.6) (2021-08-21)
 
 **Note:** Version bump only for package pintora
