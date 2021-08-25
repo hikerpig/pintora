@@ -7,7 +7,7 @@ export const sequenceExample: DiagramExample = {
   code: stripStartEmptyLines(`
 sequenceDiagram
   autonumber
-  User->>+Pintora: render this
+  User->>Pintora: render this
   activate Pintora
   loop Check input
     Pintora-->>Pintora: Has input changed?

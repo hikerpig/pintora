@@ -25,6 +25,7 @@ let lexer = moo.states({
       { match: /left\sof/, type: () => 'LEFT_OF' },
       { match: /right\sof/, type: () => 'RIGHT_OF' },
     ],
+    COLOR: /#[a-zA-Z0-9]+/,
     WORD: { match: VALID_TEXT_REGEXP, fallback: true },
   },
   line: {
@@ -44,10 +45,10 @@ export function setYY(v) {
 @builtin "string.ne"
 @builtin "whitespace.ne"
 
-start -> __ start
-	| "sequenceDiagram" document {%
+start -> __ start {% (d) => d[1] %}
+	| "sequenceDiagram" document __:? {%
       function(d) {
-        yy.apply(d[1])
+        // console.log('[sequenceDiagram]', JSON.stringify(d, null, 2))
         return d[1]
       }
     %}
@@ -56,7 +57,8 @@ document -> null
   | document line {%
     (d) => {
         // console.log('[doc line]', d[1])
-        return d[1]
+        const r = d[0].concat(d[1])
+        return r
       }
     %}
 
@@ -100,43 +102,47 @@ statement ->
     return d[0]
   } %}
 	| "title" textWithColon %NEWLINE {% (d) => ({ type:'setTitle', text: d[1] }) %}
-	| ("loop"|"opt") words %NEWLINE document _ "end" {%
+	| ("loop"|"opt") __ color:? words %NEWLINE document _ "end" _ %NEWLINE {%
       function(d) {
+        // console.log('[loop]', d[5])
         const groupType = tv(d[0][0])
-        const text = yy.parseMessage(d[1])
+        const text = yy.parseMessage(d[3])
+        const background = d[2] ? d[2]: null
         const result = [
-          {type: 'groupStart', text, groupType },
-          d[3],
+          {type: 'groupStart', text, groupType, background },
+          d[5],
           {type: 'groupEnd', groupType },
         ]
         return result
       }
     %}
-	| ("par") words %NEWLINE par_sections _ "end" {%
+	| ("par") __ color:? words %NEWLINE par_sections _ "end" _ %NEWLINE {%
       function(d) {
         const groupType = tv(d[0][0])
-        const text = yy.parseMessage(d[1])
+        const text = yy.parseMessage(d[3])
+        const background = d[2] ? d[2]: null
         const result = [
-          {type: 'groupStart', text, groupType },
-          d[3],
+          {type: 'groupStart', text, groupType, background },
+          d[5],
           {type: 'groupEnd', groupType },
         ]
         return result
       }
     %}
-	| ("alt") words %NEWLINE else_sections _ "end" {%
+	| ("alt") __ color:? words %NEWLINE else_sections _ "end" _ %NEWLINE {%
       function(d) {
         const groupType = tv(d[0][0])
-        const text = yy.parseMessage(d[1])
+        const text = yy.parseMessage(d[3])
+        const background = d[2] ? d[2]: null
         const result = [
-          {type: 'groupStart', text, groupType },
-          d[3],
+          {type: 'groupStart', text, groupType, background },
+          d[5],
           {type: 'groupEnd', groupType },
         ]
         return result
       }
     %}
-  | "==" __ (%WORD | %SPACE):+ __ "==" {%
+  | "==" __ (%WORD | %SPACE):+ __ "==" _ %NEWLINE {%
       function(d) {
         const text = d[2].map(o => tv(o[0])).join('').trim()
         return { type: 'addDivider', text, signalType: yy.LINETYPE.DIVIDER }
@@ -216,16 +222,16 @@ placement ->
 note_statement ->
 	  ("note"|%START_NOTE) _ placement _ actor _ textWithColon %NEWLINE {%
       function(d) {
-        // console.log('[note one]\n', d[5])
+        // console.log('[note one]\n', d)
         return [d[4], { type:'addNote', placement: d[2], actor: d[4].actor, text: d[6] }]
       }
     %}
-	| ("note"|%START_NOTE) _ placement _ actor multilineNoteText {%
+	| ("note"|%START_NOTE) _ placement _ actor multilineNoteText %NEWLINE {%
       function(d) {
         // console.log('[note multi]\n', d[5])
         const text = d[5]
         const message = yy.parseMessage(text)
-        return [message, { type:'addNote', placement: d[2], actor: d[4].actor, text: message }]
+        return [d[4], { type:'addNote', placement: d[2], actor: d[4].actor, text: message }]
       }
     %}
 	| ("note"|%START_NOTE) _ "over" _ actor_pair _ textWithColon %NEWLINE {%
@@ -242,23 +248,28 @@ actor_pair -> actor %COMMA actor {% (d) => ([d[0], d[2]]) %}
 	| actor {% id %}
 
 else_sections -> document
-	| document _ "else" words %NEWLINE else_sections {%
+	| document _ "else" __ color:? words %NEWLINE else_sections {%
     function(d) {
-      // console.log('[else_sections]', d)
+      const background = d[4] ? d[4]: null
+      const text = yy.parseMessage(d[5])
       return d[0].concat([
-        {type: 'else', altText: yy.parseMessage(d[3]), signalType: yy.LINETYPE.ALT_ELSE},
-        d[5],
+        {type: 'groupStart', groupType: 'else', text, signalType: yy.LINETYPE.ALT_ELSE, background },
+        d[7],
       ])
     }
   %}
 
 par_sections ->
 	  document
-	| document _ "and" words %NEWLINE par_sections {%
+	| document _ "and" __ color:? words %NEWLINE par_sections {%
     function(d) {
+      const background = d[4] ? d[4]: null
+      const text = yy.parseMessage(d[5])
       return d[0].concat([
-        {type: 'and', altText: yy.parseMessage(d[3]), signalType: yy.LINETYPE.PAR_AND},
-        d[5],
+        {type: 'groupStart', groupType: 'and', text, signalType: yy.LINETYPE.PAR_AND, background },
+        d[7],
       ])
     }
   %}
+
+color -> %COLOR {% (d) => tv(d[0]) %}

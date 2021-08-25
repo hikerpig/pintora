@@ -1,4 +1,5 @@
-import { logger, OrNull } from '@pintora/core'
+import { Group, logger, OrNull } from '@pintora/core'
+import { parseColor } from '../util/color'
 
 export interface WrappedText {
   text: string
@@ -62,6 +63,7 @@ export interface Message extends WrappedText {
   answer?: any
   type?: LINETYPE
   placement?: any
+  attrs?: GroupAttrs
 }
 
 export interface Note extends WrappedText {
@@ -69,15 +71,17 @@ export interface Note extends WrappedText {
   placement: any
 }
 
-type ParsedRelation = {
-  actor: string
-}
-
 const GROUP_TYPE_CONFIGS: Record<string, { startSignalType: LINETYPE, endSignalType: LINETYPE }> = {
   loop: { startSignalType: LINETYPE.LOOP_START, endSignalType: LINETYPE.LOOP_END },
   par: { startSignalType: LINETYPE.PAR_START, endSignalType: LINETYPE.PAR_END },
   opt: { startSignalType: LINETYPE.OPT_START, endSignalType: LINETYPE.OPT_END },
   alt: { startSignalType: LINETYPE.ALT_START, endSignalType: LINETYPE.ALT_END },
+  else: { startSignalType: LINETYPE.ALT_ELSE, endSignalType: LINETYPE.ALT_END },
+  and: { startSignalType: LINETYPE.PAR_AND, endSignalType: LINETYPE.PAR_END },
+}
+
+export type GroupAttrs = {
+  background: string | null
 }
 
 export type SequenceDiagramIR = {
@@ -169,21 +173,24 @@ class SequenceDB {
     return true
   }
 
-  addSignalWithoutActor(message: WrappedText = { text: '', wrap: false }, messageType: LINETYPE) {
+  addSignalWithoutActor(message: WrappedText = { text: '', wrap: false }, messageType: LINETYPE, attrs?: GroupAttrs) {
     this.messages.push({
       from: undefined,
       to: undefined,
       text: message.text || '',
       wrap: (message.wrap === undefined && this.wrapEnabled) || !!message.wrap,
       type: messageType,
+      attrs,
     })
-    return true
   }
 
-  addGroupStart(groupType: string, text: WrappedText) {
+  addGroupStart(groupType: string, text: WrappedText, attrs: GroupAttrs) {
     const groupConfig = GROUP_TYPE_CONFIGS[groupType]
     if (!groupConfig) return
-    this.addSignalWithoutActor(text, groupConfig.startSignalType)
+    if ( attrs.background) {
+      attrs.background = parseColor(attrs.background).color
+    }
+    this.addSignalWithoutActor(text, groupConfig.startSignalType, attrs)
   }
 
   addGroupEnd(groupType: string) {
@@ -281,7 +288,7 @@ class SequenceDB {
           db.addSignal(param.from, param.to, param.msg, param.signalType)
           break
         case 'groupStart':
-          db.addGroupStart(param.groupType, param.text)
+          db.addGroupStart(param.groupType, param.text, { background: param.background })
           break
         case 'groupEnd':
           db.addGroupEnd(param.groupType)
@@ -294,9 +301,6 @@ class SequenceDB {
         //   break
         case 'setTitle':
           db.setTitle(param.text)
-          break
-        case 'and':
-          db.addSignalWithoutActor(param.parText, param.signalType)
           break
         case 'addDivider':
           db.addSignalWithoutActor({ text: param.text, wrap: false }, param.signalType)
@@ -366,20 +370,11 @@ type ApplyParam =
       type: 'groupStart'
       groupType: string
       text: WrappedText
+      background: string | null
     }
   | {
       type: 'groupEnd'
       groupType: string
-    }
-  | {
-      type: 'and'
-      signalType: LINETYPE
-      parText: WrappedText
-    }
-  | {
-      type: 'else'
-      signalType: LINETYPE
-      altText: WrappedText
     }
   | {
       type: 'addDivider'

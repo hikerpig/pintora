@@ -9,6 +9,7 @@ title: Sequence Diagram
 
 - [多行备注](#给消息添加备注)
 - [消息文本支持多行](#消息文本支持多行)
+- [自定义分组颜色](#自定义分组颜色)
 - [分隔符](#分隔符)
 
 ## 简单示意
@@ -16,7 +17,7 @@ title: Sequence Diagram
 ```pintora play
 sequenceDiagram
   autonumber
-  用户->>+Pintora: 帮我画张时序图（图表 DSL）
+  用户->>Pintora: 帮我画张时序图（图表 DSL）
   activate Pintora
   Pintora->>Pintora: 解析 DSL，绘制图像
   alt DSL 正确
@@ -79,6 +80,22 @@ sequenceDiagram
   multiline
   note
   @end_note
+```
+
+## 自定义分组颜色
+
+在分组关键词（例如 `loop`/`alt`/`par`）后添加以 `#` 开始的 6 位 16 进制颜色值，可以更改该分组的背景色。
+
+```pintora play
+sequenceDiagram
+  loop #88bbf4 with bg color
+    A-->B: message inside loop
+  end
+  alt #ccdd77 Success
+    A-->B: Congrats!
+  else #ee776f Fail
+    A-->B: error handling
+  end
 ```
 
 ## 分隔符

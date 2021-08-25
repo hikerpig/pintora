@@ -11,18 +11,27 @@ describe('sequence parser', () => {
     const backquoteExample = stripStartEmptyLines(`
 sequenceDiagram
   autonumber
-  用户->>+Pintora: 帮我画张时序图
+  用户->>Pintora: 帮我画张时序图
   activate Pintora
   alt DSL 正确
     Pintora->>用户: 返回绘制好的图表
   else DSL 有误
     Pintora->>用户: 返回报错信息
   end
-  deactivate Pintora`)
+  deactivate Pintora
+`)
     parse(backquoteExample)
     const result = db.getDiagramIR()
     expect(result.messages.length).toBeGreaterThan(0)
-    // console.log(result.messages)
+    const messageTexts = result.messages.map(o => o.text).filter(s => Boolean(s))
+    // console.log(messageTexts)
+    expect(messageTexts).toMatchObject([
+      '帮我画张时序图',
+      'DSL 正确',
+      '\b\b返回绘制好的图表',
+      'DSL 有误',
+      '\b\b返回报错信息',
+    ])
   })
 
   it('can parse singleline note', () => {
@@ -61,13 +70,38 @@ sequenceDiagram
 sequenceDiagram
   Alice-->Bob: hello
   == 1 second later ==
-  Bob-->Alice: hello there`)
+  Bob-->Alice: hello there
+  `)
     parse(example)
     const result = db.getDiagramIR()
     expect(result.messages.length).toEqual(3)
     expect(result.messages[1]).toMatchObject({
       text: '1 second later',
     })
+  })
+
+  it('should be correct when there is no char after divider', () => {
+    const example = stripStartEmptyLines(`
+  sequenceDiagram
+    A->>B: m1
+    == Divider ==`)
+    parse(example)
+    const result = db.getDiagramIR()
+    // console.log('result', JSON.stringify(result, null, 2))
+    expect(result.messages).toMatchObject([
+      {
+        from: 'A',
+        to: 'B',
+        text: 'm1',
+        wrap: false,
+        type: 0,
+      },
+      {
+        text: 'Divider',
+        wrap: false,
+        type: 26,
+      },
+    ])
   })
 
   it('can parse participant', () => {
@@ -128,9 +162,176 @@ sequenceDiagram
     const result = db.getDiagramIR()
     // console.log(JSON.stringify(result, null, 2))
     const messageList = result.messages.map(o => o.text)
-    expect(messageList.slice(0, 2)).toMatchObject([
-      'DSL 正确',
-      'inside group'
+    expect(messageList.slice(0, 2)).toMatchObject(['DSL 正确', 'inside group'])
+  })
+
+  it('group color', () => {
+    const example = stripStartEmptyLines(`
+sequenceDiagram
+  loop #e9f5dc can have color
+    A-->B: inside group
+    B-->C: second
+  end
+  `)
+    parse(example)
+    const ir = db.getDiagramIR()
+    // console.log(JSON.stringify(ir, null, 2))
+    expect(ir.messages[0]).toMatchObject({
+      text: 'can have color',
+      attrs: {
+        background: '#e9f5dc',
+      },
+    })
+    expect(ir.messages[1]).toMatchObject({
+      text: 'inside group',
+    })
+    expect(ir.messages[2]).toMatchObject({
+      text: 'second',
+    })
+  })
+
+  it('can parse activations', () => {
+    const example = stripStartEmptyLines(`
+  sequenceDiagram
+    autonumber
+    A->>B: m1
+    activate A
+    B->>A: m2
+    deactivate A
+  `)
+    parse(example)
+    const ir = db.getDiagramIR()
+    expect(ir.messages).toMatchObject([
+      {
+        from: 'A',
+        to: 'B',
+        text: 'm1',
+        wrap: false,
+        type: 0,
+      },
+      {
+        from: 'A',
+        to: '',
+        text: '',
+        wrap: false,
+        type: 17,
+      },
+      {
+        from: 'B',
+        to: 'A',
+        text: 'm2',
+        wrap: false,
+        type: 0,
+      },
+      {
+        from: 'A',
+        to: '',
+        text: '',
+        wrap: false,
+        type: 18,
+      },
+    ])
+  })
+
+  it('can parse alt/else', () => {
+    const example = stripStartEmptyLines(`
+  sequenceDiagram
+    alt #ccdd77 Success
+      A-->B: Congrats!
+    else #ff6666 Fail
+      A-->B: error handling
+    end
+  `)
+    parse(example)
+    const ir = db.getDiagramIR()
+    // console.log(JSON.stringify(ir, null, 2))
+    expect(ir.messages).toMatchObject([
+      {
+        text: 'Success',
+        wrap: false,
+        type: 12,
+        attrs: {
+          background: '#ccdd77',
+        },
+      },
+      {
+        from: 'A',
+        to: 'B',
+        text: 'Congrats!',
+        wrap: false,
+        type: 6,
+      },
+      {
+        text: 'Fail',
+        wrap: false,
+        type: 13,
+        attrs: {
+          background: '#ff6666',
+        },
+      },
+      {
+        from: 'A',
+        to: 'B',
+        text: 'error handling',
+        wrap: false,
+        type: 6,
+      },
+      {
+        text: '',
+        wrap: false,
+        type: 14,
+      },
+    ])
+  })
+
+  it('can parse par/and', () => {
+    const example = stripStartEmptyLines(`
+  sequenceDiagram
+    par #ccdd77 Success
+      A-->B: m1
+    and #ff6666 Fail
+      A-->B: m2
+    end
+  `)
+    parse(example)
+    const ir = db.getDiagramIR()
+    // console.log(JSON.stringify(ir, null, 2))
+    expect(ir.messages).toMatchObject([
+      {
+        text: 'Success',
+        wrap: false,
+        type: 19,
+        attrs: {
+          background: '#ccdd77',
+        },
+      },
+      {
+        from: 'A',
+        to: 'B',
+        text: 'm1',
+        wrap: false,
+        type: 6,
+      },
+      {
+        text: 'Fail',
+        wrap: false,
+        type: 20,
+        attrs: {
+          background: '#ff6666',
+        },
+      },
+      {
+        from: 'A',
+        to: 'B',
+        text: 'm2',
+        wrap: false,
+        type: 6,
+      },
+      {
+        text: '',
+        wrap: false,
+        type: 21,
+      },
     ])
   })
 })
