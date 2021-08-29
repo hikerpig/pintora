@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.1.0-alpha.8](https://github.com/hikerpig/pintora/compare/v0.1.0-alpha.7...v0.1.0-alpha.8) (2021-08-29)
+
+
+### Features
+
+* [sequenceDiagram] add custom group color ([f93fe8a](https://github.com/hikerpig/pintora/commit/f93fe8a6fdb81af55eeb6f303f426c6150eeaf86))
+* custom style engine and `[@style](https://github.com/style)` rule in erDiagram ([564af61](https://github.com/hikerpig/pintora/commit/564af616b3e5c808155506cbb05f0a8d5e882b85))
+
+
+
+
+
 # [0.1.0-alpha.7](https://github.com/hikerpig/pintora/compare/v0.1.0-alpha.6...v0.1.0-alpha.7) (2021-08-24)
 
 **Note:** Version bump only for package pintora-website
