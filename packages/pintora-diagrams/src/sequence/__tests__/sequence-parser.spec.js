@@ -109,20 +109,42 @@ sequenceDiagram
 sequenceDiagram
   participant A as Alice
   participant B as Bob
+  participant C
   A-->B: hello
+  A-->C: yoho
   `)
     parse(example)
-    const result = db.getDiagramIR()
-    // console.log('result', JSON.stringify(result, null, 2))
-    expect(result.actors['A']).toMatchObject({
-      description: 'Alice',
+    const ir = db.getDiagramIR()
+    // console.log('ir', JSON.stringify(ir, null, 2))
+    expect(ir.actors).toMatchObject({
+      A: {
+        name: 'A',
+        description: 'Alice',
+        wrap: false,
+        prevActorId: null,
+        nextActorId: 'B',
+      },
+      B: {
+        name: 'B',
+        description: 'Bob',
+        wrap: false,
+        prevActorId: 'A',
+        nextActorId: 'C',
+      },
+      C: {
+        name: 'C',
+        description: 'C',
+        wrap: false,
+        prevActorId: 'B',
+      },
     })
-    expect(result.actors['B']).toMatchObject({
-      description: 'Bob',
-    })
-    expect(result.messages[0]).toMatchObject({
+    expect(ir.messages[0]).toMatchObject({
       from: 'A',
       to: 'B',
+    })
+    expect(ir.messages[1]).toMatchObject({
+      from: 'A',
+      to: 'C',
     })
   })
 
@@ -233,6 +255,46 @@ sequenceDiagram
     ])
   })
 
+  it('can parse activations with plus/minus token', () => {
+    const example = stripStartEmptyLines(`
+  sequenceDiagram
+    A-->>+B: m1
+    A-->>-B: m2
+  `)
+    parse(example)
+    const ir = db.getDiagramIR()
+    expect(ir.messages).toMatchObject([
+      {
+        from: 'A',
+        to: 'B',
+        text: 'm1',
+        wrap: false,
+        type: 1,
+      },
+      {
+        from: 'B',
+        to: '',
+        text: '',
+        wrap: false,
+        type: 17,
+      },
+      {
+        from: 'A',
+        to: 'B',
+        text: 'm2',
+        wrap: false,
+        type: 1,
+      },
+      {
+        from: 'B',
+        to: '',
+        text: '',
+        wrap: false,
+        type: 18,
+      },
+    ])
+  })
+
   it('can parse alt/else', () => {
     const example = stripStartEmptyLines(`
   sequenceDiagram
@@ -324,6 +386,41 @@ sequenceDiagram
         from: 'A',
         to: 'B',
         text: 'm2',
+        wrap: false,
+        type: 6,
+      },
+      {
+        text: '',
+        wrap: false,
+        type: 21,
+      },
+    ])
+  })
+
+  it('should be correct when there is blank line inside par', () => {
+    const example = stripStartEmptyLines(`
+sequenceDiagram
+  par Success
+    A-->B: m1
+
+  end
+  `)
+    parse(example)
+    const ir = db.getDiagramIR()
+    // console.log(JSON.stringify(ir, null, 2))
+    expect(ir.messages).toMatchObject([
+      {
+        text: 'Success',
+        wrap: false,
+        type: 19,
+        attrs: {
+          background: null,
+        },
+      },
+      {
+        from: 'A',
+        to: 'B',
+        text: 'm1',
         wrap: false,
         type: 6,
       },

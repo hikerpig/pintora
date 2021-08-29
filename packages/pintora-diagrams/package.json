@@ -15,7 +15,8 @@
     "watch": "tsc -w",
     "test": "jest",
     "prepare": "npm run gen-parser",
-    "gen-parser": "node ./scripts/build-grammar.js"
+    "gen-parser": "node ./scripts/build-grammar.js",
+    "coverage": "npx jest --collect-coverage"
   },
   "dependencies": {
     "@pintora/core": "^0.1.0-alpha.7",

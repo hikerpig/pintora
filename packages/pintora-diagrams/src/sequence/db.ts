@@ -246,10 +246,11 @@ class SequenceDB {
   }
 
   clear() {
-    this.title = ''
-    this.actors = {}
+    this.prevActorId = null
     this.messages = []
     this.notes = []
+    this.actors = {}
+    this.title = ''
     this.showSequenceNumbers = false
   }
 

@@ -49,6 +49,7 @@ const GROUP_LABEL_MAP = {
 
 const sequenceArtist: IDiagramArtist<SequenceDiagramIR> = {
   draw(ir, config?) {
+    console.log('[draw]', ir)
     conf = getConf()
     theme = (configApi.getConfig() as DiagramsConf).themeConfig.themeVariables
     model.init()
