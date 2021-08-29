@@ -100,6 +100,35 @@ export type SequenceConf = {
 }
 ```
 
+### er
+
+Config for entity relationship diagram. For more detail, check the [latest code](https://github.com/hikerpig/pintora/blob/master/packages/pintora-diagrams/src/er/config.ts).
+
+```ts
+export type ErConf = {
+  diagramPadding: number
+  layoutDirection: string
+
+  minEntityWidth: number
+  minEntityHeight: number
+
+  entityPaddingX: number
+  entityPaddingY: number
+  borderRadius: number
+
+  stroke: string
+  fill: string
+  edgeColor: string
+  attributeFill: string
+
+  textColor: string
+
+  labelBackground: string
+
+  fontSize: number
+}
+```
+
 ### component
 
 Config for component diagram. For more detail, check the [latest code](https://github.com/hikerpig/pintora/blob/master/packages/pintora-diagrams/src/component/config.ts).

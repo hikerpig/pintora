@@ -86,9 +86,26 @@ export const defaultConfig: SequenceConf = {
 }
 
 export const SEQUENCE_STYLE_RULES = {
-  noteTextColor: { valueType: 'color' },
-  messageTextColor: { valueType: 'color' },
+  noteMargin: { valueType: 'size' },
+  boxMargin: { valueType: 'size' },
+  activationWidth: { valueType: 'size' },
+  diagramMarginX: { valueType: 'size' },
+  diagramMarginY: { valueType: 'size' },
+  boxTextMargin: { valueType: 'size' },
   messageFontSize: { valueType: 'fontSize' },
+  messageFontFamily: { valueType: 'string' },
+  messageTextColor: { valueType: 'color' },
+  wrapPadding: { valueType: 'size' },
+  labelBoxWidth: { valueType: 'size' },
+  labelBoxHeight: { valueType: 'size' },
+  loopLineColor: { valueType: 'color' },
+  actorBackground: { valueType: 'color' },
+  actorBorderColor: { valueType: 'color' },
+  actorTextColor: { valueType: 'color' },
+  actorLineColor: { valueType: 'color' },
+  noteTextColor: { valueType: 'color' },
+  activationBackground: { valueType: 'color' },
+  dividerTextColor: { valueType: 'color' },
 } as const
 
 export function getConf(styleParams: StyleParam[]) {

@@ -15,6 +15,7 @@ let lexer = moo.compile({
   COLON: /:/,
   LEFT_BRACE: /\{/,
   RIGHT_BRACE: /\}/,
+  STYLE: /@style/, // for style.ne
   VALID_TEXT: { match: VALID_TEXT_REGEXP, fallback: true },
 })
 
@@ -29,19 +30,20 @@ export function setYY(v) {
 @lexer lexer
 @builtin "string.ne"
 @builtin "whitespace.ne"
+@include "../../util/parser-grammars/style.ne"
 
-program -> "erDiagram" document
+start -> __ start
+  | "erDiagram" document
  
- document -> null
-   | document line
+document -> null
+  | document line
  
 line ->
     %SPACE:* statement
 	| %NEWLINE
 
 statement ->
-    directive
-  | entityName _ relSpec _ entityName _ %COLON _ role
+    entityName _ relSpec _ entityName _ %COLON _ role
     {%
       function(d) {
         yy.addEntity(tv(d[0]));
@@ -58,6 +60,12 @@ statement ->
     %}
   | entityName "{":? "}":? {% (d) => yy.addEntity(tv(d[0])) %}
   | entityName {% (d) => yy.addEntity(tv(d[0])) %}
+  | styleClause _ %NEWLINE {%
+      function(d) {
+        const { type, ...styleParam } = d[0]
+        yy.addStyle(styleParam)
+      }
+    %}
 
 entityName ->
     %VALID_TEXT {% id %}

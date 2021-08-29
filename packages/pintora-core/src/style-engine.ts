@@ -1,9 +1,9 @@
 /**
- * This module evaluate custom style params to real style configs
+ * This module evaluate custom style params to real configs
  */
 import { parseColor } from './util/color'
 
-export type StyleValueType = 'color' | 'fontSize'
+export type StyleValueType = 'color' | 'size' | 'fontSize' | 'string'
 
 export type StyleMeta = {
   valueType: StyleValueType | StyleValueType[]
@@ -18,7 +18,15 @@ type StyleEvaluateResult<T> = { valid: true; value: T } | { valid: false }
 
 interface StyleValueTypeMap {
   color: string
+  size: number
   fontSize: number
+  string: string
+}
+
+const sizeEvaluator = ({ value }: any): StyleEvaluateResult<number> => {
+  const parsed = parseInt(value)
+  if (isNaN(parsed)) return { valid: false }
+  return { value: parsed, valid: true }
 }
 
 const styleValueEvaluators: { [K in StyleValueType]: (p: StyleParam) => StyleEvaluateResult<StyleValueTypeMap[K]> } = {
@@ -26,10 +34,10 @@ const styleValueEvaluators: { [K in StyleValueType]: (p: StyleParam) => StyleEva
     const parsed = parseColor(value)
     return { value: parsed.color, valid: true }
   },
-  fontSize({ value }) {
-    const parsed = parseInt(value)
-    if (isNaN(parsed)) return { valid: false }
-    return { value: parsed, valid: true }
+  size: sizeEvaluator,
+  fontSize: sizeEvaluator,
+  string({ value }) {
+    return { value, valid: true }
   },
 }
 
@@ -37,7 +45,7 @@ type StyleRuleMap = Record<string, StyleMeta>
 
 /**
  * Generate style config from style params
- */ 
+ */
 export function interpreteStyles<T extends StyleRuleMap>(
   ruleMap: T,
   params: StyleParam[],

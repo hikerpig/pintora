@@ -1,6 +1,7 @@
 import { DiagramsConf } from '../type'
 import { PALETTE } from '../util/theme'
 import { configApi, safeAssign } from '@pintora/core'
+import { interpreteStyles, StyleParam } from '../util/style'
 
 export type ErConf = {
   diagramPadding: number
@@ -23,8 +24,6 @@ export type ErConf = {
   labelBackground: string
 
   fontSize: number
-
-  useMaxWidth: boolean
 }
 
 export const defaultConfig: ErConf = {
@@ -51,25 +50,34 @@ export const defaultConfig: ErConf = {
   labelBackground: PALETTE.white,
 
   fontSize: 14,
-
-  useMaxWidth: true,
 }
 
-export const conf: ErConf = {
-  ...defaultConfig,
-}
+export const ER_STYLE_RULES = {
+  borderRadius: { valueType: 'size' },
+  stroke: { valueType: 'color' },
+  fill: { valueType: 'color' },
+  edgeColor: { valueType: 'color' },
+  attributeFill: { valueType: 'color' },
+  textColor: { valueType: 'color' },
+  labelBackground: { valueType: 'color' },
+  fontSize: { valueType: 'size' },
+} as const
 
-export function getConf() {
+export function getConf(styleParams: StyleParam[]) {
   const globalConfig: DiagramsConf = configApi.getConfig()
-  const t = globalConfig.themeConfig.themeVariables
-  safeAssign(conf, {
-    stroke: t.primaryBorderColor,
-    fill: t.primaryColor,
-    edgeColor: t.primaryLineColor,
-    textColor: t.textColor,
-    labelBackground: t.canvasBackground || t.background1,
-    attributeFill: t.lightestBackground || conf.attributeFill,
-  })
+  const t = globalConfig.themeConfig?.themeVariables
+  const conf = {...defaultConfig}
+  if (t) {
+    safeAssign(conf, {
+      stroke: t.primaryBorderColor,
+      fill: t.primaryColor,
+      edgeColor: t.primaryLineColor,
+      textColor: t.textColor,
+      labelBackground: t.canvasBackground || t.background1,
+      attributeFill: t.lightestBackground || conf.attributeFill,
+    })
+  }
   Object.assign(conf, globalConfig.er || {})
+  Object.assign(conf, interpreteStyles(ER_STYLE_RULES, styleParams))
   return conf
 }

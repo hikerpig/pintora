@@ -17,7 +17,6 @@ erDiagram
   albums
 
   artists ||--o{ albums : "foreign key"
-  artists ||--o{ albums : "foreign key"
     `)
     parse(example)
     const ir = db.getDiagramIR()

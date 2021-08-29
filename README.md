@@ -32,6 +32,8 @@ Heavily inspired by [Mermaid.js](https://mermaid-js.github.io/mermaid/#/) and [P
 - Entity Relationship Diagram
 - Component Diagram
 
+## 📖 Documentation
+
 Check the online [documentation and demo](http://pintorajs.vercel.app/docs/intro/) for more details.
 
 🚧 This project is currently under active development, if you have good thoughts or feature requests, please feel free to [start a new discussion](https://github.com/hikerpig/pintora/discussions).

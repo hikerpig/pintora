@@ -22,7 +22,7 @@ let conf: ErConf
 
 const erArtist: IDiagramArtist<ErDiagramIR, ErConf> = {
   draw(ir, config) {
-    conf = getConf()
+    conf = getConf(ir.styleParams)
     // Now we have to construct the diagram in a specific way:
     // ---
     // 1. Create all the entities in the svg node at 0,0, but with the correct dimensions (allowing for text content)
@@ -131,12 +131,13 @@ const drawAttributes = (group: Group, entityText: Text, attributes: Entity['attr
   attributes.forEach(item => {
     const attrPrefix = `${entityText.attrs.id}-attr-${attrNum}`
 
+    const fontConfig = { fontSize: conf.fontSize }
     let keyText: Text
     if (item.attributeKey) {
       keyText = makeMark(
         'text',
         {
-          ...calculateTextDimensions(item.attributeKey),
+          ...calculateTextDimensions(item.attributeKey, fontConfig),
           ...getBaseText(),
           text: item.attributeKey,
           id: `${attrPrefix}-key`,
@@ -151,7 +152,7 @@ const drawAttributes = (group: Group, entityText: Text, attributes: Entity['attr
     const typeText = makeMark(
       'text',
       {
-        ...calculateTextDimensions(item.attributeType),
+        ...calculateTextDimensions(item.attributeType, fontConfig),
         ...getBaseText(),
         text: item.attributeType,
         id: `${attrPrefix}-type`,
@@ -164,7 +165,7 @@ const drawAttributes = (group: Group, entityText: Text, attributes: Entity['attr
     const nameText = makeMark(
       'text',
       {
-        ...calculateTextDimensions(item.attributeName),
+        ...calculateTextDimensions(item.attributeName, fontConfig),
         ...getBaseText(),
         text: item.attributeName,
         id: `${attrPrefix}-name`,
@@ -336,17 +337,18 @@ const drawEntities = function (rootMark: Group, ir: ErDiagramIR, graph: LayoutGr
     // Label the entity - this is done first so that we can get the bounding box
     // which then determines the size of the rectangle
     const textId = 'entity-' + id
+    const fontConfig = { fontSize: conf.fontSize, fontWeight: 'bold' as const }
 
     const textMark = makeMark(
       'text',
       {
         ...getBaseText(),
-        ...calculateTextDimensions(id),
+        ...calculateTextDimensions(id, fontConfig),
         text: id,
         id: textId,
         textAlign: 'center',
         textBaseline: 'middle',
-        fontWeight: 'bold',
+        ...fontConfig,
       },
       { class: 'er__entity-label' },
     )
@@ -540,6 +542,8 @@ const drawRelationshipFromLayout = function (group: Group, rel: Relationship, g:
     fontFamily: 'sans-serif',
     fontWeight: 400,
   })
+  labelDims.width += conf.fontSize / 2
+  labelDims.height += conf.fontSize / 2
   const labelBg = makeLabelBg(labelDims, { x: labelX, y: labelY }, { id: `#${labelId}`, fill: conf.labelBackground })
 
   const insertingMarks = [linePath, labelBg, labelMark, startMarker, endMarker].filter(o => !!o)

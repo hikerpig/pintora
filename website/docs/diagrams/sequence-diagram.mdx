@@ -11,6 +11,7 @@ The syntax is based on Mermaid 8.9, with some other good stuff:
 - [Multiline text for message](#multiline-text-for-message)
 - [Color group messages](#color-group-messages)
 - [Divider](#divider)
+- [Custom Style](#custom-style)
 
 ## A Simple Demo
 
@@ -57,7 +58,7 @@ sequenceDiagram
 
 ## Color group messages
 
-Specify background to group section by adding a hex color string - which starts with '#' - after group-like keyword such as `loop`/`alt`/`par` and so on.
+Specify background to group section by adding a hex color string - which starts with `#` - after group-like keyword such as `loop`/`alt`/`par` and so on.
 
 ```pintora play
 sequenceDiagram
@@ -82,4 +83,25 @@ sequenceDiagram
   Georgia->>Frida: I like your portraits
   == They didn't have this conversation ==
   Frida-->>Frida: I like flowers on my hair, too
+```
+
+## Custom Style
+
+You can override style config through `@style` directive.
+
+All available configs can be seen in the [Config page](../configuration/config.md#sequence).
+
+```pintora play
+sequenceDiagram
+  @style loopLineColor #79caf1
+  @style actorBackground #61afef
+  @style actorTextColor #ffffff
+  @style messageFontFamily Consolas
+  @style dividerTextColor #61afef
+  User->>Pintora: render this
+  activate Pintora
+  loop Check input
+    Pintora-->>Pintora: Has input changed?
+  end
+  == Divider ==
 ```

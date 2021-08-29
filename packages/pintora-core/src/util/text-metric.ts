@@ -1,7 +1,7 @@
 export interface IFont {
-  fontFamily: string
+  fontFamily?: string
   fontSize: number
-  fontWeight: number | string
+  fontWeight?: any
 }
 
 export function calculateTextDimensions(text: string, font?: IFont) {

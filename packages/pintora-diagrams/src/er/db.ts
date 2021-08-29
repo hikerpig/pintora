@@ -1,3 +1,5 @@
+import { StyleParam } from '../util/style'
+
 export enum Cardinality {
   ZERO_OR_ONE = 'ZERO_OR_ONE',
   ZERO_OR_MORE = 'ZERO_OR_MORE',
@@ -37,6 +39,7 @@ export type RelSpec = {
 export type ErDiagramIR = {
   entities: Record<string, Entity>
   relationships: Relationship[]
+  styleParams: StyleParam[]
 }
 
 class ErDb {
@@ -45,6 +48,7 @@ class ErDb {
 
   entities: Record<string, Entity> = {}
   relationships: Relationship[] = []
+  styleParams: ErDiagramIR['styleParams'] = []
 
   addEntity(name: string) {
     if (!this.entities[name]) {
@@ -66,15 +70,20 @@ class ErDb {
     return {
       entities: this.entities,
       relationships: this.relationships,
+      styleParams: this.styleParams,
     }
   }
   addAttributes(name: string, attributes: Attribute[]) {
     const entity = this.addEntity(name)
     entity.attributes.push(...attributes)
   }
+  addStyle(styleParam: StyleParam) {
+    this.styleParams.push(styleParam)
+  }
   clear() {
     this.entities = {}
     this.relationships = []
+    this.styleParams = []
   }
 }
 

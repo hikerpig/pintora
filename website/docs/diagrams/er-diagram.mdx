@@ -33,3 +33,28 @@ erDiagram
     string deliveryAddress
   }
 ```
+
+## Custom Style
+
+You can override style config through `@style` directive.
+
+All available configs can be seen in the [Config page](../configuration/config.md#er).
+
+```pintora play
+erDiagram
+  @style fill #aabb00
+  @style stroke #aacc00
+  @style textColor #cc4488
+  @style attributeFill #fcfff2
+  @style labelBackground #white
+  @style fontSize 16
+  @style borderRadius 4
+
+  artists {
+    INTEGER ArtistId
+    NVARCHAR Name
+  }
+  albums
+
+  artists ||--o{ albums : "foreign key"
+```
