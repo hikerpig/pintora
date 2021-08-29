@@ -5,8 +5,10 @@ import { logger, setLogLevel } from './logger'
 import configApi from './config'
 
 export * from './util'
-import { encodeForUrl, decodeCodeInUrl, makeMark, calculateTextDimensions } from './util'
+import { encodeForUrl, decodeCodeInUrl, makeMark, calculateTextDimensions, parseColor } from './util'
 import { symbolRegistry, SymbolDef, SymbolStyleAttrs } from './symbol-registry'
+import { StyleParam, interpreteStyles } from './style-engine'
+import * as styleEngine from './style-engine'
 
 export {
   logger,
@@ -15,6 +17,8 @@ export {
   symbolRegistry,
   SymbolDef,
   SymbolStyleAttrs,
+  StyleParam,
+  interpreteStyles,
 }
 
 type DrawOptions = {
@@ -24,6 +28,8 @@ type DrawOptions = {
 const pintora = {
   configApi,
   diagramRegistry,
+  symbolRegistry,
+  styleEngine,
   parseAndDraw(text: string, opts: DrawOptions) {
     const { onError } = opts
     const diagram = diagramRegistry.detectDiagram(text)
@@ -48,8 +54,8 @@ const pintora = {
     decodeCodeInUrl,
     makeMark,
     calculateTextDimensions,
+    parseColor,
   },
-  symbolRegistry,
 }
 
 export default pintora

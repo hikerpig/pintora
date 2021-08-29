@@ -16,8 +16,12 @@ export function textToCaseInsensitiveRegex(text) {
 
 /** token value */
 export function tv(token) {
-  return token.value
+  if (token && ('value' in token)) return token.value
+  return token
 }
 
 /** CJK friendly text pattern */
 export const VALID_TEXT_REGEXP = /(?:[a-zA-Z0-9_]\p{Unified_Ideograph})+/
+
+/** hex color */
+export const COLOR_REGEXP = /#[a-zA-Z0-9]+/

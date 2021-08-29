@@ -431,4 +431,25 @@ sequenceDiagram
       },
     ])
   })
+
+  it('can parse style clause', () => {
+    const example = stripStartEmptyLines(`
+sequenceDiagram
+  @style noteTextColor #00bbaa
+  @style messageFontSize 20
+  `)
+    parse(example)
+    const ir = db.getDiagramIR()
+    // console.log(JSON.stringify(ir, null, 2))
+    expect(ir.styleParams).toMatchObject([
+      {
+        key: 'noteTextColor',
+        value: '#00bbaa',
+      },
+      {
+        key: 'messageFontSize',
+        value: '20',
+      },
+    ])
+  })
 })

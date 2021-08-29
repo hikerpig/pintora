@@ -1,5 +1,5 @@
-import { Group, logger, OrNull } from '@pintora/core'
-import { parseColor } from '../util/color'
+import { logger, OrNull, parseColor } from '@pintora/core'
+import { StyleParam } from '../util/style'
 
 export interface WrappedText {
   text: string
@@ -91,6 +91,7 @@ export type SequenceDiagramIR = {
   title: string
   showSequenceNumbers: boolean
   // titleWrapped: boolean
+  styleParams: StyleParam[]
 }
 
 class SequenceDB {
@@ -102,6 +103,7 @@ class SequenceDB {
   titleWrapped: boolean = false
   wrapEnabled = false
   showSequenceNumbers = false
+  styleParams: SequenceDiagramIR['styleParams'] = []
 
   addActor(id: string, name: string, description: ParsedDescription) {
     // Don't allow description nulling
@@ -237,6 +239,10 @@ class SequenceDB {
     return message
   }
 
+  addStyle(sp: StyleParam) {
+    this.styleParams.push(sp)
+  }
+
   getActor(id: string) {
     return this.actors[id]
   }
@@ -252,6 +258,7 @@ class SequenceDB {
     this.actors = {}
     this.title = ''
     this.showSequenceNumbers = false
+    this.styleParams = []
   }
 
   getDiagramIR(): SequenceDiagramIR {
@@ -261,6 +268,7 @@ class SequenceDB {
       actors: this.actors,
       title: this.title,
       showSequenceNumbers: this.showSequenceNumbers,
+      styleParams: this.styleParams,
     }
   }
 
@@ -306,6 +314,9 @@ class SequenceDB {
         case 'addDivider':
           db.addSignalWithoutActor({ text: param.text, wrap: false }, param.signalType)
           break
+        case 'addStyle':
+          db.addStyle({ key: param.key, value: param.value })
+          break
       }
     }
   }
@@ -339,6 +350,9 @@ export function enableSequenceNumbers() {
   db.showSequenceNumbers = true;
 }
 
+/**
+ * action param that will be handled by `apply`
+ */
 type ApplyParam =
   | {
       type: 'addActor'
@@ -381,6 +395,11 @@ type ApplyParam =
       type: 'addDivider'
       signalType: LINETYPE
       text: string
+    }
+  | {
+      type: 'addStyle'
+      key: string
+      value: string
     }
 
 export {

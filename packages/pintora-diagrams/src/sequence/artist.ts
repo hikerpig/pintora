@@ -16,7 +16,7 @@ import {
   makeid,
   configApi,
 } from '@pintora/core'
-import { db, SequenceDiagramIR, LINETYPE, Message, PLACEMENT, WrappedText, GroupAttrs } from './db'
+import { db, SequenceDiagramIR, LINETYPE, Message, PLACEMENT, WrappedText } from './db'
 import { SequenceConf, getConf } from './config'
 import { getBaseNote, drawArrowTo, drawCrossTo, getBaseText, makeMark, makeLoopLabelBox } from './artist-util'
 import { ITheme } from '../util/themes/base'
@@ -49,8 +49,8 @@ const GROUP_LABEL_MAP = {
 
 const sequenceArtist: IDiagramArtist<SequenceDiagramIR> = {
   draw(ir, config?) {
-    console.log('[draw]', ir)
-    conf = getConf()
+    // console.log('[draw]', ir)
+    conf = getConf(ir.styleParams)
     theme = (configApi.getConfig() as DiagramsConf).themeConfig.themeVariables
     model.init()
     logger.debug(`C:${JSON.stringify(conf, null, 2)}`)
@@ -71,7 +71,7 @@ const sequenceArtist: IDiagramArtist<SequenceDiagramIR> = {
     calcLoopMinWidths(ir.messages)
     const maxMessageWidthPerActor = getMaxMessageWidthPerActor(ir)
     model.maxMessageWidthPerActor = maxMessageWidthPerActor
-    conf.actorHeight = calculateActorMargins(actors, maxMessageWidthPerActor)
+    model.actorHeight = calculateActorMargins(actors, maxMessageWidthPerActor)
 
     drawActors(rootMark, ir, { verticalPos: 0 })
     const loopWidths = calculateLoopBounds(messages)
@@ -295,6 +295,8 @@ class Model {
   /** backgrounds for groups like loop and opt */
   groupBgs: Rect[]
 
+  actorHeight: number
+
   private onBoundsFinishCbs: Array<OnBoundsFinishCallback>
 
   init() {
@@ -312,6 +314,7 @@ class Model {
     this.loopMinWidths = {}
     this.onBoundsFinishCbs = []
     this.groupBgs = []
+    this.actorHeight = conf.actorHeight
   }
   clear() {
     this.activations = []
@@ -903,7 +906,7 @@ export const drawActors = function (
     // Add some rendering data to the object
     safeAssign(attrs, {
       width: attrs.width || conf.actorWidth,
-      height: Math.max(attrs.height || 0, conf.actorHeight),
+      height: Math.max(attrs.height || 0, model.actorHeight),
       margin: attrs.margin || conf.actorMargin,
       x: prevWidth + prevMargin,
       y: verticalPos,
@@ -971,7 +974,7 @@ export const drawActors = function (
   }
 
   // Add a margin between the actor boxes and the first arrow
-  model.bumpVerticalPos(conf.actorHeight)
+  model.bumpVerticalPos(model.actorHeight)
 }
 
 function drawActivationTo(mark: Group, data: ActivationData) {

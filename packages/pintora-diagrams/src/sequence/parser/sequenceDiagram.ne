@@ -1,6 +1,6 @@
 @{%
 import * as moo from 'moo'
-import { tv, textToCaseInsensitiveRegex, VALID_TEXT_REGEXP } from '../../util/parser-shared'
+import { tv, textToCaseInsensitiveRegex, VALID_TEXT_REGEXP, COLOR_REGEXP } from '../../util/parser-shared'
 
 let lexer = moo.states({
   main: {
@@ -44,6 +44,7 @@ export function setYY(v) {
 @lexer lexer
 @builtin "string.ne"
 @builtin "whitespace.ne"
+@include "../../util/parser-grammars/style.ne"
 
 start -> __ start {% (d) => d[1] %}
 	| "sequenceDiagram" document __:? {%
@@ -148,6 +149,7 @@ statement ->
         return { type: 'addDivider', text, signalType: yy.LINETYPE.DIVIDER }
       }
     %}
+  | styleClause _ %NEWLINE
 
 words -> (%WORD | %SPACE):+ {%
       function(d) {
@@ -271,5 +273,3 @@ par_sections ->
       ])
     }
   %}
-
-color -> %COLOR {% (d) => tv(d[0]) %}
