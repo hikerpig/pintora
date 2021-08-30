@@ -1,5 +1,6 @@
 import React, { useCallback } from 'react'
-import MonacoEditor from 'src/live-editor/components/MonacoEditor'
+// import MonacoEditor from 'src/live-editor/components/MonacoEditor'
+import CodeMirrorEditor from 'src/live-editor/components/CodeMirrorEditor'
 import { useDispatch, connect, ConnectedProps } from 'react-redux'
 import { State, actions } from 'src/live-editor/redux/slice'
 import './Editor.less'
@@ -21,12 +22,12 @@ function Editor(props: Props) {
   }
   return (
     <div className="Editor" style={style}>
-      <MonacoEditor
+      <CodeMirrorEditor
         code={editorCode}
         onCodeChange={onCodeChange}
         editorOptions={CODE_EDITOR_OPTIONS}
         errorInfo={errorInfo}
-      ></MonacoEditor>
+      ></CodeMirrorEditor>
     </div>
   )
 }

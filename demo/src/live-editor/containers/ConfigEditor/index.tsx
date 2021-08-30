@@ -1,8 +1,10 @@
 import React, { useCallback } from 'react'
 import { useDebounceCallback } from '@react-hook/debounce'
-import MonacoEditor from 'src/live-editor/components/MonacoEditor'
+// import MonacoEditor from 'src/live-editor/components/MonacoEditor'
+import CodeMirrorEditor from 'src/live-editor/components/CodeMirrorEditor'
 import { useDispatch, connect } from 'react-redux'
 import { State, actions } from 'src/live-editor/redux/slice'
+
 
 interface Props {
   editorCode: string
@@ -29,7 +31,7 @@ function ConfigEditor(props: Props) {
   }
   return (
     <div className="ConfigEditor Editor" style={style}>
-      <MonacoEditor code={editorCode} onCodeChange={onCodeChange} editorOptions={CONFIG_EDITOR_OPTIONS} />
+      <CodeMirrorEditor code={editorCode} onCodeChange={onCodeChange} editorOptions={CONFIG_EDITOR_OPTIONS} />
     </div>
   )
 }
