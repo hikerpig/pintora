@@ -1,11 +1,12 @@
 import React, { useEffect, useRef } from 'react'
 import { ErrorInfo } from 'src/live-editor/type'
-// import {EditorView, EditorState} from '@codemirror/basic-setup'
 import { keymap, EditorView } from '@codemirror/view'
 import { history, historyKeymap } from '@codemirror/history'
 import { EditorState } from '@codemirror/state'
 import { standardKeymap } from '@codemirror/commands'
 import { oneDarkTheme } from '@codemirror/theme-one-dark'
+import { lineNumbers } from '@codemirror/gutter'
+import { searchConfig, searchKeymap } from '@codemirror/search'
 import './CMEditor.less'
 
 interface Props {
@@ -36,8 +37,18 @@ const Editor = (props: Props) => {
       })
       state = EditorState.create({
         doc: code,
-        extensions: [keymap.of(standardKeymap), history(), oneDarkTheme, keymap.of(historyKeymap), onUpdateExtension],
+        extensions: [
+          keymap.of(standardKeymap),
+          history(),
+          oneDarkTheme,
+          keymap.of(historyKeymap),
+          onUpdateExtension,
+          keymap.of(searchKeymap),
+          lineNumbers(),
+          searchConfig({ top: true }),
+        ],
       })
+      stateRef.current = state
     }
 
     editor = new EditorView({
@@ -64,9 +75,9 @@ const Editor = (props: Props) => {
   }, [])
 
   useEffect(() => {
-    const state = stateRef.current
     const view = viewRef.current
-    if (state && view) {
+    if (view && view.state) {
+      const state = view.state
       const currentCode = state.doc.toJSON().join('\n')
       // console.log('currentCode == code', currentCode == code)
       if (currentCode !== code) {
