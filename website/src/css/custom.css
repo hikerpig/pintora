@@ -16,6 +16,7 @@
   --ifm-color-primary-lightest: #ffc9b4;
   --ifm-code-font-size: 95%;
   --ifm-font-size-base: 16px;
+  --ifm-font-family-monospace: "Source Code Pro", Menlo, Monaco, sans-serif;
 }
 
 .docusaurus-highlight-code-line {

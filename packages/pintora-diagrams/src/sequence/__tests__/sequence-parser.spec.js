@@ -107,8 +107,8 @@ sequenceDiagram
   it('can parse participant', () => {
     const example = stripStartEmptyLines(`
 sequenceDiagram
-  participant A as Alice
-  participant B as Bob
+  participant A as "Alice"
+  participant B as "Bob"
   participant C
   A-->B: hello
   A-->C: yoho
@@ -145,6 +145,33 @@ sequenceDiagram
     expect(ir.messages[1]).toMatchObject({
       from: 'A',
       to: 'C',
+    })
+  })
+
+  it('can parse participant with classifier', () => {
+    const example = stripStartEmptyLines(`
+sequenceDiagram
+  participant [<actor> A]
+  participant B as "[B]"
+  `)
+    parse(example)
+    const ir = db.getDiagramIR()
+    // console.log(JSON.stringify(ir, null, 2))
+    expect(ir.actors).toMatchObject({
+      A: {
+        name: 'A',
+        description: 'A',
+        wrap: false,
+        prevActorId: null,
+        classifier: 'actor',
+        nextActorId: 'B',
+      },
+      B: {
+        name: 'B',
+        description: '[B]',
+        wrap: false,
+        prevActorId: 'A',
+      },
     })
   })
 

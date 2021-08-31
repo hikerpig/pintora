@@ -6,6 +6,7 @@ let lexer = moo.states({
   main: {
     NEWLINE: { match: /\n/, lineBreaks: true },
     SPACE: {match: /\s+/, lineBreaks: true},
+    QUOTED_WORD: /\"[^"]*\"/,
     START_NOTE: textToCaseInsensitiveRegex('@note'),
     END_NOTE: textToCaseInsensitiveRegex('@end_note'),
     BACKQUOTED_TEXT: /`[^`]*`/,
@@ -21,6 +22,10 @@ let lexer = moo.states({
     MINUS: /-/,
     COMMA: /,/,
     COLON: { match: /:/, push: 'line' },
+    L_SQ_BRACKET: { match: /\[/ },
+    R_SQ_BRACKET: { match: /\]/ },
+    L_AN_BRACKET: { match: /\</ },
+    R_AN_BRACKET: { match: /\>/ },
     _PLACEMENT: [
       { match: /left\sof/, type: () => 'LEFT_OF' },
       { match: /right\sof/, type: () => 'RIGHT_OF' },
@@ -71,13 +76,14 @@ line ->
 	| %NEWLINE
 
 statement ->
-	  "participant" __ actor __ "as" __ %WORD _ %NEWLINE {%
+	  participantWord __ classifiableActor __ "as" __ %QUOTED_WORD _ %NEWLINE {%
       function(d) {
-        d[2].description = yy.parseMessage(tv(d[6]))
+        const aliasWithQuotes = tv(d[6])
+        d[2].description = yy.parseMessage(aliasWithQuotes.slice(1, aliasWithQuotes.length - 1))
         return d[2]
       }
     %}
-	| "participant" __ actor %NEWLINE {%
+	| participantWord __ classifiableActor %NEWLINE {%
       function(d) {
         return d[2]
       }
@@ -150,6 +156,19 @@ statement ->
       }
     %}
   | styleClause _ %NEWLINE
+
+participantWord ->
+    "participant"
+
+classifiableActor ->
+    %L_SQ_BRACKET %L_AN_BRACKET %WORD %R_AN_BRACKET __ actor "]" {%
+      function(d) {
+        const actor = d[5]
+        actor.classifier = tv(d[2])
+        return actor
+      }
+    %}
+  | actor {% id %}
 
 words -> (%WORD | %SPACE):+ {%
       function(d) {

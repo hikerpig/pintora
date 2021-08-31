@@ -15,6 +15,9 @@ import {
   calculateTextDimensions,
   makeid,
   configApi,
+  symbolRegistry,
+  ContentArea,
+  clamp,
 } from '@pintora/core'
 import { db, SequenceDiagramIR, LINETYPE, Message, PLACEMENT, WrappedText } from './db'
 import { SequenceConf, getConf } from './config'
@@ -875,11 +878,7 @@ type DrawActorsOptions = {
   isMirror?: boolean
 }
 
-export const drawActors = function (
-  rootMark: Group,
-  ir: SequenceDiagramIR,
-  opts: DrawActorsOptions,
-) {
+export const drawActors = function (rootMark: Group, ir: SequenceDiagramIR, opts: DrawActorsOptions) {
   // Draw the actors
   let prevWidth = 0
   let prevMargin = 0
@@ -891,35 +890,73 @@ export const drawActors = function (
     const actor = ir.actors[key]
     const attrsKey = isMirror ? `${key}_mirror` : key
 
+    const actorMark: Group = {
+      type: 'group',
+      class: 'actor',
+      children: [],
+    }
+
     let attrs: MarkAttrs
     if (isMirror) {
       attrs = { ...model.actorAttrsMap.get(key) }
     } else {
       attrs = model.actorAttrsMap.get(key) || { fill: conf.actorBackground, stroke: conf.actorBorderColor }
     }
-    const textAttrs: Text['attrs'] = {
-      fill: conf.actorTextColor,
-      text: actor.description,
-      ...(actorFont(conf) as any),
-    }
 
+    const areaWidth = attrs.width || conf.actorWidth
+    const areaHeight = Math.max(attrs.height || 0, model.actorHeight)
     // Add some rendering data to the object
     safeAssign(attrs, {
-      width: attrs.width || conf.actorWidth,
-      height: Math.max(attrs.height || 0, model.actorHeight),
+      width: areaWidth,
+      height: areaHeight,
       margin: attrs.margin || conf.actorMargin,
       x: prevWidth + prevMargin,
       y: verticalPos,
       radius: 4,
     })
-    // console.log('drawActors', attrsKey, verticalPos, 'attrs', attrs)
-
     const actorCenter: Point = { x: attrs.x + attrs.width / 2, y: attrs.y + attrs.height / 2 }
-    safeAssign(textAttrs, {
+    const labelFontFonfig = actorFont(conf)
+    const textAttrs: Text['attrs'] = {
+      fill: conf.actorTextColor,
+      text: actor.description,
       x: actorCenter.x,
       y: actorCenter.y,
       textAlign: 'center',
       textBaseline: 'middle',
+      ...labelFontFonfig,
+    }
+    const labelDims = calculateTextDimensions(actor.description, labelFontFonfig)
+
+    if (actor.classifier && symbolRegistry.get(actor.classifier)) {
+      // const symbolDef = symbolRegistry.get(actor.classifier)
+      const symbolHeight = areaHeight - labelDims.height
+      const contentArea: ContentArea = {
+        x: attrs.x! + areaWidth / 2,
+        y: attrs.y! + (areaHeight - labelDims.height) / 2,
+        width: clamp(symbolHeight * 1.4, areaWidth / 2, areaWidth),
+        height: symbolHeight,
+      }
+      const sym = symbolRegistry.create(actor.classifier, {
+        mode: 'icon',
+        attrs: {
+          stroke: attrs.stroke,
+          fill: attrs.fill,
+        },
+        contentArea,
+      })
+      textAttrs.y = actorCenter.y + (areaHeight - labelDims.height) / 2 + 4
+      actorMark.children.push(sym)
+    } else {
+      // console.log('drawActors', attrsKey, verticalPos, 'attrs', attrs)
+      actorMark.children.push({
+        type: 'rect',
+        attrs: attrs,
+      })
+    }
+
+    actorMark.children.push({
+      type: 'text',
+      attrs: textAttrs,
     })
 
     // Draw the attached line
@@ -931,7 +968,7 @@ export const drawActors = function (
         attrs: {
           x1: actorCenter.x,
           x2: actorCenter.x,
-          y1: attrs.y,
+          y1: attrs.y + areaHeight + labelDims.height / 2,
           y2: 2000,
           stroke: conf.actorLineColor,
         },
@@ -943,30 +980,14 @@ export const drawActors = function (
         prevLineMark.attrs.y2 = attrs.y
       }
     }
+    if (lineMark) {
+      actorMark.children.unshift(lineMark)
+    }
 
     model.insert(attrs.x, verticalPos, attrs.x + attrs.width, attrs.height)
 
     prevWidth += attrs.width
     prevMargin += attrs.margin
-
-    const actorMark: Group = {
-      type: 'group',
-      class: 'actor',
-      children: [
-        {
-          type: 'rect',
-          attrs: attrs,
-        },
-        {
-          type: 'text',
-          attrs: textAttrs,
-        },
-      ],
-    }
-    if (lineMark) {
-      actorMark.children.unshift(lineMark)
-    }
-
     // console.log('actorMark', attrsKey, actorMark)
 
     rootMark.children.push(actorMark)
@@ -1438,12 +1459,12 @@ function calcLoopMinWidths(messages: Message[]) {
       case LINETYPE.PAR_START:
         if (!msg.id) msg.id = makeid(10)
         const label = GROUP_LABEL_MAP[msg.type]
-        const labelWidth = label ? calculateTextDimensions(label, messageFontConfig).width: conf.labelBoxWidth
+        const labelWidth = label ? calculateTextDimensions(label, messageFontConfig).width : conf.labelBoxWidth
         const titleWidth = calculateTextDimensions(msg.text, messageFontConfig).width
         minWidths[msg.id] = labelWidth + titleWidth + 2 * conf.boxTextMargin
         break
     }
-  });
+  })
   model.loopMinWidths = minWidths
 }
 

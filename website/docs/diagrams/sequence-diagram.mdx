@@ -11,7 +11,8 @@ The syntax is based on Mermaid 8.9, with some other good stuff:
 - [Multiline text for message](#multiline-text-for-message)
 - [Color group messages](#color-group-messages)
 - [Divider](#divider)
-- [Custom Style](#custom-style)
+- [Override config](#override-config)
+- [Classifier types](#classifier-types) <span class="badge badge--info">experimenting</span>
 
 ## A Simple Demo
 
@@ -85,9 +86,9 @@ sequenceDiagram
   Frida-->>Frida: I like flowers on my hair, too
 ```
 
-## Custom Style
+## Override config
 
-You can override style config through `@style` directive.
+You can override diagarm style config through `@style` directive.
 
 All available configs can be seen in the [Config page](../configuration/config.md#sequence).
 
@@ -104,4 +105,30 @@ sequenceDiagram
     Pintora-->>Pintora: Has input changed?
   end
   == Divider ==
+```
+
+## Classifier types
+
+You can specify a classifier to participant by the syntax:
+
+```
+participant [<classifier> Name]
+```
+
+A classifier type can be associated with symbols to have a different shape for the participant.
+
+Symbols are shared across pintora by a `symbolRegistry`, it can be extended by calling `pintora.symbolRegisty.register`, we will cover this in another chapter.
+
+Some builtin symbols are:
+
+- `actor`
+- `database`
+- `node`
+
+```pintora play
+sequenceDiagram
+  participant [<actor> A]
+  participant [<database> B] as "Storage"
+  participant [<node> C]
+  A-->B: Hello
 ```

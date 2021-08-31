@@ -50,6 +50,7 @@ export type Actor = {
   name: string
   description: string
   wrap: boolean
+  classifier?: string
   prevActorId?: OrNull<string>
   nextActorId?: OrNull<string>
 }
@@ -105,7 +106,10 @@ class SequenceDB {
   showSequenceNumbers = false
   styleParams: SequenceDiagramIR['styleParams'] = []
 
-  addActor(id: string, name: string, description: ParsedDescription) {
+  addActor(param: AddActorParam) {
+    const { actor: name, classifier } = param
+    let { description } = param
+    const id = name
     // Don't allow description nulling
     const old = this.actors[id]
     if (old && name === old.name && description == null) return
@@ -120,6 +124,7 @@ class SequenceDB {
       description: description.text,
       wrap: (description.wrap === undefined && this.wrapEnabled) || !!description.wrap,
       prevActorId: this.prevActorId,
+      classifier,
     }
     if (this.prevActorId && this.actors[this.prevActorId]) {
       this.actors[this.prevActorId].nextActorId = id
@@ -284,7 +289,8 @@ class SequenceDB {
       logger.debug('apply', param)
       switch (param.type) {
         case 'addActor':
-          db.addActor(param.actor, param.actor, param.description)
+          // db.addActor(param.actor, param.actor, param.description)
+          db.addActor(param)
           break
         case 'activeStart':
         case 'activeEnd':
@@ -350,15 +356,19 @@ export function enableSequenceNumbers() {
   db.showSequenceNumbers = true;
 }
 
+type AddActorParam = {
+  actor: string
+  description: WrappedText
+  classifier?: string
+}
+
 /**
  * action param that will be handled by `apply`
  */
 type ApplyParam =
-  | {
+  | ({
       type: 'addActor'
-      actor: string
-      description: WrappedText
-    }
+    } & AddActorParam)
   | {
       type: 'activeStart' | 'activeEnd'
       actor: { type: string; actor: string }

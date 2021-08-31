@@ -275,6 +275,7 @@ function drawGroupsTo(parentMark: Group, ir: ComponentDiagramIR, g: LayoutGraph)
           group.children.unshift(bgMark)
         } else {
           bgMark = symbolRegistry.create(groupType, {
+            mode: 'container',
             contentArea: data,
             attrs: {
               fill: conf.groupBackground,
