@@ -5,6 +5,7 @@ import { keymap, EditorView } from '@codemirror/view'
 import { history, historyKeymap } from '@codemirror/history'
 import { EditorState } from '@codemirror/state'
 import { standardKeymap } from '@codemirror/commands'
+import { oneDarkTheme } from '@codemirror/theme-one-dark'
 import './CMEditor.less'
 
 interface Props {
@@ -13,25 +14,6 @@ interface Props {
   editorOptions: any
   errorInfo?: ErrorInfo | null
 }
-
-let baseTheme = EditorView.baseTheme({
-  ".cm-o-replacement": {
-    display: "inline-block",
-    width: ".5em",
-    height: ".5em",
-    borderRadius: ".25em"
-  },
-  '.cm-line': {
-    fontSize: 16,
-    fontFamily: 'Menlo, Consolas, sans-serif'
-  },
-  "&light .cm-o-replacement": {
-    backgroundColor: "#04c"
-  },
-  "&dark .cm-o-replacement": {
-    backgroundColor: "#5bf"
-  }
-})
 
 const Editor = (props: Props) => {
   const { code, onCodeChange, editorOptions, errorInfo } = props
@@ -46,9 +28,15 @@ const Editor = (props: Props) => {
     let state = stateRef.current
     if (viewRef.current) viewRef.current.destroy()
     if (!state) {
+      const onUpdateExtension = EditorView.updateListener.of(update => {
+        if (update.docChanged && state) {
+          const newCode = update.view.state.doc.toJSON().join('\n')
+          onCodeChange(newCode)
+        }
+      })
       state = EditorState.create({
         doc: code,
-        extensions: [keymap.of(standardKeymap), baseTheme, history(), keymap.of(historyKeymap)],
+        extensions: [keymap.of(standardKeymap), history(), oneDarkTheme, keymap.of(historyKeymap), onUpdateExtension],
       })
     }
 
@@ -56,7 +44,6 @@ const Editor = (props: Props) => {
       parent: wrapperRef.current,
       state: state,
     })
-
     // editor = monaco.editor.create(wrapperRef.current, {
     //   value: code,
     //   minimap: { enabled: false },
@@ -67,16 +54,6 @@ const Editor = (props: Props) => {
     //   tabSize: 2,
     //   ...editorOptions,
     // })
-
-    // const editorModel = editor.getModel()
-    // if (editorModel) {
-    //   editorModel.onDidChangeContent((e) => {
-    //     const newCode = editorModel.getLinesContent().join('\n')
-    //     // console.log('on change')
-    //     if (!e.changes.length) return
-    //     onCodeChange(newCode)
-    //   })
-    // }
     viewRef.current = editor
 
     return () => {
@@ -98,25 +75,9 @@ const Editor = (props: Props) => {
     }
   }, [code])
 
-  useEffect(() => {
-    // const editor = viewRef.current
-    // if (!editor) return
-    // const model = editor.getModel()
-    // if (model) {
-    //   if (errorInfo) {
-    //     monaco.editor.setModelMarkers(model, 'pintora', [{
-    //       startLineNumber: errorInfo.line,
-    //       startColumn: errorInfo.col,
-    //       endLineNumber: errorInfo.line,
-    //       endColumn: errorInfo.col,
-    //       message: errorInfo.message,
-    //       severity: monaco.MarkerSeverity.Error,
-    //     }])
-    //   } else {
-    //     monaco.editor.setModelMarkers(model, 'pintora', [])
-    //   }
-    // }
-  }, [errorInfo])
+  // TOOD: highlight error
+  // useEffect(() => {
+  // }, [errorInfo])
 
   return <div className="CMEditor" ref={wrapperRef as any}></div>
 }
