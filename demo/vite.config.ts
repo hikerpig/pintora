@@ -4,8 +4,6 @@ import reactRefresh from '@vitejs/plugin-react-refresh'
 import tsconfigPaths from 'vite-tsconfig-paths'
 import { VitePWA } from 'vite-plugin-pwa'
 
-const monacoPrefix = `monaco-editor/esm/vs`
-
 const BASE = '/demo/'
 
 // https://vitejs.dev/config/
@@ -37,9 +35,6 @@ export default defineConfig({
         'live-editor': resolve(__dirname, 'live-editor/index.html')
       },
       output: {
-        manualChunks: {
-          editorWorker: [`${monacoPrefix}/editor/editor.worker`],
-        },
         entryFileNames: `assets/[name].js`,
         chunkFileNames: `assets/[name].js`,
         assetFileNames: `assets/[name].[ext]`

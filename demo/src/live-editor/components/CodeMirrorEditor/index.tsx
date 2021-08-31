@@ -55,16 +55,6 @@ const Editor = (props: Props) => {
       parent: wrapperRef.current,
       state: state,
     })
-    // editor = monaco.editor.create(wrapperRef.current, {
-    //   value: code,
-    //   minimap: { enabled: false },
-    //   lineDecorationsWidth: 0,
-    //   automaticLayout: true,
-    //   fontSize: 15,
-    //   theme: 'vs-dark',
-    //   tabSize: 2,
-    //   ...editorOptions,
-    // })
     viewRef.current = editor
 
     return () => {

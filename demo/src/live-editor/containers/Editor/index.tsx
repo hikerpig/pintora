@@ -1,5 +1,4 @@
 import React, { useCallback } from 'react'
-// import MonacoEditor from 'src/live-editor/components/MonacoEditor'
 import CodeMirrorEditor from 'src/live-editor/components/CodeMirrorEditor'
 import { useDispatch, connect, ConnectedProps } from 'react-redux'
 import { State, actions } from 'src/live-editor/redux/slice'
