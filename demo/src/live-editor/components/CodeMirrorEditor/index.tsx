@@ -1,18 +1,24 @@
 import React, { useEffect, useRef } from 'react'
 import { ErrorInfo } from 'src/live-editor/type'
-import { keymap, EditorView } from '@codemirror/view'
+import { keymap, EditorView, highlightActiveLine } from '@codemirror/view'
 import { history, historyKeymap } from '@codemirror/history'
-import { EditorState } from '@codemirror/state'
+import { EditorState, Extension } from '@codemirror/state'
 import { standardKeymap } from '@codemirror/commands'
-import { oneDarkTheme } from '@codemirror/theme-one-dark'
+import { oneDarkTheme, oneDarkHighlightStyle } from '@codemirror/theme-one-dark'
 import { lineNumbers } from '@codemirror/gutter'
 import { searchConfig, searchKeymap } from '@codemirror/search'
+import { json } from '@codemirror/lang-json'
+import { tabKeymaps } from './utils'
 import './CMEditor.less'
+
+type EditorOptions = {
+  language: string
+}
 
 interface Props {
   code: string
   onCodeChange(code: string): void
-  editorOptions: any
+  editorOptions: EditorOptions
   errorInfo?: ErrorInfo | null
 }
 
@@ -35,18 +41,26 @@ const Editor = (props: Props) => {
           onCodeChange(newCode)
         }
       })
+      const extensions: Extension[] = [
+        keymap.of(standardKeymap),
+        history(),
+        oneDarkTheme,
+        keymap.of(historyKeymap),
+        onUpdateExtension,
+        keymap.of(searchKeymap),
+        lineNumbers(),
+        searchConfig({ top: true }),
+        highlightActiveLine(),
+        oneDarkHighlightStyle.fallback,
+        keymap.of(tabKeymaps),
+      ]
+      if (editorOptions.language === 'json') {
+        extensions.push(json())
+      }
+
       state = EditorState.create({
         doc: code,
-        extensions: [
-          keymap.of(standardKeymap),
-          history(),
-          oneDarkTheme,
-          keymap.of(historyKeymap),
-          onUpdateExtension,
-          keymap.of(searchKeymap),
-          lineNumbers(),
-          searchConfig({ top: true }),
-        ],
+        extensions,
       })
       stateRef.current = state
     }
