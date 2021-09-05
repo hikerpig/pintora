@@ -195,4 +195,20 @@ componentDiagram
     // const ir = db.getDiagramIR()
     // console.log('ir', ir)
   })
+
+  it('can parse style clause', () => {
+    const example = stripStartEmptyLines(`
+componentDiagram
+  @style lineWidth 3
+  `)
+    parse(example)
+    const ir = db.getDiagramIR()
+    // console.log(JSON.stringify(ir, null, 2))
+    expect(ir.styleParams).toMatchObject([
+      {
+        key: 'lineWidth',
+        value: '3',
+      },
+    ])
+  })
 })

@@ -34,6 +34,7 @@ export function setYY(v) {
 @lexer lexer
 @builtin "string.ne"
 @builtin "whitespace.ne"
+@include "../../util/parser-grammars/style.ne"
 
 start -> __ start
   | "componentDiagram" document {%
@@ -57,12 +58,14 @@ line ->
     %SPACE:* statement
 	| %NEWLINE {% (d) => null %}
 
-statement -> UMLElement {%
-    function(d) {
-      // console.log('[statement]', JSON.stringify(d[0]))
-      return d[0]
-    }
-  %}
+statement ->
+    UMLElement {%
+      function(d) {
+        // console.log('[statement]', JSON.stringify(d[0]))
+        return d[0]
+      }
+    %}
+  | styleClause _ %NEWLINE
 
 UMLElement ->
     group {%

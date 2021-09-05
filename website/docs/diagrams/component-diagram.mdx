@@ -83,3 +83,17 @@ database "MySql" {
 [Folder 3] --> [Frame 4]
 ```
 
+## Override config
+
+You can override diagarm style config through `@style` directive.
+
+All available configs can be seen in the [Config page](../configuration/config.md#component).
+
+```pintora play
+componentDiagram
+  @style componentBackground #61afef
+  @style componentBorderColor #61afef
+
+  DataQuery -- [Component]
+  [Component] ..> HTTP : use
+```

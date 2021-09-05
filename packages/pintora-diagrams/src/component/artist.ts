@@ -35,7 +35,7 @@ type EdgeData = {
 const componentArtist: IDiagramArtist<ComponentDiagramIR, ComponentConf> = {
   draw(ir) {
     // logger.info('[artist] component', ir)
-    conf = getConf()
+    conf = getConf(ir.styleParams)
 
     const rootMark: Group = {
       type: 'group',

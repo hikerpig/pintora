@@ -1,3 +1,5 @@
+import { StyleParam } from '../util/style'
+
 type Component = {
   name: string
   label?: string
@@ -56,13 +58,18 @@ type ApplyPart = {
   name: string
   label?: string
   children: UMLElement[]
-}
+} | {
+    type: 'addStyle'
+    key: string
+    value: string
+  }
 
 export type ComponentDiagramIR = {
   components: Record<string, Component>
   interfaces: Record<string, Interface>
   groups: Record<string, CGroup>
   relationships: Relationship[]
+  styleParams: StyleParam[]
 }
 
 export enum LineType {
@@ -78,6 +85,7 @@ class ComponentDb {
   protected interfaces: Record<string, Interface> = {}
   protected groups: Record<string, CGroup> = {}
   protected relationships: Relationship[] = []
+  protected styleParams: StyleParam[] = []
 
   LineType = LineType
 
@@ -112,7 +120,8 @@ class ComponentDb {
     if (!part) return
     // console.log('apply', part)
     switch (part.type) {
-      case 'group': {
+      case 'addStyle': {
+        this.styleParams.push(part)
       } break
       default: {
       }
@@ -170,6 +179,7 @@ class ComponentDb {
       interfaces: this.interfaces,
       groups: this.groups,
       relationships: this.relationships,
+      styleParams: this.styleParams,
     }
   }
 
@@ -179,6 +189,7 @@ class ComponentDb {
     this.interfaces = {}
     this.groups = {}
     this.relationships = []
+    this.styleParams = []
   }
 }
 
