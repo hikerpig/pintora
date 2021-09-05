@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.1.0-alpha.9](https://github.com/hikerpig/pintora/compare/v0.1.0-alpha.8...v0.1.0-alpha.9) (2021-09-05)
+
+
+### Features
+
+* **pintora-demo:** CodeMirror options ([e4dccc5](https://github.com/hikerpig/pintora/commit/e4dccc5b9168560e3640bbe964b82117c3491ec2))
+
+
+
+
+
 # [0.1.0-alpha.8](https://github.com/hikerpig/pintora/compare/v0.1.0-alpha.7...v0.1.0-alpha.8) (2021-08-29)
 
 **Note:** Version bump only for package pintora-demo

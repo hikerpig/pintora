@@ -1,6 +1,6 @@
 {
   "name": "@pintora/diagrams",
-  "version": "0.1.0-alpha.8",
+  "version": "0.1.0-alpha.9",
   "description": "Core diagrams of pintora",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
@@ -19,7 +19,7 @@
     "coverage": "npx jest --collect-coverage"
   },
   "dependencies": {
-    "@pintora/core": "^0.1.0-alpha.8",
+    "@pintora/core": "^0.1.0-alpha.9",
     "@pintora/dagre": "^0.10.0-alpha.0",
     "@pintora/graphlib": "2.2.2",
     "nearley": "^2.20.1"

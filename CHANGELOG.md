@@ -3,6 +3,19 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.1.0-alpha.9](https://github.com/hikerpig/pintora/compare/v0.1.0-alpha.8...v0.1.0-alpha.9) (2021-09-05)
+
+
+### Features
+
+* custom style engine and `[@style](https://github.com/style)` rule in componentDiagram ([14dc634](https://github.com/hikerpig/pintora/commit/14dc63438999be65fc4518a72b4c6ced64352984))
+* **pintora-demo:** CodeMirror options ([e4dccc5](https://github.com/hikerpig/pintora/commit/e4dccc5b9168560e3640bbe964b82117c3491ec2))
+* **pintora-diagrams:** [sequenceDiagram] participant with classifier symbol ([0372a29](https://github.com/hikerpig/pintora/commit/0372a2941342a6834e9edb98dada87cd8ee51b6e))
+
+
+
+
+
 # [0.1.0-alpha.8](https://github.com/hikerpig/pintora/compare/v0.1.0-alpha.7...v0.1.0-alpha.8) (2021-08-29)
 
 
