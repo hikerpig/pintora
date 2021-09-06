@@ -97,8 +97,10 @@ sequenceDiagram
   @style loopLineColor #79caf1
   @style actorBackground #61afef
   @style actorTextColor #ffffff
-  @style messageFontFamily Consolas
-  @style dividerTextColor #61afef
+  @style {
+    messageFontFamily Consolas
+    dividerTextColor #61afef
+  }
   User->>Pintora: render this
   activate Pintora
   loop Check input
