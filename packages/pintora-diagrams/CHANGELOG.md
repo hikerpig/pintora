@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.1.0-alpha.10](https://github.com/hikerpig/pintora/compare/v0.1.0-alpha.9...v0.1.0-alpha.10) (2021-09-07)
+
+
+### Features
+
+* **pintora-diagrams:** `[@style](https://github.com/style)` clause with brackets ([0f79672](https://github.com/hikerpig/pintora/commit/0f7967237af1dd42178edb227417ce89b8de23f5))
+
+
+
+
+
 # [0.1.0-alpha.9](https://github.com/hikerpig/pintora/compare/v0.1.0-alpha.8...v0.1.0-alpha.9) (2021-09-05)
 
 
