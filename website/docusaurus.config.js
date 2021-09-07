@@ -17,7 +17,7 @@ module.exports = {
   },
   url: SITE_URL,
   baseUrl: '/',
-  onBrokenLinks: 'throw',
+  onBrokenLinks: 'warn',
   onBrokenMarkdownLinks: 'warn',
   favicon: '/img/logo.svg',
   organizationName: 'hikerpig', // Usually your GitHub org/user name.

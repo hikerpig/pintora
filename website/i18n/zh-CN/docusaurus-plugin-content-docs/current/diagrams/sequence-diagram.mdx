@@ -11,6 +11,8 @@ title: Sequence Diagram
 - [消息文本支持多行](#消息文本支持多行)
 - [自定义分组颜色](#自定义分组颜色)
 - [分隔符](#分隔符)
+- [覆盖设置](#覆盖设置)
+- [分类](#分类) <span class="badge badge--info">experimenting</span>
 
 ## 简单示意
 
@@ -109,4 +111,51 @@ sequenceDiagram
   Georgia->>Frida: 你的自画像很有特色
   == 另一段时间后 ==
   Frida-->>Frida: 花在我身上很美
+```
+
+## 覆盖设置
+
+可以使用 `@style` 指令覆盖图表的部分设置。
+
+可设置项的说明请见 [Config page](../configuration/config.md#sequence).
+
+```pintora play
+sequenceDiagram
+  @style loopLineColor #79caf1
+  @style actorBackground #61afef
+  @style actorTextColor #ffffff
+  @style {
+    messageFontFamily Consolas
+    dividerTextColor #61afef
+  }
+  User->>Pintora: render this
+  activate Pintora
+  loop Check input
+    Pintora-->>Pintora: Has input changed?
+  end
+  == Divider ==
+```
+
+## 分类
+
+可以使用以下语法对 participant 指定类别(classifer)。
+
+```
+participant [<classifier> Name]
+```
+
+类别可以影响绘制时参与者的符号或形状，在 pintora 内部有一个中心化的 `symbolRegistry`，可以使用 `pintora.symbolRegisty.register` 进行扩展，关于扩展性会在文档的其他篇章中阐述。
+
+一些内建的符号有：
+
+- `actor`
+- `database`
+- `node`
+
+```pintora play
+sequenceDiagram
+  participant [<actor> A]
+  participant [<database> B] as "Storage"
+  participant [<node> C]
+  A-->B: Hello
 ```

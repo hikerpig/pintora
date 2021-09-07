@@ -10,10 +10,12 @@ import Translate, { translate } from '@docusaurus/Translate'
 function HomepageHeader() {
   const { siteConfig } = useDocusaurusContext()
   return (
-    <header className={clsx('hero hero--primary', styles.heroBanner)}>
+    <header className={clsx('hero', styles.heroBanner)}>
       <div className="container">
+        <div>
+          <img src="/img/logo.svg" alt="Logo" width="240" />
+        </div>
         <h1 className="hero__title">{siteConfig.title}</h1>
-        {/* <p className="hero__subtitle">{siteConfig.tagline}</p> */}
         <div className="hero__subtitle">
           <div>
             <Translate id="homepage.tagline_1" description="Homepage banner tagline 1">
@@ -27,7 +29,7 @@ function HomepageHeader() {
           </div>
         </div>
         <div className={styles.buttons}>
-          <Link className="button button--secondary button--lg" to="/docs/intro">
+          <Link className="button button--primary button--lg" to="/docs/intro">
             <Translate id="homepage.get_started" description="Get started">
               Get Started
             </Translate>
@@ -47,7 +49,7 @@ export default function Home() {
         message: 'site.description',
         description: 'Site description',
       })}
-      keywords={siteConfig.customFields.keywords}
+      keywords={siteConfig.customFields.keywords as string[]}
     >
       <HomepageHeader />
       <main>

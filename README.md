@@ -3,6 +3,11 @@
 <p align='center'>
   <img width="140" src="https://raw.githubusercontent.com/hikerpig/pintora/master/demo/public/img/logo.svg" alt="pintora" />
 </p>
+<p align='center'>
+  <a href="http://pintorajs.vercel.app/docs/intro/">Documentation</a>
+  <span>|</span>
+  <a href="http://pintorajs.vercel.app/demo/live-editor/">Live Editor</a>
+</p>
 
 <p align='center'>
   <a href='https://www.npmjs.com/package/@pintora/standalone'>

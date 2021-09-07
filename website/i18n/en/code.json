@@ -164,7 +164,7 @@
     "description": "The skip to content label used for accessibility, allowing to rapidly navigate to main content with keyboard tab/enter navigation"
   },
   "homepage.get_started": {
-    "message": "Get Started",
+    "message": "Get Started →",
     "description": "Get started"
   },
   "site.description": {
