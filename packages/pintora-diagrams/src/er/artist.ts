@@ -495,23 +495,17 @@ const drawRelationshipFromLayout = function (group: Group, rel: Relationship, g:
   if (rel.relSpec.relType === Identification.NON_IDENTIFYING) {
     linePath.attrs.lineDash = [4, 4]
   }
-
-  // Decide which start and end markers it needs. It may be possible to be more concise here
-  // by reversing a start marker to make an end marker...but this will do for now
-
-  // Note that the 'A' entity's marker is at the end of the relationship and the 'B' entity's marker is at the start
-  const endDirection = calcDirection(restPoints[restPoints.length - 1], restPoints[restPoints.length - 2])
-  const endMarker = drawMarkerTo(lastPoint, rel.relSpec.cardA, endDirection, {
+  const endMarkerDirection = calcDirection(restPoints[restPoints.length - 1], restPoints[restPoints.length - 2])
+  const endMarker = drawMarkerTo(lastPoint, rel.relSpec.cardA, endMarkerDirection, {
     stroke: conf.stroke,
     id: `${edge.name}-end`,
   })
 
-  const startDirection = calcDirection(secondPoint, startPoint) // backward
-  const startMarker = drawMarkerTo(startPoint, rel.relSpec.cardB, startDirection, {
+  const startMarkerDirection = calcDirection(startPoint, secondPoint)
+  const startMarker = drawMarkerTo(startPoint, rel.relSpec.cardB, startMarkerDirection, {
     stroke: conf.stroke,
     id: `${edge.name}-start`,
   })
-
   // Now label the relationship
 
   // Find the half-way point

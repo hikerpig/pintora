@@ -86,3 +86,7 @@ export function getPointAt(points: Point[], s: number, isProportion = false) {
 export function clamp(num: number, min: number, max: number) {
   return Math.min(Math.max(num, min), max)
 }
+
+// function radToDegree(rad: number) {
+//   return rad / Math.PI * 180
+// }

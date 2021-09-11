@@ -62,16 +62,36 @@ export function drawCrossTo(dest: Point, baseLength: number, rad: number, attrs?
   }
 }
 
+/**
+ * Given start and end point, return the angle of the direction vector, in radian
+ */
 export function calcDirection(start: Point, end: Point) {
   const ox = end.x - start.x
   const oy = end.y - start.y
 
   let r = Math.atan(oy / ox)
-  if (ox * oy < 0) {
+  if ((ox < 0 || oy < 0)) {
     r = r + Math.PI
   }
+  // console.log('ox', ox, 'oy', oy, 'r', r)
   return r
 }
+
+// export enum Quardrant {
+//   First = 1,
+//   Second = 2,
+//   Third = 3,
+//   Fourth = 4,
+// }
+
+// export function getQuardrant(rad: number): Quardrant {
+//   const r = (rad + 2 * Math.PI) % (Math.PI * 2)
+//   const part = Math.floor(r / (Math.PI / 2))
+//   if (part === 1) return Quardrant.Second
+//   if (part === 2) return Quardrant.Third
+//   if (part === 3) return Quardrant.Fourth
+//   return Quardrant.First
+// }
 
 export function makeLabelBg(labelDims: TSize, center: Point, attrs: Partial<Rect['attrs']> = {}) {
   const labelBg = makeMark('rect', {
