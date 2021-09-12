@@ -12,13 +12,14 @@ title: Sequence Diagram
 - [自定义分组颜色](#自定义分组颜色)
 - [分隔符](#分隔符)
 - [覆盖设置](#覆盖设置)
-- [分类](#分类) <span class="badge badge--info">experimenting</span>
+- [分类](#分类) <span className="badge badge--info">experimenting</span>
 
 ## 简单示意
 
 ```pintora play
 sequenceDiagram
   autonumber
+  participant [<actor> 用户]
   用户->>Pintora: 帮我画张时序图（图表 DSL）
   activate Pintora
   Pintora->>Pintora: 解析 DSL，绘制图像
