@@ -1,5 +1,6 @@
 {
   "name": "pintora",
+  "description": "Monorepo for pintora project",
   "private": true,
   "scripts": {
     "clean": "rimraf \"packages/**/lib\"",
