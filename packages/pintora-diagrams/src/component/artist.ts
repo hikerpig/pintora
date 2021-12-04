@@ -210,7 +210,7 @@ function drawGroupsTo(parentMark: Group, ir: ComponentDiagramIR, g: LayoutGraph)
     // console.log('[draw] group', cGroup)
 
     let bgMark: Rect | GSymbol
-    let symbolDef = symbolRegistry.get(groupType)
+    const symbolDef = symbolRegistry.get(groupType)
     if (symbolDef) {
       // wait till onLayout
     } else {
@@ -253,7 +253,7 @@ function drawGroupsTo(parentMark: Group, ir: ComponentDiagramIR, g: LayoutGraph)
     const labelTextDims = calculateTextDimensions(groupLabel)
     const typeTextDims = calculateTextDimensions(typeText)
 
-    let nodeMargin = {}
+    const nodeMargin = {}
     if (symbolDef && symbolDef.symbolMargin) {
       Object.assign(nodeMargin, {
         marginl: symbolDef.symbolMargin.left,

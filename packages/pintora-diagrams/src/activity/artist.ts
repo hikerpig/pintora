@@ -123,7 +123,7 @@ function getActionRectSize(text: string) {
 
 class ArtistModel {
   constructor(public ir: ActivityDiagramIR) {
-    ;(window as any).activityModel = this
+    (window as any).activityModel = this
   }
 
   stepModelMap = new Map<string, StepModel>()
@@ -930,7 +930,7 @@ function drawEdges(parent: Group, g: LayoutGraph) {
     const labelPoint = getPointAt(edge.points, 0.4, true)
     if (!labelPoint) return
     const labelX = labelPoint.x
-    let labelY = labelPoint.y
+    const labelY = labelPoint.y
     // if (edge.simplifyStartEdge) {
     //   labelY = (startPoint.y + lastPoint.y) / 2
     // }

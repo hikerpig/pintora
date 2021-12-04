@@ -2,8 +2,7 @@ import { Mark, Bounds, Point } from '@pintora/core'
 import { Graph, Edge, GraphOptions } from '@pintora/graphlib'
 import { GraphData } from '@pintora/dagre/dist/types/type'
 
-export interface LayoutGraph extends Graph<LayoutNodeOption, any, GraphData> {
-}
+export type LayoutGraph = Graph<LayoutNodeOption, any, GraphData>
 
 export function createLayoutGraph(opts?: GraphOptions) {
   return new Graph(opts)

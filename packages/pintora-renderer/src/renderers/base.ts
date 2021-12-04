@@ -1,5 +1,5 @@
-import { GraphicsIR, Mark, MarkType, MarkAttrs, MarkTypeMap } from "@pintora/core"
-import { IGroup, ShapeCfg } from '@antv/g-base'
+import { GraphicsIR, Mark, MarkType, MarkTypeMap } from "@pintora/core"
+import { IGroup } from '@antv/g-base'
 import { AbstractCanvas, CanvasCfg, IShape } from '@antv/g-base'
 import { IRenderer } from '../type'
 import { Stack } from '../util'
@@ -84,6 +84,7 @@ export abstract class BaseRenderer implements IRenderer {
     if (!gcvs) return
 
     gcvs.clear()
+    // eslint-disable-next-line @typescript-eslint/no-this-alias
     const self = this
 
     this.addBgShape()
@@ -133,6 +134,7 @@ export abstract class BaseRenderer implements IRenderer {
     }, actions)
   }
 
+  // eslint-disable-next-line
   protected onShapeAdd(shape: IShape | IGroup, mark: Mark) {}
 
   render() {

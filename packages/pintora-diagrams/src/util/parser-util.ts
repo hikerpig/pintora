@@ -20,7 +20,7 @@ export function genParserWithRules(grammar: nearley.CompiledRules, opts: Options
     }).join('\n')
 
     // a hack to add a new line as EOF, https://github.com/kach/nearley/issues/194
-    let textToParse = text[preparedText.length - 1] !== '\n' ? preparedText + '\n' : preparedText
+    const textToParse = text[preparedText.length - 1] !== '\n' ? preparedText + '\n' : preparedText
 
     // const start = Date.now()
     parser.feed(textToParse)

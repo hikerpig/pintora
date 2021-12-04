@@ -15,7 +15,7 @@ export function compact<T>(list: T[]) {
 const CHARACTERS = '0123456789abcdef'
 export function makeid(length: number) {
   let result = ''
-  let CHARACTERSLength = CHARACTERS.length
+  const CHARACTERSLength = CHARACTERS.length
   for (let i = 0; i < length; i++) {
     result += CHARACTERS.charAt(Math.floor(Math.random() * CHARACTERSLength))
   }

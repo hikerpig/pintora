@@ -44,7 +44,7 @@ export function drawArrowTo(dest: Point, baseLength: number, rad: number, opts: 
   const { type = 'default', color = 'transparent' } = opts
 
   let p: PathCommand[] = []
-  let arrowAttrs: MarkAttrs = {}
+  const arrowAttrs: MarkAttrs = {}
   if (type === 'default') {
     p = [
       ['M', x - xOffset, y - baseLength / 2], // top

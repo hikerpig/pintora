@@ -12,7 +12,7 @@ export function textToCaseInsensitiveRegex(text) {
   });
 
   return new RegExp(regexSource.join(''));
-};
+}
 
 /** token value */
 export function tv(token) {

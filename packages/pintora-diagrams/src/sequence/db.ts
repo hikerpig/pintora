@@ -101,7 +101,7 @@ class SequenceDB {
   notes: Note[] = []
   actors: { [key: string]: Actor } = {}
   title = ''
-  titleWrapped: boolean = false
+  titleWrapped = false
   wrapEnabled = false
   showSequenceNumbers = false
   styleParams: SequenceDiagramIR['styleParams'] = []
@@ -159,7 +159,7 @@ class SequenceDB {
       const cnt = activationCount(this, from.actor)
       if (cnt < 1) {
         // Bail out as there is an activation signal from an inactive participant
-        let error = new SError('Trying to inactivate an inactive participant (' + from.actor + ')')
+        const error = new SError('Trying to inactivate an inactive participant (' + from.actor + ')')
         error.hash = {
           text: '->>-',
           token: '->>-',
@@ -276,8 +276,6 @@ class SequenceDB {
       styleParams: this.styleParams,
     }
   }
-
-  setWrap(v: boolean) {}
 
   apply(param: ApplyParam | ApplyParam[]) {
     if (!param) return
@@ -420,7 +418,6 @@ export default {
   addActor: db.addActor,
   addMessage: db.addMessage,
   addSignal: db.addSignal,
-  // setWrap,
   enableSequenceNumbers,
   parseMessage: db.parseMessage,
   LINETYPE,
