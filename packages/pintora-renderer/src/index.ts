@@ -8,10 +8,7 @@ export type RenderOptions = {
   onRender?(renderer: IRenderer): void
 }
 
-export {
-  BaseRenderer,
-  rendererRegistry,
-}
+export { BaseRenderer, rendererRegistry }
 
 export function render(ir: GraphicsIR, opts: RenderOptions) {
   // console.log('TBD, render', ir)

@@ -10,16 +10,7 @@ import { symbolRegistry, SymbolDef, SymbolStyleAttrs } from './symbol-registry'
 import { StyleParam, interpreteStyles } from './style-engine'
 import * as styleEngine from './style-engine'
 
-export {
-  logger,
-  setLogLevel,
-  configApi,
-  symbolRegistry,
-  SymbolDef,
-  SymbolStyleAttrs,
-  StyleParam,
-  interpreteStyles,
-}
+export { logger, setLogLevel, configApi, symbolRegistry, SymbolDef, SymbolStyleAttrs, StyleParam, interpreteStyles }
 
 type DrawOptions = {
   onError?(error: Error): void

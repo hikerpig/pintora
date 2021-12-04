@@ -3,10 +3,7 @@ import { JSDOM } from 'jsdom'
 import { implForWrapper } from 'jsdom/lib/jsdom/living/generated/utils'
 import { Canvas } from 'canvas'
 
-export const SUPPORTED_MIME_TYPES = [
-  'image/png',
-  'image/jpeg',
-]
+export const SUPPORTED_MIME_TYPES = ['image/png', 'image/jpeg']
 
 export type CLIRenderOptions = {
   code: string

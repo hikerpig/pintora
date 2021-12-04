@@ -3,8 +3,8 @@ export function safeAssign<T>(base: Partial<T>, attrs: Partial<T>) {
 }
 
 export function pick<T, K extends keyof T>(base: Partial<T>, keys: K[]): { [key in K]: T[key] } {
-  const out:any = {}
-  keys.forEach(k => out[k] = base[k])
+  const out: any = {}
+  keys.forEach(k => (out[k] = base[k]))
   return out
 }
 
@@ -22,7 +22,7 @@ export function makeid(length: number) {
   return result
 }
 
-export function makeIdCounter(offset=0) {
+export function makeIdCounter(offset = 0) {
   let v = offset
   return {
     reset() {

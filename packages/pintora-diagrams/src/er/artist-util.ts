@@ -8,9 +8,13 @@ type MarkerGenerator = (attrs?: MarkAttrs) => Mark
 
 const MARKER_GENERATORS: Partial<Record<Cardinality, MarkerGenerator>> = {
   [Cardinality.ONLY_ONE]() {
-    const mark = makeMark('path', {
-      path: 'M9,-9 L9,9 M15,-9 L15,9',
-    }, { class: 'er-marker--only-one' })
+    const mark = makeMark(
+      'path',
+      {
+        path: 'M9,-9 L9,9 M15,-9 L15,9',
+      },
+      { class: 'er-marker--only-one' },
+    )
     return mark
   },
   [Cardinality.ZERO_OR_ONE](attrs) {
@@ -33,9 +37,13 @@ const MARKER_GENERATORS: Partial<Record<Cardinality, MarkerGenerator>> = {
     return group
   },
   [Cardinality.ONE_OR_MORE]() {
-    const mark = makeMark('path', {
-      path: 'M-18,0 Q 0,18 18,0 Q 0,-18 -18,0 M24,-9 L24,9',
-    }, { class: 'er-marker--one-or-more' })
+    const mark = makeMark(
+      'path',
+      {
+        path: 'M-18,0 Q 0,18 18,0 Q 0,-18 -18,0 M24,-9 L24,9',
+      },
+      { class: 'er-marker--one-or-more' },
+    )
     return mark
   },
   [Cardinality.ZERO_OR_MORE](attrs) {
@@ -72,6 +80,6 @@ export function drawMarkerTo(dest: Point, type: Cardinality, rad: number, attrs?
   mark.matrix = finalMatrix
   if (mark.class) mark.class = `er-marker ${mark.class}`
   // console.log('drawMarkerTo', type, rad, finalMatrix, mark)
-  
+
   return mark
 }

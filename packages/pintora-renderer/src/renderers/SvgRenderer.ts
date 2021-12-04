@@ -11,11 +11,10 @@ export class SvgRenderer extends BaseRenderer {
     if (mark.class) {
       const el = shape.get('el')
       if (el) {
-        mark.class.split(' ').forEach((cls) => {
-          if(cls) el.classList.add(cls)
+        mark.class.split(' ').forEach(cls => {
+          if (cls) el.classList.add(cls)
         })
       }
     }
   }
 }
-

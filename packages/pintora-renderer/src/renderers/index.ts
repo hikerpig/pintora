@@ -3,14 +3,12 @@ import { BaseRenderer } from './base'
 import { SvgRenderer } from './SvgRenderer'
 import { CanvasRenderer } from './CanvasRenderer'
 
-export {
-  BaseRenderer,
-}
+export { BaseRenderer }
 
 export type RendererType = 'svg' | 'canvas'
 
 type RendererConstructor = {
-  new(ir: GraphicsIR): BaseRenderer
+  new (ir: GraphicsIR): BaseRenderer
 }
 
 class RendererRegistry {

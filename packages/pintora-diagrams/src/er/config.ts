@@ -66,7 +66,7 @@ export const ER_STYLE_RULES = {
 export function getConf(styleParams: StyleParam[]) {
   const globalConfig: DiagramsConf = configApi.getConfig()
   const t = globalConfig.themeConfig?.themeVariables
-  const conf = {...defaultConfig}
+  const conf = { ...defaultConfig }
   if (t) {
     safeAssign(conf, {
       stroke: t.primaryBorderColor,

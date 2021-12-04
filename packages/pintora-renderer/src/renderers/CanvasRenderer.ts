@@ -6,4 +6,3 @@ export class CanvasRenderer extends BaseRenderer {
     return Canvas
   }
 }
-

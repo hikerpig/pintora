@@ -12,7 +12,7 @@ type Config = {
 }
 
 const defaultConfig: Config = {
-  backgroundColor: '#FFF'
+  backgroundColor: '#FFF',
 }
 
 type CliRenderArgs = {
@@ -65,19 +65,19 @@ async function handleRenderCommand(args: CliRenderArgs) {
     const nameWithoutExt = sourceBasename.slice(0, -path.extname(sourceBasename).length)
     args.output = `${nameWithoutExt}.png`
   }
-  const devicePixelRatio = args.pixelRatio ? parseFloat(args.pixelRatio): null
+  const devicePixelRatio = args.pixelRatio ? parseFloat(args.pixelRatio) : null
   const code = fs.readFileSync(path.resolve(CWD, args.input)).toString()
 
   const mimeType = mime.contentType(args.output)
   if (!(mimeType && SUPPORTED_MIME_TYPES.includes(mimeType))) {
     const ext = path.extname(args.output)
-    const supportedExts = SUPPORTED_MIME_TYPES.map((t) => {
+    const supportedExts = SUPPORTED_MIME_TYPES.map(t => {
       return `.${mime.extension(t)}`
     })
     consola.error(`Error, output ext '${ext}' is not supported. Please try ${supportedExts.join('/')}`)
     return
   }
-  const config = {...defaultConfig}
+  const config = { ...defaultConfig }
   const buf = await render({
     code,
     devicePixelRatio,

@@ -9,7 +9,7 @@ export const AYU_LIGHT = {
   pink: '#f07171',
   purple: '#af71d0',
   red: '#e45649',
-  yellow: '#f5f1be'
+  yellow: '#f5f1be',
 }
 
 // dracula
@@ -22,7 +22,7 @@ export const DRACULA = {
   pink: '#ff79c6',
   purple: '#bd93f9',
   red: '#ff5555',
-  yellow: '#f1fa8c'
+  yellow: '#f1fa8c',
 }
 
 export const NOTE_BACKGROUND = '#F8EA75'

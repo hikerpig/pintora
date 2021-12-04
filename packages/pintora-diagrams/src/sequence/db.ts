@@ -72,7 +72,7 @@ export interface Note extends WrappedText {
   placement: any
 }
 
-const GROUP_TYPE_CONFIGS: Record<string, { startSignalType: LINETYPE, endSignalType: LINETYPE }> = {
+const GROUP_TYPE_CONFIGS: Record<string, { startSignalType: LINETYPE; endSignalType: LINETYPE }> = {
   loop: { startSignalType: LINETYPE.LOOP_START, endSignalType: LINETYPE.LOOP_END },
   par: { startSignalType: LINETYPE.PAR_START, endSignalType: LINETYPE.PAR_END },
   opt: { startSignalType: LINETYPE.OPT_START, endSignalType: LINETYPE.OPT_END },
@@ -172,7 +172,7 @@ class SequenceDB {
     }
     this.messages.push({
       from: from.actor,
-      to: to ? to.actor: '',
+      to: to ? to.actor : '',
       text: message.text || '',
       wrap: (message.wrap === undefined && this.wrapEnabled) || !!message.wrap,
       type: messageType,
@@ -194,7 +194,7 @@ class SequenceDB {
   addGroupStart(groupType: string, text: WrappedText, attrs: GroupAttrs) {
     const groupConfig = GROUP_TYPE_CONFIGS[groupType]
     if (!groupConfig) return
-    if ( attrs.background) {
+    if (attrs.background) {
       attrs.background = parseColor(attrs.background).color
     }
     this.addSignalWithoutActor(text, groupConfig.startSignalType, attrs)
@@ -214,8 +214,8 @@ class SequenceDB {
       wrap: (message.wrap === undefined && this.wrapEnabled) || !!message.wrap,
     }
 
-    const fromActor = Array.isArray(actor) ? actor[0]: actor
-    const toActor = Array.isArray(actor) ? actor[1]: actor
+    const fromActor = Array.isArray(actor) ? actor[0] : actor
+    const toActor = Array.isArray(actor) ? actor[1] : actor
 
     this.notes.push(note)
     this.messages.push({
@@ -351,7 +351,7 @@ const activationCount = (db: SequenceDB, part: string) => {
 }
 
 export function enableSequenceNumbers() {
-  db.showSequenceNumbers = true;
+  db.showSequenceNumbers = true
 }
 
 type AddActorParam = {
@@ -410,9 +410,7 @@ type ApplyParam =
       value: string
     }
 
-export {
-  db
-}
+export { db }
 
 export default {
   addActor: db.addActor,

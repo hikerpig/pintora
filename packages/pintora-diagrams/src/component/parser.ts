@@ -4,4 +4,4 @@ import { genParserWithRules } from '../util/parser-util'
 
 setYY(db)
 
-export const parse = genParserWithRules(grammar);
+export const parse = genParserWithRules(grammar)

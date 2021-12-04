@@ -31,4 +31,3 @@ export interface ITheme {
   noteTextColor?: string
   noteBackground?: string
 }
-

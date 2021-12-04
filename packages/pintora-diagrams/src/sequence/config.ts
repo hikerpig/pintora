@@ -12,7 +12,7 @@ export type SequenceConf = {
   activationWidth: number
   diagramMarginX: number
   diagramMarginY: number
-  boxTextMargin: number;
+  boxTextMargin: number
 
   messageFontFamily: string
   messageFontSize: number
@@ -114,7 +114,7 @@ export const SEQUENCE_STYLE_RULES = {
 export function getConf(styleParams: StyleParam[]) {
   const globalConfig: DiagramsConf = configApi.getConfig()
   const t = globalConfig.themeConfig.themeVariables
-  const conf = {...defaultConfig}
+  const conf = { ...defaultConfig }
   safeAssign(conf, {
     actorBackground: t.primaryColor,
     actorBorderColor: t.primaryBorderColor,

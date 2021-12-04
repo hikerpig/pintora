@@ -36,7 +36,7 @@ type StyleMarkFunction = (mark: Group, def: SymbolDef, attrs: SymbolStyleAttrs) 
 
 export type SymbolDef = SymbolPrototypeDef | SymbolFactoryDef
 
-export interface SymbolStyleAttrs extends MarkAttrs {}
+export type SymbolStyleAttrs = MarkAttrs
 
 export class SymbolRegistry {
   protected symbols: Record<string, SymbolDef> = {}
@@ -59,7 +59,10 @@ export class SymbolRegistry {
   /**
    * Create and instantiate a symbol mark
    */
-  create(name: string, opts: { attrs: SymbolStyleAttrs, contentArea?: ContentArea, mode?: SymbolMode }): GSymbol | null {
+  create(
+    name: string,
+    opts: { attrs: SymbolStyleAttrs; contentArea?: ContentArea; mode?: SymbolMode },
+  ): GSymbol | null {
     const { attrs, contentArea } = opts
     const def = this.symbols[name]
     if (!def) return null
