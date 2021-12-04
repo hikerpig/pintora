@@ -1,26 +1,12 @@
 import { Rect, Point, PointTuple, symbolRegistry } from '@pintora/core'
-import { makeMark, getBaseText, drawArrowTo, drawCrossTo } from '../util/artist-util'
-import { ITheme } from '../util/themes/base'
+import { makeMark, getBaseText, drawArrowTo, drawCrossTo, getBaseNote } from '../util/artist-util'
 
 export {
   makeMark,
   getBaseText,
   drawArrowTo,
   drawCrossTo,
-}
-
-export const getBaseNote = function (theme: ITheme): Rect['attrs'] {
-  return {
-    x: 0,
-    y: 0,
-    fill: theme.noteBackground || theme.groupBackground,
-    stroke: theme.primaryBorderColor,
-    width: 50,
-    anchor: 'start',
-    height: 50,
-    rx: 0,
-    ry: 0,
-  }
+  getBaseNote,
 }
 
 export function makeLoopLabelBox(position: Point, width: number, height: number, cut: number) {

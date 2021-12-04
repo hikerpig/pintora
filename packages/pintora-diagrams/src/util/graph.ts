@@ -21,7 +21,7 @@ export function getGraphBounds(g: LayoutGraph): Bounds {
   let bottom = 0
   g.nodes().forEach((k) => {
     const node: LayoutNode = g.node(k) as any
-    // left = Math.min(node.x, left)
+    if (!node) return
     left = Math.min(node.outerLeft || node.x, left)
     const width = node.outerWidth || node.width
     // assuming the node is positioned with anchor point centered
@@ -82,4 +82,19 @@ export type LayoutEdge<T> = {
 
 export function isSubgraph(g: LayoutGraph, id: string) {
   return Boolean(g.children(id).length)
+}
+
+/**
+ * call `onLayout` on each nodeData
+ */
+export const adjustEntities = function (graph: LayoutGraph) {
+  graph.nodes().forEach(function (v) {
+    const nodeData: LayoutNode = graph.node(v) as any
+    if (nodeData) {
+      // console.log('adjustEntities, graph node: ', nodeData)
+      if (nodeData.onLayout) {
+        nodeData.onLayout(nodeData)
+      }
+    }
+  })
 }

@@ -379,8 +379,7 @@ function drawRelationshipsTo(parentMark: Group, ir: ComponentDiagramIR, g: Layou
           const pointsForDirection = data.points.slice(-2)
           const arrowRad = calcDirection.apply(null, pointsForDirection)
           const arrowMark = drawArrowTo(lastPoint, 8, arrowRad, {
-            stroke: conf.relationLineColor,
-            fill: conf.relationLineColor,
+            color: conf.relationLineColor,
           })
           // arrowMark.class = 'component__rel-arrow'
           relationGroupMark.children.push(arrowMark)

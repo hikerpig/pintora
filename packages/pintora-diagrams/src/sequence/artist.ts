@@ -663,7 +663,8 @@ const drawMessage = function (msgModel: MessageModel): DrawResult<Group> {
   if (type === LINETYPE.SOLID || type === LINETYPE.DOTTED) {
     lineEndType = LineEndType.ARROWHEAD
     lineEndMark = drawArrowTo({ x: lineAttrs.x2, y: lineAttrs.y2 }, 10, arrowRad, {
-      fill: lineAttrs.stroke,
+      type: 'triangle',
+      color: lineAttrs.stroke,
     })
   }
   if (type === LINETYPE.SOLID_POINT || type === LINETYPE.DOTTED_POINT) {

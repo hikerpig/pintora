@@ -10,6 +10,7 @@ import {
   calculateTextDimensions,
   getPointAt,
   Rect,
+  Bounds,
 } from '@pintora/core'
 import { ErDiagramIR, Identification, Entity, Relationship } from './db'
 import { ErConf, getConf } from './config'
@@ -87,6 +88,13 @@ const erArtist: IDiagramArtist<ErDiagramIR, ErConf> = {
       -Math.min(0, gBounds.left) + pad,
       -Math.min(0, gBounds.top) + pad,
     ])
+
+    function adjustRootMarkBounds(rootMark: Group, gBounds: Bounds, padX: number, padY: number) {
+      rootMark.matrix = mat3.fromTranslation(mat3.create(), [
+        -Math.min(0, gBounds.left) + padX,
+        -Math.min(0, gBounds.top) + padY,
+      ])
+    }
 
     const width = gBounds.width + pad * 2
     const height = gBounds.height + pad * 2

@@ -24,3 +24,5 @@ export const DRACULA = {
   red: '#ff5555',
   yellow: '#f1fa8c'
 }
+
+export const NOTE_BACKGROUND = '#F8EA75'

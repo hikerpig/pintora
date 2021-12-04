@@ -1,9 +1,22 @@
-import { MarkAttrs, Rect, Text, Point, Path, PathCommand, createRotateAtPoint, TSize, makeMark } from '@pintora/core'
-import { PALETTE } from './theme'
-
-export {
+import {
+  MarkAttrs,
+  Rect,
+  Text,
+  Point,
+  Path,
+  PathCommand,
+  createRotateAtPoint,
+  TSize,
   makeMark,
-}
+  Group,
+  mat3,
+  Bounds,
+  safeAssign,
+} from '@pintora/core'
+import { PALETTE } from './theme'
+import { ITheme } from '../util/themes/base'
+
+export { makeMark }
 
 export function getBaseText(): Text['attrs'] {
   return {
@@ -14,25 +27,48 @@ export function getBaseText(): Text['attrs'] {
   }
 }
 
+type ArrowType = 'default' | 'triangle'
+
+type DrawArrowOpts = {
+  type?: ArrowType
+  attrs?: Partial<MarkAttrs>
+  color?: string
+}
+
 /**
  * Will point to dest
  */
-export function drawArrowTo(dest: Point, baseLength: number, rad: number, attrs?: Partial<MarkAttrs>): Path {
+export function drawArrowTo(dest: Point, baseLength: number, rad: number, opts: DrawArrowOpts): Path {
   const { x, y } = dest
   const xOffset = (baseLength / 2) * Math.tan(Math.PI / 3)
-  const p: PathCommand[] = [
-    ['M', x - xOffset, y - baseLength / 2], // top
-    ['L', x - xOffset, y + baseLength / 2], // bottom
-    ['L', x, y], // right
-    ['Z'],
-  ]
+  const { type = 'default', color = 'transparent' } = opts
+
+  let p: PathCommand[] = []
+  let arrowAttrs: MarkAttrs = {}
+  if (type === 'default') {
+    p = [
+      ['M', x - xOffset, y - baseLength / 2], // top
+      ['L', x, y], // right
+      ['L', x - xOffset, y + baseLength / 2], // bottom
+    ]
+    safeAssign(arrowAttrs, { stroke: color, lineCap: 'round' })
+  } else if (type === 'triangle') {
+    p = [
+      ['M', x - xOffset, y - baseLength / 2], // top
+      ['L', x - xOffset, y + baseLength / 2], // bottom
+      ['L', x, y], // right
+      ['Z'],
+    ]
+    safeAssign(arrowAttrs, { fill: color })
+  }
 
   const matrix = createRotateAtPoint(x, y, rad)
   return {
     type: 'path',
     matrix,
     attrs: {
-      ...(attrs || {}),
+      ...arrowAttrs,
+      ...(opts.attrs || {}),
       path: p,
     },
   }
@@ -70,7 +106,7 @@ export function calcDirection(start: Point, end: Point) {
   const oy = end.y - start.y
 
   let r = Math.atan(oy / ox)
-  if ((ox < 0 || oy < 0)) {
+  if (ox < 0) {
     r = r + Math.PI
   }
   // console.log('ox', ox, 'oy', oy, 'r', r)
@@ -94,14 +130,47 @@ export function calcDirection(start: Point, end: Point) {
 // }
 
 export function makeLabelBg(labelDims: TSize, center: Point, attrs: Partial<Rect['attrs']> = {}) {
-  const labelBg = makeMark('rect', {
-    x: center.x - labelDims.width / 2,
-    y: center.y - labelDims.height / 2,
-    width: labelDims.width,
-    height: labelDims.height,
-    fill: '#fff',
-    opacity: 0.85,
-    ...attrs,
-  }, { class: 'label-bg' })
+  const labelBg = makeMark(
+    'rect',
+    {
+      x: center.x - labelDims.width / 2,
+      y: center.y - labelDims.height / 2,
+      width: labelDims.width,
+      height: labelDims.height,
+      fill: '#fff',
+      opacity: 0.85,
+      ...attrs,
+    },
+    { class: 'label-bg' },
+  )
   return labelBg
+}
+
+export function adjustRootMarkBounds(rootMark: Group, gBounds: Bounds, padX: number, padY: number) {
+  rootMark.matrix = mat3.fromTranslation(mat3.create(), [
+    -Math.min(0, gBounds.left) + padX,
+    -Math.min(0, gBounds.top) + padY,
+  ])
+  return {
+    width: gBounds.width + padX * 2,
+    height: gBounds.height + padY * 2,
+  }
+}
+
+export function makeEmptyGroup() {
+  return makeMark('group', { x: 0, y: 0 }, { children: [] })
+}
+
+export const getBaseNote = function (theme: ITheme): Rect['attrs'] {
+  return {
+    x: 0,
+    y: 0,
+    fill: theme.noteBackground || theme.groupBackground,
+    stroke: theme.primaryBorderColor,
+    width: 50,
+    anchor: 'start',
+    height: 50,
+    rx: 0,
+    ry: 0,
+  }
 }
