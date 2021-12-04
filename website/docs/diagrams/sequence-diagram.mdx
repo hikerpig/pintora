@@ -12,13 +12,14 @@ The syntax is based on Mermaid 8.9, with some other good stuff:
 - [Color group messages](#color-group-messages)
 - [Divider](#divider)
 - [Override config](#override-config)
-- [Classifier types](#classifier-types) <span class="badge badge--info">experimenting</span>
+- [Classifier types](#classifier-types) <span className="badge badge--info">experimenting</span>
 
 ## A Simple Demo
 
 ```pintora play
 sequenceDiagram
   autonumber
+  participant [<actor> User]
   User->>Pintora: Draw me a sequence diagram（with DSL）
   activate Pintora
   Pintora->>Pintora: Parse DSL, draw diagram
