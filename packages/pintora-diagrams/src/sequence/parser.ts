@@ -8,5 +8,5 @@ export const parse = genParserWithRules(grammar, {
   postProcess(results) {
     db.apply(results as any)
     return results
-  }
-});
+  },
+})

@@ -18,16 +18,16 @@ export function getGraphBounds(g: LayoutGraph): Bounds {
   let right = 0
   let top = 0
   let bottom = 0
-  g.nodes().forEach((k) => {
+  g.nodes().forEach(k => {
     const node: LayoutNode = g.node(k) as any
     if (!node) return
     left = Math.min(node.outerLeft || node.x, left)
     const width = node.outerWidth || node.width
     // assuming the node is positioned with anchor point centered
-    right = Math.max(node.outerRight || (node.x + width / 2), right)
+    right = Math.max(node.outerRight || node.x + width / 2, right)
     top = Math.min(node.outerTop || node.y, top)
     const height = node.outerHeight || node.height
-    bottom = Math.max(node.outerBottom || (node.y + height / 2), bottom)
+    bottom = Math.max(node.outerBottom || node.y + height / 2, bottom)
   })
 
   const graphOpts: DagreGraphOpts = g.graph() as any

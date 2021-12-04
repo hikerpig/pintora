@@ -3,7 +3,7 @@ import { compact } from '@pintora/core'
 
 type Options = {
   prepare?(): void
-  postProcess?<T>(results: T): T 
+  postProcess?<T>(results: T): T
 }
 
 export function genParserWithRules(grammar: nearley.CompiledRules, opts: Options = {}) {
@@ -15,9 +15,12 @@ export function genParserWithRules(grammar: nearley.CompiledRules, opts: Options
 
     // a hack to remove blank lines
     let preparedText = text
-    preparedText = preparedText.split('\n').filter((line) => {
-      return line.length > 0
-    }).join('\n')
+    preparedText = preparedText
+      .split('\n')
+      .filter(line => {
+        return line.length > 0
+      })
+      .join('\n')
 
     // a hack to add a new line as EOF, https://github.com/kach/nearley/issues/194
     const textToParse = text[preparedText.length - 1] !== '\n' ? preparedText + '\n' : preparedText

@@ -1,22 +1,22 @@
-const LETTER_REGEXP = /[a-zA-Z]/;
-const isCharLetter= (char) => LETTER_REGEXP.test(char);
+const LETTER_REGEXP = /[a-zA-Z]/
+const isCharLetter = char => LETTER_REGEXP.test(char)
 
 // from moo issue: https://github.com/no-context/moo/issues/117
 export function textToCaseInsensitiveRegex(text) {
-  const regexSource = text.split('').map((char) => {
+  const regexSource = text.split('').map(char => {
     if (isCharLetter(char)) {
-      return `[${char.toLowerCase()}${char.toUpperCase()}]`;
+      return `[${char.toLowerCase()}${char.toUpperCase()}]`
     }
 
-    return char;
-  });
+    return char
+  })
 
-  return new RegExp(regexSource.join(''));
+  return new RegExp(regexSource.join(''))
 }
 
 /** token value */
 export function tv(token) {
-  if (token && ('value' in token)) return token.value
+  if (token && 'value' in token) return token.value
   return token
 }
 

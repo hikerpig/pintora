@@ -10,8 +10,8 @@ export type ActivityConf = {
   actionPaddingX: number
   actionPaddingY: number
 
-  actionBackground: string,
-  actionBorderColor: string,
+  actionBackground: string
+  actionBorderColor: string
 
   groupBackground: string
   groupBorderColor: string
@@ -57,7 +57,7 @@ export const ACTIVITY_STYLE_RULES = {
 export function getConf(styleParams: StyleParam[]) {
   const globalConfig: DiagramsConf = configApi.getConfig()
   const t = globalConfig.themeConfig?.themeVariables
-  const conf = {...defaultConfig}
+  const conf = { ...defaultConfig }
   if (t) {
     safeAssign(conf, {
       actionBackground: t.secondaryColor,

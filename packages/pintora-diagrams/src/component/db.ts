@@ -44,25 +44,29 @@ export type Relationship = {
 
 type UMLElement = Component | Interface | CGroup | Relationship
 
-type ApplyPart = {
-  type: 'component'
-  name: string
-  label?: string
-} | {
-  type: 'interface'
-  name: string
-  label?: string
-} | {
-  type: 'group'
-  groupType: string
-  name: string
-  label?: string
-  children: UMLElement[]
-} | {
-    type: 'addStyle'
-    key: string
-    value: string
-  }
+type ApplyPart =
+  | {
+      type: 'component'
+      name: string
+      label?: string
+    }
+  | {
+      type: 'interface'
+      name: string
+      label?: string
+    }
+  | {
+      type: 'group'
+      groupType: string
+      name: string
+      label?: string
+      children: UMLElement[]
+    }
+  | {
+      type: 'addStyle'
+      key: string
+      value: string
+    }
 
 export type ComponentDiagramIR = {
   components: Record<string, Component>
@@ -120,9 +124,11 @@ class ComponentDb {
     if (!part) return
     // console.log('apply', part)
     switch (part.type) {
-      case 'addStyle': {
-        this.styleParams.push(part)
-      } break
+      case 'addStyle':
+        {
+          this.styleParams.push(part)
+        }
+        break
       default: {
       }
     }
@@ -133,7 +139,7 @@ class ComponentDb {
     const groupMap: Record<string, CGroup> = {}
     const walkGroup = (group: CGroup) => {
       groupMap[group.name] = group
-      group.children.forEach((child) => {
+      group.children.forEach(child => {
         if ('groupType' in child) {
           return walkGroup(child)
         }
@@ -144,7 +150,7 @@ class ComponentDb {
       walkGroup(group)
     }
 
-    this.relationships.forEach((r) => {
+    this.relationships.forEach(r => {
       elements.push(r.from)
       elements.push(r.to)
     })
@@ -154,7 +160,7 @@ class ComponentDb {
       if (parentGroup) parentGroup.children.push(element as any)
     }
 
-    elements.forEach((element) => {
+    elements.forEach(element => {
       const { name, type } = element
       if (this.aliases[name]) {
       } else {

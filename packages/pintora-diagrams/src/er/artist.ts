@@ -9,7 +9,6 @@ import {
   calculateTextDimensions,
   getPointAt,
   Rect,
-  Bounds,
 } from '@pintora/core'
 import { ErDiagramIR, Identification, Entity, Relationship } from './db'
 import { ErConf, getConf } from './config'
@@ -193,7 +192,7 @@ const drawAttributes = (group: Group, entityText: Text, attributes: Entity['attr
     attrNum += 1
   })
 
-  const paddingXCount = hasKeyAttribute ? 6: 4
+  const paddingXCount = hasKeyAttribute ? 6 : 4
   // Calculate the new bounding box of the overall entity, now that attributes have been added
   const bBox = {
     width: Math.max(

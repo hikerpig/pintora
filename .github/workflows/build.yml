@@ -16,13 +16,15 @@ jobs:
         uses: actions/setup-node@v2
         with:
           node-version: ${{ matrix.node-version }}
+          cache: 'npm'
+          cache-dependency-path: '**/package-lock.json'
       - name: npm install, build, and test
         run: |
-          # remove after stable version released
           npm i -g npm@7
           npm install
+          # npm run lint
+          npm run format:check
           npm run compile
-          npm run lint
           npm run test
         env:
           CI: true

@@ -1,16 +1,10 @@
-import { Rect, Point, PointTuple } from '@pintora/core'
+import { Point, PointTuple } from '@pintora/core'
 import { makeMark, getBaseText, drawArrowTo, drawCrossTo, getBaseNote } from '../util/artist-util'
 
-export {
-  makeMark,
-  getBaseText,
-  drawArrowTo,
-  drawCrossTo,
-  getBaseNote,
-}
+export { makeMark, getBaseText, drawArrowTo, drawCrossTo, getBaseNote }
 
 export function makeLoopLabelBox(position: Point, width: number, height: number, cut: number) {
-  const {x, y} = position
+  const { x, y } = position
   const points: PointTuple[] = [
     [x, y],
     [x + width, y],
@@ -18,7 +12,11 @@ export function makeLoopLabelBox(position: Point, width: number, height: number,
     [x + width - cut * 1.2, y + height],
     [x, y + height],
   ]
-  return makeMark('polygon', {
-    points,
-  }, { class: 'loop__label-box' })
+  return makeMark(
+    'polygon',
+    {
+      points,
+    },
+    { class: 'loop__label-box' },
+  )
 }

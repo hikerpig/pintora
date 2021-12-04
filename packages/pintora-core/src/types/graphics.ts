@@ -152,12 +152,12 @@ export type PathCommand =
   | [CurveCommandType, number, number, number, number, number, number]
 
 export type Bounds = {
-  left: number;
-  right: number;
-  top: number;
-  bottom: number;
-  width: number;
-  height: number;
+  left: number
+  right: number
+  top: number
+  bottom: number
+  width: number
+  height: number
 }
 
 export interface GSymbol extends IMark {

@@ -1,20 +1,24 @@
-import { GraphicsIR, Mark, MarkType, MarkTypeMap } from "@pintora/core"
+import { GraphicsIR, Mark, MarkType, MarkTypeMap } from '@pintora/core'
 import { IGroup } from '@antv/g-base'
 import { AbstractCanvas, CanvasCfg, IShape } from '@antv/g-base'
 import { IRenderer } from '../type'
 import { Stack } from '../util'
 
-type Visitor<T extends Mark, Actions=any> = {
+type Visitor<T extends Mark, Actions = any> = {
   enter(mark: T, actions?: Actions): boolean | void
   exit?(mark: T, actions?: Actions): void
 }
 type VisitorInput<T extends Mark> = Visitor<T> | Visitor<T>['enter']
 
 type Visitors = {
-  [K in MarkType]: VisitorInput<K extends keyof MarkTypeMap ? MarkTypeMap[K]: Mark>
+  [K in MarkType]: VisitorInput<K extends keyof MarkTypeMap ? MarkTypeMap[K] : Mark>
 }
 
-function traverseScene<Actions=any>(mark: Mark, visitors: Partial<Visitors> & { default?: VisitorInput<Mark> }, actions: Actions) {
+function traverseScene<Actions = any>(
+  mark: Mark,
+  visitors: Partial<Visitors> & { default?: VisitorInput<Mark> },
+  actions: Actions,
+) {
   const visitor = visitors[mark.type] || visitors.default
   let visitorEnter
   let visitorExit
@@ -30,7 +34,7 @@ function traverseScene<Actions=any>(mark: Mark, visitors: Partial<Visitors> & { 
     visitorEnter(mark as any, actions)
   }
   if (mark.type === 'group' && mark.children) {
-    mark.children.forEach((child) => {
+    mark.children.forEach(child => {
       traverseScene(child, visitors, actions)
     })
   } else if (mark.type === 'symbol') {
@@ -44,11 +48,10 @@ function traverseScene<Actions=any>(mark: Mark, visitors: Partial<Visitors> & { 
 export abstract class BaseRenderer implements IRenderer {
   container: HTMLElement | null = null
   protected gcvs?: AbstractCanvas
-  constructor(protected ir: GraphicsIR) {
-  }
+  constructor(protected ir: GraphicsIR) {}
 
   // abstract getMarkClass(type: MarkType): { new(cfg: ShapeCfg): AbstractShape }
-  abstract getCanvasClass(): { new(cfg: CanvasCfg): AbstractCanvas }
+  abstract getCanvasClass(): { new (cfg: CanvasCfg): AbstractCanvas }
 
   setContainer(c: HTMLElement) {
     this.container = c
@@ -74,7 +77,7 @@ export abstract class BaseRenderer implements IRenderer {
           width: this.ir.width,
           height: this.ir.height,
           fill: this.ir.bgColor,
-        }
+        },
       })
     }
   }
@@ -108,30 +111,34 @@ export abstract class BaseRenderer implements IRenderer {
       },
     }
 
-    traverseScene(this.ir.mark, {
-      group: {
-        enter(mark) {
-          const prevGroup = groupStack.top()
-          const container = prevGroup || gcvs
-          const group = container.addGroup()
-          groupStack.push(group)
-          self.onShapeAdd(group, mark)
-          actions.applyMarkPostProcess(mark, group)
+    traverseScene(
+      this.ir.mark,
+      {
+        group: {
+          enter(mark) {
+            const prevGroup = groupStack.top()
+            const container = prevGroup || gcvs
+            const group = container.addGroup()
+            groupStack.push(group)
+            self.onShapeAdd(group, mark)
+            actions.applyMarkPostProcess(mark, group)
+          },
+          exit() {
+            groupStack.pop()
+          },
         },
-        exit() {
-          groupStack.pop()
-        }
+        symbol: {
+          enter(mark) {
+            // prevent entering default visitor
+          },
+        },
+        default(mark) {
+          const shape = actions.addToCurrentGroup(mark)
+          actions.applyMarkPostProcess(mark, shape)
+        },
       },
-      symbol: {
-        enter(mark) {
-          // prevent entering default visitor
-        }
-      },
-      default(mark) {
-        const shape = actions.addToCurrentGroup(mark)
-        actions.applyMarkPostProcess(mark, shape)
-      },
-    }, actions)
+      actions,
+    )
   }
 
   // eslint-disable-next-line

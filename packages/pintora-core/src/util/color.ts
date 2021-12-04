@@ -11,6 +11,6 @@ export function parseColor(input: string) {
   }
   return {
     color,
-    isValid
+    isValid,
   }
 }

@@ -64,7 +64,7 @@ const erArtist: IDiagramArtist<ActivityDiagramIR, ActivityConf> = {
 
     model.preProcess()
     activityDraw = new ActivityDraw(model, g)
-    ;(window as any).activityDraw = activityDraw
+    // ;(window as any).activityDraw = activityDraw
 
     ir.steps.forEach(step => {
       activityDraw.drawStep(rootMark, step)
@@ -122,9 +122,7 @@ function getActionRectSize(text: string) {
 }
 
 class ArtistModel {
-  constructor(public ir: ActivityDiagramIR) {
-    (window as any).activityModel = this
-  }
+  constructor(public ir: ActivityDiagramIR) {}
 
   stepModelMap = new Map<string, StepModel>()
   stepNotesMap = new Map<string, Note[]>()

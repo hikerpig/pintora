@@ -1,13 +1,10 @@
-import { IDiagram } from "@pintora/core"
+import { IDiagram } from '@pintora/core'
 import { db, SequenceDiagramIR } from './db'
 import artist from './artist'
 import { parse } from './parser'
 import { SequenceConf } from './config'
 
-export {
-  SequenceDiagramIR,
-  SequenceConf
-}
+export { SequenceDiagramIR, SequenceConf }
 
 export const sequenceDiagram: IDiagram<SequenceDiagramIR, SequenceConf> = {
   pattern: /^\s*sequenceDiagram/,
@@ -15,7 +12,7 @@ export const sequenceDiagram: IDiagram<SequenceDiagramIR, SequenceConf> = {
     parse(text, config) {
       parse(text)
       return db.getDiagramIR()
-    }
+    },
   },
   artist,
   configKey: 'sequence',

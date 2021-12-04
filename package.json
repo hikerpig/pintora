@@ -1,5 +1,6 @@
 {
   "name": "pintora",
+  "description": "Monorepo for pintora project",
   "private": true,
   "scripts": {
     "clean": "rimraf \"packages/**/lib\"",
@@ -11,10 +12,11 @@
     "demo:dev": "cd demo && npm run dev",
     "website:dev": "cd website && npm run start",
     "coverage": "lerna run coverage --parallel",
-    "prettier": "prettier \"*.{js,json,yml,md}\" \"packages/**/*\"",
+    "prettier": "prettier \"packages/**/*.{ts,js}\"",
     "format": "npm run prettier -- --write",
     "format:check": "npm run prettier -- --check",
     "lint": "eslint packages/*/src/**/*.{ts,js}",
+    "test": "npx lerna run test",
     "build-site": "sh ./scripts/build-site.sh",
     "vercel-build": "npm run compile:browser && npm run build-site"
   },
@@ -22,6 +24,7 @@
     "@typescript-eslint/eslint-plugin": "^5.5.0",
     "@typescript-eslint/parser": "^5.5.0",
     "eslint": "^8.4.0",
+    "eslint-plugin-prettier": "^4.0.0",
     "husky": "^7.0.4",
     "lerna": "^4.0.0",
     "lint-staged": "^12.1.2",
