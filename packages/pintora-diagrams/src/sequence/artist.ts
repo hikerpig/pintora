@@ -663,7 +663,8 @@ const drawMessage = function (msgModel: MessageModel): DrawResult<Group> {
   if (type === LINETYPE.SOLID || type === LINETYPE.DOTTED) {
     lineEndType = LineEndType.ARROWHEAD
     lineEndMark = drawArrowTo({ x: lineAttrs.x2, y: lineAttrs.y2 }, 10, arrowRad, {
-      fill: lineAttrs.stroke,
+      type: 'triangle',
+      color: lineAttrs.stroke,
     })
   }
   if (type === LINETYPE.SOLID_POINT || type === LINETYPE.DOTTED_POINT) {
@@ -1266,7 +1267,7 @@ const calculateActorMargins = function (actors: SequenceDiagramIR['actors'], act
     maxHeight = Math.max(maxHeight, actorAttrs.height)
   })
 
-  for (let actorKey in actorToMessageWidth) {
+  for (const actorKey in actorToMessageWidth) {
     const actor = actors[actorKey]
     const actorAttrs = model.actorAttrsMap.get(actorKey)
 
@@ -1386,9 +1387,9 @@ const buildNoteModel = function (msg: Message) {
   const fromActorAttr = model.actorAttrsMap.get(msg.from)
   const toActorAttr = model.actorAttrsMap.get(msg.to)
 
-  let startx = fromActorAttr.x
-  let stopx = toActorAttr.x
-  let shouldWrap = msg.wrap && msg.text
+  const startx = fromActorAttr.x
+  const stopx = toActorAttr.x
+  const shouldWrap = msg.wrap && msg.text
 
   // let textDimensions = calculateTextDimensions(
   //   shouldWrap ? utils.wrapLabel(msg.message, conf.width, noteFont(conf)) : msg.message,
@@ -1396,7 +1397,7 @@ const buildNoteModel = function (msg: Message) {
   // );
   let textDimensions = calculateTextDimensions(msg.text, noteFont(conf))
   // console.log('build note model, textDims', textDimensions)
-  let noteModel: NoteModel = {
+  const noteModel: NoteModel = {
     width: shouldWrap ? conf.noteWidth : Math.max(conf.noteWidth, textDimensions.width + 2 * conf.noteMargin),
     height: 0,
     startx: fromActorAttr.x,
@@ -1561,8 +1562,8 @@ const calculateLoopBounds = function (messages: Message[]) {
         stack.forEach(stk => {
           current = stk
           if (isZeroWidth) {
-            let from = model.actorAttrsMap.get(msg.from)
-            let to = model.actorAttrsMap.get(msg.to)
+            const from = model.actorAttrsMap.get(msg.from)
+            const to = model.actorAttrsMap.get(msg.to)
             current.from = Math.min(from.x - msgModel.width / 2, from.x - from.width / 2, current.from)
             current.to = Math.max(to.x + msgModel.width / 2, to.x + from.width / 2, current.to)
             current.width = Math.max(current.width, Math.abs(current.to - current.from)) - conf.labelBoxWidth

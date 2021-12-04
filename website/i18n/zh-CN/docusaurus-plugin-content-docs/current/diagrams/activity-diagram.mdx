@@ -1,0 +1,108 @@
+---
+title: Activity Diagram 活动图
+---
+
+> 活动图（英語：activity diagram）是工作流的图形化表示。活动图主要由活动和动作构成，也可以支持分支选择、迭代、并行。
+> <cite><a href="https://www.wikiwand.com/zh/活动图">维基百科</a></cite>
+
+## 简介
+
+活动图参考了 PlantUML 的 [Activity Diagram Beta 语法](https://plantuml.com/zh/activity-diagram-beta)。
+
+## 简单动作
+
+简单动作行以 `:` 开始，以 `;` 结尾，之间为描述文字。
+
+```pintora play
+activityDiagram
+  :动作 1;
+  :动作 2;
+```
+
+## start/end 关键字
+
+使用 `start` 和 `stop` 关键字来表示一个图的开始和结束。
+
+```pintora play
+activityDiagram
+  start
+  :纸上得来终觉浅;
+  :绝知此事要躬行;
+  end
+```
+
+## 条件语句
+
+使用关键词 `if`， `then` 和 `else` 指定条件分支。说明文字放在括号中。
+
+以下是几种常见语法：
+
+- `if (...) then (...)`
+
+```pintora play
+activityDiagram
+  if (diagram registered ?) then
+    :get implementation;
+  else (no)
+    :print error;
+  endif
+```
+
+## While 循环语句
+
+使用关键词 `while` 和 `endwhile` 可指定 While 循环语句。
+
+同时，可选择使用 `is (...)` 来指定条件满足时的说明文字。
+
+```pintora play
+activityDiagram
+  start
+  while (data available)
+    :read data;
+    :generate diagrams;
+  endwhile
+
+  while (met another test) is (yes)
+    :do something;
+  endwhile
+  end
+```
+
+## Switch/Case 语句
+
+使用 `switch` 和 `case` 关键字可组成分支选择语句。
+
+```pintora play
+activityDiagram
+  switch (test ?)
+  case ( condition A )
+    :Text 1;
+  case ( condition B )
+    :Text 2;
+  case ( condition C )
+    :Text 3;
+  endswitch
+```
+
+## 分组
+
+使用分组关键词和花括号来实现分组，目前支持的分组关键字有：
+
+- `group`
+- `partition`
+
+同时，也可选择在分组关键字后添加颜色 `#\d{6}` 来指定背景色。
+
+```pintora play
+activityDiagram
+  start
+  partition Init {
+    :Read config;
+
+    group #88bbf4 Process {
+      :Init themes;
+      :Init symbols;
+    }
+  }
+  end
+```

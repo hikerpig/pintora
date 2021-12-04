@@ -1,5 +1,5 @@
 import { ITheme } from './base'
-import { DRACULA } from './palette'
+import { DRACULA, NOTE_BACKGROUND } from './palette'
 
 export class ThemeDark implements ITheme {
   isDark = true
@@ -25,5 +25,5 @@ export class ThemeDark implements ITheme {
   background1 = '#555'
 
   noteTextColor = DRACULA.normalDark
-  noteBackground = DRACULA.yellow
+  noteBackground = NOTE_BACKGROUND
 }

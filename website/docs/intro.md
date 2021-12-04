@@ -22,3 +22,4 @@ Heavily inspired by [Mermaid.js](https://mermaid-js.github.io/mermaid/#/) and [P
 - [Sequence Diagram](./diagrams/sequence-diagram.mdx)
 - [Entity Relationship Diagram](./diagrams/er-diagram.mdx)
 - [Component Diagram](./diagrams/component-diagram.mdx)
+- [Activity Diagram](./diagrams/activity-diagram.mdx)

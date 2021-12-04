@@ -36,6 +36,7 @@ function App() {
         }
       }
     }
+
     if (code) {
       store.dispatch(actions.updateEditorCode({ code, syncToPreview: true }))
     }

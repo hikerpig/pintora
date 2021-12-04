@@ -210,7 +210,7 @@ function drawGroupsTo(parentMark: Group, ir: ComponentDiagramIR, g: LayoutGraph)
     // console.log('[draw] group', cGroup)
 
     let bgMark: Rect | GSymbol
-    let symbolDef = symbolRegistry.get(groupType)
+    const symbolDef = symbolRegistry.get(groupType)
     if (symbolDef) {
       // wait till onLayout
     } else {
@@ -253,7 +253,7 @@ function drawGroupsTo(parentMark: Group, ir: ComponentDiagramIR, g: LayoutGraph)
     const labelTextDims = calculateTextDimensions(groupLabel)
     const typeTextDims = calculateTextDimensions(typeText)
 
-    let nodeMargin = {}
+    const nodeMargin = {}
     if (symbolDef && symbolDef.symbolMargin) {
       Object.assign(nodeMargin, {
         marginl: symbolDef.symbolMargin.left,
@@ -379,8 +379,7 @@ function drawRelationshipsTo(parentMark: Group, ir: ComponentDiagramIR, g: Layou
           const pointsForDirection = data.points.slice(-2)
           const arrowRad = calcDirection.apply(null, pointsForDirection)
           const arrowMark = drawArrowTo(lastPoint, 8, arrowRad, {
-            stroke: conf.relationLineColor,
-            fill: conf.relationLineColor,
+            color: conf.relationLineColor,
           })
           // arrowMark.class = 'component__rel-arrow'
           relationGroupMark.children.push(arrowMark)

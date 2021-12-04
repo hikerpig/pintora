@@ -1,5 +1,5 @@
 import { ITheme } from './base'
-import { AYU_LIGHT } from './palette'
+import { AYU_LIGHT, NOTE_BACKGROUND } from './palette'
 
 export class ThemeDefault implements ITheme {
   schemeOppsiteTheme = 'dark'
@@ -22,5 +22,5 @@ export class ThemeDefault implements ITheme {
   groupBackground = AYU_LIGHT.white
   background1 = AYU_LIGHT.neutralGray
 
-  noteBackground = AYU_LIGHT.yellow
+  noteBackground = NOTE_BACKGROUND
 }

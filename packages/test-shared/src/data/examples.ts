@@ -206,9 +206,46 @@ componentDiagram
   `),
 }
 
+const activityExample: DiagramExample = {
+  name: 'Activity Diagram',
+  description: 'Sample for a activityDiagram',
+  code: stripStartEmptyLines(`
+activityDiagram
+start
+partition Init {
+  :read config;
+  :init internal services;
+  note left: init themes
+}
+:Diagram requested;
+if (diagram registered ?) then
+  :get implementation;
+else (no)
+  :print error;
+endif
+
+switch ( renderer type )
+case ( svg )
+  :Generate svg;
+case ( canvas )
+  :Draw canvas;
+case ( custom )
+  :Custom renderer output;
+endswitch
+
+while (data available?) is (available)
+  :read data;
+  :generate diagrams;
+endwhile (no)
+
+end
+  `),
+}
+
 export const EXAMPLES = {
   sequence: sequenceExample,
   er: erExample,
   erLarge: erLargeExample,
   component: componentExample,
+  activity: activityExample,
 }

@@ -1,0 +1,106 @@
+---
+title: Activity Diagram
+---
+
+> Activity diagrams are graphical representations of workflows of stepwise activities and actions with support for choice, iteration and concurrency.
+> <cite><a href="https://en.wikipedia.org/wiki/Activity_diagram">Wikipedia</a></cite>
+
+## Introduction
+
+The Activity Diagram is inspired by PlantUML's [Activity Diagram Beta Syntax](https://plantuml.com/en/activity-diagram-beta).
+
+## Simple Action
+
+Simple action starts with `:` and ends with `;`, with description between them.
+
+```pintora play
+activityDiagram
+  :Aciton 1;
+  :Aciton 2;
+```
+
+## `start`/`end` keyword
+
+You can use `start` and `end` keyword to denote the beginning and the end of a diagram.
+
+```pintora play
+activityDiagram
+  start
+  :No pain;
+  :No gain;
+  end
+```
+
+## Conditional
+
+You can use `if`, `then` and `else` to put tests and branches. Labels can be provided using parentheses.
+
+- `if (...) then (...)`
+
+```pintora play
+activityDiagram
+  if (diagram registered ?) then
+    :get implementation;
+  else (no)
+    :print error;
+  endif
+```
+
+## While Loop
+
+You can use `while` and `endwhile` to make repeat loops.
+
+And it's possibleto provide a label after the `endwhile` keyword, or using the `is` keyword to provide label for the link.
+
+```pintora play
+activityDiagram
+  start
+  while (data available)
+    :read data;
+    :generate diagrams;
+  endwhile
+
+  while (met another test) is (yes)
+    :do something;
+  endwhile (done)
+  end
+```
+
+## Switch And Case
+
+You can use `switch`, `case` and `endswitch` to pu switch sentences.
+
+```pintora play
+activityDiagram
+  switch (test ?)
+  case ( condition A )
+    :Text 1;
+  case ( condition B )
+    :Text 2;
+  case ( condition C )
+    :Text 3;
+  endswitch
+```
+
+## Grouping
+
+You can use several keywords to make groups:
+
+- `group`
+- `partition`
+
+And it's possible to add color `#\d{6}` after the grouping keyword to specify background color.
+
+```pintora play
+activityDiagram
+  start
+  partition Init {
+    :Read config;
+
+    group #88bbf4 Process {
+      :Init themes;
+      :Init symbols;
+    }
+  }
+  end
+```
