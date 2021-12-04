@@ -12,7 +12,7 @@
     "demo:dev": "cd demo && npm run dev",
     "website:dev": "cd website && npm run start",
     "coverage": "lerna run coverage --parallel",
-    "prettier": "prettier \"*.{js,json,yml,md}\" \"packages/**/*\"",
+    "prettier": "prettier \"packages/**/*.{ts,js}\"",
     "format": "npm run prettier -- --write",
     "format:check": "npm run prettier -- --check",
     "lint": "eslint packages/*/src/**/*.{ts,js}",

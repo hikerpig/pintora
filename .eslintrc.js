@@ -14,6 +14,6 @@ module.exports = {
   rules: {
     '@typescript-eslint/no-explicit-any': 'warn',
     '@typescript-eslint/no-this-alias': 'warn',
-    'prefer-spread': 0
+    'prefer-spread': 0,
   },
 }
