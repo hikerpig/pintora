@@ -1,4 +1,4 @@
-import { Rect, Point, PointTuple, symbolRegistry } from '@pintora/core'
+import { Rect, Point, PointTuple } from '@pintora/core'
 import { makeMark, getBaseText, drawArrowTo, drawCrossTo, getBaseNote } from '../util/artist-util'
 
 export {

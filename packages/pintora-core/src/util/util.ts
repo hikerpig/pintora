@@ -34,3 +34,8 @@ export function makeIdCounter(offset=0) {
     },
   }
 }
+
+export function last<T>(list: T[] | undefined) {
+  if (!(list && list.length)) return
+  return list[list.length - 1]
+}

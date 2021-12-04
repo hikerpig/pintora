@@ -4,7 +4,6 @@ import {
   Group,
   safeAssign,
   Rect,
-  Point,
   Text,
   calculateTextDimensions,
   getPointAt,
@@ -12,13 +11,13 @@ import {
   TSize,
   Mark,
   configApi,
+  last,
 } from '@pintora/core'
 import { Action, ActivityDiagramIR, AGroup, Condition, Keyword, Note, Step, Switch, Case, While } from './db'
 import { ActivityConf, getConf } from './config'
 import { adjustEntities, createLayoutGraph, getGraphBounds, LayoutEdge, LayoutGraph, LayoutNode } from '../util/graph'
 import {
   makeMark,
-  getBaseText,
   calcDirection,
   makeLabelBg,
   drawArrowTo,
@@ -262,7 +261,7 @@ class ArtistModel {
         if (stepModel.endId) {
           newPrevId = stepModel.endId
         } else if ('startId' in stepModel) {
-          newPrevId = stepModel.startId;
+          newPrevId = stepModel.startId
         } else if ('id' in step.value) {
           newPrevId = step.value.id
         }
@@ -675,7 +674,10 @@ class ActivityDraw {
     s.children.map((caseStep: Step<Case>, i) => {
       const childResult = this.drawStep(parentMark, caseStep)
       // console.log('[drawSwitch]childResult', childResult)
-      this.g.setEdge(id, childResult.stepModel.startId || childResult.id, { label: caseStep.value.confirmLabel, simplifyStartEdge: true } as EdgeData)
+      this.g.setEdge(id, childResult.stepModel.startId || childResult.id, {
+        label: caseStep.value.confirmLabel,
+        simplifyStartEdge: true,
+      } as EdgeData)
       this.g.setEdge(childResult.endId, endId, { label: '' })
       return childResult
     })
@@ -684,7 +686,7 @@ class ActivityDraw {
   }
 
   drawCase(parentMark: Group, c: Case): DrawStepResult {
-    const { id, confirmLabel } = c
+    const { id } = c
     const group = makeEmptyGroup()
     const stepModel = model.stepModelMap.get(id)
 
@@ -904,7 +906,7 @@ function drawEdges(parent: Group, g: LayoutGraph) {
     // if (edge.simplifyStartEdge) {
     //   const secondPoint = restPoints[0]
     //   safeAssign(secondPoint, {
-    //     y: startPoint.y, 
+    //     y: startPoint.y,
     //   })
     // }
 
@@ -969,11 +971,6 @@ function makeTextMark(text: string, textDims: TSize, attrs: Partial<Text['attrs'
     textAlign: 'center',
     ...attrs,
   })
-}
-
-function last<T>(list: T[]) {
-  if (!list && list.length) return
-  return list[list.length - 1]
 }
 
 export default erArtist

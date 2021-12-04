@@ -5,7 +5,6 @@ import {
   Text,
   mat3,
   safeAssign,
-  createTranslation,
   Point,
   calculateTextDimensions,
   getPointAt,
@@ -88,13 +87,6 @@ const erArtist: IDiagramArtist<ErDiagramIR, ErConf> = {
       -Math.min(0, gBounds.left) + pad,
       -Math.min(0, gBounds.top) + pad,
     ])
-
-    function adjustRootMarkBounds(rootMark: Group, gBounds: Bounds, padX: number, padY: number) {
-      rootMark.matrix = mat3.fromTranslation(mat3.create(), [
-        -Math.min(0, gBounds.left) + padX,
-        -Math.min(0, gBounds.top) + padY,
-      ])
-    }
 
     const width = gBounds.width + pad * 2
     const height = gBounds.height + pad * 2
