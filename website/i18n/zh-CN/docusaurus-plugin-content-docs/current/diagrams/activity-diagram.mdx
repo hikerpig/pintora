@@ -106,3 +106,29 @@ activityDiagram
   }
   end
 ```
+
+## 添加备注
+
+在动作语句之后使用 `@note`，以及带上方位指示词和参与者来添加便签样式的备注。
+
+1. 方位词 `left` 和 `right` 表示在参与者的左/右添加备注
+1. 可添加多行备注，在结尾使用 `@end_note` 结束
+
+```pintora play
+activityDiagram
+  start
+  :Some action;
+  @note right: 右边的注释
+
+  if (diagram registered ?) then
+    :get implementation;
+  else (no)
+    :print error;
+  endif
+
+  @note left
+  左边的
+  多行注释
+  @end_note
+  end
+```
