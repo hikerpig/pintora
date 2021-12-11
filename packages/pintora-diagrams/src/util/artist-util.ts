@@ -129,7 +129,12 @@ export function calcDirection(start: Point, end: Point) {
 //   return Quardrant.First
 // }
 
-export function makeLabelBg(labelDims: TSize, center: Point, attrs: Partial<Rect['attrs']> = {}) {
+export function makeLabelBg(labelDims: TSize, center: Point, attrs: Partial<Rect['attrs']> = {}, theme?: ITheme) {
+  let fill = '#fff'
+  if (theme) {
+    fill = theme.canvasBackground || (theme.isDark ? '#000' : '#fff')
+  }
+
   const labelBg = makeMark(
     'rect',
     {
@@ -137,7 +142,7 @@ export function makeLabelBg(labelDims: TSize, center: Point, attrs: Partial<Rect
       y: center.y - labelDims.height / 2,
       width: labelDims.width,
       height: labelDims.height,
-      fill: '#fff',
+      fill,
       opacity: 0.85,
       ...attrs,
     },

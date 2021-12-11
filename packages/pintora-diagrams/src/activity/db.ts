@@ -1,5 +1,6 @@
 import { StyleParam } from '../util/style'
 import { makeIdCounter } from '@pintora/core'
+import { dedent } from '../util/text'
 
 export type Action = {
   id: string
@@ -241,7 +242,7 @@ class ActivityDb {
         break
       }
       case 'note': {
-        const value: Note = { id: this.makeId(), ...part }
+        const value: Note = { id: this.makeId(), ...part, text: dedent(part.text) }
         const prevStepId = state.prevStepId
         if (prevStepId) {
           value.target = prevStepId

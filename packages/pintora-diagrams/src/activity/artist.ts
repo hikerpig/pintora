@@ -35,6 +35,11 @@ let model: ArtistModel
 let activityDraw: ActivityDraw
 let theme: ITheme
 
+function calcTextDims(text: string, attrs: Partial<Text['attrs']> = {}) {
+  const _attrs = Object.assign({ fontSize: conf.fontSize }, attrs)
+  return calculateTextDimensions(text, _attrs)
+}
+
 const erArtist: IDiagramArtist<ActivityDiagramIR, ActivityConf> = {
   draw(ir) {
     conf = getConf([])
@@ -104,18 +109,8 @@ type StepModel = {
   height: number
 }
 
-type NoteModel = {
-  width: number
-  height: number
-  startx: number
-  stopx: number
-  starty: number
-  stopy: number
-  text: string
-}
-
 function getActionRectSize(text: string) {
-  const textDims = calculateTextDimensions(text)
+  const textDims = calcTextDims(text)
   const rectWidth = textDims.width + conf.actionPaddingX * 2
   const rectHeight = textDims.height + conf.actionPaddingY * 2
   return { rectWidth, rectHeight }
@@ -459,7 +454,7 @@ class ActivityDraw {
       { class: 'activity__decision-bg' },
     )
 
-    const textDims = calculateTextDimensions(message)
+    const textDims = calcTextDims(message)
 
     const textMark = makeTextMark(message, textDims, {
       y: rectHeight / 2,
@@ -614,7 +609,7 @@ class ActivityDraw {
       },
       { class: 'component__group-rect' },
     )
-    const labelTextDims = calculateTextDimensions(groupLabel)
+    const labelTextDims = calcTextDims(groupLabel)
 
     this.g.setNode(id, {
       id,
@@ -782,7 +777,7 @@ class ActivityDraw {
     )
     parentMark.children.push(group)
 
-    const textDims = calculateTextDimensions(text, { fontSize: conf.fontSize })
+    const textDims = calcTextDims(text, { fontSize: conf.fontSize })
     const rectAttrs = getBaseNote(theme)
     const noteModel = {
       width: textDims.width + 2 * conf.noteMargin,
@@ -796,7 +791,7 @@ class ActivityDraw {
 
     const textMark: Text = {
       type: 'text',
-      attrs: { fill: conf.noteTextColor, text, textBaseline: 'alphabetic' },
+      attrs: { fill: conf.noteTextColor, text, textBaseline: 'middle', fontSize: conf.fontSize },
     }
 
     const targetStepModel = this.model.stepModelMap.get(note.target)
@@ -810,7 +805,7 @@ class ActivityDraw {
       mark: group,
       width: noteModel.width,
       height: noteModel.height,
-      onLayout: (data: LayoutNode) => {
+      onLayout: () => {
         const targetNodeData = this.g.node(targetStepModel.id) as LayoutNode
         let x
         if (note.placement === 'left') {
@@ -822,7 +817,7 @@ class ActivityDraw {
 
         safeAssign(textMark.attrs, {
           x: x + conf.noteMargin,
-          y: y + textDims.height + conf.noteMargin,
+          y: y + textDims.height / 2 + conf.noteMargin,
           width: noteModel.width,
         })
 
@@ -832,6 +827,10 @@ class ActivityDraw {
           width: noteModel.width,
           height: noteModel.height,
         })
+
+        const node = this.g.node(id)
+        node.outerLeft = x
+        node.outerRight = x + noteModel.width
       },
     })
     group.children.push(noteRect, textMark)
@@ -848,7 +847,7 @@ function drawAction(parentMark: Group, action: Action, g: LayoutGraph): DrawStep
     },
     { children: [] },
   )
-  const textDims = calculateTextDimensions(action.message)
+  const textDims = calcTextDims(action.message)
   const rectWidth = stepModel.width
   const rectHeight = stepModel.height
   const rectMark = makeMark('rect', {
@@ -933,8 +932,8 @@ function drawEdges(parent: Group, g: LayoutGraph) {
     //   labelY = (startPoint.y + lastPoint.y) / 2
     // }
 
-    const labelDims = calculateTextDimensions(edge.label || '')
-    const labelBgMark = makeLabelBg(labelDims, { x: labelX, y: labelY })
+    const labelDims = calcTextDims(edge.label || '')
+    const labelBgMark = makeLabelBg(labelDims, { x: labelX, y: labelY }, {}, theme)
     const labelMark = makeMark(
       'text',
       {

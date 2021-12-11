@@ -104,3 +104,29 @@ activityDiagram
   }
   end
 ```
+
+## Note
+
+Add `@note`, placement, and participant names after action to add a note.
+
+1. placement keywords `left` and `right`.
+1. note can be multiline, in this case you need to add `@end_note` to end it.
+
+```pintora play
+activityDiagram
+  start
+  :Some action;
+  @note right: note on the right
+
+  if (diagram registered ?) then
+    :get implementation;
+  else (no)
+    :print error;
+  endif
+
+  @note left
+  left multiline note,
+  no colon after placement
+  @end_note
+  end
+```
