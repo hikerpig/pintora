@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.1.0-alpha.12](https://github.com/hikerpig/pintora/compare/v0.1.0-alpha.11...v0.1.0-alpha.12) (2021-12-11)
+
+
+### Features
+
+* color scheme larkLight / larkDark ([aa16be1](https://github.com/hikerpig/pintora/commit/aa16be1049934cb9d83b1c6c0c8363807cf48418))
+
+
+
+
+
 # [0.1.0-alpha.11](https://github.com/hikerpig/pintora/compare/v0.1.0-alpha.10...v0.1.0-alpha.11) (2021-12-04)
 
 

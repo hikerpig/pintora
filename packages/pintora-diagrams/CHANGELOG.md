@@ -3,6 +3,19 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.1.0-alpha.12](https://github.com/hikerpig/pintora/compare/v0.1.0-alpha.11...v0.1.0-alpha.12) (2021-12-11)
+
+
+### Features
+
+* **pintora-diagrams:** [activityDiagram] Add style config ([f1c908a](https://github.com/hikerpig/pintora/commit/f1c908a68fd4a9ba12e505cf144b78c913f3a03c))
+* **pintora-diagrams:** [activityDiagram] parse and draw arrowLabel ([aae1275](https://github.com/hikerpig/pintora/commit/aae1275ac322b4ac72dfc08c579512210250a150))
+* color scheme larkLight / larkDark ([aa16be1](https://github.com/hikerpig/pintora/commit/aa16be1049934cb9d83b1c6c0c8363807cf48418))
+
+
+
+
+
 # [0.1.0-alpha.11](https://github.com/hikerpig/pintora/compare/v0.1.0-alpha.10...v0.1.0-alpha.11) (2021-12-04)
 
 
