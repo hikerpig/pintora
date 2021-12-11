@@ -149,3 +149,31 @@ activityDiagram
   :Action 2;
   end
 ```
+
+
+## Override config
+
+You can override diagarm style config through `@style` directive.
+
+All available configs can be seen in the [Config page](../configuration/config.md#activity).
+
+```pintora play
+activityDiagram
+  @style actionBackground #61afef
+  @style textColor #fff
+  @style noteTextColor #purple
+  @style edgeColor #143C9A
+  @style {
+    keywordBackground #143C9A
+    labelTextColor #143C9A
+  }
+  start
+  partition Init {
+    :Read config;
+    @note right: comment
+  }
+  while (data available) is (yes)
+    :read data;
+  endwhile
+  end
+```

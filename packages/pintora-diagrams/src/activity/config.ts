@@ -19,10 +19,13 @@ export type ActivityConf = {
   textColor: string
   edgeColor: string
 
-  keywordBgColor: string
+  keywordBackground: string
 
   noteTextColor: string
   noteMargin: number
+
+  labelTextColor: string
+  labelBackground: string
 
   fontSize: number
 }
@@ -42,16 +45,41 @@ export const defaultConfig: ActivityConf = {
   textColor: PALETTE.normalDark,
   edgeColor: PALETTE.normalDark,
 
-  keywordBgColor: PALETTE.normalDark,
+  keywordBackground: PALETTE.normalDark,
 
   noteTextColor: PALETTE.normalDark,
   noteMargin: 10,
+
+  labelTextColor: PALETTE.normalDark,
+  labelBackground: PALETTE.white,
 
   fontSize: 14,
 }
 
 export const ACTIVITY_STYLE_RULES = {
+  diagramPadding: { valueType: 'size' },
+  layoutDirection: { valueType: 'string' },
+
+  actionPaddingX: { valueType: 'size' },
+  actionPaddingY: { valueType: 'size' },
+  actionBackground: { valueType: 'color' },
+  actionBorderColor: { valueType: 'color' },
+
+  groupBackground: { valueType: 'color' },
+  groupBorderColor: { valueType: 'color' },
+
   textColor: { valueType: 'color' },
+  edgeColor: { valueType: 'color' },
+
+  keywordBackground: { valueType: 'color' },
+
+  noteTextColor: { valueType: 'color' },
+  noteMargin: { valueType: 'size' },
+
+  labelBackground: { valueType: 'color' },
+  labelTextColor: { valueType: 'color' },
+
+  fontSize: { valueType: 'size' },
 } as const
 
 export function getConf(styleParams: StyleParam[]) {
@@ -66,7 +94,9 @@ export function getConf(styleParams: StyleParam[]) {
       groupBorderColor: t.primaryBorderColor,
       textColor: t.textColor,
       edgeColor: t.primaryColor,
-      keywordBgColor: t.textColor,
+      keywordBackground: t.textColor,
+      labelBackground: t.canvasBackground || t.background1,
+      labelTextColor: t.textColor,
     })
   }
   Object.assign(conf, globalConfig.er || {})

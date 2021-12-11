@@ -1,5 +1,5 @@
-import { StyleParam } from '../util/style'
 import { makeIdCounter } from '@pintora/core'
+import { StyleParam, StyleAction } from '../util/style'
 import { dedent } from '../util/text'
 
 export type Action = {
@@ -82,14 +82,11 @@ export type ActivityDiagramIR = {
   steps: Step[]
   notes: Note[]
   arrowLabels: ArrowLabel[]
+  styleParams: StyleParam[]
 }
 
 type ApplyPart =
-  | {
-      type: 'addStyle'
-      key: string
-      value: string
-    }
+  | StyleAction
   | {
       type: 'addAction'
       action: Action
@@ -293,6 +290,7 @@ class ActivityDb {
       steps: this.steps,
       notes: this.notes,
       arrowLabels: this.arrowLabels,
+      styleParams: this.styleParams,
     }
   }
 
@@ -300,6 +298,7 @@ class ActivityDb {
     this.idCounter.reset()
     this.steps = []
     this.notes = []
+    this.styleParams = []
   }
 }
 

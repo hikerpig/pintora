@@ -132,7 +132,7 @@ export function calcDirection(start: Point, end: Point) {
 export function makeLabelBg(labelDims: TSize, center: Point, attrs: Partial<Rect['attrs']> = {}, theme?: ITheme) {
   let fill = '#fff'
   if (theme) {
-    fill = theme.canvasBackground || (theme.isDark ? '#000' : '#fff')
+    fill = theme.canvasBackground || theme.background1 || (theme.isDark ? '#000' : '#fff')
   }
 
   const labelBg = makeMark(
@@ -141,7 +141,7 @@ export function makeLabelBg(labelDims: TSize, center: Point, attrs: Partial<Rect
       x: center.x - labelDims.width / 2,
       y: center.y - labelDims.height / 2,
       width: labelDims.width,
-      height: labelDims.height,
+      height: labelDims.height + 2,
       fill,
       opacity: 0.85,
       ...attrs,

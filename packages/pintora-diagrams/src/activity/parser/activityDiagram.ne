@@ -78,6 +78,7 @@ statement ->
   | switchSentence
   | noteStatement
   | arrowLabelStatement
+  | styleClause _ %NEWLINE
 
 conditionSentence ->
     "if" %SPACE:+ wordsInParens %SPACE:+ "then" wordsInParens:? %SPACE:* %NEWLINE line:* elseClause:? _ "endif" _ %NEWLINE {%

@@ -155,6 +155,37 @@ export type ComponentConf = {
 }
 ```
 
+### activity
+
+```ts
+export type ActivityConf = {
+  diagramPadding: number
+  layoutDirection: string
+
+  actionPaddingX: number
+  actionPaddingY: number
+
+  actionBackground: string
+  actionBorderColor: string
+
+  groupBackground: string
+  groupBorderColor: string
+
+  textColor: string
+  edgeColor: string
+
+  keywordBackground: string
+
+  noteTextColor: string
+  noteMargin: number
+
+  labelTextColor: string
+  labelBackground: string
+
+  fontSize: number
+}
+```
+
 ## The `@style` directive
 
 If you don't have the access to add JS script into the page or in the Node.js module, it's also possible to override some configs of the builtin diagrams through the `@style` directive.

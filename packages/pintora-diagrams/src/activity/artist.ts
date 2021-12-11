@@ -54,7 +54,7 @@ function calcTextDims(text: string, attrs: Partial<Text['attrs']> = {}) {
 
 const erArtist: IDiagramArtist<ActivityDiagramIR, ActivityConf> = {
   draw(ir) {
-    conf = getConf([])
+    conf = getConf(ir.styleParams)
     model = new ArtistModel(ir)
     theme = (configApi.getConfig() as DiagramsConf).themeConfig.themeVariables
     // console.log('ir', JSON.stringify(ir, null, 2))
@@ -649,7 +649,7 @@ class ActivityDraw {
     group.children.push(bgMark, labelMark)
     parentMark.children.push(group)
 
-    aGroup.children.map((s, i) => {
+    aGroup.children.map(s => {
       const childResult = this.drawStep(parentMark, s)
       this.g.setParent(childResult.id, id)
       return childResult
@@ -688,7 +688,7 @@ class ActivityDraw {
     group.children.push(decisionBg, textMark)
     parentMark.children.push(group, diamondMark)
 
-    s.children.map((caseStep: Step<Case>, i) => {
+    s.children.map((caseStep: Step<Case>) => {
       const childResult = this.drawStep(parentMark, caseStep)
       // console.log('[drawSwitch]childResult', childResult)
       this.g.setEdge(id, childResult.stepModel.startId || childResult.id, {
@@ -718,7 +718,7 @@ class ActivityDraw {
     parentMark.children.push(group)
 
     if (c.children.length) {
-      c.children.map((caseClause, i) => {
+      c.children.map(caseClause => {
         const childResult = this.drawStep(parentMark, caseClause)
         return childResult
       })
@@ -744,8 +744,8 @@ class ActivityDraw {
     const group = makeEmptyGroup()
     const { label, id } = keyword
     const r = 10
-    const stroke = conf.keywordBgColor
-    const fill = conf.keywordBgColor
+    const stroke = conf.keywordBackground
+    const fill = conf.keywordBackground
     if (label === 'start') {
       const bgMark = makeMark('circle', {
         r,
@@ -957,7 +957,7 @@ function drawEdges(parent: Group, g: LayoutGraph) {
     // }
 
     const labelDims = calcTextDims(edge.label || '')
-    const labelBgMark = makeLabelBg(labelDims, { x: labelX, y: labelY }, {}, theme)
+    const labelBgMark = makeLabelBg(labelDims, { x: labelX, y: labelY }, { fill: conf.labelBackground }, theme)
     const labelMark = makeMark(
       'text',
       {
@@ -967,7 +967,7 @@ function drawEdges(parent: Group, g: LayoutGraph) {
         textBaseline: 'middle',
         x: labelX,
         y: labelY,
-        fill: conf.textColor,
+        fill: conf.labelTextColor,
         fontSize: conf.fontSize,
       },
       { class: 'activity__edge-label' },
