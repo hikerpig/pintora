@@ -13,7 +13,19 @@ import {
   configApi,
   last,
 } from '@pintora/core'
-import { Action, ActivityDiagramIR, AGroup, Condition, Keyword, Note, Step, Switch, Case, While } from './db'
+import {
+  Action,
+  ActivityDiagramIR,
+  AGroup,
+  Condition,
+  Keyword,
+  Note,
+  Step,
+  Switch,
+  Case,
+  While,
+  ArrowLabel,
+} from './db'
 import { ActivityConf, getConf } from './config'
 import { adjustEntities, createLayoutGraph, getGraphBounds, LayoutEdge, LayoutGraph, LayoutNode } from '../util/graph'
 import {
@@ -121,6 +133,7 @@ class ArtistModel {
 
   stepModelMap = new Map<string, StepModel>()
   stepNotesMap = new Map<string, Note[]>()
+  stepArrowLabelMap = new Map<string, ArrowLabel>()
 
   private shouldTouchPrevIds(step: Step) {
     return step.type !== 'group'
@@ -280,6 +293,12 @@ class ArtistModel {
         stepNotes.push(note)
       }
     })
+    ir.arrowLabels.forEach(arrowLabel => {
+      const parentId = arrowLabel.target
+      if (parentId && this.stepModelMap.has(parentId)) {
+        this.stepArrowLabelMap.set(parentId, arrowLabel)
+      }
+    })
   }
 
   protected makeStepModel(step: Step): StepModel {
@@ -346,12 +365,17 @@ class ActivityDraw {
     if (result && result.stepModel) {
       const prevId = result.stepModel.prevId
       const startIdOfCurrent = result.stepModel.startId || result.stepModel.id
+      let label = ''
+      const arrowLabel = this.model.stepArrowLabelMap.get(prevId)
+      if (arrowLabel) {
+        label = arrowLabel.text
+      }
       if (prevId && prevId === this.keywordStepResults.start?.id) {
-        g.setEdge(prevId, startIdOfCurrent, { label: '' })
+        g.setEdge(prevId, startIdOfCurrent, { label })
       } else if (result === this.keywordStepResults.end) {
-        g.setEdge(prevId, startIdOfCurrent, { label: '' })
+        g.setEdge(prevId, startIdOfCurrent, { label })
       } else if (prevId) {
-        g.setEdge(prevId, startIdOfCurrent, { label: '' })
+        g.setEdge(prevId, startIdOfCurrent, { label })
       }
     }
 

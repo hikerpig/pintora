@@ -431,4 +431,35 @@ activityDiagram
       },
     })
   })
+
+  it('can parse arrow statement', () => {
+    const example = stripStartEmptyLines(`
+activityDiagram
+  :Text 1;
+  -> Arrow label;
+`)
+    parse(example)
+    const ir = db.getDiagramIR()
+    // console.log('ir', JSON.stringify(ir, null, 2))
+    expect(ir).toMatchObject({
+      steps: [
+        {
+          type: 'action',
+          value: {
+            actionType: 'normal',
+            message: 'Text 1',
+            id: '1',
+          },
+        },
+      ],
+      arrowLabels: [
+        {
+          id: '2',
+          type: 'arrowLabel',
+          text: 'Arrow label',
+          target: '1',
+        },
+      ],
+    })
+  })
 })

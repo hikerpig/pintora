@@ -64,7 +64,13 @@ export type Note = {
   target?: string
 }
 
-type StepValue = Action | Condition | While | Keyword | AGroup | Switch | Case
+export type ArrowLabel = {
+  id: string
+  text: string
+  target?: string
+}
+
+type StepValue = Action | Condition | While | Keyword | AGroup | Switch | Case | ArrowLabel
 
 export type Step<T extends StepValue = StepValue> = {
   type: string
@@ -75,6 +81,7 @@ export type Step<T extends StepValue = StepValue> = {
 export type ActivityDiagramIR = {
   steps: Step[]
   notes: Note[]
+  arrowLabels: ArrowLabel[]
 }
 
 type ApplyPart =
@@ -133,6 +140,10 @@ type ApplyPart =
       text: string
       placement: string
     }
+  | {
+      type: 'arrowLabel'
+      text: string
+    }
 
 type DbApplyState = {
   prevStepId?: string | undefined
@@ -143,6 +154,7 @@ class ActivityDb {
   protected styleParams: StyleParam[] = []
   protected steps: Step[] = []
   protected notes: Note[] = []
+  protected arrowLabels: ArrowLabel[] = []
   protected idCounter = makeIdCounter()
 
   protected makeId() {
@@ -250,6 +262,15 @@ class ActivityDb {
         this.notes.push(value)
         break
       }
+      case 'arrowLabel': {
+        const value: ArrowLabel = { id: this.makeId(), ...part }
+        const prevStepId = state.prevStepId
+        if (prevStepId) {
+          value.target = prevStepId
+        }
+        this.arrowLabels.push(value)
+        break
+      }
       case 'addStyle':
         {
           this.styleParams.push(part)
@@ -271,6 +292,7 @@ class ActivityDb {
     return {
       steps: this.steps,
       notes: this.notes,
+      arrowLabels: this.arrowLabels,
     }
   }
 

@@ -130,3 +130,22 @@ activityDiagram
   @end_note
   end
 ```
+
+## Arrow Label
+
+In the next line of action, you can add label to the arrow with the arrow label notation.
+
+Currently only single line text is supported.
+
+```
+-> multiline description;
+```
+
+```pintora play
+activityDiagram
+  start
+  :Action 1;
+  -> Hey there;
+  :Action 2;
+  end
+```

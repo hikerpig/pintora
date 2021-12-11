@@ -77,6 +77,7 @@ statement ->
   | whileSentence
   | switchSentence
   | noteStatement
+  | arrowLabelStatement
 
 conditionSentence ->
     "if" %SPACE:+ wordsInParens %SPACE:+ "then" wordsInParens:? %SPACE:* %NEWLINE line:* elseClause:? _ "endif" _ %NEWLINE {%
@@ -211,5 +212,12 @@ noteStatement ->
         // console.log('[note multi]\n', d[5])
         const text = d[5]
         return { type: 'note', placement: d[2], text }
+      }
+    %}
+
+arrowLabelStatement ->
+    "->" __ words %SEMICOLON _ %NEWLINE {%
+      function(d) {
+        return { type: 'arrowLabel', text: d[2] }
       }
     %}

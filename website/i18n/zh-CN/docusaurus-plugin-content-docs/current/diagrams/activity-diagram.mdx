@@ -132,3 +132,22 @@ activityDiagram
   @end_note
   end
 ```
+
+## 为箭头添加文字
+
+在动作语句下一行可以使用箭头标记语法来指定箭头文字。
+
+目前只支持单行文字。
+
+```
+-> [说明文字];
+```
+
+```pintora play
+activityDiagram
+  start
+  :行动 1;
+  -> 行动说明文字;
+  :行动 2;
+  end
+```
