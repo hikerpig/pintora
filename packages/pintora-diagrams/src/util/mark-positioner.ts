@@ -26,11 +26,11 @@ export const MARK_TRANSFORMERS: Partial<{ [K in MarkType]: MarkTransformer<K> }>
     if (info.scales.y) attrs.ry *= info.scales.y
   },
   line(mark, info) {
-    const { attrs, type } = mark
+    // const { attrs, type } = mark
     mark.matrix = createTranslation(info.offsets.x, info.offsets.y)
   },
   path(mark, info) {
-    const { attrs, type } = mark
+    // const { attrs, type } = mark
     const translateMatrix = createTranslation(info.offsets.x, info.offsets.y)
     const scaleMatrix = mat3.fromScaling(mat3.create(), [info.scales.x || 1, info.scales.y || 1])
     const matrix = mat3.multiply(mat3.create(), translateMatrix, scaleMatrix)

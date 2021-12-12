@@ -57,6 +57,16 @@ export type Case = {
   children: Step[]
 }
 
+export type Fork = {
+  id: string
+  branches: Step[]
+  shouldMerge: boolean
+}
+
+export type ForkBranch = {
+  id: string
+  children: Step[]
+}
 export type Note = {
   id: string
   text: string
@@ -70,7 +80,7 @@ export type ArrowLabel = {
   target?: string
 }
 
-type StepValue = Action | Condition | While | Keyword | AGroup | Switch | Case | ArrowLabel
+type StepValue = Action | Condition | While | Keyword | AGroup | Switch | Case | Fork | ForkBranch | ArrowLabel
 
 export type Step<T extends StepValue = StepValue> = {
   type: string
@@ -95,11 +105,11 @@ type ApplyPart =
       type: 'condition'
       message: string
       then: {
-        message: string
+        label: string
         children: ApplyPart[]
       }
       else?: {
-        message: string
+        label: string
         children: ApplyPart[]
       }
     }
@@ -140,6 +150,15 @@ type ApplyPart =
   | {
       type: 'arrowLabel'
       text: string
+    }
+  | {
+      type: 'fork'
+      branches: ApplyPart[]
+      shouldMerge: boolean
+    }
+  | {
+      type: 'forkBranch'
+      children: ApplyPart[]
     }
 
 type DbApplyState = {
@@ -191,14 +210,14 @@ class ActivityDb {
             id,
             message: part.message,
             then: {
-              label: part.then.message,
+              label: part.then.label,
               children: thenResult,
             },
           }
           if (part.else) {
             const elseResult = this.apply(part.else.children, true, { ...state, parentId: id })
             condition.else = {
-              label: part.else.message,
+              label: part.else.label,
               children: elseResult,
             }
           }
@@ -238,6 +257,27 @@ class ActivityDb {
           children,
         }
         step = { type: 'case', value: caseClause }
+        break
+      }
+      case 'fork': {
+        const id = this.makeId()
+        const branches = this.apply(part.branches, true, { ...state, parentId: id })
+        const forkSentence: Fork = {
+          id,
+          shouldMerge: part.shouldMerge,
+          branches,
+        }
+        step = { type: 'fork', value: forkSentence }
+        break
+      }
+      case 'forkBranch': {
+        const id = this.makeId()
+        const children = this.apply(part.children, true, { ...state, parentId: id })
+        const forkBranch: ForkBranch = {
+          id,
+          children,
+        }
+        step = { type: 'forkBranch', value: forkBranch }
         break
       }
       case 'keyword': {

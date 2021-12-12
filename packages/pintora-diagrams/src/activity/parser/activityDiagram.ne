@@ -76,15 +76,16 @@ statement ->
   | conditionSentence
   | whileSentence
   | switchSentence
+  | forkSentence
   | noteStatement
   | arrowLabelStatement
   | styleClause _ %NEWLINE
 
 conditionSentence ->
-    "if" %SPACE:+ wordsInParens %SPACE:+ "then" wordsInParens:? %SPACE:* %NEWLINE line:* elseClause:? _ "endif" _ %NEWLINE {%
+    "if" %SPACE:+ wordsInParens %SPACE:+ "then" (%SPACE:+ wordsInParens):? %SPACE:* %NEWLINE line:* elseClause:? _ "endif" _ %NEWLINE {%
       function(d) {
         // console.log('[conditions]', d[2])
-        const thenLabel = d[5] || ''
+        const thenLabel = (d[5] ? d[5][1]: null) || ''
         const elseResult = d[9]
         return {
           type: 'condition',
@@ -134,6 +135,26 @@ caseClause ->
         const confirmLabel = d[2].trim()
         const children = d[5].map(o => o[0])
         return { type: 'case', confirmLabel, children }
+      }
+    %}
+
+forkSentence ->
+    "fork" %SPACE:* %NEWLINE (__ statement):+ (_ forkAgainClause):* _ ("endfork"|"endmerge") %NEWLINE {%
+      function(d) {
+        const firstActions = d[3].map(a => a[1][0])
+        const forkAgains = d[4].map(a => a[1])
+        const branches = [{ type: 'forkBranch', children: firstActions }, ...forkAgains]
+        const endWord = tv(d[6][0])
+        const shouldMerge = endWord  === 'endmerge'
+        return { type: 'fork', shouldMerge, branches }
+      }
+    %}
+
+forkAgainClause ->
+    "forkagain" %SPACE:* %NEWLINE (__ statement):+ {%
+      function(d) {
+        const statements = d[3].map(a => a[1][0])
+        return { type: 'forkBranch', children: statements }
       }
     %}
 

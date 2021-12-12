@@ -160,7 +160,6 @@ export type ComponentConf = {
 ```ts
 export type ActivityConf = {
   diagramPadding: number
-  layoutDirection: string
 
   actionPaddingX: number
   actionPaddingY: number

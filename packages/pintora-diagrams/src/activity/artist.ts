@@ -12,6 +12,7 @@ import {
   Mark,
   configApi,
   last,
+  Path,
 } from '@pintora/core'
 import {
   Action,
@@ -25,6 +26,8 @@ import {
   Case,
   While,
   ArrowLabel,
+  Fork,
+  ForkBranch,
 } from './db'
 import { ActivityConf, getConf } from './config'
 import { adjustEntities, createLayoutGraph, getGraphBounds, LayoutEdge, LayoutGraph, LayoutNode } from '../util/graph'
@@ -38,9 +41,10 @@ import {
   getBaseNote,
 } from '../util/artist-util'
 import dagre from '@pintora/dagre'
-import { positionGroupContents } from '../util/mark-positioner'
+import { MARK_TRANSFORMERS, positionGroupContents } from '../util/mark-positioner'
 import { ITheme } from '../util/themes/base'
 import { DiagramsConf } from '../type'
+import { isDev } from '../util/env'
 
 let conf: ActivityConf
 let model: ArtistModel
@@ -70,9 +74,9 @@ const erArtist: IDiagramArtist<ActivityDiagramIR, ActivityConf> = {
       compound: true,
     })
       .setGraph({
-        rankdir: conf.layoutDirection,
+        rankdir: 'TB',
         nodesep: 60,
-        edgesep: 60,
+        edgesep: conf.edgesep,
         ranksep: 30,
       })
       .setDefaultEdgeLabel(function () {
@@ -81,7 +85,9 @@ const erArtist: IDiagramArtist<ActivityDiagramIR, ActivityConf> = {
 
     model.preProcess()
     activityDraw = new ActivityDraw(model, g)
-    // ;(window as any).activityDraw = activityDraw
+    if (isDev) {
+      ;(window as any).activityDraw = activityDraw
+    }
 
     ir.steps.forEach(step => {
       activityDraw.drawStep(rootMark, step)
@@ -194,6 +200,7 @@ class ArtistModel {
           stepModel.prevId = last(prevIds)
           const oldPrevIds = prevIds
           prevIds = []
+          // prevIds = [step.value.id]
           condition.then.children.forEach(s => processStep(s))
           if (condition.else) {
             prevIds = []
@@ -247,6 +254,19 @@ class ArtistModel {
             height: rectHeight,
           })
           this.stepModelMap.set(keyword.id, stepModel)
+          break
+        }
+        case 'fork': {
+          const fork = step.value as Fork
+          processRecursiveStep(step, stepModel, { childrenKeys: ['branches'], parallelChildren: true })
+          const endId = `${fork.id}-end`
+          safeAssign(stepModel, {
+            endId,
+          })
+          break
+        }
+        case 'forkBranch': {
+          processRecursiveStep(step, stepModel)
           break
         }
         default: {
@@ -314,7 +334,7 @@ class ArtistModel {
 type DrawStepResult = {
   id: string
   endId?: string
-  startMark: Group
+  startMark: Group | Rect
   stepModel?: StepModel
 }
 
@@ -356,6 +376,14 @@ class ActivityDraw {
         const keyword = step.value as Keyword
         result = this.drawKeyword(rootMark, keyword)
         this.keywordStepResults[keyword.label] = result
+        break
+      }
+      case 'fork': {
+        result = this.drawFork(rootMark, step.value as Fork)
+        break
+      }
+      case 'forkBranch': {
+        result = this.drawForkBranch(rootMark, step.value as ForkBranch)
         break
       }
       default:
@@ -434,7 +462,7 @@ class ActivityDraw {
       condition.then.children.map((s, i) => {
         const childResult = this.drawStep(parentMark, s)
         if (i === 0) {
-          this.linkResult(id, childResult, 'yes')
+          this.linkResult(id, childResult, condition.then.label || 'yes')
         }
         return childResult
       }),
@@ -517,23 +545,29 @@ class ActivityDraw {
       { class: opts.class || 'activity__condition-end' },
     )
 
+    const moveDiamond = (x: number, y: number) => {
+      // for some strange reason, we can't specify two move commands at the first of the path,
+      // otherwise the path will be invalid in canvas output, may be a 'g-canvas' bug or something else.
+      // here is a trick to make the path commands valid and diamond centered.
+      const firstCommand = (diamondMark.attrs.path as PathCommand[])[0]
+      firstCommand[1] = x - diamondSide
+      firstCommand[2] = y
+    }
+
     this.g.setNode(id, {
       id: id,
       mark: diamondMark,
       width: diamondSide * 2,
       height: diamondSide * 2,
       onLayout(data) {
-        // for some strange reason, we can't specify two move commands at the first of the path,
-        // otherwise the path will be invalid in canvas output, may be a 'g-canvas' bug or something else.
-        // here is a trick to make the path commands valid and diamond centered.
-        const firstCommand = (diamondMark.attrs.path as PathCommand[])[0]
-        firstCommand[1] = data.x - diamondSide
-        firstCommand[2] = data.y
+        moveDiamond(data.x, data.y)
       },
     })
 
     return {
       mark: diamondMark,
+      diamondSide,
+      moveDiamond,
     }
   }
 
@@ -788,6 +822,177 @@ class ActivityDraw {
     return result
   }
 
+  traverseStepCollection = (steps: Step[], cb: (child: Step) => boolean | void) => {
+    if (!steps) return
+    let shouldStop = false
+    steps.forEach(child => {
+      if (cb(child) === false) {
+        shouldStop = true
+        return
+      }
+      this.traverseStep(child, cb)
+    })
+    return !shouldStop
+  }
+
+  traverseStep = (step: Step, cb: (child: Step) => boolean | void) => {
+    if (!step) return
+    const value = step.value
+    if ('children' in value) {
+      this.traverseStepCollection(value.children, cb)
+    } else if ('then' in value) {
+      this.traverseStepCollection(value.then.children, cb)
+      if (value.else) {
+        this.traverseStepCollection(value.else.children, cb)
+      }
+    } else if ('branches' in value) {
+      this.traverseStepCollection(value.branches, cb)
+    }
+  }
+
+  drawFork(parentMark: Group, fork: Fork): DrawStepResult {
+    const { id } = fork
+    const group = makeEmptyGroup()
+    const stepModel = model.stepModelMap.get(id)
+
+    const startMark = makeMark('rect', {
+      width: 100, // this width doesn't matter, later we will replace it with frame width
+      height: 4,
+      x: 0,
+      y: 0,
+      fill: conf.keywordBackground,
+      radius: 2,
+    })
+
+    const getFrameBounds = () => {
+      const bounds = this.g.node(frameId) as LayoutNode
+      return bounds
+    }
+
+    const getBorderShrinkedWidth = (bounds: LayoutNode) => {
+      const shrinkedWidth = bounds.width - 2 * conf.edgesep
+      const x = bounds.x + conf.actionPaddingX // TODO: why this hack
+      return { ...bounds, width: shrinkedWidth, x }
+    }
+
+    this.g.setNode(id, {
+      id: id,
+      mark: group,
+      width: startMark.attrs.width,
+      height: startMark.attrs.height,
+      onLayout: data => {
+        // console.log('[drawFork] start onLayout', data, id)
+        const fb = getBorderShrinkedWidth(getFrameBounds())
+        if (fb) {
+          safeAssign(startMark.attrs, { x: fb.x - fb.width / 2, y: data.y - data.height / 2, width: fb.width })
+          data.width = fb.width
+        }
+      },
+    })
+
+    const endId = stepModel.endId
+    const result: DrawStepResult = {
+      id,
+      startMark,
+      stepModel,
+      endId,
+    }
+
+    const frameId = `${id}-frame`
+    this.g.setNode(frameId, {
+      mark: group,
+      width: 0,
+      // onLayout(data) {
+      //   console.log('[drawFork] frame onLayout', data)
+      // },
+    })
+
+    let endMark: Mark
+
+    if (!fork.shouldMerge) {
+      endMark = makeMark('rect', {
+        ...startMark.attrs,
+      })
+      this.g.setNode(endId, {
+        id: endId,
+        mark: endMark,
+        width: endMark.attrs.width,
+        height: endMark.attrs.height,
+        onLayout(data) {
+          // console.log('[drawFork] end onLayout', data)
+          const fb = getBorderShrinkedWidth(getFrameBounds())
+          if (fb) {
+            safeAssign(endMark.attrs, { x: fb.x - fb.width / 2, y: data.y - data.height / 2, width: fb.width })
+            data.width = fb.width
+          }
+        },
+      })
+    } else {
+      const { mark: diamondMark, diamondSide, moveDiamond } = this.drawDiamondMark(endId)
+      endMark = diamondMark
+      this.g.setNode(endId, {
+        id: endId,
+        mark: endMark,
+        width: endMark.attrs.width,
+        height: endMark.attrs.height,
+        onLayout(data) {
+          const fb = getFrameBounds()
+          if (fb) {
+            moveDiamond(fb.x + diamondSide + 1, data.y) // why is this +1 ?
+          }
+        },
+      })
+    }
+
+    group.children.push(startMark)
+    parentMark.children.push(group, endMark)
+
+    fork.branches.map((branch: Step<ForkBranch>) => {
+      const childResult = this.drawStep(group, branch)
+      const firstChildId = branch.value.children[0]?.value.id
+      if (firstChildId) {
+        this.g.setEdge(id, firstChildId, {
+          label: '',
+          isForkStartStraightLine: true,
+        } as EdgeData)
+      }
+
+      const childrenIds = branch.value.children.map(o => o.value.id)
+      childrenIds.forEach(childId => {
+        this.g.setParent(childId, frameId)
+      })
+
+      this.g.setEdge(childResult.endId, endId, { label: '', isForkEndStraightLine: !fork.shouldMerge } as EdgeData)
+      return childResult
+    })
+    return result
+  }
+  drawForkBranch(parentMark: Group, branch: ForkBranch): DrawStepResult {
+    const { id } = branch
+    const group = makeEmptyGroup()
+    const stepModel = model.stepModelMap.get(id)
+
+    const result: DrawStepResult = {
+      id,
+      startMark: group,
+      stepModel,
+      endId: '',
+    }
+
+    parentMark.children.push(group)
+
+    const childResults = branch.children.map((branch: Step<ForkBranch>) => {
+      const childResult = this.drawStep(parentMark, branch)
+      group.children.push(childResult.startMark)
+      return childResult
+    })
+    const lastChild = last(childResults)
+    if (lastChild) {
+      result.endId = lastChild.id
+    }
+    return result
+  }
+
   drawNote(parentMark: Group, note: Note) {
     const { id, text } = note
 
@@ -915,6 +1120,8 @@ function drawAction(parentMark: Group, action: Action, g: LayoutGraph): DrawStep
 type EdgeData = LayoutEdge<{
   label?: string
   simplifyStartEdge?: boolean
+  isForkStartStraightLine?: boolean
+  isForkEndStraightLine?: boolean
 }>
 
 function drawEdges(parent: Group, g: LayoutGraph) {
@@ -930,6 +1137,19 @@ function drawEdges(parent: Group, g: LayoutGraph) {
     //     y: startPoint.y,
     //   })
     // }
+    if (edge.isForkStartStraightLine) {
+      edge.points.slice(0, edge.points.length - 2).forEach(p => {
+        safeAssign(p, {
+          x: lastPoint.x,
+        })
+      })
+    } else if (edge.isForkEndStraightLine) {
+      edge.points.slice(1).forEach(p => {
+        safeAssign(p, {
+          x: startPoint.x,
+        })
+      })
+    }
 
     const linePath = makeMark('path', {
       path: [

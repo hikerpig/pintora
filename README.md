@@ -49,6 +49,6 @@ Check the online [documentation and demo](http://pintorajs.vercel.app/docs/intro
 - [x] Pintora node.js cli
 - [x] PlantUML style Component diagram
 - [x] Theme config
-- [ ] PlantUML style activity diagram, or Mermaid's flowchart
+- [x] PlantUML style activity diagram, or Mermaid's flowchart
 - [ ] PlantUML style deploy diagram
 - [ ] Load diagram implementation and canvas renderer only when needed

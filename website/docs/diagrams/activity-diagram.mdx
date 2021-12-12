@@ -105,6 +105,56 @@ activityDiagram
   end
 ```
 
+## Parallel processing (fork)
+
+You can use `fork` / `forkagain` / `endfork` / `endmerge` to denote parallel processing.
+
+1. Simple fork.
+
+```pintora play
+activityDiagram
+  start
+  fork
+    :Action 1;
+  forkagain
+    :Action 2;
+  forkagain
+    :Action 3;
+  endfork
+  end
+```
+
+2. With `endmerge`.
+
+```pintora play
+activityDiagram
+  start
+  fork
+    :Action 1;
+  forkagain
+    :Action 2;
+  endmerge
+  end
+```
+
+3. Another example of combining conditional and fork.
+
+```pintora play
+activityDiagram
+  start
+  if (multiprocessor?) then
+    fork
+      :Action 1;
+    forkagain
+      :Action 2;
+    endfork
+    else (monoproc)
+      :Action 1;
+      :Action 2;
+    endif
+  end
+```
+
 ## Note
 
 Add `@note`, placement, and participant names after action to add a note.

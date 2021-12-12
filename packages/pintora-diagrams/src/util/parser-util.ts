@@ -1,5 +1,6 @@
 import nearley from 'nearley'
 import { compact } from '@pintora/core'
+// import { dedent } from './text'
 
 type Options = {
   prepare?(): void
@@ -21,6 +22,9 @@ export function genParserWithRules(grammar: nearley.CompiledRules, opts: Options
         return line.length > 0
       })
       .join('\n')
+
+    // a hack to avoid nearley's getting duplicate results
+    // preparedText = dedent(preparedText)
 
     // a hack to add a new line as EOF, https://github.com/kach/nearley/issues/194
     const textToParse = text[preparedText.length - 1] !== '\n' ? preparedText + '\n' : preparedText
