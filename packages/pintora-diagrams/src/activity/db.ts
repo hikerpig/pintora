@@ -57,6 +57,15 @@ export type Case = {
   children: Step[]
 }
 
+export type Fork = {
+  id: string
+  branches: Step[]
+}
+
+export type ForkBranch = {
+  id: string
+  children: Step[]
+}
 export type Note = {
   id: string
   text: string
@@ -70,7 +79,7 @@ export type ArrowLabel = {
   target?: string
 }
 
-type StepValue = Action | Condition | While | Keyword | AGroup | Switch | Case | ArrowLabel
+type StepValue = Action | Condition | While | Keyword | AGroup | Switch | Case | Fork | ForkBranch | ArrowLabel
 
 export type Step<T extends StepValue = StepValue> = {
   type: string
@@ -140,6 +149,14 @@ type ApplyPart =
   | {
       type: 'arrowLabel'
       text: string
+    }
+  | {
+      type: 'fork'
+      branches: ApplyPart[]
+    }
+  | {
+      type: 'forkBranch'
+      children: ApplyPart[]
     }
 
 type DbApplyState = {
@@ -238,6 +255,26 @@ class ActivityDb {
           children,
         }
         step = { type: 'case', value: caseClause }
+        break
+      }
+      case 'fork': {
+        const id = this.makeId()
+        const branches = this.apply(part.branches, true, { ...state, parentId: id })
+        const forkSentence: Fork = {
+          id,
+          branches,
+        }
+        step = { type: 'fork', value: forkSentence }
+        break
+      }
+      case 'forkBranch': {
+        const id = this.makeId()
+        const children = this.apply(part.children, true, { ...state, parentId: id })
+        const forkBranch: ForkBranch = {
+          id,
+          children,
+        }
+        step = { type: 'forkBranch', value: forkBranch }
         break
       }
       case 'keyword': {

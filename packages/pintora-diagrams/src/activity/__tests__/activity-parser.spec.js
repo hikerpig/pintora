@@ -462,4 +462,64 @@ activityDiagram
       ],
     })
   })
+
+  it('can parse fork sentence', () => {
+    const example = stripStartEmptyLines(`
+activityDiagram
+  fork
+    :action 1;
+  forkagain
+    :action 2;
+  endfork
+`)
+    parse(example)
+    const ir = db.getDiagramIR()
+    // console.log('ir', JSON.stringify(ir, null, 2))
+    expect(ir.steps).toMatchObject([
+      {
+        type: 'fork',
+        value: {
+          id: '1',
+          branches: [
+            {
+              type: 'forkBranch',
+              value: {
+                id: '2',
+                children: [
+                  {
+                    type: 'action',
+                    value: {
+                      actionType: 'normal',
+                      message: 'action 1',
+                      id: '3',
+                    },
+                    parentId: '2',
+                  },
+                ],
+              },
+              parentId: '1',
+            },
+            {
+              type: 'forkBranch',
+              value: {
+                id: '4',
+                children: [
+                  {
+                    type: 'action',
+                    value: {
+                      actionType: 'normal',
+                      message: 'action 2',
+                      id: '5',
+                    },
+                    parentId: '4',
+                  },
+                ],
+              },
+              parentId: '1',
+            },
+          ],
+        },
+      },
+    ])
+  })
 })

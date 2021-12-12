@@ -76,6 +76,7 @@ statement ->
   | conditionSentence
   | whileSentence
   | switchSentence
+  | forkSentence
   | noteStatement
   | arrowLabelStatement
   | styleClause _ %NEWLINE
@@ -134,6 +135,25 @@ caseClause ->
         const confirmLabel = d[2].trim()
         const children = d[5].map(o => o[0])
         return { type: 'case', confirmLabel, children }
+      }
+    %}
+
+forkSentence ->
+    "fork" %SPACE:* %NEWLINE (__ statement):+ (_ forkAgainClause):* _ "endfork" %NEWLINE {%
+      function(d) {
+        // console.log('forkSentence', d)
+        const firstActions = d[3].map(a => a[1][0])
+        const forkAgains = d[4].map(a => a[1])
+        const branches = [{ type: 'forkBranch', children: firstActions }, ...forkAgains]
+        return { type: 'fork', branches }
+      }
+    %}
+
+forkAgainClause ->
+    "forkagain" %SPACE:* %NEWLINE (__ statement):+ {%
+      function(d) {
+        const statements = d[3].map(a => a[1][0])
+        return { type: 'forkBranch', children: statements }
       }
     %}
 
