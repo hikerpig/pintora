@@ -27,7 +27,7 @@ Heavily inspired by [Mermaid.js](https://mermaid-js.github.io/mermaid/#/) and [P
 ## ✨ Features
 
 - In browser side, output SVG or Canvas.
-- In Node.js side, output PNG/JPG file.
+- In Node.js side, output PNG/JPG/SVG file.
 - Outputs are clean and self contained, won't pollute the page with global style.
 - Modular and highly extensible, provide a plugin system for diagram developer to write and distribute their own diagrams.
 

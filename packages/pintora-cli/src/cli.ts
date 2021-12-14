@@ -3,7 +3,8 @@ import * as fs from 'fs'
 import * as mime from 'mime-types'
 import yargs from 'yargs'
 import consola from 'consola'
-import { render, SUPPORTED_MIME_TYPES } from './render'
+import { render } from './render'
+import { SUPPORTED_MIME_TYPES } from './const'
 
 const CWD = process.cwd()
 

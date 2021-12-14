@@ -42,7 +42,7 @@ Options:
 examples:
 
 ```sh
-pintora render -i ../test-shared/example-files/sequence.pintora -o sequence.png
+pintora render -i ../test-shared/example-files/sequence.pintora -o sequence.svg
 
 # Set image background color
 pintora render -i ../test-shared/example-files/sequence-2.pintora -b "#FAFAFA" -o sequence-2.jpg
