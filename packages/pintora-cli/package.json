@@ -28,7 +28,8 @@
   },
   "scripts": {
     "compile": "tsc",
-    "watch": "tsc -w"
+    "watch": "tsc -w",
+    "test": "jest"
   },
   "bugs": {
     "url": "https://github.com/hikerpig/pintora/issues"
