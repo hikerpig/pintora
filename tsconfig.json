@@ -11,7 +11,7 @@
     "baseUrl": "./packages",
     "esModuleInterop": true,
     "skipLibCheck": true,
-    "allowJs": true,
+    "allowJs": false,
     "checkJs": false,
     "forceConsistentCasingInFileNames": true
   }

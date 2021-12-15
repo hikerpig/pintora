@@ -17,6 +17,10 @@ export type PintoraConfig = DiagramsConf & {
   }
 }
 
+type DeepPartial<T> = {
+  [P in keyof T]?: DeepPartial<T[P]>
+}
+
 configApi.setConfig<PintoraConfig>({
   core: {
     defaultRenderer: 'svg',
@@ -99,7 +103,7 @@ const pintoraStandalone = {
     })
   },
   getConfig: configApi.getConfig,
-  setConfig(c: Partial<DiagramsConf>) {
+  setConfig(c: DeepPartial<DiagramsConf>) {
     configApi.setConfig(c)
     if (c.themeConfig?.theme) {
       const conf = configApi.getConfig<PintoraConfig>()
