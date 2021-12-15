@@ -26,7 +26,8 @@
   },
   "files": [
     "lib",
-    "types"
+    "types",
+    "CHANGELOG.md"
   ],
   "publishConfig": {
     "access": "public"

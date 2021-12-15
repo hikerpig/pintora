@@ -8,6 +8,10 @@
   "author": "hikerpigwinnie@gmail.com",
   "license": "MIT",
   "sideEffects": false,
+  "files": [
+    "lib",
+    "CHANGELOG.md"
+  ],
   "scripts": {
     "compile": "tsc",
     "watch": "tsc -w"

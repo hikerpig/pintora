@@ -14,7 +14,8 @@
     "test": "__tests__"
   },
   "files": [
-    "lib"
+    "lib",
+    "CHANGELOG.md"
   ],
   "bin": {
     "pintora": "./bin/pintora"
