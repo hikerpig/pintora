@@ -13,10 +13,12 @@ import { actions } from 'src/live-editor/redux/slice'
 import { DEMO_BASE_URL } from '../const'
 import './App.css'
 
+const LAST_EDITOR_CODE_KEY = 'pintoraEditorCode'
+
 function App() {
   useEffect(() => {
     const params = new URLSearchParams(location.search)
-    let code: string = ''
+    let code = ''
     const encodedCode = params.get('code')
     if (encodedCode) {
       try {
@@ -35,12 +37,37 @@ function App() {
           code = EXAMPLES[exampleName].code
         }
       }
+    } else {
+      try {
+        const rawData = localStorage.getItem(LAST_EDITOR_CODE_KEY)
+        if (rawData) {
+          const data = JSON.parse(rawData)
+          code = data.code
+        }
+      } catch (error) {
+        console.warn('error recovering data from storage', error)
+      }
     }
 
     if (code) {
       store.dispatch(actions.updateEditorCode({ code, syncToPreview: true }))
     }
+  }, [])
 
+  useEffect(() => {
+    const handler = () => {
+      const state = store.getState()
+      const dataToSave = {
+        code: state.editor.code,
+      }
+      localStorage.setItem(LAST_EDITOR_CODE_KEY, JSON.stringify(dataToSave))
+    }
+
+    window.addEventListener('beforeunload', handler)
+
+    return () => {
+      window.removeEventListener('beforeunload', handler)
+    }
   }, [])
 
   const onOpenPreviewPage = useCallback(() => {
@@ -50,12 +77,13 @@ function App() {
       const encodedCode = pintora.util.encodeForUrl(previewCode)
       const encodedPintoraConfig = pintora.util.encodeForUrl(JSON.stringify(state.preview.pintoraConfig))
       window.open(`${DEMO_BASE_URL}preview/?code=${encodedCode}&config=${encodedPintoraConfig}`)
-    } catch (error) {
-    }
+    } catch (error) {}
   }, [])
   const previewHeaderSuffix = (
     <div>
-      <button className="btn btn-primary btn-xs" onClick={onOpenPreviewPage}>Open preview page</button>
+      <button className="btn btn-primary btn-xs" onClick={onOpenPreviewPage}>
+        Open preview page
+      </button>
     </div>
   )
 
