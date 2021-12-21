@@ -69,5 +69,8 @@ lib/
 
 *.tsbuildinfo
 
+# turborepo
+.turbo/
+
 # Local Netlify folder
 .netlify

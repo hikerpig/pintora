@@ -4,10 +4,10 @@
   "private": true,
   "scripts": {
     "clean": "rimraf \"packages/**/lib\"",
-    "compile": "lerna run compile",
-    "compile:browser": "npx lerna run compile --ignore @pintora/cli",
-    "watch": "npx lerna run watch --parallel",
-    "watch:browser": "npx lerna run watch --parallel --ignore @pintora/cli",
+    "compile": "npx turbo run compile --concurrency=10",
+    "compile:browser": "npx turbo run compile --concurrency=10 --ignore='packages/pintora-cli/**/*'",
+    "watch": "npx turbo run watch --parallel --no-cache",
+    "watch:browser": "npx lerna run watch --parallel --ignore='packages/pintora-cli/**/*'",
     "prepare": "lerna run prepare",
     "demo:dev": "cd demo && npm run dev",
     "website:dev": "cd website && npm run start",
@@ -33,6 +33,7 @@
     "lint-staged": "^12.1.2",
     "prettier": "2.3.2",
     "rimraf": "3.0.2",
+    "turbo": "^1.0.19",
     "typescript": "4.3.5"
   },
   "workspaces": [
@@ -45,5 +46,20 @@
       "prettier --write",
       "eslint --fix"
     ]
+  },
+  "turbo": {
+    "baseBranch": "origin/master",
+    "npmClient": "npm",
+    "pipeline": {
+      "compile": {
+        "dependsOn": ["^compile"],
+        "outputs": ["lib/**", "dist/*"]
+      },
+      "watch": {
+        "dependsOn": ["^watch"],
+        "outputs": ["lib/**", "dist/*"],
+        "cache": false
+      }
+    }
   }
 }
