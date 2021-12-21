@@ -22,6 +22,6 @@
     "deepmerge": "^4.2.2"
   },
   "devDependencies": {
-    "typescript": "4.2.4"
+    "typescript": "^4.4.4"
   }
 }
