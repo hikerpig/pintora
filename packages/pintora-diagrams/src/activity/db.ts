@@ -60,6 +60,7 @@ export type Case = {
 export type Fork = {
   id: string
   branches: Step[]
+  shouldMerge: boolean
 }
 
 export type ForkBranch = {
@@ -153,6 +154,7 @@ type ApplyPart =
   | {
       type: 'fork'
       branches: ApplyPart[]
+      shouldMerge: boolean
     }
   | {
       type: 'forkBranch'
@@ -262,6 +264,7 @@ class ActivityDb {
         const branches = this.apply(part.branches, true, { ...state, parentId: id })
         const forkSentence: Fork = {
           id,
+          shouldMerge: part.shouldMerge,
           branches,
         }
         step = { type: 'fork', value: forkSentence }

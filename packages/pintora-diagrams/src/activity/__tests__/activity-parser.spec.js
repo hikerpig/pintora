@@ -465,12 +465,12 @@ activityDiagram
 
   it('can parse fork sentence', () => {
     const example = stripStartEmptyLines(`
-activityDiagram
-  fork
-    :action 1;
-  forkagain
-    :action 2;
-  endfork
+  activityDiagram
+    fork
+      :action 1;
+    forkagain
+      :action 2;
+    endfork
 `)
     parse(example)
     const ir = db.getDiagramIR()
@@ -521,5 +521,20 @@ activityDiagram
         },
       },
     ])
+  })
+
+  it('can parse fork with end merge', () => {
+    const example = stripStartEmptyLines(`
+activityDiagram
+  fork
+    :action 1;
+  forkagain
+    :action 2;
+  endmerge
+`)
+    parse(example)
+    const ir = db.getDiagramIR()
+    // console.log('ir', JSON.stringify(ir, null, 2))
+    expect(ir.steps[0].value.shouldMerge).toBeTruthy()
   })
 })

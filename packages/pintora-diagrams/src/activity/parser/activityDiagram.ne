@@ -139,13 +139,14 @@ caseClause ->
     %}
 
 forkSentence ->
-    "fork" %SPACE:* %NEWLINE (__ statement):+ (_ forkAgainClause):* _ "endfork" %NEWLINE {%
+    "fork" %SPACE:* %NEWLINE (__ statement):+ (_ forkAgainClause):* _ ("endfork"|"endmerge") %NEWLINE {%
       function(d) {
-        // console.log('forkSentence', d)
         const firstActions = d[3].map(a => a[1][0])
         const forkAgains = d[4].map(a => a[1])
         const branches = [{ type: 'forkBranch', children: firstActions }, ...forkAgains]
-        return { type: 'fork', branches }
+        const endWord = tv(d[6][0])
+        const shouldMerge = endWord  === 'endmerge'
+        return { type: 'fork', shouldMerge, branches }
       }
     %}
 

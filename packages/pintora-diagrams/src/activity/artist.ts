@@ -25,6 +25,8 @@ import {
   Case,
   While,
   ArrowLabel,
+  Fork,
+  ForkBranch,
 } from './db'
 import { ActivityConf, getConf } from './config'
 import { adjustEntities, createLayoutGraph, getGraphBounds, LayoutEdge, LayoutGraph, LayoutNode } from '../util/graph'
@@ -41,6 +43,7 @@ import dagre from '@pintora/dagre'
 import { positionGroupContents } from '../util/mark-positioner'
 import { ITheme } from '../util/themes/base'
 import { DiagramsConf } from '../type'
+import { isDev } from '../util/env'
 
 let conf: ActivityConf
 let model: ArtistModel
@@ -81,7 +84,9 @@ const erArtist: IDiagramArtist<ActivityDiagramIR, ActivityConf> = {
 
     model.preProcess()
     activityDraw = new ActivityDraw(model, g)
-    // ;(window as any).activityDraw = activityDraw
+    if (isDev) {
+      ;(window as any).activityDraw = activityDraw
+    }
 
     ir.steps.forEach(step => {
       activityDraw.drawStep(rootMark, step)
@@ -249,6 +254,19 @@ class ArtistModel {
           this.stepModelMap.set(keyword.id, stepModel)
           break
         }
+        case 'fork': {
+          const fork = step.value as Fork
+          processRecursiveStep(step, stepModel, { childrenKeys: ['branches'], parallelChildren: true })
+          const endId = `${fork.id}-end`
+          safeAssign(stepModel, {
+            endId,
+          })
+          break
+        }
+        case 'forkBranch': {
+          processRecursiveStep(step, stepModel)
+          break
+        }
         default: {
           stepModel = null
         }
@@ -314,7 +332,7 @@ class ArtistModel {
 type DrawStepResult = {
   id: string
   endId?: string
-  startMark: Group
+  startMark: Group | Rect
   stepModel?: StepModel
 }
 
@@ -356,6 +374,14 @@ class ActivityDraw {
         const keyword = step.value as Keyword
         result = this.drawKeyword(rootMark, keyword)
         this.keywordStepResults[keyword.label] = result
+        break
+      }
+      case 'fork': {
+        result = this.drawFork(rootMark, step.value as Fork)
+        break
+      }
+      case 'forkBranch': {
+        result = this.drawForkBranch(rootMark, step.value as ForkBranch)
         break
       }
       default:
@@ -788,6 +814,88 @@ class ActivityDraw {
     return result
   }
 
+  drawFork(parentMark: Group, fork: Fork): DrawStepResult {
+    const { id } = fork
+    const group = makeEmptyGroup()
+    const stepModel = model.stepModelMap.get(id)
+
+    const startMark = makeMark('rect', {
+      width: 200,
+      height: 4,
+      x: 0,
+      y: 0,
+      fill: conf.keywordBackground,
+      radius: 2,
+    })
+
+    this.g.setNode(id, {
+      id: id,
+      mark: group,
+      width: startMark.attrs.width,
+      height: startMark.attrs.height,
+      onLayout(data) {
+        // console.log('[drawFork] onLayout', data)
+        // TODO: here we may need to adjust startMark's width by branches children width
+        positionGroupContents(group, { ...data, x: data.x - data.width / 2, y: data.y - data.height / 2 })
+      },
+    })
+
+    const endId = stepModel.endId
+    const result: DrawStepResult = {
+      id,
+      startMark,
+      stepModel,
+      endId,
+    }
+
+    const { mark: diamondMark } = this.drawDiamondMark(endId)
+    const endMark = diamondMark
+
+    group.children.push(startMark)
+    parentMark.children.push(group, endMark)
+
+    // TODO: when shouldMerge: false, end mark should be a rect
+    fork.branches.map((branch: Step<ForkBranch>) => {
+      const childResult = this.drawStep(parentMark, branch)
+      const firstChildId = branch.value.children[0]?.value.id
+      if (firstChildId) {
+        this.g.setEdge(id, firstChildId, {
+          label: '',
+          isForkStartStraightLine: true,
+        } as EdgeData)
+      }
+
+      this.g.setEdge(childResult.endId, endId, { label: '' })
+      return childResult
+    })
+    return result
+  }
+  drawForkBranch(parentMark: Group, branch: ForkBranch): DrawStepResult {
+    const { id } = branch
+    const group = makeEmptyGroup()
+    const stepModel = model.stepModelMap.get(id)
+
+    const result: DrawStepResult = {
+      id,
+      startMark: group,
+      stepModel,
+      endId: '',
+    }
+
+    parentMark.children.push(group)
+
+    const childResults = branch.children.map((branch: Step<ForkBranch>) => {
+      const childResult = this.drawStep(parentMark, branch)
+      group.children.push(childResult.startMark)
+      return childResult
+    })
+    const lastChild = last(childResults)
+    if (lastChild) {
+      result.endId = lastChild.id
+    }
+    return result
+  }
+
   drawNote(parentMark: Group, note: Note) {
     const { id, text } = note
 
@@ -915,6 +1023,7 @@ function drawAction(parentMark: Group, action: Action, g: LayoutGraph): DrawStep
 type EdgeData = LayoutEdge<{
   label?: string
   simplifyStartEdge?: boolean
+  isForkStartStraightLine?: boolean
 }>
 
 function drawEdges(parent: Group, g: LayoutGraph) {
@@ -930,6 +1039,13 @@ function drawEdges(parent: Group, g: LayoutGraph) {
     //     y: startPoint.y,
     //   })
     // }
+    if (edge.isForkStartStraightLine) {
+      edge.points.slice(0, edge.points.length - 2).forEach(p => {
+        safeAssign(p, {
+          x: lastPoint.x,
+        })
+      })
+    }
 
     const linePath = makeMark('path', {
       path: [
