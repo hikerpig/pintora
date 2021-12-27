@@ -465,12 +465,12 @@ activityDiagram
 
   it('can parse fork sentence', () => {
     const example = stripStartEmptyLines(`
-  activityDiagram
-    fork
-      :action 1;
-    forkagain
-      :action 2;
-    endfork
+activityDiagram
+  fork
+    :action 1;
+  forkagain
+    :action 2;
+  endfork
 `)
     parse(example)
     const ir = db.getDiagramIR()
@@ -528,6 +528,7 @@ activityDiagram
 activityDiagram
   fork
     :action 1;
+    :action 11;
   forkagain
     :action 2;
   endmerge

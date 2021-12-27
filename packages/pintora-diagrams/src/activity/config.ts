@@ -5,7 +5,8 @@ import { interpreteStyles, StyleParam } from '../util/style'
 
 export type ActivityConf = {
   diagramPadding: number
-  layoutDirection: string
+
+  edgesep: number
 
   actionPaddingX: number
   actionPaddingY: number
@@ -32,7 +33,8 @@ export type ActivityConf = {
 
 export const defaultConfig: ActivityConf = {
   diagramPadding: 15,
-  layoutDirection: 'TB',
+
+  edgesep: 60,
 
   actionPaddingX: 10,
   actionPaddingY: 10,

@@ -107,6 +107,56 @@ activityDiagram
   end
 ```
 
+## 并行(fork)
+
+使用 `fork` / `forkagain` / `endfork` / `endmerge` 来实现并行处理的实例。
+
+1. 并行的 fork
+
+```pintora play
+activityDiagram
+  start
+  fork
+    :Action 1;
+  forkagain
+    :Action 2;
+  forkagain
+    :Action 3;
+  endfork
+  end
+```
+
+2. 带有 `endmerge`
+
+```pintora play
+activityDiagram
+  start
+  fork
+    :Action 1;
+  forkagain
+    :Action 2;
+  endmerge
+  end
+```
+
+3. 配合条件语句一起使用
+
+```pintora play
+activityDiagram
+  start
+  if (multiprocessor?) then
+    fork
+      :Action 1;
+    forkagain
+      :Action 2;
+    endfork
+    else (monoproc)
+      :Action 1;
+      :Action 2;
+    endif
+  end
+```
+
 ## 添加备注
 
 在动作语句之后使用 `@note`，以及带上方位指示词和参与者来添加便签样式的备注。

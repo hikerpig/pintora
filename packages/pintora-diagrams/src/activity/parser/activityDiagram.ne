@@ -82,10 +82,10 @@ statement ->
   | styleClause _ %NEWLINE
 
 conditionSentence ->
-    "if" %SPACE:+ wordsInParens %SPACE:+ "then" wordsInParens:? %SPACE:* %NEWLINE line:* elseClause:? _ "endif" _ %NEWLINE {%
+    "if" %SPACE:+ wordsInParens %SPACE:+ "then" (%SPACE:+ wordsInParens):? %SPACE:* %NEWLINE line:* elseClause:? _ "endif" _ %NEWLINE {%
       function(d) {
         // console.log('[conditions]', d[2])
-        const thenLabel = d[5] || ''
+        const thenLabel = (d[5] ? d[5][1]: null) || ''
         const elseResult = d[9]
         return {
           type: 'condition',

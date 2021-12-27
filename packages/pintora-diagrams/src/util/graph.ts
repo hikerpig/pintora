@@ -13,14 +13,22 @@ type DagreGraphOpts = {
   marginy?: number
 }
 
-export function getGraphBounds(g: LayoutGraph): Bounds {
-  let left = 0
+type GetGraphBoundsOpts = {
+  filterNode?(node: LayoutNode): boolean
+  startLeft?: number
+  startTop?: number
+}
+
+export function getGraphBounds(g: LayoutGraph, opts: GetGraphBoundsOpts = {}): Bounds {
+  let left = opts.startLeft || 0
   let right = 0
-  let top = 0
+  let top = opts.startTop || 0
   let bottom = 0
   g.nodes().forEach(k => {
     const node: LayoutNode = g.node(k) as any
     if (!node) return
+    if (opts.filterNode && !opts.filterNode(node)) return
+
     left = Math.min(node.outerLeft || node.x, left)
     const width = node.outerWidth || node.width
     // assuming the node is positioned with anchor point centered
@@ -69,6 +77,7 @@ export interface LayoutNodeOption {
 export interface LayoutNode extends LayoutNodeOption {
   id?: string
   mark?: Mark
+  name?: string // debug
   width: number
   height: number
   x: number

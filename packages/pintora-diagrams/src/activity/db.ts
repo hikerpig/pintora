@@ -105,11 +105,11 @@ type ApplyPart =
       type: 'condition'
       message: string
       then: {
-        message: string
+        label: string
         children: ApplyPart[]
       }
       else?: {
-        message: string
+        label: string
         children: ApplyPart[]
       }
     }
@@ -210,14 +210,14 @@ class ActivityDb {
             id,
             message: part.message,
             then: {
-              label: part.then.message,
+              label: part.then.label,
               children: thenResult,
             },
           }
           if (part.else) {
             const elseResult = this.apply(part.else.children, true, { ...state, parentId: id })
             condition.else = {
-              label: part.else.message,
+              label: part.else.label,
               children: elseResult,
             }
           }
