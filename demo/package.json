@@ -1,6 +1,6 @@
 {
   "name": "pintora-demo",
-  "version": "0.1.0-alpha.13",
+  "version": "0.1.0-alpha.14",
   "private": true,
   "scripts": {
     "dev": "vite --port 3001",
@@ -17,9 +17,9 @@
     "@codemirror/theme-one-dark": "^0.19.1",
     "@codemirror/tooltip": "^0.19.10",
     "@codemirror/view": "^0.19.37",
-    "@pintora/core": "^0.1.0-alpha.11",
-    "@pintora/renderer": "^0.1.0-alpha.13",
-    "@pintora/standalone": "^0.1.0-alpha.13",
+    "@pintora/core": "^0.1.0-alpha.14",
+    "@pintora/renderer": "^0.1.0-alpha.14",
+    "@pintora/standalone": "^0.1.0-alpha.14",
     "@pintora/test-shared": "^0.1.0-alpha.11",
     "@react-hook/debounce": "^4.0.0",
     "@reduxjs/toolkit": "^1.7.1",

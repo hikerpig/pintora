@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.1.0-alpha.14](https://github.com/hikerpig/pintora/compare/v0.1.0-alpha.13...v0.1.0-alpha.14) (2021-12-30)
+
+
+### Features
+
+* **pintora-demo:** save editor code before unload and restore when new page loads ([fd4a2cc](https://github.com/hikerpig/pintora/commit/fd4a2ccba143140fed1de635641ab479a2de5ab9))
+* **pintora-diagrams:** [activityDiagram] Add support for parallel processing (fork) ([3ab6f2e](https://github.com/hikerpig/pintora/commit/3ab6f2e527b23081313d093366a988a37be4a7b9))
+
+
+
+
+
 # [0.1.0-alpha.13](https://github.com/hikerpig/pintora/compare/v0.1.0-alpha.12...v0.1.0-alpha.13) (2021-12-15)
 
 

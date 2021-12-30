@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.1.0-alpha.14](https://github.com/hikerpig/pintora/compare/v0.1.0-alpha.13...v0.1.0-alpha.14) (2021-12-30)
+
+
+### Features
+
+* **pintora-demo:** save editor code before unload and restore when new page loads ([fd4a2cc](https://github.com/hikerpig/pintora/commit/fd4a2ccba143140fed1de635641ab479a2de5ab9))
+
+
+
+
+
 # [0.1.0-alpha.13](https://github.com/hikerpig/pintora/compare/v0.1.0-alpha.12...v0.1.0-alpha.13) (2021-12-15)
 
 **Note:** Version bump only for package pintora-demo
