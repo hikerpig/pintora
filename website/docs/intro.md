@@ -23,3 +23,7 @@ Heavily inspired by [Mermaid.js](https://mermaid-js.github.io/mermaid/#/) and [P
 - [Entity Relationship Diagram](./diagrams/er-diagram.mdx)
 - [Component Diagram](./diagrams/component-diagram.mdx)
 - [Activity Diagram](./diagrams/activity-diagram.mdx)
+
+## 💻 Editor Support
+
+- VSCode extension [pintora-vscode](https://marketplace.visualstudio.com/items?itemName=hikerpig.pintora-vscode), providing syntax highlight and preview support for `.pintora` file and markdown code fence.

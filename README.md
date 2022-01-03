@@ -36,12 +36,15 @@ Heavily inspired by [Mermaid.js](https://mermaid-js.github.io/mermaid/#/) and [P
 - Sequence Diagram
 - Entity Relationship Diagram
 - Component Diagram
+- Activity Diagram
 
 ## 📖 Documentation
 
 Check the online [documentation and demo](http://pintorajs.vercel.app/docs/intro/) for more details.
 
-🚧 This project is currently under active development, if you have good thoughts or feature requests, please feel free to [start a new discussion](https://github.com/hikerpig/pintora/discussions).
+## 💻 Editor Support
+
+- VSCode extension [pintora-vscode](https://marketplace.visualstudio.com/items?itemName=hikerpig.pintora-vscode), providing syntax highlight and preview support for `.pintora` file and markdown code fence.
 
 ## 🔭 Roadmap
 
@@ -52,3 +55,5 @@ Check the online [documentation and demo](http://pintorajs.vercel.app/docs/intro
 - [x] PlantUML style activity diagram, or Mermaid's flowchart
 - [ ] PlantUML style deploy diagram
 - [ ] Load diagram implementation and canvas renderer only when needed
+
+If you have good thoughts or feature requests, please feel free to [start a new discussion](https://github.com/hikerpig/pintora/discussions).
