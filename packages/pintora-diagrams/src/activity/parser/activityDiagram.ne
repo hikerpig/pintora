@@ -1,5 +1,5 @@
 @{%
-import * as moo from 'moo'
+import * as moo from '@hikerpig/moo'
 import { tv, textToCaseInsensitiveRegex, VALID_TEXT_REGEXP, COLOR_REGEXP } from '../../util/parser-shared'
 
 let lexer = moo.compile({
@@ -23,12 +23,6 @@ let yy
 
 export function setYY(v) {
   yy = v
-}
-
-export function reset() {
-  if (lexer.queuedText) {
-    lexer.queuedText = ''; // this is a tweak for moo.js bug
-  }
 }
 %}
 

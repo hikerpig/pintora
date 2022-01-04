@@ -1,5 +1,5 @@
 @{%
-import * as moo from 'moo'
+import * as moo from '@hikerpig/moo'
 import { tv, VALID_TEXT_REGEXP } from '../../util/parser-shared'
 
 let lexer = moo.compile({

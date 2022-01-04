@@ -23,6 +23,7 @@
     "coverage": "npx jest --collect-coverage"
   },
   "dependencies": {
+    "@hikerpig/moo": "^0.5.2-beta.2",
     "@pintora/core": "^0.1.0-alpha.14",
     "@pintora/dagre": "^0.10.0-alpha.0",
     "@pintora/graphlib": "2.2.2",
