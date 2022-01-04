@@ -51,15 +51,28 @@
     "npmClient": "npm",
     "pipeline": {
       "compile": {
-        "dependsOn": ["^compile"],
-        "outputs": ["lib/**", "dist/*"]
+        "dependsOn": [
+          "^compile"
+        ],
+        "outputs": [
+          "lib/**",
+          "dist/*"
+        ]
       },
       "build": {
-        "outputs": ["dist/*", "build/*"]
+        "outputs": [
+          "dist/*",
+          "build/*"
+        ]
       },
       "watch": {
-        "dependsOn": ["^watch"],
-        "outputs": ["lib/**", "dist/*"],
+        "dependsOn": [
+          "^watch"
+        ],
+        "outputs": [
+          "lib/**",
+          "dist/*"
+        ],
         "cache": false
       }
     }
