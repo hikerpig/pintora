@@ -2,12 +2,12 @@ import nearley from 'nearley'
 import { compact } from '@pintora/core'
 // import { dedent } from './text'
 
-type Options = {
+type Options<T> = {
   prepare?(): void
-  postProcess?<T>(results: T): T
+  postProcess?(results: T[]): T[]
 }
 
-export function genParserWithRules(grammar: nearley.CompiledRules, opts: Options = {}) {
+export function genParserWithRules<T = any>(grammar: nearley.CompiledRules, opts: Options<T> = {}) {
   return function parse(text: string) {
     // should construct a brand new parser everytime
     const parser = new nearley.Parser(nearley.Grammar.fromCompiled(grammar))
@@ -35,6 +35,7 @@ export function genParserWithRules(grammar: nearley.CompiledRules, opts: Options
     // console.log('[genParserWithRules]parser results', parser.results)
     parser.finish()
     let results = compact(parser.results)
+
     if (opts.postProcess) {
       results = opts.postProcess(results)
     }

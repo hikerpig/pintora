@@ -9,10 +9,10 @@ describe('activity parser', () => {
 
   it('can parse action', () => {
     const example = stripStartEmptyLines(`
-activityDiagram
-:simple action;
-:multiline
- action;
+  activityDiagram
+  :simple action;
+  :multiline
+  action;
 `)
     parse(example)
     const ir = db.getDiagramIR()
@@ -25,7 +25,7 @@ activityDiagram
       },
       {
         actionType: 'normal',
-        message: 'multiline\n action',
+        message: 'multiline\n  action',
       },
     ])
   })
