@@ -45,6 +45,7 @@ import { MARK_TRANSFORMERS, positionGroupContents } from '../util/mark-positione
 import { ITheme } from '../util/themes/base'
 import { DiagramsConf } from '../type'
 import { isDev } from '../util/env'
+import { getPointsCurvePath, getPointsLinearPath } from '../util/line-util'
 
 let conf: ActivityConf
 let model: ArtistModel
@@ -1151,13 +1152,10 @@ function drawEdges(parent: Group, g: LayoutGraph) {
       })
     }
 
+    const path = conf.curvedEdge ? getPointsCurvePath(edge.points) : getPointsLinearPath(edge.points)
+
     const linePath = makeMark('path', {
-      path: [
-        ['M', startPoint.x, startPoint.y],
-        ...restPoints.map(point => {
-          return ['L', point.x, point.y] as any
-        }),
-      ],
+      path,
       stroke: conf.edgeColor,
       lineJoin: 'round',
     })

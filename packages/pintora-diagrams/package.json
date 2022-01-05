@@ -27,9 +27,11 @@
     "@pintora/core": "^0.1.0-alpha.14",
     "@pintora/dagre": "^0.10.0-alpha.0",
     "@pintora/graphlib": "2.2.2",
+    "d3-shape": "^3.0.1",
     "nearley": "^2.20.1"
   },
   "devDependencies": {
+    "@types/d3-shape": "^3.0.2",
     "@types/nearley": "^2.11.1",
     "@types/node": "^14.11.8",
     "babel-jest": "^27.0.2",

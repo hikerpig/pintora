@@ -9,13 +9,16 @@ import {
   calculateTextDimensions,
   getPointAt,
   Rect,
+  PathCommand,
 } from '@pintora/core'
+import * as D3_SHAPE from 'd3-shape'
 import { ErDiagramIR, Identification, Entity, Relationship } from './db'
 import { ErConf, getConf } from './config'
 import { createLayoutGraph, getGraphBounds, LayoutGraph, LayoutNode } from '../util/graph'
 import { makeMark, getBaseText, calcDirection, makeLabelBg } from '../util/artist-util'
 import dagre from '@pintora/dagre'
 import { drawMarkerTo } from './artist-util'
+import { getPointsCurvePath, getPointsLinearPath } from '../util/line-util'
 
 let conf: ErConf
 
@@ -449,7 +452,6 @@ let relCnt = 0
  * @param svg the svg node
  * @param rel the relationship to draw in the svg
  * @param g the graph containing the edge information
- * @param insert the insertion point in the svg DOM (because relationships have markers that need to sit 'behind' opaque entity boxes)
  */
 const drawRelationshipFromLayout = function (group: Group, rel: Relationship, g: LayoutGraph) {
   relCnt++
@@ -457,35 +459,20 @@ const drawRelationshipFromLayout = function (group: Group, rel: Relationship, g:
   // Find the edge relating to this relationship
   const edge: EdgeData = g.edge(rel.entityA, rel.entityB)
 
-  // Get a function that will generate the line path
-  // const lineFunction = line()
-  //   .x(function (d) {
-  //     return d.x
-  //   })
-  //   .y(function (d) {
-  //     return d.y
-  //   })
-  //   .curve(curveBasis)
-
-  // Insert the line at the right place
-  // const svgPath = svg
-  //   .insert('path', '#' + insert)
-  //   .attr('class', 'er relationshipLine')
-  //   // .attr('d', lineFunction(edge.points))
-  //   .attr('stroke', conf.stroke)
-  //   .attr('fill', 'none')
-
   const [startPoint, ...restPoints] = edge.points
   const secondPoint = restPoints[0]
   const lastPoint = restPoints[restPoints.length - 1]
 
+  let pathCommands: PathCommand[] | string
+  if (conf.curvedEdge) {
+    const pathString = getPointsCurvePath(edge.points)
+    pathCommands = pathString
+  } else {
+    pathCommands = getPointsLinearPath(edge.points)
+  }
+
   const linePath = makeMark('path', {
-    path: [
-      ['M', startPoint.x, startPoint.y],
-      ...restPoints.map(point => {
-        return ['L', point.x, point.y] as any
-      }),
-    ],
+    path: pathCommands,
     stroke: conf.edgeColor,
     lineJoin: 'round',
   })

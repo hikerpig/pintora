@@ -3,7 +3,7 @@
  */
 import { parseColor } from './util/color'
 
-export type StyleValueType = 'color' | 'size' | 'fontSize' | 'string'
+export type StyleValueType = 'color' | 'size' | 'fontSize' | 'string' | 'boolean'
 
 export type StyleMeta = {
   valueType: StyleValueType | StyleValueType[]
@@ -21,6 +21,7 @@ interface StyleValueTypeMap {
   size: number
   fontSize: number
   string: string
+  boolean: boolean
 }
 
 const sizeEvaluator = ({ value }: any): StyleEvaluateResult<number> => {
@@ -38,6 +39,9 @@ const styleValueEvaluators: { [K in StyleValueType]: (p: StyleParam) => StyleEva
   fontSize: sizeEvaluator,
   string({ value }) {
     return { value, valid: true }
+  },
+  boolean({ value }) {
+    return { value: value === 'true', valid: true }
   },
 }
 

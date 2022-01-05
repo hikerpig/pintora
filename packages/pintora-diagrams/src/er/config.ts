@@ -7,6 +7,8 @@ export type ErConf = {
   diagramPadding: number
   layoutDirection: string
 
+  curvedEdge: boolean
+
   minEntityWidth: number
   minEntityHeight: number
 
@@ -29,6 +31,8 @@ export type ErConf = {
 export const defaultConfig: ErConf = {
   diagramPadding: 15,
   layoutDirection: 'TB',
+
+  curvedEdge: true,
 
   minEntityWidth: 90,
 
@@ -53,6 +57,8 @@ export const defaultConfig: ErConf = {
 }
 
 export const ER_STYLE_RULES = {
+  curvedEdge: { valueType: 'boolean' },
+  layoutDirection: { valueType: 'string' },
   borderRadius: { valueType: 'size' },
   stroke: { valueType: 'color' },
   fill: { valueType: 'color' },

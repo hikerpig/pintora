@@ -109,6 +109,8 @@ export type ErConf = {
   diagramPadding: number
   layoutDirection: string
 
+  curvedEdge: boolean
+
   minEntityWidth: number
   minEntityHeight: number
 
@@ -160,6 +162,9 @@ export type ComponentConf = {
 ```ts
 export type ActivityConf = {
   diagramPadding: number
+
+  edgesep: number
+  curvedEdge: boolean
 
   actionPaddingX: number
   actionPaddingY: number

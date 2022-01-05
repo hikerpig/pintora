@@ -7,6 +7,7 @@ export type ActivityConf = {
   diagramPadding: number
 
   edgesep: number
+  curvedEdge: boolean
 
   actionPaddingX: number
   actionPaddingY: number
@@ -35,6 +36,7 @@ export const defaultConfig: ActivityConf = {
   diagramPadding: 15,
 
   edgesep: 60,
+  curvedEdge: true,
 
   actionPaddingX: 10,
   actionPaddingY: 10,
@@ -60,7 +62,8 @@ export const defaultConfig: ActivityConf = {
 
 export const ACTIVITY_STYLE_RULES = {
   diagramPadding: { valueType: 'size' },
-  layoutDirection: { valueType: 'string' },
+
+  curvedEdge: { valueType: 'boolean' },
 
   actionPaddingX: { valueType: 'size' },
   actionPaddingY: { valueType: 'size' },
