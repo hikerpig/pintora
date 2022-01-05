@@ -1,6 +1,6 @@
 {
   "name": "@pintora/diagrams",
-  "version": "0.1.0-alpha.14",
+  "version": "0.1.0-alpha.15",
   "description": "Core diagrams of pintora",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
@@ -24,7 +24,7 @@
   },
   "dependencies": {
     "@hikerpig/moo": "^0.5.2-beta.2",
-    "@pintora/core": "^0.1.0-alpha.14",
+    "@pintora/core": "^0.1.0-alpha.15",
     "@pintora/dagre": "^0.10.0-alpha.0",
     "@pintora/graphlib": "2.2.2",
     "d3-shape": "^3.0.1",
