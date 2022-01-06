@@ -311,9 +311,20 @@ Notice the `class` attribute on `itemGroup`, which will be carried in the SVG ou
 
 At this point, the final `graphicsIR` is complete with all the required data.
 
+```ts
+    const diagramWidth = maxLabelRight + conf.diagarmPadding
+
+    const graphicsIR: GraphicsIR = {
+      mark: rootMark,
+      width: diagramWidth,
+      height: circleStartY + 2 * radius + conf.diagarmPadding,
+      bgColor: conf.diagramBackgroundColor,
+    }
+```
+
 ## Testing the diagram
 
-We use an arbitrary bundler to package the source code of this diagram as `dist/pintora-diagram-pie-chart.umd.js`, which can be tested in an html page to see the effect.
+We can use any bundler to package the source code of this diagram as `dist/pintora-diagram-pie-chart.umd.js`, which can be tested in an html page to see the effect.
 
 ```html
   <section>
