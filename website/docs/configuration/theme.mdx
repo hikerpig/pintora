@@ -108,3 +108,67 @@ pintora.default.setConfig({
   }
 })
 ```
+
+## Register a theme
+
+```ts
+interface IPintoraStandalone {
+  registerTheme(name: string, variables: ITheme): void
+}
+```
+
+```ts
+/** @typedef {import('@pintora/standalone').ITheme} ITheme */
+
+// duskfox https://coolors.co/393552-eb6f92-a3be8c-f6c177-569fba-c4a7e7-9ccfd8-e0def4-ea9a97-eb98c3
+const PALETTE = {
+  normalDark: '#393552',
+  pink: '#EB6F92',
+  purple: '#C4A7E7',
+  blue: '#569FBA',
+  yellow: '#F6C177',
+  green: '#A3BE8C',
+  lightBlue: '#9CCFD8',
+  pastelPink: '#EA9A97',
+  lightPurple: '#E0DEF4',
+  white: '#f9f9f9',
+};
+
+/** @type {ITheme} */
+const themeDuskFox = {
+  schemeOppsiteTheme: 'default',
+  isDark: true,
+
+  primaryColor: PALETTE.purple,
+  secondaryColor: PALETTE.pink,
+  teritaryColor: PALETTE.blue,
+
+  primaryLineColor: PALETTE.lightPurple,
+  secondaryLineColor: PALETTE.lightBlue,
+
+  textColor: PALETTE.white,
+  primaryTextColor: PALETTE.normalDark,
+  secondaryTextColor: PALETTE.white,
+  teritaryTextColor: PALETTE.lightPurple,
+
+  primaryBorderColor: PALETTE.white,
+  secondaryBorderColor: PALETTE.blue,
+
+  canvasBackground: PALETTE.normalDark,
+  background1: PALETTE.pastelPink,
+  lightestBackground: PALETTE.white,
+  groupBackground: PALETTE.normalDark,
+
+  noteBackground: PALETTE.yellow,
+  noteTextColor: PALETTE.normalDark,
+};
+
+pintora.default.registerTheme('duskfox', themeDuskFox);
+
+// use it somewhere after
+pintora.default.setConfig({
+  themeConfig: {
+    theme: 'duskfox',
+  },
+});
+```

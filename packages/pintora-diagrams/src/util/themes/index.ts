@@ -4,6 +4,8 @@ import { ThemeLarkLight } from './theme-lark-light'
 import { ThemeLarkDark } from './theme-lark-dark'
 import { ITheme } from './base'
 
+export { ITheme }
+
 const THEMES: Record<string, ITheme> = {
   default: new ThemeDefault(),
   dark: new ThemeDark(),

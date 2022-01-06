@@ -1,6 +1,6 @@
 import pintora, { configApi, GraphicsIR } from '@pintora/core'
 export * from '@pintora/core'
-import { DIAGRAMS, DiagramsConf, THEMES } from '@pintora/diagrams'
+import { DIAGRAMS, DiagramsConf, THEMES, ITheme } from '@pintora/diagrams'
 import { render, RenderOptions, BaseRenderer, rendererRegistry } from '@pintora/renderer'
 
 function initDiagrams() {
@@ -116,9 +116,15 @@ const pintoraStandalone = {
       configApi.setConfig(newConf)
     }
   },
+  registerTheme(name: string, variables: ITheme) {
+    if (THEMES[name]) {
+      console.warn(`[pintora] override theme ${name}`)
+    }
+    THEMES[name] = variables
+  },
 }
 
-export { BaseRenderer, rendererRegistry, DiagramsConf }
+export { BaseRenderer, rendererRegistry, DiagramsConf, ITheme, THEMES }
 
 export { pintoraStandalone } // for @pintora/cli
 

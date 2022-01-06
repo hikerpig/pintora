@@ -4,10 +4,10 @@ import { erDiagram, ErDiagramIR } from './er'
 import { componentDiagram, ComponentDiagramIR } from './component'
 import { activityDiagram, ActivityDiagramIR } from './activity'
 import { DiagramsConf } from './type'
-import THEMES from './util/themes/index'
+import THEMES, { ITheme } from './util/themes/index'
 import './util/symbols'
 
-export { DiagramsConf, THEMES }
+export { DiagramsConf, THEMES, ITheme }
 
 configApi.setConfig<DiagramsConf>({
   themeConfig: {
