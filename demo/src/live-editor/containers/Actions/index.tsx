@@ -43,7 +43,7 @@ const ACION_BUTTONS: ActionButtonDef[] = [
     description: 'Will use canvas renderer',
     action() {
       const state = store.getState()
-      renderPintora(state.editor.code, 'canvas').then(renderer => {
+      renderPintora(state.main.editor.code, 'canvas').then(renderer => {
         const canvas: HTMLCanvasElement = renderer.getRootElement()
         setTimeout(() => {
           const dataURL = canvas.toDataURL('image/png;base64', 0.9)
@@ -61,7 +61,7 @@ const ACION_BUTTONS: ActionButtonDef[] = [
     description: 'Will use svg renderer',
     action() {
       const state = store.getState()
-      renderPintora(state.editor.code, 'svg').then(renderer => {
+      renderPintora(state.main.editor.code, 'svg').then(renderer => {
         const str = getSvgString(renderer)
         if (str) {
           var element = document.createElement('a')

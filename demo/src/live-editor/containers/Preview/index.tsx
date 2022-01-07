@@ -1,7 +1,8 @@
-import React, { useCallback, useEffect } from 'react'
+import React, { useCallback } from 'react'
 import classnames from 'classnames'
 import { useDispatch, connect } from 'react-redux'
-import { State, actions } from 'src/live-editor/redux/slice'
+import { StoreState } from 'src/live-editor/redux/store'
+import { actions } from 'src/live-editor/redux/slice'
 import PintoraPreview from 'src/components/PintoraPreview'
 import './Preview.less'
 
@@ -84,11 +85,11 @@ const Preview = ({ previewCode, previewConfig, pintoraConfig, className }: Props
   )
 }
 
-const connector = connect((state: State) => {
+const connector = connect((state: StoreState) => {
   return {
-    previewCode: state.preview.code,
-    previewConfig: state.preview.config,
-    pintoraConfig: state.preview.pintoraConfig,
+    previewCode: state.main.preview.code,
+    previewConfig: state.main.preview.config,
+    pintoraConfig: state.main.preview.pintoraConfig,
   }
 })(Preview)
 

@@ -32,7 +32,7 @@ export default defineConfig({
       input: {
         'entries/demo': resolve(__dirname, 'entries/demo/index.html'),
         'preview': resolve(__dirname, 'preview/index.html'),
-        'live-editor': resolve(__dirname, 'live-editor/index.html')
+        'live-editor': resolve(__dirname, 'live-editor/index.html'),
       },
       output: {
         entryFileNames: `assets/[name].js`,

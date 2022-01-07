@@ -67,7 +67,7 @@ const appSlice = createSlice({
         state.preview.code = code
       }
     },
-    updateEditorError(state, action: PayloadAction<{ errorInfo: ErrorInfo | null }>){
+    updateEditorError(state, action: PayloadAction<{ errorInfo: ErrorInfo | null }>) {
       const { errorInfo } = action.payload
       state.editor.error = errorInfo
     },

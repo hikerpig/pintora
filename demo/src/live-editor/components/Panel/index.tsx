@@ -6,12 +6,13 @@ interface PanelProps {
   title: string
   tabs?: Tabs
   className?: string
+  initialTab?: string
   onCurrentTabChange?(v: string): void
   headerAppendix?: PanelHeaderProps['appendix']
 }
 
-const Panel: React.FC<PanelProps> = ({ className, title, tabs, children, onCurrentTabChange, headerAppendix }) => {
-  const [currentTab, setCurrentTab] = useState(tabs?.[0]?.key)
+const Panel: React.FC<PanelProps> = ({ className, title, tabs, initialTab, children, onCurrentTabChange, headerAppendix }) => {
+  const [currentTab, setCurrentTab] = useState(initialTab || tabs?.[0]?.key)
   const setCurrentTabProp = useCallback(
     key => {
       setCurrentTab(key)

@@ -14,24 +14,23 @@ const Examples = ({}: ExamplesProps) => {
     if (example) {
       store.dispatch(actions.updateEditorCode({ code: example.code, syncToPreview: true }))
     }
-
   }, [])
   return (
     <div className="Examples">
       <Buttons>
-      {Object.entries(EXAMPLES).map(([key, example]) => {
-        return (
-          <div
-            key={key}
-            className="btn btn-primary btn-sm"
-            data-key={key}
-            title={example.description}
-            onClick={onExampleClick}
-          >
-            {example.name}
-          </div>
-        )
-      })}
+        {Object.entries(EXAMPLES).map(([key, example]) => {
+          return (
+            <div
+              key={key}
+              className="btn btn-primary btn-sm"
+              data-key={key}
+              title={example.description}
+              onClick={onExampleClick}
+            >
+              {example.name}
+            </div>
+          )
+        })}
       </Buttons>
     </div>
   )

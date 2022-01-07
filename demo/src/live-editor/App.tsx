@@ -1,21 +1,53 @@
-import React, { useCallback, useEffect } from 'react'
+import React, { useEffect } from 'react'
 import { Provider } from 'react-redux'
 import pintora from '@pintora/standalone'
 import { EXAMPLES } from '@pintora/test-shared'
 import Header from './components/Header'
-import Preview from './containers/Preview'
-import Panel from './components/Panel'
-import Examples from './containers/Examples'
-import Actions from './containers/Actions'
-import EditorPanel from './containers/EditorPanel'
+import AppSidebar from './containers/AppSidebar'
 import store from './redux/store'
+import EditorSpace from 'src/live-editor/containers/EditorSpace'
+import ThemePreviewSpace from 'src/live-editor/containers/ThemePreviewSpace'
 import { actions } from 'src/live-editor/redux/slice'
-import { DEMO_BASE_URL } from '../const'
+import { BrowserRouter, HashRouter, Routes, Route, Outlet } from 'react-router-dom'
 import './App.css'
 
 const LAST_EDITOR_CODE_KEY = 'pintoraEditorCode'
 
 function App() {
+  useEffect(() => {
+    const handler = () => {
+      const state = store.getState()
+      const dataToSave = {
+        code: state.main.editor.code,
+      }
+      localStorage.setItem(LAST_EDITOR_CODE_KEY, JSON.stringify(dataToSave))
+    }
+
+    window.addEventListener('beforeunload', handler)
+
+    return () => {
+      window.removeEventListener('beforeunload', handler)
+    }
+  }, [])
+
+  return (
+    <Provider store={store}>
+      <div className="App min-h-screen min-w-screen flex flex-col" data-theme="bumblebee">
+        <HashRouter>
+          <Routes>
+            <Route path="/" element={<AppLayout />}>
+              <Route index element={<EditorSpace />}></Route>
+              <Route path="editor" element={<EditorSpace />}></Route>
+              <Route path="theme-preview" element={<ThemePreviewSpace />}></Route>
+            </Route>
+          </Routes>
+        </HashRouter>
+      </div>
+    </Provider>
+  )
+}
+
+const AppLayout = () => {
   useEffect(() => {
     const params = new URLSearchParams(location.search)
     let code = ''
@@ -54,61 +86,16 @@ function App() {
     }
   }, [])
 
-  useEffect(() => {
-    const handler = () => {
-      const state = store.getState()
-      const dataToSave = {
-        code: state.editor.code,
-      }
-      localStorage.setItem(LAST_EDITOR_CODE_KEY, JSON.stringify(dataToSave))
-    }
-
-    window.addEventListener('beforeunload', handler)
-
-    return () => {
-      window.removeEventListener('beforeunload', handler)
-    }
-  }, [])
-
-  const onOpenPreviewPage = useCallback(() => {
-    try {
-      const state = store.getState()
-      const previewCode = state.preview.code
-      const encodedCode = pintora.util.encodeForUrl(previewCode)
-      const encodedPintoraConfig = pintora.util.encodeForUrl(JSON.stringify(state.preview.pintoraConfig))
-      window.open(`${DEMO_BASE_URL}preview/?code=${encodedCode}&config=${encodedPintoraConfig}`)
-    } catch (error) {}
-  }, [])
-  const previewHeaderSuffix = (
-    <div>
-      <button className="btn btn-primary btn-xs" onClick={onOpenPreviewPage}>
-        Open preview page
-      </button>
-    </div>
-  )
-
   return (
-    <Provider store={store}>
-      <div className="App min-h-screen min-w-screen flex flex-col" data-theme="bumblebee">
-        <Header></Header>
-        <div className="App__content flex">
-          <div className="App__left">
-            <EditorPanel />
-            <Panel title="Examples">
-              <Examples />
-            </Panel>
-            <Panel title="Actions">
-              <Actions />
-            </Panel>
-          </div>
-          <div className="App__right">
-            <Panel title="Preview" headerAppendix={previewHeaderSuffix}>
-              <Preview className="App__preview" />
-            </Panel>
-          </div>
-        </div>
+    <>
+      <Header></Header>
+      <div className="App__content flex">
+        <AppSidebar></AppSidebar>
+
+        <Outlet />
+
       </div>
-    </Provider>
+    </>
   )
 }
 

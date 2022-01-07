@@ -3,7 +3,8 @@ import { connect, useDispatch } from 'react-redux'
 import Editor from 'src/live-editor/containers/Editor'
 import ConfigEditor from 'src/live-editor/containers/ConfigEditor'
 import Panel from 'src/live-editor/components/Panel'
-import { State, actions } from 'src/live-editor/redux/slice'
+import { StoreState } from 'src/live-editor/redux/store'
+import { actions } from 'src/live-editor/redux/slice'
 
 const EDITOR_TABS = [
   { key: 'code', label: 'Code' },
@@ -12,9 +13,10 @@ const EDITOR_TABS = [
 
 interface EditorPanelProps {
   autoSync: boolean
+  currentEditor: string;
 }
 
-const EditorPanel = ({ autoSync }: EditorPanelProps) => {
+const EditorPanel = ({ autoSync, currentEditor }: EditorPanelProps) => {
   const dispatch = useDispatch()
 
   const onEditorTabChange = useCallback((tab: string) => {
@@ -56,6 +58,7 @@ const EditorPanel = ({ autoSync }: EditorPanelProps) => {
       title="Editor"
       tabs={EDITOR_TABS}
       onCurrentTabChange={onEditorTabChange}
+      initialTab={currentEditor}
       headerAppendix={editorHeaderAppendix}
     >
       <Editor />
@@ -64,8 +67,9 @@ const EditorPanel = ({ autoSync }: EditorPanelProps) => {
   )
 }
 
-export default connect((state: State) => {
+export default connect((state: StoreState) => {
   return {
-    autoSync: state.preview.autoSync,
+    autoSync: state.main.preview.autoSync,
+    currentEditor: state.main.currentEditor,
   }
 })(EditorPanel)

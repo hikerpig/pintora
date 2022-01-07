@@ -2,7 +2,8 @@ import React, { useCallback } from 'react'
 import { useDebounceCallback } from '@react-hook/debounce'
 import CodeMirrorEditor from 'src/live-editor/components/CodeMirrorEditor'
 import { useDispatch, connect } from 'react-redux'
-import { State, actions } from 'src/live-editor/redux/slice'
+import { StoreState } from 'src/live-editor/redux/store'
+import { actions } from 'src/live-editor/redux/slice'
 
 
 interface Props {
@@ -35,9 +36,9 @@ function ConfigEditor(props: Props) {
   )
 }
 
-export default connect((state: State) => {
+export default connect((state: StoreState) => {
   return {
-    editorCode: state.configEditor.code,
-    show: state.currentEditor === 'config',
+    editorCode: state.main.configEditor.code,
+    show: state.main.currentEditor === 'config',
   } as Props
 })(ConfigEditor)

@@ -1,7 +1,8 @@
 import React, { useCallback } from 'react'
 import CodeMirrorEditor from 'src/live-editor/components/CodeMirrorEditor'
 import { useDispatch, connect, ConnectedProps } from 'react-redux'
-import { State, actions } from 'src/live-editor/redux/slice'
+import { StoreState } from 'src/live-editor/redux/store'
+import { actions } from 'src/live-editor/redux/slice'
 import './Editor.less'
 
 const CODE_EDITOR_OPTIONS = {
@@ -31,11 +32,11 @@ function Editor(props: Props) {
   )
 }
 
-const connector = connect((state: State) => {
+const connector = connect((state: StoreState) => {
   return {
-    editorCode: state.editor.code,
-    errorInfo: state.editor.error,
-    show: state.currentEditor === 'code',
+    editorCode: state.main.editor.code,
+    errorInfo: state.main.editor.error,
+    show: state.main.currentEditor === 'code',
   }
 })
 
