@@ -350,6 +350,7 @@ const drawEntities = function (rootMark: Group, ir: ErDiagramIR, graph: LayoutGr
         id: textId,
         textAlign: 'center',
         textBaseline: 'middle',
+        fill: conf.textColor,
         ...fontConfig,
       },
       { class: 'er__entity-label' },

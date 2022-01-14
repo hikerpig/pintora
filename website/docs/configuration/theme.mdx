@@ -117,7 +117,7 @@ interface IPintoraStandalone {
 }
 ```
 
-```ts
+```js
 /** @typedef {import('@pintora/standalone').ITheme} ITheme */
 
 // duskfox https://coolors.co/393552-eb6f92-a3be8c-f6c177-569fba-c4a7e7-9ccfd8-e0def4-ea9a97-eb98c3
@@ -139,8 +139,8 @@ const themeDuskFox = {
   schemeOppsiteTheme: 'default',
   isDark: true,
 
-  primaryColor: PALETTE.purple,
-  secondaryColor: PALETTE.pink,
+  primaryColor: PALETTE.pink,
+  secondaryColor: PALETTE.purple,
   teritaryColor: PALETTE.blue,
 
   primaryLineColor: PALETTE.lightPurple,
@@ -162,6 +162,7 @@ const themeDuskFox = {
   noteBackground: PALETTE.yellow,
   noteTextColor: PALETTE.normalDark,
 };
+
 
 pintora.default.registerTheme('duskfox', themeDuskFox);
 

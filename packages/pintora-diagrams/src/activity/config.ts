@@ -93,7 +93,7 @@ export function getConf(styleParams: StyleParam[]) {
   const conf = { ...defaultConfig }
   if (t) {
     safeAssign(conf, {
-      actionBackground: t.secondaryColor,
+      actionBackground: t.primaryColor,
       actionBorderColor: t.primaryBorderColor,
       groupBackground: t.groupBackground,
       groupBorderColor: t.primaryBorderColor,

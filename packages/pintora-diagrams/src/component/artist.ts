@@ -219,7 +219,7 @@ function drawGroupsTo(parentMark: Group, ir: ComponentDiagramIR, g: LayoutGraph)
         {
           fill: conf.groupBackground,
           stroke: conf.groupBorderColor,
-          lineWidth: conf.lineWidth,
+          lineWidth: conf.groupBorderWidth,
           radius: 2,
         },
         { class: 'component__group-rect' },
@@ -280,7 +280,7 @@ function drawGroupsTo(parentMark: Group, ir: ComponentDiagramIR, g: LayoutGraph)
             attrs: {
               fill: conf.groupBackground,
               stroke: conf.groupBorderColor,
-              lineWidth: conf.lineWidth,
+              lineWidth: conf.groupBorderWidth,
             },
           })
           if (bgMark) {

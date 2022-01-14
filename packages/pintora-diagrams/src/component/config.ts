@@ -12,6 +12,7 @@ export type ComponentConf = {
 
   groupBackground: string
   groupBorderColor: string
+  groupBorderWidth: number
 
   relationLineColor: string
   textColor: string
@@ -32,11 +33,12 @@ export const defaultConfig: ComponentConf = {
 
   groupBackground: PALETTE.white,
   groupBorderColor: PALETTE.normalDark,
+  groupBorderWidth: 2,
 
   relationLineColor: PALETTE.orange,
   textColor: PALETTE.normalDark,
   fontSize: 14,
-  lineWidth: 2,
+  lineWidth: 1,
 
   labelBackground: PALETTE.white,
 
@@ -50,6 +52,7 @@ export const COMPONENT_STYLE_RULES = {
   componentBorderColor: { valueType: 'color' },
   groupBackground: { valueType: 'color' },
   groupBorderColor: { valueType: 'color' },
+  groupBorderWidth: { valueType: 'size' },
   relationLineColor: { valueType: 'color' },
   textColor: { valueType: 'color' },
   lineWidth: { valueType: 'size' },
@@ -62,8 +65,8 @@ export function getConf(styleParams: StyleParam[]) {
   const globalConfig: DiagramsConf = configApi.getConfig()
   const t = globalConfig.themeConfig.themeVariables
   safeAssign(conf, {
-    componentBackground: t.secondaryColor,
-    componentBorderColor: t.primaryColor,
+    componentBackground: t.primaryColor,
+    componentBorderColor: t.primaryBorderColor,
     groupBackground: t.groupBackground,
     groupBorderColor: t.primaryBorderColor,
     relationLineColor: t.primaryColor,

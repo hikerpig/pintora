@@ -12,7 +12,7 @@ export const AYU_LIGHT = {
   yellow: '#f5f1be',
 }
 
-// dracula
+// modified dracula https://coolors.co/ad78f7-ff79c6-8be9fd-f1fa8c-ff5555
 export const DRACULA = {
   white: '#f8f8f2',
   normalDark: '#282a36',
@@ -20,7 +20,8 @@ export const DRACULA = {
   green: '#50fa7b',
   orange: '#ffb86c',
   pink: '#ff79c6',
-  purple: '#bd93f9',
+  // purple: '#bd93f9',
+  purple: '#AD78F7',
   red: '#ff5555',
   yellow: '#f1fa8c',
 }

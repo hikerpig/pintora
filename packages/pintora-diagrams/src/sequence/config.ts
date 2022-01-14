@@ -120,7 +120,7 @@ export function getConf(styleParams: StyleParam[]) {
     actorBorderColor: t.primaryBorderColor,
     messageTextColor: t.textColor,
     loopLineColor: t.primaryColor,
-    actorTextColor: t.primaryTextColor,
+    actorTextColor: t.textColor,
     actorLineColor: t.primaryLineColor,
     noteTextColor: t.noteTextColor || t.textColor,
     activationBackground: t.background1,
