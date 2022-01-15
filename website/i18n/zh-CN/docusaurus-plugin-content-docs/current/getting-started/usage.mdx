@@ -4,6 +4,8 @@ title: 使用方法
 
 ## Browser
 
+### UMD
+
 使用 CDN 上的 UMD 版本:
 
 ```html
@@ -19,6 +21,22 @@ import { CodePen, Gist } from 'mdx-embed';
 一个 CodePen 的例子:
 
 <CodePen codePenId="zYwdMZj" tabs={['html', 'result']} clickToRun={true} />
+
+### ESM
+
+使用 Skaypack 上的 ESM 版本:
+
+```html
+<script type="module">
+  import pintora from 'https://cdn.skypack.dev/@pintora/standalone';
+
+  pintora.initBrowser();
+</script>
+```
+
+一个 CodePen 的例子，使用 ESM 版本，以及注册和使用自定义主题:
+
+<CodePen codePenId="qBPgNGM" tabs={['html', 'result']} clickToRun={true} />
 
 ## CLI
 

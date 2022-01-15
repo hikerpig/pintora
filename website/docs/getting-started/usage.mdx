@@ -4,6 +4,8 @@ title: Usage
 
 ## Browser
 
+### UMD
+
 Use this UMD build:
 
 ```html
@@ -19,7 +21,24 @@ import { CodePen, Gist } from 'mdx-embed';
 <!-- Here is a [CodePen example](https://codepen.io/hikerpig/pen/zYwdMZj). -->
 
 Here is a CodePen example:
+
 <CodePen codePenId="zYwdMZj" tabs={['html', 'result']} clickToRun={true} />
+
+### ESM
+
+Use this ESM build from Skypack:
+
+```html
+<script type="module">
+  import pintora from 'https://cdn.skypack.dev/@pintora/standalone';
+
+  pintora.initBrowser();
+</script>
+```
+
+Here is a CodePen example for using ESM version to register a custom theme:
+
+<CodePen codePenId="qBPgNGM" tabs={['html', 'result']} clickToRun={true} />
 
 ## CLI
 
