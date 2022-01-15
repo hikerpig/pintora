@@ -69,7 +69,8 @@ async function handleRenderCommand(args: CliRenderArgs) {
   const devicePixelRatio = args.pixelRatio ? parseFloat(args.pixelRatio) : null
   const code = fs.readFileSync(path.resolve(CWD, args.input)).toString()
 
-  const mimeType = mime.contentType(args.output)
+  const outputFilename = path.basename(args.output)
+  const mimeType = mime.contentType(outputFilename)
   if (!(mimeType && SUPPORTED_MIME_TYPES.includes(mimeType))) {
     const ext = path.extname(args.output)
     const supportedExts = SUPPORTED_MIME_TYPES.map(t => {
