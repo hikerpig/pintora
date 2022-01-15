@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.1.0-alpha.17](https://github.com/hikerpig/pintora/compare/v0.1.0-alpha.16...v0.1.0-alpha.17) (2022-01-15)
+
+
+### Bug Fixes
+
+* **pintora-cli:** output filename mimetype bug ([54601f6](https://github.com/hikerpig/pintora/commit/54601f639e351100f040f1e22d9beaedb1658b5e))
+
+
+
+
+
 # [0.1.0-alpha.16](https://github.com/hikerpig/pintora/compare/v0.1.0-alpha.15...v0.1.0-alpha.16) (2022-01-15)
 
 
