@@ -8,7 +8,7 @@ import './Preview.less'
 
 interface Props {
   previewCode: string
-  previewConfig: State['preview']['config']
+  previewConfig: StoreState['main']['preview']['config']
   className?: string
   pintoraConfig?: any
 }

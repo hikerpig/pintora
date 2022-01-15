@@ -108,10 +108,14 @@ const pintoraStandalone = {
     if (c.themeConfig?.theme) {
       const conf = configApi.getConfig<PintoraConfig>()
       const newConf = { ...conf }
-      const themeConfig = THEMES[c.themeConfig.theme]
-      if (themeConfig) {
+      const themeVars = THEMES[c.themeConfig.theme]
+      const configThemeVars = c.themeConfig.themeVariables
+      if (themeVars) {
         newConf.themeConfig = newConf.themeConfig || ({} as any)
-        newConf.themeConfig.themeVariables = themeConfig
+        newConf.themeConfig.themeVariables = { ...themeVars }
+      }
+      if (configThemeVars) {
+        Object.assign(newConf.themeConfig.themeVariables, configThemeVars)
       }
       configApi.setConfig(newConf)
     }

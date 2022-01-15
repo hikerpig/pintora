@@ -12,7 +12,11 @@ You can set theme through the `setConfig` method.
 ```js
 pintora.default.setConfig({
   themeConfig: {
-    theme: 'dark'
+    theme: 'dark',
+    // override some of the theme's variables
+    themeVariables: {
+      primaryColor: '#A8DADC',
+    }
   }
 })
 ```

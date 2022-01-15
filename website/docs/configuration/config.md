@@ -2,17 +2,22 @@
 title: Config
 ---
 
+## Config API
+
 Assume you are using the UMD bundle in the browser, here is an easy example of setting default renderer to CanvasRenderer by using `setConfig` method.
 
 ```js
 pintora.default.setConfig({
   core: {
     defalutRenderer: 'canvas'
-  }
+  },
+  sequence: {
+    messageFontSize: 16,
+  },
 })
 ```
 
-Or get current config by:
+Or get current config by `getConfig`:
 
 ```ts
 pintora.default.getConfig()
@@ -145,6 +150,7 @@ export type ComponentConf = {
 
   groupBackground: string
   groupBorderColor: string
+  groupBorderWidth: number
 
   relationLineColor: string
   textColor: string
