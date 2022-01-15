@@ -3,7 +3,14 @@ const path = require('path')
 const lightCodeTheme = require('prism-react-renderer/themes/palenight')
 const darkCodeTheme = require('prism-react-renderer/themes/dracula')
 
-const SITE_URL = process.env.SITE_URL || 'https://pintorajs.vercel.app'
+const vercelUrl = process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}`: null
+
+const SITE_URL = process.env.SITE_URL || vercelUrl || 'https://pintorajs.vercel.app'
+
+const isProduction = process.env.VERCEL_ENV === 'production'
+const gitRefName = process.env.VERCEL_GIT_COMMIT_REF
+
+// console.log('isProduction', isProduction, 'gitRefName', gitRefName)
 
 /** @type {import('@docusaurus/types').DocusaurusConfig} */
 module.exports = {
@@ -29,10 +36,13 @@ module.exports = {
   },
   themeConfig: {
     navbar: {
-      title: 'Pintora',
-      logo: {
+      title: isProduction ? 'Pintora': `Pintora Preview${gitRefName ? ` ${gitRefName}`: ''}`,
+      logo: isProduction ? {
         alt: 'Pintora Logo',
         src: 'img/logo.svg',
+      }: {
+        alt: 'Pintora Logo',
+        src: 'img/logo-preview.svg',
       },
       items: [
         {
