@@ -1,21 +1,22 @@
 import { RenderOptions, IRenderer } from '@pintora/renderer'
-import { pintoraStandalone } from '@pintora/standalone'
+import { pintoraStandalone, PintoraConfig } from '@pintora/standalone'
 import { JSDOM } from 'jsdom'
 import { implForWrapper } from 'jsdom/lib/jsdom/living/generated/utils'
 import { Canvas } from 'canvas'
-import { SVG_MIME_TYPE } from './const'
+import { SVG_MIME_TYPE, DEFAUT_BGS } from './const'
 
 export type CLIRenderOptions = {
   code: string
   devicePixelRatio?: number | null
   mimeType?: string
   backgroundColor?: string
+  pintoraConfig?: Partial<PintoraConfig>
   // width?: number
   // height?: number
 }
 
 function renderPrepare(opts: CLIRenderOptions) {
-  const { code, backgroundColor } = opts
+  const { code, backgroundColor, pintoraConfig } = opts
   const devicePixelRatio = opts.devicePixelRatio || 2
 
   const dom = new JSDOM('<!DOCTYPE html><body></body>')
@@ -31,12 +32,23 @@ function renderPrepare(opts: CLIRenderOptions) {
   return {
     container,
     pintorRender(renderOpts: Pick<RenderOptions, 'renderer'>) {
+      if (pintoraConfig) {
+        pintoraStandalone.setConfig(pintoraConfig)
+      }
+
       return new Promise<IRenderer>((resolve, reject) => {
         pintoraStandalone.renderTo(code, {
           container,
           renderer: renderOpts.renderer || 'canvas',
           enhanceGraphicIR(ir) {
-            if (backgroundColor && !ir.bgColor) ir.bgColor = backgroundColor
+            if (!ir.bgColor) {
+              const themeVariables = pintoraStandalone.getConfig<PintoraConfig>().themeConfig.themeVariables
+              const newBgColor =
+                backgroundColor ||
+                themeVariables.canvasBackground ||
+                (themeVariables.isDark ? DEFAUT_BGS.dark : DEFAUT_BGS.light)
+              ir.bgColor = newBgColor
+            }
             return ir
           },
           onRender(renderer) {

@@ -76,7 +76,8 @@ Options:
   -i, --input             Input file path                             [required]
   -o, --output            Output file path
   -p, --pixel-ratio       Pixel ratio                               [default: 2]
-  -b, --background-color  Background color                     [default: "#fff"]
+  -b, --background-color  Background color
+  -t, --theme             Pintora theme                     [default: "default"]
 ```
 
 examples:
@@ -86,4 +87,7 @@ pintora render -i ../test-shared/example-files/sequence.pintora -o sequence.png
 
 # Set image background color
 pintora render -i ../test-shared/example-files/sequence-2.pintora -b "#FAFAFA" -o sequence-2.jpg
+
+# Preview with theme 'dark'
+pintora render -i ../test-shared/example-files/sequence-2.pintora --theme dark -o sequence-2.jpg
 ```

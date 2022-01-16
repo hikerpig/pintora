@@ -75,13 +75,17 @@ Render DSL to diagram image
   -o, --output            Output file path
   -p, --pixel-ratio       Pixel ratio                                [默认值: 2]
   -b, --background-color  Background color                      [默认值: "#fff"]
+  -t, --theme             Pintora theme                      [默认值: "default"]
 ```
 
 几个例子:
 
-```
+```sh
 pintora render -i ../test-shared/example-files/sequence.pintora -o sequence.png
 
 # 可以通过 -b 设置背景色
 pintora render -i ../test-shared/example-files/sequence-2.pintora -b "#FAFAFA" -o sequence-2.jpg
+
+# 通过 `--theme` 指定 pintora 主题为 `dark`
+pintora render -i ../test-shared/example-files/sequence-2.pintora --theme dark -o sequence-2.jpg
 ```

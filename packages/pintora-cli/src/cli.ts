@@ -1,19 +1,21 @@
-import * as path from 'path'
+import { PintoraConfig } from '@pintora/standalone'
+import consola from 'consola'
 import * as fs from 'fs'
 import * as mime from 'mime-types'
+import * as path from 'path'
 import yargs from 'yargs'
-import consola from 'consola'
-import { render } from './render'
 import { SUPPORTED_MIME_TYPES } from './const'
+import { render } from './render'
 
 const CWD = process.cwd()
 
 type Config = {
-  backgroundColor: string
+  backgroundColor?: string
+  theme: string
 }
 
 const defaultConfig: Config = {
-  backgroundColor: '#FFF',
+  theme: 'default',
 }
 
 type CliRenderArgs = {
@@ -23,6 +25,7 @@ type CliRenderArgs = {
   // config?: string
   pixelRatio?: string
   backgroundColor?: string
+  theme?: string
 }
 
 yargs
@@ -46,8 +49,12 @@ yargs
       },
       'background-color': {
         alias: 'b',
-        default: '#fff',
         describe: 'Background color',
+      },
+      theme: {
+        alias: 't',
+        default: 'default',
+        describe: 'Pintora theme',
       },
       // config: {
       //   alias: 'c',
@@ -80,11 +87,22 @@ async function handleRenderCommand(args: CliRenderArgs) {
     return
   }
   const config = { ...defaultConfig }
+
+  const pintoraConfig: Partial<PintoraConfig> = {}
+  if (args.theme) {
+    Object.assign(pintoraConfig, {
+      themeConfig: {
+        theme: args.theme,
+      },
+    } as Partial<PintoraConfig>)
+  }
+
   const buf = await render({
     code,
     devicePixelRatio,
     mimeType,
     backgroundColor: args.backgroundColor || config.backgroundColor,
+    pintoraConfig,
   })
   if (!buf) {
     consola.error(`Error during generating image`)

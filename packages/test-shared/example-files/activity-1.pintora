@@ -11,7 +11,6 @@ if (diagram registered ?) then
 else (no)
   :print error;
 endif
-
 switch ( renderer type )
 case ( svg )
   :Generate svg;
