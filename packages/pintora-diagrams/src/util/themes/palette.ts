@@ -33,6 +33,7 @@ export const BLUE_LARK = {
   green: '#03B59C',
   blue: '#4492FD',
   darkBlue: '#143C9A',
+  brightBlue: '#8BBBFD',
   orange: '#ffb86c',
   pink: '#F9DBD8',
   purple: '#AFBCF1',

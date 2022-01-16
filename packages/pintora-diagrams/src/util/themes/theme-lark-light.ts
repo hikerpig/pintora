@@ -4,7 +4,7 @@ import { BLUE_LARK, NOTE_BACKGROUND } from './palette'
 export class ThemeLarkLight implements ITheme {
   schemeOppsiteTheme = 'larkDark'
 
-  primaryColor = BLUE_LARK.blue
+  primaryColor = BLUE_LARK.brightBlue
   secondaryColor = BLUE_LARK.cyan
   teritaryColor = BLUE_LARK.cyan
 
