@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.1.0-alpha.18](https://github.com/hikerpig/pintora/compare/v0.1.0-alpha.17...v0.1.0-alpha.18) (2022-01-16)
+
+
+### Features
+
+* **pintora-cli:** read cli args `--theme` ([a502c35](https://github.com/hikerpig/pintora/commit/a502c35cf1dbbad65c5847e2752e17711b8dccef))
+
+
+
+
+
 # [0.1.0-alpha.17](https://github.com/hikerpig/pintora/compare/v0.1.0-alpha.16...v0.1.0-alpha.17) (2022-01-15)
 
 
