@@ -2,7 +2,7 @@ import { diagramRegistry } from './diagram-registry'
 
 export * from './type'
 import { logger, setLogLevel } from './logger'
-import configApi from './config'
+import configApi, { PintoraConfig } from './config'
 
 export * from './util'
 import { encodeForUrl, decodeCodeInUrl, makeMark, calculateTextDimensions, parseColor } from './util'
@@ -10,7 +10,17 @@ import { symbolRegistry, SymbolDef, SymbolStyleAttrs } from './symbol-registry'
 import { StyleParam, interpreteStyles } from './style-engine'
 import * as styleEngine from './style-engine'
 
-export { logger, setLogLevel, configApi, symbolRegistry, SymbolDef, SymbolStyleAttrs, StyleParam, interpreteStyles }
+export {
+  logger,
+  setLogLevel,
+  configApi,
+  symbolRegistry,
+  SymbolDef,
+  SymbolStyleAttrs,
+  StyleParam,
+  interpreteStyles,
+  PintoraConfig,
+}
 
 type DrawOptions = {
   onError?(error: Error): void

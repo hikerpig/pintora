@@ -12,7 +12,7 @@ import {
   Mark,
   configApi,
   last,
-  Path,
+  PintoraConfig,
 } from '@pintora/core'
 import {
   Action,
@@ -43,7 +43,6 @@ import {
 import dagre from '@pintora/dagre'
 import { MARK_TRANSFORMERS, positionGroupContents } from '../util/mark-positioner'
 import { ITheme } from '../util/themes/base'
-import { DiagramsConf } from '../type'
 import { isDev } from '../util/env'
 import { getPointsCurvePath, getPointsLinearPath } from '../util/line-util'
 
@@ -61,7 +60,7 @@ const erArtist: IDiagramArtist<ActivityDiagramIR, ActivityConf> = {
   draw(ir) {
     conf = getConf(ir.styleParams)
     model = new ArtistModel(ir)
-    theme = (configApi.getConfig() as DiagramsConf).themeConfig.themeVariables
+    theme = (configApi.getConfig() as PintoraConfig).themeConfig.themeVariables
     // console.log('ir', JSON.stringify(ir, null, 2))
 
     const rootMark: Group = {

@@ -1,6 +1,5 @@
 import { PALETTE } from '../util/theme'
-import { configApi, safeAssign } from '@pintora/core'
-import { DiagramsConf } from '../type'
+import { configApi, safeAssign, PintoraConfig } from '@pintora/core'
 import { interpreteStyles, StyleParam } from '../util/style'
 
 export type ComponentConf = {
@@ -62,7 +61,7 @@ export const COMPONENT_STYLE_RULES = {
 
 export function getConf(styleParams: StyleParam[]) {
   const conf = { ...defaultConfig }
-  const globalConfig: DiagramsConf = configApi.getConfig()
+  const globalConfig: PintoraConfig = configApi.getConfig()
   const t = globalConfig.themeConfig.themeVariables
   safeAssign(conf, {
     componentBackground: t.primaryColor,

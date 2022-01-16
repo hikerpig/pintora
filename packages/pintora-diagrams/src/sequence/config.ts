@@ -1,7 +1,6 @@
-import { MarkAttrs } from '@pintora/core'
+import { MarkAttrs, PintoraConfig } from '@pintora/core'
 import { PALETTE } from '../util/theme'
 import { configApi, safeAssign } from '@pintora/core'
-import { DiagramsConf } from '../type'
 import { interpreteStyles, StyleParam } from '../util/style'
 
 export type SequenceConf = {
@@ -112,7 +111,7 @@ export const SEQUENCE_STYLE_RULES = {
 } as const
 
 export function getConf(styleParams: StyleParam[]) {
-  const globalConfig: DiagramsConf = configApi.getConfig()
+  const globalConfig: PintoraConfig = configApi.getConfig()
   const t = globalConfig.themeConfig.themeVariables
   const conf = { ...defaultConfig }
   safeAssign(conf, {

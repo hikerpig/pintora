@@ -1,6 +1,6 @@
-import pintora, { configApi, GraphicsIR } from '@pintora/core'
+import pintora, { configApi, GraphicsIR, PintoraConfig } from '@pintora/core'
 export * from '@pintora/core'
-import { DIAGRAMS, DiagramsConf, THEMES, ITheme } from '@pintora/diagrams'
+import { DIAGRAMS, THEMES, ITheme } from '@pintora/diagrams'
 import { render, RenderOptions, BaseRenderer, rendererRegistry } from '@pintora/renderer'
 
 function initDiagrams() {
@@ -10,22 +10,9 @@ function initDiagrams() {
 }
 initDiagrams()
 
-export type PintoraConfig = DiagramsConf & {
-  core: {
-    /** by default it's 'svg' */
-    defaultRenderer: string
-  }
-}
-
 type DeepPartial<T> = {
   [P in keyof T]?: DeepPartial<T[P]>
 }
-
-configApi.setConfig<PintoraConfig>({
-  core: {
-    defaultRenderer: 'svg',
-  },
-})
 
 type InitBrowserOptions = {
   startOnLoad?: boolean
@@ -103,7 +90,7 @@ const pintoraStandalone = {
     })
   },
   getConfig: configApi.getConfig,
-  setConfig(c: DeepPartial<DiagramsConf>) {
+  setConfig(c: DeepPartial<PintoraConfig>) {
     configApi.setConfig(c)
     if (c.themeConfig?.theme) {
       const conf = configApi.getConfig<PintoraConfig>()
@@ -128,7 +115,7 @@ const pintoraStandalone = {
   },
 }
 
-export { BaseRenderer, rendererRegistry, DiagramsConf, ITheme, THEMES }
+export { BaseRenderer, rendererRegistry, PintoraConfig, ITheme, THEMES }
 
 export { pintoraStandalone } // for @pintora/cli
 

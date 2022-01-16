@@ -26,37 +26,24 @@ pintora.default.getConfig()
 ## Available configs
 
 ```ts
-export type DiagramsConf = {
-  themeConfig: {
-    theme: string
-    darkTheme?: string
-    themeVariables: ITheme
-  }
-  component: ComponentConf
-  er: ErConf
-  sequence: SequenceConf
-}
-
-type DiagramsConf = {
-  themeConfig: {
-    theme: string
-    darkTheme?: string
-    themeVariables: ITheme
-  }
-  component: ComponentDiagramIR
-  er: ErDiagramIR
-  sequence: SequenceDiagramIR
-}
-
-type PintoraConfig = DiagramsConf & {
+export type PintoraConfig = {
   core: {
     /** by default it's 'svg' */
     defaultRenderer: string
   }
+  themeConfig: {
+    theme: string
+    darkTheme?: string
+    themeVariables: ITheme
+  }
+  activity: ActivityDiagramIR
+  component: ComponentDiagramIR
+  er: ErDiagramIR
+  sequence: SequenceDiagramIR
 }
 ```
 
-## DiagramsConf
+## Config for diagrams
 
 ### sequence
 

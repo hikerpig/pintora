@@ -1,6 +1,5 @@
-import { DiagramsConf } from '../type'
 import { PALETTE } from '../util/theme'
-import { configApi, safeAssign } from '@pintora/core'
+import { configApi, safeAssign, PintoraConfig } from '@pintora/core'
 import { interpreteStyles, StyleParam } from '../util/style'
 
 export type ErConf = {
@@ -70,7 +69,7 @@ export const ER_STYLE_RULES = {
 } as const
 
 export function getConf(styleParams: StyleParam[]) {
-  const globalConfig: DiagramsConf = configApi.getConfig()
+  const globalConfig: PintoraConfig = configApi.getConfig()
   const t = globalConfig.themeConfig?.themeVariables
   const conf = { ...defaultConfig }
   if (t) {

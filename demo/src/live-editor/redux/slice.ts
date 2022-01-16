@@ -1,6 +1,6 @@
 import { createSlice, DeepPartial, Draft, PayloadAction } from '@reduxjs/toolkit'
 import { EXAMPLES } from '@pintora/test-shared'
-import { DiagramsConf } from '@pintora/standalone'
+import { PintoraConfig } from '@pintora/standalone'
 import { ErrorInfo } from 'src/live-editor/type'
 
 export type State = {
@@ -18,11 +18,11 @@ export type State = {
     config: {
       renderer: 'svg' | 'canvas'
     }
-    pintoraConfig: DeepPartial<DiagramsConf>
+    pintoraConfig: DeepPartial<PintoraConfig>
   }
 }
 
-const DEFAULT_CONFIG: DeepPartial<DiagramsConf> = {
+const DEFAULT_CONFIG: DeepPartial<PintoraConfig> = {
   themeConfig: {
     theme: 'default',
   },

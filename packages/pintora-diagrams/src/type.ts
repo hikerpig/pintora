@@ -4,14 +4,17 @@ import { ComponentConf } from './component'
 import { ActivityConf } from './activity'
 import { ITheme } from './util/themes/base'
 
-export type DiagramsConf = {
-  themeConfig: {
-    theme: string
-    darkTheme?: string
-    themeVariables: ITheme
+// type augmentation
+declare module '@pintora/core' {
+  interface PintoraConfig {
+    themeConfig: {
+      theme: string
+      darkTheme?: string
+      themeVariables: ITheme
+    }
+    component: ComponentConf
+    er: ErConf
+    sequence: SequenceConf
+    activity: ActivityConf
   }
-  component: ComponentConf
-  er: ErConf
-  sequence: SequenceConf
-  activity: ActivityConf
 }

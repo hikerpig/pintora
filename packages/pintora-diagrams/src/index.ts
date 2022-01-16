@@ -1,15 +1,15 @@
-import { configApi } from '@pintora/core'
+import { configApi, PintoraConfig } from '@pintora/core'
 import { sequenceDiagram, SequenceDiagramIR } from './sequence'
 import { erDiagram, ErDiagramIR } from './er'
 import { componentDiagram, ComponentDiagramIR } from './component'
 import { activityDiagram, ActivityDiagramIR } from './activity'
-import { DiagramsConf } from './type'
 import THEMES, { ITheme } from './util/themes/index'
+import './type' // type augmentation
 import './util/symbols'
 
-export { DiagramsConf, THEMES, ITheme }
+export { PintoraConfig, THEMES, ITheme }
 
-configApi.setConfig<DiagramsConf>({
+configApi.setConfig<PintoraConfig>({
   themeConfig: {
     theme: 'default',
     darkTheme: 'dark',

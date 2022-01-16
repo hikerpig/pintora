@@ -1,12 +1,23 @@
 import deepmerge from 'deepmerge'
 
-let config = {}
+export interface PintoraConfig {
+  core: {
+    /** by default it's 'svg' */
+    defaultRenderer: string
+  }
+}
+
+let config: PintoraConfig = {
+  core: {
+    defaultRenderer: 'svg',
+  },
+}
 
 const configApi = {
-  getConfig<T = any>() {
-    return config as T
+  getConfig<T = PintoraConfig>() {
+    return config as any as T
   },
-  setConfig<T = any>(c: Partial<T>) {
+  setConfig<T = PintoraConfig>(c: Partial<T>) {
     config = deepmerge(config, c)
   },
 }

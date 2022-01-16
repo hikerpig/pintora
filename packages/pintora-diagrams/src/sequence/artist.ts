@@ -18,12 +18,12 @@ import {
   symbolRegistry,
   ContentArea,
   clamp,
+  PintoraConfig,
 } from '@pintora/core'
 import { db, SequenceDiagramIR, LINETYPE, Message, PLACEMENT, WrappedText } from './db'
 import { SequenceConf, getConf } from './config'
 import { getBaseNote, drawArrowTo, drawCrossTo, getBaseText, makeMark, makeLoopLabelBox } from './artist-util'
 import { ITheme } from '../util/themes/base'
-import { DiagramsConf } from '../type'
 
 let conf: SequenceConf
 let theme: ITheme
@@ -54,7 +54,7 @@ const sequenceArtist: IDiagramArtist<SequenceDiagramIR> = {
   draw(ir, config?) {
     // console.log('[draw]', ir)
     conf = getConf(ir.styleParams)
-    theme = (configApi.getConfig() as DiagramsConf).themeConfig.themeVariables
+    theme = (configApi.getConfig() as PintoraConfig).themeConfig.themeVariables
     model.init()
     logger.debug(`C:${JSON.stringify(conf, null, 2)}`)
 
