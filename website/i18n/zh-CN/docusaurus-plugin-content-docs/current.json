@@ -12,7 +12,7 @@
     "description": "The label for category Diagram Syntax in sidebar tutorialSidebar"
   },
   "sidebar.tutorialSidebar.category.Configuration": {
-    "message": "Configuration",
+    "message": "配置",
     "description": "The label for category Configuration in sidebar tutorialSidebar"
   },
   "sidebar.tutorialSidebar.category.Advanced": {

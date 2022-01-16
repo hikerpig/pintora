@@ -6,6 +6,8 @@ Pintora has some builtin themes. Check the [Live Editor](https://pintorajs.verce
 
 - `default`, default light theme, based on Ayu Light palette.
 - `dark`, dark theme, based on Dracula palette.
+- `larkLight`, light theme, based on [Lark palette](https://coolors.co/3370ff-143c9a-01d6b9-447dfd-edf4ff).
+- `larkDark`, dark theme, based on [Lark palette](https://coolors.co/3370ff-143c9a-01d6b9-447dfd-edf4ff).
 
 You can set theme through the `setConfig` method.
 
@@ -26,7 +28,7 @@ pintora.default.setConfig({
 At first glance, a theme is an object that fits to the `ITheme` interface.
 
 ```ts
-interface ITheme {
+export interface ITheme {
   /**
    * Indicate if this is a dark theme, if not specified, will be treat as a light theme
    */
@@ -51,12 +53,24 @@ interface ITheme {
   secondaryTextColor: string
   teritaryTextColor: string
 
+  /**
+   * Background color for the canvas, by default, it will be transparent
+   */
   canvasBackground?: string
   groupBackground: string
   background1: string
+  /**
+   * Used in area that needs to display dark text, like erDiagram's atrributes
+   */
   lightestBackground?: string
 
+  /**
+   * Text color for note, by default, it will be the same with `textColor`
+   */
   noteTextColor?: string
+  /**
+   * Background color for note, by default, it will be slightly light yellow
+   */
   noteBackground?: string
 }
 ```
@@ -126,6 +140,7 @@ interface IPintoraStandalone {
 ```js
 /** @typedef {import('@pintora/standalone').ITheme} ITheme */
 
+// from a neovim theme https://github.com/EdenEast/nightfox.nvim
 // duskfox https://coolors.co/393552-eb6f92-a3be8c-f6c177-569fba-c4a7e7-9ccfd8-e0def4-ea9a97-eb98c3
 const PALETTE = {
   normalDark: '#393552',

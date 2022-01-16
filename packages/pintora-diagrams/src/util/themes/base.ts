@@ -23,11 +23,23 @@ export interface ITheme {
   secondaryTextColor: string
   teritaryTextColor: string
 
+  /**
+   * Background color for the canvas, by default, it will be transparent
+   */
   canvasBackground?: string
   groupBackground: string
   background1: string
+  /**
+   * Used in area that needs to display dark text, like erDiagram's atrributes
+   */
   lightestBackground?: string
 
+  /**
+   * Text color for note, by default, it will be the same with `textColor`
+   */
   noteTextColor?: string
+  /**
+   * Background color for note, by default, it will be slightly light yellow
+   */
   noteBackground?: string
 }
