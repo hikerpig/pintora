@@ -11,7 +11,6 @@ import {
   Rect,
   PathCommand,
 } from '@pintora/core'
-import * as D3_SHAPE from 'd3-shape'
 import { ErDiagramIR, Identification, Entity, Relationship } from './db'
 import { ErConf, getConf } from './config'
 import { createLayoutGraph, getGraphBounds, LayoutGraph, LayoutNode } from '../util/graph'

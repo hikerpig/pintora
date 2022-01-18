@@ -1,0 +1,1266 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`component-artist match example snapshot 1`] = `
+Object {
+  "height": 545.234375,
+  "mark": Object {
+    "attrs": Object {},
+    "children": Array [
+      Object {
+        "attrs": Object {},
+        "children": Array [
+          Object {
+            "attrs": Object {
+              "fill": "#fff",
+              "height": 100,
+              "lineWidth": 2,
+              "radius": 2,
+              "stroke": "#3b4044",
+              "width": 720.5,
+              "x": 35,
+              "y": 0,
+            },
+            "class": "component__group-rect",
+            "type": "rect",
+          },
+          Object {
+            "attrs": Object {
+              "fill": "#3b4044",
+              "fontSize": 14,
+              "fontWeight": "bold",
+              "text": "@pintora/standalone",
+              "textAlign": "center",
+              "x": 395.25,
+              "y": 18.234375,
+            },
+            "class": "component__group-rect",
+            "type": "text",
+          },
+          Object {
+            "attrs": Object {
+              "fill": "#3b4044",
+              "fontSize": 14,
+              "text": "[package]",
+              "textBaseline": "hanging",
+              "x": 37,
+              "y": 84.79296875,
+            },
+            "class": "component__type",
+            "type": "text",
+          },
+        ],
+        "type": "group",
+      },
+      Object {
+        "attrs": Object {},
+        "children": Array [
+          Object {
+            "attrs": Object {
+              "fill": "#fff",
+              "height": 103,
+              "lineWidth": 2,
+              "radius": 2,
+              "stroke": "#3b4044",
+              "width": 363,
+              "x": 124.5,
+              "y": 160,
+            },
+            "class": "component__group-rect",
+            "type": "rect",
+          },
+          Object {
+            "attrs": Object {
+              "fill": "#3b4044",
+              "fontSize": 14,
+              "fontWeight": "bold",
+              "text": "@pintora/renderer",
+              "textAlign": "center",
+              "x": 306,
+              "y": 178.234375,
+            },
+            "class": "component__group-rect",
+            "type": "text",
+          },
+          Object {
+            "attrs": Object {
+              "fill": "#3b4044",
+              "fontSize": 14,
+              "text": "[package]",
+              "textBaseline": "hanging",
+              "x": 126.5,
+              "y": 247.79296875,
+            },
+            "class": "component__type",
+            "type": "text",
+          },
+        ],
+        "type": "group",
+      },
+      Object {
+        "attrs": Object {},
+        "children": Array [
+          Object {
+            "attrs": Object {
+              "fill": "#fff",
+              "height": 103,
+              "lineWidth": 2,
+              "radius": 2,
+              "stroke": "#3b4044",
+              "width": 208,
+              "x": 507.5,
+              "y": 160,
+            },
+            "class": "component__group-rect",
+            "type": "rect",
+          },
+          Object {
+            "attrs": Object {
+              "fill": "#3b4044",
+              "fontSize": 14,
+              "fontWeight": "bold",
+              "text": "@pintora/diagrams",
+              "textAlign": "center",
+              "x": 611.5,
+              "y": 178.412109375,
+            },
+            "class": "component__group-rect",
+            "type": "text",
+          },
+          Object {
+            "attrs": Object {
+              "fill": "#3b4044",
+              "fontSize": 14,
+              "text": "[package]",
+              "textBaseline": "hanging",
+              "x": 509.5,
+              "y": 247.79296875,
+            },
+            "class": "component__type",
+            "type": "text",
+          },
+        ],
+        "type": "group",
+      },
+      Object {
+        "attrs": Object {},
+        "children": Array [
+          Object {
+            "attrs": Object {
+              "fill": "#fff",
+              "height": 192.234375,
+              "lineWidth": 2,
+              "radius": 2,
+              "stroke": "#3b4044",
+              "width": 663.75,
+              "x": 0,
+              "y": 323,
+            },
+            "class": "component__group-rect",
+            "type": "rect",
+          },
+          Object {
+            "attrs": Object {
+              "fill": "#3b4044",
+              "fontSize": 14,
+              "fontWeight": "bold",
+              "text": "@pintora/core",
+              "textAlign": "center",
+              "x": 331.875,
+              "y": 341.234375,
+            },
+            "class": "component__group-rect",
+            "type": "text",
+          },
+          Object {
+            "attrs": Object {
+              "fill": "#3b4044",
+              "fontSize": 14,
+              "text": "[package]",
+              "textBaseline": "hanging",
+              "x": 2,
+              "y": 500.02734375,
+            },
+            "class": "component__type",
+            "type": "text",
+          },
+        ],
+        "type": "group",
+      },
+      Object {
+        "attrs": Object {},
+        "children": Array [
+          Object {
+            "attrs": Object {
+              "fill": "#fdb05e",
+              "height": 43,
+              "lineWidth": 1,
+              "radius": 4,
+              "stroke": "#3b4044",
+              "width": 140,
+              "x": 20,
+              "y": 353,
+            },
+            "class": "component__component-rect",
+            "type": "rect",
+          },
+          Object {
+            "attrs": Object {
+              "fill": "#3b4044",
+              "fontSize": 14,
+              "text": "Diagram Registry",
+              "textAlign": "center",
+              "textBaseline": "middle",
+              "x": 90,
+              "y": 374.5,
+            },
+            "type": "text",
+          },
+        ],
+        "class": "component__component",
+        "type": "group",
+      },
+      Object {
+        "attrs": Object {},
+        "children": Array [
+          Object {
+            "attrs": Object {
+              "fill": "#fdb05e",
+              "height": 43,
+              "lineWidth": 1,
+              "radius": 4,
+              "stroke": "#3b4044",
+              "width": 168,
+              "x": 527.5,
+              "y": 190,
+            },
+            "class": "component__component-rect",
+            "type": "rect",
+          },
+          Object {
+            "attrs": Object {
+              "fill": "#3b4044",
+              "fontSize": 14,
+              "text": "...Multiple Diagrams...",
+              "textAlign": "center",
+              "textBaseline": "middle",
+              "x": 611.5,
+              "y": 211.5,
+            },
+            "type": "text",
+          },
+        ],
+        "class": "component__component",
+        "type": "group",
+      },
+      Object {
+        "attrs": Object {},
+        "children": Array [
+          Object {
+            "attrs": Object {
+              "fill": "#fdb05e",
+              "height": 41,
+              "lineWidth": 1,
+              "radius": 4,
+              "stroke": "#3b4044",
+              "width": 106,
+              "x": 144.5,
+              "y": 191,
+            },
+            "class": "component__component-rect",
+            "type": "rect",
+          },
+          Object {
+            "attrs": Object {
+              "fill": "#3b4044",
+              "fontSize": 14,
+              "text": "SVGRender",
+              "textAlign": "center",
+              "textBaseline": "middle",
+              "x": 197.5,
+              "y": 211.5,
+            },
+            "type": "text",
+          },
+        ],
+        "class": "component__component",
+        "type": "group",
+      },
+      Object {
+        "attrs": Object {},
+        "children": Array [
+          Object {
+            "attrs": Object {
+              "fill": "#fdb05e",
+              "height": 41,
+              "lineWidth": 1,
+              "radius": 4,
+              "stroke": "#3b4044",
+              "width": 125,
+              "x": 270.5,
+              "y": 191,
+            },
+            "class": "component__component-rect",
+            "type": "rect",
+          },
+          Object {
+            "attrs": Object {
+              "fill": "#3b4044",
+              "fontSize": 14,
+              "text": "CanvasRender",
+              "textAlign": "center",
+              "textBaseline": "middle",
+              "x": 333,
+              "y": 211.5,
+            },
+            "type": "text",
+          },
+        ],
+        "class": "component__component",
+        "type": "group",
+      },
+      Object {
+        "attrs": Object {},
+        "children": Array [
+          Object {
+            "attrs": Object {
+              "fill": "#fdb05e",
+              "height": 40,
+              "lineWidth": 1,
+              "radius": 4,
+              "stroke": "#3b4044",
+              "width": 100,
+              "x": 391.5,
+              "y": 30,
+            },
+            "class": "component__component-rect",
+            "type": "rect",
+          },
+          Object {
+            "attrs": Object {
+              "fill": "#3b4044",
+              "fontSize": 14,
+              "text": "standalone",
+              "textAlign": "center",
+              "textBaseline": "middle",
+              "x": 441.5,
+              "y": 50,
+            },
+            "type": "text",
+          },
+        ],
+        "class": "component__component",
+        "type": "group",
+      },
+      Object {
+        "attrs": Object {},
+        "children": Array [
+          Object {
+            "attrs": Object {
+              "fill": "#fdb05e",
+              "lineWidth": 1,
+              "r": 8,
+              "stroke": "#3b4044",
+              "x": 379.5,
+              "y": 466,
+            },
+            "class": "component__interface",
+            "type": "circle",
+          },
+          Object {
+            "attrs": Object {
+              "fill": "#3b4044",
+              "fontSize": 14,
+              "text": "GraphicsIR",
+              "textAlign": "center",
+              "textBaseline": "top",
+              "x": 379.5,
+              "y": 472.6171875,
+            },
+            "type": "text",
+          },
+        ],
+        "class": "component__group",
+        "type": "group",
+      },
+      Object {
+        "attrs": Object {},
+        "children": Array [
+          Object {
+            "attrs": Object {
+              "fill": "#fdb05e",
+              "lineWidth": 1,
+              "r": 8,
+              "stroke": "#3b4044",
+              "x": 240.25,
+              "y": 371.33203125,
+            },
+            "class": "component__interface",
+            "type": "circle",
+          },
+          Object {
+            "attrs": Object {
+              "fill": "#3b4044",
+              "fontSize": 14,
+              "text": "IRenderer",
+              "textAlign": "center",
+              "textBaseline": "top",
+              "x": 240.25,
+              "y": 376.5,
+            },
+            "type": "text",
+          },
+        ],
+        "class": "component__group",
+        "type": "group",
+      },
+      Object {
+        "attrs": Object {},
+        "children": Array [
+          Object {
+            "attrs": Object {
+              "fill": "#fdb05e",
+              "lineWidth": 1,
+              "r": 8,
+              "stroke": "#3b4044",
+              "x": 611.5,
+              "y": 369.9306640625,
+            },
+            "class": "component__interface",
+            "type": "circle",
+          },
+          Object {
+            "attrs": Object {
+              "fill": "#3b4044",
+              "fontSize": 14,
+              "text": "IDiagram",
+              "textAlign": "center",
+              "textBaseline": "top",
+              "x": 611.5,
+              "y": 376.5,
+            },
+            "type": "text",
+          },
+        ],
+        "class": "component__group",
+        "type": "group",
+      },
+      Object {
+        "attrs": Object {},
+        "children": Array [
+          Object {
+            "attrs": Object {
+              "fill": "#fdb05e",
+              "lineWidth": 1,
+              "r": 8,
+              "stroke": "#3b4044",
+              "x": 441.5,
+              "y": 206.96826171875,
+            },
+            "class": "component__interface",
+            "type": "circle",
+          },
+          Object {
+            "attrs": Object {
+              "fill": "#3b4044",
+              "fontSize": 14,
+              "text": "render()",
+              "textAlign": "center",
+              "textBaseline": "top",
+              "x": 441.5,
+              "y": 213.5,
+            },
+            "type": "text",
+          },
+        ],
+        "class": "component__group",
+        "type": "group",
+      },
+      Object {
+        "attrs": Object {},
+        "children": Array [
+          Object {
+            "attrs": Object {
+              "lineCap": "round",
+              "points": Array [
+                Array [
+                  611.5,
+                  233,
+                ],
+                Array [
+                  611.5,
+                  263,
+                ],
+                Array [
+                  611.5,
+                  293,
+                ],
+                Array [
+                  611.5,
+                  323,
+                ],
+                Array [
+                  611.5,
+                  359.9306640625,
+                ],
+              ],
+              "stroke": "#fdb05e",
+            },
+            "class": "component__rel-line",
+            "type": "polyline",
+          },
+          Object {
+            "attrs": Object {
+              "fill": "#f8f8f2",
+              "height": 14.9609375,
+              "opacity": 0.85,
+              "width": 73,
+              "x": 611.5,
+              "y": 277.291796875,
+            },
+            "class": "label-bg",
+            "type": "rect",
+          },
+          Object {
+            "attrs": Object {
+              "fill": "#3b4044",
+              "fontSize": 14,
+              "text": "implements",
+              "textAlign": "center",
+              "textBaseline": "middle",
+              "x": 648,
+              "y": 283.772265625,
+            },
+            "class": "component__rel-text",
+            "type": "text",
+          },
+          Object {
+            "attrs": Object {
+              "lineCap": "round",
+              "path": Array [
+                Array [
+                  "M",
+                  604.5717967697245,
+                  355.9306640625,
+                ],
+                Array [
+                  "L",
+                  611.5,
+                  359.9306640625,
+                ],
+                Array [
+                  "L",
+                  604.5717967697245,
+                  363.9306640625,
+                ],
+              ],
+              "stroke": "#fdb05e",
+            },
+            "matrix": Array [
+              6.123233995736766e-17,
+              1,
+              0,
+              -1,
+              6.123233995736766e-17,
+              0,
+              971.4306640625,
+              -251.5693359375,
+              1,
+            ],
+            "type": "path",
+          },
+        ],
+        "type": "group",
+      },
+      Object {
+        "attrs": Object {},
+        "children": Array [
+          Object {
+            "attrs": Object {
+              "lineCap": "round",
+              "points": Array [
+                Array [
+                  197.5,
+                  232,
+                ],
+                Array [
+                  197.5,
+                  263,
+                ],
+                Array [
+                  197.5,
+                  293,
+                ],
+                Array [
+                  197.5,
+                  323,
+                ],
+                Array [
+                  232.25,
+                  364.8625730994152,
+                ],
+              ],
+              "stroke": "#fdb05e",
+            },
+            "class": "component__rel-line",
+            "type": "polyline",
+          },
+          Object {
+            "attrs": Object {
+              "fill": "#f8f8f2",
+              "height": 14.9609375,
+              "opacity": 0.85,
+              "width": 73,
+              "x": 197.5,
+              "y": 283.68202201371133,
+            },
+            "class": "label-bg",
+            "type": "rect",
+          },
+          Object {
+            "attrs": Object {
+              "fill": "#3b4044",
+              "fontSize": 14,
+              "text": "implements",
+              "textAlign": "center",
+              "textBaseline": "middle",
+              "x": 234,
+              "y": 290.16249076371133,
+            },
+            "class": "component__rel-text",
+            "type": "text",
+          },
+          Object {
+            "attrs": Object {
+              "lineCap": "round",
+              "path": Array [
+                Array [
+                  "M",
+                  225.3217967697245,
+                  360.8625730994152,
+                ],
+                Array [
+                  "L",
+                  232.25,
+                  364.8625730994152,
+                ],
+                Array [
+                  "L",
+                  225.3217967697245,
+                  368.8625730994152,
+                ],
+              ],
+              "stroke": "#fdb05e",
+            },
+            "matrix": Array [
+              0.6387136541915536,
+              0.7694445190845618,
+              0,
+              -0.7694445190845618,
+              0.6387136541915536,
+              0,
+              364.650260904447,
+              -46.88362380003463,
+              1,
+            ],
+            "type": "path",
+          },
+        ],
+        "type": "group",
+      },
+      Object {
+        "attrs": Object {},
+        "children": Array [
+          Object {
+            "attrs": Object {
+              "lineCap": "round",
+              "points": Array [
+                Array [
+                  333,
+                  232,
+                ],
+                Array [
+                  333,
+                  263,
+                ],
+                Array [
+                  333,
+                  293,
+                ],
+                Array [
+                  333,
+                  323,
+                ],
+                Array [
+                  248.25,
+                  370.0579514824798,
+                ],
+              ],
+              "stroke": "#fdb05e",
+            },
+            "class": "component__rel-line",
+            "type": "polyline",
+          },
+          Object {
+            "attrs": Object {
+              "fill": "#f8f8f2",
+              "height": 14.9609375,
+              "opacity": 0.85,
+              "width": 73,
+              "x": 333,
+              "y": 300.6948085234946,
+            },
+            "class": "label-bg",
+            "type": "rect",
+          },
+          Object {
+            "attrs": Object {
+              "fill": "#3b4044",
+              "fontSize": 14,
+              "text": "implements",
+              "textAlign": "center",
+              "textBaseline": "middle",
+              "x": 369.5,
+              "y": 307.1752772734946,
+            },
+            "class": "component__rel-text",
+            "type": "text",
+          },
+          Object {
+            "attrs": Object {
+              "lineCap": "round",
+              "path": Array [
+                Array [
+                  "M",
+                  241.3217967697245,
+                  366.0579514824798,
+                ],
+                Array [
+                  "L",
+                  248.25,
+                  370.0579514824798,
+                ],
+                Array [
+                  "L",
+                  241.3217967697245,
+                  374.0579514824798,
+                ],
+              ],
+              "stroke": "#fdb05e",
+            },
+            "matrix": Array [
+              -0.8742684097625482,
+              0.4854428366875602,
+              0,
+              -0.4854428366875602,
+              -0.8742684097625482,
+              0,
+              644.9291144299951,
+              573.0767440373668,
+              1,
+            ],
+            "type": "path",
+          },
+        ],
+        "type": "group",
+      },
+      Object {
+        "attrs": Object {},
+        "children": Array [
+          Object {
+            "attrs": Object {
+              "lineCap": "round",
+              "lineDash": Array [
+                4,
+                4,
+              ],
+              "points": Array [
+                Array [
+                  240.25,
+                  387.66796875,
+                ],
+                Array [
+                  240.25,
+                  426,
+                ],
+                Array [
+                  371.5,
+                  468.0539020421903,
+                ],
+              ],
+              "stroke": "#fdb05e",
+            },
+            "class": "component__rel-line",
+            "type": "polyline",
+          },
+          Object {
+            "attrs": Object {
+              "fill": "#f8f8f2",
+              "height": 14.2841796875,
+              "opacity": 0.85,
+              "width": 49,
+              "x": 270.8476012243958,
+              "y": 429.6617084390442,
+            },
+            "class": "label-bg",
+            "type": "rect",
+          },
+          Object {
+            "attrs": Object {
+              "fill": "#3b4044",
+              "fontSize": 14,
+              "text": "accepts",
+              "textAlign": "center",
+              "textBaseline": "middle",
+              "x": 295.3476012243958,
+              "y": 435.8037982827942,
+            },
+            "class": "component__rel-text",
+            "type": "text",
+          },
+          Object {
+            "attrs": Object {
+              "lineCap": "round",
+              "path": Array [
+                Array [
+                  "M",
+                  364.5717967697245,
+                  464.0539020421903,
+                ],
+                Array [
+                  "L",
+                  371.5,
+                  468.0539020421903,
+                ],
+                Array [
+                  "L",
+                  364.5717967697245,
+                  472.0539020421903,
+                ],
+              ],
+              "stroke": "#fdb05e",
+            },
+            "matrix": Array [
+              0.9523105551402347,
+              0.3051304746637052,
+              0,
+              -0.3051304746637052,
+              0.9523105551402347,
+              0,
+              160.53413806373575,
+              -91.0347405847275,
+              1,
+            ],
+            "type": "path",
+          },
+        ],
+        "type": "group",
+      },
+      Object {
+        "attrs": Object {},
+        "children": Array [
+          Object {
+            "attrs": Object {
+              "lineCap": "round",
+              "points": Array [
+                Array [
+                  611.5,
+                  389.0693359375,
+                ],
+                Array [
+                  611.5,
+                  426,
+                ],
+                Array [
+                  387.5,
+                  469.07866379310343,
+                ],
+              ],
+              "stroke": "#fdb05e",
+            },
+            "class": "component__rel-line",
+            "type": "polyline",
+          },
+          Object {
+            "attrs": Object {
+              "fill": "#f8f8f2",
+              "height": 14.4619140625,
+              "opacity": 0.85,
+              "width": 57,
+              "x": 543.6596587611295,
+              "y": 432.81578962874426,
+            },
+            "class": "label-bg",
+            "type": "rect",
+          },
+          Object {
+            "attrs": Object {
+              "fill": "#3b4044",
+              "fontSize": 14,
+              "text": "generate",
+              "textAlign": "center",
+              "textBaseline": "middle",
+              "x": 572.1596587611295,
+              "y": 439.04674665999426,
+            },
+            "class": "component__rel-text",
+            "type": "text",
+          },
+          Object {
+            "attrs": Object {
+              "lineCap": "round",
+              "path": Array [
+                Array [
+                  "M",
+                  380.5717967697245,
+                  465.07866379310343,
+                ],
+                Array [
+                  "L",
+                  387.5,
+                  469.07866379310343,
+                ],
+                Array [
+                  "L",
+                  380.5717967697245,
+                  473.07866379310343,
+                ],
+              ],
+              "stroke": "#fdb05e",
+            },
+            "matrix": Array [
+              -0.982005031749243,
+              0.18885475270473898,
+              0,
+              -0.18885475270473898,
+              -0.982005031749243,
+              0,
+              856.6146848525476,
+              856.5350552510561,
+              1,
+            ],
+            "type": "path",
+          },
+        ],
+        "type": "group",
+      },
+      Object {
+        "attrs": Object {},
+        "children": Array [
+          Object {
+            "attrs": Object {
+              "lineCap": "round",
+              "points": Array [
+                Array [
+                  391.5,
+                  57.112375533428164,
+                ],
+                Array [
+                  90,
+                  100,
+                ],
+                Array [
+                  90,
+                  130,
+                ],
+                Array [
+                  90,
+                  160,
+                ],
+                Array [
+                  90,
+                  211.5,
+                ],
+                Array [
+                  90,
+                  263,
+                ],
+                Array [
+                  90,
+                  293,
+                ],
+                Array [
+                  90,
+                  323,
+                ],
+                Array [
+                  90,
+                  353,
+                ],
+              ],
+              "stroke": "#fdb05e",
+            },
+            "class": "component__rel-line",
+            "type": "polyline",
+          },
+          Object {
+            "attrs": Object {
+              "fill": "#f8f8f2",
+              "height": 15.412109375,
+              "opacity": 0.85,
+              "width": 207,
+              "x": 170.7085779356502,
+              "y": 81.81335101155403,
+            },
+            "class": "label-bg",
+            "type": "rect",
+          },
+          Object {
+            "attrs": Object {
+              "fill": "#3b4044",
+              "fontSize": 14,
+              "text": "register all of @pintora/diagrams",
+              "textAlign": "center",
+              "textBaseline": "middle",
+              "x": 274.20857793565017,
+              "y": 88.51940569905403,
+            },
+            "class": "component__rel-text",
+            "type": "text",
+          },
+          Object {
+            "attrs": Object {
+              "lineCap": "round",
+              "path": Array [
+                Array [
+                  "M",
+                  83.0717967697245,
+                  349,
+                ],
+                Array [
+                  "L",
+                  90,
+                  353,
+                ],
+                Array [
+                  "L",
+                  83.0717967697245,
+                  357,
+                ],
+              ],
+              "stroke": "#fdb05e",
+            },
+            "matrix": Array [
+              6.123233995736766e-17,
+              1,
+              0,
+              -1,
+              6.123233995736766e-17,
+              0,
+              443,
+              263,
+              1,
+            ],
+            "type": "path",
+          },
+        ],
+        "type": "group",
+      },
+      Object {
+        "attrs": Object {},
+        "children": Array [
+          Object {
+            "attrs": Object {
+              "lineCap": "round",
+              "points": Array [
+                Array [
+                  491.5,
+                  58.50340136054422,
+                ],
+                Array [
+                  735.5,
+                  100,
+                ],
+                Array [
+                  735.5,
+                  130,
+                ],
+                Array [
+                  735.5,
+                  160,
+                ],
+                Array [
+                  715.5,
+                  168.30645161290323,
+                ],
+              ],
+              "stroke": "#fdb05e",
+            },
+            "class": "component__rel-line",
+            "type": "polyline",
+          },
+          Object {
+            "attrs": Object {
+              "fill": "#f8f8f2",
+              "height": 14.9609375,
+              "opacity": 0.85,
+              "width": 40,
+              "x": 621.3001907825006,
+              "y": 74.09779498852052,
+            },
+            "class": "label-bg",
+            "type": "rect",
+          },
+          Object {
+            "attrs": Object {
+              "fill": "#3b4044",
+              "fontSize": 14,
+              "text": "import",
+              "textAlign": "center",
+              "textBaseline": "middle",
+              "x": 641.3001907825006,
+              "y": 80.57826373852052,
+            },
+            "class": "component__rel-text",
+            "type": "text",
+          },
+          Object {
+            "attrs": Object {
+              "lineCap": "round",
+              "path": Array [
+                Array [
+                  "M",
+                  708.5717967697245,
+                  164.30645161290323,
+                ],
+                Array [
+                  "L",
+                  715.5,
+                  168.30645161290323,
+                ],
+                Array [
+                  "L",
+                  708.5717967697245,
+                  172.30645161290323,
+                ],
+              ],
+              "stroke": "#fdb05e",
+            },
+            "matrix": Array [
+              -0.9235170105020505,
+              0.3835574680714164,
+              0,
+              -0.3835574680714164,
+              -0.9235170105020505,
+              0,
+              1440.8316174549468,
+              49.304954249561234,
+              1,
+            ],
+            "type": "path",
+          },
+        ],
+        "type": "group",
+      },
+      Object {
+        "attrs": Object {},
+        "children": Array [
+          Object {
+            "attrs": Object {
+              "lineCap": "round",
+              "points": Array [
+                Array [
+                  441.5,
+                  70,
+                ],
+                Array [
+                  441.5,
+                  100,
+                ],
+                Array [
+                  441.5,
+                  130,
+                ],
+                Array [
+                  441.5,
+                  160,
+                ],
+                Array [
+                  441.5,
+                  196.96826171875,
+                ],
+              ],
+              "stroke": "#fdb05e",
+            },
+            "class": "component__rel-line",
+            "type": "polyline",
+          },
+          Object {
+            "attrs": Object {
+              "fill": "#f8f8f2",
+              "height": 15.234375,
+              "opacity": 0.85,
+              "width": 125,
+              "x": 441.5,
+              "y": 114.17011718750001,
+            },
+            "class": "label-bg",
+            "type": "rect",
+          },
+          Object {
+            "attrs": Object {
+              "fill": "#3b4044",
+              "fontSize": 14,
+              "text": "call with GraphicsIR",
+              "textAlign": "center",
+              "textBaseline": "middle",
+              "x": 504,
+              "y": 120.78730468750001,
+            },
+            "class": "component__rel-text",
+            "type": "text",
+          },
+          Object {
+            "attrs": Object {
+              "lineCap": "round",
+              "path": Array [
+                Array [
+                  "M",
+                  434.5717967697245,
+                  192.96826171875,
+                ],
+                Array [
+                  "L",
+                  441.5,
+                  196.96826171875,
+                ],
+                Array [
+                  "L",
+                  434.5717967697245,
+                  200.96826171875,
+                ],
+              ],
+              "stroke": "#fdb05e",
+            },
+            "matrix": Array [
+              6.123233995736766e-17,
+              1,
+              0,
+              -1,
+              6.123233995736766e-17,
+              0,
+              638.46826171875,
+              -244.53173828125,
+              1,
+            ],
+            "type": "path",
+          },
+        ],
+        "type": "group",
+      },
+    ],
+    "matrix": Float32Array [
+      1,
+      0,
+      0,
+      0,
+      1,
+      0,
+      15,
+      15,
+      1,
+    ],
+    "type": "group",
+  },
+  "width": 785.5,
+}
+`;

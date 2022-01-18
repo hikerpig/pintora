@@ -16,6 +16,7 @@
     "format:check": "npm run prettier -- --check",
     "lint": "eslint packages/*/src/**/*.{ts,js}",
     "test": "npx jest",
+    "coverage": "npx jest --coverage",
     "build-site": "sh ./scripts/build-site.sh",
     "vercel-build": "npm run compile:browser && npm run build-site"
   },
