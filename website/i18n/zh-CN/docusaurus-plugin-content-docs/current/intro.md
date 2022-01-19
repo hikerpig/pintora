@@ -22,3 +22,4 @@ Pintora 是一个可在浏览器和 Node.js 环境下运行的文字转示意图
 - [Entity Relationship Diagram](./diagrams/er-diagram.mdx)
 - [组件图 Component Diagram](./diagrams/component-diagram.mdx)
 - [活动图 Activity Diagram](./diagrams/activity-diagram.mdx)
+- [思维导图 Mind Map](./diagrams/mindmap.mdx) <span class="badge badge--info">实验中</span>

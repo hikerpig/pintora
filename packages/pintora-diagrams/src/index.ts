@@ -3,6 +3,7 @@ import { sequenceDiagram, SequenceDiagramIR } from './sequence'
 import { erDiagram, ErDiagramIR } from './er'
 import { componentDiagram, ComponentDiagramIR } from './component'
 import { activityDiagram, ActivityDiagramIR } from './activity'
+import { mindmap, MindmapIR } from './mindmap'
 import THEMES, { ITheme } from './util/themes/index'
 import './type' // type augmentation
 import './util/symbols'
@@ -23,6 +24,7 @@ export const DIAGRAMS = {
   sequenceDiagram,
   componentDiagram,
   activityDiagram,
+  mindmap,
 }
 
 export {
@@ -33,4 +35,6 @@ export {
   componentDiagram,
   ComponentDiagramIR,
   ActivityDiagramIR,
+  MindmapIR,
+  mindmap,
 }

@@ -1,0 +1,61 @@
+---
+title: Mind Map
+---
+
+Mind Map syntax is based on PlantUML MindMap beta. 
+
+<span class="badge badge--info">Experiment</span> syntax may change.
+
+## OrgMode syntax for levels
+
+You can specify node level by number of `*` symobl, starting from 1.
+
+```pintora play
+mindmap
+* UML Diagrams
+** Behavior Diagrams
+*** Sequence Diagram
+*** State Diagram
+```
+
+## +/- symbol for side
+
+Normally the diagram layout is from left to right, you can use `-` symbol to choose another side.
+
+```pintora play
+mindmap
++ UML Diagrams
+++ Behavior Diagrams
++++ Sequence Diagram
++++ State Diagram
++++ Activity Diagram
+-- Structural Diagrams
+--- Class Diagram
+--- Component Diagram
+```
+
+## Multiline text
+
+You can use : and ; to have multilines box.
+
+```pintora play
+mindmap
+* example
+** :can have multiline
+text;
+```
+
+## Multiroot
+
+You can create multiroot mind map, every node with depth 1 will create a new tree.
+
+```pintora play
+mindmap
+* UML Diagram
+** Sequence Diagram
+** State Diagram
+** Component Diagram
+* Non-UML Diagram
+** Entity Relationship Diagram
+** Mind Map
+```

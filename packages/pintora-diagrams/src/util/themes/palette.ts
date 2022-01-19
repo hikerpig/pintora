@@ -5,7 +5,9 @@ export const AYU_LIGHT = {
   neutralGray: '#f8f8f2',
   cyan: '#55b4d4',
   green: '#9c0',
-  orange: '#fdb05e',
+  orange: '#fdb05e', // lightness 68
+  orangeLight1: '#fec88f', // +10 lightness
+  orangeLight2: '#fee0c1', // +20 lightness
   pink: '#f07171',
   purple: '#af71d0',
   red: '#e45649',

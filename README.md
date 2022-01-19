@@ -37,6 +37,7 @@ Heavily inspired by [Mermaid.js](https://mermaid-js.github.io/mermaid/#/) and [P
 - Entity Relationship Diagram
 - Component Diagram
 - Activity Diagram
+- Mind Map
 
 <table>
   <thead>
@@ -70,6 +71,12 @@ Heavily inspired by [Mermaid.js](https://mermaid-js.github.io/mermaid/#/) and [P
         <img src="https://i.imgur.com/HoMe3Gp.jpg" title="source: imgur.com" width="300" />
       </td>
     </tr>
+    <tr>
+      <td>Mind Map</td>
+      <td>
+        <img src="https://i.imgur.com/FqoVe32.jpg" title="source: imgur.com" width="300" />
+      </td>
+    </tr>
   </tbody>
 </table>
 
@@ -88,6 +95,7 @@ Check the online [documentation and demo](http://pintorajs.vercel.app/docs/intro
 - [x] PlantUML style Component diagram
 - [x] Theme config
 - [x] PlantUML style Activity diagram
+- [x] Mind Map
 - [ ] PlantUML style deploy diagram
 - [ ] Load diagram implementation and canvas renderer only when needed
 

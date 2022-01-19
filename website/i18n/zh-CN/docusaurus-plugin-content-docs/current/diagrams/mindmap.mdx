@@ -1,0 +1,59 @@
+---
+title: Mind Map 思维导图
+---
+
+Mind Map 语法基于 PlantUML 的 MindMap 语法。
+
+<span class="badge badge--info">实验中</span> 现在还在实验期间，语法可能会改变。
+
+## OrgMode 形式的层级语法
+
+使用不同数量的 `*` 来表明节点深度，从 1 开始。
+
+```pintora play
+mindmap
+* UML Diagrams
+** Behavior Diagrams
+*** Sequence Diagram
+*** State Diagram
+```
+
+## 使用 +/- 号表明节点方向
+
+```pintora play
+mindmap
++ UML Diagrams
+++ Behavior Diagrams
++++ Sequence Diagram
++++ State Diagram
++++ Activity Diagram
+-- Structural Diagrams
+--- Class Diagram
+--- Component Diagram
+```
+
+## 多行文本
+
+节点的文本可以是多行文字，需要以 `:` 开始，以 `;` 结尾。
+
+```pintora play
+mindmap
+* example
+** :can have multiline
+text;
+```
+
+## 具有多个根节点的导图
+
+可以创建具有多个根节点的导图，每个深度为 1 的节点都会创建一棵树。
+
+```pintora play
+mindmap
+* UML Diagram
+** Sequence Diagram
+** State Diagram
+** Component Diagram
+* Non-UML Diagram
+** Entity Relationship Diagram
+** Mind Map
+```

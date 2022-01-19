@@ -36,7 +36,50 @@ Heavily inspired by [Mermaid.js](https://mermaid-js.github.io/mermaid/#/) and [P
 ### Diagram types
 
 - Sequence Diagram
-- Entity Diagram
+- Entity Relationship Diagram
 - Component Diagram
+- Activity Diagram
+- Mind Map
+
+<table>
+  <thead>
+    <tr>
+      <th>name</th>
+      <th>preview</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Sequence Diagram</td>
+      <td>
+        <img src="https://i.imgur.com/6CMLz7C.jpg" title="source: imgur.com" width="300" />
+      </td>
+    </tr>
+    <tr>
+      <td>ER Diagram</td>
+      <td>
+        <img src="https://i.imgur.com/o31ydlQ.jpg" title="source: imgur.com" width="300" />
+      </td>
+    </tr>
+    <tr>
+      <td>Component Diagram</td>
+      <td>
+        <img src="https://i.imgur.com/yk68Ot5.jpg" title="source: imgur.com" width="300" />
+      </td>
+    </tr>
+    <tr>
+      <td>Activity Diagram</td>
+      <td>
+        <img src="https://i.imgur.com/HoMe3Gp.jpg" title="source: imgur.com" width="300" />
+      </td>
+    </tr>
+    <tr>
+      <td>Mind Map</td>
+      <td>
+        <img src="https://i.imgur.com/FqoVe32.jpg" title="source: imgur.com" width="300" />
+      </td>
+    </tr>
+  </tbody>
+</table>
 
 Check the online [documentation and demo](http://pintorajs.vercel.app/) for more details.

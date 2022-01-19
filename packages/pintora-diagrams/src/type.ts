@@ -2,6 +2,7 @@ import { SequenceConf } from './sequence'
 import { ErConf } from './er'
 import { ComponentConf } from './component'
 import { ActivityConf } from './activity'
+import { MindmapConf } from './mindmap'
 import { ITheme } from './util/themes/base'
 
 // type augmentation
@@ -16,5 +17,6 @@ declare module '@pintora/core' {
     er: ErConf
     sequence: SequenceConf
     activity: ActivityConf
+    mindmap: MindmapConf
   }
 }

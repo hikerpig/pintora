@@ -1,4 +1,15 @@
-import { GSymbol, safeAssign, TRect, MarkType, MarkTypeMap, Point, createTranslation, mat3, Group } from '@pintora/core'
+import {
+  GSymbol,
+  safeAssign,
+  TRect,
+  MarkType,
+  MarkTypeMap,
+  Point,
+  createTranslation,
+  mat3,
+  Group,
+  Bounds,
+} from '@pintora/core'
 
 type TranformInfo = {
   offsets: Point
@@ -131,4 +142,30 @@ export function positionGroupContents(group: Group, p: TRect) {
   })
 
   safeAssign(group.attrs, p)
+}
+
+export const TRANSFORM_GRAPH = {
+  /**
+   * Turn dagre layout result node coords to GraphicsIR rect left top
+   */
+  graphNodeToRectStart(rect: TRect) {
+    const { width, height, x, y } = rect
+    return {
+      width,
+      height,
+      x: x - rect.width / 2,
+      y: y - rect.height / 2,
+    }
+  },
+}
+
+export function makeBounds(): Bounds {
+  return {
+    left: Infinity,
+    right: -Infinity,
+    top: Infinity,
+    bottom: -Infinity,
+    width: 0,
+    height: 0,
+  }
 }

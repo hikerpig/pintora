@@ -242,10 +242,27 @@ end
   `),
 }
 
+export const mindmapExample: DiagramExample = {
+  name: 'Mind Map',
+  description: 'Sample for a mindmap',
+  code: stripStartEmptyLines(`
+mindmap
++ UML Diagrams
+++ Behavior Diagrams
++++ Sequence Diagram
++++ State Diagram
++++ Activity Diagram
+-- Structural Diagrams
+--- Class Diagram
+--- Component Diagram
+`),
+}
+
 export const EXAMPLES = {
   sequence: sequenceExample,
   er: erExample,
   erLarge: erLargeExample,
   component: componentExample,
   activity: activityExample,
+  mindmap: mindmapExample,
 }

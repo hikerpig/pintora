@@ -12,6 +12,7 @@ import {
   mat3,
   Bounds,
   safeAssign,
+  Circle,
 } from '@pintora/core'
 import { PALETTE } from './theme'
 import { ITheme } from '../util/themes/base'
@@ -178,4 +179,17 @@ export const getBaseNote = function (theme: ITheme): Rect['attrs'] {
     rx: 0,
     ry: 0,
   }
+}
+
+/**
+ * can be used to create position marker
+ */
+export function makeCircleInPoint(p: Point, opts: Partial<Circle['attrs']> = {}) {
+  return makeMark('circle', {
+    x: p.x,
+    y: p.y,
+    r: 4,
+    fill: 'red',
+    ...opts,
+  }) 
 }

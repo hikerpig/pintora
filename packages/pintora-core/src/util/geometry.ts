@@ -90,3 +90,42 @@ export function clamp(num: number, min: number, max: number) {
 // function radToDegree(rad: number) {
 //   return rad / Math.PI * 180
 // }
+
+/* eslint-disable prettier/prettier */
+export enum PositionH {
+  LEFT = 0b100000,
+  CENTER = 0b010000,
+  RIGHT = 0b001000,
+}
+
+export enum PositionV {
+  TOP = 0b000100,
+  CENTER = 0b000010,
+  BOTTOM = 0b000001,
+}
+/* eslint-enable prettier/prettier */
+
+export function getPositionOfRect(rect: TRect, position: number) {
+  let x = rect.x
+  let y = rect.y
+  if (position & PositionH.CENTER) {
+    x += rect.width / 2
+  } else if (position & PositionH.RIGHT) {
+    x += rect.width
+  }
+  if (position & PositionV.CENTER) {
+    y += rect.height / 2
+  } else if (position & PositionV.BOTTOM) {
+    y += rect.height
+  }
+  return { x, y }
+}
+
+export function moveRectPosition(rect: TRect, offsets: Point) {
+  return {
+    width: rect.width,
+    height: rect.height,
+    x: rect.x + offsets.x,
+    y: rect.y + offsets.y,
+  }
+}
