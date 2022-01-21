@@ -5,4 +5,5 @@ module.exports = {
   testEnvironment: 'jsdom',
   testMatch: ['**/(*.)+(spec|test).[jt]s?(x)'],
   transformIgnorePatterns: ['/node_modules/(?!(d3-*))'],
+  // testPathIgnorePatterns: ['cypress'],
 }
