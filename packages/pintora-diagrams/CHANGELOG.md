@@ -3,6 +3,22 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.1.0-alpha.19](https://github.com/hikerpig/pintora/compare/v0.1.0-alpha.18...v0.1.0-alpha.19) (2022-01-22)
+
+
+### Bug Fixes
+
+* parser error when adding `\n` as suffix ([16fc07e](https://github.com/hikerpig/pintora/commit/16fc07e016c2cd506b7951a64f9b24cf26671447))
+
+
+### Features
+
+* **pintora-diagrams:** add mindmap support ([3062216](https://github.com/hikerpig/pintora/commit/306221660b34baad83d67435470d6aabc27b289f))
+
+
+
+
+
 # [0.1.0-alpha.18](https://github.com/hikerpig/pintora/compare/v0.1.0-alpha.17...v0.1.0-alpha.18) (2022-01-16)
 
 
