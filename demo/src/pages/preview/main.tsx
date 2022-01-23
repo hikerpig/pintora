@@ -5,7 +5,8 @@ import PintoraPreview from 'src/components/PintoraPreview'
 import './index.less'
 
 const App = () => {
-  const [pintoraCode, setPintoraCode] = useState('');
+  const [pintoraCode, setPintoraCode] = useState('')
+  const [pintoraRenderer, setPintoraRenderer] = useState<any>('svg')
 
   useEffect(() => {
     const params = new URLSearchParams(location.search)
@@ -21,7 +22,7 @@ const App = () => {
       }
     }
 
-    let code: string = ''
+    let code = ''
     const encodedCode = params.get('code')
     if (encodedCode) {
       try {
@@ -36,16 +37,23 @@ const App = () => {
     if (code) {
       setPintoraCode(code)
     }
+
+    const renderer = params.get('renderer')
+    if (renderer) {
+      setPintoraRenderer(renderer)
+    }
   }, [])
-  
-  return <div className="preview">
-    <PintoraPreview code={pintoraCode} />
-  </div>
+
+  return (
+    <div className="preview">
+      <PintoraPreview code={pintoraCode} renderer={pintoraRenderer} />
+    </div>
+  )
 }
 
 ReactDOM.render(
   <React.StrictMode>
     <App />
   </React.StrictMode>,
-  document.getElementById('root')
+  document.getElementById('root'),
 )
