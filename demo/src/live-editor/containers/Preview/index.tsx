@@ -36,6 +36,7 @@ const Preview = ({ previewCode, previewConfig, pintoraConfig, className }: Props
       const errorInfo = {
         line: error.token.line,
         col: error.token.col,
+        offset: error.token.offset,
         message: error.message,
       }
       dispatch(actions.updateEditorError({ errorInfo }))

@@ -1,9 +1,10 @@
 import React, { useEffect, useRef } from 'react'
 import { ErrorInfo } from 'src/live-editor/type'
-import { keymap, EditorView, highlightActiveLine } from '@codemirror/view'
+import { keymap, EditorView, highlightActiveLine, Decoration } from '@codemirror/view'
 import { history, historyKeymap } from '@codemirror/history'
 import { EditorState, Extension } from '@codemirror/state'
 import { standardKeymap } from '@codemirror/commands'
+import { setDiagnostics } from '@codemirror/lint'
 import { oneDarkTheme, oneDarkHighlightStyle } from '@codemirror/theme-one-dark'
 import { lineNumbers } from '@codemirror/gutter'
 import { searchConfig, searchKeymap } from '@codemirror/search'
@@ -89,6 +90,25 @@ const Editor = (props: Props) => {
       }
     }
   }, [code])
+
+  useEffect(() => {
+    const view = viewRef.current
+    if (view) {
+      if (errorInfo) {
+        const spec = setDiagnostics(view.state, [
+          {
+            severity: 'error',
+            message: errorInfo.message,
+            from: errorInfo.offset,
+            to: errorInfo.offset,
+          },
+        ])
+        view.dispatch(spec)
+      } else {
+        view.dispatch(setDiagnostics(view.state, []))
+      }
+    }
+  }, [errorInfo])
 
   // TOOD: highlight error
   // useEffect(() => {
