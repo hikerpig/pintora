@@ -57,3 +57,30 @@ mindmap
 ** Entity Relationship Diagram
 ** Mind Map
 ```
+
+## 覆盖设置
+
+可以使用 `@config` 指令覆盖图表的部分设置。
+
+可设置项的说明请见 [Config page](../configuration/config.md#mindmap).
+
+```pintora play
+mindmap
+@config layoutDirection TB
+@config {
+  l1NodeBgColor   #2B7A5D
+  l1NodeTextColor #fff
+  l2NodeBgColor   #26946C
+  l2NodeTextColor #fff
+  nodeBgColor     #67B599
+  textColor       #fff
+}
++ UML Diagrams
+++ Behavior Diagrams
++++ Sequence Diagram
++++ State Diagram
++++ Activity Diagram
+++ Structural Diagrams
++++ Class Diagram
++++ Component Diagram
+```

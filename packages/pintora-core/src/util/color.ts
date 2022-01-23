@@ -1,3 +1,5 @@
+import tinycolor from 'tinycolor2'
+
 const HEX_PATTERN = /^#(?:[0-9a-fA-F]{3}){1,2}$/
 
 export function parseColor(input: string) {
@@ -14,3 +16,5 @@ export function parseColor(input: string) {
     isValid,
   }
 }
+
+export { tinycolor }

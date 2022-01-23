@@ -183,6 +183,35 @@ export type ActivityConf = {
 }
 ```
 
+### mindmap
+
+```ts
+export type MindmapConf = {
+  diagramPadding: number
+  layoutDirection: 'LR' | 'TB'
+
+  borderRadius: number
+
+  /** default node color */
+  nodeBgColor: string
+  nodePadding: number
+
+  textColor: string
+  edgeColor: string
+
+  maxFontSize: number
+  minFontSize: number
+
+  levelDistance: number
+
+  // node config for different levels
+  l1NodeBgColor: string
+  l1NodeTextColor: string
+  l2NodeBgColor: string
+  l2NodeTextColor: string
+}
+```
+
 ## The `@config` directive
 
 If you don't have the access to add JS script into the page or in the Node.js module, it's also possible to override some configs of the builtin diagrams through the `@config` directive.

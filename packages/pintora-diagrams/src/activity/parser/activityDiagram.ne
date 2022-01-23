@@ -12,7 +12,6 @@ let lexer = moo.compile({
   R_PAREN: { match: /\)/ },
   L_BRACKET: { match: /\{/ },
   R_BRACKET: { match: /\}/ },
-  color: COLOR_REGEXP,
   START_NOTE: textToCaseInsensitiveRegex('@note'),
   END_NOTE: textToCaseInsensitiveRegex('@end_note'),
   VALID_TEXT: { match: VALID_TEXT_REGEXP, fallback: true },

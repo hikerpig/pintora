@@ -6,7 +6,7 @@ export class ThemeDark implements ITheme {
   schemeOppsiteTheme = 'default'
 
   // primaryColor = DRACULA.pink
-  primaryColor = DRACULA.purple
+  primaryColor = DRACULA.purpleDark
   secondaryColor = DRACULA.pink
   teritaryColor = DRACULA.cyan
 

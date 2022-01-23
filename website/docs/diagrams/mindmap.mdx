@@ -59,3 +59,30 @@ mindmap
 ** Entity Relationship Diagram
 ** Mind Map
 ```
+
+## Override config
+
+You can override diagarm config through `@config` directive.
+
+All available configs can be seen in the [Config page](../configuration/config.md#mindmap).
+
+```pintora play
+mindmap
+@config layoutDirection TB
+@config {
+  l1NodeBgColor   #2B7A5D
+  l1NodeTextColor #fff
+  l2NodeBgColor   #26946C
+  l2NodeTextColor #fff
+  nodeBgColor     #67B599
+  textColor       #fff
+}
++ UML Diagrams
+++ Behavior Diagrams
++++ Sequence Diagram
++++ State Diagram
++++ Activity Diagram
+++ Structural Diagrams
++++ Class Diagram
++++ Component Diagram
+```

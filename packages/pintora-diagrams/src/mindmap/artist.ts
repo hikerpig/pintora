@@ -179,11 +179,11 @@ class MMDraw {
       const { isReverse } = edge
       if (isVertical) {
         fromOutPoint = getPositionOfRect(
-          TRANSFORM_GRAPH.graphNodeToRectStart(fromNode),
+          TRANSFORM_GRAPH.graphNodeToRectStart(isReverse ? toNode : fromNode),
           PositionH.CENTER | (isReverse ? PositionV.TOP : PositionV.BOTTOM),
         )
         toInPoint = getPositionOfRect(
-          TRANSFORM_GRAPH.graphNodeToRectStart(toNode),
+          TRANSFORM_GRAPH.graphNodeToRectStart(isReverse ? fromNode : toNode),
           PositionH.CENTER | (isReverse ? PositionV.BOTTOM : PositionV.TOP),
         )
       } else {
@@ -224,7 +224,9 @@ class MMDraw {
 
       let newPoints: Point[]
       if (isVertical) {
-        const middleY = (fromOutPoint.y + nextLevelBounds.top) / 2
+        const middleY = isReverse
+          ? (fromOutPoint.y + nextLevelBounds.bottom) / 2
+          : (fromOutPoint.y + nextLevelBounds.top) / 2
         newPoints = [fromOutPoint, { x: fromOutPoint.x, y: middleY }, { x: toInPoint.x, y: middleY }, toInPoint]
       } else {
         // the middle of output and the left of next level's boundings

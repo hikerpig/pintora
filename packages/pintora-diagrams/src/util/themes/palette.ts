@@ -6,8 +6,8 @@ export const AYU_LIGHT = {
   cyan: '#55b4d4',
   green: '#9c0',
   orange: '#fdb05e', // lightness 68
-  orangeLight1: '#fec88f', // +10 lightness
-  orangeLight2: '#fee0c1', // +20 lightness
+  // orangeLight1: '#fec88f', // +10 lightness
+  // orangeLight2: '#fee0c1', // +20 lightness
   pink: '#f07171',
   purple: '#af71d0',
   red: '#e45649',
@@ -23,7 +23,8 @@ export const DRACULA = {
   orange: '#ffb86c',
   pink: '#ff79c6',
   // purple: '#bd93f9',
-  purple: '#AD78F7',
+  purple: '#AD78F7', // lightness 72
+  purpleDark: '#9a58f5', // lightness 65
   red: '#ff5555',
   yellow: '#f1fa8c',
 }

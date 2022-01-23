@@ -4,12 +4,12 @@
 
 .App__left {
   min-width: 40vw;
-  width: 45vw;
+  width: 40vw;
   height: 100%;
 }
 
 .App__right {
-  max-width: 60vw;
+  max-width: calc(60vw - 85px);
   flex-grow: 1;
-  margin-left: 1em;
+  margin-left: 20px;
 }
