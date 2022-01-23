@@ -34,7 +34,7 @@ export function setYY(v) {
 @lexer lexer
 @builtin "string.ne"
 @builtin "whitespace.ne"
-@include "../../util/parser-grammars/style.ne"
+@include "../../util/parser-grammars/config.ne"
 
 start -> __ start
   | "componentDiagram" document {%
@@ -65,7 +65,7 @@ statement ->
         return d[0]
       }
     %}
-  | styleClause _ %NEWLINE
+  | configClause _ %NEWLINE
 
 UMLElement ->
     group {%

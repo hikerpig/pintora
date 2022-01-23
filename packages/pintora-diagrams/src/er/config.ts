@@ -1,6 +1,6 @@
 import { PALETTE } from '../util/theme'
 import { configApi, safeAssign, PintoraConfig } from '@pintora/core'
-import { interpreteStyles, StyleParam } from '../util/style'
+import { interpreteConfigs, ConfigParam } from '../util/style'
 
 export type ErConf = {
   diagramPadding: number
@@ -55,7 +55,7 @@ export const defaultConfig: ErConf = {
   fontSize: 14,
 }
 
-export const ER_STYLE_RULES = {
+export const ER_CONFIG_DIRECTIVE_RULES = {
   curvedEdge: { valueType: 'boolean' },
   layoutDirection: { valueType: 'string' },
   borderRadius: { valueType: 'size' },
@@ -68,7 +68,7 @@ export const ER_STYLE_RULES = {
   fontSize: { valueType: 'size' },
 } as const
 
-export function getConf(styleParams: StyleParam[]) {
+export function getConf(configParams: ConfigParam[]) {
   const globalConfig: PintoraConfig = configApi.getConfig()
   const t = globalConfig.themeConfig?.themeVariables
   const conf = { ...defaultConfig }
@@ -83,6 +83,6 @@ export function getConf(styleParams: StyleParam[]) {
     })
   }
   Object.assign(conf, globalConfig.er || {})
-  Object.assign(conf, interpreteStyles(ER_STYLE_RULES, styleParams))
+  Object.assign(conf, interpreteConfigs(ER_CONFIG_DIRECTIVE_RULES, configParams))
   return conf
 }

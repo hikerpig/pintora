@@ -1,6 +1,6 @@
 import { PALETTE } from '../util/theme'
 import { configApi, safeAssign, PintoraConfig } from '@pintora/core'
-import { interpreteStyles, StyleParam } from '../util/style'
+import { interpreteConfigs, ConfigParam } from '../util/style'
 
 export type ActivityConf = {
   diagramPadding: number
@@ -59,7 +59,7 @@ export const defaultConfig: ActivityConf = {
   fontSize: 14,
 }
 
-export const ACTIVITY_STYLE_RULES = {
+export const ACTIVITY_CONFIG_DIRECTIVE_RULES = {
   diagramPadding: { valueType: 'size' },
 
   curvedEdge: { valueType: 'boolean' },
@@ -86,7 +86,7 @@ export const ACTIVITY_STYLE_RULES = {
   fontSize: { valueType: 'size' },
 } as const
 
-export function getConf(styleParams: StyleParam[]) {
+export function getConf(configParams: ConfigParam[]) {
   const globalConfig: PintoraConfig = configApi.getConfig()
   const t = globalConfig.themeConfig?.themeVariables
   const conf = { ...defaultConfig }
@@ -104,6 +104,6 @@ export function getConf(styleParams: StyleParam[]) {
     })
   }
   Object.assign(conf, globalConfig.er || {})
-  Object.assign(conf, interpreteStyles(ACTIVITY_STYLE_RULES, styleParams))
+  Object.assign(conf, interpreteConfigs(ACTIVITY_CONFIG_DIRECTIVE_RULES, configParams))
   return conf
 }

@@ -462,13 +462,13 @@ sequenceDiagram
   it('can parse style clause', () => {
     const example = stripStartEmptyLines(`
 sequenceDiagram
-  @style noteTextColor #00bbaa
-  @style messageFontSize 20
+  @config noteTextColor #00bbaa
+  @config messageFontSize 20
   `)
     parse(example)
     const ir = db.getDiagramIR()
     // console.log(JSON.stringify(ir, null, 2))
-    expect(ir.styleParams).toMatchObject([
+    expect(ir.configParams).toMatchObject([
       {
         key: 'noteTextColor',
         value: '#00bbaa',
@@ -483,14 +483,14 @@ sequenceDiagram
   it('can parse style clause inside brackets', () => {
     const example = stripStartEmptyLines(`
 sequenceDiagram
-  @style {
+  @config {
     noteTextColor #00bbaa
     messageFontSize 20
   }
   `)
     parse(example)
     const ir = db.getDiagramIR()
-    expect(ir.styleParams).toMatchObject([
+    expect(ir.configParams).toMatchObject([
       {
         key: 'noteTextColor',
         value: '#00bbaa',

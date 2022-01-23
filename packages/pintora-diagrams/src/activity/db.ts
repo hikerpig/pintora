@@ -1,5 +1,5 @@
 import { makeIdCounter } from '@pintora/core'
-import { StyleParam, StyleAction } from '../util/style'
+import { ConfigParam, ConfigAction } from '../util/style'
 import { dedent } from '../util/text'
 
 export type Action = {
@@ -92,11 +92,11 @@ export type ActivityDiagramIR = {
   steps: Step[]
   notes: Note[]
   arrowLabels: ArrowLabel[]
-  styleParams: StyleParam[]
+  configParams: ConfigParam[]
 }
 
 type ApplyPart =
-  | StyleAction
+  | ConfigAction
   | {
       type: 'addAction'
       action: Action
@@ -167,7 +167,7 @@ type DbApplyState = {
 }
 
 class ActivityDb {
-  protected styleParams: StyleParam[] = []
+  protected configParams: ConfigParam[] = []
   protected steps: Step[] = []
   protected notes: Note[] = []
   protected arrowLabels: ArrowLabel[] = []
@@ -308,9 +308,9 @@ class ActivityDb {
         this.arrowLabels.push(value)
         break
       }
-      case 'addStyle':
+      case 'addConfig':
         {
-          this.styleParams.push(part)
+          this.configParams.push(part)
         }
         break
       default: {
@@ -330,7 +330,7 @@ class ActivityDb {
       steps: this.steps,
       notes: this.notes,
       arrowLabels: this.arrowLabels,
-      styleParams: this.styleParams,
+      configParams: this.configParams,
     }
   }
 
@@ -338,7 +338,7 @@ class ActivityDb {
     this.idCounter.reset()
     this.steps = []
     this.notes = []
-    this.styleParams = []
+    this.configParams = []
   }
 }
 

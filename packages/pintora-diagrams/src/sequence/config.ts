@@ -1,7 +1,7 @@
 import { MarkAttrs, PintoraConfig } from '@pintora/core'
 import { PALETTE } from '../util/theme'
 import { configApi, safeAssign } from '@pintora/core'
-import { interpreteStyles, StyleParam } from '../util/style'
+import { interpreteConfigs, ConfigParam } from '../util/style'
 
 export type SequenceConf = {
   noteWidth: number
@@ -84,7 +84,7 @@ export const defaultConfig: SequenceConf = {
   showSequenceNumbers: false,
 }
 
-export const SEQUENCE_STYLE_RULES = {
+export const SEQUENCE_CONFIG_DIRECTIVE_RULES = {
   noteMargin: { valueType: 'size' },
   boxMargin: { valueType: 'size' },
   activationWidth: { valueType: 'size' },
@@ -110,7 +110,7 @@ export const SEQUENCE_STYLE_RULES = {
   dividerTextColor: { valueType: 'color' },
 } as const
 
-export function getConf(styleParams: StyleParam[]) {
+export function getConf(configParams: ConfigParam[]) {
   const globalConfig: PintoraConfig = configApi.getConfig()
   const t = globalConfig.themeConfig.themeVariables
   const conf = { ...defaultConfig }
@@ -126,6 +126,6 @@ export function getConf(styleParams: StyleParam[]) {
     dividerTextColor: t.secondaryTextColor,
   })
   Object.assign(conf, globalConfig.sequence || {})
-  Object.assign(conf, interpreteStyles(SEQUENCE_STYLE_RULES, styleParams))
+  Object.assign(conf, interpreteConfigs(SEQUENCE_CONFIG_DIRECTIVE_RULES, configParams))
   return conf
 }

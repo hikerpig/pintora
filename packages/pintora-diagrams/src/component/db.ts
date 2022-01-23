@@ -1,4 +1,4 @@
-import { StyleParam } from '../util/style'
+import { ConfigParam } from '../util/style'
 
 type Component = {
   name: string
@@ -63,7 +63,7 @@ type ApplyPart =
       children: UMLElement[]
     }
   | {
-      type: 'addStyle'
+      type: 'addConfig'
       key: string
       value: string
     }
@@ -73,7 +73,7 @@ export type ComponentDiagramIR = {
   interfaces: Record<string, Interface>
   groups: Record<string, CGroup>
   relationships: Relationship[]
-  styleParams: StyleParam[]
+  configParams: ConfigParam[]
 }
 
 export enum LineType {
@@ -89,7 +89,7 @@ class ComponentDb {
   protected interfaces: Record<string, Interface> = {}
   protected groups: Record<string, CGroup> = {}
   protected relationships: Relationship[] = []
-  protected styleParams: StyleParam[] = []
+  protected configParams: ConfigParam[] = []
 
   LineType = LineType
 
@@ -124,9 +124,9 @@ class ComponentDb {
     if (!part) return
     // console.log('apply', part)
     switch (part.type) {
-      case 'addStyle':
+      case 'addConfig':
         {
-          this.styleParams.push(part)
+          this.configParams.push(part)
         }
         break
       default: {
@@ -185,7 +185,7 @@ class ComponentDb {
       interfaces: this.interfaces,
       groups: this.groups,
       relationships: this.relationships,
-      styleParams: this.styleParams,
+      configParams: this.configParams,
     }
   }
 
@@ -195,7 +195,7 @@ class ComponentDb {
     this.interfaces = {}
     this.groups = {}
     this.relationships = []
-    this.styleParams = []
+    this.configParams = []
   }
 }
 

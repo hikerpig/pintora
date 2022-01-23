@@ -53,7 +53,7 @@ const GROUP_LABEL_MAP = {
 const sequenceArtist: IDiagramArtist<SequenceDiagramIR> = {
   draw(ir, config?) {
     // console.log('[draw]', ir)
-    conf = getConf(ir.styleParams)
+    conf = getConf(ir.configParams)
     theme = (configApi.getConfig() as PintoraConfig).themeConfig.themeVariables
     model.init()
     logger.debug(`C:${JSON.stringify(conf, null, 2)}`)

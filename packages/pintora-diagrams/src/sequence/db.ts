@@ -1,5 +1,5 @@
 import { logger, OrNull, parseColor } from '@pintora/core'
-import { StyleParam } from '../util/style'
+import { ConfigParam } from '../util/style'
 
 export interface WrappedText {
   text: string
@@ -92,7 +92,7 @@ export type SequenceDiagramIR = {
   title: string
   showSequenceNumbers: boolean
   // titleWrapped: boolean
-  styleParams: StyleParam[]
+  configParams: ConfigParam[]
 }
 
 class SequenceDB {
@@ -104,7 +104,7 @@ class SequenceDB {
   titleWrapped = false
   wrapEnabled = false
   showSequenceNumbers = false
-  styleParams: SequenceDiagramIR['styleParams'] = []
+  configParams: SequenceDiagramIR['configParams'] = []
 
   addActor(param: AddActorParam) {
     const { actor: name, classifier } = param
@@ -244,8 +244,8 @@ class SequenceDB {
     return message
   }
 
-  addStyle(sp: StyleParam) {
-    this.styleParams.push(sp)
+  addConfig(sp: ConfigParam) {
+    this.configParams.push(sp)
   }
 
   getActor(id: string) {
@@ -263,7 +263,7 @@ class SequenceDB {
     this.actors = {}
     this.title = ''
     this.showSequenceNumbers = false
-    this.styleParams = []
+    this.configParams = []
   }
 
   getDiagramIR(): SequenceDiagramIR {
@@ -273,7 +273,7 @@ class SequenceDB {
       actors: this.actors,
       title: this.title,
       showSequenceNumbers: this.showSequenceNumbers,
-      styleParams: this.styleParams,
+      configParams: this.configParams,
     }
   }
 
@@ -318,8 +318,8 @@ class SequenceDB {
         case 'addDivider':
           db.addSignalWithoutActor({ text: param.text, wrap: false }, param.signalType)
           break
-        case 'addStyle':
-          db.addStyle({ key: param.key, value: param.value })
+        case 'addConfig':
+          db.addConfig({ key: param.key, value: param.value })
           break
       }
     }
@@ -405,7 +405,7 @@ type ApplyParam =
       text: string
     }
   | {
-      type: 'addStyle'
+      type: 'addConfig'
       key: string
       value: string
     }

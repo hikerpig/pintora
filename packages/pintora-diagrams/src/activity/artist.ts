@@ -58,7 +58,7 @@ function calcTextDims(text: string, attrs: Partial<Text['attrs']> = {}) {
 
 const erArtist: IDiagramArtist<ActivityDiagramIR, ActivityConf> = {
   draw(ir) {
-    conf = getConf(ir.styleParams)
+    conf = getConf(ir.configParams)
     model = new ArtistModel(ir)
     theme = (configApi.getConfig() as PintoraConfig).themeConfig.themeVariables
     // console.log('ir', JSON.stringify(ir, null, 2))

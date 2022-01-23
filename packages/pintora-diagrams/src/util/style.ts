@@ -1,10 +1,10 @@
-import { StyleParam, interpreteStyles } from '@pintora/core'
+import { ConfigParam, interpreteConfigs } from '@pintora/core'
 
-export { StyleParam, interpreteStyles }
+export { ConfigParam, interpreteConfigs }
 
 /** parser action */
-export type StyleAction = {
-  type: 'addStyle'
+export type ConfigAction = {
+  type: 'addConfig'
   key: string
   value: string
 }

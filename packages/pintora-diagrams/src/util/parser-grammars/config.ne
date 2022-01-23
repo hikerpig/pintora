@@ -1,20 +1,20 @@
 @{%
 export const COLOR = /#[a-zA-Z0-9]+/
-export const STYLE = /@style/
+export const CONFIG_DIRECTIVE = /@config/
 %}
 
 color -> %COLOR {% (d) => tv(d[0]) %}
 
-styleClause ->
-    %STYLE __ stylePart {%
+configClause ->
+    %CONFIG_DIRECTIVE __ configPart {%
       function(d) {
-        // console.log('[styleClause]', d[2], JSON.stringify(d[4]))
+        // console.log('[configClause]', d[2], JSON.stringify(d[4]))
         return d[2]
       }
     %}
-  | %STYLE __ "{" _ ([\n] _ stylePart):* [\n] _ "}" {%
+  | %CONFIG_DIRECTIVE __ "{" _ ([\n] _ configPart):* [\n] _ "}" {%
       function(d) {
-        // console.log('[styleClause]', JSON.stringify(d[4]))
+        // console.log('[configClause]', JSON.stringify(d[4]))
         const params = []
         d[4].forEach((seg) => {
           params.push(seg[2])
@@ -23,10 +23,10 @@ styleClause ->
       }
     %}
 
-stylePart -> [a-zA-Z0-9]:+ __ [^ \n]:+ {%
+configPart -> [a-zA-Z0-9]:+ __ [^ \n]:+ {%
     function(d) {
       const key = d[0].map(v => tv(v)).join('')
       let value = d[2]
       if (typeof value !== 'string') value = value.map(v => tv(v)).join('')
-      return { type: 'addStyle', key, value }
+      return { type: 'addConfig', key, value }
     }%}

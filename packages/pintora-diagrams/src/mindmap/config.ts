@@ -1,6 +1,6 @@
 import { PALETTE } from '../util/theme'
 import { configApi, safeAssign, PintoraConfig } from '@pintora/core'
-import { interpreteStyles, StyleParam } from '../util/style'
+import { interpreteConfigs, ConfigParam } from '../util/style'
 
 export type MindmapConf = {
   diagramPadding: number
@@ -52,7 +52,7 @@ export const defaultConfig: MindmapConf = {
   l2NodeTextColor: PALETTE.normalDark,
 }
 
-export const MINDMAP_STYLE_RULES = {
+export const MINDMAP_CONFIG_DIRECTIVE_RULES = {
   // curvedEdge: { valueType: 'boolean' },
   diagramPadding: { valueType: 'size' },
   layoutDirection: { valueType: 'layoutDirection' },
@@ -70,7 +70,7 @@ export const MINDMAP_STYLE_RULES = {
   l2NodeTextColor: { valueType: 'color' },
 } as const
 
-export function getConf(styleParams: StyleParam[]) {
+export function getConf(configParams: ConfigParam[]) {
   const globalConfig: PintoraConfig = configApi.getConfig()
   const t = globalConfig.themeConfig?.themeVariables
   const conf: MindmapConf = { ...defaultConfig }
@@ -78,6 +78,6 @@ export function getConf(styleParams: StyleParam[]) {
     safeAssign(conf, {})
   }
   safeAssign(conf, globalConfig.mindmap || {})
-  safeAssign(conf, interpreteStyles(MINDMAP_STYLE_RULES, styleParams))
+  safeAssign(conf, interpreteConfigs(MINDMAP_CONFIG_DIRECTIVE_RULES, configParams))
   return conf
 }

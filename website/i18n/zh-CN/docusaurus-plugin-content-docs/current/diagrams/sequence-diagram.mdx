@@ -116,16 +116,16 @@ sequenceDiagram
 
 ## 覆盖设置
 
-可以使用 `@style` 指令覆盖图表的部分设置。
+可以使用 `@config` 指令覆盖图表的部分设置。
 
 可设置项的说明请见 [Config page](../configuration/config.md#sequence).
 
 ```pintora play
 sequenceDiagram
-  @style loopLineColor #79caf1
-  @style actorBackground #61afef
-  @style actorTextColor #ffffff
-  @style {
+  @config loopLineColor #79caf1
+  @config actorBackground #61afef
+  @config actorTextColor #ffffff
+  @config {
     messageFontFamily Consolas
     dividerTextColor #61afef
   }

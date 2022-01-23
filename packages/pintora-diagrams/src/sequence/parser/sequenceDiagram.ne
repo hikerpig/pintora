@@ -49,7 +49,7 @@ export function setYY(v) {
 @lexer lexer
 @builtin "string.ne"
 @builtin "whitespace.ne"
-@include "../../util/parser-grammars/style.ne"
+@include "../../util/parser-grammars/config.ne"
 
 start -> __ start {% (d) => d[1] %}
 	| "sequenceDiagram" document __:? {%
@@ -155,7 +155,7 @@ statement ->
         return { type: 'addDivider', text, signalType: yy.LINETYPE.DIVIDER }
       }
     %}
-  | styleClause _ %NEWLINE
+  | configClause _ %NEWLINE
 
 participantWord ->
     "participant"

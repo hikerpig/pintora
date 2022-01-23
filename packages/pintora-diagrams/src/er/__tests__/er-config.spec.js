@@ -9,13 +9,13 @@ describe('er config', () => {
   it('can parse style clause', () => {
     const example = `
 erDiagram
-  @style fill #aabb00
-  @style fontSize 16
+  @config fill #aabb00
+  @config fontSize 16
   ORDER
     `
     parse(example)
     const ir = db.getDiagramIR()
-    const conf = getConf(ir.styleParams)
+    const conf = getConf(ir.configParams)
     // console.log('ir', JSON.stringify(ir, null, 2))
     // console.log(conf)
     expect(conf).toMatchObject({

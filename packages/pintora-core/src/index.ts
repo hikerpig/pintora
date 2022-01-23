@@ -7,8 +7,8 @@ import configApi, { PintoraConfig } from './config'
 export * from './util'
 import { encodeForUrl, decodeCodeInUrl, makeMark, calculateTextDimensions, parseColor } from './util'
 import { symbolRegistry, SymbolDef, SymbolStyleAttrs } from './symbol-registry'
-import { StyleParam, interpreteStyles } from './style-engine'
-import * as styleEngine from './style-engine'
+import { ConfigParam, interpreteConfigs } from './config-engine'
+import * as configEngine from './config-engine'
 
 export {
   logger,
@@ -17,8 +17,8 @@ export {
   symbolRegistry,
   SymbolDef,
   SymbolStyleAttrs,
-  StyleParam,
-  interpreteStyles,
+  ConfigParam,
+  interpreteConfigs,
   PintoraConfig,
 }
 
@@ -30,7 +30,7 @@ const pintora = {
   configApi,
   diagramRegistry,
   symbolRegistry,
-  styleEngine,
+  configEngine,
   parseAndDraw(text: string, opts: DrawOptions) {
     const { onError } = opts
     const diagram = diagramRegistry.detectDiagram(text)

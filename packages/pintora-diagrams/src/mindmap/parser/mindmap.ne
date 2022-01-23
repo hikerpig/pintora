@@ -11,7 +11,7 @@ let lexer = moo.compile({
   MINUS: /\-+/,
   SEMICOLON: /;/,
   COLON: /:/,
-  STYLE: /@style/, // for style.ne
+  CONFIG_DIRECTIVE: /@config/, // for config.ne
   VALID_TEXT: { match: VALID_TEXT_REGEXP, fallback: true },
 })
 
@@ -26,7 +26,7 @@ export function setYY(v) {
 @lexer lexer
 @builtin "string.ne"
 @builtin "whitespace.ne"
-@include "../../util/parser-grammars/style.ne"
+@include "../../util/parser-grammars/config.ne"
 
 start -> __ start
   | "mindmap" document
@@ -60,7 +60,7 @@ statement ->
         return { type: 'addItem', label, depth: notation.depth, isReverse: notation.isReverse } as ApplyPart
       }
     %}
-  | styleClause _ %NEWLINE
+  | configClause _ %NEWLINE
 
 levelNotation ->
     (%ASTERISKS | %PLUS) {%

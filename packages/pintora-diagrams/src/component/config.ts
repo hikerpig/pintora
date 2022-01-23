@@ -1,6 +1,6 @@
 import { PALETTE } from '../util/theme'
 import { configApi, safeAssign, PintoraConfig } from '@pintora/core'
-import { interpreteStyles, StyleParam } from '../util/style'
+import { interpreteConfigs, ConfigParam } from '../util/style'
 
 export type ComponentConf = {
   diagramPadding: number
@@ -44,7 +44,7 @@ export const defaultConfig: ComponentConf = {
   interfaceSize: 16,
 }
 
-export const COMPONENT_STYLE_RULES = {
+export const COMPONENT_CONFIG_DIRECTIVE_RULES = {
   diagramPadding: { valueType: 'size' },
   componentPadding: { valueType: 'size' },
   componentBackground: { valueType: 'color' },
@@ -59,7 +59,7 @@ export const COMPONENT_STYLE_RULES = {
   interfaceSize: { valueType: 'size' },
 } as const
 
-export function getConf(styleParams: StyleParam[]) {
+export function getConf(configParams: ConfigParam[]) {
   const conf = { ...defaultConfig }
   const globalConfig: PintoraConfig = configApi.getConfig()
   const t = globalConfig.themeConfig.themeVariables
@@ -73,6 +73,6 @@ export function getConf(styleParams: StyleParam[]) {
     textColor: t.textColor,
   })
   Object.assign(conf, globalConfig.component || {})
-  Object.assign(conf, interpreteStyles(COMPONENT_STYLE_RULES, styleParams))
+  Object.assign(conf, interpreteConfigs(COMPONENT_CONFIG_DIRECTIVE_RULES, configParams))
   return conf
 }

@@ -1,5 +1,5 @@
 import { makeIdCounter } from '@pintora/core'
-import { StyleParam, StyleAction } from '../util/style'
+import { ConfigParam, ConfigAction } from '../util/style'
 
 export type LevelNotation = {
   depth: number
@@ -94,7 +94,7 @@ export class MMTree {
 }
 
 export type ApplyPart =
-  | StyleAction
+  | ConfigAction
   | {
       type: 'addItem'
       depth: number
@@ -104,11 +104,11 @@ export type ApplyPart =
 
 export type MindmapIR = {
   trees: IMMDataTree[]
-  styleParams: StyleParam[]
+  configParams: ConfigParam[]
 }
 
 class MindmapDb {
-  styleParams: StyleParam[] = []
+  configParams: ConfigParam[] = []
   items: MMItem[] = []
 
   private currentTree: MMTree | null
@@ -128,7 +128,7 @@ class MindmapDb {
         this.treeMap.set(data, tree)
         return data
       }),
-      styleParams: this.styleParams,
+      configParams: this.configParams,
     }
   }
 
@@ -153,8 +153,8 @@ class MindmapDb {
         this.addItem({ ...data, id: this.makeId(), isReverse: Boolean(part.isReverse), children: [] })
         break
       }
-      case 'addStyle': {
-        this.styleParams.push(part)
+      case 'addConfig': {
+        this.configParams.push(part)
         break
       }
     }
@@ -168,7 +168,7 @@ class MindmapDb {
     this.idCounter.reset()
     this.trees = []
     this.items = []
-    this.styleParams = []
+    this.configParams = []
     this.currentTree = null
   }
 }

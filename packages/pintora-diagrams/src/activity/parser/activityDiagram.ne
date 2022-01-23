@@ -1,12 +1,11 @@
 @{%
 import * as moo from '@hikerpig/moo'
-import { tv, textToCaseInsensitiveRegex, VALID_TEXT_REGEXP, COLOR_REGEXP } from '../../util/parser-shared'
+import { tv, textToCaseInsensitiveRegex, VALID_TEXT_REGEXP } from '../../util/parser-shared'
 
 let lexer = moo.compile({
   NEWLINE: { match: /\n/, lineBreaks: true },
   SPACE: { match: / /, lineBreaks: false },
   QUOTED_WORD: /\"[^"]*\"/,
-  STYLE: /@style/, // for style.ne
   SEMICOLON: /;/,
   COLON: /:/,
   L_PAREN: { match: /\(/ },
@@ -30,7 +29,7 @@ export function setYY(v) {
 @lexer lexer
 @builtin "string.ne"
 @builtin "whitespace.ne"
-@include "../../util/parser-grammars/style.ne"
+@include "../../util/parser-grammars/config.ne"
 
 start -> __ start {% (d) => d[1] %}
 	| "activityDiagram" document __:? {%
@@ -73,7 +72,7 @@ statement ->
   | forkSentence
   | noteStatement
   | arrowLabelStatement
-  | styleClause _ %NEWLINE
+  | configClause _ %NEWLINE
 
 conditionSentence ->
     "if" %SPACE:+ wordsInParens %SPACE:+ "then" (%SPACE:+ wordsInParens):? %SPACE:* %NEWLINE line:* elseClause:? _ "endif" _ %NEWLINE {%

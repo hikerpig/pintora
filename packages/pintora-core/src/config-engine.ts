@@ -1,24 +1,24 @@
 /**
- * This module evaluate custom style params to real configs
+ * This module evaluate custom config params to real configs
  */
 import { parseColor } from './util/color'
 
-export type StyleValueType = 'color' | 'size' | 'fontSize' | 'string' | 'boolean' | 'layoutDirection'
+export type ConfigValueType = 'color' | 'size' | 'fontSize' | 'string' | 'boolean' | 'layoutDirection'
 
-export type StyleMeta = {
-  valueType: StyleValueType
+export type ConfigMeta = {
+  valueType: ConfigValueType
 }
 
-export type StyleParam<K = string> = {
+export type ConfigParam<K = string> = {
   key: K
   value: string
 }
 
-type StyleEvaluateResult<T> = { valid: true; value: T } | { valid: false }
+type ConfigEvaluateResult<T> = { valid: true; value: T } | { valid: false }
 
 export type TLayoutDirection = 'LR' | 'TB'
 
-interface StyleValueTypeMap {
+interface ConfigValueTypeMap {
   color: string
   size: number
   fontSize: number
@@ -27,13 +27,15 @@ interface StyleValueTypeMap {
   layoutDirection: TLayoutDirection
 }
 
-const sizeEvaluator = ({ value }: any): StyleEvaluateResult<number> => {
+const sizeEvaluator = ({ value }: any): ConfigEvaluateResult<number> => {
   const parsed = parseInt(value)
   if (isNaN(parsed)) return { valid: false }
   return { value: parsed, valid: true }
 }
 
-const styleValueEvaluators: { [K in StyleValueType]: (p: StyleParam) => StyleEvaluateResult<StyleValueTypeMap[K]> } = {
+const configValueEvaluators: {
+  [K in ConfigValueType]: (p: ConfigParam) => ConfigEvaluateResult<ConfigValueTypeMap[K]>
+} = {
   color({ value }) {
     const parsed = parseColor(value)
     return { value: parsed.color, valid: true }
@@ -51,22 +53,22 @@ const styleValueEvaluators: { [K in StyleValueType]: (p: StyleParam) => StyleEva
   },
 }
 
-type StyleRuleMap = Record<string, StyleMeta>
+type ConfigRuleMap = Record<string, ConfigMeta>
 
 /**
- * Generate style config from style params
+ * Generate config from config params
  */
-export function interpreteStyles<T extends StyleRuleMap>(
+export function interpreteConfigs<T extends ConfigRuleMap>(
   ruleMap: T,
-  params: StyleParam[],
-): { [K in keyof T]: T[K]['valueType'] extends StyleValueType[] ? any : StyleValueTypeMap[T[K]['valueType']] } {
+  params: ConfigParam[],
+): { [K in keyof T]: T[K]['valueType'] extends ConfigValueType[] ? any : ConfigValueTypeMap[T[K]['valueType']] } {
   const out: any = {}
   params.forEach(param => {
     const meta = ruleMap[param.key]
     if (!meta) return
-    const valueTypes: StyleValueType[] = Array.isArray(meta.valueType) ? meta.valueType : [meta.valueType]
+    const valueTypes: ConfigValueType[] = Array.isArray(meta.valueType) ? meta.valueType : [meta.valueType]
     for (const valueType of valueTypes) {
-      const evaluator = styleValueEvaluators[valueType]
+      const evaluator = configValueEvaluators[valueType]
       if (!evaluator) continue
       const result = evaluator(param)
       if (result.valid) {
@@ -75,6 +77,6 @@ export function interpreteStyles<T extends StyleRuleMap>(
       }
     }
   })
-  // console.log('interpreteStyles', out)
+  // console.log('interpreteConfigs', out)
   return out
 }

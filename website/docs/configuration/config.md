@@ -183,9 +183,9 @@ export type ActivityConf = {
 }
 ```
 
-## The `@style` directive
+## The `@config` directive
 
-If you don't have the access to add JS script into the page or in the Node.js module, it's also possible to override some configs of the builtin diagrams through the `@style` directive.
+If you don't have the access to add JS script into the page or in the Node.js module, it's also possible to override some configs of the builtin diagrams through the `@config` directive.
 
 :::info
 This is the recommended way to override configs inside the text DSL for all pintora's builtin diagrams.
@@ -195,11 +195,11 @@ But it may be slightly different or not implemented at all in some third-party d
 Syntax:
 
 ```text
-@style prop value
+@config prop value
 
 # --- or ---
 
-@style {
+@config {
   prop value
 }
 ```
@@ -208,10 +208,10 @@ For example:
 
 ```pintora play
 sequenceDiagram
-  @style loopLineColor #79caf1
-  @style actorBackground #61afef
-  @style actorTextColor #ffffff
-  @style {
+  @config loopLineColor #79caf1
+  @config actorBackground #61afef
+  @config actorTextColor #ffffff
+  @config {
     messageFontFamily Consolas
     dividerTextColor #61afef
   }
