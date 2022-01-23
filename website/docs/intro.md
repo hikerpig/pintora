@@ -15,7 +15,7 @@ Heavily inspired by [Mermaid.js](https://mermaid-js.github.io/mermaid/#/) and [P
 - In browser side, output SVG or Canvas.
 - In Node.js side, output PNG/JPG/SVG file.
 - \[Planning\] Modular and composable, load specific diagram implementaions only when needed, keep the core code lightweight.
-- Highly extensible, provide a plugin system for diagram developer to write and distribute their own diagrams.
+- Highly extensible, provide a plugin system for diagram developer to write and distribute their own diagrams. See [Write a custom diagram](./advanced/write-a-custom-diagram.md)
 
 ## Diagram types
 
