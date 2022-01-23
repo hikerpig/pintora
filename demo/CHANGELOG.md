@@ -3,17 +3,6 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
-# [1.0.0-alpha.0](https://github.com/hikerpig/pintora/compare/v0.1.0-alpha.19...v1.0.0-alpha.0) (2022-01-23)
-
-
-### Features
-
-* add tinycolor2 to calculate mindmap colors from theme ([9c2178a](https://github.com/hikerpig/pintora/commit/9c2178aa11d5fbf66255a978fbb0def8a2888ba9))
-
-
-
-
-
 # [0.1.0-alpha.19](https://github.com/hikerpig/pintora/compare/v0.1.0-alpha.18...v0.1.0-alpha.19) (2022-01-22)
 
 **Note:** Version bump only for package pintora-demo
