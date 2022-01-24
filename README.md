@@ -50,31 +50,31 @@ Heavily inspired by [Mermaid.js](https://mermaid-js.github.io/mermaid/#/) and [P
     <tr>
       <td>Sequence Diagram</td>
       <td>
-        <img src="https://i.imgur.com/6CMLz7C.jpg" title="source: imgur.com" width="300" />
+        <img src="https://i.imgur.com/6CMLz7C.jpg" title="Sequence Diagram" width="300" />
       </td>
     </tr>
     <tr>
-      <td>ER Diagram</td>
+      <td>Entity Relationship Diagram</td>
       <td>
-        <img src="https://i.imgur.com/o31ydlQ.jpg" title="source: imgur.com" width="300" />
+        <img src="https://i.imgur.com/o31ydlQ.jpg" title="Entity Relationship Diagram" width="300" />
       </td>
     </tr>
     <tr>
       <td>Component Diagram</td>
       <td>
-        <img src="https://i.imgur.com/yk68Ot5.jpg" title="source: imgur.com" width="300" />
+        <img src="https://i.imgur.com/yk68Ot5.jpg" title="Component Diagram" width="300" />
       </td>
     </tr>
     <tr>
       <td>Activity Diagram</td>
       <td>
-        <img src="https://i.imgur.com/HoMe3Gp.jpg" title="source: imgur.com" width="300" />
+        <img src="https://i.imgur.com/HoMe3Gp.jpg" title="Activity Diagram" width="300" />
       </td>
     </tr>
     <tr>
       <td>Mind Map</td>
       <td>
-        <img src="https://i.imgur.com/FqoVe32.jpg" title="source: imgur.com" width="300" />
+        <img src="https://i.imgur.com/jT6HQg6.jpg" title="Mind Map" width="300" />
       </td>
     </tr>
   </tbody>

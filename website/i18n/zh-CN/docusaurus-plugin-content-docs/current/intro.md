@@ -19,7 +19,24 @@ Pintora 是一个可在浏览器和 Node.js 环境下运行的文字转示意图
 ## 支持图表
 
 - [时序图 Sequence Diagram](./diagrams/sequence-diagram.mdx)
-- [Entity Relationship Diagram](./diagrams/er-diagram.mdx)
+- [实体关系图 Entity Relationship Diagram](./diagrams/er-diagram.mdx)
 - [组件图 Component Diagram](./diagrams/component-diagram.mdx)
 - [活动图 Activity Diagram](./diagrams/activity-diagram.mdx)
 - [思维导图 Mind Map](./diagrams/mindmap.mdx) <span class="badge badge--info">实验中</span>
+
+```pintora play
+mindmap
+@config layoutDirection TB
+* Pintora diagrams
+** UML 图表
+*** 时序图 Sequence Diagram
+*** 活动图 Activity Diagram
+*** 组件图 Component Diagram
+** Non-UML Diagrams
+*** 实体关系图 Entity Relationship Diagram
+*** 思维导图 Mind Map
+```
+
+## 💻 编辑器支持
+
+- VSCode 插件 [pintora-vscode](https://marketplace.visualstudio.com/items?itemName=hikerpig.pintora-vscode), 提供 `.pintora` 文件的语法高亮和 Markdown 代码块预览等功能。

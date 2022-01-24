@@ -25,6 +25,19 @@ Heavily inspired by [Mermaid.js](https://mermaid-js.github.io/mermaid/#/) and [P
 - [Activity Diagram](./diagrams/activity-diagram.mdx)
 - [Mind Map](./diagrams/mindmap.mdx) <span class="badge badge--info">Experiment</span>
 
+```pintora play
+mindmap
+@config layoutDirection TB
+* Pintora diagrams
+** UML Diagrams
+*** Sequence Diagram
+*** Activity Diagram
+*** Component Diagram
+** Non-UML Diagrams
+*** Entity Relationship Diagram
+*** Mind Map
+```
+
 ## 💻 Editor Support
 
 - VSCode extension [pintora-vscode](https://marketplace.visualstudio.com/items?itemName=hikerpig.pintora-vscode), providing syntax highlight and preview support for `.pintora` file and markdown code fence.
