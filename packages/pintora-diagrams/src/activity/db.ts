@@ -95,7 +95,7 @@ export type ActivityDiagramIR = {
   configParams: ConfigParam[]
 }
 
-type ApplyPart =
+export type ApplyPart =
   | ConfigAction
   | {
       type: 'addAction'

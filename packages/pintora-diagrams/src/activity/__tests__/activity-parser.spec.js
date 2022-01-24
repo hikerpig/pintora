@@ -160,6 +160,36 @@ partition Init {
     })
   })
 
+  it('can parse group title with multiple words', () => {
+    const example = stripStartEmptyLines(`
+activityDiagram
+partition "Init pintora" {
+  :init internal services;
+}
+`)
+    parse(example)
+    const ir = db.getDiagramIR()
+    // console.log('ir', JSON.stringify(ir, null, 2))
+    expect(ir.steps[0].value).toMatchObject({
+      id: '1',
+      type: 'group',
+      name: 'Init pintora',
+      groupType: 'partition',
+      label: 'Init pintora',
+      background: null,
+      children: [
+        {
+          type: 'action',
+          value: {
+            actionType: 'normal',
+            message: 'init internal services',
+            id: '2',
+          },
+          parentId: '1',
+        },
+      ],
+    })
+  })
   it('can parse notes', () => {
     const example = stripStartEmptyLines(`
 activityDiagram
@@ -363,12 +393,12 @@ group Init {
   it('can parse switch case sentence', () => {
     const example = stripStartEmptyLines(`
 activityDiagram
-  switch (test?) 
-  case ( condition A ) 
+  switch (test?)
+  case ( condition A )
     :Text 1;
   case ( condition B )
     :Text 2;
-    :Text 3; 
+    :Text 3;
   endswitch
 `)
     parse(example)

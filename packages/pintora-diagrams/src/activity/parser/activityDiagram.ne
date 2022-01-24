@@ -1,6 +1,7 @@
 @{%
 import * as moo from '@hikerpig/moo'
 import { tv, textToCaseInsensitiveRegex, VALID_TEXT_REGEXP } from '../../util/parser-shared'
+import type { ApplyPart } from '../db'
 
 let lexer = moo.compile({
   NEWLINE: { match: /\n/, lineBreaks: true },
@@ -183,17 +184,19 @@ groupType ->
   | "partition"
 
 group ->
-    groupType __ (color __):? words __ %L_BRACKET (__ statement):+ %SPACE:* %R_BRACKET %SPACE:* %NEWLINE {%
-        function(d) {
-          const groupType = tv(d[0][0])
-          const background = d[2] ? (d[2][0]): null
-          const label = (d[3] || groupType).trim()
-          const name = (d[3] || `${groupType}_${Date.now()}`).trim()
-          const children = d[6].map(l => l[1][0]).filter(o => o)
-          children.forEach(child => child.parent = name)
-          return { type: 'group', name, groupType, label, background, children, }
-        }
-      %}
+    groupType __ (color %SPACE):? (%QUOTED_WORD | %VALID_TEXT) __ %L_BRACKET (__ statement):+ %SPACE:* %R_BRACKET %SPACE:* %NEWLINE {%
+      function(d) {
+        const groupType = tv(d[0][0])
+        const background = d[2] ? (d[2][0]): null
+        const titleToken = d[3][0]
+        const title = titleToken.type === 'QUOTED_WORD' ? tv(titleToken).replace(/"(.*)"/, '$1') : tv(titleToken)
+        const label = (title || groupType).trim()
+        const name = (title || `${groupType}_${Date.now()}`).trim()
+        const children = d[6].map(l => l[1][0]).filter(o => o)
+        children.forEach(child => child.parent = name)
+        return { type: 'group', name, groupType, label, background, children, } as ApplyPart
+      }
+    %}
 
 placement ->
 	  "left"  {% (d) => "left" %}
@@ -218,20 +221,20 @@ noteStatement ->
       function(d) {
         const text = d[4].trim()
         // console.log('[note one]\n', text)
-        return { type: 'note', placement: d[2], text }
+        return { type: 'note', placement: d[2], text } as ApplyPart
       }
     %}
 	| ("note"|%START_NOTE) %SPACE:* placement %SPACE:* %NEWLINE multilineNoteText %NEWLINE {%
       function(d) {
         // console.log('[note multi]\n', d[5])
         const text = d[5]
-        return { type: 'note', placement: d[2], text }
+        return { type: 'note', placement: d[2], text } as ApplyPart
       }
     %}
 
 arrowLabelStatement ->
     "->" __ words %SEMICOLON _ %NEWLINE {%
       function(d) {
-        return { type: 'arrowLabel', text: d[2] }
+        return { type: 'arrowLabel', text: d[2] } as ApplyPart
       }
     %}
