@@ -13,12 +13,16 @@ let config: PintoraConfig = {
   },
 }
 
+const overwriteArrayMerge = <T>(destinationArray: T[], sourceArray: T[]) => sourceArray
+
 const configApi = {
   getConfig<T = PintoraConfig>() {
     return config as any as T
   },
   setConfig<T = PintoraConfig>(c: Partial<T>) {
-    config = deepmerge(config, c)
+    config = deepmerge(config, c, {
+      arrayMerge: overwriteArrayMerge,
+    })
   },
 }
 

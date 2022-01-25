@@ -14,7 +14,8 @@
   ],
   "scripts": {
     "compile": "tsc",
-    "watch": "tsc -w"
+    "watch": "tsc -w",
+    "test": "jest"
   },
   "dependencies": {
     "@antv/matrix-util": "^3.0.4",
