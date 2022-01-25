@@ -1,6 +1,6 @@
+import { configApi, MarkAttrs, PintoraConfig, safeAssign, tinycolor } from '@pintora/core'
+import { ConfigParam, interpreteConfigs } from '../util/style'
 import { PALETTE } from '../util/theme'
-import { configApi, safeAssign, PintoraConfig, tinycolor } from '@pintora/core'
-import { interpreteConfigs, ConfigParam } from '../util/style'
 
 export type MindmapConf = {
   diagramPadding: number
@@ -13,6 +13,8 @@ export type MindmapConf = {
   /** default node color */
   nodeBgColor: string
   nodePadding: number
+  /** font weight of node label */
+  nodeFontWeight: MarkAttrs['fontWeight']
 
   textColor: string
   edgeColor: string
@@ -31,17 +33,16 @@ export type MindmapConf = {
 
 function getColorsByPrimary(c: string, isDark = false) {
   const primaryColor = tinycolor(c)
+  const hslColor = primaryColor.toHsl()
   let primaryLight1: tinycolor.Instance
-  let primaryLight2: tinycolor.Instance
   if (isDark) {
-    primaryLight1 = primaryColor.clone().brighten(6)
-    primaryLight2 = primaryColor.clone().brighten(12)
+    primaryLight1 = primaryColor.clone().brighten(15)
   } else {
-    primaryLight1 = primaryColor.clone().brighten(10)
-    primaryLight2 = primaryColor.clone().brighten(20)
+    primaryLight1 = primaryColor.clone().brighten(15)
   }
+  const primaryLight2 = tinycolor({ h: hslColor.h, s: 20, l: 90 })
   return {
-    nodeBgColor: primaryLight2.toHex8String(),
+    nodeBgColor: primaryLight2.toHexString(),
     l1NodeBgColor: c,
     l2NodeBgColor: primaryLight1.toHexString(),
   }
@@ -59,12 +60,13 @@ export const defaultConfig: MindmapConf = {
 
   nodeBgColor: DEFAULT_COLORS.nodeBgColor,
   nodePadding: 10,
+  nodeFontWeight: 'normal',
 
   textColor: PALETTE.normalDark,
   edgeColor: PALETTE.normalDark,
 
   maxFontSize: 18,
-  minFontSize: 14,
+  minFontSize: 12,
 
   levelDistance: 40,
 
@@ -98,9 +100,13 @@ export function getConf(configParams: ConfigParam[]) {
   const conf: MindmapConf = { ...defaultConfig }
   if (t) {
     const { nodeBgColor, l1NodeBgColor, l2NodeBgColor } = getColorsByPrimary(t.primaryColor, t.isDark)
+    const nodeBgColorInstance = tinycolor(nodeBgColor)
+    const bgIsLight = nodeBgColorInstance.isLight()
+    const textColorIsLight = tinycolor(t.textColor).isLight()
+    const normalNodeTextColor = bgIsLight !== textColorIsLight ? t.textColor : t.canvasBackground
     safeAssign(conf, {
       nodeBgColor,
-      textColor: t.textColor,
+      textColor: normalNodeTextColor,
       edgeColor: t.primaryLineColor,
       l1NodeBgColor,
       l1NodeTextColor: t.textColor,

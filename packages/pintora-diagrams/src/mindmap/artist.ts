@@ -109,7 +109,7 @@ class MMDraw {
   protected drawNode(rootMark: Group, tree: MMTree, node: MMItem) {
     const fontSize = Math.max(conf.minFontSize, conf.maxFontSize - (node.depth - 1) * 2)
 
-    const fontConfig = { fontSize }
+    const fontConfig = { fontSize, fontWeight: conf.nodeFontWeight as any }
     const labelDim = calculateTextDimensions(node.label, fontConfig)
 
     const group = makeEmptyGroup()

@@ -195,6 +195,8 @@ export type MindmapConf = {
   /** default node color */
   nodeBgColor: string
   nodePadding: number
+  /** font weight of node label */
+  nodeFontWeight: MarkAttrs['fontWeight']
 
   textColor: string
   edgeColor: string
