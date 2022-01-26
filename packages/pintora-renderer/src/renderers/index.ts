@@ -2,10 +2,11 @@ import { GraphicsIR } from '@pintora/core/lib/type'
 import { BaseRenderer } from './base'
 import { SvgRenderer } from './SvgRenderer'
 import { CanvasRenderer } from './CanvasRenderer'
+import { ExcalidrawRenderer } from './excalidraw'
 
 export { BaseRenderer }
 
-export type RendererType = 'svg' | 'canvas'
+export type RendererType = 'svg' | 'canvas' | 'excalidraw'
 
 type RendererConstructor = {
   new (ir: GraphicsIR): BaseRenderer
@@ -15,6 +16,7 @@ class RendererRegistry {
   renderers: Record<RendererType, RendererConstructor | null> = {
     svg: SvgRenderer,
     canvas: CanvasRenderer,
+    excalidraw: ExcalidrawRenderer,
   }
 
   getRendererClass(name: RendererType) {

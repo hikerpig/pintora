@@ -68,6 +68,7 @@ const Preview = ({ previewCode, previewConfig, pintoraConfig, className }: Props
             >
               <option value="svg">svg</option>
               <option value="canvas">canvas</option>
+              <option value="excalidraw">excalidraw</option>
             </select>
           </div>
           {/* <div className="section">

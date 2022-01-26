@@ -70,6 +70,7 @@ export function render(opts: CLIRenderOptions) {
   const { pintorRender } = renderPrepare(opts)
 
   const isSvg = mimeType === SVG_MIME_TYPE
+  console.log('is svg', isSvg)
   if (isSvg) {
     function renderToSvg() {
       return new Promise<string>((resolve, reject) => {
