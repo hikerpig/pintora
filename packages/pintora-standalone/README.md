@@ -11,8 +11,11 @@
 
 <p align='center'>
   <a href='https://www.npmjs.com/package/@pintora/standalone'>
-  <img src='https://img.shields.io/npm/v/@pintora/standalone?color=ff8150&label=@pintora/standalone'>
-  <img src="https://badgen.net/bundlephobia/minzip/@pintora/standalone">
+    <img src='https://img.shields.io/npm/v/@pintora/standalone?color=ff8150&label=@pintora/standalone' />
+  </a>
+  <a href="https://bundlephobia.com/package/@pintora/standalone">
+    <img src="https://img.shields.io/bundlephobia/min/@pintora/standalone" />
+  </a>
 </a>
 </p>
 
