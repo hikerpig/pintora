@@ -57,13 +57,15 @@
         ],
         "outputs": [
           "lib/**",
-          "dist/**"
+          "dist/**",
+          "types/**"
         ]
       },
       "build": {
         "outputs": [
           "dist/**",
-          "build/**"
+          "build/**",
+          "types/**"
         ]
       },
       "watch": {
