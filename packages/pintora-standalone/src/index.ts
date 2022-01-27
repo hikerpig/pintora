@@ -1,6 +1,6 @@
-import pintora, { configApi, GraphicsIR, PintoraConfig } from '@pintora/core'
+import pintora, { configApi, GraphicsIR, PintoraConfig, themeRegistry } from '@pintora/core'
 export * from '@pintora/core'
-import { DIAGRAMS, THEMES, ITheme } from '@pintora/diagrams'
+import { DIAGRAMS } from '@pintora/diagrams'
 import { render, RenderOptions, BaseRenderer, rendererRegistry } from '@pintora/renderer'
 import 'tinycolor2'
 
@@ -125,7 +125,7 @@ const pintoraStandalone = {
     if (c.themeConfig?.theme) {
       const conf = configApi.getConfig<PintoraConfig>()
       const newConf = { ...conf }
-      const themeVars = THEMES[c.themeConfig.theme]
+      const themeVars = themeRegistry.themes[c.themeConfig.theme]
       const configThemeVars = c.themeConfig.themeVariables
       if (themeVars) {
         newConf.themeConfig = newConf.themeConfig || ({} as any)
@@ -137,15 +137,9 @@ const pintoraStandalone = {
       configApi.setConfig(newConf)
     }
   },
-  registerTheme(name: string, variables: ITheme) {
-    if (THEMES[name]) {
-      console.warn(`[pintora] override theme ${name}`)
-    }
-    THEMES[name] = variables
-  },
 }
 
-export { BaseRenderer, rendererRegistry, PintoraConfig, ITheme, THEMES }
+export { BaseRenderer, rendererRegistry, PintoraConfig }
 
 export { pintoraStandalone } // for @pintora/cli
 

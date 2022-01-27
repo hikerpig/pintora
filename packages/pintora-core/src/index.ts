@@ -8,6 +8,7 @@ export * from './util'
 import { encodeForUrl, decodeCodeInUrl, makeMark, calculateTextDimensions, parseColor, tinycolor } from './util'
 import { symbolRegistry, SymbolDef, SymbolStyleAttrs } from './symbol-registry'
 import { ConfigParam, interpreteConfigs } from './config-engine'
+import { themeRegistry, ITheme } from './themes'
 import * as configEngine from './config-engine'
 
 export {
@@ -21,6 +22,8 @@ export {
   interpreteConfigs,
   PintoraConfig,
   tinycolor,
+  ITheme,
+  themeRegistry,
 }
 
 type DrawOptions = {
@@ -33,6 +36,7 @@ const pintora = {
   diagramRegistry,
   symbolRegistry,
   configEngine,
+  themeRegistry,
   parseAndDraw(text: string, opts: DrawOptions) {
     const { onError, config } = opts
     const diagram = diagramRegistry.detectDiagram(text)

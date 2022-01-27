@@ -1,5 +1,4 @@
-import pintora, { configApi, PintoraConfig } from '@pintora/core'
-import THEMES from '../util/themes/index'
+import pintora, { configApi, PintoraConfig, themeRegistry } from '@pintora/core'
 
 export function testDraw(code: string) {
   let success = true
@@ -20,7 +19,7 @@ export function prepareDiagramConfig() {
     themeConfig: {
       theme: 'default',
       darkTheme: 'dark',
-      themeVariables: THEMES.default,
+      themeVariables: themeRegistry.themes.default,
     },
   })
 }

@@ -133,7 +133,9 @@ You can see the demo in [Codepen](https://codepen.io/hikerpig/pen/qBPgNGM).
 
 ```ts
 interface IPintoraStandalone {
-  registerTheme(name: string, variables: ITheme): void
+  themeRegistry: {
+    registerTheme(name: string, variables: ITheme): void
+  }
 }
 ```
 
@@ -185,7 +187,7 @@ const themeDuskFox = {
 };
 
 
-pintora.default.registerTheme('duskfox', themeDuskFox);
+pintora.default.themeRegistry.registerTheme('duskfox', themeDuskFox);
 
 // use it somewhere after
 pintora.default.setConfig({

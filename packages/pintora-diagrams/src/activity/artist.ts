@@ -13,6 +13,7 @@ import {
   configApi,
   last,
   PintoraConfig,
+  ITheme,
 } from '@pintora/core'
 import {
   Action,
@@ -42,7 +43,6 @@ import {
 } from '../util/artist-util'
 import dagre from '@pintora/dagre'
 import { MARK_TRANSFORMERS, positionGroupContents } from '../util/mark-positioner'
-import { ITheme } from '../util/themes/base'
 import { isDev } from '../util/env'
 import { getPointsCurvePath, getPointsLinearPath } from '../util/line-util'
 

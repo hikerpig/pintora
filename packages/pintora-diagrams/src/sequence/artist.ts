@@ -19,12 +19,12 @@ import {
   ContentArea,
   clamp,
   PintoraConfig,
+  ITheme,
 } from '@pintora/core'
 import { db, SequenceDiagramIR, LINETYPE, Message, PLACEMENT, WrappedText } from './db'
 import { ActivationData, LoopModel, LoopSection, SequenceDiagramBounds } from './artist/type'
 import { SequenceConf, getConf } from './config'
 import { getBaseNote, drawArrowTo, drawCrossTo, getBaseText, makeMark, makeLoopLabelBox } from './artist-util'
-import { ITheme } from '../util/themes/base'
 
 let conf: SequenceConf
 let theme: ITheme
