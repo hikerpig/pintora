@@ -18,23 +18,17 @@ export default function PintoraPreview(props: Props) {
 
   useEffect(() => {
     if (!containerRef.current) return
-    if (pintoraConfig) {
-      try {
-        pintora.setConfig(pintoraConfig || {})
-      } catch (error) {
-        console.warn('error in setConfig', error)
-      }
-    }
 
     pintora.renderTo(code, {
       container: containerRef.current,
+      config: pintoraConfig,
       renderer,
       // enhanceGraphicIR(ir) {
       //   const backgroundColor = '#282a36'
       //   if (backgroundColor && !ir.bgColor) ir.bgColor = backgroundColor
       //   return ir
       // },
-      onRender(renderer: any) {
+      onRender(renderer: unknown) {
         ;(window as any).pintoraRenderer = renderer
         setErrorMessage(null)
         if (onSuccess) onSuccess()

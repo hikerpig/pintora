@@ -25,6 +25,7 @@ export {
 
 type DrawOptions = {
   onError?(error: Error): void
+  config?: PintoraConfig
 }
 
 const pintora = {
@@ -33,7 +34,7 @@ const pintora = {
   symbolRegistry,
   configEngine,
   parseAndDraw(text: string, opts: DrawOptions) {
-    const { onError } = opts
+    const { onError, config } = opts
     const diagram = diagramRegistry.detectDiagram(text)
     if (!diagram) {
       const errMessage = `[pintora] no diagram detected with input: ${text.slice(0, 30)}`
@@ -44,7 +45,13 @@ const pintora = {
 
     diagram.clear()
     const diagramIR = diagram.parser.parse(text)
-    const graphicIR = diagram.artist.draw(diagramIR)
+
+    let configForArtist = undefined
+
+    if (config && diagram.configKey && (config as any)[diagram.configKey]) {
+      configForArtist = (config as any)[diagram.configKey]
+    }
+    const graphicIR = diagram.artist.draw(diagramIR, configForArtist)
 
     return {
       diagramIR,

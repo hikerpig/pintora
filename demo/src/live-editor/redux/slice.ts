@@ -26,6 +26,11 @@ const DEFAULT_CONFIG: DeepPartial<PintoraConfig> = {
   themeConfig: {
     theme: 'default',
   },
+  sequence: {},
+  er: {},
+  component: {},
+  activity: {},
+  mindmap: {},
 }
 
 const initialState: State = {

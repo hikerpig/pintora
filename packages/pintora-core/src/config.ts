@@ -1,4 +1,5 @@
 import deepmerge from 'deepmerge'
+import cloneDeep from 'clone-deep'
 
 export interface PintoraConfig {
   core: {
@@ -23,6 +24,12 @@ const configApi = {
     config = deepmerge(config, c, {
       arrayMerge: overwriteArrayMerge,
     })
+  },
+  cloneConfig() {
+    return cloneDeep(config)
+  },
+  replaceConfig<T = PintoraConfig>(c: T) {
+    config = c as any
   },
 }
 

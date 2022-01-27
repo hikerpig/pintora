@@ -2,6 +2,7 @@ import pintora, { configApi, GraphicsIR, PintoraConfig } from '@pintora/core'
 export * from '@pintora/core'
 import { DIAGRAMS, THEMES, ITheme } from '@pintora/diagrams'
 import { render, RenderOptions, BaseRenderer, rendererRegistry } from '@pintora/renderer'
+import 'tinycolor2'
 
 function initDiagrams() {
   Object.keys(DIAGRAMS).forEach(name => {
@@ -20,21 +21,46 @@ type InitBrowserOptions = {
 interface RenderToOptions extends RenderOptions {
   onError?(error: Error): void
   enhanceGraphicIR?(ir: GraphicsIR): GraphicsIR
+  config?: PintoraConfig
 }
 
 const CLASSES = {
   wrapper: 'pintora-wrapper',
 }
 
+class ConfigStack<T> {
+  private list: T[] = []
+  push(c: T) {
+    this.list.push(c)
+  }
+  pop() {
+    return this.list.pop()
+  }
+
+  get size() {
+    return this.list.length
+  }
+}
+
+const configStack = new ConfigStack<PintoraConfig>()
+
 const pintoraStandalone = {
   ...pintora,
   renderTo(code: string, options: RenderToOptions) {
-    const { container } = options
+    const { container, config } = options
     let ctn: HTMLDivElement
     if (typeof container === 'string') {
       ctn = document.querySelector(container) as any
     } else {
       ctn = container
+    }
+
+    let backupConfig: PintoraConfig
+    if (config) {
+      backupConfig = configApi.cloneConfig()
+      configStack.push(backupConfig)
+
+      pintoraStandalone.setConfig(config)
     }
 
     let drawResult: ReturnType<typeof pintoraStandalone.parseAndDraw>
@@ -45,16 +71,20 @@ const pintoraStandalone = {
       onError(error)
     }
 
-    if (drawResult) {
-      let graphicIR = drawResult.graphicIR
-      if (options.enhanceGraphicIR) graphicIR = options.enhanceGraphicIR(graphicIR)
-      if (!graphicIR.bgColor) {
-        const conf = configApi.getConfig<PintoraConfig>()
-        const canvasBackground = conf.themeConfig.themeVariables?.canvasBackground
-        if (canvasBackground) graphicIR.bgColor = canvasBackground
-      }
+    try {
+      if (drawResult) {
+        let graphicIR = drawResult.graphicIR
+        if (options.enhanceGraphicIR) graphicIR = options.enhanceGraphicIR(graphicIR)
+        if (!graphicIR.bgColor) {
+          const conf = configApi.getConfig<PintoraConfig>()
+          const canvasBackground = conf.themeConfig.themeVariables?.canvasBackground
+          if (canvasBackground) graphicIR.bgColor = canvasBackground
+        }
 
-      render(graphicIR, options)
+        render(graphicIR, options)
+      }
+    } finally {
+      if (config) configApi.replaceConfig(backupConfig)
     }
   },
   /**
