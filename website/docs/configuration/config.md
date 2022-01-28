@@ -23,6 +23,21 @@ Or get current config by `getConfig`:
 pintora.default.getConfig()
 ```
 
+## Apply config to just one render
+
+When using `@pintora/standalone` in the browser, you can apply config to just one render. This will not change the globalConfig.
+
+```ts
+pintora.default.renderTo(code, {
+  container,
+  config: {
+    themeConfig: {
+      theme: 'dark',
+    }
+  }
+})
+```
+
 ## Available configs
 
 ```ts

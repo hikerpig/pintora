@@ -322,6 +322,82 @@ At this point, the final `graphicsIR` is complete with all the required data.
     }
 ```
 
+## Next step: Adding config to the diagram
+
+For basic concepts of config, see the [Configuration documentation](configuration/config.md).
+
+With Typescript's type enhancement feature, you can extend the `interface PintoraConfig` in the `@pintora/core` package to add some pie-chart specific configs, and can be saved and accessed by the key `pie`.
+
+```ts
+declare module '@pintora/core' {
+  interface PintoraConfig {
+    pie: {
+      diagarmPadding: number
+      diagramBackgroundColor: string
+      circleRadius: number
+      pieColors: string[]
+    }
+  }
+}
+```
+
+### Set the default config for your diagram
+
+Before registering the diagram, use `pintora.setConfig({ pie: { ...defaultConfig } })` to set the default config for `pie`.
+
+```diff
+import pintora, { IFont, PintoraConfig } from '@pintora/standalone'
+ import { PieChartDiagramIR } from './type'
+ 
+-const PIE_COLORS = [
++const DEFAULT_PIE_COLORS = [
+   '#ecb3b2',
+   '#efc9b3',
+   '#f5f6b8',
+@@ -19,21 +19,25 @@ const LEGEND_FONT: IFont = {
+   fontWeight: 'normal',
+ }
+ 
+-type PieConf = {
+-  diagarmPadding: number
+-  diagramBackgroundColor: string
+-  circleRadius: number
+-}
++type PieConf = PintoraConfig['pie']
+ 
+-const conf: PieConf = {
++// default config
++const defaultConfig: PieConf = {
+   diagarmPadding: 10,
+   diagramBackgroundColor: '#F9F9F9',
+   circleRadius: 150,
++  pieColors: DEFAULT_PIE_COLORS
+ }
+ 
++pintora.setConfig({
++  pie: { ...defaultConfig },
++})
++
+```
+
+### Some changes to the artist
+
+```diff
+-  draw(diagramIR) {
++  draw(diagramIR, config) {
++    const conf: PieConf = Object.assign({}, pintora.getConfig().pie, config || {})
++
+     const rootMark: Group = {
+       type: 'group',
+       children: [],
+@@ -74,7 +78,7 @@ const pieChartArtist: IDiagramArtist<PieChartDiagramIR> = {
+     let currentLabelY = legendStart.y
+     let maxLabelRight = 0
+     diagramIR.items.forEach((item, i) => {
+-      const fillColor = PIE_COLORS[i % PIE_COLORS.length]
++      const fillColor = conf.pieColors[i % conf.pieColors.length]
+```
+
 ## Testing the diagram
 
 We can use any bundler to package the source code of this diagram as `dist/pintora-diagram-pie-chart.umd.js`, which can be tested in an html page to see the effect.
