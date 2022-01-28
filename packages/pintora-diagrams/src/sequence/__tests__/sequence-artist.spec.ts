@@ -1,6 +1,6 @@
 import pintora from '@pintora/core'
 import { EXAMPLES } from '@pintora/test-shared'
-import { testDraw, prepareDiagramConfig } from '../../__tests__/test-util'
+import { testDraw, prepareDiagramConfig, stripDrawResultForSnapshot } from '../../__tests__/test-util'
 import { sequenceDiagram } from '../index'
 
 describe('sequence-artist', () => {
@@ -10,6 +10,6 @@ describe('sequence-artist', () => {
   })
 
   it('match example snapshot', () => {
-    expect(testDraw(EXAMPLES.sequence.code).graphicIR).toMatchSnapshot()
+    expect(stripDrawResultForSnapshot(testDraw(EXAMPLES.sequence.code))).toMatchSnapshot()
   })
 })
