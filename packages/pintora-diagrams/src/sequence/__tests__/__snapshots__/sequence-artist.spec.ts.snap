@@ -22,10 +22,6 @@ Object {
           Object {
             "attrs": Object {
               "stroke": "#3b4044",
-              "x1": 40,
-              "x2": 40,
-              "y1": 55.9453125,
-              "y2": 473.9453125,
             },
             "class": "actor__line",
             "type": "line",
@@ -33,7 +29,6 @@ Object {
           Object {
             "attrs": Object {
               "fill": "#fdb05e",
-              "margin": 105,
               "radius": 4,
               "stroke": "#3b4044",
             },
@@ -60,10 +55,6 @@ Object {
           Object {
             "attrs": Object {
               "stroke": "#3b4044",
-              "x1": 230,
-              "x2": 230,
-              "y1": 56.171875,
-              "y2": 473.9453125,
             },
             "class": "actor__line",
             "type": "line",
@@ -71,7 +62,6 @@ Object {
           Object {
             "attrs": Object {
               "fill": "#fdb05e",
-              "margin": 10,
               "radius": 4,
               "stroke": "#3b4044",
             },
@@ -117,10 +107,6 @@ Object {
             "attrs": Object {
               "lineWidth": 2,
               "stroke": "#3b4044",
-              "x1": 40,
-              "x2": 230,
-              "y1": 84.765625,
-              "y2": 84.765625,
             },
             "class": "message__line",
             "type": "line",
@@ -128,38 +114,7 @@ Object {
           Object {
             "attrs": Object {
               "fill": "#3b4044",
-              "path": Array [
-                Array [
-                  "M",
-                  221.3397459621556,
-                  79.765625,
-                ],
-                Array [
-                  "L",
-                  221.3397459621556,
-                  89.765625,
-                ],
-                Array [
-                  "L",
-                  230,
-                  84.765625,
-                ],
-                Array [
-                  "Z",
-                ],
-              ],
             },
-            "matrix": Array [
-              1,
-              0,
-              0,
-              0,
-              1,
-              0,
-              0,
-              0,
-              1,
-            ],
             "type": "path",
           },
           Object {
@@ -215,11 +170,7 @@ Object {
                 3,
               ],
               "lineWidth": 2,
-              "path": "M 235,180.953125 C 295,170.953125 295,210.953125 235,200.953125",
               "stroke": "#3b4044",
-              "x1": 235,
-              "x2": 235,
-              "y2": 200.953125,
             },
             "class": "message__line",
             "type": "path",
@@ -227,38 +178,7 @@ Object {
           Object {
             "attrs": Object {
               "fill": "#3b4044",
-              "path": Array [
-                Array [
-                  "M",
-                  226.3397459621556,
-                  195.953125,
-                ],
-                Array [
-                  "L",
-                  226.3397459621556,
-                  205.953125,
-                ],
-                Array [
-                  "L",
-                  235,
-                  200.953125,
-                ],
-                Array [
-                  "Z",
-                ],
-              ],
             },
-            "matrix": Array [
-              -1,
-              -1.2246467991473532e-16,
-              0,
-              1.2246467991473532e-16,
-              -1,
-              0,
-              470,
-              401.90625,
-              1,
-            ],
             "type": "path",
           },
           Object {
@@ -311,28 +231,6 @@ Object {
           Object {
             "attrs": Object {
               "fill": "#fdb05e",
-              "points": Array [
-                Array [
-                  135,
-                  94.765625,
-                ],
-                Array [
-                  185,
-                  94.765625,
-                ],
-                Array [
-                  185,
-                  115.296875,
-                ],
-                Array [
-                  179,
-                  120.296875,
-                ],
-                Array [
-                  135,
-                  120.296875,
-                ],
-              ],
               "stroke": "#fdb05e",
             },
             "class": "loop__label-box",
@@ -377,10 +275,6 @@ Object {
               ],
               "lineWidth": 2,
               "stroke": "#3b4044",
-              "x1": 225,
-              "x2": 40,
-              "y1": 272.140625,
-              "y2": 272.140625,
             },
             "class": "message__line",
             "type": "line",
@@ -388,38 +282,7 @@ Object {
           Object {
             "attrs": Object {
               "fill": "#3b4044",
-              "path": Array [
-                Array [
-                  "M",
-                  31.339745962155618,
-                  267.140625,
-                ],
-                Array [
-                  "L",
-                  31.339745962155618,
-                  277.140625,
-                ],
-                Array [
-                  "L",
-                  40,
-                  272.140625,
-                ],
-                Array [
-                  "Z",
-                ],
-              ],
             },
-            "matrix": Array [
-              -1,
-              -1.2246467991473532e-16,
-              0,
-              1.2246467991473532e-16,
-              -1,
-              0,
-              79.99999999999997,
-              544.28125,
-              1,
-            ],
             "type": "path",
           },
           Object {
@@ -560,20 +423,12 @@ Object {
           Object {
             "attrs": Object {
               "stroke": "#3b4044",
-              "x1": 0,
-              "x2": 395,
-              "y1": 438.63671875,
-              "y2": 438.63671875,
             },
             "type": "line",
           },
           Object {
             "attrs": Object {
               "stroke": "#3b4044",
-              "x1": 0,
-              "x2": 395,
-              "y1": 441.63671875,
-              "y2": 441.63671875,
             },
             "type": "line",
           },
@@ -606,7 +461,6 @@ Object {
           Object {
             "attrs": Object {
               "fill": "#fdb05e",
-              "margin": 105,
               "radius": 4,
               "stroke": "#3b4044",
             },
@@ -633,7 +487,6 @@ Object {
           Object {
             "attrs": Object {
               "fill": "#fdb05e",
-              "margin": 10,
               "radius": 4,
               "stroke": "#3b4044",
             },
@@ -655,17 +508,6 @@ Object {
         "class": "actor",
         "type": "group",
       },
-    ],
-    "matrix": Float32Array [
-      1,
-      0,
-      0,
-      0,
-      1,
-      0,
-      10,
-      10,
-      1,
     ],
     "type": "group",
   },

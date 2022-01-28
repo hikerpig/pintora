@@ -25,7 +25,8 @@ export function prepareDiagramConfig() {
   })
 }
 
-const GEOMETRY_ATTRS = ['x', 'y', 'width', 'height']
+const GEOMETRY_ATTRS = ['x', 'y', 'width', 'height', 'x1', 'x2', 'y1', 'y2', 'path', 'points', 'margin']
+const MARK_IGNORE_FIELDS = ['matrix']
 
 /**
  * width/height and other text dimension related attributes may differ from test machine's default font.
@@ -37,12 +38,18 @@ export function stripGraphicIRForSnapshot(ir: GraphicsIR) {
   delete cloned.width
 
   function processMark(mark: Mark) {
+    if (!mark) return
+
     const attrs = mark.attrs
     if (attrs) {
       GEOMETRY_ATTRS.forEach(k => {
         if (k in attrs) delete attrs[k]
       })
     }
+
+    MARK_IGNORE_FIELDS.forEach(k => {
+      if (k in mark) delete mark[k]
+    })
 
     if ('children' in mark) {
       mark.children.forEach(child => processMark(child))
