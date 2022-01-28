@@ -1,15 +1,28 @@
 import deepmerge from 'deepmerge'
+import cloneDeep from 'clone-deep'
+import { ITheme, themeRegistry } from './themes'
 
 export interface PintoraConfig {
   core: {
     /** by default it's 'svg' */
     defaultRenderer: string
   }
+  themeConfig: {
+    theme: string
+    darkTheme?: string
+    themeVariables: ITheme
+  }
 }
 
 let config: PintoraConfig = {
   core: {
     defaultRenderer: 'svg',
+  },
+  themeConfig: {
+    theme: 'default',
+    darkTheme: 'dark',
+    themeVariables: themeRegistry.themes.default,
+    // themeVariables: themeRegistry.themes..dark,
   },
 }
 
@@ -23,6 +36,12 @@ const configApi = {
     config = deepmerge(config, c, {
       arrayMerge: overwriteArrayMerge,
     })
+  },
+  cloneConfig() {
+    return cloneDeep(config)
+  },
+  replaceConfig<T = PintoraConfig>(c: T) {
+    config = c as any
   },
 }
 

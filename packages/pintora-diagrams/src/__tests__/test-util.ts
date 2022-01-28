@@ -1,5 +1,5 @@
-import pintora, { configApi, PintoraConfig } from '@pintora/core'
-import THEMES from '../util/themes/index'
+import pintora, { configApi, PintoraConfig, themeRegistry, GraphicsIR, Mark } from '@pintora/core'
+import cloneDeep from 'clone-deep'
 
 export function testDraw(code: string) {
   let success = true
@@ -20,7 +20,47 @@ export function prepareDiagramConfig() {
     themeConfig: {
       theme: 'default',
       darkTheme: 'dark',
-      themeVariables: THEMES.default,
+      themeVariables: themeRegistry.themes.default,
     },
   })
+}
+
+const GEOMETRY_ATTRS = ['x', 'y', 'width', 'height', 'x1', 'x2', 'y1', 'y2', 'path', 'points', 'margin']
+const MARK_IGNORE_FIELDS = ['matrix']
+
+/**
+ * width/height and other text dimension related attributes may differ from test machine's default font.
+ * ignore them for now to pass CI tests.
+ */
+export function stripGraphicIRForSnapshot(ir: GraphicsIR) {
+  const cloned = cloneDeep(ir)
+  delete cloned.height
+  delete cloned.width
+
+  function processMark(mark: Mark) {
+    if (!mark) return
+
+    const attrs = mark.attrs
+    if (attrs) {
+      GEOMETRY_ATTRS.forEach(k => {
+        if (k in attrs) delete attrs[k]
+      })
+    }
+
+    MARK_IGNORE_FIELDS.forEach(k => {
+      if (k in mark) delete mark[k]
+    })
+
+    if ('children' in mark) {
+      mark.children.forEach(child => processMark(child))
+    }
+  }
+
+  processMark(cloned.mark)
+
+  return cloned
+}
+
+export function stripDrawResultForSnapshot(result: ReturnType<typeof pintora.parseAndDraw>) {
+  return stripGraphicIRForSnapshot(result.graphicIR)
 }

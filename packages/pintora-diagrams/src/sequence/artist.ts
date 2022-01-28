@@ -19,11 +19,12 @@ import {
   ContentArea,
   clamp,
   PintoraConfig,
+  ITheme,
 } from '@pintora/core'
 import { db, SequenceDiagramIR, LINETYPE, Message, PLACEMENT, WrappedText } from './db'
+import { ActivationData, LoopModel, LoopSection, SequenceDiagramBounds } from './artist/type'
 import { SequenceConf, getConf } from './config'
 import { getBaseNote, drawArrowTo, drawCrossTo, getBaseText, makeMark, makeLoopLabelBox } from './artist-util'
-import { ITheme } from '../util/themes/base'
 
 let conf: SequenceConf
 let theme: ITheme
@@ -50,10 +51,10 @@ const GROUP_LABEL_MAP = {
   [LINETYPE.PAR_START]: 'par',
 }
 
-const sequenceArtist: IDiagramArtist<SequenceDiagramIR> = {
+const sequenceArtist: IDiagramArtist<SequenceDiagramIR, SequenceConf> = {
   draw(ir, config?) {
-    // console.log('[draw]', ir)
-    conf = getConf(ir.configParams)
+    // console.log('[draw]', ir, config)
+    conf = getConf(ir.configParams, config)
     theme = (configApi.getConfig() as PintoraConfig).themeConfig.themeVariables
     model.init()
     logger.debug(`C:${JSON.stringify(conf, null, 2)}`)
@@ -242,42 +243,6 @@ const sequenceArtist: IDiagramArtist<SequenceDiagramIR> = {
 
     return graphicsIR
   },
-}
-
-type ActivationData = {
-  startx: number
-  starty: number
-  stopx: number
-  stopy: number
-  actor: string
-}
-
-type LoopModel = {
-  startx: number
-  stopx: number
-  starty: number
-  stopy: number
-  width: number
-  height: number
-  title: string
-  wrap?: boolean
-  sections?: LoopSection[]
-  fill?: string | null
-}
-
-type LoopSection = {
-  y: number
-  width: number
-  height: number
-  fill: string | undefined
-  message: Message
-}
-
-type SequenceDiagramBounds = {
-  startx: number
-  stopx: number
-  starty: number
-  stopy: number
 }
 
 type OnBoundsFinishCallback = (opts: { bounds: SequenceDiagramBounds }) => void

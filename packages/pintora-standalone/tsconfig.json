@@ -6,6 +6,7 @@
     "strict": false,
     "checkJs": false,
     "allowJs": true,
-    "resolveJsonModule": true
+    "resolveJsonModule": true,
+    "types": ["tinycolor2"]
   }
 }

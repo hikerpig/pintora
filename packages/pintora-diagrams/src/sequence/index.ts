@@ -9,7 +9,7 @@ export { SequenceDiagramIR, SequenceConf }
 export const sequenceDiagram: IDiagram<SequenceDiagramIR, SequenceConf> = {
   pattern: /^\s*sequenceDiagram/,
   parser: {
-    parse(text, config) {
+    parse(text) {
       parse(text)
       return db.getDiagramIR()
     },

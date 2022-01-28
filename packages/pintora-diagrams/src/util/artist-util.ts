@@ -13,9 +13,9 @@ import {
   Bounds,
   safeAssign,
   Circle,
+  ITheme,
 } from '@pintora/core'
 import { PALETTE } from './theme'
-import { ITheme } from '../util/themes/base'
 
 export { makeMark }
 
@@ -191,5 +191,5 @@ export function makeCircleInPoint(p: Point, opts: Partial<Circle['attrs']> = {})
     r: 4,
     fill: 'red',
     ...opts,
-  }) 
+  })
 }

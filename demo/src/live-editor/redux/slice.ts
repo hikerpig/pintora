@@ -2,6 +2,7 @@ import { createSlice, DeepPartial, Draft, PayloadAction } from '@reduxjs/toolkit
 import { EXAMPLES } from '@pintora/test-shared'
 import { PintoraConfig } from '@pintora/standalone'
 import { ErrorInfo } from 'src/live-editor/type'
+import '@pintora/diagrams'
 
 export type State = {
   currentEditor: 'code' | 'config'
@@ -26,6 +27,11 @@ const DEFAULT_CONFIG: DeepPartial<PintoraConfig> = {
   themeConfig: {
     theme: 'default',
   },
+  sequence: {},
+  er: {},
+  component: {},
+  activity: {},
+  mindmap: {},
 }
 
 const initialState: State = {

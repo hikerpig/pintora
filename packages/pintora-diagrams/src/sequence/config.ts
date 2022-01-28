@@ -110,7 +110,7 @@ export const SEQUENCE_CONFIG_DIRECTIVE_RULES = {
   dividerTextColor: { valueType: 'color' },
 } as const
 
-export function getConf(configParams: ConfigParam[]) {
+export function getConf(configParams: ConfigParam[], extraConfig: SequenceConf | undefined) {
   const globalConfig: PintoraConfig = configApi.getConfig()
   const t = globalConfig.themeConfig.themeVariables
   const conf = { ...defaultConfig }
@@ -125,7 +125,7 @@ export function getConf(configParams: ConfigParam[]) {
     activationBackground: t.background1,
     dividerTextColor: t.secondaryTextColor,
   })
-  Object.assign(conf, globalConfig.sequence || {})
+  Object.assign(conf, globalConfig.sequence || {}, extraConfig || {})
   Object.assign(conf, interpreteConfigs(SEQUENCE_CONFIG_DIRECTIVE_RULES, configParams))
   return conf
 }

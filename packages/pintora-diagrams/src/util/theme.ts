@@ -1,4 +1,4 @@
-import { AYU_LIGHT } from './themes/palette'
+import { themeRegistry } from '@pintora/core'
 
 // ayu light
-export const PALETTE = AYU_LIGHT
+export const PALETTE = themeRegistry.palettes.AYU_LIGHT

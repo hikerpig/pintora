@@ -8,6 +8,7 @@ export * from './util'
 import { encodeForUrl, decodeCodeInUrl, makeMark, calculateTextDimensions, parseColor, tinycolor } from './util'
 import { symbolRegistry, SymbolDef, SymbolStyleAttrs } from './symbol-registry'
 import { ConfigParam, interpreteConfigs } from './config-engine'
+import { themeRegistry, ITheme } from './themes'
 import * as configEngine from './config-engine'
 
 export {
@@ -21,10 +22,13 @@ export {
   interpreteConfigs,
   PintoraConfig,
   tinycolor,
+  ITheme,
+  themeRegistry,
 }
 
 type DrawOptions = {
   onError?(error: Error): void
+  config?: PintoraConfig
 }
 
 const pintora = {
@@ -32,8 +36,9 @@ const pintora = {
   diagramRegistry,
   symbolRegistry,
   configEngine,
+  themeRegistry,
   parseAndDraw(text: string, opts: DrawOptions) {
-    const { onError } = opts
+    const { onError, config } = opts
     const diagram = diagramRegistry.detectDiagram(text)
     if (!diagram) {
       const errMessage = `[pintora] no diagram detected with input: ${text.slice(0, 30)}`
@@ -44,7 +49,13 @@ const pintora = {
 
     diagram.clear()
     const diagramIR = diagram.parser.parse(text)
-    const graphicIR = diagram.artist.draw(diagramIR)
+
+    let configForArtist = undefined
+
+    if (config && diagram.configKey && (config as any)[diagram.configKey]) {
+      configForArtist = (config as any)[diagram.configKey]
+    }
+    const graphicIR = diagram.artist.draw(diagramIR, configForArtist)
 
     return {
       diagramIR,

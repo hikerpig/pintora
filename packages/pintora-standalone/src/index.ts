@@ -1,7 +1,8 @@
-import pintora, { configApi, GraphicsIR, PintoraConfig } from '@pintora/core'
+import pintora, { configApi, GraphicsIR, PintoraConfig, themeRegistry } from '@pintora/core'
 export * from '@pintora/core'
-import { DIAGRAMS, THEMES, ITheme } from '@pintora/diagrams'
+import { DIAGRAMS } from '@pintora/diagrams'
 import { render, RenderOptions, BaseRenderer, rendererRegistry } from '@pintora/renderer'
+import 'tinycolor2'
 
 function initDiagrams() {
   Object.keys(DIAGRAMS).forEach(name => {
@@ -20,21 +21,46 @@ type InitBrowserOptions = {
 interface RenderToOptions extends RenderOptions {
   onError?(error: Error): void
   enhanceGraphicIR?(ir: GraphicsIR): GraphicsIR
+  config?: PintoraConfig
 }
 
 const CLASSES = {
   wrapper: 'pintora-wrapper',
 }
 
+class ConfigStack<T> {
+  private list: T[] = []
+  push(c: T) {
+    this.list.push(c)
+  }
+  pop() {
+    return this.list.pop()
+  }
+
+  get size() {
+    return this.list.length
+  }
+}
+
+const configStack = new ConfigStack<PintoraConfig>()
+
 const pintoraStandalone = {
   ...pintora,
   renderTo(code: string, options: RenderToOptions) {
-    const { container } = options
+    const { container, config } = options
     let ctn: HTMLDivElement
     if (typeof container === 'string') {
       ctn = document.querySelector(container) as any
     } else {
       ctn = container
+    }
+
+    let backupConfig: PintoraConfig
+    if (config) {
+      backupConfig = configApi.cloneConfig()
+      configStack.push(backupConfig)
+
+      pintoraStandalone.setConfig(config)
     }
 
     let drawResult: ReturnType<typeof pintoraStandalone.parseAndDraw>
@@ -45,16 +71,20 @@ const pintoraStandalone = {
       onError(error)
     }
 
-    if (drawResult) {
-      let graphicIR = drawResult.graphicIR
-      if (options.enhanceGraphicIR) graphicIR = options.enhanceGraphicIR(graphicIR)
-      if (!graphicIR.bgColor) {
-        const conf = configApi.getConfig<PintoraConfig>()
-        const canvasBackground = conf.themeConfig.themeVariables?.canvasBackground
-        if (canvasBackground) graphicIR.bgColor = canvasBackground
-      }
+    try {
+      if (drawResult) {
+        let graphicIR = drawResult.graphicIR
+        if (options.enhanceGraphicIR) graphicIR = options.enhanceGraphicIR(graphicIR)
+        if (!graphicIR.bgColor) {
+          const conf = configApi.getConfig<PintoraConfig>()
+          const canvasBackground = conf.themeConfig.themeVariables?.canvasBackground
+          if (canvasBackground) graphicIR.bgColor = canvasBackground
+        }
 
-      render(graphicIR, options)
+        render(graphicIR, options)
+      }
+    } finally {
+      if (config) configApi.replaceConfig(backupConfig)
     }
   },
   /**
@@ -95,7 +125,7 @@ const pintoraStandalone = {
     if (c.themeConfig?.theme) {
       const conf = configApi.getConfig<PintoraConfig>()
       const newConf = { ...conf }
-      const themeVars = THEMES[c.themeConfig.theme]
+      const themeVars = themeRegistry.themes[c.themeConfig.theme]
       const configThemeVars = c.themeConfig.themeVariables
       if (themeVars) {
         newConf.themeConfig = newConf.themeConfig || ({} as any)
@@ -107,15 +137,9 @@ const pintoraStandalone = {
       configApi.setConfig(newConf)
     }
   },
-  registerTheme(name: string, variables: ITheme) {
-    if (THEMES[name]) {
-      console.warn(`[pintora] override theme ${name}`)
-    }
-    THEMES[name] = variables
-  },
 }
 
-export { BaseRenderer, rendererRegistry, PintoraConfig, ITheme, THEMES }
+export { BaseRenderer, rendererRegistry, PintoraConfig }
 
 export { pintoraStandalone } // for @pintora/cli
 
