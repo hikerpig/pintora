@@ -18,7 +18,7 @@
     "test": "npx jest",
     "coverage": "npx jest --coverage",
     "upload-coverage": "codecov -f coverage/coverage-final.json",
-    "ci:coverage": "npx jest --coverage --ci --reporters=default --reporters=jest-junit",
+    "ci:coverage": "npx jest --coverage --ci",
     "build-site": "sh ./scripts/build-site.sh",
     "vercel-build": "npm run compile:browser && npm run build-site"
   },
