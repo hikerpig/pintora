@@ -322,6 +322,96 @@ const conf: PieConf = {
     }
 ```
 
+## 下一步: 给图表加上可配置项
+
+关于配置的基本概念，请参阅 [Config 相关文档](configuration/config.md)。
+
+通过 Typescript 的类型增强特性，你可以扩展 `@pintora/core` 包中的 `interface PintoraConfig`，给这个类型加上一些饼图特有的配置项，使用 `pie` 作为键名来存取。
+
+```ts
+declare module '@pintora/core' {
+  interface PintoraConfig {
+    pie: {
+      diagarmPadding: number
+      diagramBackgroundColor: string
+      circleRadius: number
+      pieColors: string[]
+    }
+  }
+}
+```
+
+### 设置默认配置
+
+在注册图表时，使用 `pintora.setConfig({ pie: { ...defaultConfig } })` 来给 `pie` 设置默认值。
+
+```diff
+import pintora, { IFont, PintoraConfig } from '@pintora/standalone'
+ import { PieChartDiagramIR } from './type'
+ 
+-const PIE_COLORS = [
++const DEFAULT_PIE_COLORS = [
+   '#ecb3b2',
+   '#efc9b3',
+   '#f5f6b8',
+@@ -19,21 +19,25 @@ const LEGEND_FONT: IFont = {
+   fontWeight: 'normal',
+ }
+ 
+-type PieConf = {
+-  diagarmPadding: number
+-  diagramBackgroundColor: string
+-  circleRadius: number
+-}
++type PieConf = PintoraConfig['pie']
+ 
+-const conf: PieConf = {
++// default config
++const defaultConfig: PieConf = {
+   diagarmPadding: 10,
+   diagramBackgroundColor: '#F9F9F9',
+   circleRadius: 150,
++  pieColors: DEFAULT_PIE_COLORS
+ }
+ 
++pintora.setConfig({
++  pie: { ...defaultConfig },
++})
++
+```
+
+### 更改 artist
+
+此时 `draw` 方法从 `PIE_COLORS` 改为 `conf.pieColors`。
+
+```diff
+-  draw(diagramIR) {
++  draw(diagramIR, config) {
++    const conf: PieConf = Object.assign({}, pintora.getConfig().pie, config || {})
++
+     const rootMark: Group = {
+       type: 'group',
+       children: [],
+@@ -74,7 +78,7 @@ const pieChartArtist: IDiagramArtist<PieChartDiagramIR> = {
+     let currentLabelY = legendStart.y
+     let maxLabelRight = 0
+     diagramIR.items.forEach((item, i) => {
+-      const fillColor = PIE_COLORS[i % PIE_COLORS.length]
++      const fillColor = conf.pieColors[i % conf.pieColors.length]
+```
+
+### 测试更改全局配置的效果
+
+假设你在渲染图表之前，通过以下方式来更改了部分设定。那么下次再渲染的时候，artist 就会画出一个半径 300
+
+```ts
+pintora.default.setConfig({
+  pie: {
+    circleRadius: 300,
+  }
+})
+```
+
 ## 测试图表
 
 我们使用任意 bundler 将此图表的源码打包为 `dist/pintora-diagram-pie-chart.umd.js`，可以在 html 页面中简单测试一下效果。

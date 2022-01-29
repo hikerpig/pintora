@@ -18,16 +18,34 @@ jobs:
           node-version: ${{ matrix.node-version }}
           cache: 'npm'
           cache-dependency-path: '**/package-lock.json'
-      - name: npm install, build, and test
+      - name: npm install
         run: |
           npm i -g npm@7
           npm install
-          # npm run lint
-          npm run format:check
-          npm run compile
-          npm run test
         env:
           CI: true
+      - name: Turbo Cache
+        id: turbo-cache
+        uses: actions/cache@v2
+        with:
+          path: node_modules/.cache/turbo
+          key: turbo-${{ github.job }}-${{ github.ref_name }}-${{ github.sha }}
+          restore-keys: |
+            turbo-${{ github.job }}-${{ github.ref_name }}-
+      - name: build, and test
+        run: |
+          npm run format:check
+          npm run compile
+          npm run ci:coverage
+        env:
+          CI: true
+      - name: Test Report
+        uses: dorny/test-reporter@v1
+        if: success()    # run this step even if previous step failed
+        with:
+          name: JEST Tests            # Name of the check run which will be created
+          path: reports/junit.xml    # Path to test results
+          reporter: jest-junit        # Format of test results
       - uses: codecov/codecov-action@v2
         with:
           token: ${{ secrets.CODECOV_TOKEN }} # not required for public repos
