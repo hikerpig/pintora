@@ -18,6 +18,7 @@
     "test": "npx jest",
     "coverage": "npx jest --coverage",
     "upload-coverage": "codecov -f coverage/coverage-final.json",
+    "ci:coverage": "npx jest --coverage --ci --reporters=default --reporters=jest-junit",
     "build-site": "sh ./scripts/build-site.sh",
     "vercel-build": "npm run compile:browser && npm run build-site"
   },
@@ -31,6 +32,7 @@
     "eslint-plugin-prettier": "^4.0.0",
     "husky": "^7.0.4",
     "jest": "^27.4.5",
+    "jest-junit": "^13.0.0",
     "lerna": "^4.0.0",
     "lint-staged": "^12.1.4",
     "prettier": "2.5.1",
