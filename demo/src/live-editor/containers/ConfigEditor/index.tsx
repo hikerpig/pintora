@@ -5,7 +5,6 @@ import { useDispatch, connect } from 'react-redux'
 import { StoreState } from 'src/live-editor/redux/store'
 import { actions } from 'src/live-editor/redux/slice'
 
-
 interface Props {
   editorCode: string
   show: boolean

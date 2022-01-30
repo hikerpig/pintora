@@ -3,8 +3,7 @@ import { useNavigate, useLocation } from 'react-router-dom'
 import classnames from 'classnames'
 import './AppSidebar.less'
 
-type Props = {
-}
+type Props = {}
 
 const SIDEBAR_ICONS = [
   {
@@ -19,7 +18,7 @@ const SIDEBAR_ICONS = [
   },
 ]
 
-type ArrayElement<T> = T extends Array<infer I> ? I: any;
+type ArrayElement<T> = T extends Array<infer I> ? I : any
 
 type SidebarItem = ArrayElement<typeof SIDEBAR_ICONS>
 
@@ -40,7 +39,8 @@ const AppSidebar = ({}: Props) => {
         })
         return (
           <div key={item.name} title={item.label} className={itemCls} onClick={() => handleClick(item)}>
-            <i className="iconify-inline" data-icon={item.icon} data-width="26"></i><br />
+            <i className="iconify-inline" data-icon={item.icon} data-width="26"></i>
+            <br />
           </div>
         )
       })}

@@ -93,7 +93,6 @@ const AppLayout = () => {
         <AppSidebar></AppSidebar>
 
         <Outlet />
-
       </div>
     </>
   )
