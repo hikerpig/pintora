@@ -12,8 +12,7 @@ const initialState: State = {
 const slice = createSlice({
   name: 'theme',
   initialState,
-  reducers: {
-  },
+  reducers: {},
 })
 
 export const actions = slice.actions

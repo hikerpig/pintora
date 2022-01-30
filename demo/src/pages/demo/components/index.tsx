@@ -9,7 +9,5 @@ setLogLevel('debug')
 const testSequenceDiagram = EXAMPLES.sequence.code
 
 export default function Basic() {
-  return <PintoraPreview
-    code={testSequenceDiagram}
-  />
+  return <PintoraPreview code={testSequenceDiagram} />
 }

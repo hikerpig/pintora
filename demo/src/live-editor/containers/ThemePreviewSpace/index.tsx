@@ -25,8 +25,10 @@ function ThemePreviewSpace(props: Props) {
           {examplesToRender.map(example => {
             return (
               <div key={example.name}>
-                <div className="ThemePreviewSpace__item-title"><b>{example.name}</b></div>
-                <PintoraPreview key={example.name} renderer='canvas' code={example.code} />
+                <div className="ThemePreviewSpace__item-title">
+                  <b>{example.name}</b>
+                </div>
+                <PintoraPreview key={example.name} renderer="canvas" code={example.code} />
               </div>
             )
           })}

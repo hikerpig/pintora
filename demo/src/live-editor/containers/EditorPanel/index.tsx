@@ -13,7 +13,7 @@ const EDITOR_TABS = [
 
 interface EditorPanelProps {
   autoSync: boolean
-  currentEditor: string;
+  currentEditor: string
 }
 
 const EditorPanel = ({ autoSync, currentEditor }: EditorPanelProps) => {

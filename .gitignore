@@ -1,6 +1,7 @@
 # project
 packages/**/*/parser/*.[tj]s
 demo/dist/
+demo/cypress/videos/
 .idea/
 
 # Created by https://www.gitignore.io/api/node
@@ -24,6 +25,8 @@ lib-cov
 
 # Coverage directory used by tools like istanbul
 coverage
+
+reports/*
 
 # nyc test coverage
 .nyc_output
