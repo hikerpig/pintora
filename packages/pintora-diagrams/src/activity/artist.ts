@@ -668,7 +668,7 @@ class ActivityDraw {
         ...fontConfig,
         fontWeight: 'bold',
       },
-      { class: 'component__group-rect' },
+      { class: 'activity__group-rect' },
     )
     const labelTextDims = calcTextDims(groupLabel, fontConfig)
 
@@ -692,12 +692,10 @@ class ActivityDraw {
         // console.log('will set parent', modelId, id, m.type)
         if (modelId) this.g.setParent(modelId, id)
       })
-      if ('children' in m.value) {
-        m.value.children.forEach(child => {
-          const childStepModel = this.model.stepModelMap.get(child.value.id)
-          if (childStepModel) setParentRecursive(childStepModel)
-        })
-      }
+      this.traverseStep(m, child => {
+        const childStepModel = this.model.stepModelMap.get(child.value.id)
+        if (childStepModel) setParentRecursive(childStepModel)
+      })
     }
 
     aGroup.children.map(s => {

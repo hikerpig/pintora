@@ -10,6 +10,12 @@ describe('Activity Diagram', () => {
 activityDiagram
 start
 partition Outer {
+  if (diagram registered ?) then
+    :get implementation;
+  else (no)
+    :print error;
+  endif
+
   group Inner {
     while (data available?) is (available)
       :read data;
@@ -19,7 +25,7 @@ partition Outer {
 }
 end`),
       onRender(c) {
-        c.get('.component__group-rect').should('exist')
+        c.get('.activity__group-rect').should('exist')
       },
     },
   ])
