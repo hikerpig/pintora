@@ -50,8 +50,7 @@ function EditorSpace(props: Props) {
 }
 
 const connector = connect((state: StoreState) => {
-  return {
-  }
+  return {}
 })
 
 type Props = ConnectedProps<typeof connector>

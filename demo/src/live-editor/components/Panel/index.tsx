@@ -11,7 +11,15 @@ interface PanelProps {
   headerAppendix?: PanelHeaderProps['appendix']
 }
 
-const Panel: React.FC<PanelProps> = ({ className, title, tabs, initialTab, children, onCurrentTabChange, headerAppendix }) => {
+const Panel: React.FC<PanelProps> = ({
+  className,
+  title,
+  tabs,
+  initialTab,
+  children,
+  onCurrentTabChange,
+  headerAppendix,
+}) => {
   const [currentTab, setCurrentTab] = useState(initialTab || tabs?.[0]?.key)
   const setCurrentTabProp = useCallback(
     key => {
@@ -23,7 +31,13 @@ const Panel: React.FC<PanelProps> = ({ className, title, tabs, initialTab, child
 
   return (
     <div className={`Panel ${className || ''} border-secondary border-opacity-40 rounded`}>
-      <PanelHeader title={title} tabs={tabs} currentTab={currentTab} setCurrentTab={setCurrentTabProp} appendix={headerAppendix} />
+      <PanelHeader
+        title={title}
+        tabs={tabs}
+        currentTab={currentTab}
+        setCurrentTab={setCurrentTabProp}
+        appendix={headerAppendix}
+      />
       <div className="Panel__content">{children}</div>
     </div>
   )

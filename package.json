@@ -11,7 +11,7 @@
     "prepare": "lerna run prepare",
     "demo:dev": "cd demo && npm run dev",
     "website:dev": "cd website && npm run start",
-    "prettier": "prettier \"packages/**/*.{ts,js}\"",
+    "prettier": "prettier \"packages/**/*.{ts,js}\" \"demo/src\"",
     "format": "npm run prettier -- --write",
     "format:check": "npm run prettier -- --check",
     "lint": "eslint packages/*/src/**/*.{ts,js}",

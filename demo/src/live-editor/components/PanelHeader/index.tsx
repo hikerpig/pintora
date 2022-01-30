@@ -40,7 +40,7 @@ const PanelHeader = ({ title, tabs, currentTab, setCurrentTab, appendix }: Panel
             )
           })}
       </div>
-      {appendix && <div className="PanelHeader__appendix flex items-center">{appendix}</div> }
+      {appendix && <div className="PanelHeader__appendix flex items-center">{appendix}</div>}
     </div>
   )
 }
