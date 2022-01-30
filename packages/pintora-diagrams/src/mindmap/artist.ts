@@ -7,6 +7,7 @@ import {
   PositionH,
   Bounds,
   Point,
+  IFont,
 } from '@pintora/core'
 import { MindmapIR, MMItem, MMTree } from './db'
 import { MindmapConf, getConf } from './config'
@@ -109,7 +110,7 @@ class MMDraw {
   protected drawNode(rootMark: Group, tree: MMTree, node: MMItem) {
     const fontSize = Math.max(conf.minFontSize, conf.maxFontSize - (node.depth - 1) * 2)
 
-    const fontConfig = { fontSize, fontWeight: conf.nodeFontWeight as any }
+    const fontConfig = getFontConfig(conf, { fontSize, fontWeight: conf.nodeFontWeight })
     const labelDim = calculateTextDimensions(node.label, fontConfig)
 
     const group = makeEmptyGroup()
@@ -251,6 +252,13 @@ class MMDraw {
     })
     rootMark.children.push(edgeGroup)
   }
+}
+
+function getFontConfig(conf: MindmapConf, f: Partial<IFont>) {
+  return {
+    fontFamily: conf.fontFamily,
+    ...f,
+  } as IFont
 }
 
 export default mmArtist

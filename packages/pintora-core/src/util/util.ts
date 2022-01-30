@@ -1,5 +1,5 @@
-export function safeAssign<T>(base: Partial<T>, attrs: Partial<T>) {
-  return Object.assign(base || {}, attrs)
+export function safeAssign<T>(base: Partial<T>, ...attrList: Array<Partial<T>>) {
+  return Object.assign(base || {}, ...attrList)
 }
 
 export function pick<T, K extends keyof T>(base: Partial<T>, keys: K[]): { [key in K]: T[key] } {

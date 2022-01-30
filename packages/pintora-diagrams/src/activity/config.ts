@@ -1,6 +1,7 @@
 import { PALETTE } from '../util/theme'
 import { configApi, safeAssign, PintoraConfig } from '@pintora/core'
 import { interpreteConfigs, ConfigParam } from '../util/style'
+import { DEFAULT_FONT_FAMILY } from '../util/text'
 
 export type ActivityConf = {
   diagramPadding: number
@@ -29,6 +30,7 @@ export type ActivityConf = {
   labelBackground: string
 
   fontSize: number
+  fontFamily: string
 }
 
 export const defaultConfig: ActivityConf = {
@@ -57,6 +59,7 @@ export const defaultConfig: ActivityConf = {
   labelBackground: PALETTE.white,
 
   fontSize: 14,
+  fontFamily: DEFAULT_FONT_FAMILY,
 }
 
 export const ACTIVITY_CONFIG_DIRECTIVE_RULES = {
@@ -84,6 +87,7 @@ export const ACTIVITY_CONFIG_DIRECTIVE_RULES = {
   labelTextColor: { valueType: 'color' },
 
   fontSize: { valueType: 'size' },
+  fontFamily: { valueType: 'string' },
 } as const
 
 export function getConf(configParams: ConfigParam[]) {
@@ -103,7 +107,7 @@ export function getConf(configParams: ConfigParam[]) {
       labelTextColor: t.textColor,
     })
   }
-  Object.assign(conf, globalConfig.er || {})
-  Object.assign(conf, interpreteConfigs(ACTIVITY_CONFIG_DIRECTIVE_RULES, configParams))
+  safeAssign(conf, { fontFamily: globalConfig.core.defaultFontFamily }, globalConfig.activity)
+  safeAssign(conf, interpreteConfigs(ACTIVITY_CONFIG_DIRECTIVE_RULES, configParams))
   return conf
 }

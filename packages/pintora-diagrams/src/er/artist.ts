@@ -106,6 +106,13 @@ type AttributePair = {
   key?: Text
 }
 
+function getFontConfig(conf: ErConf) {
+  return {
+    fontSize: conf.fontSize,
+    fontFamily: conf.fontFamily,
+  }
+}
+
 /**
  * Draw attributes for an entity
  * @param groupNode the svg group node for the entity
@@ -132,7 +139,7 @@ const drawAttributes = (group: Group, entityText: Text, attributes: Entity['attr
   attributes.forEach(item => {
     const attrPrefix = `${entityText.attrs.id}-attr-${attrNum}`
 
-    const fontConfig = { fontSize: conf.fontSize }
+    const fontConfig = { ...getFontConfig(conf), fontSize: attrFontSize }
     let keyText: Text
     if (item.attributeKey) {
       keyText = makeMark(
@@ -144,7 +151,7 @@ const drawAttributes = (group: Group, entityText: Text, attributes: Entity['attr
           id: `${attrPrefix}-key`,
           textAlign: 'left',
           textBaseline: 'middle',
-          fontSize: attrFontSize,
+          ...fontConfig,
         },
         { class: 'er__entity-label' },
       )
@@ -159,7 +166,7 @@ const drawAttributes = (group: Group, entityText: Text, attributes: Entity['attr
         id: `${attrPrefix}-type`,
         textAlign: 'left',
         textBaseline: 'middle',
-        fontSize: attrFontSize,
+        ...fontConfig,
       },
       { class: 'er__entity-label' },
     )
@@ -172,7 +179,7 @@ const drawAttributes = (group: Group, entityText: Text, attributes: Entity['attr
         id: `${attrPrefix}-name`,
         textAlign: 'left',
         textBaseline: 'middle',
-        fontSize: attrFontSize,
+        ...fontConfig,
       },
       { class: 'er__entity-label' },
     )
@@ -338,7 +345,7 @@ const drawEntities = function (rootMark: Group, ir: ErDiagramIR, graph: LayoutGr
     // Label the entity - this is done first so that we can get the bounding box
     // which then determines the size of the rectangle
     const textId = 'entity-' + id
-    const fontConfig = { fontSize: conf.fontSize, fontWeight: 'bold' as const }
+    const fontConfig = { ...getFontConfig(conf), fontWeight: 'bold' as const }
 
     const textMark = makeMark(
       'text',
@@ -501,6 +508,7 @@ const drawRelationshipFromLayout = function (group: Group, rel: Relationship, g:
 
   // Append a text node containing the label
   const labelId = 'rel' + relCnt
+  const fontConfig = { ...getFontConfig(conf), fontWeight: 400 }
 
   const labelMark = makeMark(
     'text',
@@ -512,16 +520,12 @@ const drawRelationshipFromLayout = function (group: Group, rel: Relationship, g:
       x: labelX,
       y: labelY,
       fill: conf.textColor,
-      fontSize: conf.fontSize,
+      ...fontConfig,
     },
     { class: 'er__relationship-label' },
   )
 
-  const labelDims = calculateTextDimensions(rel.roleA, {
-    fontSize: conf.fontSize,
-    fontFamily: 'sans-serif',
-    fontWeight: 400,
-  })
+  const labelDims = calculateTextDimensions(rel.roleA, fontConfig)
   labelDims.width += conf.fontSize / 2
   labelDims.height += conf.fontSize / 2
   const labelBg = makeLabelBg(labelDims, { x: labelX, y: labelY }, { id: `#${labelId}`, fill: conf.labelBackground })

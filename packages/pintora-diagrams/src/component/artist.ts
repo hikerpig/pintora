@@ -12,6 +12,7 @@ import {
   symbolRegistry,
   GSymbol,
   mat3,
+  IFont,
 } from '@pintora/core'
 import { ComponentDiagramIR, LineType, Relationship } from './db'
 import { ComponentConf, getConf } from './config'
@@ -90,11 +91,11 @@ const componentArtist: IDiagramArtist<ComponentDiagramIR, ComponentConf> = {
 
 function drawComponentsTo(parentMark: Group, ir: ComponentDiagramIR, g: LayoutGraph) {
   const groups: Group[] = []
-  const fontConfig = { fontSize: conf.fontSize }
+  const fontConfig = getFontConfig(conf)
   for (const component of Object.values(ir.components)) {
     const id = component.name
     const label = component.label || component.name
-    const componentLabelDims = calculateTextDimensions(label || '', fontConfig as any)
+    const componentLabelDims = calculateTextDimensions(label || '', fontConfig)
     const compWidth = Math.round(componentLabelDims.width + conf.componentPadding * 2)
     const compHeight = Math.round(componentLabelDims.height + conf.componentPadding * 2)
     const rectMark = makeMark(
@@ -143,11 +144,11 @@ function drawComponentsTo(parentMark: Group, ir: ComponentDiagramIR, g: LayoutGr
 
 function drawInterfacesTo(parentMark: Group, ir: ComponentDiagramIR, g: LayoutGraph) {
   const groups: Group[] = []
-  const fontConfig = { fontSize: conf.fontSize }
+  const fontConfig = getFontConfig(conf)
   for (const interf of Object.values(ir.interfaces)) {
     const id = interf.name
     const label = interf.label || interf.name
-    const labelDims = calculateTextDimensions(label, fontConfig as any)
+    const labelDims = calculateTextDimensions(label, fontConfig)
     const interfaceSize = conf.interfaceSize
     const circleMark = makeMark(
       'circle',
@@ -226,6 +227,8 @@ function drawGroupsTo(parentMark: Group, ir: ComponentDiagramIR, g: LayoutGraph)
       )
     }
 
+    const fontConfig = getFontConfig(conf)
+
     const groupLabel = cGroup.label || cGroup.name
     const labelMark = makeMark(
       'text',
@@ -233,8 +236,8 @@ function drawGroupsTo(parentMark: Group, ir: ComponentDiagramIR, g: LayoutGraph)
         text: groupLabel,
         fill: conf.textColor,
         textAlign: 'center',
+        ...fontConfig,
         fontWeight: 'bold',
-        fontSize: conf.fontSize,
       },
       { class: 'component__group-rect' },
     )
@@ -244,7 +247,7 @@ function drawGroupsTo(parentMark: Group, ir: ComponentDiagramIR, g: LayoutGraph)
       {
         text: typeText,
         fill: conf.textColor,
-        fontSize: conf.fontSize,
+        ...fontConfig,
         textBaseline: 'hanging', // have to hack a little, otherwise label will collide with rect border in downloaded svg
       },
       { class: 'component__type' },
@@ -342,7 +345,8 @@ function drawRelationshipsTo(parentMark: Group, ir: ComponentDiagramIR, g: Layou
     let relTextBg: Rect
     let labelDims: TSize
     if (r.message) {
-      labelDims = calculateTextDimensions(r.message)
+      const fontConfig = getFontConfig(conf)
+      labelDims = calculateTextDimensions(r.message, fontConfig)
       relText = makeMark(
         'text',
         {
@@ -350,7 +354,7 @@ function drawRelationshipsTo(parentMark: Group, ir: ComponentDiagramIR, g: Layou
           fill: conf.textColor,
           textAlign: 'center',
           textBaseline: 'middle',
-          fontSize: conf.fontSize,
+          ...fontConfig,
         },
         { class: 'component__rel-text' },
       )
@@ -416,6 +420,13 @@ const adjustMarkInGraph = function (graph: LayoutGraph) {
       edgeData.onLayout(edgeData, e)
     }
   })
+}
+
+function getFontConfig(conf: ComponentConf) {
+  return {
+    fontSize: conf.fontSize,
+    fontFamily: conf.fontFamily,
+  } as IFont
 }
 
 export default componentArtist

@@ -21,6 +21,7 @@ Object {
           Object {
             "attrs": Object {
               "fill": "#3b4044",
+              "fontFamily": "Source Code Pro, sans-serif",
               "fontSize": 14,
               "fontWeight": "bold",
               "text": "@pintora/standalone",
@@ -32,6 +33,7 @@ Object {
           Object {
             "attrs": Object {
               "fill": "#3b4044",
+              "fontFamily": "Source Code Pro, sans-serif",
               "fontSize": 14,
               "text": "[package]",
               "textBaseline": "hanging",
@@ -58,6 +60,7 @@ Object {
           Object {
             "attrs": Object {
               "fill": "#3b4044",
+              "fontFamily": "Source Code Pro, sans-serif",
               "fontSize": 14,
               "fontWeight": "bold",
               "text": "@pintora/renderer",
@@ -69,6 +72,7 @@ Object {
           Object {
             "attrs": Object {
               "fill": "#3b4044",
+              "fontFamily": "Source Code Pro, sans-serif",
               "fontSize": 14,
               "text": "[package]",
               "textBaseline": "hanging",
@@ -95,6 +99,7 @@ Object {
           Object {
             "attrs": Object {
               "fill": "#3b4044",
+              "fontFamily": "Source Code Pro, sans-serif",
               "fontSize": 14,
               "fontWeight": "bold",
               "text": "@pintora/diagrams",
@@ -106,6 +111,7 @@ Object {
           Object {
             "attrs": Object {
               "fill": "#3b4044",
+              "fontFamily": "Source Code Pro, sans-serif",
               "fontSize": 14,
               "text": "[package]",
               "textBaseline": "hanging",
@@ -132,6 +138,7 @@ Object {
           Object {
             "attrs": Object {
               "fill": "#3b4044",
+              "fontFamily": "Source Code Pro, sans-serif",
               "fontSize": 14,
               "fontWeight": "bold",
               "text": "@pintora/core",
@@ -143,6 +150,7 @@ Object {
           Object {
             "attrs": Object {
               "fill": "#3b4044",
+              "fontFamily": "Source Code Pro, sans-serif",
               "fontSize": 14,
               "text": "[package]",
               "textBaseline": "hanging",
@@ -169,6 +177,7 @@ Object {
           Object {
             "attrs": Object {
               "fill": "#3b4044",
+              "fontFamily": "Source Code Pro, sans-serif",
               "fontSize": 14,
               "text": "Diagram Registry",
               "textAlign": "center",
@@ -196,6 +205,7 @@ Object {
           Object {
             "attrs": Object {
               "fill": "#3b4044",
+              "fontFamily": "Source Code Pro, sans-serif",
               "fontSize": 14,
               "text": "...Multiple Diagrams...",
               "textAlign": "center",
@@ -223,6 +233,7 @@ Object {
           Object {
             "attrs": Object {
               "fill": "#3b4044",
+              "fontFamily": "Source Code Pro, sans-serif",
               "fontSize": 14,
               "text": "SVGRender",
               "textAlign": "center",
@@ -250,6 +261,7 @@ Object {
           Object {
             "attrs": Object {
               "fill": "#3b4044",
+              "fontFamily": "Source Code Pro, sans-serif",
               "fontSize": 14,
               "text": "CanvasRender",
               "textAlign": "center",
@@ -277,6 +289,7 @@ Object {
           Object {
             "attrs": Object {
               "fill": "#3b4044",
+              "fontFamily": "Source Code Pro, sans-serif",
               "fontSize": 14,
               "text": "standalone",
               "textAlign": "center",
@@ -304,6 +317,7 @@ Object {
           Object {
             "attrs": Object {
               "fill": "#3b4044",
+              "fontFamily": "Source Code Pro, sans-serif",
               "fontSize": 14,
               "text": "GraphicsIR",
               "textAlign": "center",
@@ -331,6 +345,7 @@ Object {
           Object {
             "attrs": Object {
               "fill": "#3b4044",
+              "fontFamily": "Source Code Pro, sans-serif",
               "fontSize": 14,
               "text": "IRenderer",
               "textAlign": "center",
@@ -358,6 +373,7 @@ Object {
           Object {
             "attrs": Object {
               "fill": "#3b4044",
+              "fontFamily": "Source Code Pro, sans-serif",
               "fontSize": 14,
               "text": "IDiagram",
               "textAlign": "center",
@@ -385,6 +401,7 @@ Object {
           Object {
             "attrs": Object {
               "fill": "#3b4044",
+              "fontFamily": "Source Code Pro, sans-serif",
               "fontSize": 14,
               "text": "render()",
               "textAlign": "center",
@@ -418,6 +435,7 @@ Object {
           Object {
             "attrs": Object {
               "fill": "#3b4044",
+              "fontFamily": "Source Code Pro, sans-serif",
               "fontSize": 14,
               "text": "implements",
               "textAlign": "center",
@@ -458,6 +476,7 @@ Object {
           Object {
             "attrs": Object {
               "fill": "#3b4044",
+              "fontFamily": "Source Code Pro, sans-serif",
               "fontSize": 14,
               "text": "implements",
               "textAlign": "center",
@@ -498,6 +517,7 @@ Object {
           Object {
             "attrs": Object {
               "fill": "#3b4044",
+              "fontFamily": "Source Code Pro, sans-serif",
               "fontSize": 14,
               "text": "implements",
               "textAlign": "center",
@@ -542,6 +562,7 @@ Object {
           Object {
             "attrs": Object {
               "fill": "#3b4044",
+              "fontFamily": "Source Code Pro, sans-serif",
               "fontSize": 14,
               "text": "accepts",
               "textAlign": "center",
@@ -582,6 +603,7 @@ Object {
           Object {
             "attrs": Object {
               "fill": "#3b4044",
+              "fontFamily": "Source Code Pro, sans-serif",
               "fontSize": 14,
               "text": "generate",
               "textAlign": "center",
@@ -622,6 +644,7 @@ Object {
           Object {
             "attrs": Object {
               "fill": "#3b4044",
+              "fontFamily": "Source Code Pro, sans-serif",
               "fontSize": 14,
               "text": "register all of @pintora/diagrams",
               "textAlign": "center",
@@ -662,6 +685,7 @@ Object {
           Object {
             "attrs": Object {
               "fill": "#3b4044",
+              "fontFamily": "Source Code Pro, sans-serif",
               "fontSize": 14,
               "text": "import",
               "textAlign": "center",
@@ -702,6 +726,7 @@ Object {
           Object {
             "attrs": Object {
               "fill": "#3b4044",
+              "fontFamily": "Source Code Pro, sans-serif",
               "fontSize": 14,
               "text": "call with GraphicsIR",
               "textAlign": "center",

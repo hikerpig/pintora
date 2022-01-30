@@ -9,6 +9,7 @@ import { encodeForUrl, decodeCodeInUrl, makeMark, calculateTextDimensions, parse
 import { symbolRegistry, SymbolDef, SymbolStyleAttrs } from './symbol-registry'
 import { ConfigParam, interpreteConfigs } from './config-engine'
 import { themeRegistry, ITheme } from './themes'
+import { DEFAULT_FONT_FAMILY } from './consts'
 import * as configEngine from './config-engine'
 
 export {
@@ -24,6 +25,7 @@ export {
   tinycolor,
   ITheme,
   themeRegistry,
+  DEFAULT_FONT_FAMILY,
 }
 
 type DrawOptions = {

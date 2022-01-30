@@ -1,5 +1,5 @@
 import { PALETTE } from '../util/theme'
-import { configApi, safeAssign, PintoraConfig } from '@pintora/core'
+import { configApi, safeAssign, PintoraConfig, DEFAULT_FONT_FAMILY } from '@pintora/core'
 import { interpreteConfigs, ConfigParam } from '../util/style'
 
 export type ErConf = {
@@ -25,6 +25,7 @@ export type ErConf = {
   labelBackground: string
 
   fontSize: number
+  fontFamily: string
 }
 
 export const defaultConfig: ErConf = {
@@ -53,6 +54,7 @@ export const defaultConfig: ErConf = {
   labelBackground: PALETTE.white,
 
   fontSize: 14,
+  fontFamily: DEFAULT_FONT_FAMILY,
 }
 
 export const ER_CONFIG_DIRECTIVE_RULES = {
@@ -66,6 +68,7 @@ export const ER_CONFIG_DIRECTIVE_RULES = {
   textColor: { valueType: 'color' },
   labelBackground: { valueType: 'color' },
   fontSize: { valueType: 'size' },
+  fontFamily: { valueType: 'string' },
 } as const
 
 export function getConf(configParams: ConfigParam[]) {
@@ -82,7 +85,7 @@ export function getConf(configParams: ConfigParam[]) {
       attributeFill: t.lightestBackground || conf.attributeFill,
     })
   }
-  Object.assign(conf, globalConfig.er || {})
-  Object.assign(conf, interpreteConfigs(ER_CONFIG_DIRECTIVE_RULES, configParams))
+  safeAssign(conf, { fontFamily: globalConfig.core.defaultFontFamily }, globalConfig.er || {})
+  safeAssign(conf, interpreteConfigs(ER_CONFIG_DIRECTIVE_RULES, configParams))
   return conf
 }

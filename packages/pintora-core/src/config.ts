@@ -1,11 +1,13 @@
 import deepmerge from 'deepmerge'
 import cloneDeep from 'clone-deep'
 import { ITheme, themeRegistry } from './themes'
+import { DEFAULT_FONT_FAMILY } from './consts'
 
 export interface PintoraConfig {
   core: {
     /** by default it's 'svg' */
     defaultRenderer: string
+    defaultFontFamily: string
   }
   themeConfig: {
     theme: string
@@ -17,6 +19,7 @@ export interface PintoraConfig {
 let config: PintoraConfig = {
   core: {
     defaultRenderer: 'svg',
+    defaultFontFamily: DEFAULT_FONT_FAMILY,
   },
   themeConfig: {
     theme: 'default',

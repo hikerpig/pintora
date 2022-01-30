@@ -1216,7 +1216,7 @@ const getMaxMessageWidthPerActor = function (ir: SequenceDiagramIR) {
 const calculateActorMargins = function (actors: SequenceDiagramIR['actors'], actorToMessageWidth) {
   let maxHeight = 0
   Object.keys(actors).forEach(prop => {
-    const actorAttrs = model.actorAttrsMap.get(prop)
+    const actorAttrs = model.actorAttrsMap.get(prop) || {}
     const actor = actors[prop]
     // if (actor.wrap) {
     //   actor.description = utils.wrapLabel(

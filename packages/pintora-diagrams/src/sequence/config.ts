@@ -1,4 +1,4 @@
-import { MarkAttrs, PintoraConfig } from '@pintora/core'
+import { DEFAULT_FONT_FAMILY, MarkAttrs, PintoraConfig } from '@pintora/core'
 import { PALETTE } from '../util/theme'
 import { configApi, safeAssign } from '@pintora/core'
 import { interpreteConfigs, ConfigParam } from '../util/style'
@@ -56,7 +56,7 @@ export const defaultConfig: SequenceConf = {
   boxTextMargin: 5,
 
   messageFontSize: 16,
-  messageFontFamily: 'menlo, sans-serif',
+  messageFontFamily: DEFAULT_FONT_FAMILY,
   messageFontWeight: 400,
   messageTextColor: PALETTE.normalDark,
   wrapPadding: 10,
@@ -125,7 +125,12 @@ export function getConf(configParams: ConfigParam[], extraConfig: SequenceConf |
     activationBackground: t.background1,
     dividerTextColor: t.secondaryTextColor,
   })
-  Object.assign(conf, globalConfig.sequence || {}, extraConfig || {})
-  Object.assign(conf, interpreteConfigs(SEQUENCE_CONFIG_DIRECTIVE_RULES, configParams))
+  safeAssign(
+    conf,
+    { messageFontFamily: globalConfig.core.defaultFontFamily },
+    globalConfig.sequence || {},
+    extraConfig || {},
+  )
+  safeAssign(conf, interpreteConfigs(SEQUENCE_CONFIG_DIRECTIVE_RULES, configParams))
   return conf
 }

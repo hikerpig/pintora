@@ -54,7 +54,7 @@ let activityDraw: ActivityDraw
 let theme: ITheme
 
 function calcTextDims(text: string, attrs: Partial<Text['attrs']> = {}) {
-  const _attrs = Object.assign({ fontSize: conf.fontSize }, attrs)
+  const _attrs = Object.assign(getFontConfig(conf), attrs)
   return calculateTextDimensions(text, _attrs)
 }
 
@@ -658,18 +658,19 @@ class ActivityDraw {
     )
 
     const groupLabel = aGroup.label || aGroup.name
+    const fontConfig = getFontConfig(conf)
 
     const labelMark = makeMark(
       'text',
       {
         text: groupLabel,
         fill: conf.textColor,
+        ...fontConfig,
         fontWeight: 'bold',
-        fontSize: conf.fontSize,
       },
       { class: 'component__group-rect' },
     )
-    const labelTextDims = calcTextDims(groupLabel)
+    const labelTextDims = calcTextDims(groupLabel, fontConfig)
 
     this.g.setNode(id, {
       id,
@@ -1023,7 +1024,8 @@ class ActivityDraw {
     )
     parentMark.children.push(group)
 
-    const textDims = calcTextDims(text, { fontSize: conf.fontSize })
+    const fontConfig = { fontSize: conf.fontSize, fontFamily: conf.fontFamily }
+    const textDims = calcTextDims(text, fontConfig)
     const rectAttrs = getBaseNote(theme)
     const noteModel = {
       width: textDims.width + 2 * conf.noteMargin,
@@ -1037,7 +1039,7 @@ class ActivityDraw {
 
     const textMark: Text = {
       type: 'text',
-      attrs: { fill: conf.noteTextColor, text, textBaseline: 'middle', fontSize: conf.fontSize },
+      attrs: { fill: conf.noteTextColor, text, textBaseline: 'middle', ...fontConfig },
     }
 
     const targetStepModel = this.model.stepModelMap.get(note.target)
@@ -1190,7 +1192,8 @@ function drawEdges(parent: Group, g: LayoutGraph) {
     //   labelY = (startPoint.y + lastPoint.y) / 2
     // }
 
-    const labelDims = calcTextDims(edge.label || '')
+    const fontConfig = getFontConfig(conf)
+    const labelDims = calcTextDims(edge.label || '', fontConfig)
     const labelBgMark = makeLabelBg(labelDims, { x: labelX, y: labelY }, { fill: conf.labelBackground }, theme)
     const labelMark = makeMark(
       'text',
@@ -1202,7 +1205,7 @@ function drawEdges(parent: Group, g: LayoutGraph) {
         x: labelX,
         y: labelY,
         fill: conf.labelTextColor,
-        fontSize: conf.fontSize,
+        ...fontConfig,
       },
       { class: 'activity__edge-label' },
     )
@@ -1210,6 +1213,13 @@ function drawEdges(parent: Group, g: LayoutGraph) {
     edgeGroup.children.push(linePath, labelBgMark, labelMark, arrowMark)
   })
   parent.children.push(edgeGroup)
+}
+
+function getFontConfig(conf: ActivityConf) {
+  return {
+    fontSize: conf.fontSize,
+    fontFamily: conf.fontFamily,
+  }
 }
 
 export default erArtist

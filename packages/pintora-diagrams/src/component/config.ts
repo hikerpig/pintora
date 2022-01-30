@@ -1,5 +1,5 @@
 import { PALETTE } from '../util/theme'
-import { configApi, safeAssign, PintoraConfig } from '@pintora/core'
+import { configApi, safeAssign, PintoraConfig, DEFAULT_FONT_FAMILY } from '@pintora/core'
 import { interpreteConfigs, ConfigParam } from '../util/style'
 
 export type ComponentConf = {
@@ -16,6 +16,7 @@ export type ComponentConf = {
   relationLineColor: string
   textColor: string
   fontSize: number
+  fontFamily: string
   lineWidth: number
 
   labelBackground: string
@@ -37,6 +38,7 @@ export const defaultConfig: ComponentConf = {
   relationLineColor: PALETTE.orange,
   textColor: PALETTE.normalDark,
   fontSize: 14,
+  fontFamily: DEFAULT_FONT_FAMILY,
   lineWidth: 1,
 
   labelBackground: PALETTE.white,
@@ -54,6 +56,7 @@ export const COMPONENT_CONFIG_DIRECTIVE_RULES = {
   groupBorderWidth: { valueType: 'size' },
   relationLineColor: { valueType: 'color' },
   textColor: { valueType: 'color' },
+  fontFamily: { valueType: 'string' },
   lineWidth: { valueType: 'size' },
   labelBackground: { valueType: 'color' },
   interfaceSize: { valueType: 'size' },
@@ -72,7 +75,7 @@ export function getConf(configParams: ConfigParam[]) {
     labelBackground: t.canvasBackground || t.background1,
     textColor: t.textColor,
   })
-  Object.assign(conf, globalConfig.component || {})
-  Object.assign(conf, interpreteConfigs(COMPONENT_CONFIG_DIRECTIVE_RULES, configParams))
+  safeAssign(conf, { fontFamily: globalConfig.core.defaultFontFamily }, globalConfig.component || {})
+  safeAssign(conf, interpreteConfigs(COMPONENT_CONFIG_DIRECTIVE_RULES, configParams))
   return conf
 }

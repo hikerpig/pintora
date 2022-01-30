@@ -9,7 +9,8 @@ Assume you are using the UMD bundle in the browser, here is an easy example of s
 ```js
 pintora.default.setConfig({
   core: {
-    defalutRenderer: 'canvas'
+    defalutRenderer: 'canvas',
+    defaultFontFamily: 'Menlo',
   },
   sequence: {
     messageFontSize: 16,
@@ -45,6 +46,7 @@ export type PintoraConfig = {
   core: {
     /** by default it's 'svg' */
     defaultRenderer: string
+    defaultFontFamily: string
   }
   themeConfig: {
     theme: string
@@ -135,6 +137,7 @@ export type ErConf = {
   labelBackground: string
 
   fontSize: number
+  fontFamily: string
 }
 ```
 
@@ -157,6 +160,7 @@ export type ComponentConf = {
   relationLineColor: string
   textColor: string
   fontSize: number
+  fontFamily: string
   lineWidth: number
 
   labelBackground: string
@@ -195,6 +199,7 @@ export type ActivityConf = {
   labelBackground: string
 
   fontSize: number
+  fontFamily: string
 }
 ```
 
@@ -218,6 +223,7 @@ export type MindmapConf = {
 
   maxFontSize: number
   minFontSize: number
+  fontFamily: string
 
   levelDistance: number
 

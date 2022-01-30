@@ -37,7 +37,7 @@ Object {
           Object {
             "attrs": Object {
               "fill": "#3b4044",
-              "fontFamily": "menlo, sans-serif",
+              "fontFamily": "Source Code Pro, sans-serif",
               "fontSize": 16,
               "fontWeight": 400,
               "text": "User",
@@ -70,7 +70,7 @@ Object {
           Object {
             "attrs": Object {
               "fill": "#3b4044",
-              "fontFamily": "menlo, sans-serif",
+              "fontFamily": "Source Code Pro, sans-serif",
               "fontSize": 16,
               "fontWeight": 400,
               "text": "Pintora",
@@ -120,7 +120,7 @@ Object {
           Object {
             "attrs": Object {
               "fill": "#3b4044",
-              "fontFamily": "menlo, sans-serif",
+              "fontFamily": "Source Code Pro, sans-serif",
               "fontSize": 16,
               "fontWeight": 400,
               "stroke": "#3b4044",
@@ -184,7 +184,7 @@ Object {
           Object {
             "attrs": Object {
               "fill": "#3b4044",
-              "fontFamily": "menlo, sans-serif",
+              "fontFamily": "Source Code Pro, sans-serif",
               "fontSize": 16,
               "fontWeight": 400,
               "stroke": "#3b4044",
@@ -239,7 +239,7 @@ Object {
           Object {
             "attrs": Object {
               "fill": "#3b4044",
-              "fontFamily": "menlo, sans-serif",
+              "fontFamily": "Source Code Pro, sans-serif",
               "fontSize": 16,
               "fontWeight": 400,
               "text": "loop",
@@ -251,7 +251,7 @@ Object {
           Object {
             "attrs": Object {
               "fill": "#3b4044",
-              "fontFamily": "menlo, sans-serif",
+              "fontFamily": "Source Code Pro, sans-serif",
               "fontSize": 16,
               "fontWeight": 400,
               "text": "[Check input]",
@@ -288,7 +288,7 @@ Object {
           Object {
             "attrs": Object {
               "fill": "#3b4044",
-              "fontFamily": "menlo, sans-serif",
+              "fontFamily": "Source Code Pro, sans-serif",
               "fontSize": 16,
               "fontWeight": 400,
               "stroke": "#3b4044",
@@ -345,7 +345,7 @@ Object {
           Object {
             "attrs": Object {
               "fill": "#3b4044",
-              "fontFamily": "menlo, sans-serif",
+              "fontFamily": "Source Code Pro, sans-serif",
               "fontSize": 16,
               "fontWeight": 400,
               "text": "note over",
@@ -374,7 +374,7 @@ Object {
           Object {
             "attrs": Object {
               "fill": "#3b4044",
-              "fontFamily": "menlo, sans-serif",
+              "fontFamily": "Source Code Pro, sans-serif",
               "fontSize": 16,
               "fontWeight": 400,
               "text": "note aside actor",
@@ -403,7 +403,7 @@ Object {
           Object {
             "attrs": Object {
               "fill": "#3b4044",
-              "fontFamily": "menlo, sans-serif",
+              "fontFamily": "Source Code Pro, sans-serif",
               "fontSize": 16,
               "fontWeight": 400,
               "text": "multiline note
@@ -443,7 +443,7 @@ Object {
           Object {
             "attrs": Object {
               "fill": "#3b4044",
-              "fontFamily": "menlo, sans-serif",
+              "fontFamily": "Source Code Pro, sans-serif",
               "fontSize": 16,
               "fontWeight": 600,
               "text": "Divider",
@@ -469,7 +469,7 @@ Object {
           Object {
             "attrs": Object {
               "fill": "#3b4044",
-              "fontFamily": "menlo, sans-serif",
+              "fontFamily": "Source Code Pro, sans-serif",
               "fontSize": 16,
               "fontWeight": 400,
               "text": "User",
@@ -495,7 +495,7 @@ Object {
           Object {
             "attrs": Object {
               "fill": "#3b4044",
-              "fontFamily": "menlo, sans-serif",
+              "fontFamily": "Source Code Pro, sans-serif",
               "fontSize": 16,
               "fontWeight": 400,
               "text": "Pintora",

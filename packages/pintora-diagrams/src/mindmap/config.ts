@@ -1,4 +1,4 @@
-import { configApi, MarkAttrs, PintoraConfig, safeAssign, tinycolor } from '@pintora/core'
+import { configApi, DEFAULT_FONT_FAMILY, MarkAttrs, PintoraConfig, safeAssign, tinycolor } from '@pintora/core'
 import { ConfigParam, interpreteConfigs } from '../util/style'
 import { PALETTE } from '../util/theme'
 
@@ -21,6 +21,7 @@ export type MindmapConf = {
 
   maxFontSize: number
   minFontSize: number
+  fontFamily: string
 
   levelDistance: number
 
@@ -64,6 +65,7 @@ export const defaultConfig: MindmapConf = {
 
   textColor: PALETTE.normalDark,
   edgeColor: PALETTE.normalDark,
+  fontFamily: DEFAULT_FONT_FAMILY,
 
   maxFontSize: 18,
   minFontSize: 12,
@@ -87,6 +89,7 @@ export const MINDMAP_CONFIG_DIRECTIVE_RULES = {
   edgeColor: { valueType: 'color' },
   maxFontSize: { valueType: 'size' },
   minFontSize: { valueType: 'size' },
+  fontFamily: { valueType: 'string' },
   levelDistance: { valueType: 'size' },
   l1NodeBgColor: { valueType: 'color' },
   l1NodeTextColor: { valueType: 'color' },
@@ -114,7 +117,7 @@ export function getConf(configParams: ConfigParam[]) {
       l2NodeTextColor: t.textColor,
     })
   }
-  safeAssign(conf, globalConfig.mindmap || {})
+  safeAssign(conf, { fontFamily: globalConfig.core.defaultFontFamily }, globalConfig.mindmap || {})
   safeAssign(conf, interpreteConfigs(MINDMAP_CONFIG_DIRECTIVE_RULES, configParams))
   return conf
 }
