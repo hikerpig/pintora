@@ -1,6 +1,7 @@
 # project
 packages/**/*/parser/*.[tj]s
 demo/dist/
+demo/cypress/videos/
 .idea/
 
 # Created by https://www.gitignore.io/api/node
