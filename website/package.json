@@ -1,6 +1,6 @@
 {
   "name": "pintora-website",
-  "version": "0.1.0-alpha.22",
+  "version": "0.1.0-alpha.23",
   "private": true,
   "scripts": {
     "docusaurus": "docusaurus",
