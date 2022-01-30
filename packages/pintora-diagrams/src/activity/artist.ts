@@ -8,12 +8,13 @@ import {
   calculateTextDimensions,
   getPointAt,
   PathCommand,
-  TSize,
   Mark,
   configApi,
   last,
   PintoraConfig,
   ITheme,
+  unique,
+  compact,
 } from '@pintora/core'
 import {
   Action,
@@ -45,6 +46,7 @@ import dagre from '@pintora/dagre'
 import { MARK_TRANSFORMERS, positionGroupContents } from '../util/mark-positioner'
 import { isDev } from '../util/env'
 import { getPointsCurvePath, getPointsLinearPath } from '../util/line-util'
+import { makeTextMark } from './artist-util'
 
 let conf: ActivityConf
 let model: ArtistModel
@@ -508,7 +510,7 @@ class ActivityDraw {
 
     const textDims = calcTextDims(message)
 
-    const textMark = makeTextMark(message, textDims, {
+    const textMark = makeTextMark(conf, message, textDims, {
       y: rectHeight / 2,
       x: rectWidth / 2,
       fontSize: conf.fontSize,
@@ -683,9 +685,24 @@ class ActivityDraw {
     group.children.push(bgMark, labelMark)
     parentMark.children.push(group)
 
+    const setParentRecursive = (m: StepModel) => {
+      if (m.type === 'group') return
+      unique(compact([m.id, m.startId, m.endId])).forEach(modelId => {
+        // console.log('will set parent', modelId, id, m.type)
+        if (modelId) this.g.setParent(modelId, id)
+      })
+      if ('children' in m.value) {
+        m.value.children.forEach(child => {
+          const childStepModel = this.model.stepModelMap.get(child.value.id)
+          if (childStepModel) setParentRecursive(childStepModel)
+        })
+      }
+    }
+
     aGroup.children.map(s => {
       const childResult = this.drawStep(parentMark, s)
       this.g.setParent(childResult.id, id)
+      setParentRecursive(childResult.stepModel)
       return childResult
     })
 
@@ -1087,7 +1104,7 @@ function drawAction(parentMark: Group, action: Action, g: LayoutGraph): DrawStep
     fill: conf.actionBackground,
     stroke: conf.actionBorderColor,
   })
-  const textMark = makeTextMark(action.message, textDims, {
+  const textMark = makeTextMark(conf, action.message, textDims, {
     y: rectHeight / 2,
     x: rectWidth / 2,
     fontSize: conf.fontSize,
@@ -1193,22 +1210,6 @@ function drawEdges(parent: Group, g: LayoutGraph) {
     edgeGroup.children.push(linePath, labelBgMark, labelMark, arrowMark)
   })
   parent.children.push(edgeGroup)
-}
-
-/**
- * Based on action text config
- */
-function makeTextMark(text: string, textDims: TSize, attrs: Partial<Text['attrs']>) {
-  return makeMark('text', {
-    text,
-    width: textDims.width,
-    height: textDims.height,
-    fill: conf.textColor,
-    fontSize: conf.fontSize,
-    textBaseline: 'middle',
-    textAlign: 'center',
-    ...attrs,
-  })
 }
 
 export default erArtist

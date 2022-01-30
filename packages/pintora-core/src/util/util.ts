@@ -12,6 +12,17 @@ export function compact<T>(list: T[]) {
   return list.filter(v => Boolean(v))
 }
 
+export function unique<T>(list: T[]): T[] {
+  const map = new Map()
+  const result: T[] = []
+  list.forEach(item => {
+    if (map.has(item)) return
+    map.set(item, item)
+    result.push(item)
+  })
+  return result
+}
+
 const CHARACTERS = '0123456789abcdef'
 export function makeid(length: number) {
   let result = ''

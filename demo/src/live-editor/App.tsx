@@ -8,7 +8,7 @@ import store from './redux/store'
 import EditorSpace from 'src/live-editor/containers/EditorSpace'
 import ThemePreviewSpace from 'src/live-editor/containers/ThemePreviewSpace'
 import { actions } from 'src/live-editor/redux/slice'
-import { BrowserRouter, HashRouter, Routes, Route, Outlet } from 'react-router-dom'
+import { HashRouter, Routes, Route, Outlet } from 'react-router-dom'
 import './App.css'
 
 const LAST_EDITOR_CODE_KEY = 'pintoraEditorCode'
