@@ -201,7 +201,7 @@ componentDiagram
   }
   [IDiagram] --> GraphicsIR : generate
   [standalone] --> registry : register all of @pintora/diagrams
-  [standalone] --> [@pintora/diagrams] : import
+  [@pintora/standalone] --> [@pintora/diagrams] : import
   [standalone] --> renderFn : call with GraphicsIR
   `),
 }

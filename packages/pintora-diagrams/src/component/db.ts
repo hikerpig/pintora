@@ -23,7 +23,7 @@ type CGroup = {
   parent?: string
 }
 
-type ElementType = 'component' | 'interface'
+type ElementType = 'component' | 'interface' | 'group'
 
 type ElementRef = {
   name: string
@@ -110,6 +110,7 @@ class ComponentDb {
   addGroup(name: string, group: CGroup) {
     if (this.groups[name]) return
     this.groups[name] = group
+    this.aliases[name] = group
   }
 
   addRelationship(r: Relationship) {
@@ -176,6 +177,19 @@ class ComponentDb {
           }
         }
       }
+    })
+
+    // correct relationship elements
+    this.relationships.forEach(r => {
+      ;[r.from, r.to].forEach(e => {
+        const aliasEntity = this.aliases[e.name]
+        if (aliasEntity) {
+          if ('type' in aliasEntity && (aliasEntity as any).type !== e.type) {
+            // console.log('alias', e, aliasEntity)
+            Object.assign(e, aliasEntity)
+          }
+        }
+      })
     })
   }
 

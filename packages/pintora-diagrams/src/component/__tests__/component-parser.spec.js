@@ -188,12 +188,60 @@ componentDiagram
     componentDiagram
       component "A" {
         component "A.1" {
+          [Diagrams]
         }
       }
     `)
     parse(componentExample)
-    // const ir = db.getDiagramIR()
-    // console.log('ir', ir)
+    const ir = db.getDiagramIR()
+    // console.log(JSON.stringify(ir, null, 2))
+    expect(ir).toMatchObject({
+      components: {
+        Diagrams: {
+          type: 'component',
+          name: 'Diagrams',
+          parent: 'A.1',
+        },
+      },
+      groups: {
+        'A.1': {
+          type: 'group',
+          name: 'A.1',
+          groupType: 'component',
+          label: 'A.1',
+          children: [
+            {
+              type: 'component',
+              name: 'Diagrams',
+              parent: 'A.1',
+            },
+          ],
+          parent: 'A',
+        },
+        A: {
+          type: 'group',
+          name: 'A',
+          groupType: 'component',
+          label: 'A',
+          children: [
+            {
+              type: 'group',
+              name: 'A.1',
+              groupType: 'component',
+              label: 'A.1',
+              children: [
+                {
+                  type: 'component',
+                  name: 'Diagrams',
+                  parent: 'A.1',
+                },
+              ],
+              parent: 'A',
+            },
+          ],
+        },
+      },
+    })
   })
 
   it('can parse style clause', () => {
@@ -208,6 +256,40 @@ componentDiagram
       {
         key: 'lineWidth',
         value: '3',
+      },
+    ])
+  })
+
+  it('can parse element to group relationship', () => {
+    parse(
+      stripStartEmptyLines(`
+  componentDiagram
+    package "P_A" {
+      [ContentA]
+    }
+    package "P_B" {
+      [ContentB]
+    }
+    ContentA --> P_B : imports
+    `),
+    )
+    const ir = db.getDiagramIR()
+    // console.log(JSON.stringify(ir, null, 2))
+    expect(Object.keys(ir.interfaces).length).toBe(0)
+    expect(ir.relationships).toMatchObject([
+      {
+        from: {
+          type: 'interface',
+          name: 'ContentA',
+        },
+        to: {
+          type: 'interface',
+          name: 'P_B',
+        },
+        line: {
+          lineType: 'SOLID_ARROW',
+        },
+        message: 'imports',
       },
     ])
   })

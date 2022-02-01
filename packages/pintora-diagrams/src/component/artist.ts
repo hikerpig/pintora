@@ -20,6 +20,7 @@ import { createLayoutGraph, getGraphBounds, LayoutEdge, LayoutGraph, LayoutNode,
 import { makeMark, drawArrowTo, calcDirection, makeLabelBg } from '../util/artist-util'
 import dagre from '@pintora/dagre'
 import { Edge } from '@pintora/graphlib'
+import { isDev } from '../util/env'
 
 let conf: ComponentConf
 
@@ -31,11 +32,13 @@ type EdgeData = {
   name: string
   relationship: Relationship
   onLayout(data: LayoutEdge<EdgeData>, edge: Edge): void
+  /** this edge is for layout, should not be drawn */
+  isDummyEdge?: boolean
 }
 
 const componentArtist: IDiagramArtist<ComponentDiagramIR, ComponentConf> = {
   draw(ir) {
-    // logger.info('[artist] component', ir)
+    // console.info('[artist] component', ir)
     conf = getConf(ir.configParams)
 
     const rootMark: Group = {
@@ -66,7 +69,9 @@ const componentArtist: IDiagramArtist<ComponentDiagramIR, ComponentConf> = {
     dagre.layout(g, {
       // debugTiming: true,
     })
-    // ;(window as any).graph = g
+    if (isDev) {
+      ;(window as any).componentGraph = g
+    }
 
     adjustMarkInGraph(g)
 
@@ -194,6 +199,7 @@ function drawInterfacesTo(parentMark: Group, ir: ComponentDiagramIR, g: LayoutGr
         safeAssign(textMark.attrs, { x, y: y + 2 })
       },
     }
+
     g.setNode(id, layoutNode)
 
     if (labelDims.width > interfaceSize) {
@@ -329,6 +335,7 @@ function drawGroupsTo(parentMark: Group, ir: ComponentDiagramIR, g: LayoutGraph)
 
 function drawRelationshipsTo(parentMark: Group, ir: ComponentDiagramIR, g: LayoutGraph) {
   ir.relationships.forEach(function (r) {
+    // console.log('draw relationship', r)
     const lineMark = makeMark(
       'polyline',
       {
@@ -368,7 +375,13 @@ function drawRelationshipsTo(parentMark: Group, ir: ComponentDiagramIR, g: Layou
       labelpos: 'r',
       labeloffset: 100,
       onLayout(data, edge) {
-        // console.log('edge onlayout', data, 'points', data.points.map(t => `${t.x},${t.y}`))
+        // console.log(
+        //   'edge onLayout',
+        //   edge,
+        //   data,
+        //   'points',
+        //   data.points.map(t => `${t.x},${t.y}`),
+        // )
         const points = data.points.map(p => [p.x, p.y]) as PointTuple[]
         lineMark.attrs.points = points
         if (relText) {
@@ -385,11 +398,26 @@ function drawRelationshipsTo(parentMark: Group, ir: ComponentDiagramIR, g: Layou
           const arrowMark = drawArrowTo(lastPoint, 8, arrowRad, {
             color: conf.relationLineColor,
           })
-          // arrowMark.class = 'component__rel-arrow'
           relationGroupMark.children.push(arrowMark)
         }
       },
     } as EdgeData)
+
+    const isFromGroup = r.from.type === 'group'
+    const isToGroup = r.to.type === 'group'
+    if (isFromGroup || isToGroup) {
+      if (isToGroup) {
+        const toGroup = ir.groups[r.to.name]
+        const firstChild = toGroup?.children[0]
+        if (firstChild && 'name' in firstChild) {
+          g.setEdge(r.from.name, firstChild.name, { isDummyEdge: true } as EdgeData)
+        }
+      } else if (isFromGroup) {
+        const fromGroup = ir.groups[r.from.name]
+        const firstChild = fromGroup?.children[0]
+        if (firstChild && 'name' in firstChild) g.setEdge(firstChild.name, r.to.name, { isDummyEdge: true } as EdgeData)
+      }
+    }
 
     const relationGroupMark = makeMark(
       'group',
