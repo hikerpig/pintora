@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.1.0-alpha.24](https://github.com/hikerpig/pintora/compare/v0.1.0-alpha.23...v0.1.0-alpha.24) (2022-02-01)
+
+
+### Features
+
+* **pintora-diagrams:** [activityDiagram] optimize while layout by inserting dummy edge ([54cea28](https://github.com/hikerpig/pintora/commit/54cea28c3d31b404f30aeecf6917e160847832b6))
+
+
+
+
+
 # [0.1.0-alpha.23](https://github.com/hikerpig/pintora/compare/v0.1.0-alpha.21...v0.1.0-alpha.23) (2022-01-30)
 
 

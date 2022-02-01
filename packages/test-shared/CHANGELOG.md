@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.1.0-alpha.24](https://github.com/hikerpig/pintora/compare/v0.1.0-alpha.23...v0.1.0-alpha.24) (2022-02-01)
+
+
+### Features
+
+* **pintora-diagrams:** [componentDiagram] we can have relationship from element to group ([9cc74cd](https://github.com/hikerpig/pintora/commit/9cc74cdc53013b6b63a13658ff719d414d04706f))
+
+
+
+
+
 # [0.1.0-alpha.19](https://github.com/hikerpig/pintora/compare/v0.1.0-alpha.18...v0.1.0-alpha.19) (2022-01-22)
 
 
