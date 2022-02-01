@@ -245,7 +245,7 @@ function drawGroupsTo(parentMark: Group, ir: ComponentDiagramIR, g: LayoutGraph)
         ...fontConfig,
         fontWeight: 'bold',
       },
-      { class: 'component__group-rect' },
+      { class: 'component__group-label' },
     )
     const typeText = `[${cGroup.groupType}]`
     const typeMark = makeMark(
@@ -259,8 +259,8 @@ function drawGroupsTo(parentMark: Group, ir: ComponentDiagramIR, g: LayoutGraph)
       { class: 'component__type' },
     )
 
-    const labelTextDims = calculateTextDimensions(groupLabel)
-    const typeTextDims = calculateTextDimensions(typeText)
+    const labelTextDims = calculateTextDimensions(groupLabel, { ...fontConfig, fontWeight: labelMark.attrs.fontWeight })
+    const typeTextDims = calculateTextDimensions(typeText, fontConfig)
 
     const nodeMargin = {}
     if (symbolDef && symbolDef.symbolMargin) {
@@ -283,9 +283,10 @@ function drawGroupsTo(parentMark: Group, ir: ComponentDiagramIR, g: LayoutGraph)
           safeAssign(bgMark.attrs, { x: x - containerWidth / 2, y: y - height / 2, width: containerWidth, height })
           group.children.unshift(bgMark)
         } else {
+          const contentArea = { ...data, width: Math.max(data.width, containerWidth) }
           bgMark = symbolRegistry.create(groupType, {
             mode: 'container',
-            contentArea: data,
+            contentArea,
             attrs: {
               fill: conf.groupBackground,
               stroke: conf.groupBorderColor,
