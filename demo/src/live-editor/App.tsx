@@ -80,7 +80,6 @@ const AppLayout = () => {
         console.warn('error recovering data from storage', error)
       }
     }
-
     if (code) {
       store.dispatch(actions.updateEditorCode({ code, syncToPreview: true }))
     }

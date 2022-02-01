@@ -13,6 +13,7 @@ import {
   last,
   PintoraConfig,
   ITheme,
+  Point,
   unique,
   compact,
 } from '@pintora/core'
@@ -43,7 +44,7 @@ import {
   getBaseNote,
 } from '../util/artist-util'
 import dagre from '@pintora/dagre'
-import { MARK_TRANSFORMERS, positionGroupContents } from '../util/mark-positioner'
+import { makeBounds, MARK_TRANSFORMERS, positionGroupContents, tryExpandBounds } from '../util/mark-positioner'
 import { isDev } from '../util/env'
 import { getPointsCurvePath, getPointsLinearPath } from '../util/line-util'
 import { makeTextMark } from './artist-util'
@@ -102,9 +103,9 @@ const erArtist: IDiagramArtist<ActivityDiagramIR, ActivityConf> = {
 
     adjustEntities(g)
 
-    drawEdges(rootMark, g)
+    const { bounds: edgeBounds } = drawEdges(rootMark, g)
 
-    const bounds = getGraphBounds(g)
+    const bounds = tryExpandBounds(getGraphBounds(g), edgeBounds)
 
     // console.log('bounds', bounds)
     const { width, height } = adjustRootMarkBounds(rootMark, bounds, conf.diagramPadding, conf.diagramPadding)
@@ -619,7 +620,10 @@ class ActivityDraw {
         return childResult
       }),
     )
-    if (lastChildResult) this.g.setEdge(lastChildResult.endId || lastChildResult.id, id, { label: '' })
+    if (lastChildResult) {
+      this.g.setEdge(lastChildResult.endId || lastChildResult.id, id, { label: '' })
+      this.g.setEdge(lastChildResult.endId || lastChildResult.id, endId, { label: '', isDummyEdge: true } as EdgeData)
+    }
     this.g.setEdge(id, endId, { label: wh.denyLabel || '' }) // to end mark
 
     return result
@@ -1139,13 +1143,32 @@ type EdgeData = LayoutEdge<{
   simplifyStartEdge?: boolean
   isForkStartStraightLine?: boolean
   isForkEndStraightLine?: boolean
+  /** this edge is for layout, should not be drawn */
+  isDummyEdge?: boolean
 }>
 
 function drawEdges(parent: Group, g: LayoutGraph) {
   const edgeGroup = makeMark('group', {}, { children: [] })
+  const bounds = makeBounds()
+  function updateBounds(points: Point[]) {
+    points.forEach(p => {
+      bounds.left = Math.min(bounds.left, p.x)
+      bounds.right = Math.max(bounds.right, p.x)
+      bounds.top = Math.min(bounds.top, p.y)
+      bounds.bottom = Math.max(bounds.bottom, p.y)
+      bounds.width = bounds.right - bounds.left
+      bounds.height = bounds.bottom - bounds.top
+    })
+  }
+
   g.edges().forEach(e => {
     const edge: EdgeData = g.edge(e)
     if (!edge.points) return
+
+    updateBounds(edge.points)
+
+    if (edge.isDummyEdge) return
+
     const [startPoint, ...restPoints] = edge.points
     const lastPoint = restPoints[restPoints.length - 1]
     // if (edge.simplifyStartEdge) {
@@ -1211,6 +1234,7 @@ function drawEdges(parent: Group, g: LayoutGraph) {
     edgeGroup.children.push(linePath, labelBgMark, labelMark, arrowMark)
   })
   parent.children.push(edgeGroup)
+  return { bounds }
 }
 
 function getFontConfig(conf: ActivityConf) {

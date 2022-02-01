@@ -169,3 +169,13 @@ export function makeBounds(): Bounds {
     height: 0,
   }
 }
+
+export function tryExpandBounds(base: Bounds, newRegion: Bounds) {
+  base.left = Math.min(base.left, newRegion.left)
+  base.right = Math.max(base.right, newRegion.right)
+  base.top = Math.min(base.top, newRegion.top)
+  base.bottom = Math.max(base.bottom, newRegion.bottom)
+  base.width = base.right - base.left
+  base.height = base.bottom - base.top
+  return base
+}
