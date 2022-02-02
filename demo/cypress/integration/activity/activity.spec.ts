@@ -28,5 +28,30 @@ end`),
         c.get('.activity__group-rect').should('exist')
       },
     },
+    {
+      description: 'Should render early end correctly',
+      code: stripStartEmptyLines(`
+  activityDiagram
+  if (diagram registered ?) then
+    :get implementation;
+  else (no)
+    :print error;
+    end
+  endif
+  switch ( renderer type )
+  case ( svg )
+    :Generate svg;
+  case ( canvas )
+    :Draw canvas;
+  case ( custom )
+    :Custom renderer output;
+  case ( unregistered )
+    end
+  endswitch
+  end`),
+      onRender(c) {
+        c.get('.activity__keyword').should('exist')
+      },
+    },
   ])
 })

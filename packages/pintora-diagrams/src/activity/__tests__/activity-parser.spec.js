@@ -119,6 +119,43 @@ end
     expect(keywords).toMatchObject(['start', 'end'])
   })
 
+  it('can parse keyword in condition', () => {
+    const example = stripStartEmptyLines(`
+activityDiagram
+  if (diagram registered ?) then
+    :get implementation;
+  else (no)
+    :print error;
+    end
+  endif
+`)
+    parse(example)
+    const ir = db.getDiagramIR()
+    // console.log('ir', JSON.stringify(ir, null, 2))
+    expect(ir.steps[0].value.else).toMatchObject({
+      label: 'no',
+      children: [
+        {
+          type: 'action',
+          value: {
+            actionType: 'normal',
+            message: 'print error',
+            id: '3',
+          },
+          parentId: '1',
+        },
+        {
+          type: 'keyword',
+          value: {
+            id: '4',
+            label: 'end',
+          },
+          parentId: '1',
+        },
+      ],
+    })
+  })
+
   it('can parse group', () => {
     const example = stripStartEmptyLines(`
 activityDiagram

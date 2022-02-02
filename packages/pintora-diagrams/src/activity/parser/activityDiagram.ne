@@ -23,6 +23,10 @@ let yy
 export function setYY(v) {
   yy = v
 }
+
+function extractChildren(o) {
+  return Array.isArray(o) ? o[0]: o
+}
 %}
 
 @preprocessor typescript
@@ -83,7 +87,7 @@ conditionSentence ->
         return {
           type: 'condition',
           message: d[2],
-          then: { label: thenLabel, children: d[8].map(o => o[0]) },
+          then: { label: thenLabel, children: d[8].map(o => Array.isArray(o) ? o[0]: o) },
           else: elseResult,
         }
       }
@@ -92,14 +96,14 @@ conditionSentence ->
 elseClause ->
     %SPACE:* "else" __ wordsInParens:? %SPACE:* %NEWLINE line:* {%
       function(d) {
-        return { label: d[3], children: d[6].map(o => o[0]) }
+        return { label: d[3], children: d[6].map(o => Array.isArray(o) ? o[0]: o) }
       }
     %}
 
 whileSentence ->
     "while" __ wordsInParens (%SPACE:+ "is" __ wordsInParens):? _ %NEWLINE line:* %SPACE:* "endwhile" (%SPACE:+ wordsInParens):? %NEWLINE {%
       function(d) {
-        // console.log('[whileSentence]', d[11])
+        // console.log('[whileSentence]', d[6])
         const confirmLabel = d[3] ? d[3][3]: undefined
         const denyLabel = d[9] ? d[9][1]: undefined
         return {
@@ -107,7 +111,7 @@ whileSentence ->
           message: d[2],
           confirmLabel,
           denyLabel,
-          children: d[6].map(o => o[0]),
+          children: d[6].map(o => Array.isArray(o) ? o[0]: o),
         }
       }
     %}
@@ -126,7 +130,7 @@ caseClause ->
     "case" __ wordsInParens %SPACE:* %NEWLINE line:* {%
       function(d) {
         const confirmLabel = d[2].trim()
-        const children = d[5].map(o => o[0])
+        const children = d[5].map(o => Array.isArray(o) ? o[0]: o)
         return { type: 'case', confirmLabel, children }
       }
     %}
@@ -134,7 +138,7 @@ caseClause ->
 forkSentence ->
     "fork" %SPACE:* %NEWLINE (__ statement):+ (_ forkAgainClause):* _ ("endfork"|"endmerge") %NEWLINE {%
       function(d) {
-        const firstActions = d[3].map(a => a[1][0])
+        const firstActions = d[3].map(a => extractChildren(a[1]))
         const forkAgains = d[4].map(a => a[1])
         const branches = [{ type: 'forkBranch', children: firstActions }, ...forkAgains]
         const endWord = tv(d[6][0])
@@ -146,7 +150,7 @@ forkSentence ->
 forkAgainClause ->
     "forkagain" %SPACE:* %NEWLINE (__ statement):+ {%
       function(d) {
-        const statements = d[3].map(a => a[1][0])
+        const statements = d[3].map(a => extractChildren(a[1]))
         return { type: 'forkBranch', children: statements }
       }
     %}

@@ -339,6 +339,7 @@ type DrawStepResult = {
   endId?: string
   startMark: Group | Rect
   stepModel?: StepModel
+  hasEnded?: boolean
 }
 
 class ActivityDraw {
@@ -401,12 +402,15 @@ class ActivityDraw {
       if (arrowLabel) {
         label = arrowLabel.text
       }
-      if (prevId && prevId === this.keywordStepResults.start?.id) {
-        g.setEdge(prevId, startIdOfCurrent, { label })
-      } else if (result === this.keywordStepResults.end) {
-        g.setEdge(prevId, startIdOfCurrent, { label })
-      } else if (prevId) {
-        g.setEdge(prevId, startIdOfCurrent, { label })
+      if (prevId) {
+        const prevStepModel = this.model.stepModelMap.get(prevId)
+        if (prevId === this.keywordStepResults.start?.id) {
+          g.setEdge(prevId, startIdOfCurrent, { label })
+        } else if (prevStepModel && prevStepModel.type === 'keyword') {
+          g.setEdge(prevId, startIdOfCurrent, { label, isDummyEdge: true } as EdgeData)
+        } else {
+          g.setEdge(prevId, startIdOfCurrent, { label })
+        }
       }
     }
 
@@ -461,28 +465,33 @@ class ActivityDraw {
     parentMark.children.push(group, diamondMark)
     group.children.push(decisionBg, textMark)
 
-    const lastThenChildResult = last(
-      condition.then.children.map((s, i) => {
-        const childResult = this.drawStep(parentMark, s)
-        if (i === 0) {
-          this.linkResult(id, childResult, condition.then.label || 'yes')
-        }
-        return childResult
-      }),
-    )
-    if (lastThenChildResult) this.g.setEdge(lastThenChildResult.endId || lastThenChildResult.id, endId, { label: '' })
-
-    if (condition.else) {
-      const lastElseChildResult = last(
-        condition.else.children.map((s, i) => {
-          const childResult = this.drawStep(parentMark, s)
+    const drawChildren = (children: Step[], label: string) => {
+      let hasEnded = false
+      const lastChildResult = last(
+        children.map((child, i) => {
+          if (hasEnded) return
+          const childResult = this.drawStep(parentMark, child)
+          if (child.type === 'keyword') {
+            hasEnded = true
+          }
           if (i === 0) {
-            this.linkResult(id, childResult, 'no')
+            this.linkResult(id, childResult, label)
           }
           return childResult
         }),
       )
-      if (lastElseChildResult) this.g.setEdge(lastElseChildResult.endId || lastElseChildResult.id, endId, { label: '' })
+      if (lastChildResult) {
+        this.g.setEdge(lastChildResult.endId || lastChildResult.id, endId, {
+          label: '',
+          isDummyEdge: hasEnded,
+        } as EdgeData)
+      }
+    }
+
+    drawChildren(condition.then.children, condition.then.label || 'yes')
+
+    if (condition.else) {
+      drawChildren(condition.else.children, 'no')
     }
 
     return result
@@ -749,7 +758,9 @@ class ActivityDraw {
         label: caseStep.value.confirmLabel,
         simplifyStartEdge: true,
       } as EdgeData)
-      this.g.setEdge(childResult.endId, endId, { label: '' })
+      if (!childResult.hasEnded) {
+        this.g.setEdge(childResult.endId, endId, { label: '' })
+      }
       return childResult
     })
 
@@ -767,14 +778,18 @@ class ActivityDraw {
       startMark: group,
       stepModel,
       endId,
+      hasEnded: false,
     }
 
     parentMark.children.push(group)
 
     if (c.children.length) {
-      c.children.map(caseClause => {
-        const childResult = this.drawStep(parentMark, caseClause)
-        return childResult
+      c.children.forEach(caseClause => {
+        if (result.hasEnded) return
+        if (caseClause.type === 'keyword') {
+          result.hasEnded = true
+        }
+        this.drawStep(parentMark, caseClause)
       })
     } else {
       const holderMark = makeMark('circle', {
@@ -796,6 +811,7 @@ class ActivityDraw {
   drawKeyword(parentMark: Group, keyword: Keyword): DrawStepResult {
     const stepModel = model.stepModelMap.get(keyword.id)
     const group = makeEmptyGroup()
+    group.class = 'activity__keyword'
     const { label, id } = keyword
     const r = 10
     const stroke = conf.keywordBackground
@@ -977,12 +993,22 @@ class ActivityDraw {
         } as EdgeData)
       }
 
+      let hasEnded = false
       const childrenIds = branch.value.children.map(o => o.value.id)
       childrenIds.forEach(childId => {
+        if (hasEnded) return
+        const childStepModel = this.model.stepModelMap.get(childId)
+        if (childStepModel && childStepModel.type === 'keyword') {
+          hasEnded = true
+        }
         this.g.setParent(childId, frameId)
       })
 
-      this.g.setEdge(childResult.endId, endId, { label: '', isForkEndStraightLine: !fork.shouldMerge } as EdgeData)
+      this.g.setEdge(childResult.endId, endId, {
+        label: '',
+        isForkEndStraightLine: !fork.shouldMerge,
+        isDummyEdge: hasEnded,
+      } as EdgeData)
       return childResult
     })
     return result
