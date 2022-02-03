@@ -33,7 +33,6 @@ export function setYY(v) {
 
 @preprocessor typescript
 @lexer lexer
-@builtin "string.ne"
 @builtin "whitespace.ne"
 @include "../../util/parser-grammars/config.ne"
 @include "../../util/parser-grammars/comment.ne"

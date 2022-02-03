@@ -37,9 +37,13 @@ export function stripGraphicIRForSnapshot(ir: GraphicsIR) {
   delete cloned.height
   delete cloned.width
 
+  const visited: Map<Mark, boolean> = new Map()
+
   function processMark(mark: Mark) {
     if (!mark) return
+    if (visited.has(mark)) return
 
+    visited.set(mark, true)
     const attrs = mark.attrs
     if (attrs) {
       GEOMETRY_ATTRS.forEach(k => {
