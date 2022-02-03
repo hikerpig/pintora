@@ -13,7 +13,6 @@ import {
   last,
   PintoraConfig,
   ITheme,
-  Point,
   unique,
   compact,
   Bounds,
@@ -868,7 +867,7 @@ class ActivityDraw {
       id,
       startMark: group,
       stepModel,
-      hasEnded: ['stop', 'end'].includes(label),
+      hasEnded: isEndAlikeKeyword(keyword),
       hasDetached,
     }
     return result
@@ -1249,7 +1248,7 @@ function drawEdges(parent: Group, g: LayoutGraph) {
     let labelBgMark: Rect | null = null
     if (edge.label) {
       const fontConfig = getFontConfig(conf)
-      const labelDims = calcTextDims(edge.label || '', fontConfig)
+      const labelDims = calcTextDims(edge.label, fontConfig)
       labelBgMark = makeLabelBg(labelDims, { x: labelX, y: labelY }, { fill: conf.labelBackground }, theme)
       labelMark = makeMark(
         'text',

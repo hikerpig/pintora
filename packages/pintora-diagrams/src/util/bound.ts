@@ -1,4 +1,5 @@
 import { Mark, MarkType, MarkTypeMap, Bounds, PathCommand, Point } from '@pintora/core'
+import { makeBounds } from './mark-positioner'
 
 export type MarkBoundCalculator<K extends MarkType> = (mark: MarkTypeMap[K]) => BoundsWithoutSize
 
@@ -38,20 +39,24 @@ export const MARK_BOUND_CALCULATORS: Partial<{ [K in MarkType]: MarkBoundCalcula
       bottom: Math.max(attrs.y1, attrs.y2),
     }
   },
-  path({ attrs }) {
-    return calcPathBound(attrs.path as PathCommand[])
+  path() {
+    return makeBounds()
+    // return calcPathBound(attrs.path as PathCommand[])
   },
 }
 
-// TODO:
-function calcPathBound(commands: PathCommand[]): BoundsWithoutSize {
-  return {
-    left: -100,
-    right: 100,
-    top: 0,
-    bottom: 100,
-  }
-}
+// // TODO:
+// function calcPathBound(commands: PathCommand[]): BoundsWithoutSize {
+//   const bounds = makeBounds()
+//   commands.forEach(command => {
+//   })
+//   return {
+//     left: -100,
+//     right: 100,
+//     top: 0,
+//     bottom: 100,
+//   }
+// }
 
 /**
  * Calculate bounds of a list of marks
