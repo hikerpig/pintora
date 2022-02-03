@@ -49,4 +49,15 @@ erDiagram
       },
     })
   })
+
+  it('can parse comments', () => {
+    parse(
+      stripStartEmptyLines(`
+erDiagram
+  %% comment here
+  `),
+    )
+    const ir = db.getDiagramIR()
+    expect(Object.keys(ir.entities).length).toBe(0)
+  })
 })

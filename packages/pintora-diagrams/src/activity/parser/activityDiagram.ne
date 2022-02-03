@@ -1,6 +1,6 @@
 @{%
 import * as moo from '@hikerpig/moo'
-import { tv, textToCaseInsensitiveRegex, VALID_TEXT_REGEXP } from '../../util/parser-shared'
+import { tv, textToCaseInsensitiveRegex, VALID_TEXT_REGEXP, COMMENT_LINE_REGEXP } from '../../util/parser-shared'
 import type { ApplyPart } from '../db'
 
 let lexer = moo.compile({
@@ -15,6 +15,7 @@ let lexer = moo.compile({
   R_BRACKET: { match: /\}/ },
   START_NOTE: textToCaseInsensitiveRegex('@note'),
   END_NOTE: textToCaseInsensitiveRegex('@end_note'),
+  COMMENT_LINE: COMMENT_LINE_REGEXP,
   VALID_TEXT: { match: VALID_TEXT_REGEXP, fallback: true },
 })
 
@@ -34,6 +35,7 @@ function extractChildren(o) {
 @builtin "string.ne"
 @builtin "whitespace.ne"
 @include "../../util/parser-grammars/config.ne"
+@include "../../util/parser-grammars/comment.ne"
 
 start -> __ start {% (d) => d[1] %}
 	| "activityDiagram" document __:? {%
@@ -77,6 +79,7 @@ statement ->
   | noteStatement
   | arrowLabelStatement
   | configClause _ %NEWLINE
+  | comment _ %NEWLINE
 
 conditionSentence ->
     "if" %SPACE:+ wordsInParens %SPACE:+ "then" (%SPACE:+ wordsInParens):? %SPACE:* %NEWLINE line:* elseClause:? _ "endif" _ %NEWLINE {%

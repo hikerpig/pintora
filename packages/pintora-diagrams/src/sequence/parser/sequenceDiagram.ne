@@ -1,11 +1,11 @@
 @{%
 import * as moo from '@hikerpig/moo'
-import { tv, textToCaseInsensitiveRegex, VALID_TEXT_REGEXP, COLOR_REGEXP } from '../../util/parser-shared'
+import { tv, textToCaseInsensitiveRegex, VALID_TEXT_REGEXP, COLOR_REGEXP, COMMENT_LINE_REGEXP } from '../../util/parser-shared'
 
 let lexer = moo.states({
   main: {
     NEWLINE: { match: /\n/, lineBreaks: true },
-    SPACE: {match: /\s+/, lineBreaks: true},
+    SPACE: {match: / +/, lineBreaks: false },
     QUOTED_WORD: /\"[^"]*\"/,
     START_NOTE: textToCaseInsensitiveRegex('@note'),
     END_NOTE: textToCaseInsensitiveRegex('@end_note'),
@@ -31,6 +31,7 @@ let lexer = moo.states({
       { match: /right\sof/, type: () => 'RIGHT_OF' },
     ],
     COLOR: /#[a-zA-Z0-9]+/,
+    COMMENT_LINE: COMMENT_LINE_REGEXP,
     WORD: { match: VALID_TEXT_REGEXP, fallback: true },
   },
   line: {
@@ -50,6 +51,7 @@ export function setYY(v) {
 @builtin "string.ne"
 @builtin "whitespace.ne"
 @include "../../util/parser-grammars/config.ne"
+@include "../../util/parser-grammars/comment.ne"
 
 start -> __ start {% (d) => d[1] %}
 	| "sequenceDiagram" document __:? {%
@@ -156,6 +158,7 @@ statement ->
       }
     %}
   | configClause _ %NEWLINE
+  | comment _ %NEWLINE
 
 participantWord ->
     "participant"

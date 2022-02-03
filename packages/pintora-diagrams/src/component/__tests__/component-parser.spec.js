@@ -293,4 +293,15 @@ componentDiagram
       },
     ])
   })
+
+  it('can parse comments', () => {
+    parse(
+      stripStartEmptyLines(`
+componentDiagram
+  %% comment here
+  `),
+    )
+    const ir = db.getDiagramIR()
+    expect(ir.interfaces).toEqual({})
+  })
 })

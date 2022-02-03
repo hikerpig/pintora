@@ -1,12 +1,13 @@
 @{%
 import * as moo from '@hikerpig/moo'
-import { tv, VALID_TEXT_REGEXP } from '../../util/parser-shared'
+import { tv, VALID_TEXT_REGEXP, COMMENT_LINE_REGEXP } from '../../util/parser-shared'
 
 const commonTopRules = {
   NEWLINE: { match: /\n/, lineBreaks: true },
   SPACE: {match: /\s+/, lineBreaks: true},
   L_SQ_BRACKET: { match: /\[/ },
   R_SQ_BRACKET: { match: /\]/ },
+  COMMENT_LINE: COMMENT_LINE_REGEXP,
 }
 
 const commonTextRules = {
@@ -35,6 +36,7 @@ export function setYY(v) {
 @builtin "string.ne"
 @builtin "whitespace.ne"
 @include "../../util/parser-grammars/config.ne"
+@include "../../util/parser-grammars/comment.ne"
 
 start -> __ start
   | "componentDiagram" document {%
@@ -66,6 +68,7 @@ statement ->
       }
     %}
   | configClause _ %NEWLINE
+  | comment _ %NEWLINE
 
 UMLElement ->
     group {%

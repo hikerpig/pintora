@@ -1,0 +1,25 @@
+---
+title: Basic Syntax
+---
+
+## Syntax Structure
+
+All Diagrams definitions begin with a declaration of the diagram type, followed by the definitions of the diagram and its contents.
+
+For example, the DSL below specify a component diagram by the `componentDiagram` declaration.
+
+```pintora play
+componentDiagram
+  [Pintora] --> [DiagramRegistry] : Get diagram by type
+```
+
+## Comments
+
+You can add line comment with `%%` prefixed, the content in that line will not be rendered.
+
+```pintora play
+sequenceDiagram
+  %% here is line comment
+  %% another line comment
+  A-->B: Hi there!
+```

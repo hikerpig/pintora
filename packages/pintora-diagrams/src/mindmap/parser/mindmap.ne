@@ -1,6 +1,6 @@
 @{%
 import * as moo from '@hikerpig/moo'
-import { tv, VALID_TEXT_REGEXP, MOO_NEWLINE } from '../../util/parser-shared'
+import { tv, VALID_TEXT_REGEXP, MOO_NEWLINE, COMMENT_LINE_REGEXP } from '../../util/parser-shared'
 import type { ApplyPart } from '../db'
 
 let lexer = moo.compile({
@@ -12,6 +12,7 @@ let lexer = moo.compile({
   SEMICOLON: /;/,
   COLON: /:/,
   CONFIG_DIRECTIVE: /@config/, // for config.ne
+  COMMENT_LINE: COMMENT_LINE_REGEXP,
   VALID_TEXT: { match: VALID_TEXT_REGEXP, fallback: true },
 })
 
@@ -27,6 +28,7 @@ export function setYY(v) {
 @builtin "string.ne"
 @builtin "whitespace.ne"
 @include "../../util/parser-grammars/config.ne"
+@include "../../util/parser-grammars/comment.ne"
 
 start -> __ start
   | "mindmap" document
@@ -61,6 +63,7 @@ statement ->
       }
     %}
   | configClause _ %NEWLINE
+  | comment _ %NEWLINE
 
 levelNotation ->
     (%ASTERISKS | %PLUS) {%

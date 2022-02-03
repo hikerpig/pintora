@@ -29,3 +29,5 @@ export const COLOR_REGEXP = /#[a-zA-Z0-9]+/
 export const MOO_NEWLINE = { match: /\n/, lineBreaks: true }
 
 // export const CONFIG_DIRECTIVE = /@config/
+
+export const COMMENT_LINE_REGEXP = /%%.*/

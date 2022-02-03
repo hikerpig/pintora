@@ -501,4 +501,15 @@ sequenceDiagram
       },
     ])
   })
+
+  it('can parse comments', () => {
+    const example = stripStartEmptyLines(`
+sequenceDiagram
+  %% comment in one line
+  A->>B: m1
+  `)
+    parse(example)
+    const ir = db.getDiagramIR()
+    expect(ir.messages.length).toBe(1)
+  })
 })

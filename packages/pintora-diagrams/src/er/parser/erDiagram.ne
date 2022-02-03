@@ -1,6 +1,6 @@
 @{%
 import * as moo from '@hikerpig/moo'
-import { tv, VALID_TEXT_REGEXP } from '../../util/parser-shared'
+import { tv, VALID_TEXT_REGEXP, COMMENT_LINE_REGEXP } from '../../util/parser-shared'
 
 let lexer = moo.compile({
   NEWLINE: { match: /\n/, lineBreaks: true },
@@ -16,6 +16,7 @@ let lexer = moo.compile({
   LEFT_BRACE: /\{/,
   RIGHT_BRACE: /\}/,
   CONFIG_DIRECTIVE: /@config/, // for config.ne
+  COMMENT_LINE: COMMENT_LINE_REGEXP,
   VALID_TEXT: { match: VALID_TEXT_REGEXP, fallback: true },
 })
 
@@ -31,6 +32,7 @@ export function setYY(v) {
 @builtin "string.ne"
 @builtin "whitespace.ne"
 @include "../../util/parser-grammars/config.ne"
+@include "../../util/parser-grammars/comment.ne"
 
 start -> __ start
   | "erDiagram" document
@@ -66,6 +68,7 @@ statement ->
         yy.addConfig(styleParam)
       }
     %}
+  | comment _ %NEWLINE
 
 entityName ->
     %VALID_TEXT {% id %}
