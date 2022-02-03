@@ -1,0 +1,25 @@
+---
+title: 语法入门
+---
+
+## 图表语法规则
+
+所有的图表定义都以一个图表类型开始，接下来才是图表的内容。
+
+例如，以下内容使用 `componentDiagram` 声明开头，因此它描述的是一个 [Component Diagram 组件图](/diagrams/component-diagram.mdx)。
+
+```pintora play
+componentDiagram
+  [Pintora] --> [DiagramRegistry] : Get diagram by type
+```
+
+## 注释
+
+若在一行中使用 `%%` 开头，此行内容会被视为注释，不会被处理。 
+
+```pintora play
+sequenceDiagram
+  %% here is line comment
+  %% another line comment
+  A-->B: Hi there!
+```
