@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.1.0-alpha.25](https://github.com/hikerpig/pintora/compare/v0.1.0-alpha.24...v0.1.0-alpha.25) (2022-02-03)
+
+
+### Features
+
+* **pintora-diagrams:** support line comment that starts with '%%' ([de3e9e1](https://github.com/hikerpig/pintora/commit/de3e9e1e74465fdd8aec11374b4335363c7b8570))
+
+
+
+
+
 # [0.1.0-alpha.24](https://github.com/hikerpig/pintora/compare/v0.1.0-alpha.23...v0.1.0-alpha.24) (2022-02-01)
 
 **Note:** Version bump only for package pintora-website
