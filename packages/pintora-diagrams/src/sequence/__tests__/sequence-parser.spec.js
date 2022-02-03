@@ -459,7 +459,7 @@ sequenceDiagram
     ])
   })
 
-  it('can parse style clause', () => {
+  it('can parse config clause', () => {
     const example = stripStartEmptyLines(`
 sequenceDiagram
   @config noteTextColor #00bbaa
@@ -480,7 +480,7 @@ sequenceDiagram
     ])
   })
 
-  it('can parse style clause inside brackets', () => {
+  it('can parse config clause inside brackets', () => {
     const example = stripStartEmptyLines(`
 sequenceDiagram
   @config {

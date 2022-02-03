@@ -2,28 +2,28 @@ import { parse } from '../parser'
 import db from '../db'
 import { getConf } from '../config'
 
-describe('er config', () => {
+describe('mindmap config', () => {
   afterEach(() => {
     db.clear()
   })
-  it('can parse config clause', () => {
+
+  it('can parse config', () => {
     const example = `
-erDiagram
-  @config fill #aabb00
-  @config fontSize 16
+  mindmap
+  @config maxFontSize 16
   @config {
-    layoutDirection LR
+    l1NodeBgColor #555555
+    l2NodeBgColor red
   }
-  ORDER
-    `
+  * Level
+  `
     parse(example)
     const ir = db.getDiagramIR()
     const conf = getConf(ir.configParams)
-    // console.log('ir', JSON.stringify(ir, null, 2))
-    // console.log(conf)
     expect(conf).toMatchObject({
-      fill: '#aabb00',
-      fontSize: 16,
+      maxFontSize: 16,
+      l1NodeBgColor: '#555555',
+      l2NodeBgColor: 'red',
     })
   })
 })

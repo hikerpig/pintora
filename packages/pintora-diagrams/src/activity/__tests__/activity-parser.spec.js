@@ -33,7 +33,7 @@ describe('activity parser', () => {
   it('can parse conditions', () => {
     const example = stripStartEmptyLines(`
 activityDiagram
-if (diagram registered ?) then
+if (diagram registered ?) then (yes)
   :get implementation;
 else (no)
   :print error;
@@ -47,6 +47,7 @@ endif
       value: {
         message: 'diagram registered ?',
         then: {
+          label: 'yes',
           children: [
             {
               type: 'action',
@@ -535,7 +536,7 @@ activityDiagram
 activityDiagram
   fork
     :action 1;
-  forkagain
+  forkagain 
     :action 2;
   endfork
 `)

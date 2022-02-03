@@ -12,4 +12,12 @@ describe('sequence-artist', () => {
   it('match example snapshot', () => {
     expect(stripDrawResultForSnapshot(testDraw(EXAMPLES.sequence.code))).toMatchSnapshot()
   })
+
+  it('draw cross mark to', () => {
+    const code = `
+    sequenceDiagram
+      A--xB : Message
+    `
+    expect(stripDrawResultForSnapshot(testDraw(code))).toMatchSnapshot()
+  })
 })

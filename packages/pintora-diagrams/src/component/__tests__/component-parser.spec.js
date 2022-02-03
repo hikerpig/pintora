@@ -146,7 +146,7 @@ componentDiagram
     const relationExample = stripStartEmptyLines(`
 componentDiagram
   [@pintora/cli] --> [@pintora/standalone] : use
-  [@pintora/standalone] --> renderer : use this to draw GraphicsIR
+  renderer <.. [@pintora/standalone] : use this to draw GraphicsIR
     `)
     parse(relationExample)
     const ir = db.getDiagramIR()
@@ -168,15 +168,16 @@ componentDiagram
       },
       {
         from: {
-          type: 'component',
-          name: '@pintora/standalone',
-        },
-        to: {
           type: 'interface',
           name: 'renderer',
         },
+        to: {
+          type: 'component',
+          name: '@pintora/standalone',
+        },
         line: {
-          lineType: 'SOLID_ARROW',
+          lineType: 'DOTTED_ARROW',
+          isReversed: true,
         },
         message: 'use this to draw GraphicsIR',
       },
@@ -244,7 +245,7 @@ componentDiagram
     })
   })
 
-  it('can parse style clause', () => {
+  it('can parse config clause', () => {
     const example = stripStartEmptyLines(`
 componentDiagram
   @config lineWidth 3

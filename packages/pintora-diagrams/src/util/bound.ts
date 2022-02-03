@@ -1,4 +1,4 @@
-import { Mark, MarkType, MarkTypeMap, Bounds, PathCommand, Point } from '@pintora/core'
+import { Mark, MarkType, MarkTypeMap, Bounds, Point } from '@pintora/core'
 import { makeBounds } from './mark-positioner'
 
 export type MarkBoundCalculator<K extends MarkType> = (mark: MarkTypeMap[K]) => BoundsWithoutSize

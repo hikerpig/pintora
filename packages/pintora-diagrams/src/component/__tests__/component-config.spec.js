@@ -2,28 +2,30 @@ import { parse } from '../parser'
 import db from '../db'
 import { getConf } from '../config'
 
-describe('er config', () => {
+describe('componentDiagram config', () => {
   afterEach(() => {
     db.clear()
   })
-  it('can parse config clause', () => {
+
+  it('can parse config', () => {
     const example = `
-erDiagram
-  @config fill #aabb00
-  @config fontSize 16
+  componentDiagram
+  @config groupBackground #000000
   @config {
-    layoutDirection LR
+    componentPadding 20
+    fontFamily serif
   }
-  ORDER
-    `
+  package "P_A" {
+    [ContentA]
+  }
+  `
     parse(example)
     const ir = db.getDiagramIR()
     const conf = getConf(ir.configParams)
-    // console.log('ir', JSON.stringify(ir, null, 2))
-    // console.log(conf)
     expect(conf).toMatchObject({
-      fill: '#aabb00',
-      fontSize: 16,
+      groupBackground: '#000000',
+      componentPadding: 20,
+      fontFamily: 'serif',
     })
   })
 })

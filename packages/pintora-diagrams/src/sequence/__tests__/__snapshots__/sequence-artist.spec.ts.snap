@@ -1,5 +1,179 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`sequence-artist draw cross mark to 1`] = `
+Object {
+  "mark": Object {
+    "attrs": Object {},
+    "children": Array [
+      Object {
+        "children": Array [
+          Object {
+            "attrs": Object {
+              "stroke": "#3b4044",
+            },
+            "class": "actor__line",
+            "type": "line",
+          },
+          Object {
+            "attrs": Object {
+              "fill": "#fdb05e",
+              "radius": 4,
+              "stroke": "#3b4044",
+            },
+            "type": "rect",
+          },
+          Object {
+            "attrs": Object {
+              "fill": "#3b4044",
+              "fontFamily": "Source Code Pro, sans-serif",
+              "fontSize": 16,
+              "fontWeight": 400,
+              "text": "A",
+              "textAlign": "center",
+              "textBaseline": "middle",
+            },
+            "type": "text",
+          },
+        ],
+        "class": "actor",
+        "type": "group",
+      },
+      Object {
+        "children": Array [
+          Object {
+            "attrs": Object {
+              "stroke": "#3b4044",
+            },
+            "class": "actor__line",
+            "type": "line",
+          },
+          Object {
+            "attrs": Object {
+              "fill": "#fdb05e",
+              "radius": 4,
+              "stroke": "#3b4044",
+            },
+            "type": "rect",
+          },
+          Object {
+            "attrs": Object {
+              "fill": "#3b4044",
+              "fontFamily": "Source Code Pro, sans-serif",
+              "fontSize": 16,
+              "fontWeight": 400,
+              "text": "B",
+              "textAlign": "center",
+              "textBaseline": "middle",
+            },
+            "type": "text",
+          },
+        ],
+        "class": "actor",
+        "type": "group",
+      },
+      Object {
+        "attrs": Object {},
+        "children": Array [],
+        "class": "activations",
+        "type": "group",
+      },
+      Object {
+        "children": Array [
+          Object {
+            "attrs": Object {
+              "lineDash": Array [
+                3,
+                3,
+              ],
+              "lineWidth": 2,
+              "stroke": "#3b4044",
+            },
+            "class": "message__line",
+            "type": "line",
+          },
+          Object {
+            "attrs": Object {
+              "lineWidth": 2,
+              "stroke": "#3b4044",
+            },
+            "type": "path",
+          },
+          Object {
+            "attrs": Object {
+              "fill": "#3b4044",
+              "fontFamily": "Source Code Pro, sans-serif",
+              "fontSize": 16,
+              "fontWeight": 400,
+              "stroke": "#3b4044",
+              "text": "Message",
+              "textAlign": "center",
+              "textBaseline": "top",
+            },
+            "class": "message__text",
+            "type": "text",
+          },
+        ],
+        "class": "message",
+        "type": "group",
+      },
+      Object {
+        "children": Array [
+          Object {
+            "attrs": Object {
+              "fill": "#fdb05e",
+              "radius": 4,
+              "stroke": "#3b4044",
+            },
+            "type": "rect",
+          },
+          Object {
+            "attrs": Object {
+              "fill": "#3b4044",
+              "fontFamily": "Source Code Pro, sans-serif",
+              "fontSize": 16,
+              "fontWeight": 400,
+              "text": "A",
+              "textAlign": "center",
+              "textBaseline": "middle",
+            },
+            "type": "text",
+          },
+        ],
+        "class": "actor",
+        "type": "group",
+      },
+      Object {
+        "children": Array [
+          Object {
+            "attrs": Object {
+              "fill": "#fdb05e",
+              "radius": 4,
+              "stroke": "#3b4044",
+            },
+            "type": "rect",
+          },
+          Object {
+            "attrs": Object {
+              "fill": "#3b4044",
+              "fontFamily": "Source Code Pro, sans-serif",
+              "fontSize": 16,
+              "fontWeight": 400,
+              "text": "B",
+              "textAlign": "center",
+              "textBaseline": "middle",
+            },
+            "type": "text",
+          },
+        ],
+        "class": "actor",
+        "type": "group",
+      },
+    ],
+    "type": "group",
+  },
+}
+`;
+
 exports[`sequence-artist match example snapshot 1`] = `
 Object {
   "mark": Object {
