@@ -27,7 +27,7 @@ Object {
               "text": "@pintora/standalone",
               "textAlign": "center",
             },
-            "class": "component__group-rect",
+            "class": "component__group-label",
             "type": "text",
           },
           Object {
@@ -66,7 +66,7 @@ Object {
               "text": "@pintora/renderer",
               "textAlign": "center",
             },
-            "class": "component__group-rect",
+            "class": "component__group-label",
             "type": "text",
           },
           Object {
@@ -105,7 +105,7 @@ Object {
               "text": "@pintora/diagrams",
               "textAlign": "center",
             },
-            "class": "component__group-rect",
+            "class": "component__group-label",
             "type": "text",
           },
           Object {
@@ -144,7 +144,7 @@ Object {
               "text": "@pintora/core",
               "textAlign": "center",
             },
-            "class": "component__group-rect",
+            "class": "component__group-label",
             "type": "text",
           },
           Object {

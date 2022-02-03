@@ -605,4 +605,32 @@ activityDiagram
     // console.log('ir', JSON.stringify(ir, null, 2))
     expect(ir.steps[0].value.shouldMerge).toBeTruthy()
   })
+
+  it('can parse detach and kill', () => {
+    const example = stripStartEmptyLines(`
+activityDiagram
+  fork
+    :action 1;
+    detach
+  forkagain
+    :action 2;
+    kill
+  endfork
+`)
+    parse(example)
+    const ir = db.getDiagramIR()
+    // console.log('ir', JSON.stringify(ir, null, 2))
+    expect(ir.steps[0].value.branches[0].value.children[1]).toMatchObject({
+      type: 'keyword',
+      value: {
+        label: 'detach',
+      },
+    })
+    expect(ir.steps[0].value.branches[1].value.children[1]).toMatchObject({
+      type: 'keyword',
+      value: {
+        label: 'kill',
+      },
+    })
+  })
 })

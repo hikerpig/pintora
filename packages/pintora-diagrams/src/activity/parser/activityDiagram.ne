@@ -60,7 +60,7 @@ line ->
 
 statement ->
     action
-  | ("start"|"stop"|"end") %NEWLINE {%
+  | ("start"|"stop"|"end"|"detach"|"kill") %NEWLINE {%
       function(d) {
         const keyword = tv(d[0][0])
         return {

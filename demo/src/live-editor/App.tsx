@@ -80,7 +80,15 @@ const AppLayout = () => {
         console.warn('error recovering data from storage', error)
       }
     }
-
+    code = `
+    activityDiagram
+start
+while (check filesize ?) is (not empty)
+  :read file;
+endwhile (empty)
+:close file;
+    
+    `
     if (code) {
       store.dispatch(actions.updateEditorCode({ code, syncToPreview: true }))
     }

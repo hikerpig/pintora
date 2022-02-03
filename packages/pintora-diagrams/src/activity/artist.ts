@@ -61,6 +61,14 @@ function calcTextDims(text: string, attrs: Partial<Text['attrs']> = {}) {
   return calculateTextDimensions(text, _attrs)
 }
 
+function isDetachAlikeKeyword(keyword: Keyword) {
+  return ['detach', 'kill'].includes(keyword.label)
+}
+
+function isEndAlikeKeyword(keyword: Keyword) {
+  return ['end', 'stop'].includes(keyword.label)
+}
+
 const erArtist: IDiagramArtist<ActivityDiagramIR, ActivityConf> = {
   draw(ir) {
     conf = getConf(ir.configParams)
@@ -342,6 +350,7 @@ type DrawStepResult = {
   startMark: Group | Rect
   stepModel?: StepModel
   hasEnded?: boolean
+  hasDetached?: boolean
 }
 
 class ActivityDraw {
@@ -409,6 +418,8 @@ class ActivityDraw {
         if (prevId === this.keywordStepResults.start?.id) {
           g.setEdge(prevId, startIdOfCurrent, { label })
         } else if (prevStepModel && prevStepModel.type === 'keyword') {
+          g.setEdge(prevId, startIdOfCurrent, { label, isDummyEdge: true } as EdgeData)
+        } else if (result.hasDetached) {
           g.setEdge(prevId, startIdOfCurrent, { label, isDummyEdge: true } as EdgeData)
         } else {
           g.setEdge(prevId, startIdOfCurrent, { label })
@@ -852,10 +863,13 @@ class ActivityDraw {
         positionGroupContents(group, { ...data, x: data.x, y: data.y })
       },
     })
-    const result = {
+    const hasDetached = isDetachAlikeKeyword(keyword)
+    const result: DrawStepResult = {
       id,
       startMark: group,
       stepModel,
+      hasEnded: ['stop', 'end'].includes(label),
+      hasDetached,
     }
     return result
   }
@@ -1029,8 +1043,8 @@ class ActivityDraw {
 
     parentMark.children.push(group)
 
-    const childResults = branch.children.map((branch: Step<ForkBranch>) => {
-      const childResult = this.drawStep(parentMark, branch)
+    const childResults = branch.children.map((step: Step) => {
+      const childResult = this.drawStep(parentMark, step)
       group.children.push(childResult.startMark)
       return childResult
     })

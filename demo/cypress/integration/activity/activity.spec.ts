@@ -53,5 +53,16 @@ end`),
         c.get('.activity__keyword').should('exist')
       },
     },
+    {
+      description: 'Should render fork branch with detach',
+      code: stripStartEmptyLines(`
+  activityDiagram
+  fork
+    :action 1;
+  forkagain
+    :action 2;
+    kill
+  endfork`),
+    },
   ])
 })
