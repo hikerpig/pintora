@@ -1,4 +1,4 @@
-import { Mark, MarkType, MarkTypeMap, Bounds, PathCommand } from '@pintora/core'
+import { Mark, MarkType, MarkTypeMap, Bounds, PathCommand, Point } from '@pintora/core'
 
 export type MarkBoundCalculator<K extends MarkType> = (mark: MarkTypeMap[K]) => BoundsWithoutSize
 
@@ -83,4 +83,16 @@ export function calcBound(marks: Mark[]): Bounds {
   const width = right - left
   const height = bottom - top
   return { left, top, right, bottom, width, height }
+}
+
+export function updateBoundsByPoints(bounds: Bounds, points: Point[]) {
+  points.forEach(p => {
+    bounds.left = Math.min(bounds.left, p.x)
+    bounds.right = Math.max(bounds.right, p.x)
+    bounds.top = Math.min(bounds.top, p.y)
+    bounds.bottom = Math.max(bounds.bottom, p.y)
+    bounds.width = bounds.right - bounds.left
+    bounds.height = bounds.bottom - bounds.top
+  })
+  return bounds
 }

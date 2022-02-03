@@ -13,6 +13,7 @@ import {
   GSymbol,
   mat3,
   IFont,
+  Bounds,
 } from '@pintora/core'
 import { ComponentDiagramIR, LineType, Relationship } from './db'
 import { ComponentConf, getConf } from './config'
@@ -21,6 +22,7 @@ import { makeMark, drawArrowTo, calcDirection, makeLabelBg } from '../util/artis
 import dagre from '@pintora/dagre'
 import { Edge } from '@pintora/graphlib'
 import { isDev } from '../util/env'
+import { makeBounds, tryExpandBounds } from '../util/mark-positioner'
 
 let conf: ComponentConf
 
@@ -31,9 +33,10 @@ function getEdgeName(relationship: Relationship) {
 type EdgeData = {
   name: string
   relationship: Relationship
-  onLayout(data: LayoutEdge<EdgeData>, edge: Edge): void
+  onLayout(data: LayoutEdge<EdgeData>, edge: Edge, context: { updateBounds(b: Bounds): void }): void
   /** this edge is for layout, should not be drawn */
   isDummyEdge?: boolean
+  labelSize?: TSize
 }
 
 const componentArtist: IDiagramArtist<ComponentDiagramIR, ComponentConf> = {
@@ -73,9 +76,9 @@ const componentArtist: IDiagramArtist<ComponentDiagramIR, ComponentConf> = {
       ;(window as any).componentGraph = g
     }
 
-    adjustMarkInGraph(g)
+    const { labelBounds } = adjustMarkInGraph(g)
 
-    const gBounds = getGraphBounds(g)
+    const gBounds = tryExpandBounds(getGraphBounds(g), labelBounds)
 
     const pad = conf.diagramPadding
     rootMark.matrix = mat3.fromTranslation(mat3.create(), [
@@ -375,7 +378,8 @@ function drawRelationshipsTo(parentMark: Group, ir: ComponentDiagramIR, g: Layou
       relationship: r,
       labelpos: 'r',
       labeloffset: 100,
-      onLayout(data, edge) {
+      labelSize: labelDims,
+      onLayout(data, edge, context) {
         // console.log(
         //   'edge onLayout',
         //   edge,
@@ -390,6 +394,15 @@ function drawRelationshipsTo(parentMark: Group, ir: ComponentDiagramIR, g: Layou
           const anchorPoint = getPointAt(data.points, 0.4, true)
           safeAssign(relText.attrs, { x: anchorPoint.x + labelDims.width / 2, y: anchorPoint.y })
           safeAssign(relTextBg.attrs, { x: anchorPoint.x, y: anchorPoint.y - labelDims.height / 2 })
+          const bgAttrs = relTextBg.attrs
+          context.updateBounds({
+            left: bgAttrs.x,
+            right: bgAttrs.x + bgAttrs.width,
+            top: bgAttrs.y,
+            bottom: bgAttrs.y + bgAttrs.height,
+            width: bgAttrs.width,
+            height: bgAttrs.height,
+          })
         }
 
         if (shouldDrawArrow) {
@@ -434,6 +447,7 @@ function drawRelationshipsTo(parentMark: Group, ir: ComponentDiagramIR, g: Layou
 
 const adjustMarkInGraph = function (graph: LayoutGraph) {
   // console.log('adjustMarkInGraphNodes', graph)
+  const labelBounds = makeBounds()
   graph.nodes().forEach(function (v) {
     const nodeData: LayoutNode = graph.node(v) as any
     if (nodeData) {
@@ -443,12 +457,18 @@ const adjustMarkInGraph = function (graph: LayoutGraph) {
     }
   })
 
+  const updateLabelBounds = b => {
+    tryExpandBounds(labelBounds, b)
+  }
   graph.edges().forEach(function (e) {
     const edgeData: LayoutEdge<EdgeData> = graph.edge(e)
-    if (edgeData?.onLayout) {
-      edgeData.onLayout(edgeData, e)
+    if (edgeData) {
+      if (edgeData.onLayout) {
+        edgeData.onLayout(edgeData, e, { updateBounds: updateLabelBounds })
+      }
     }
   })
+  return { labelBounds }
 }
 
 function getFontConfig(conf: ComponentConf) {

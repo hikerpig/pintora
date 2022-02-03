@@ -49,7 +49,7 @@ import { makeBounds, MARK_TRANSFORMERS, positionGroupContents, tryExpandBounds }
 import { isDev } from '../util/env'
 import { getPointsCurvePath, getPointsLinearPath } from '../util/line-util'
 import { makeTextMark } from './artist-util'
-import { calcBound } from '../util/bound'
+import { calcBound, updateBoundsByPoints } from '../util/bound'
 
 let conf: ActivityConf
 let model: ArtistModel
@@ -1192,22 +1192,12 @@ type EdgeData = LayoutEdge<{
 function drawEdges(parent: Group, g: LayoutGraph) {
   const edgeGroup = makeMark('group', {}, { children: [] })
   const bounds = makeBounds()
-  function updateBounds(points: Point[]) {
-    points.forEach(p => {
-      bounds.left = Math.min(bounds.left, p.x)
-      bounds.right = Math.max(bounds.right, p.x)
-      bounds.top = Math.min(bounds.top, p.y)
-      bounds.bottom = Math.max(bounds.bottom, p.y)
-      bounds.width = bounds.right - bounds.left
-      bounds.height = bounds.bottom - bounds.top
-    })
-  }
 
   g.edges().forEach(e => {
     const edge: EdgeData = g.edge(e)
     if (!edge.points) return
 
-    updateBounds(edge.points)
+    updateBoundsByPoints(bounds, edge.points)
 
     if (edge.isDummyEdge) return
 
