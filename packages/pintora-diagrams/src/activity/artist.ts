@@ -16,6 +16,7 @@ import {
   Point,
   unique,
   compact,
+  Bounds,
 } from '@pintora/core'
 import {
   Action,
@@ -48,6 +49,7 @@ import { makeBounds, MARK_TRANSFORMERS, positionGroupContents, tryExpandBounds }
 import { isDev } from '../util/env'
 import { getPointsCurvePath, getPointsLinearPath } from '../util/line-util'
 import { makeTextMark } from './artist-util'
+import { calcBound } from '../util/bound'
 
 let conf: ActivityConf
 let model: ArtistModel
@@ -1239,25 +1241,31 @@ function drawEdges(parent: Group, g: LayoutGraph) {
     //   labelY = (startPoint.y + lastPoint.y) / 2
     // }
 
-    const fontConfig = getFontConfig(conf)
-    const labelDims = calcTextDims(edge.label || '', fontConfig)
-    const labelBgMark = makeLabelBg(labelDims, { x: labelX, y: labelY }, { fill: conf.labelBackground }, theme)
-    const labelMark = makeMark(
-      'text',
-      {
-        text: edge.label,
-        id: [e.v, e.w].join('-'),
-        textAlign: 'center',
-        textBaseline: 'middle',
-        x: labelX,
-        y: labelY,
-        fill: conf.labelTextColor,
-        ...fontConfig,
-      },
-      { class: 'activity__edge-label' },
-    )
+    let labelMark: Text | null = null
+    let labelBgMark: Rect | null = null
+    if (edge.label) {
+      const fontConfig = getFontConfig(conf)
+      const labelDims = calcTextDims(edge.label || '', fontConfig)
+      labelBgMark = makeLabelBg(labelDims, { x: labelX, y: labelY }, { fill: conf.labelBackground }, theme)
+      labelMark = makeMark(
+        'text',
+        {
+          text: edge.label,
+          id: [e.v, e.w].join('-'),
+          textAlign: 'center',
+          textBaseline: 'middle',
+          x: labelX,
+          y: labelY,
+          fill: conf.labelTextColor,
+          ...fontConfig,
+        },
+        { class: 'activity__edge-label' },
+      )
+      const labelBounds: Bounds = calcBound([labelBgMark])
+      tryExpandBounds(bounds, labelBounds)
+    }
 
-    edgeGroup.children.push(linePath, labelBgMark, labelMark, arrowMark)
+    edgeGroup.children.push(...compact([linePath, labelBgMark, labelMark, arrowMark]))
   })
   parent.children.push(edgeGroup)
   return { bounds }
