@@ -2,7 +2,7 @@ import { IDiagram } from '@pintora/core'
 import db, { ErDiagramIR } from './db'
 import artist from './artist'
 import { parse } from './parser'
-import { ErConf } from './config'
+import { configKey, ErConf } from './config'
 
 export { ErDiagramIR, ErConf }
 
@@ -15,7 +15,7 @@ export const erDiagram: IDiagram<ErDiagramIR, ErConf> = {
     },
   },
   artist,
-  configKey: 'er',
+  configKey,
   clear() {
     db.clear()
   },

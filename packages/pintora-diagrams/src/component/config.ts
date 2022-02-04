@@ -1,6 +1,6 @@
 import { PALETTE } from '../util/theme'
-import { configApi, safeAssign, PintoraConfig, DEFAULT_FONT_FAMILY } from '@pintora/core'
-import { interpreteConfigs, ConfigParam } from '../util/style'
+import { DEFAULT_FONT_FAMILY } from '@pintora/core'
+import { interpreteConfigs, makeConfigurator } from '../util/style'
 
 export type ComponentConf = {
   diagramPadding: number
@@ -46,7 +46,7 @@ export const defaultConfig: ComponentConf = {
   interfaceSize: 16,
 }
 
-export const COMPONENT_CONFIG_DIRECTIVE_RULES = {
+export const COMPONENT_PARAM_DIRECTIVE_RULES = {
   diagramPadding: { valueType: 'size' },
   componentPadding: { valueType: 'size' },
   componentBackground: { valueType: 'color' },
@@ -62,20 +62,25 @@ export const COMPONENT_CONFIG_DIRECTIVE_RULES = {
   interfaceSize: { valueType: 'size' },
 } as const
 
-export function getConf(configParams: ConfigParam[]) {
-  const conf = { ...defaultConfig }
-  const globalConfig: PintoraConfig = configApi.getConfig()
-  const t = globalConfig.themeConfig.themeVariables
-  safeAssign(conf, {
-    componentBackground: t.primaryColor,
-    componentBorderColor: t.primaryBorderColor,
-    groupBackground: t.groupBackground,
-    groupBorderColor: t.primaryBorderColor,
-    relationLineColor: t.primaryColor,
-    labelBackground: t.canvasBackground || t.background1,
-    textColor: t.textColor,
-  })
-  safeAssign(conf, { fontFamily: globalConfig.core.defaultFontFamily }, globalConfig.component || {})
-  safeAssign(conf, interpreteConfigs(COMPONENT_CONFIG_DIRECTIVE_RULES, configParams))
-  return conf
-}
+export const configKey = 'component'
+
+const configurator = makeConfigurator<ComponentConf>({
+  defaultConfig,
+  configKey,
+  getConfigFromParamDirectives(configParams) {
+    return interpreteConfigs(COMPONENT_PARAM_DIRECTIVE_RULES, configParams)
+  },
+  getConfigFromTheme(t) {
+    return {
+      componentBackground: t.primaryColor,
+      componentBorderColor: t.primaryBorderColor,
+      groupBackground: t.groupBackground,
+      groupBorderColor: t.primaryBorderColor,
+      relationLineColor: t.primaryColor,
+      labelBackground: t.canvasBackground || t.background1,
+      textColor: t.textColor,
+    }
+  },
+})
+
+export const getConf = configurator.getConfig

@@ -1,5 +1,7 @@
 import { logger, OrNull, parseColor } from '@pintora/core'
-import { ConfigParam } from '../util/style'
+import { ConfigParam, OverrideAction, ParamAction } from '../util/style'
+import { BaseDb } from '../util/base-db'
+import { BaseDiagramIR } from '../util/ir'
 
 export interface WrappedText {
   text: string
@@ -85,17 +87,16 @@ export type GroupAttrs = {
   background: string | null
 }
 
-export type SequenceDiagramIR = {
+export type SequenceDiagramIR = BaseDiagramIR & {
   messages: Message[]
   notes: Note[]
   actors: { [key: string]: Actor }
   title: string
   showSequenceNumbers: boolean
   // titleWrapped: boolean
-  configParams: ConfigParam[]
 }
 
-class SequenceDB {
+class SequenceDB extends BaseDb {
   prevActorId: string | null = null
   messages: Message[] = []
   notes: Note[] = []
@@ -104,7 +105,6 @@ class SequenceDB {
   titleWrapped = false
   wrapEnabled = false
   showSequenceNumbers = false
-  configParams: SequenceDiagramIR['configParams'] = []
 
   addActor(param: AddActorParam) {
     const { actor: name, classifier } = param
@@ -244,7 +244,7 @@ class SequenceDB {
     return message
   }
 
-  addConfig(sp: ConfigParam) {
+  addParam(sp: ConfigParam) {
     this.configParams.push(sp)
   }
 
@@ -256,14 +256,14 @@ class SequenceDB {
     return Object.keys(this.actors)
   }
 
-  clear() {
+  override clear() {
+    super.clear()
     this.prevActorId = null
     this.messages = []
     this.notes = []
     this.actors = {}
     this.title = ''
     this.showSequenceNumbers = false
-    this.configParams = []
   }
 
   getDiagramIR(): SequenceDiagramIR {
@@ -274,6 +274,7 @@ class SequenceDB {
       title: this.title,
       showSequenceNumbers: this.showSequenceNumbers,
       configParams: this.configParams,
+      overrideConfig: this.overrideConfig,
     }
   }
 
@@ -287,24 +288,23 @@ class SequenceDB {
       logger.debug('apply', param)
       switch (param.type) {
         case 'addActor':
-          // db.addActor(param.actor, param.actor, param.description)
-          db.addActor(param)
+          this.addActor(param)
           break
         case 'activeStart':
         case 'activeEnd':
-          db.addSignal(param.actor, undefined, undefined, param.signalType)
+          this.addSignal(param.actor, undefined, undefined, param.signalType)
           break
         case 'addNote':
-          db.addNote(param.actor, param.placement, param.text)
+          this.addNote(param.actor, param.placement, param.text)
           break
         case 'addSignal':
-          db.addSignal(param.from, param.to, param.msg, param.signalType)
+          this.addSignal(param.from, param.to, param.msg, param.signalType)
           break
         case 'groupStart':
-          db.addGroupStart(param.groupType, param.text, { background: param.background })
+          this.addGroupStart(param.groupType, param.text, { background: param.background })
           break
         case 'groupEnd':
-          db.addGroupEnd(param.groupType)
+          this.addGroupEnd(param.groupType)
           break
         // case 'rectStart':
         //   addSignal(undefined, undefined, param.color, param.signalType)
@@ -313,13 +313,16 @@ class SequenceDB {
         //   addSignal(undefined, undefined, undefined, param.signalType)
         //   break
         case 'setTitle':
-          db.setTitle(param.text)
+          this.setTitle(param.text)
           break
         case 'addDivider':
-          db.addSignalWithoutActor({ text: param.text, wrap: false }, param.signalType)
+          this.addSignalWithoutActor({ text: param.text, wrap: false }, param.signalType)
           break
-        case 'addConfig':
-          db.addConfig({ key: param.key, value: param.value })
+        case 'addParam':
+          this.addParam({ key: param.key, value: param.value })
+          break
+        case 'overrideConfig':
+          this.addOverrideConfig(param)
           break
       }
     }
@@ -364,6 +367,8 @@ type AddActorParam = {
  * action param that will be handled by `apply`
  */
 type ApplyParam =
+  | ParamAction
+  | OverrideAction
   | ({
       type: 'addActor'
     } & AddActorParam)
@@ -404,11 +409,6 @@ type ApplyParam =
       signalType: LINETYPE
       text: string
     }
-  | {
-      type: 'addConfig'
-      key: string
-      value: string
-    }
 
 export { db }
 
@@ -423,5 +423,5 @@ export default {
   PLACEMENT,
   addNote: db.addNote,
   setTitle: db.setTitle,
-  apply: db.apply,
+  apply: db.apply.bind(db),
 }

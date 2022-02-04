@@ -1,19 +1,49 @@
+@preprocessor typescript
+@lexer lexer
+@builtin "whitespace.ne"
+@include "../../util/parser-grammars/config.ne"
+@include "../../util/parser-grammars/comment.ne"
+
 @{%
 import * as moo from '@hikerpig/moo'
-import { tv, VALID_TEXT_REGEXP, MOO_NEWLINE, COMMENT_LINE_REGEXP } from '../../util/parser-shared'
+import {
+  tv,
+  MOO_NEWLINE,
+  VALID_TEXT_REGEXP,
+  COMMENT_LINE_REGEXP,
+  CONFIG_DIRECTIVE,
+  L_PAREN_REGEXP,
+  R_PAREN_REGEXP,
+  configLexerMainState,
+  configLexerConfigClauseState,
+} from '../../util/parser-shared'
+
 import type { ApplyPart } from '../db'
 
-let lexer = moo.compile({
-  NEWLINE: MOO_NEWLINE,
-  SPACE: { match: /[ ]+/, lineBreaks: false },
-  ASTERISKS: /\*+/,
-  PLUS: /\++/,
-  MINUS: /\-+/,
-  SEMICOLON: /;/,
-  COLON: /:/,
-  CONFIG_DIRECTIVE: /@config/, // for config.ne
-  COMMENT_LINE: COMMENT_LINE_REGEXP,
+const COMMON_TOKEN_RULES = {
   VALID_TEXT: { match: VALID_TEXT_REGEXP, fallback: true },
+}
+
+let lexer = moo.states({
+  main: {
+    NEWLINE: MOO_NEWLINE,
+    SPACE: { match: /[ ]+/, lineBreaks: false },
+    ASTERISKS: /\*+/,
+    PLUS: /\++/,
+    MINUS: /\-+/,
+    SEMICOLON: /;/,
+    COLON: /:/,
+    PARAM_DIRECTIVE,
+    ...configLexerMainState,
+    L_PAREN: L_PAREN_REGEXP,
+    R_PAREN: R_PAREN_REGEXP,
+    COMMENT_LINE: COMMENT_LINE_REGEXP,
+    ...COMMON_TOKEN_RULES,
+  },
+  configClause: {
+    ...configLexerConfigClauseState,
+    ...COMMON_TOKEN_RULES,
+  },
 })
 
 let yy
@@ -22,12 +52,6 @@ export function setYY(v) {
   yy = v
 }
 %}
-
-@preprocessor typescript
-@lexer lexer
-@builtin "whitespace.ne"
-@include "../../util/parser-grammars/config.ne"
-@include "../../util/parser-grammars/comment.ne"
 
 start -> __ start
   | "mindmap" document
@@ -61,7 +85,8 @@ statement ->
         return { type: 'addItem', label, depth: notation.depth, isReverse: notation.isReverse } as ApplyPart
       }
     %}
-  | configClause _ %NEWLINE
+  | paramClause _ %NEWLINE
+  | configOpenCloseClause %NEWLINE
   | comment _ %NEWLINE
 
 levelNotation ->

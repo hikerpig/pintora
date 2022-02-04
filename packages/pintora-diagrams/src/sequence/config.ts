@@ -1,7 +1,7 @@
 import { DEFAULT_FONT_FAMILY, MarkAttrs, PintoraConfig } from '@pintora/core'
 import { PALETTE } from '../util/theme'
 import { configApi, safeAssign } from '@pintora/core'
-import { interpreteConfigs, ConfigParam } from '../util/style'
+import { interpreteConfigs, ConfigParam, makeConfigurator } from '../util/style'
 
 export type SequenceConf = {
   noteWidth: number
@@ -84,7 +84,7 @@ export const defaultConfig: SequenceConf = {
   showSequenceNumbers: false,
 }
 
-export const SEQUENCE_CONFIG_DIRECTIVE_RULES = {
+export const SEQUENCE_PARAM_DIRECTIVE_RULES = {
   noteMargin: { valueType: 'size' },
   boxMargin: { valueType: 'size' },
   activationWidth: { valueType: 'size' },
@@ -110,27 +110,55 @@ export const SEQUENCE_CONFIG_DIRECTIVE_RULES = {
   dividerTextColor: { valueType: 'color' },
 } as const
 
-export function getConf(configParams: ConfigParam[], extraConfig: SequenceConf | undefined) {
-  const globalConfig: PintoraConfig = configApi.getConfig()
-  const t = globalConfig.themeConfig.themeVariables
-  const conf = { ...defaultConfig }
-  safeAssign(conf, {
-    actorBackground: t.primaryColor,
-    actorBorderColor: t.primaryBorderColor,
-    messageTextColor: t.textColor,
-    loopLineColor: t.primaryColor,
-    actorTextColor: t.textColor,
-    actorLineColor: t.primaryLineColor,
-    noteTextColor: t.noteTextColor || t.textColor,
-    activationBackground: t.background1,
-    dividerTextColor: t.secondaryTextColor,
-  })
-  safeAssign(
-    conf,
-    { messageFontFamily: globalConfig.core.defaultFontFamily },
-    globalConfig.sequence || {},
-    extraConfig || {},
-  )
-  safeAssign(conf, interpreteConfigs(SEQUENCE_CONFIG_DIRECTIVE_RULES, configParams))
-  return conf
-}
+export const configKey = 'sequence'
+
+const configurator = makeConfigurator<SequenceConf>({
+  defaultConfig,
+  configKey,
+  getConfigFromGlobalConfig(globalConfig) {
+    return safeAssign({ messageFontFamily: globalConfig.core.defaultFontFamily })
+  },
+  getConfigFromParamDirectives(configParams) {
+    return interpreteConfigs(SEQUENCE_PARAM_DIRECTIVE_RULES, configParams)
+  },
+  getConfigFromTheme(t) {
+    return {
+      actorBackground: t.primaryColor,
+      actorBorderColor: t.primaryBorderColor,
+      messageTextColor: t.textColor,
+      loopLineColor: t.primaryColor,
+      actorTextColor: t.textColor,
+      actorLineColor: t.primaryLineColor,
+      noteTextColor: t.noteTextColor || t.textColor,
+      activationBackground: t.background1,
+      dividerTextColor: t.secondaryTextColor,
+    }
+  },
+})
+
+export const getConf = configurator.getConfig
+
+// export function getConf(configParams: ConfigParam[], extraConfig: SequenceConf | undefined) {
+//   const globalConfig: PintoraConfig = configApi.getConfig()
+//   const t = globalConfig.themeConfig.themeVariables
+//   const conf = { ...defaultConfig }
+//   safeAssign(conf, {
+//     actorBackground: t.primaryColor,
+//     actorBorderColor: t.primaryBorderColor,
+//     messageTextColor: t.textColor,
+//     loopLineColor: t.primaryColor,
+//     actorTextColor: t.textColor,
+//     actorLineColor: t.primaryLineColor,
+//     noteTextColor: t.noteTextColor || t.textColor,
+//     activationBackground: t.background1,
+//     dividerTextColor: t.secondaryTextColor,
+//   })
+//   safeAssign(
+//     conf,
+//     { messageFontFamily: globalConfig.core.defaultFontFamily },
+//     globalConfig.sequence || {},
+//     extraConfig || {},
+//   )
+//   safeAssign(conf, interpreteConfigs(SEQUENCE_PARAM_DIRECTIVE_RULES, configParams))
+//   return conf
+// }

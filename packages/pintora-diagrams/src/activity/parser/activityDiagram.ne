@@ -1,22 +1,51 @@
+@preprocessor typescript
+@lexer lexer
+@builtin "whitespace.ne"
+@include "../../util/parser-grammars/config.ne"
+@include "../../util/parser-grammars/comment.ne"
+
 @{%
 import * as moo from '@hikerpig/moo'
-import { tv, textToCaseInsensitiveRegex, VALID_TEXT_REGEXP, COMMENT_LINE_REGEXP } from '../../util/parser-shared'
+// import { tv, textToCaseInsensitiveRegex, VALID_TEXT_REGEXP, COMMENT_LINE_REGEXP } from '../../util/parser-shared'
+import {
+  tv,
+  textToCaseInsensitiveRegex,
+  VALID_TEXT_REGEXP,
+  COMMENT_LINE_REGEXP,
+  CONFIG_DIRECTIVE,
+  QUOTED_WORD_REGEXP,
+  configLexerMainState,
+  configLexerConfigClauseState,
+  L_PAREN_REGEXP,
+  R_PAREN_REGEXP,
+} from '../../util/parser-shared'
 import type { ApplyPart } from '../db'
 
-let lexer = moo.compile({
-  NEWLINE: { match: /\n/, lineBreaks: true },
-  SPACE: { match: / /, lineBreaks: false },
-  QUOTED_WORD: /\"[^"]*\"/,
-  SEMICOLON: /;/,
-  COLON: /:/,
-  L_PAREN: { match: /\(/ },
-  R_PAREN: { match: /\)/ },
-  L_BRACKET: { match: /\{/ },
-  R_BRACKET: { match: /\}/ },
-  START_NOTE: textToCaseInsensitiveRegex('@note'),
-  END_NOTE: textToCaseInsensitiveRegex('@end_note'),
-  COMMENT_LINE: COMMENT_LINE_REGEXP,
+const COMMON_TOKEN_RULES = {
   VALID_TEXT: { match: VALID_TEXT_REGEXP, fallback: true },
+}
+
+let lexer = moo.states({
+  main: {
+    NEWLINE: { match: /\n/, lineBreaks: true },
+    SPACE: { match: / /, lineBreaks: false },
+    QUOTED_WORD: QUOTED_WORD_REGEXP,
+    SEMICOLON: /;/,
+    COLON: /:/,
+    L_PAREN: L_PAREN_REGEXP,
+    R_PAREN: R_PAREN_REGEXP,
+    L_BRACKET: { match: /\{/ },
+    R_BRACKET: { match: /\}/ },
+    START_NOTE: textToCaseInsensitiveRegex('@note'),
+    END_NOTE: textToCaseInsensitiveRegex('@end_note'),
+    COMMENT_LINE: COMMENT_LINE_REGEXP,
+    ...configLexerMainState,
+    VALID_TEXT: { match: VALID_TEXT_REGEXP, fallback: true },
+  },
+  configClause: {
+    ...configLexerConfigClauseState,
+    ...COMMON_TOKEN_RULES,
+  },
 })
 
 let yy
@@ -29,12 +58,6 @@ function extractChildren(o) {
   return Array.isArray(o) ? o[0]: o
 }
 %}
-
-@preprocessor typescript
-@lexer lexer
-@builtin "whitespace.ne"
-@include "../../util/parser-grammars/config.ne"
-@include "../../util/parser-grammars/comment.ne"
 
 start -> __ start {% (d) => d[1] %}
 	| "activityDiagram" document __:? {%
@@ -77,6 +100,7 @@ statement ->
   | forkSentence
   | noteStatement
   | arrowLabelStatement
+  | paramClause _ %NEWLINE
   | configClause _ %NEWLINE
   | comment _ %NEWLINE
 

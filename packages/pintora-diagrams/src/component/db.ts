@@ -1,4 +1,6 @@
-import { ConfigParam } from '../util/style'
+import { BaseDb } from '../util/base-db'
+import { BaseDiagramIR } from '../util/ir'
+import { OverrideAction, ParamAction } from '../util/style'
 
 type Component = {
   name: string
@@ -45,6 +47,8 @@ export type Relationship = {
 type UMLElement = Component | Interface | CGroup | Relationship
 
 type ApplyPart =
+  | ParamAction
+  | OverrideAction
   | {
       type: 'component'
       name: string
@@ -62,18 +66,12 @@ type ApplyPart =
       label?: string
       children: UMLElement[]
     }
-  | {
-      type: 'addConfig'
-      key: string
-      value: string
-    }
 
-export type ComponentDiagramIR = {
+export type ComponentDiagramIR = BaseDiagramIR & {
   components: Record<string, Component>
   interfaces: Record<string, Interface>
   groups: Record<string, CGroup>
   relationships: Relationship[]
-  configParams: ConfigParam[]
 }
 
 export enum LineType {
@@ -83,13 +81,12 @@ export enum LineType {
   DOTTED = 'DOTTED',
 }
 
-class ComponentDb {
+class ComponentDb extends BaseDb {
   protected aliases: Record<string, UMLElement> = {}
   protected components: Record<string, Component> = {}
   protected interfaces: Record<string, Interface> = {}
   protected groups: Record<string, CGroup> = {}
   protected relationships: Relationship[] = []
-  protected configParams: ConfigParam[] = []
 
   LineType = LineType
 
@@ -125,11 +122,14 @@ class ComponentDb {
     if (!part) return
     // console.log('apply', part)
     switch (part.type) {
-      case 'addConfig':
-        {
-          this.configParams.push(part)
-        }
+      case 'addParam': {
+        this.configParams.push(part)
         break
+      }
+      case 'overrideConfig': {
+        this.addOverrideConfig(part)
+        break
+      }
       default: {
       }
     }
@@ -199,17 +199,17 @@ class ComponentDb {
       interfaces: this.interfaces,
       groups: this.groups,
       relationships: this.relationships,
-      configParams: this.configParams,
+      ...this.getBaseDiagramIR(),
     }
   }
 
-  clear() {
+  override clear() {
+    super.clear()
     this.aliases = {}
     this.components = {}
     this.interfaces = {}
     this.groups = {}
     this.relationships = []
-    this.configParams = []
   }
 }
 

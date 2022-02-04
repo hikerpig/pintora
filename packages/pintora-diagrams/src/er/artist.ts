@@ -23,7 +23,7 @@ let conf: ErConf
 
 const erArtist: IDiagramArtist<ErDiagramIR, ErConf> = {
   draw(ir, config) {
-    conf = getConf(ir.configParams)
+    conf = getConf(ir)
     // Now we have to construct the diagram in a specific way:
     // ---
     // 1. Create all the entities in the svg node at 0,0, but with the correct dimensions (allowing for text content)

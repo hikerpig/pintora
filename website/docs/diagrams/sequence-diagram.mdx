@@ -89,16 +89,16 @@ sequenceDiagram
 
 ## Override config
 
-You can override diagarm config through `@config` directive.
+You can override diagarm config through `@param` directive.
 
 All available configs can be seen in the [Config page](../configuration/config.md#sequence).
 
 ```pintora play
 sequenceDiagram
-  @config loopLineColor #79caf1
-  @config actorBackground #61afef
-  @config actorTextColor #ffffff
-  @config {
+  @param loopLineColor #79caf1
+  @param actorBackground #61afef
+  @param actorTextColor #ffffff
+  @param {
     messageFontFamily Consolas
     dividerTextColor #61afef
   }

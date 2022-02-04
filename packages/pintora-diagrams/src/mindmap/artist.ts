@@ -32,7 +32,7 @@ let mmDraw: MMDraw
 
 const mmArtist: IDiagramArtist<MindmapIR, MindmapConf> = {
   draw(ir, config) {
-    conf = Object.assign(getConf(ir.configParams), config || {})
+    conf = Object.assign(getConf(ir), config || {})
     mmDraw = new MMDraw(ir)
     if (isDev) {
       ;(window as any).mmDraw = mmDraw

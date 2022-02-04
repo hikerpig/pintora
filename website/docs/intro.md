@@ -27,7 +27,7 @@ Heavily inspired by [Mermaid.js](https://mermaid-js.github.io/mermaid/#/) and [P
 
 ```pintora play
 mindmap
-@config layoutDirection TB
+@param layoutDirection TB
 * Pintora diagrams
 ** UML Diagrams
 *** Sequence Diagram
