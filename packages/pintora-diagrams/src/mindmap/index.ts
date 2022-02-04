@@ -2,7 +2,7 @@ import { IDiagram } from '@pintora/core'
 import db, { MindmapIR } from './db'
 import artist from './artist'
 import { parse } from './parser'
-import { MindmapConf } from './config'
+import { configKey, MindmapConf } from './config'
 
 export { MindmapIR, MindmapConf }
 
@@ -15,7 +15,7 @@ export const mindmap: IDiagram<MindmapIR, MindmapConf> = {
     },
   },
   artist,
-  configKey: 'mindmap',
+  configKey,
   clear() {
     db.clear()
   },

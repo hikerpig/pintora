@@ -69,8 +69,8 @@ function isEndAlikeKeyword(keyword: Keyword) {
 }
 
 const erArtist: IDiagramArtist<ActivityDiagramIR, ActivityConf> = {
-  draw(ir) {
-    conf = getConf(ir.configParams)
+  draw(ir, config) {
+    conf = getConf(ir, config)
     model = new ArtistModel(ir)
     theme = (configApi.getConfig() as PintoraConfig).themeConfig.themeVariables
     // console.log('ir', JSON.stringify(ir, null, 2))

@@ -235,23 +235,27 @@ export type MindmapConf = {
 }
 ```
 
-## The `@config` directive
+## Override config by directive
 
-If you don't have the access to add JS script into the page or in the Node.js module, it's also possible to override some configs of the builtin diagrams through the `@config` directive.
+If you don't have the access to add JS script into the page or in the Node.js module, it's also possible to override some configs of the builtin diagrams through the `@param` or `@config` directive.
 
 :::info
 This is the recommended way to override configs inside the text DSL for all pintora's builtin diagrams.
 But it may be slightly different or not implemented at all in some third-party diagrams, due to syntax confilict or other diagram-parser implementation details.
 :::
 
+### The `@param` directive
+
+This directive overrides local config in current diagram.
+
 Syntax:
 
 ```text
-@config prop value
+@param prop value
 
-# --- or ---
+%% --- or ---
 
-@config {
+@param {
   prop value
 }
 ```
@@ -260,10 +264,10 @@ For example:
 
 ```pintora play
 sequenceDiagram
-  @config loopLineColor #79caf1
-  @config actorBackground #61afef
-  @config actorTextColor #ffffff
-  @config {
+  @param loopLineColor #79caf1
+  @param actorBackground #61afef
+  @param actorTextColor #ffffff
+  @param {
     messageFontFamily Consolas
     dividerTextColor #61afef
   }
@@ -272,4 +276,47 @@ sequenceDiagram
   loop Check input
     Pintora-->>Pintora: Has input changed?
   end
+```
+
+### The `@config` directive
+
+Unlike the `@param` directive, this directive:
+
+1. Overrides global config in this render.
+2. Config needs to be valid JSON string.
+
+Syntax:
+
+```text
+@config(...configJSON)
+```
+
+For example:
+
+```pintora play
+mindmap
+
+@config({
+  "core": {
+    "defaultFontFamily": "serif"
+  },
+  "mindmap": {
+    "layoutDirection":   "TB",
+      "l1NodeBgColor":   "#2B7A5D",
+      "l1NodeTextColor": "#fff",
+      "l2NodeBgColor":   "#26946C",
+      "l2NodeTextColor": "#fff",
+      "nodeBgColor":     "#67B599",
+      "textColor":       "#fff"
+  }
+})
+
++ UML Diagrams
+++ Behavior Diagrams
++++ Sequence Diagram
++++ State Diagram
++++ Activity Diagram
+++ Structural Diagrams
++++ Class Diagram
++++ Component Diagram
 ```

@@ -1,6 +1,5 @@
 import { PALETTE } from '../util/theme'
-import { configApi, safeAssign, PintoraConfig } from '@pintora/core'
-import { interpreteConfigs, ConfigParam } from '../util/style'
+import { interpreteConfigs, makeConfigurator } from '../util/style'
 import { DEFAULT_FONT_FAMILY } from '../util/text'
 
 export type ActivityConf = {
@@ -62,7 +61,7 @@ export const defaultConfig: ActivityConf = {
   fontFamily: DEFAULT_FONT_FAMILY,
 }
 
-export const ACTIVITY_CONFIG_DIRECTIVE_RULES = {
+export const ACTIVITY_PARAM_DIRECTIVE_RULES = {
   diagramPadding: { valueType: 'size' },
 
   curvedEdge: { valueType: 'boolean' },
@@ -90,12 +89,16 @@ export const ACTIVITY_CONFIG_DIRECTIVE_RULES = {
   fontFamily: { valueType: 'string' },
 } as const
 
-export function getConf(configParams: ConfigParam[]) {
-  const globalConfig: PintoraConfig = configApi.getConfig()
-  const t = globalConfig.themeConfig?.themeVariables
-  const conf = { ...defaultConfig }
-  if (t) {
-    safeAssign(conf, {
+export const configKey = 'activity'
+
+const configurator = makeConfigurator<ActivityConf>({
+  defaultConfig,
+  configKey,
+  getConfigFromParamDirectives(configParams) {
+    return interpreteConfigs(ACTIVITY_PARAM_DIRECTIVE_RULES, configParams)
+  },
+  getConfigFromTheme(t) {
+    return {
       actionBackground: t.primaryColor,
       actionBorderColor: t.primaryBorderColor,
       groupBackground: t.groupBackground,
@@ -105,9 +108,8 @@ export function getConf(configParams: ConfigParam[]) {
       keywordBackground: t.textColor,
       labelBackground: t.canvasBackground || t.background1,
       labelTextColor: t.textColor,
-    })
-  }
-  safeAssign(conf, { fontFamily: globalConfig.core.defaultFontFamily }, globalConfig.activity)
-  safeAssign(conf, interpreteConfigs(ACTIVITY_CONFIG_DIRECTIVE_RULES, configParams))
-  return conf
-}
+    }
+  },
+})
+
+export const getConf = configurator.getConfig

@@ -1,5 +1,7 @@
 import { makeIdCounter } from '@pintora/core'
-import { ConfigParam, ConfigAction } from '../util/style'
+import { BaseDb } from '../util/base-db'
+import { BaseDiagramIR } from '../util/ir'
+import { OverrideAction, ParamAction } from '../util/style'
 import { dedent } from '../util/text'
 
 export type Action = {
@@ -88,15 +90,15 @@ export type Step<T extends StepValue = StepValue> = {
   value: T
 }
 
-export type ActivityDiagramIR = {
+export type ActivityDiagramIR = BaseDiagramIR & {
   steps: Step[]
   notes: Note[]
   arrowLabels: ArrowLabel[]
-  configParams: ConfigParam[]
 }
 
 export type ApplyPart =
-  | ConfigAction
+  | ParamAction
+  | OverrideAction
   | {
       type: 'addAction'
       action: Action
@@ -166,8 +168,7 @@ type DbApplyState = {
   parentId?: string | undefined
 }
 
-class ActivityDb {
-  protected configParams: ConfigParam[] = []
+class ActivityDb extends BaseDb {
   protected steps: Step[] = []
   protected notes: Note[] = []
   protected arrowLabels: ArrowLabel[] = []
@@ -308,11 +309,14 @@ class ActivityDb {
         this.arrowLabels.push(value)
         break
       }
-      case 'addConfig':
-        {
-          this.configParams.push(part)
-        }
+      case 'addParam': {
+        this.configParams.push(part)
         break
+      }
+      case 'overrideConfig': {
+        this.addOverrideConfig(part)
+        break
+      }
       default: {
       }
     }
@@ -330,15 +334,15 @@ class ActivityDb {
       steps: this.steps,
       notes: this.notes,
       arrowLabels: this.arrowLabels,
-      configParams: this.configParams,
+      ...this.getBaseDiagramIR(),
     }
   }
 
   clear() {
+    super.clear()
     this.idCounter.reset()
     this.steps = []
     this.notes = []
-    this.configParams = []
   }
 }
 

@@ -26,7 +26,7 @@ Pintora 是一个可在浏览器和 Node.js 环境下运行的文字转示意图
 
 ```pintora play
 mindmap
-@config layoutDirection TB
+@param layoutDirection TB
 * Pintora diagrams
 ** UML 图表
 *** 时序图 Sequence Diagram

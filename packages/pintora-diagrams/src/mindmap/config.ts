@@ -1,5 +1,5 @@
 import { configApi, DEFAULT_FONT_FAMILY, MarkAttrs, PintoraConfig, safeAssign, tinycolor } from '@pintora/core'
-import { ConfigParam, interpreteConfigs } from '../util/style'
+import { ConfigParam, interpreteConfigs, makeConfigurator } from '../util/style'
 import { PALETTE } from '../util/theme'
 
 export type MindmapConf = {
@@ -78,7 +78,7 @@ export const defaultConfig: MindmapConf = {
   l2NodeTextColor: PALETTE.normalDark,
 }
 
-export const MINDMAP_CONFIG_DIRECTIVE_RULES = {
+export const MINDMAP_PARAM_DIRECTIVE_RULES = {
   // curvedEdge: { valueType: 'boolean' },
   diagramPadding: { valueType: 'size' },
   layoutDirection: { valueType: 'layoutDirection' },
@@ -97,17 +97,21 @@ export const MINDMAP_CONFIG_DIRECTIVE_RULES = {
   l2NodeTextColor: { valueType: 'color' },
 } as const
 
-export function getConf(configParams: ConfigParam[]) {
-  const globalConfig: PintoraConfig = configApi.getConfig()
-  const t = globalConfig.themeConfig?.themeVariables
-  const conf: MindmapConf = { ...defaultConfig }
-  if (t) {
+export const configKey = 'mindmap'
+
+const configurator = makeConfigurator<MindmapConf>({
+  defaultConfig,
+  configKey,
+  getConfigFromParamDirectives(configParams) {
+    return interpreteConfigs(MINDMAP_PARAM_DIRECTIVE_RULES, configParams)
+  },
+  getConfigFromTheme(t) {
     const { nodeBgColor, l1NodeBgColor, l2NodeBgColor } = getColorsByPrimary(t.primaryColor, t.isDark)
     const nodeBgColorInstance = tinycolor(nodeBgColor)
     const bgIsLight = nodeBgColorInstance.isLight()
     const textColorIsLight = tinycolor(t.textColor).isLight()
     const normalNodeTextColor = bgIsLight !== textColorIsLight ? t.textColor : t.canvasBackground
-    safeAssign(conf, {
+    return {
       nodeBgColor,
       textColor: normalNodeTextColor,
       edgeColor: t.primaryLineColor,
@@ -115,9 +119,8 @@ export function getConf(configParams: ConfigParam[]) {
       l1NodeTextColor: t.textColor,
       l2NodeBgColor,
       l2NodeTextColor: t.textColor,
-    })
-  }
-  safeAssign(conf, { fontFamily: globalConfig.core.defaultFontFamily }, globalConfig.mindmap || {})
-  safeAssign(conf, interpreteConfigs(MINDMAP_CONFIG_DIRECTIVE_RULES, configParams))
-  return conf
-}
+    }
+  },
+})
+
+export const getConf = configurator.getConfig

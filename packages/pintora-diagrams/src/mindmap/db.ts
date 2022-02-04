@@ -1,5 +1,7 @@
 import { makeIdCounter } from '@pintora/core'
-import { ConfigParam, ConfigAction } from '../util/style'
+import { BaseDb } from '../util/base-db'
+import { BaseDiagramIR } from '../util/ir'
+import { ConfigParam, OverrideAction, ParamAction } from '../util/style'
 
 export type LevelNotation = {
   depth: number
@@ -33,7 +35,7 @@ export class MMTree {
 
   add(item: MMItem) {
     let cur = this.current
-    while (Math.abs(cur.depth) >= Math.abs(item.depth)) {
+    while (cur && Math.abs(cur.depth) >= Math.abs(item.depth)) {
       if (cur.id === this.root.id) break
       if (cur.parent) {
         cur = this.nodes.get(cur.parent)
@@ -49,7 +51,6 @@ export class MMTree {
       const newNode = this.addItemToNode(item)
       this.addChild(cur, newNode)
       this.current = newNode
-    } else {
     }
   }
 
@@ -94,7 +95,8 @@ export class MMTree {
 }
 
 export type ApplyPart =
-  | ConfigAction
+  | ParamAction
+  | OverrideAction
   | {
       type: 'addItem'
       depth: number
@@ -102,13 +104,11 @@ export type ApplyPart =
       isReverse?: boolean
     }
 
-export type MindmapIR = {
+export type MindmapIR = BaseDiagramIR & {
   trees: IMMDataTree[]
-  configParams: ConfigParam[]
 }
 
-class MindmapDb {
-  configParams: ConfigParam[] = []
+class MindmapDb extends BaseDb {
   items: MMItem[] = []
 
   private currentTree: MMTree | null
@@ -123,12 +123,12 @@ class MindmapDb {
 
   getDiagramIR(): MindmapIR {
     return {
+      ...this.getBaseDiagramIR(),
       trees: this.trees.map(tree => {
         const data = tree.serialize()
         this.treeMap.set(data, tree)
         return data
       }),
-      configParams: this.configParams,
     }
   }
 
@@ -153,8 +153,12 @@ class MindmapDb {
         this.addItem({ ...data, id: this.makeId(), isReverse: Boolean(part.isReverse), children: [] })
         break
       }
-      case 'addConfig': {
+      case 'addParam': {
         this.configParams.push(part)
+        break
+      }
+      case 'overrideConfig': {
+        this.addOverrideConfig(part)
         break
       }
     }
@@ -164,11 +168,11 @@ class MindmapDb {
     return this.treeMap.get(data)
   }
 
-  clear() {
+  override clear() {
+    super.clear()
     this.idCounter.reset()
     this.trees = []
     this.items = []
-    this.configParams = []
     this.currentTree = null
   }
 }

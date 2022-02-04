@@ -204,18 +204,18 @@ activityDiagram
 
 ## 覆盖设置
 
-可以使用 `@config` 指令覆盖图表的部分设置。
+可以使用 `@param` 指令覆盖图表的部分设置。
 
 可设置项的说明请见 [Config page](../configuration/config.md#activity).
 
 ```pintora play
 activityDiagram
-  @config actionBackground #61afef
-  @config textColor #fff
-  @config noteTextColor #purple
-  @config edgeColor #143C9A
-  @config curvedEdge false
-  @config {
+  @param actionBackground #61afef
+  @param textColor #fff
+  @param noteTextColor #purple
+  @param edgeColor #143C9A
+  @param curvedEdge false
+  @param {
     keywordBackground #143C9A
     labelTextColor #143C9A
   }

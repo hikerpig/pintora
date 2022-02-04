@@ -1,6 +1,6 @@
 import { PALETTE } from '../util/theme'
-import { configApi, safeAssign, PintoraConfig, DEFAULT_FONT_FAMILY } from '@pintora/core'
-import { interpreteConfigs, ConfigParam } from '../util/style'
+import { DEFAULT_FONT_FAMILY } from '@pintora/core'
+import { interpreteConfigs, makeConfigurator } from '../util/style'
 
 export type ErConf = {
   diagramPadding: number
@@ -57,7 +57,7 @@ export const defaultConfig: ErConf = {
   fontFamily: DEFAULT_FONT_FAMILY,
 }
 
-export const ER_CONFIG_DIRECTIVE_RULES = {
+export const ER_PARAM_DIRECTIVE_RULES = {
   curvedEdge: { valueType: 'boolean' },
   layoutDirection: { valueType: 'string' },
   borderRadius: { valueType: 'size' },
@@ -71,21 +71,24 @@ export const ER_CONFIG_DIRECTIVE_RULES = {
   fontFamily: { valueType: 'string' },
 } as const
 
-export function getConf(configParams: ConfigParam[]) {
-  const globalConfig: PintoraConfig = configApi.getConfig()
-  const t = globalConfig.themeConfig?.themeVariables
-  const conf = { ...defaultConfig }
-  if (t) {
-    safeAssign(conf, {
+export const configKey = 'er'
+
+const configurator = makeConfigurator<ErConf>({
+  defaultConfig,
+  configKey,
+  getConfigFromParamDirectives(configParams) {
+    return interpreteConfigs(ER_PARAM_DIRECTIVE_RULES, configParams)
+  },
+  getConfigFromTheme(t, conf) {
+    return {
       stroke: t.primaryBorderColor,
       fill: t.primaryColor,
       edgeColor: t.primaryLineColor,
       textColor: t.textColor,
       labelBackground: t.canvasBackground || t.background1,
       attributeFill: t.lightestBackground || conf.attributeFill,
-    })
-  }
-  safeAssign(conf, { fontFamily: globalConfig.core.defaultFontFamily }, globalConfig.er || {})
-  safeAssign(conf, interpreteConfigs(ER_CONFIG_DIRECTIVE_RULES, configParams))
-  return conf
-}
+    }
+  },
+})
+
+export const getConf = configurator.getConfig

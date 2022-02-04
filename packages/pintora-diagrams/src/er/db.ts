@@ -1,4 +1,6 @@
+import { BaseDiagramIR } from '../util/ir'
 import { ConfigParam } from '../util/style'
+import { BaseDb } from '../util/base-db'
 
 export enum Cardinality {
   ZERO_OR_ONE = 'ZERO_OR_ONE',
@@ -36,19 +38,17 @@ export type RelSpec = {
   relType: Identification
 }
 
-export type ErDiagramIR = {
+export type ErDiagramIR = BaseDiagramIR & {
   entities: Record<string, Entity>
   relationships: Relationship[]
-  configParams: ConfigParam[]
 }
 
-class ErDb {
+export class ErDb extends BaseDb {
   Cardinality = Cardinality
   Identification = Identification
 
   entities: Record<string, Entity> = {}
   relationships: Relationship[] = []
-  configParams: ErDiagramIR['configParams'] = []
 
   addEntity(name: string) {
     if (!this.entities[name]) {
@@ -71,16 +71,19 @@ class ErDb {
       entities: this.entities,
       relationships: this.relationships,
       configParams: this.configParams,
+      overrideConfig: this.overrideConfig,
     }
   }
   addAttributes(name: string, attributes: Attribute[]) {
     const entity = this.addEntity(name)
     entity.attributes.push(...attributes)
   }
-  addConfig(styleParam: ConfigParam) {
+  addParam(styleParam: ConfigParam) {
     this.configParams.push(styleParam)
   }
-  clear() {
+
+  override clear() {
+    super.clear()
     this.entities = {}
     this.relationships = []
     this.configParams = []

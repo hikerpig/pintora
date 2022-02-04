@@ -1,12 +1,30 @@
+@preprocessor typescript
+@lexer lexer
+@builtin "whitespace.ne"
+@include "../../util/parser-grammars/config.ne"
+@include "../../util/parser-grammars/comment.ne"
+
 @{%
 import * as moo from '@hikerpig/moo'
-import { tv, textToCaseInsensitiveRegex, VALID_TEXT_REGEXP, COLOR_REGEXP, COMMENT_LINE_REGEXP } from '../../util/parser-shared'
+import {
+  tv,
+  textToCaseInsensitiveRegex,
+  VALID_TEXT_REGEXP,
+  COMMENT_LINE_REGEXP,
+  CONFIG_DIRECTIVE,
+  QUOTED_WORD_REGEXP,
+  configLexerMainState,
+  configLexerConfigClauseState,
+  L_PAREN_REGEXP,
+  R_PAREN_REGEXP,
+} from '../../util/parser-shared'
 
 let lexer = moo.states({
   main: {
     NEWLINE: { match: /\n/, lineBreaks: true },
     SPACE: {match: / +/, lineBreaks: false },
-    QUOTED_WORD: /\"[^"]*\"/,
+    ...configLexerMainState,
+    QUOTED_WORD: QUOTED_WORD_REGEXP,
     START_NOTE: textToCaseInsensitiveRegex('@note'),
     END_NOTE: textToCaseInsensitiveRegex('@end_note'),
     BACKQUOTED_TEXT: /`[^`]*`/,
@@ -26,6 +44,8 @@ let lexer = moo.states({
     R_SQ_BRACKET: { match: /\]/ },
     L_AN_BRACKET: { match: /\</ },
     R_AN_BRACKET: { match: /\>/ },
+    L_PAREN: L_PAREN_REGEXP,
+    R_PAREN: R_PAREN_REGEXP,
     _PLACEMENT: [
       { match: /left\sof/, type: () => 'LEFT_OF' },
       { match: /right\sof/, type: () => 'RIGHT_OF' },
@@ -37,6 +57,10 @@ let lexer = moo.states({
   line: {
     REST_OF_LINE: { match: /[^#\n;]+/, pop: 1 },
   },
+  configClause: {
+    ...configLexerConfigClauseState,
+    WORD: { match: VALID_TEXT_REGEXP, fallback: true },
+  },
 })
 
 let yy
@@ -45,12 +69,6 @@ export function setYY(v) {
   yy = v
 }
 %}
-
-@preprocessor typescript
-@lexer lexer
-@builtin "whitespace.ne"
-@include "../../util/parser-grammars/config.ne"
-@include "../../util/parser-grammars/comment.ne"
 
 start -> __ start {% (d) => d[1] %}
 	| "sequenceDiagram" document __:? {%
@@ -156,7 +174,8 @@ statement ->
         return { type: 'addDivider', text, signalType: yy.LINETYPE.DIVIDER }
       }
     %}
-  | configClause _ %NEWLINE
+  | paramClause _ %NEWLINE
+  | configOpenCloseClause _ %NEWLINE
   | comment _ %NEWLINE
 
 participantWord ->

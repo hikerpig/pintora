@@ -459,49 +459,6 @@ sequenceDiagram
     ])
   })
 
-  it('can parse config clause', () => {
-    const example = stripStartEmptyLines(`
-sequenceDiagram
-  @config noteTextColor #00bbaa
-  @config messageFontSize 20
-  `)
-    parse(example)
-    const ir = db.getDiagramIR()
-    // console.log(JSON.stringify(ir, null, 2))
-    expect(ir.configParams).toMatchObject([
-      {
-        key: 'noteTextColor',
-        value: '#00bbaa',
-      },
-      {
-        key: 'messageFontSize',
-        value: '20',
-      },
-    ])
-  })
-
-  it('can parse config clause inside brackets', () => {
-    const example = stripStartEmptyLines(`
-sequenceDiagram
-  @config {
-    noteTextColor #00bbaa
-    messageFontSize 20
-  }
-  `)
-    parse(example)
-    const ir = db.getDiagramIR()
-    expect(ir.configParams).toMatchObject([
-      {
-        key: 'noteTextColor',
-        value: '#00bbaa',
-      },
-      {
-        key: 'messageFontSize',
-        value: '20',
-      },
-    ])
-  })
-
   it('can parse comments', () => {
     const example = stripStartEmptyLines(`
 sequenceDiagram

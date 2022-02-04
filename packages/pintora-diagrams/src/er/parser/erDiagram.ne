@@ -1,6 +1,20 @@
+@preprocessor typescript
+@lexer lexer
+@builtin "whitespace.ne"
+@include "../../util/parser-grammars/config.ne"
+@include "../../util/parser-grammars/comment.ne"
+
 @{%
 import * as moo from '@hikerpig/moo'
-import { tv, VALID_TEXT_REGEXP, COMMENT_LINE_REGEXP } from '../../util/parser-shared'
+import {
+  tv,
+  textToCaseInsensitiveRegex,
+  VALID_TEXT_REGEXP,
+  COMMENT_LINE_REGEXP,
+  CONFIG_DIRECTIVE,
+  QUOTED_WORD_REGEXP,
+} from '../../util/parser-shared'
+import { ErDb } from '../db'
 
 let lexer = moo.compile({
   NEWLINE: { match: /\n/, lineBreaks: true },
@@ -15,23 +29,18 @@ let lexer = moo.compile({
   COLON: /:/,
   LEFT_BRACE: /\{/,
   RIGHT_BRACE: /\}/,
-  CONFIG_DIRECTIVE: /@config/, // for config.ne
+  PARAM_DIRECTIVE: /@param/, // for config.ne
   COMMENT_LINE: COMMENT_LINE_REGEXP,
+  CONFIG_DIRECTIVE,
   VALID_TEXT: { match: VALID_TEXT_REGEXP, fallback: true },
 })
 
-let yy
+let yy: ErDb
 
 export function setYY(v) {
   yy = v
 }
 %}
-
-@preprocessor typescript
-@lexer lexer
-@builtin "whitespace.ne"
-@include "../../util/parser-grammars/config.ne"
-@include "../../util/parser-grammars/comment.ne"
 
 start -> __ start
   | "erDiagram" document
@@ -61,10 +70,15 @@ statement ->
     %}
   | entityName "{":? "}":? {% (d) => yy.addEntity(tv(d[0])) %}
   | entityName {% (d) => yy.addEntity(tv(d[0])) %}
-  | configClause _ %NEWLINE {%
+  | paramClause _ %NEWLINE {%
       function(d) {
         const { type, ...styleParam } = d[0]
-        yy.addConfig(styleParam)
+        yy.addParam(styleParam)
+      }
+    %}
+  | configClause _ %NEWLINE {%
+      function(d) {
+        yy.addOverrideConfig(d[0])
       }
     %}
   | comment _ %NEWLINE

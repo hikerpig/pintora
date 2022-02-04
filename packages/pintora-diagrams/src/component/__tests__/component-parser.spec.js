@@ -245,10 +245,10 @@ componentDiagram
     })
   })
 
-  it('can parse config clause', () => {
+  it('can parse param clause', () => {
     const example = stripStartEmptyLines(`
 componentDiagram
-  @config lineWidth 3
+  @param lineWidth 3
   `)
     parse(example)
     const ir = db.getDiagramIR()

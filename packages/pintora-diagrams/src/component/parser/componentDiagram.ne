@@ -1,10 +1,23 @@
+@preprocessor typescript
+@lexer lexer
+@builtin "whitespace.ne"
+@include "../../util/parser-grammars/config.ne"
+@include "../../util/parser-grammars/comment.ne"
+
 @{%
 import * as moo from '@hikerpig/moo'
-import { tv, VALID_TEXT_REGEXP, COMMENT_LINE_REGEXP } from '../../util/parser-shared'
+import {
+  tv,
+  VALID_TEXT_REGEXP,
+  COMMENT_LINE_REGEXP,
+  CONFIG_DIRECTIVE,
+  configLexerMainState,
+  configLexerConfigClauseState,
+} from '../../util/parser-shared'
 
 const commonTopRules = {
   NEWLINE: { match: /\n/, lineBreaks: true },
-  SPACE: {match: /\s+/, lineBreaks: true},
+  SPACE: { match: /\s+/, lineBreaks: true },
   L_SQ_BRACKET: { match: /\[/ },
   R_SQ_BRACKET: { match: /\]/ },
   COMMENT_LINE: COMMENT_LINE_REGEXP,
@@ -20,6 +33,11 @@ let lexer = moo.states({
     ...commonTopRules,
     L_BRACKET: { match: /\{/ },
     R_BRACKET: { match: /\}/ },
+    ...configLexerMainState,
+    ...commonTextRules,
+  },
+  configClause: {
+    ...configLexerConfigClauseState,
     ...commonTextRules,
   },
 })
@@ -30,12 +48,6 @@ export function setYY(v) {
   yy = v
 }
 %}
-
-@preprocessor typescript
-@lexer lexer
-@builtin "whitespace.ne"
-@include "../../util/parser-grammars/config.ne"
-@include "../../util/parser-grammars/comment.ne"
 
 start -> __ start
   | "componentDiagram" document {%
@@ -66,7 +78,8 @@ statement ->
         return d[0]
       }
     %}
-  | configClause _ %NEWLINE
+  | paramClause _ %NEWLINE
+  | configOpenCloseClause _ %NEWLINE
   | comment _ %NEWLINE
 
 UMLElement ->
@@ -215,3 +228,4 @@ relationLine ->
   | "<.." {% (d) => ({ lineType: yy.LineType.DOTTED_ARROW, isReversed: true }) %}
   | "--" {% (d) => ({ lineType: yy.LineType.STRAIGHT }) %}
   | ".." {% (d) => ({ lineType: yy.LineType.DOTTED }) %}
+
