@@ -44,7 +44,7 @@ import {
   getBaseNote,
 } from '../util/artist-util'
 import dagre from '@pintora/dagre'
-import { makeBounds, MARK_TRANSFORMERS, positionGroupContents, tryExpandBounds } from '../util/mark-positioner'
+import { makeBounds, positionGroupContents, tryExpandBounds } from '../util/mark-positioner'
 import { isDev } from '../util/env'
 import { getPointsCurvePath, getPointsLinearPath } from '../util/line-util'
 import { makeTextMark } from './artist-util'

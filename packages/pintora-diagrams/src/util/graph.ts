@@ -1,5 +1,5 @@
 import { Mark, Bounds, Point } from '@pintora/core'
-import { Graph, Edge, GraphOptions } from '@pintora/graphlib'
+import { Graph, GraphOptions } from '@pintora/graphlib'
 import { GraphData } from '@pintora/dagre/dist/types/type'
 
 export type LayoutGraph = Graph<LayoutNodeOption, any, GraphData>
