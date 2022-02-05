@@ -1,7 +1,7 @@
 import { makeIdCounter } from '@pintora/core'
 import { BaseDb } from '../util/base-db'
 import { BaseDiagramIR } from '../util/ir'
-import { ConfigParam, OverrideAction, ParamAction } from '../util/style'
+import { OverrideAction, ParamAction } from '../util/style'
 
 export type LevelNotation = {
   depth: number

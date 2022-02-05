@@ -1,7 +1,7 @@
-import { DEFAULT_FONT_FAMILY, MarkAttrs, PintoraConfig } from '@pintora/core'
+import { DEFAULT_FONT_FAMILY, MarkAttrs } from '@pintora/core'
 import { PALETTE } from '../util/theme'
-import { configApi, safeAssign } from '@pintora/core'
-import { interpreteConfigs, ConfigParam, makeConfigurator } from '../util/style'
+import { safeAssign } from '@pintora/core'
+import { interpreteConfigs, makeConfigurator } from '../util/style'
 
 export type SequenceConf = {
   noteWidth: number
