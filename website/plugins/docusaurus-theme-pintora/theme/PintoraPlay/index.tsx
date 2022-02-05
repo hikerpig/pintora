@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react'
-import useThemeContext from '@theme/hooks/useThemeContext'
+import { useColorMode } from '@docusaurus/theme-common'
 import pintora from '@pintora/standalone'
 import { stripStartEmptyLines } from '@pintora/test-shared'
 import { PINTORA_LIVE_EDITOR_URL } from '../../../../src/const'
@@ -13,7 +13,7 @@ const PintoraPlay = props => {
   const renderer = 'svg'
   const [errorMessage, setErrorMessage] = useState('')
   const [highlightedCode, setHighlightedCode] = useState('')
-  const { isDarkTheme } = useThemeContext()
+  const { isDarkTheme } = useColorMode()
 
   useEffect(() => {
     if (!containerRef.current) return
@@ -78,7 +78,7 @@ const PintoraPlay = props => {
   return (
     <div className="PintoraPlay">
       <div className="PintoraPlay__code-wrap">
-        {highlightedCode ? <div dangerouslySetInnerHTML={{ __html: highlightedCode }}></div>: <pre>{code}</pre>}
+        {highlightedCode ? <div dangerouslySetInnerHTML={{ __html: highlightedCode }}></div> : <pre>{code}</pre>}
         <button onClick={onOpenInEditorClick} className="PintoraPlay__float-button">
           Open in Live Editor
         </button>
