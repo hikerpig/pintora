@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.1.0-alpha.26](https://github.com/hikerpig/pintora/compare/v0.1.0-alpha.25...v0.1.0-alpha.26) (2022-02-05)
+
+
+### Features
+
+* **pintora-diagrams:** add new `[@config](https://github.com/config)` directive, rename the old to `[@param](https://github.com/param)` ([0ca092e](https://github.com/hikerpig/pintora/commit/0ca092e097849e42c689cc25f4b856ef5c212fa5))
+
+
+
+
+
 # [0.1.0-alpha.25](https://github.com/hikerpig/pintora/compare/v0.1.0-alpha.24...v0.1.0-alpha.25) (2022-02-03)
 
 
