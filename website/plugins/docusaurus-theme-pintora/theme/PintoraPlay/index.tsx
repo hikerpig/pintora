@@ -1,25 +1,27 @@
-import React, { useState, useEffect, useRef, useCallback, useLayoutEffect } from 'react'
-import useThemeContext from '@theme/hooks/useThemeContext';
+import React, { useState, useEffect, useRef, useCallback } from 'react'
+import useThemeContext from '@theme/hooks/useThemeContext'
 import pintora from '@pintora/standalone'
 import { stripStartEmptyLines } from '@pintora/test-shared'
 import { PINTORA_LIVE_EDITOR_URL } from '../../../../src/const'
+import { startShiki, shikiLightTheme, shikiDarkTheme } from './highlight'
 import './PintoraPlay.less'
 
-const PintoraPlay = (props) => {
+const PintoraPlay = props => {
   // console.log('[PintoraPlay] props', props)
   const code = stripStartEmptyLines(props.code)
   const containerRef = useRef<HTMLDivElement>()
   const renderer = 'svg'
   const [errorMessage, setErrorMessage] = useState('')
-  const {isDarkTheme} = useThemeContext();
+  const [highlightedCode, setHighlightedCode] = useState('')
+  const { isDarkTheme } = useThemeContext()
 
   useEffect(() => {
     if (!containerRef.current) return
 
     pintora.setConfig({
       themeConfig: {
-        theme: isDarkTheme ? 'dark': 'default'
-      }
+        theme: isDarkTheme ? 'dark' : 'default',
+      },
     } as any)
 
     pintora.renderTo(code, {
@@ -59,20 +61,34 @@ const PintoraPlay = (props) => {
     const encoded = pintora.util.encodeForUrl(code)
     const url = `${PINTORA_LIVE_EDITOR_URL}?code=${encoded}`
     window.open(url, '_blank')
-  }, [code])
+  }, [code, isDarkTheme])
+
+  useEffect(() => {
+    startShiki({ isDarkMode: isDarkTheme }).then(({ highlighter }) => {
+      try {
+        const shikiTheme = isDarkTheme ? shikiDarkTheme : shikiLightTheme
+        const html = highlighter.codeToHtml(code, { lang: 'pintora', theme: shikiTheme })
+        setHighlightedCode(html)
+      } catch (error) {
+        console.warn('error in highlighting pintora DSL')
+      }
+    })
+  }, [code, isDarkTheme])
 
   return (
     <div className="PintoraPlay">
       <div className="PintoraPlay__code-wrap">
-        <pre>{code}</pre>
-        <button onClick={onOpenInEditorClick} className="PintoraPlay__float-button">Open in Live Editor</button>
+        {highlightedCode ? <div dangerouslySetInnerHTML={{ __html: highlightedCode }}></div>: <pre>{code}</pre>}
+        <button onClick={onOpenInEditorClick} className="PintoraPlay__float-button">
+          Open in Live Editor
+        </button>
       </div>
       {errorMessage && (
-        <div className="DintoraPreview__error">
+        <div className="PintoraPreview__error">
           <pre>{errorMessage}</pre>
         </div>
       )}
-      <div ref={containerRef}></div>
+      <div className="PintoraPlay__preview" ref={containerRef}></div>
     </div>
   )
 }

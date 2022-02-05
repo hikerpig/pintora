@@ -1,0 +1,917 @@
+{
+  "fileTypes": [],
+  "injectionSelector": "L:markup.fenced_code.block.markdown",
+  "patterns": [
+    {
+      "include": "#pintora-code-block"
+    },
+    {
+      "include": "#pintora"
+    }
+  ],
+  "repository": {
+    "pintora-code-block": {
+      "begin": "(?<=[`~])pintora(\\s+[^`~]*)?$",
+      "end": "(^|\\G)(?=\\s*[`~]{3,}\\s*$)",
+      "patterns": [
+        {
+          "include": "#pintora"
+        }
+      ]
+    },
+    "pintora": {
+      "patterns": [
+        {
+          "comment": "Activity Diagram",
+          "begin": "\\b(activityDiagram)",
+          "beginCaptures": {
+            "1": {
+              "name": "keyword.control.pintora"
+            }
+          },
+          "patterns": [
+            {
+              "include": "#activity__element"
+            },
+            {
+              "include": "#config__clause"
+            },
+            {
+              "include": "#comment"
+            }
+          ],
+          "end": "(^|\\G)(?=\\s*[`~]{3,}\\s*$)"
+        },
+        {
+          "comment": "Component Diagram",
+          "begin": "\\b(componentDiagram)",
+          "beginCaptures": {
+            "1": {
+              "name": "keyword.control.pintora"
+            }
+          },
+          "patterns": [
+            {
+              "include": "#component__element"
+            },
+            {
+              "include": "#config__clause"
+            },
+            {
+              "include": "#comment"
+            }
+          ],
+          "end": "(^|\\G)(?=\\s*[`~]{3,}\\s*$)"
+        },
+        {
+          "comment": "ER Diagram",
+          "begin": "\\b(erDiagram)",
+          "beginCaptures": {
+            "1": {
+              "name": "keyword.control.pintora"
+            }
+          },
+          "patterns": [
+            {
+              "comment": "entityName relSpec entityName: role",
+              "match": "(\\w+)\\s*([^\\s]+)\\s*(.*)\\s*(:)\\s*(.*)",
+              "captures": {
+                "1": {
+                  "name": "variable"
+                },
+                "2": {
+                  "name": "keyword.control.pintora"
+                },
+                "3": {
+                  "name": "variable"
+                },
+                "4": {
+                  "name": "keyword.control.pintora"
+                },
+                "5": {
+                  "name": "string"
+                }
+              }
+            },
+            {
+              "comment": "Attribute",
+              "begin": "(\\w+)\\s*({)",
+              "beginCaptures": {
+                "1": {
+                  "name": "variable"
+                },
+                "2": {
+                  "name": "punctuation.bracket.open.pintora"
+                }
+              },
+              "end": "(})",
+              "endCaptures": {
+                "1": {
+                  "name": "punctuation.bracket.close.pintora"
+                }
+              },
+              "patterns": [
+                {
+                  "comment": "propType propName keyType",
+                  "match": "(\\w+)\\s*([^\\s]+)\\s*(.*)?",
+                  "captures": {
+                    "1": {
+                      "name": "entity.name.type.pintora"
+                    },
+                    "2": {
+                      "name": "support.type.property-name.pintora"
+                    },
+                    "3": {
+                      "name": "keyword.pintora"
+                    }
+                  }
+                }
+              ]
+            },
+            {
+              "include": "#config__clause"
+            },
+            {
+              "include": "#comment"
+            }
+          ],
+          "end": "(^|\\G)(?=\\s*[`~]{3,}\\s*$)"
+        },
+        {
+          "comment": "Mind Map",
+          "begin": "\\b(mindmap)",
+          "beginCaptures": {
+            "1": {
+              "name": "keyword.control.pintora"
+            }
+          },
+          "end": "(^|\\G)(?=\\s*[`~]{3,}\\s*$)",
+          "patterns": [
+            {
+              "comment": "multiline text",
+              "begin": "(:)",
+              "beginCaptures": {
+                "1": {
+                  "name": "keyword.control.pintora"
+                }
+              },
+              "end": "(;)",
+              "endCaptures": {
+                "1": {
+                  "name": "keyword.control.pintora"
+                }
+              },
+              "patterns": [
+                {
+                  "comment": "text",
+                  "match": "([^;]+)",
+                  "captures": {
+                    "1": {
+                      "name": "string"
+                    }
+                  }
+                }
+              ]
+            },
+            {
+              "comment": "mindmap node",
+              "match": "(\\*+|\\++|\\-+)\\s*([^:;\\n]*)",
+              "captures": {
+                "1": {
+                  "name": "keyword.control.pintora"
+                },
+                "2": {
+                  "name": "string"
+                }
+              }
+            },
+            {
+              "include": "#config__clause"
+            },
+            {
+              "include": "#comment"
+            }
+          ]
+        },
+        {
+          "comment": "Sequence Diagram",
+          "begin": "\\b(sequenceDiagram)",
+          "beginCaptures": {
+            "1": {
+              "name": "keyword.control.pintora"
+            }
+          },
+          "patterns": [
+            {
+              "match": "(\\%%|#).*",
+              "name": "comment"
+            },
+            {
+              "comment": "(title)",
+              "match": "(title)\\s*(:)\\s+(\\s*[\"\\(\\)$&%\\^/#.,?!:*+=<>\\'\\\\\\-\\w\\s]*)",
+              "captures": {
+                "1": {
+                  "name": "keyword.control.pintora"
+                },
+                "2": {
+                  "name": "keyword.control.pintora"
+                },
+                "3": {
+                  "name": "string"
+                }
+              }
+            },
+            {
+              "comment": "(participant)(Actor)(as)?(Label)?",
+              "match": "\\s*(participant)\\s+([\"\\(\\)$&%\\^/#.?!*=<>\\'\\\\\\w\\s]+?)(?:\\s+(as))?\\s([\"\\(\\)$&%\\^/#.,?!*=<>\\'\\\\\\w\\s]+)?",
+              "captures": {
+                "1": {
+                  "name": "keyword.control.pintora"
+                },
+                "2": {
+                  "name": "variable"
+                },
+                "3": {
+                  "name": "keyword.control.pintora"
+                },
+                "4": {
+                  "name": "string"
+                }
+              }
+            },
+            {
+              "comment": "(activate/deactivate)(Actor)",
+              "match": "\\s*((?:de)?activate)\\s+(\\b[\"\\(\\)$&%\\^/#.?!*=<>\\'\\\\\\w\\s]+\\b\\s*)",
+              "captures": {
+                "1": {
+                  "name": "keyword.control.pintora"
+                },
+                "2": {
+                  "name": "variable"
+                }
+              }
+            },
+            {
+              "comment": "(note)(direction)(Actor)(,)?(Actor)?(:)(Message)",
+              "match": "\\s*(note|@note)\\s+((?:left|right)\\sof|over)\\s+(\\b[\"\\(\\)$&%\\^/#.?!*=<>\\'\\\\\\w\\s]+\\b\\s*)(,)?(\\b[\"\\(\\)$&%\\^/#.?!*=<>\\'\\\\\\w\\s]+\\b\\s*)?(:)(?:\\s+([^;#]*))?",
+              "captures": {
+                "1": {
+                  "name": "keyword.control.pintora"
+                },
+                "2": {
+                  "name": "entity.name.function.pintora"
+                },
+                "3": {
+                  "name": "variable"
+                },
+                "4": {
+                  "name": "keyword.control.pintora"
+                },
+                "5": {
+                  "name": "variable"
+                },
+                "6": {
+                  "name": "keyword.control.pintora"
+                },
+                "7": {
+                  "name": "string"
+                }
+              }
+            },
+            {
+              "comment": "Multiline note",
+              "begin": "(@note)\\s+((?:left|right)\\sof|over)\\s+(\\b[\"\\(\\)$&%\\^/#.?!*=<>\\'\\\\\\w\\s]+\\b\\s*)(,)?(\\b[\"\\(\\)$&%\\^/#.?!*=<>\\'\\\\\\w\\s]+\\b\\s*)?\\n",
+              "end": "(@end_note)",
+              "beginCaptures": {
+                "1": {
+                  "name": "keyword.control.pintora"
+                },
+                "2": {
+                  "name": "entity.name.function.pintora"
+                },
+                "3": {
+                  "name": "variable"
+                },
+                "4": {
+                  "name": "keyword.control.pintora"
+                },
+                "5": {
+                  "name": "variable"
+                }
+              },
+              "endCaptures": {
+                "1": {
+                  "name": "keyword.control.pintora"
+                }
+              }
+            },
+            {
+              "comment": "(loop)(loop text)",
+              "match": "\\s*(loop)(?:\\s+([^;#]*))?",
+              "captures": {
+                "1": {
+                  "name": "keyword.control.pintora"
+                },
+                "2": {
+                  "name": "string"
+                }
+              }
+            },
+            {
+              "comment": "(end)",
+              "match": "\\s*(end)",
+              "captures": {
+                "1": {
+                  "name": "keyword.control.pintora"
+                }
+              }
+            },
+            {
+              "comment": "(alt/else/opt/par/and/autonumber)(text)",
+              "match": "\\s*(alt|else|opt|par|and|rect|autonumber)(?:\\s+([^#;]*))?",
+              "captures": {
+                "1": {
+                  "name": "keyword.control.pintora"
+                },
+                "2": {
+                  "name": "string"
+                }
+              }
+            },
+            {
+              "comment": "(Actor)(Arrow)(Actor)(:)(Message)",
+              "match": "\\s*(\\b[\"\\(\\)$&%\\^/#.?!*=<>\\'\\\\\\w\\s]+\\b)\\s*(-?-(?:\\>|x|\\))\\>?[+-]?)\\s*([\"\\(\\)$&%\\^/#.?!*=<>\\'\\\\\\w\\s]+\\b)\\s*(:)\\s*([^;#]*)",
+              "captures": {
+                "1": {
+                  "name": "variable"
+                },
+                "2": {
+                  "name": "keyword.control.pintora"
+                },
+                "3": {
+                  "name": "variable"
+                },
+                "4": {
+                  "name": "keyword.control.pintora"
+                },
+                "5": {
+                  "name": "string"
+                }
+              }
+            },
+            {
+              "comment": "divider",
+              "match": "\\s*(==)\\s+(.*)\\s+(==)",
+              "captures": {
+                "1": {
+                  "name": "keyword.control.pintora"
+                },
+                "2": {
+                  "name": "variable"
+                },
+                "3": {
+                  "name": "keyword.control.pintora"
+                }
+              }
+            },
+            {
+              "include": "#config__clause"
+            },
+            {
+              "include": "#comment"
+            }
+          ],
+          "end": "(^|\\G)(?=\\s*[`~]{3,}\\s*$)"
+        }
+      ]
+    },
+    "component__element": {
+      "patterns": [
+        {
+          "include": "#comment"
+        },
+        {
+          "comment": "package",
+          "begin": "(package|node|folder|frame|cloud|database|rectangle|component)\\s+\"([^\"]+)\"\\s*({)",
+          "beginCaptures": {
+            "1": {
+              "name": "keyword.control.pintora"
+            },
+            "2": {
+              "name": "string"
+            },
+            "3": {
+              "name": "punctuation.bracket.open.pintora"
+            }
+          },
+          "end": "(})",
+          "endCaptures": {
+            "1": {
+              "name": "punctuation.bracket.close.pintora"
+            }
+          },
+          "patterns": [
+            {
+              "include": "#component__element"
+            }
+          ]
+        },
+        {
+          "comment": "() \"label\" as aliasname",
+          "match": "(\\(\\))\\s*\"([^\"]+)\"\\s*(as)\\s+(\\w+)",
+          "captures": {
+            "1": {
+              "name": "keyword.control.pintora"
+            },
+            "2": {
+              "name": "string"
+            },
+            "3": {
+              "name": "keyword.control.pintora"
+            },
+            "4": {
+              "name": "variable.pintora"
+            }
+          }
+        },
+        {
+          "comment": "() interface",
+          "match": "(\\(\\))\\s*(\\w+)",
+          "captures": {
+            "1": {
+              "name": "keyword.control.pintora"
+            },
+            "2": {
+              "name": "variable.pintora"
+            }
+          }
+        },
+        {
+          "comment": "[component] --> aliasname : message",
+          "match": "(\\[)(.*)(\\])\\s*([-><.]+)\\s*([^\\s]*)\\s*(:)\\s*(.*)",
+          "captures": {
+            "1": {
+              "name": "keyword.control.pintora"
+            },
+            "2": {
+              "name": "variable.pintora"
+            },
+            "3": {
+              "name": "keyword.control.pintora"
+            },
+            "4": {
+              "name": "keyword.control.pintora"
+            },
+            "5": {
+              "name": "variable.pintora"
+            },
+            "6": {
+              "name": "keyword.control.pintora"
+            },
+            "7": {
+              "name": "string.pintora"
+            }
+          }
+        },
+        {
+          "comment": "name --> aliasname : message",
+          "match": "([^\\s]+)\\s*([-><.]+)\\s*([^\\s]*)\\s*(:)\\s*(.*)",
+          "captures": {
+            "1": {
+              "name": "variable.pintora"
+            },
+            "2": {
+              "name": "keyword.control.pintora"
+            },
+            "3": {
+              "name": "variable.pintora"
+            },
+            "4": {
+              "name": "keyword.control.pintora"
+            },
+            "5": {
+              "name": "string.pintora"
+            }
+          }
+        },
+        {
+          "comment": "[component] as aliasname",
+          "match": "(\\[)(.*)(\\])\\s+(as)\\s+(\\w+)",
+          "captures": {
+            "1": {
+              "name": "keyword.control.pintora"
+            },
+            "2": {
+              "name": "variable.pintora"
+            },
+            "3": {
+              "name": "keyword.control.pintora"
+            },
+            "4": {
+              "name": "keyword.control.pintora"
+            },
+            "5": {
+              "name": "variable.pintora"
+            }
+          }
+        },
+        {
+          "comment": "[component]",
+          "match": "(\\[)(.*)(\\])",
+          "captures": {
+            "1": {
+              "name": "keyword.control.pintora"
+            },
+            "2": {
+              "name": "variable.pintora"
+            },
+            "3": {
+              "name": "keyword.control.pintora"
+            }
+          }
+        }
+      ]
+    },
+    "activity__element": {
+      "patterns": [
+        {
+          "comment": "group",
+          "begin": "(group|partition)\\s+([^\\s]+)\\s*({)",
+          "beginCaptures": {
+            "1": {
+              "name": "keyword.control.pintora"
+            },
+            "2": {
+              "name": "string"
+            },
+            "3": {
+              "name": "punctuation.bracket.open.pintora"
+            }
+          },
+          "end": "(})",
+          "endCaptures": {
+            "1": {
+              "name": "punctuation.bracket.close.pintora"
+            }
+          },
+          "patterns": [
+            {
+              "include": "#activity__element"
+            }
+          ]
+        },
+        {
+          "comment": "condition - if",
+          "begin": "(if)\\s+(\\()(.*)(\\))\\s+(then)\\s+(\\(.*\\))?",
+          "beginCaptures": {
+            "1": {
+              "name": "keyword.control.pintora"
+            },
+            "2": {
+              "name": "keyword.control.pintora"
+            },
+            "3": {
+              "name": "string"
+            },
+            "4": {
+              "name": "keyword.control.pintora"
+            },
+            "5": {
+              "name": "keyword.control.pintora"
+            },
+            "6": {
+              "name": "string"
+            }
+          },
+          "end": "(endif)",
+          "endCaptures": {
+            "1": {
+              "name": "keyword.control.pintora"
+            }
+          },
+          "patterns": [
+            {
+              "include": "#activity__element"
+            }
+          ]
+        },
+        {
+          "comment": "condition - else - with label",
+          "match": "(else)\\s+(\\()(.*)(\\))",
+          "captures": {
+            "1": {
+              "name": "keyword.control.pintora"
+            },
+            "2": {
+              "name": "keyword.control.pintora"
+            },
+            "3": {
+              "name": "string"
+            },
+            "4": {
+              "name": "keyword.control.pintora"
+            }
+          }
+        },
+        {
+          "comment": "condition - else",
+          "match": "(else)",
+          "captures": {
+            "1": {
+              "name": "keyword.control.pintora"
+            }
+          }
+        },
+        {
+          "comment": "while",
+          "begin": "(while)\\s+(\\()([^)]+)(\\))(?:\\s+(is)\\s+(\\()([^)]+)(\\)))?",
+          "beginCaptures": {
+            "1": {
+              "name": "keyword.control.pintora"
+            },
+            "2": {
+              "name": "keyword.control.pintora"
+            },
+            "3": {
+              "name": "string"
+            },
+            "4": {
+              "name": "keyword.control.pintora"
+            },
+            "5": {
+              "name": "keyword.control.pintora"
+            },
+            "6": {
+              "name": "keyword.control.pintora"
+            },
+            "7": {
+              "name": "string"
+            },
+            "8": {
+              "name": "keyword.control.pintora"
+            }
+          },
+          "end": "(endwhile)(?:\\s+(\\()(.*)(\\)))?",
+          "endCaptures": {
+            "1": {
+              "name": "keyword.control.pintora"
+            },
+            "2": {
+              "name": "keyword.control.pintora"
+            },
+            "3": {
+              "name": "string"
+            },
+            "4": {
+              "name": "keyword.control.pintora"
+            }
+          },
+          "patterns": [
+            {
+              "include": "#activity__element"
+            }
+          ]
+        },
+        {
+          "comment": "switch",
+          "begin": "(switch)\\s+(\\()([^)]+)(\\))",
+          "beginCaptures": {
+            "1": {
+              "name": "keyword.control.pintora"
+            },
+            "2": {
+              "name": "keyword.control.pintora"
+            },
+            "3": {
+              "name": "string"
+            },
+            "4": {
+              "name": "keyword.control.pintora"
+            }
+          },
+          "end": "(endswitch)",
+          "endCaptures": {
+            "1": {
+              "name": "keyword.control.pintora"
+            }
+          },
+          "patterns": [
+            {
+              "include": "#activity__element"
+            }
+          ]
+        },
+        {
+          "comment": "case",
+          "match": "(case)\\s+(\\()([^)]+)(\\))",
+          "captures": {
+            "1": {
+              "name": "keyword.control.pintora"
+            },
+            "2": {
+              "name": "keyword.control.pintora"
+            },
+            "3": {
+              "name": "string"
+            },
+            "4": {
+              "name": "keyword.control.pintora"
+            }
+          },
+          "patterns": [
+            {
+              "include": "#activity__element"
+            }
+          ]
+        },
+        {
+          "comment": "forkagain",
+          "match": "(forkagain)",
+          "captures": {
+            "1": {
+              "name": "keyword.control.pintora"
+            }
+          }
+        },
+        {
+          "comment": "fork",
+          "begin": "(fork)",
+          "beginCaptures": {
+            "1": {
+              "name": "keyword.control.pintora"
+            }
+          },
+          "end": "(endfork|endmerge)",
+          "endCaptures": {
+            "1": {
+              "name": "keyword.control.pintora"
+            }
+          },
+          "patterns": [
+            {
+              "include": "#activity__element"
+            }
+          ]
+        },
+        {
+          "comment": "(note)(direction)(Actor)(,)?(Actor)?(:)(Message)",
+          "match": "\\s*(note)\\s+(left|right)\\s*(:)\\s*(.*)",
+          "captures": {
+            "1": {
+              "name": "keyword.control.pintora"
+            },
+            "2": {
+              "name": "entity.name.function.pintora"
+            },
+            "3": {
+              "name": "keyword.control.pintora"
+            },
+            "4": {
+              "name": "string"
+            }
+          }
+        },
+        {
+          "comment": "arrow label",
+          "match": "(->)(.*)(;)",
+          "captures": {
+            "1": {
+              "name": "keyword.control.pintora"
+            },
+            "2": {
+              "name": "string"
+            },
+            "3": {
+              "name": "keyword.control.pintora"
+            }
+          }
+        },
+        {
+          "comment": "action",
+          "match": "(:)(.*)(;)",
+          "captures": {
+            "1": {
+              "name": "keyword.control.pintora"
+            },
+            "2": {
+              "name": "string"
+            },
+            "3": {
+              "name": "keyword.control.pintora"
+            }
+          }
+        },
+        {
+          "comment": "keyword",
+          "match": "(start|end|stop)\\s*$",
+          "captures": {
+            "1": {
+              "name": "keyword.control.pintora"
+            }
+          }
+        }
+      ]
+    },
+    "config__clause": {
+      "patterns": [
+        {
+          "comment": "@config",
+          "begin": "(@config)(\\()",
+          "beginCaptures": {
+            "1": {
+              "name": "keyword.control.pintora"
+            },
+            "2": {
+              "name": "support.type.property-name.pintora"
+            },
+            "3": {
+              "name": "string.value"
+            }
+          },
+          "end": "\\)",
+          "endCaptures": {
+            "1": {
+              "name": "keyword.control.pintora"
+            }
+          },
+          "patterns": [
+            {
+              "include": "source.json"
+            }
+          ]
+        },
+        {
+          "comment": "@param - oneline",
+          "match": "(@param)\\s+([\\w\\d_]+)\\s+(.*)",
+          "captures": {
+            "1": {
+              "name": "keyword.control.pintora"
+            },
+            "2": {
+              "name": "support.type.property-name.pintora"
+            },
+            "3": {
+              "name": "string.value"
+            }
+          }
+        },
+        {
+          "comment": "@param - block",
+          "begin": "(@param)\\s+(\\{)",
+          "beginCaptures": {
+            "1": {
+              "name": "keyword.control.pintora"
+            },
+            "2": {
+              "name": "punctuation.bracket.open.pintora"
+            }
+          },
+          "end": "(\\})",
+          "endCaptures": {
+            "1": {
+              "name": "keyword.control.pintora"
+            }
+          },
+          "patterns": [
+            {
+              "include": "#config__part"
+            }
+          ]
+        }
+      ]
+    },
+    "config__part": {
+      "patterns": [
+        {
+          "comment": "config part",
+          "match": "([^\\s]+)\\s+(.*)",
+          "captures": {
+            "1": {
+              "name": "support.type.property-name.pintora"
+            },
+            "2": {
+              "name": "string.value"
+            }
+          }
+        }
+      ]
+    },
+    "comment": {
+      "patterns": [
+        {
+          "comment": "comment",
+          "match": "(%%)(.*)",
+          "captures": {
+            "1": {
+              "name": "comment"
+            },
+            "2": {
+              "name": "comment"
+            }
+          }
+        }
+      ]
+    }
+  },
+  "scopeName": "source.pintora"
+}
