@@ -208,30 +208,30 @@ signaltype ->
 	| %DOTTED_POINT      {% (d) => yy.LINETYPE.DOTTED_POINT %}
 
 signal ->
-	  actor signaltype %PLUS actor _ textWithColon {%
+	  actor _ signaltype (%PLUS | %MINUS) _ actor _ textWithColon {%
       function(d) {
+        const toActor = d[5]
+        const activeMark = d[3][0]
+        let activeAction
+        if (activeMark.type === 'MINUS') {
+          activeAction = {type: 'activeEnd', signalType: yy.LINETYPE.ACTIVE_END, actor: toActor }
+        } else {
+          activeAction = { type: 'activeStart', signalType: yy.LINETYPE.ACTIVE_START, actor: toActor }
+        }
         return [
-          d[0], d[3],
-          {type: 'addSignal', from: d[0].actor, to: d[3].actor, signalType: d[1], msg: d[5]},
-          {type: 'activeStart', signalType: yy.LINETYPE.ACTIVE_START, actor: d[3]}
+          d[0], toActor,
+          { type: 'addSignal', from: d[0].actor, to: toActor.actor, signalType: d[2], msg: d[7] },
+          activeAction,
         ]
       }
     %}
-	| actor signaltype %MINUS actor _ textWithColon {%
-      function(d) {
-        return [
-          d[0], d[3],
-          {type: 'addSignal', from: d[0].actor, to: d[3].actor, signalType: d[1], msg: d[5]},
-          {type: 'activeEnd', signalType: yy.LINETYPE.ACTIVE_END, actor: d[3]}
-        ]
-      }
-    %}
-	| actor signaltype actor _ textWithColon {%
+	| actor _ signaltype _ actor _ textWithColon {%
       function(d) {
         // console.log('got message', d)
+        const toActor = d[4]
         return [
-          d[0], d[2],
-          {type: 'addSignal', from: d[0].actor, to: d[2].actor, signalType: d[1], msg: d[4]},
+          d[0], toActor,
+          {type: 'addSignal', from: d[0].actor, to: toActor.actor, signalType: d[2], msg: d[6]},
         ]
       }
     %}

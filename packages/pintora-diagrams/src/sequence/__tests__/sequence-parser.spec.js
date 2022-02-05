@@ -11,7 +11,7 @@ describe('sequence parser', () => {
     const backquoteExample = stripStartEmptyLines(`
 sequenceDiagram
   autonumber
-  用户->>Pintora: 帮我画张时序图
+  用户 ->> Pintora: 帮我画张时序图
   activate Pintora
   alt DSL 正确
     Pintora->>用户: 返回绘制好的图表
@@ -285,7 +285,7 @@ sequenceDiagram
   it('can parse activations with plus/minus token', () => {
     const example = stripStartEmptyLines(`
   sequenceDiagram
-    A-->>+B: m1
+    A-->>+ B: m1
     A-->>-B: m2
   `)
     parse(example)
