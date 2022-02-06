@@ -1,6 +1,6 @@
 {
   "name": "@pintora/standalone",
-  "version": "0.1.0-alpha.26",
+  "version": "0.1.0-alpha.27",
   "description": "A standalone version of pintora that has all the default diagrams",
   "keywords": [
     "pintora",
@@ -48,7 +48,7 @@
   },
   "dependencies": {
     "@pintora/core": "^0.1.0-alpha.25",
-    "@pintora/diagrams": "^0.1.0-alpha.26",
+    "@pintora/diagrams": "^0.1.0-alpha.27",
     "@pintora/renderer": "^0.1.0-alpha.25"
   },
   "devDependencies": {

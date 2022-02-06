@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.1.0-alpha.27](https://github.com/hikerpig/pintora/compare/v0.1.0-alpha.25...v0.1.0-alpha.27) (2022-02-06)
+
+
+### Features
+
+* **pintora-website:** add shiki highlight to preview ([7937abc](https://github.com/hikerpig/pintora/commit/7937abc34f990e2810b0f06a7831471eb78949e0))
+
+
+
+
+
 # [0.1.0-alpha.26](https://github.com/hikerpig/pintora/compare/v0.1.0-alpha.25...v0.1.0-alpha.26) (2022-02-05)
 
 **Note:** Version bump only for package pintora-demo

@@ -1,6 +1,6 @@
 {
   "name": "pintora-demo",
-  "version": "0.1.0-alpha.26",
+  "version": "0.1.0-alpha.27",
   "private": true,
   "scripts": {
     "dev": "vite --port 3001",
@@ -22,7 +22,7 @@
     "@codemirror/view": "^0.19.39",
     "@pintora/core": "^0.1.0-alpha.25",
     "@pintora/renderer": "^0.1.0-alpha.25",
-    "@pintora/standalone": "^0.1.0-alpha.26",
+    "@pintora/standalone": "^0.1.0-alpha.27",
     "@pintora/test-shared": "^0.1.0-alpha.24",
     "@react-hook/debounce": "^4.0.0",
     "@reduxjs/toolkit": "^1.7.1",

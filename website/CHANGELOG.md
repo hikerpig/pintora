@@ -3,6 +3,18 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+# [0.1.0-alpha.27](https://github.com/hikerpig/pintora/compare/v0.1.0-alpha.25...v0.1.0-alpha.27) (2022-02-06)
+
+
+### Features
+
+* **pintora-diagrams:** add new `[@config](https://github.com/config)` directive, rename the old to `[@param](https://github.com/param)` ([4f47693](https://github.com/hikerpig/pintora/commit/4f476936567716de29681df35c8f578cc9aa81cb))
+* **pintora-website:** add shiki highlight to preview ([7937abc](https://github.com/hikerpig/pintora/commit/7937abc34f990e2810b0f06a7831471eb78949e0))
+
+
+
+
+
 # [0.1.0-alpha.26](https://github.com/hikerpig/pintora/compare/v0.1.0-alpha.25...v0.1.0-alpha.26) (2022-02-05)
 
 
