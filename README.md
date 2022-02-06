@@ -21,7 +21,7 @@
 
 <br>
 
-Pintora is a javascript text-to-diagrams library that works in both browser and Node.js.
+Pintora is an extensible javascript text-to-diagrams library that works in both browser and Node.js.
 
 Expressing your thoughts in a diagram is better than a thousand words. With the help of pintora.js, you can create diagrams with intuitive text.
 
@@ -32,7 +32,7 @@ Heavily inspired by [Mermaid.js](https://mermaid-js.github.io/mermaid/#/) and [P
 - In browser side, output SVG or Canvas.
 - In Node.js side, output PNG/JPG/SVG file.
 - Outputs are clean and self contained, won't pollute the page with global style.
-- Modular and highly extensible, provide a plugin system for diagram developer to write and distribute their own diagrams.
+- Modular and highly extensible, provide a plugin system for diagram developer to write and distribute their own diagrams. Here is a tutorial [Write a custom diagram | Pintora](https://pintorajs.vercel.app/docs/advanced/write-a-custom-diagram/).
 
 ### Diagram types
 
@@ -94,6 +94,7 @@ Check the online [documentation and demo](http://pintorajs.vercel.app/docs/intro
 ## Related Projects
 
 - [gatsby-remark-pintora](https://github.com/hikerpig/gatsby-remark-pintora) A gatsby remark plugin for converting pintora codeblock to diagrams in markdown files.
+- [Pintora.js - Diagram as text / hikerpig / Observable](https://observablehq.com/@hikerpig/pintora-js-diagram-as-text), use pintora in Observable interactive notebook.
 
 ## 🔭 Roadmap
 
