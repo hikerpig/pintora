@@ -91,15 +91,20 @@ Check the online [documentation and demo](http://pintorajs.vercel.app/docs/intro
 
 - VSCode extension [pintora-vscode](https://marketplace.visualstudio.com/items?itemName=hikerpig.pintora-vscode), providing syntax highlight and preview support for `.pintora` file and markdown code fence.
 
+## Related Projects
+
+- [gatsby-remark-pintora](https://github.com/hikerpig/gatsby-remark-pintora) A gatsby remark plugin for converting pintora codeblock to diagrams in markdown files.
+
 ## 🔭 Roadmap
 
 - [x] Sequence Diagram and Entity Relationship Diagram
 - [x] Pintora node.js cli
 - [x] PlantUML style Component diagram
 - [x] Theme config
-- [x] PlantUML style Activity diagram
+- [x] PlantUML style Activity Diagram
 - [x] Mind Map
-- [ ] PlantUML style deploy diagram
+- [ ] Gantt diagram
+- [ ] PlantUML style Deploy Diagram
 - [ ] Load diagram implementation and canvas renderer only when needed
 
 If you have good thoughts or feature requests, please feel free to [start a new discussion](https://github.com/hikerpig/pintora/discussions).

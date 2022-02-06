@@ -1,24 +1,14 @@
 {
-  "fileTypes": [],
-  "injectionSelector": "L:markup.fenced_code.block.markdown",
+  "fileTypes": [
+    "pintora"
+  ],
+  "scopeName": "source.pintora",
   "patterns": [
-    {
-      "include": "#pintora-code-block"
-    },
     {
       "include": "#pintora"
     }
   ],
   "repository": {
-    "pintora-code-block": {
-      "begin": "(?<=[`~])pintora(\\s+[^`~]*)?$",
-      "end": "(^|\\G)(?=\\s*[`~]{3,}\\s*$)",
-      "patterns": [
-        {
-          "include": "#pintora"
-        }
-      ]
-    },
     "pintora": {
       "patterns": [
         {
@@ -222,8 +212,35 @@
               }
             },
             {
+              "comment": "participant with classifier",
+              "match": "\\s*(participant)\\s+(\\[)(\\<)([^>]+)(\\>)\\s*([^\\]]+)(\\])",
+              "captures": {
+                "1": {
+                  "name": "keyword.control.pintora"
+                },
+                "2": {
+                  "name": "keyword.control.pintora"
+                },
+                "3": {
+                  "name": "punctuation.definition.tag.begin"
+                },
+                "4": {
+                  "name": "entity.name.tag"
+                },
+                "5": {
+                  "name": "punctuation.definition.tag.end"
+                },
+                "6": {
+                  "name": "variable"
+                },
+                "7": {
+                  "name": "keyword.control.pintora"
+                }
+              }
+            },
+            {
               "comment": "(participant)(Actor)(as)?(Label)?",
-              "match": "\\s*(participant)\\s+([\"\\(\\)$&%\\^/#.?!*=<>\\'\\\\\\w\\s]+?)(?:\\s+(as))?\\s([\"\\(\\)$&%\\^/#.,?!*=<>\\'\\\\\\w\\s]+)?",
+              "match": "\\s*(participant)# participant\\s+([\"\\(\\)$&%\\^/#.?!*=<>\\'\\\\\\w\\s]+?)# Actor(?:\\s+(as))?\\s([\"\\(\\)$&%\\^/#.,?!*=<>\\'\\\\\\w\\s]+)?",
               "captures": {
                 "1": {
                   "name": "keyword.control.pintora"
@@ -443,6 +460,51 @@
             },
             "2": {
               "name": "variable.pintora"
+            }
+          }
+        },
+        {
+          "comment": "interface \"label\"",
+          "match": "(interface|\\(\\))\\s*\"(\\w+)\"",
+          "captures": {
+            "1": {
+              "name": "keyword.control.pintora"
+            },
+            "2": {
+              "name": "string.pintora"
+            }
+          }
+        },
+        {
+          "comment": "[component] --> [component] : message",
+          "match": "(\\[)(.*)(\\])\\s*([-><.]+)\\s*(\\[)([^\\s]*)(\\])\\s*(:)\\s*(.*)",
+          "captures": {
+            "1": {
+              "name": "keyword.control.pintora"
+            },
+            "2": {
+              "name": "variable.pintora"
+            },
+            "3": {
+              "name": "keyword.control.pintora"
+            },
+            "4": {
+              "name": "keyword.control.pintora"
+            },
+            "5": {
+              "name": "keyword.control.pintora"
+            },
+            "6": {
+              "name": "variable.pintora"
+            },
+            "7": {
+              "name": "keyword.control.pintora"
+            },
+            "8": {
+              "name": "keyword.control.pintora"
+            },
+            "9": {
+              "name": "string.pintora"
             }
           }
         },
@@ -912,6 +974,5 @@
         }
       ]
     }
-  },
-  "scopeName": "source.pintora"
+  }
 }
