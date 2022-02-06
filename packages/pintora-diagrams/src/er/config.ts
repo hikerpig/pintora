@@ -1,6 +1,6 @@
 import { PALETTE } from '../util/theme'
 import { DEFAULT_FONT_FAMILY } from '@pintora/core'
-import { interpreteConfigs, makeConfigurator } from '../util/style'
+import { interpreteConfigs, makeConfigurator } from '../util/config'
 
 export type ErConf = {
   diagramPadding: number

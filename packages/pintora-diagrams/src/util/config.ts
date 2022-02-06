@@ -34,7 +34,7 @@ export function makeConfigurator<C>(opts: {
   const { configKey, defaultConfig } = opts
 
   function getConfig(configContext: DiagramConfigContext, extraConfig?: Partial<C>): C {
-    const globalConfig: PintoraConfig = configApi.getConfig()
+    const globalConfig: PintoraConfig = configApi.gnernateNewConfig(configContext.overrideConfig || {})
     const t = globalConfig.themeConfig?.themeVariables
     const conf = { ...defaultConfig }
 

@@ -300,6 +300,9 @@ mindmap
   "core": {
     "defaultFontFamily": "serif"
   },
+  "themeConfig": {
+    "theme": "larkDark"
+  },
   "mindmap": {
     "layoutDirection":   "TB",
       "l1NodeBgColor":   "#2B7A5D",

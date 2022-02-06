@@ -1,5 +1,5 @@
 import { PALETTE } from '../util/theme'
-import { interpreteConfigs, makeConfigurator } from '../util/style'
+import { interpreteConfigs, makeConfigurator } from '../util/config'
 import { DEFAULT_FONT_FAMILY } from '../util/text'
 
 export type ActivityConf = {

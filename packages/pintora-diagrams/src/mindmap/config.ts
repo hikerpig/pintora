@@ -1,5 +1,5 @@
 import { DEFAULT_FONT_FAMILY, MarkAttrs, tinycolor } from '@pintora/core'
-import { interpreteConfigs, makeConfigurator } from '../util/style'
+import { interpreteConfigs, makeConfigurator } from '../util/config'
 import { PALETTE } from '../util/theme'
 
 export type MindmapConf = {

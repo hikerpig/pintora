@@ -6,6 +6,7 @@ import { activityDiagram, ActivityDiagramIR } from './activity'
 import { mindmap, MindmapIR } from './mindmap'
 import './type' // type augmentation
 import './util/symbols'
+import { BaseDiagramIR } from './util/ir'
 
 export { PintoraConfig }
 
@@ -18,6 +19,7 @@ export const DIAGRAMS = {
 }
 
 export {
+  BaseDiagramIR,
   SequenceDiagramIR,
   sequenceDiagram,
   erDiagram,

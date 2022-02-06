@@ -1,5 +1,5 @@
 import { logger, OrNull, parseColor } from '@pintora/core'
-import { ConfigParam, OverrideAction, ParamAction } from '../util/style'
+import { ConfigParam, OverrideAction, ParamAction } from '../util/config'
 import { BaseDb } from '../util/base-db'
 import { BaseDiagramIR } from '../util/ir'
 

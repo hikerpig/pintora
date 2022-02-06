@@ -1,6 +1,6 @@
-import pintora, { configApi, GraphicsIR, PintoraConfig, themeRegistry } from '@pintora/core'
+import pintora, { configApi, GraphicsIR, PintoraConfig } from '@pintora/core'
 export * from '@pintora/core'
-import { DIAGRAMS } from '@pintora/diagrams'
+import { DIAGRAMS, BaseDiagramIR } from '@pintora/diagrams'
 import { render, RenderOptions, BaseRenderer, rendererRegistry } from '@pintora/renderer'
 import 'tinycolor2'
 
@@ -10,10 +10,6 @@ function initDiagrams() {
   })
 }
 initDiagrams()
-
-type DeepPartial<T> = {
-  [P in keyof T]?: DeepPartial<T[P]>
-}
 
 type InitBrowserOptions = {
   startOnLoad?: boolean
@@ -76,15 +72,17 @@ const pintoraStandalone = {
         let graphicIR = drawResult.graphicIR
         if (options.enhanceGraphicIR) graphicIR = options.enhanceGraphicIR(graphicIR)
         if (!graphicIR.bgColor) {
-          const conf = configApi.getConfig<PintoraConfig>()
+          const diagramIR: BaseDiagramIR = drawResult.diagramIR
+          const conf = configApi.gnernateNewConfig<PintoraConfig>(diagramIR.overrideConfig || {})
           const canvasBackground = conf.themeConfig.themeVariables?.canvasBackground
+
           if (canvasBackground) graphicIR.bgColor = canvasBackground
         }
 
         render(graphicIR, options)
       }
     } finally {
-      if (config) configApi.replaceConfig(backupConfig)
+      if (config && backupConfig) configApi.replaceConfig(backupConfig)
     }
   },
   /**
@@ -120,23 +118,7 @@ const pintoraStandalone = {
     })
   },
   getConfig: configApi.getConfig,
-  setConfig(c: DeepPartial<PintoraConfig>) {
-    configApi.setConfig(c)
-    if (c.themeConfig?.theme) {
-      const conf = configApi.getConfig<PintoraConfig>()
-      const newConf = { ...conf }
-      const themeVars = themeRegistry.themes[c.themeConfig.theme]
-      const configThemeVars = c.themeConfig.themeVariables
-      if (themeVars) {
-        newConf.themeConfig = newConf.themeConfig || ({} as any)
-        newConf.themeConfig.themeVariables = { ...themeVars }
-      }
-      if (configThemeVars) {
-        Object.assign(newConf.themeConfig.themeVariables, configThemeVars)
-      }
-      configApi.setConfig(newConf)
-    }
-  },
+  setConfig: configApi.setConfig,
 }
 
 export { BaseRenderer, rendererRegistry, PintoraConfig }

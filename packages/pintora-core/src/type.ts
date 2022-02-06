@@ -2,7 +2,7 @@ import { GraphicsIR } from './types/graphics'
 
 export * from './types/graphics'
 
-export { Maybe, OrNull } from './types/helper'
+export { Maybe, OrNull, DeepPartial } from './types/helper'
 
 export interface IDiagram<D = any, Config = any> {
   /**

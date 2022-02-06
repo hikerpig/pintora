@@ -1,5 +1,5 @@
 import { PintoraConfig } from '@pintora/core'
-import { ConfigParam } from './style'
+import { ConfigParam } from './config'
 
 export type BaseDiagramIR = {
   configParams: ConfigParam[]

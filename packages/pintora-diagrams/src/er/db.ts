@@ -1,5 +1,5 @@
 import { BaseDiagramIR } from '../util/ir'
-import { ConfigParam } from '../util/style'
+import { ConfigParam } from '../util/config'
 import { BaseDb } from '../util/base-db'
 
 export enum Cardinality {

@@ -1,7 +1,9 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import deepmerge from 'deepmerge'
 import cloneDeep from 'clone-deep'
 import { ITheme, themeRegistry } from './themes'
 import { DEFAULT_FONT_FAMILY } from './consts'
+import { DeepPartial } from '.'
 
 export interface PintoraConfig {
   core: {
@@ -25,7 +27,7 @@ let config: PintoraConfig = {
     theme: 'default',
     darkTheme: 'dark',
     themeVariables: themeRegistry.themes.default,
-    // themeVariables: themeRegistry.themes..dark,
+    // themeVariables: themeRegistry.themes.dark,
   },
 }
 
@@ -35,16 +37,39 @@ const configApi = {
   getConfig<T = PintoraConfig>() {
     return config as any as T
   },
-  setConfig<T = PintoraConfig>(c: Partial<T>) {
-    config = deepmerge(config, c, {
-      arrayMerge: overwriteArrayMerge,
-    })
+  setConfig<T extends PintoraConfig = PintoraConfig>(c: DeepPartial<T>) {
+    const newConfig = configApi.gnernateNewConfig(c)
+    config = newConfig
   },
   cloneConfig() {
     return cloneDeep(config)
   },
   replaceConfig<T = PintoraConfig>(c: T) {
     config = c as any
+  },
+  /**
+   * Genrate new config based on current globalConfig and input partial config
+   */
+  gnernateNewConfig<T extends PintoraConfig = PintoraConfig>(c: DeepPartial<T>): T {
+    const newConfig = deepmerge(config, c as any, {
+      arrayMerge: overwriteArrayMerge,
+    })
+
+    // special case for themeConfig
+    if (c.themeConfig?.theme) {
+      const themeName = c.themeConfig.theme
+      const themeVars = themeRegistry.themes[themeName as any]
+      const configThemeVars = c.themeConfig.themeVariables
+      if (themeVars) {
+        newConfig.themeConfig = newConfig.themeConfig || ({} as any)
+        newConfig.themeConfig.themeVariables = { ...themeVars }
+      }
+      if (configThemeVars) {
+        Object.assign(newConfig.themeConfig.themeVariables, configThemeVars)
+      }
+    }
+
+    return newConfig as T
   },
 }
 

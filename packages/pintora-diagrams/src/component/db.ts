@@ -1,6 +1,6 @@
 import { BaseDb } from '../util/base-db'
 import { BaseDiagramIR } from '../util/ir'
-import { OverrideAction, ParamAction } from '../util/style'
+import { OverrideAction, ParamAction } from '../util/config'
 
 type Component = {
   name: string

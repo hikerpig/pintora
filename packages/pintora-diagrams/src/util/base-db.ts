@@ -1,6 +1,6 @@
 import { PintoraConfig } from '@pintora/core'
 import { BaseDiagramIR } from './ir'
-import { ConfigParam, OverrideAction } from './style'
+import { ConfigParam, OverrideAction } from './config'
 
 export class BaseDb {
   configParams: ConfigParam[] = []
