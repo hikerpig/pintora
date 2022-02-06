@@ -44,9 +44,9 @@ const pintoraStandalone = {
   ...pintora,
   renderTo(code: string, options: RenderToOptions) {
     const { container, config } = options
-    let ctn: HTMLDivElement
+    let ctn: HTMLElement
     if (typeof container === 'string') {
-      ctn = document.querySelector(container) as any
+      ctn = document.querySelector(container)
     } else {
       ctn = container
     }
@@ -79,7 +79,10 @@ const pintoraStandalone = {
           if (canvasBackground) graphicIR.bgColor = canvasBackground
         }
 
-        render(graphicIR, options)
+        render(graphicIR, {
+          ...options,
+          container: ctn,
+        })
       }
     } finally {
       if (config && backupConfig) configApi.replaceConfig(backupConfig)

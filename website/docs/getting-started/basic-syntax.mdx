@@ -23,3 +23,31 @@ sequenceDiagram
   %% another line comment
   A-->B: Hi there!
 ```
+
+## Directives
+
+### @param and @config
+
+You can override current diagram config with these directives.
+
+See [Config](/configuration/config.md) for more details.
+
+```pintora play
+erDiagram
+  @param fontSize 18
+  @config({
+    "themeConfig": {
+      "theme": "larkLight"
+    },
+    "er": {
+      "curvedEdge": false
+    }
+  })
+  CUSTOMER {
+    int id PK
+    int address FK
+  }
+  CUSTOMER ||--o{ ORDER : places
+  ORDER ||--|{ LINE-ITEM : contains
+  CUSTOMER }|..|{ DELIVERY-ADDRESS : uses
+```

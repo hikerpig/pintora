@@ -3,7 +3,7 @@ import { IRenderer } from './type'
 import { makeRenderer, RendererType, BaseRenderer, rendererRegistry } from './renderers'
 
 export type RenderOptions = {
-  container: any
+  container: HTMLElement
   renderer?: RendererType
   onRender?(renderer: IRenderer): void
 }

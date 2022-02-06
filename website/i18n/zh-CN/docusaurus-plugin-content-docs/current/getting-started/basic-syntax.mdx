@@ -23,3 +23,31 @@ sequenceDiagram
   %% another line comment
   A-->B: Hi there!
 ```
+
+## Directives 指令
+
+### @param 和 @config
+
+可以使用这两个指令来覆盖当前图表配置。
+
+更多细节请查看 [Config](/configuration/config.md)。
+
+```pintora play
+erDiagram
+  @param fontSize 18
+  @config({
+    "themeConfig": {
+      "theme": "larkLight"
+    },
+    "er": {
+      "curvedEdge": false
+    }
+  })
+  CUSTOMER {
+    int id PK
+    int address FK
+  }
+  CUSTOMER ||--o{ ORDER : places
+  ORDER ||--|{ LINE-ITEM : contains
+  CUSTOMER }|..|{ DELIVERY-ADDRESS : uses
+```
