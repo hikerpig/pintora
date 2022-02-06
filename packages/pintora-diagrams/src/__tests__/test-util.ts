@@ -1,5 +1,5 @@
 import pintora, { configApi, PintoraConfig, themeRegistry, GraphicsIR, Mark } from '@pintora/core'
-import cloneDeep from 'clone-deep'
+// import cloneDeep from 'clone-deep'
 
 export function testDraw(code: string) {
   let success = true
@@ -33,7 +33,7 @@ const MARK_IGNORE_FIELDS = ['matrix']
  * ignore them for now to pass CI tests.
  */
 export function stripGraphicIRForSnapshot(ir: GraphicsIR) {
-  const cloned = cloneDeep(ir)
+  const cloned = ir
   delete cloned.height
   delete cloned.width
 

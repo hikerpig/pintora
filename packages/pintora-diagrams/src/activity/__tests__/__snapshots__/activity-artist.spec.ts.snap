@@ -1,0 +1,493 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`activity-artist draw fork 1`] = `
+Object {
+  "mark": Object {
+    "children": Array [
+      Object {
+        "attrs": Object {
+          "id": "1",
+          "mark": [Circular],
+          "onLayout": [Function],
+        },
+        "children": Array [
+          Object {
+            "attrs": Object {
+              "fill": "#3b4044",
+              "r": 10,
+            },
+            "type": "circle",
+          },
+        ],
+        "class": "activity__keyword",
+        "type": "group",
+      },
+      Object {
+        "attrs": Object {
+          "id": "2",
+          "mark": [Circular],
+          "onLayout": [Function],
+        },
+        "children": Array [
+          Object {
+            "attrs": Object {
+              "fill": "#fdb05e",
+              "stroke": "#3b4044",
+            },
+            "class": "activity__decision-bg",
+            "type": "path",
+          },
+          Object {
+            "attrs": Object {
+              "fill": "#3b4044",
+              "fontFamily": "Source Code Pro, sans-serif",
+              "fontSize": 14,
+              "text": "multiprocessor?",
+              "textAlign": "center",
+              "textBaseline": "middle",
+            },
+            "type": "text",
+          },
+        ],
+        "type": "group",
+      },
+      Object {
+        "attrs": Object {
+          "fill": "#fdb05e",
+          "stroke": "#3b4044",
+        },
+        "class": "activity__condition-end",
+        "type": "path",
+      },
+      Object {
+        "attrs": Object {},
+        "children": Array [
+          Object {
+            "attrs": Object {
+              "fill": "#3b4044",
+              "radius": 2,
+            },
+            "type": "rect",
+          },
+          Object {
+            "attrs": Object {},
+            "children": Array [
+              Object {
+                "attrs": Object {
+                  "id": "5",
+                  "mark": [Circular],
+                  "onLayout": [Function],
+                },
+                "children": Array [
+                  Object {
+                    "attrs": Object {
+                      "fill": "#fdb05e",
+                      "stroke": "#3b4044",
+                    },
+                    "type": "rect",
+                  },
+                  Object {
+                    "attrs": Object {
+                      "fill": "#3b4044",
+                      "fontFamily": "Source Code Pro, sans-serif",
+                      "fontSize": 14,
+                      "text": "Action 1",
+                      "textAlign": "center",
+                      "textBaseline": "middle",
+                    },
+                    "type": "text",
+                  },
+                ],
+                "type": "group",
+              },
+            ],
+            "type": "group",
+          },
+          Object {
+            "attrs": Object {
+              "id": "5",
+              "mark": [Circular],
+              "onLayout": [Function],
+            },
+            "children": Array [
+              Object {
+                "attrs": Object {
+                  "fill": "#fdb05e",
+                  "stroke": "#3b4044",
+                },
+                "type": "rect",
+              },
+              Object {
+                "attrs": Object {
+                  "fill": "#3b4044",
+                  "fontFamily": "Source Code Pro, sans-serif",
+                  "fontSize": 14,
+                  "text": "Action 1",
+                  "textAlign": "center",
+                  "textBaseline": "middle",
+                },
+                "type": "text",
+              },
+            ],
+            "type": "group",
+          },
+          Object {
+            "attrs": Object {},
+            "children": Array [
+              Object {
+                "attrs": Object {
+                  "id": "7",
+                  "mark": [Circular],
+                  "onLayout": [Function],
+                },
+                "children": Array [
+                  Object {
+                    "attrs": Object {
+                      "fill": "#fdb05e",
+                      "stroke": "#3b4044",
+                    },
+                    "type": "rect",
+                  },
+                  Object {
+                    "attrs": Object {
+                      "fill": "#3b4044",
+                      "fontFamily": "Source Code Pro, sans-serif",
+                      "fontSize": 14,
+                      "text": "Action 2",
+                      "textAlign": "center",
+                      "textBaseline": "middle",
+                    },
+                    "type": "text",
+                  },
+                ],
+                "type": "group",
+              },
+            ],
+            "type": "group",
+          },
+          Object {
+            "attrs": Object {
+              "id": "7",
+              "mark": [Circular],
+              "onLayout": [Function],
+            },
+            "children": Array [
+              Object {
+                "attrs": Object {
+                  "fill": "#fdb05e",
+                  "stroke": "#3b4044",
+                },
+                "type": "rect",
+              },
+              Object {
+                "attrs": Object {
+                  "fill": "#3b4044",
+                  "fontFamily": "Source Code Pro, sans-serif",
+                  "fontSize": 14,
+                  "text": "Action 2",
+                  "textAlign": "center",
+                  "textBaseline": "middle",
+                },
+                "type": "text",
+              },
+            ],
+            "type": "group",
+          },
+        ],
+        "type": "group",
+      },
+      Object {
+        "attrs": Object {
+          "fill": "#3b4044",
+          "radius": 2,
+        },
+        "type": "rect",
+      },
+      Object {
+        "attrs": Object {
+          "id": "8",
+          "mark": [Circular],
+          "onLayout": [Function],
+        },
+        "children": Array [
+          Object {
+            "attrs": Object {
+              "fill": "#fdb05e",
+              "stroke": "#3b4044",
+            },
+            "type": "rect",
+          },
+          Object {
+            "attrs": Object {
+              "fill": "#3b4044",
+              "fontFamily": "Source Code Pro, sans-serif",
+              "fontSize": 14,
+              "text": "Action 1",
+              "textAlign": "center",
+              "textBaseline": "middle",
+            },
+            "type": "text",
+          },
+        ],
+        "type": "group",
+      },
+      Object {
+        "attrs": Object {
+          "id": "9",
+          "mark": [Circular],
+          "onLayout": [Function],
+        },
+        "children": Array [
+          Object {
+            "attrs": Object {
+              "fill": "#fdb05e",
+              "stroke": "#3b4044",
+            },
+            "type": "rect",
+          },
+          Object {
+            "attrs": Object {
+              "fill": "#3b4044",
+              "fontFamily": "Source Code Pro, sans-serif",
+              "fontSize": 14,
+              "text": "Action 2",
+              "textAlign": "center",
+              "textBaseline": "middle",
+            },
+            "type": "text",
+          },
+        ],
+        "type": "group",
+      },
+      Object {
+        "attrs": Object {
+          "id": "10",
+          "mark": [Circular],
+          "onLayout": [Function],
+        },
+        "children": Array [
+          Object {
+            "attrs": Object {
+              "r": 10,
+              "stroke": "#3b4044",
+            },
+            "type": "circle",
+          },
+          Object {
+            "attrs": Object {
+              "fill": "#3b4044",
+              "r": 6,
+            },
+            "type": "circle",
+          },
+        ],
+        "class": "activity__keyword",
+        "type": "group",
+      },
+      Object {
+        "attrs": Object {},
+        "children": Array [
+          Object {
+            "attrs": Object {
+              "lineJoin": "round",
+              "stroke": "#fdb05e",
+            },
+            "type": "path",
+          },
+          Object {
+            "attrs": Object {
+              "lineCap": "round",
+              "stroke": "#fdb05e",
+            },
+            "type": "path",
+          },
+          Object {
+            "attrs": Object {
+              "lineJoin": "round",
+              "stroke": "#fdb05e",
+            },
+            "type": "path",
+          },
+          Object {
+            "attrs": Object {
+              "lineCap": "round",
+              "stroke": "#fdb05e",
+            },
+            "type": "path",
+          },
+          Object {
+            "attrs": Object {
+              "lineJoin": "round",
+              "stroke": "#fdb05e",
+            },
+            "type": "path",
+          },
+          Object {
+            "attrs": Object {
+              "lineCap": "round",
+              "stroke": "#fdb05e",
+            },
+            "type": "path",
+          },
+          Object {
+            "attrs": Object {
+              "lineJoin": "round",
+              "stroke": "#fdb05e",
+            },
+            "type": "path",
+          },
+          Object {
+            "attrs": Object {
+              "lineCap": "round",
+              "stroke": "#fdb05e",
+            },
+            "type": "path",
+          },
+          Object {
+            "attrs": Object {
+              "lineJoin": "round",
+              "stroke": "#fdb05e",
+            },
+            "type": "path",
+          },
+          Object {
+            "attrs": Object {
+              "fill": "#f8f8f2",
+              "opacity": 0.85,
+            },
+            "class": "label-bg",
+            "type": "rect",
+          },
+          Object {
+            "attrs": Object {
+              "fill": "#3b4044",
+              "fontFamily": "Source Code Pro, sans-serif",
+              "fontSize": 14,
+              "id": "2-3",
+              "text": "yes",
+              "textAlign": "center",
+              "textBaseline": "middle",
+            },
+            "class": "activity__edge-label",
+            "type": "text",
+          },
+          Object {
+            "attrs": Object {
+              "lineCap": "round",
+              "stroke": "#fdb05e",
+            },
+            "type": "path",
+          },
+          Object {
+            "attrs": Object {
+              "lineJoin": "round",
+              "stroke": "#fdb05e",
+            },
+            "type": "path",
+          },
+          Object {
+            "attrs": Object {
+              "lineCap": "round",
+              "stroke": "#fdb05e",
+            },
+            "type": "path",
+          },
+          Object {
+            "attrs": Object {
+              "lineJoin": "round",
+              "stroke": "#fdb05e",
+            },
+            "type": "path",
+          },
+          Object {
+            "attrs": Object {
+              "fill": "#f8f8f2",
+              "opacity": 0.85,
+            },
+            "class": "label-bg",
+            "type": "rect",
+          },
+          Object {
+            "attrs": Object {
+              "fill": "#3b4044",
+              "fontFamily": "Source Code Pro, sans-serif",
+              "fontSize": 14,
+              "id": "2-8",
+              "text": "no",
+              "textAlign": "center",
+              "textBaseline": "middle",
+            },
+            "class": "activity__edge-label",
+            "type": "text",
+          },
+          Object {
+            "attrs": Object {
+              "lineCap": "round",
+              "stroke": "#fdb05e",
+            },
+            "type": "path",
+          },
+          Object {
+            "attrs": Object {
+              "lineJoin": "round",
+              "stroke": "#fdb05e",
+            },
+            "type": "path",
+          },
+          Object {
+            "attrs": Object {
+              "lineCap": "round",
+              "stroke": "#fdb05e",
+            },
+            "type": "path",
+          },
+          Object {
+            "attrs": Object {
+              "lineJoin": "round",
+              "stroke": "#fdb05e",
+            },
+            "type": "path",
+          },
+          Object {
+            "attrs": Object {
+              "lineCap": "round",
+              "stroke": "#fdb05e",
+            },
+            "type": "path",
+          },
+          Object {
+            "attrs": Object {
+              "lineJoin": "round",
+              "stroke": "#fdb05e",
+            },
+            "type": "path",
+          },
+          Object {
+            "attrs": Object {
+              "lineCap": "round",
+              "stroke": "#fdb05e",
+            },
+            "type": "path",
+          },
+          Object {
+            "attrs": Object {
+              "lineJoin": "round",
+              "stroke": "#fdb05e",
+            },
+            "type": "path",
+          },
+          Object {
+            "attrs": Object {
+              "lineCap": "round",
+              "stroke": "#fdb05e",
+            },
+            "type": "path",
+          },
+        ],
+        "type": "group",
+      },
+    ],
+    "type": "group",
+  },
+}
+`;
