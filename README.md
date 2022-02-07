@@ -21,6 +21,8 @@
 
 <br>
 
+> **pintora** Spanish for "female painter"
+
 Pintora is an extensible javascript text-to-diagrams library that works in both browser and Node.js.
 
 Expressing your thoughts in a diagram is better than a thousand words. With the help of pintora.js, you can create diagrams with intuitive text.
