@@ -26,7 +26,7 @@ const COMMON_TOKEN_RULES = {
 
 let lexer = moo.states({
   main: {
-    NEWLINE: MOO_NEWLINE,
+    NL: MOO_NEWLINE,
     SPACE: { match: /[ ]+/, lineBreaks: false },
     ASTERISKS: /\*+/,
     PLUS: /\++/,
@@ -67,10 +67,10 @@ document -> null
 
 line ->
     %SPACE:* statement
-	| %SPACE:* %NEWLINE
+	| %SPACE:* %NL
 
 statement ->
-    levelNotation %SPACE:+ words %NEWLINE {%
+    levelNotation %SPACE:+ words %NL {%
       function(d) {
         const label = d[2]
         // console.log('singleline', label)
@@ -78,16 +78,16 @@ statement ->
         return { type: 'addItem', label, depth: d[0].depth, isReverse: notation.isReverse } as ApplyPart
       }
     %}
-  | levelNotation %SPACE:+ %COLON multilineText %SEMICOLON %SPACE:? %NEWLINE {%
+  | levelNotation %SPACE:+ %COLON multilineText %SEMICOLON %SPACE:? %NL {%
       function(d) {
         const label = d[3]
         const notation = d[0]
         return { type: 'addItem', label, depth: notation.depth, isReverse: notation.isReverse } as ApplyPart
       }
     %}
-  | paramClause _ %NEWLINE
-  | configOpenCloseClause %NEWLINE
-  | comment _ %NEWLINE
+  | paramClause _ %NL
+  | configOpenCloseClause %NL
+  | comment _ %NL
 
 levelNotation ->
     (%ASTERISKS | %PLUS) {%
@@ -119,7 +119,7 @@ words ->
     %}
 
 multilineText ->
-    (%VALID_TEXT|%SPACE|%NEWLINE):* {%
+    (%VALID_TEXT|%SPACE|%NL):* {%
       function(d) {
         // console.log('[multiline text]', d)
         const v = d[0].map(l => {
