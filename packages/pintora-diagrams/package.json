@@ -4,6 +4,9 @@
   "description": "Core diagrams of pintora",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
+  "exports": {
+    "./dev-helper": "./dev-helper/index.js"
+  },
   "keywords": [
     "pintora",
     "diagrams"
