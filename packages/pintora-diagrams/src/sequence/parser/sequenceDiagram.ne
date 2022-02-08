@@ -21,8 +21,8 @@ import {
 
 let lexer = moo.states({
   main: {
-    NEWLINE: { match: /\n/, lineBreaks: true },
-    SPACE: {match: / +/, lineBreaks: false },
+    NL: { match: /\n/, lineBreaks: true },
+    WS: {match: / +/, lineBreaks: false },
     ...configLexerMainState,
     QUOTED_WORD: QUOTED_WORD_REGEXP,
     START_NOTE: textToCaseInsensitiveRegex('@note'),
@@ -88,35 +88,35 @@ document -> null
     %}
 
 line ->
-	  %SPACE:* statement {% (d) => {
+	  %WS:* statement {% (d) => {
       // console.log('[line]', JSON.stringify(d[1], null, 2))
       return d[1]
     } %}
-	| %NEWLINE
+	| %NL
 
 statement ->
-	  participantWord __ classifiableActor __ "as" __ %QUOTED_WORD _ %NEWLINE {%
+	  participantWord __ classifiableActor __ "as" __ %QUOTED_WORD _ %NL {%
       function(d) {
         const aliasWithQuotes = tv(d[6])
         d[2].description = yy.parseMessage(aliasWithQuotes.slice(1, aliasWithQuotes.length - 1))
         return d[2]
       }
     %}
-	| participantWord __ classifiableActor %NEWLINE {%
+	| participantWord __ classifiableActor %NL {%
       function(d) {
         return d[2]
       }
     %}
-	| signal %NEWLINE {% id %}
-	| "autonumber" %NEWLINE {% (d) => yy.enableSequenceNumbers() %}
-	| "activate" _ actor %NEWLINE {%
+	| signal %NL {% id %}
+	| "autonumber" %NL {% (d) => yy.enableSequenceNumbers() %}
+	| "activate" _ actor %NL {%
       function(d) {
         return {
           type: 'activeStart', signalType: yy.LINETYPE.ACTIVE_START, actor: d[2]
         }
       }
     %}
-	| "deactivate" _ actor %NEWLINE {%
+	| "deactivate" _ actor %NL {%
       function(d) {
         return {
           type: 'activeEnd', signalType: yy.LINETYPE.ACTIVE_END, actor: d[2]
@@ -127,8 +127,8 @@ statement ->
     // console.log('[note_a]', d)
     return d[0]
   } %}
-	| "title" textWithColon %NEWLINE {% (d) => ({ type:'setTitle', text: d[1] }) %}
-	| ("loop"|"opt") __ color:? words %NEWLINE document _ "end" _ %NEWLINE {%
+	| "title" textWithColon %NL {% (d) => ({ type:'setTitle', text: d[1] }) %}
+	| ("loop"|"opt") __ color:? words %NL document _ "end" _ %NL {%
       function(d) {
         // console.log('[loop]', d[5])
         const groupType = tv(d[0][0])
@@ -142,7 +142,7 @@ statement ->
         return result
       }
     %}
-	| ("par") __ color:? words %NEWLINE par_sections _ "end" _ %NEWLINE {%
+	| ("par") __ color:? words %NL par_sections _ "end" _ %NL {%
       function(d) {
         const groupType = tv(d[0][0])
         const text = yy.parseMessage(d[3])
@@ -155,7 +155,7 @@ statement ->
         return result
       }
     %}
-	| ("alt") __ color:? words %NEWLINE else_sections _ "end" _ %NEWLINE {%
+	| ("alt") __ color:? words %NL else_sections _ "end" _ %NL {%
       function(d) {
         const groupType = tv(d[0][0])
         const text = yy.parseMessage(d[3])
@@ -168,15 +168,15 @@ statement ->
         return result
       }
     %}
-  | "==" __ (%WORD | %SPACE):+ __ "==" _ %NEWLINE {%
+  | "==" __ (%WORD | %WS):+ __ "==" _ %NL {%
       function(d) {
         const text = d[2].map(o => tv(o[0])).join('').trim()
         return { type: 'addDivider', text, signalType: yy.LINETYPE.DIVIDER }
       }
     %}
-  | paramClause _ %NEWLINE
-  | configOpenCloseClause _ %NEWLINE
-  | comment _ %NEWLINE
+  | paramClause _ %NL
+  | configOpenCloseClause _ %NL
+  | comment _ %NL
 
 participantWord ->
     "participant"
@@ -191,7 +191,7 @@ classifiableActor ->
     %}
   | actor {% id %}
 
-words -> (%WORD | %SPACE):+ {%
+words -> (%WORD | %WS):+ {%
       function(d) {
         return d[0].map(a => a[0]).map(o => tv(o)).join('')
       }
@@ -247,7 +247,7 @@ textWithColon -> %COLON _ %REST_OF_LINE {%
 %}
 
 multilineNoteText ->
-    (%WORD|%SPACE|%NEWLINE):* %END_NOTE {%
+    (%WORD|%WS|%NL):* %END_NOTE {%
       function(d) {
         // console.log('[multiline text]', d)
         const v = d[0].map(l => {
@@ -262,13 +262,13 @@ placement ->
 	| %RIGHT_OF {% (d) => yy.PLACEMENT.RIGHTOF %}
 
 note_statement ->
-	  ("note"|%START_NOTE) _ placement _ actor _ textWithColon %NEWLINE {%
+	  ("note"|%START_NOTE) _ placement _ actor _ textWithColon %NL {%
       function(d) {
         // console.log('[note one]\n', d)
         return [d[4], { type:'addNote', placement: d[2], actor: d[4].actor, text: d[6] }]
       }
     %}
-	| ("note"|%START_NOTE) _ placement _ actor multilineNoteText %NEWLINE {%
+	| ("note"|%START_NOTE) _ placement _ actor multilineNoteText %NL {%
       function(d) {
         // console.log('[note multi]\n', d[5])
         const text = d[5]
@@ -276,7 +276,7 @@ note_statement ->
         return [d[4], { type:'addNote', placement: d[2], actor: d[4].actor, text: message }]
       }
     %}
-	| ("note"|%START_NOTE) _ "over" _ actor_pair _ textWithColon %NEWLINE {%
+	| ("note"|%START_NOTE) _ "over" _ actor_pair _ textWithColon %NL {%
       function(d) {
         // console.log('[note over]\n', d[5])
         const actors = [d[4][0].actor, d[4][1].actor]
@@ -290,7 +290,7 @@ actor_pair -> actor %COMMA actor {% (d) => ([d[0], d[2]]) %}
 	| actor {% id %}
 
 else_sections -> document
-	| document _ "else" __ color:? words %NEWLINE else_sections {%
+	| document _ "else" __ color:? words %NL else_sections {%
     function(d) {
       const background = d[4] ? d[4]: null
       const text = yy.parseMessage(d[5])
@@ -303,7 +303,7 @@ else_sections -> document
 
 par_sections ->
 	  document
-	| document _ "and" __ color:? words %NEWLINE par_sections {%
+	| document _ "and" __ color:? words %NL par_sections {%
     function(d) {
       const background = d[4] ? d[4]: null
       const text = yy.parseMessage(d[5])

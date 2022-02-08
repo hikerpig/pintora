@@ -80,7 +80,7 @@
 %% /* language grammar */
 
 start
-	: SPACE start
+	: WS start
 	| NEWLINE start
 	| directive start
 	| SD document { yy.apply($2);return $2; }
@@ -92,7 +92,7 @@ document
 	;
 
 line
-	: SPACE statement { $$ = $2 }
+	: WS statement { $$ = $2 }
 	| statement { $$ = $1 }
 	| NEWLINE { $$=[]; }
 	;
@@ -171,8 +171,8 @@ note_statement
 	;
 
 spaceList
-    : SPACE spaceList
-    | SPACE
+    : WS spaceList
+    | WS
     ;
 actor_pair
 	: actor ',' actor   { $$ = [$1, $3]; }

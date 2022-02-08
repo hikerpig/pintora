@@ -26,8 +26,8 @@ const COMMON_TOKEN_RULES = {
 
 let lexer = moo.states({
   main: {
-    NEWLINE: MOO_NEWLINE,
-    SPACE: { match: /[ ]+/, lineBreaks: false },
+    NL: MOO_NEWLINE,
+    WS: { match: /[ ]+/, lineBreaks: false },
     ASTERISKS: /\*+/,
     PLUS: /\++/,
     MINUS: /\-+/,
@@ -66,11 +66,11 @@ document -> null
     %}
 
 line ->
-    %SPACE:* statement
-	| %SPACE:* %NEWLINE
+    %WS:* statement
+	| %WS:* %NL
 
 statement ->
-    levelNotation %SPACE:+ words %NEWLINE {%
+    levelNotation %WS words %NL {%
       function(d) {
         const label = d[2]
         // console.log('singleline', label)
@@ -78,16 +78,16 @@ statement ->
         return { type: 'addItem', label, depth: d[0].depth, isReverse: notation.isReverse } as ApplyPart
       }
     %}
-  | levelNotation %SPACE:+ %COLON multilineText %SEMICOLON %SPACE:? %NEWLINE {%
+  | levelNotation %WS %COLON multilineText %SEMICOLON %WS:? %NL {%
       function(d) {
         const label = d[3]
         const notation = d[0]
         return { type: 'addItem', label, depth: notation.depth, isReverse: notation.isReverse } as ApplyPart
       }
     %}
-  | paramClause _ %NEWLINE
-  | configOpenCloseClause %NEWLINE
-  | comment _ %NEWLINE
+  | paramClause _ %NL
+  | configOpenCloseClause %NL
+  | comment _ %NL
 
 levelNotation ->
     (%ASTERISKS | %PLUS) {%
@@ -111,7 +111,7 @@ levelNotation ->
     %}
 
 words ->
-    (%VALID_TEXT | %ASTERISKS | %PLUS | %MINUS | %SPACE):+ {%
+    (%VALID_TEXT | %ASTERISKS | %PLUS | %MINUS | %WS):+ {%
       function(d) {
         const v = d[0].map(o => tv(o[0])).join('')
         return v
@@ -119,7 +119,7 @@ words ->
     %}
 
 multilineText ->
-    (%VALID_TEXT|%SPACE|%NEWLINE):* {%
+    (%VALID_TEXT|%WS|%NL):* {%
       function(d) {
         // console.log('[multiline text]', d)
         const v = d[0].map(l => {

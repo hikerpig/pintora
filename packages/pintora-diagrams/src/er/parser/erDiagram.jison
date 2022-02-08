@@ -13,7 +13,7 @@
 [^\}]\%\%[^\n]*                                                 /* skip comments */
 [\n]+                           return 'NEWLINE';
 \s+                             /* skip whitespace */
-[\s]+                           return 'SPACE';
+[\s]+                           return 'WS';
 \"[^"]*\"                       return 'WORD';
 "erDiagram"                     return 'ER_DIAGRAM';
 "{"                             { this.begin("block"); return 'BLOCK_START'; }
@@ -53,7 +53,7 @@ document
 	;
 
 line
-	: SPACE statement { $$ = $2 }
+	: WS statement { $$ = $2 }
 	| statement { $$ = $1 }
 	| NEWLINE { $$=[];}
 	| EOF { $$=[];}

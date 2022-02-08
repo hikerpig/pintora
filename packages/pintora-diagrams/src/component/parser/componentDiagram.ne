@@ -16,8 +16,8 @@ import {
 } from '../../util/parser-shared'
 
 const commonTopRules = {
-  NEWLINE: { match: /\n/, lineBreaks: true },
-  SPACE: { match: /\s+/, lineBreaks: true },
+  NL: { match: /\n/, lineBreaks: true },
+  WS: { match: /\s+/, lineBreaks: true },
   L_SQ_BRACKET: { match: /\[/ },
   R_SQ_BRACKET: { match: /\]/ },
   COMMENT_LINE: COMMENT_LINE_REGEXP,
@@ -68,8 +68,8 @@ document -> null
     %}
 
 line ->
-    %SPACE:* statement
-	| %NEWLINE {% (d) => null %}
+    %WS:* statement
+	| %NL {% (d) => null %}
 
 statement ->
     UMLElement {%
@@ -78,9 +78,9 @@ statement ->
         return d[0]
       }
     %}
-  | paramClause _ %NEWLINE
-  | configOpenCloseClause _ %NEWLINE
-  | comment _ %NEWLINE
+  | paramClause _ %NL
+  | configOpenCloseClause _ %NL
+  | comment _ %NL
 
 UMLElement ->
     group {%
@@ -108,7 +108,7 @@ UMLElement ->
 
 # group can include UMLElement recursively
 group ->
-    groupType __ textInsideQuote __ %L_BRACKET __ (__ UMLElement _):* %R_BRACKET _ %NEWLINE {%
+    groupType __ textInsideQuote __ %L_BRACKET __ (__ UMLElement _):* %R_BRACKET _ %NL {%
         function(d) {
           const groupType = tv(d[0][0])
           const label = d[2] || groupType
@@ -130,13 +130,13 @@ groupType ->
   | "component"
 
 component ->
-    "component" __ %WORD %SPACE:* %NEWLINE {%
+    "component" __ %WORD %WS:* %NL {%
       function(d) {
         const name = tv(d[2])
         return { type: 'component', name,  }
       }
     %}
-  | "component" __ %WORD __ %L_SQ_BRACKET elementLabel:+ %R_SQ_BRACKET %SPACE:? %NEWLINE {%
+  | "component" __ %WORD __ %L_SQ_BRACKET elementLabel:+ %R_SQ_BRACKET %WS:? %NL {%
       function(d) {
         const name = tv(d[2])
         const label = d[5].join('').trim()
@@ -150,8 +150,8 @@ component ->
   #       return { type: 'component', isGroup: true, name, children }
   #     }
   #   %}
-  | shortComponent %SPACE:? %NEWLINE {% id %}
-  | shortComponent __ "as" __ %WORD %SPACE:* %NEWLINE {%
+  | shortComponent %WS:? %NL {% id %}
+  | shortComponent __ "as" __ %WORD %WS:* %NL {%
       function(d) {
         const comp = d[0]
         const name = tv(d[4])
@@ -168,8 +168,8 @@ shortComponent ->
     %}
 
 elementLabel -> %WORD {% (d) => tv(d[0]) %}
-  | %SPACE {% (d) => tv(d[0]) %}
-  | %NEWLINE {% (d) => tv(d[0]) %}
+  | %WS {% (d) => tv(d[0]) %}
+  | %NL {% (d) => tv(d[0]) %}
 
 textInsideQuote -> %TEXT_INSIDE_QUOTES {%
     function(d) {
@@ -179,14 +179,14 @@ textInsideQuote -> %TEXT_INSIDE_QUOTES {%
   %}
 
 interface ->
-    ("interface" | "()") __ (textInsideQuote | %WORD) %SPACE:* %NEWLINE {%
+    ("interface" | "()") __ (textInsideQuote | %WORD) %WS:* %NL {%
       function(d) {
         const _l = d[2][0]
         const name = typeof _l === 'string' ? _l: tv(_l)
         return { type: 'interface', name, }
       }
     %}
-  | ("interface" | "()") __ (textInsideQuote | %WORD) %SPACE:* "as" __ %WORD %SPACE:* %NEWLINE {%
+  | ("interface" | "()") __ (textInsideQuote | %WORD) %WS:* "as" __ %WORD %WS:* %NL {%
       function(d) {
         const _l = d[2][0]
         const label = typeof _l === 'string' ? _l: tv(_l)
@@ -196,7 +196,7 @@ interface ->
     %}
 
 relationship ->
-    elementReference _ relationLine _ elementReference (__ ":" __ (%WORD | %SPACE):+):? %NEWLINE {%
+    elementReference _ relationLine _ elementReference (__ ":" __ (%WORD | %WS):+):? %NL {%
       function(d) {
         // console.log('[relationship] with message', d)
         const from = d[0]

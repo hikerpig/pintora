@@ -17,8 +17,8 @@ import {
 import { ErDb } from '../db'
 
 let lexer = moo.compile({
-  NEWLINE: { match: /\n/, lineBreaks: true },
-  SPACE: {match: /\s+/, lineBreaks: true},
+  NL: { match: /\n/, lineBreaks: true },
+  WS: {match: /\s+/, lineBreaks: true},
   WORD: /\"[^"]*\"/,
   ZERO_OR_ONE: /\|o|o\|/,
   ZERO_OR_MORE: /\}o|o\{/,
@@ -44,13 +44,13 @@ export function setYY(v) {
 
 start -> __ start
   | "erDiagram" document
- 
+
 document -> null
   | document line
- 
+
 line ->
-    %SPACE:* statement
-	| %NEWLINE
+    %WS:* statement
+	| %NL
 
 statement ->
     entityName _ relSpec _ entityName _ %COLON _ role
@@ -70,18 +70,18 @@ statement ->
     %}
   | entityName "{":? "}":? {% (d) => yy.addEntity(tv(d[0])) %}
   | entityName {% (d) => yy.addEntity(tv(d[0])) %}
-  | paramClause _ %NEWLINE {%
+  | paramClause _ %NL {%
       function(d) {
         const { type, ...styleParam } = d[0]
         yy.addParam(styleParam)
       }
     %}
-  | configClause _ %NEWLINE {%
+  | configClause _ %NL {%
       function(d) {
         yy.addOverrideConfig(d[0])
       }
     %}
-  | comment _ %NEWLINE
+  | comment _ %NL
 
 entityName ->
     %VALID_TEXT {% id %}
@@ -93,12 +93,12 @@ attributes ->
       %}
 
 attribute ->
-      attributeType __ attributeName __ %VALID_TEXT _ %NEWLINE {%
+      attributeType __ attributeName __ %VALID_TEXT _ %NL {%
         function(d) {
-          return { attributeType: tv(d[0]), attributeName: tv(d[2]), attributeKey: tv(d[4]) } 
+          return { attributeType: tv(d[0]), attributeName: tv(d[2]), attributeKey: tv(d[4]) }
         }
       %}
-    | attributeType __ attributeName _ %NEWLINE {% (d) => { return { attributeType: tv(d[0]), attributeName: tv(d[2]) } } %}
+    | attributeType __ attributeName _ %NL {% (d) => { return { attributeType: tv(d[0]), attributeName: tv(d[2]) } } %}
 
 attributeType -> %VALID_TEXT {% id %}
 
