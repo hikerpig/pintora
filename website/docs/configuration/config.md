@@ -62,6 +62,15 @@ export type PintoraConfig = {
 
 ## Config for diagrams
 
+### Common Configs
+
+There are some common diagram config keys those - if they appears in the `*Conf` below - share common meaning and possible values.
+
+| name            | value type   | description                                                        |
+|-----------------|--------------|--------------------------------------------------------------------|
+| layoutDirection | 'TB' or 'LR' | A config for dagre-layout, stands for (top-down) or (left-right)   |
+| diagramPadding  | number       | Padding of the diagram, distance from visual content to the border |
+
 ### sequence
 
 Config for sequence diagram. For more detail, check the [latest code](https://github.com/hikerpig/pintora/blob/master/packages/pintora-diagrams/src/sequence/config.ts).
