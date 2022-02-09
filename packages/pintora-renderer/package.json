@@ -19,7 +19,7 @@
   "dependencies": {
     "@antv/g-canvas": "^0.5.10",
     "@antv/g-svg": "^0.5.6",
-    "@pintora/core": "^0.1.0",
+    "@pintora/core": "workspace:^0.1.0",
     "@types/node": "^14.11.8"
   },
   "devDependencies": {

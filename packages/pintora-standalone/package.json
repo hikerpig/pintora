@@ -47,8 +47,8 @@
     "url": "https://github.com/hikerpig/pintora/issues"
   },
   "dependencies": {
-    "@pintora/core": "^0.1.0",
-    "@pintora/diagrams": "^0.1.2-beta.0",
+    "@pintora/core": "workspace:^0.1.0",
+    "@pintora/diagrams": "workspace:^0.1.0",
     "@pintora/renderer": "^0.1.0"
   },
   "devDependencies": {

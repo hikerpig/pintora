@@ -24,7 +24,7 @@
   },
   "dependencies": {
     "@hikerpig/moo": "^0.5.2-beta.2",
-    "@pintora/core": "^0.1.0",
+    "@pintora/core": "workspace:^0.1.0",
     "@pintora/dagre": "^0.10.0",
     "@pintora/graphlib": "2.2.2",
     "d3-shape": "^3.0.1",
