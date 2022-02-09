@@ -1,6 +1,5 @@
 import { GraphicsIR, Mark, MarkType, MarkTypeMap } from '@pintora/core'
-import { IGroup } from '@antv/g-base'
-import { AbstractCanvas, CanvasCfg, IShape } from '@antv/g-base'
+import { IGroup, AbstractCanvas, CanvasCfg, IShape } from '@antv/g-base'
 import { IRenderer } from '../type'
 import { Stack } from '../util'
 

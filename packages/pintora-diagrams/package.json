@@ -24,14 +24,17 @@
   },
   "dependencies": {
     "@hikerpig/moo": "^0.5.2-beta.2",
-    "@pintora/core": "workspace:^0.1.0",
+    "@pintora/core": "workspace:^0.1.2-beta.0",
     "@pintora/dagre": "^0.10.0",
     "@pintora/graphlib": "2.2.2",
     "d3-shape": "^3.0.1",
+    "dedent": "^0.7.0",
     "nearley": "^2.20.1"
   },
   "devDependencies": {
+    "@pintora/test-shared": "workspace:^0.1.2-beta.0",
     "@types/d3-shape": "^3.0.2",
+    "@types/dedent": "^0.7.0",
     "@types/nearley": "^2.11.1",
     "@types/node": "^14.11.8",
     "@types/tinycolor2": "^1.4.3",

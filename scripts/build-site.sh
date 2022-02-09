@@ -5,6 +5,6 @@
 # pushd website && npm run build && popd
 # cp -r demo/dist/ website/build/demo
 
-npx turbo run build --scope='pintora-demo'
-pushd website && npm run build && popd
+pnpx turbo run build --scope='pintora-demo'
+pushd website && pnpm run build && popd
 cp -r demo/dist/ website/build/demo

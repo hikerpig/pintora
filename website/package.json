@@ -16,9 +16,10 @@
   "dependencies": {
     "@docusaurus/core": "2.0.0-beta.15",
     "@docusaurus/preset-classic": "2.0.0-beta.15",
+    "@docusaurus/theme-common": "^2.0.0-beta.15",
     "@mdx-js/react": "^1.6.22",
-    "@pintora/standalone": "../packages/pintora-standalone",
-    "@pintora/test-shared": "../packages/test-shared",
+    "@pintora/standalone": "workspace:^0.1.2-beta.0",
+    "@pintora/test-shared": "workspace:^0.1.2-beta.0",
     "@svgr/webpack": "^6.1.2",
     "clsx": "^1.1.1",
     "docusaurus-plugin-less": "^2.0.2",

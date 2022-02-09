@@ -4,20 +4,20 @@
   "private": true,
   "scripts": {
     "clean": "rimraf \"packages/**/lib\"",
-    "compile": "npx turbo run compile --concurrency=10",
-    "compile:browser": "npx turbo run compile --concurrency=10 --ignore='packages/pintora-cli/**/*'",
-    "watch": "npx turbo run watch --parallel --no-cache",
-    "watch:browser": "npx turbo run watch --parallel --no-cache --ignore='packages/pintora-cli/**/*'",
+    "compile": "pnpx turbo run compile --concurrency=10",
+    "compile:browser": "pnpx turbo run compile --concurrency=10 --ignore='packages/pintora-cli/**/*'",
+    "watch": "pnpx turbo run watch --parallel --no-cache",
+    "watch:browser": "pnpx turbo run watch --parallel --no-cache --ignore='packages/pintora-cli/**/*'",
     "demo:dev": "cd demo && npm run dev",
     "website:dev": "cd website && npm run start",
     "prettier": "prettier \"packages/**/*.{ts,js}\" \"demo/src\"",
     "format": "npm run prettier -- --write",
     "format:check": "npm run prettier -- --check",
     "lint": "eslint packages/*/src/**/*.{ts,js}",
-    "test": "npx jest",
-    "coverage": "npx jest --coverage",
+    "test": "pnpx jest",
+    "coverage": "pnpx jest --coverage",
     "upload-coverage": "codecov -f coverage/coverage-final.json",
-    "ci:coverage": "npx jest --coverage --ci",
+    "ci:coverage": "pnpx jest --coverage --ci",
     "build-site": "sh ./scripts/build-site.sh",
     "vercel-build": "npm run compile:browser && npm run build-site"
   },
@@ -36,7 +36,7 @@
     "lint-staged": "^12.1.4",
     "prettier": "2.5.1",
     "rimraf": "3.0.2",
-    "turbo": "^1.0.28",
+    "turbo": "^1.1.2",
     "typescript": "4.5.4"
   },
   "workspaces": [
@@ -49,38 +49,5 @@
       "prettier --write",
       "eslint --fix"
     ]
-  },
-  "turbo": {
-    "baseBranch": "origin/master",
-    "npmClient": "npm",
-    "pipeline": {
-      "compile": {
-        "dependsOn": [
-          "^compile"
-        ],
-        "outputs": [
-          "lib/**",
-          "dist/**",
-          "types/**"
-        ]
-      },
-      "build": {
-        "outputs": [
-          "dist/**",
-          "build/**",
-          "types/**"
-        ]
-      },
-      "watch": {
-        "dependsOn": [
-          "^watch"
-        ],
-        "outputs": [
-          "lib/**",
-          "dist/**"
-        ],
-        "cache": false
-      }
-    }
   }
 }

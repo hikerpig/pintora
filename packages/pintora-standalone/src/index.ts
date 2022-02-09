@@ -1,8 +1,7 @@
-import pintora, { configApi, GraphicsIR, PintoraConfig } from '@pintora/core'
+import pintora, { configApi, GraphicsIR, PintoraConfig, tinycolor } from '@pintora/core'
 export * from '@pintora/core'
 import { DIAGRAMS, BaseDiagramIR } from '@pintora/diagrams'
 import { render, RenderOptions, BaseRenderer, rendererRegistry } from '@pintora/renderer'
-import 'tinycolor2'
 
 function initDiagrams() {
   Object.keys(DIAGRAMS).forEach(name => {
@@ -124,7 +123,7 @@ const pintoraStandalone = {
   setConfig: configApi.setConfig,
 }
 
-export { BaseRenderer, rendererRegistry, PintoraConfig }
+export { BaseRenderer, rendererRegistry, PintoraConfig, tinycolor }
 
 export { pintoraStandalone } // for @pintora/cli
 

@@ -1,0 +1,33 @@
+{
+  "baseBranch": "origin/master",
+  "npmClient": "pnpm",
+  "pipeline": {
+    "compile": {
+      "dependsOn": [
+        "^compile"
+      ],
+      "outputs": [
+        "lib/**",
+        "dist/**",
+        "types/**"
+      ]
+    },
+    "build": {
+      "outputs": [
+        "dist/**",
+        "build/**",
+        "types/**"
+      ]
+    },
+    "watch": {
+      "dependsOn": [
+        "^watch"
+      ],
+      "outputs": [
+        "lib/**",
+        "dist/**"
+      ],
+      "cache": false
+    }
+  }
+}
