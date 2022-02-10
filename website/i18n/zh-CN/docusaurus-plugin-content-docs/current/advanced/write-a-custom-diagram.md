@@ -116,6 +116,8 @@ const parser: IDiagramParser<PieChartDiagramIR> = {
 export default parser
 ```
 
+Pintora 的内置图表使用 nearley.js 作为 parser generator，有一些通用的语法片段（例如 `@param` 和 `@config` 指令），关于如何使用 nearley.js 和复用语法规则，今后会写另一篇教程来阐述。
+
 ## 艺术家 artist
 
 artist 的代码量一般是图表实现中最多的部分，我们将步步分解。

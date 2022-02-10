@@ -67,7 +67,7 @@ export type RelSpec = {
 
 可以使用任何的语法分析工具和技术来实现这一过程，从逐行分析的正则表达式，到各种 parser generator 生成的程序，只要能在 JS 环境下运行就行。
 
-Pintora 的内建图表使用了 [nearley.js](http://nearley.js.org/) 用于生成上下文无关的语法解析器，它简单易用，基于改进了的 Earley 算法，性能尚可（尽管也许是主流解决方案中最慢的，但对于小型文本图表 DSL 来说完全够用）。图表作者可自行选择高效的 parser generator 方案，如 jison / PEG.js ，或是手写分析器。
+Pintora 的内建图表使用了 [nearley.js](http://nearley.js.org/) 用于生成上下文无关的语法解析器，它简单易用，基于改进了的 Earley 算法，性能尚可（尽管也许是主流解决方案中比较慢的，但那是理论上的最坏情况下，实际情况可能好很多。对于小型文本图表 DSL 来说完全够用），而且运行时很小。图表作者可自行选择高效的 parser generator 方案，如 jison / PEG.js ，或是手写分析器。
 
 ### IDiagramArtist 和 GraphicsIR
 

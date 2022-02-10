@@ -116,6 +116,8 @@ const parser: IDiagramParser<PieChartDiagramIR> = {
 export default parser
 ```
 
+Pintora itself uses nearley.js as parser generator, and has some common grammar rules (like the `@param` and `@config` directive), we will write another tutorial about it in the future.
+
 ## The artist
 
 The amount of code for artist is usually the largest part of the diagram implementation, so we will break it down step by step.
