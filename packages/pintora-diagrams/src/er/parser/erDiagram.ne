@@ -18,7 +18,7 @@ import { ErDb } from '../db'
 
 let lexer = moo.compile({
   NL: { match: /\n/, lineBreaks: true },
-  WS: {match: /\s+/, lineBreaks: true},
+  WS: { match: / +/, lineBreaks: false },
   WORD: /\"[^"]*\"/,
   ZERO_OR_ONE: /\|o|o\|/,
   ZERO_OR_MORE: /\}o|o\{/,
@@ -53,7 +53,7 @@ line ->
 	| %NL
 
 statement ->
-    entityName _ relSpec _ entityName _ %COLON _ role
+    entityName _ relSpec _ entityName _ %COLON _ role %WS:* %NL
     {%
       function(d) {
         yy.addEntity(tv(d[0]));
@@ -61,7 +61,7 @@ statement ->
         yy.addRelationship(tv(d[0]), d[8], tv(d[4]), d[2])
       }
     %}
-  | entityName _ "{" _ attributes _ "}"
+  | entityName _ "{" _ attributes _ "}" %WS:* %NL
     {%
       function(d) {
         yy.addEntity(tv(d[0]));
@@ -70,18 +70,19 @@ statement ->
     %}
   | entityName "{":? "}":? {% (d) => yy.addEntity(tv(d[0])) %}
   | entityName {% (d) => yy.addEntity(tv(d[0])) %}
-  | paramClause _ %NL {%
+  | paramClause %WS:* %NL {%
       function(d) {
         const { type, ...styleParam } = d[0]
         yy.addParam(styleParam)
       }
     %}
-  | configClause _ %NL {%
+  | configClause %WS:* %NL {%
       function(d) {
         yy.addOverrideConfig(d[0])
       }
     %}
   | comment _ %NL
+  | %NL
 
 entityName ->
     %VALID_TEXT {% id %}
@@ -93,12 +94,12 @@ attributes ->
       %}
 
 attribute ->
-      attributeType __ attributeName __ %VALID_TEXT _ %NL {%
+      attributeType __ attributeName __ %VALID_TEXT %WS:* %NL {%
         function(d) {
           return { attributeType: tv(d[0]), attributeName: tv(d[2]), attributeKey: tv(d[4]) }
         }
       %}
-    | attributeType __ attributeName _ %NL {% (d) => { return { attributeType: tv(d[0]), attributeName: tv(d[2]) } } %}
+    | attributeType __ attributeName %WS:* %NL {% (d) => { return { attributeType: tv(d[0]), attributeName: tv(d[2]) } } %}
 
 attributeType -> %VALID_TEXT {% id %}
 

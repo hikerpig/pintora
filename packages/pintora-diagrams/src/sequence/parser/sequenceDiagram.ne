@@ -71,10 +71,10 @@ export function setYY(v) {
 %}
 
 start -> __ start {% (d) => d[1] %}
-	| "sequenceDiagram" document __:? {%
+	| "sequenceDiagram" _ document __:? {%
       function(d) {
         // console.log('[sequenceDiagram]', JSON.stringify(d, null, 2))
-        return d[1]
+        return d[2]
       }
     %}
 
@@ -102,21 +102,21 @@ statement ->
         return d[2]
       }
     %}
-	| participantWord __ classifiableActor %NL {%
+	| participantWord __ classifiableActor %WS:? %NL {%
       function(d) {
         return d[2]
       }
     %}
 	| signal %NL {% id %}
-	| "autonumber" %NL {% (d) => yy.enableSequenceNumbers() %}
-	| "activate" _ actor %NL {%
+	| "autonumber" %WS:? %NL {% (d) => yy.enableSequenceNumbers() %}
+	| "activate" _ actor %WS:? %NL {%
       function(d) {
         return {
           type: 'activeStart', signalType: yy.LINETYPE.ACTIVE_START, actor: d[2]
         }
       }
     %}
-	| "deactivate" _ actor %NL {%
+	| "deactivate" _ actor %WS:? %NL {%
       function(d) {
         return {
           type: 'activeEnd', signalType: yy.LINETYPE.ACTIVE_END, actor: d[2]

@@ -60,9 +60,9 @@ function extractChildren(o) {
 %}
 
 start -> __ start {% (d) => d[1] %}
-	| "activityDiagram" document __:? {%
+	| "activityDiagram" _ document __:? {%
       function(d) {
-        return d[1]
+        return d[2]
       }
     %}
 
@@ -84,7 +84,7 @@ line ->
 
 statement ->
     action
-  | ("start"|"stop"|"end"|"detach"|"kill") %NL {%
+  | ("start"|"stop"|"end"|"detach"|"kill") %WS:? %NL {%
       function(d) {
         const keyword = tv(d[0][0])
         return {
@@ -127,7 +127,7 @@ elseClause ->
     %}
 
 whileSentence ->
-    "while" __ wordsInParens (%WS "is" __ wordsInParens):? _ %NL line:* %WS:* "endwhile" (%WS wordsInParens):? %NL {%
+    "while" __ wordsInParens (%WS "is" __ wordsInParens):? _ %NL line:* %WS:* "endwhile" (%WS wordsInParens):? %WS:? %NL {%
       function(d) {
         // console.log('[whileSentence]', d[6])
         const confirmLabel = d[3] ? d[3][3]: undefined

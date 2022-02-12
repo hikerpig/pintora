@@ -533,7 +533,7 @@ activityDiagram
 
   it('can parse fork sentence', () => {
     const example = stripStartEmptyLines(`
-activityDiagram
+activityDiagram 
   fork
     :action 1;
   forkagain 

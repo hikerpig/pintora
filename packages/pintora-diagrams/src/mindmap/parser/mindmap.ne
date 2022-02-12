@@ -27,7 +27,7 @@ const COMMON_TOKEN_RULES = {
 let lexer = moo.states({
   main: {
     NL: MOO_NEWLINE,
-    WS: { match: /[ ]+/, lineBreaks: false },
+    WS: { match: / +/, lineBreaks: false },
     ASTERISKS: /\*+/,
     PLUS: /\++/,
     MINUS: /\-+/,
@@ -86,7 +86,7 @@ statement ->
       }
     %}
   | paramClause _ %NL
-  | configOpenCloseClause %NL
+  | configOpenCloseClause _ %NL
   | comment _ %NL
 
 levelNotation ->

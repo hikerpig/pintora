@@ -14,9 +14,9 @@ erDiagram
     INTEGER ArtistId
     NVARCHAR Name
   }
-  albums
+  albums  
 
-  artists ||--o{ albums : "foreign key"
+  artists ||--o{ albums : "foreign key" 
     `)
     parse(example)
     const ir = db.getDiagramIR()
@@ -26,9 +26,9 @@ erDiagram
   it('will parse attribute key', () => {
     const example = `erDiagram
     ORDER {
-      int orderNumber PK
-      string deliveryAddress
-    }
+      int orderNumber PK 
+      string deliveryAddress 
+    } 
     `
     parse(example)
     const ir = db.getDiagramIR()

@@ -10,7 +10,7 @@ describe('sequence parser', () => {
   it('can parse unicode chars', () => {
     const backquoteExample = stripStartEmptyLines(`
 sequenceDiagram
-  autonumber
+  autonumber 
   用户 ->> Pintora: 帮我画张时序图
   activate Pintora
   alt DSL 正确
@@ -106,10 +106,10 @@ sequenceDiagram
 
   it('can parse participant', () => {
     const example = stripStartEmptyLines(`
-sequenceDiagram
+sequenceDiagram 
   participant A as "Alice"
-  participant B as "Bob"
-  participant C
+  participant B as "Bob" 
+  participant C  
   A-->B: hello
   A-->C: yoho
   `)
