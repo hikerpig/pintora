@@ -1,6 +1,6 @@
 @preprocessor typescript
 @lexer lexer
-@builtin "whitespace.ne"
+@include "../../util/parser-grammars/whitespace.ne"
 @include "../../util/parser-grammars/config.ne"
 @include "../../util/parser-grammars/comment.ne"
 
@@ -13,11 +13,12 @@ import {
   COMMENT_LINE_REGEXP,
   CONFIG_DIRECTIVE,
   QUOTED_WORD_REGEXP,
+  MOO_NEWLINE,
 } from '../../util/parser-shared'
 import { ErDb } from '../db'
 
 let lexer = moo.compile({
-  NL: { match: /\n/, lineBreaks: true },
+  NL: MOO_NEWLINE,
   WS: { match: / +/, lineBreaks: false },
   WORD: /\"[^"]*\"/,
   ZERO_OR_ONE: /\|o|o\|/,

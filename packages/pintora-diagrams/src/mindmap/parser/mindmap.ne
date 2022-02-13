@@ -1,6 +1,6 @@
 @preprocessor typescript
 @lexer lexer
-@builtin "whitespace.ne"
+@include "../../util/parser-grammars/whitespace.ne"
 @include "../../util/parser-grammars/config.ne"
 @include "../../util/parser-grammars/comment.ne"
 

@@ -1,6 +1,6 @@
 @preprocessor typescript
 @lexer lexer
-@builtin "whitespace.ne"
+@include "../../util/parser-grammars/whitespace.ne"
 @include "../../util/parser-grammars/config.ne"
 @include "../../util/parser-grammars/comment.ne"
 
@@ -13,10 +13,11 @@ import {
   CONFIG_DIRECTIVE,
   configLexerMainState,
   configLexerConfigClauseState,
+  MOO_NEWLINE,
 } from '../../util/parser-shared'
 
 const commonTopRules = {
-  NL: { match: /\n/, lineBreaks: true },
+  NL: MOO_NEWLINE,
   WS: { match: /\s+/, lineBreaks: true },
   L_SQ_BRACKET: { match: /\[/ },
   R_SQ_BRACKET: { match: /\]/ },

@@ -1,6 +1,6 @@
 @preprocessor typescript
 @lexer lexer
-@builtin "whitespace.ne"
+@include "../../util/parser-grammars/whitespace.ne"
 @include "../../util/parser-grammars/config.ne"
 @include "../../util/parser-grammars/comment.ne"
 
@@ -17,11 +17,12 @@ import {
   configLexerConfigClauseState,
   L_PAREN_REGEXP,
   R_PAREN_REGEXP,
+  MOO_NEWLINE,
 } from '../../util/parser-shared'
 
 let lexer = moo.states({
   main: {
-    NL: { match: /\n/, lineBreaks: true },
+    NL: MOO_NEWLINE,
     WS: {match: / +/, lineBreaks: false },
     ...configLexerMainState,
     QUOTED_WORD: QUOTED_WORD_REGEXP,
