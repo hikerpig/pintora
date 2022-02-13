@@ -3,6 +3,17 @@
 All notable changes to this project will be documented in this file.
 See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [0.1.2-beta.0](https://github.com/hikerpig/pintora/compare/v0.1.1...v0.1.2-beta.0) (2022-02-13)
+
+
+### Bug Fixes
+
+* should support `\r` as end-of-line char and whitespace char ([f0696f4](https://github.com/hikerpig/pintora/commit/f0696f48dcb2e82b7368b8a2908dc938b6c3aea2))
+
+
+
+
+
 # [0.1.0](https://github.com/hikerpig/pintora/compare/v0.1.0-alpha.27...v0.1.0) (2022-02-06)
 
 **Note:** Version bump only for package @pintora/test-shared
