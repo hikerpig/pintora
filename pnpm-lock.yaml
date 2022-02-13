@@ -186,6 +186,7 @@ importers:
   packages/pintora-diagrams:
     specifiers:
       '@hikerpig/moo': ^0.5.2-beta.2
+      '@hikerpig/nearley': ^2.21.0-beta.0
       '@pintora/core': workspace:^0.1.2-beta.0
       '@pintora/dagre': ^0.10.0
       '@pintora/graphlib': 2.2.2
@@ -199,17 +200,16 @@ importers:
       d3-shape: ^3.0.1
       dedent: ^0.7.0
       esbuild-jest: ^0.5.0
-      nearley: ^2.20.1
       shell-exec: ^1.0.2
       typescript: ^4.4.4
     dependencies:
       '@hikerpig/moo': 0.5.2-beta.2
+      '@hikerpig/nearley': 2.21.0-beta.0
       '@pintora/core': link:../pintora-core
       '@pintora/dagre': 0.10.0
       '@pintora/graphlib': 2.2.2
       d3-shape: 3.1.0
       dedent: 0.7.0
-      nearley: 2.20.1
     devDependencies:
       '@pintora/test-shared': link:../test-shared
       '@types/d3-shape': 3.0.2
@@ -3227,6 +3227,16 @@ packages:
 
   /@hikerpig/moo/0.5.2-beta.2:
     resolution: {integrity: sha512-dujNs0HxCSsGruxwhE+WLPcHZMDvmxsOJXcnY0rOjVnWcJFUJaIN2xbEMmGZywLdw6PRE72yymVGf2mAtrbm8Q==}
+    dev: false
+
+  /@hikerpig/nearley/2.21.0-beta.0:
+    resolution: {integrity: sha512-vmv55KoccCul30mPvnqqvlj2GV61i5Jh2cLOGG03R+7x//DZnxKZdfr4G16aKoZPeThGvayRbjxUFxzWsB/UuA==}
+    hasBin: true
+    dependencies:
+      commander: 2.20.3
+      moo: 0.5.1
+      railroad-diagrams: 1.0.0
+      randexp: 0.4.6
     dev: false
 
   /@humanwhocodes/config-array/0.9.3:
@@ -10984,16 +10994,6 @@ packages:
   /natural-compare/1.4.0:
     resolution: {integrity: sha1-Sr6/7tdUHywnrPspvbvRXI1bpPc=}
     dev: true
-
-  /nearley/2.20.1:
-    resolution: {integrity: sha512-+Mc8UaAebFzgV+KpI5n7DasuuQCHA89dmwm7JXw3TV43ukfNQ9DnBH3Mdb2g/I4Fdxc26pwimBWvjIw0UAILSQ==}
-    hasBin: true
-    dependencies:
-      commander: 2.20.3
-      moo: 0.5.1
-      railroad-diagrams: 1.0.0
-      randexp: 0.4.6
-    dev: false
 
   /needle/2.9.1:
     resolution: {integrity: sha512-6R9fqJ5Zcmf+uYaFgdIHmLwNldn5HbK8L5ybn7Uz+ylX/rnOsSp1AHcvQSrCaFN+qNM1wpymHqD7mVasEOlHGQ==}

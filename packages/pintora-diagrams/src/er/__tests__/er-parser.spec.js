@@ -28,7 +28,7 @@ erDiagram
     ORDER {
       int orderNumber PK 
       string deliveryAddress 
-    } 
+    }
     `
     parse(example)
     const ir = db.getDiagramIR()

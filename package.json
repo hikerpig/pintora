@@ -5,9 +5,9 @@
   "scripts": {
     "clean": "rimraf \"packages/**/lib\"",
     "compile": "pnpx turbo run compile --concurrency=10",
-    "compile:browser": "pnpx turbo run compile --concurrency=10 --ignore='packages/pintora-cli/**/*'",
-    "watch": "pnpx turbo run watch --parallel --no-cache",
-    "watch:browser": "pnpx turbo run watch --parallel --no-cache --ignore='packages/pintora-cli/**/*'",
+    "compile:browser": "pnpx turbo run compile --concurrency=10 --ignore='@pintora/cli'",
+    "watch": "pnpx turbo run watch --concurrency=10 --no-cache",
+    "watch:browser": "pnpx turbo run watch --concurrency=10 --no-cache --no-deps --scope='@pintora/diagrams'",
     "demo:dev": "cd demo && npm run dev",
     "website:dev": "cd website && npm run start",
     "prettier": "prettier \"packages/**/*.{ts,js}\" \"demo/src\"",
@@ -50,5 +50,6 @@
       "prettier --write",
       "eslint --fix"
     ]
-  }
+  },
+  "packageManager": "pnpm@6.27.1"
 }

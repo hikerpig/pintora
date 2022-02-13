@@ -1,4 +1,4 @@
-import nearley from 'nearley'
+import nearley from '@hikerpig/nearley'
 import { compact } from '@pintora/core'
 // import { dedent } from './text'
 
@@ -33,7 +33,6 @@ export function genParserWithRules<T = any>(grammar: nearley.CompiledRules, opts
     parser.feed(textToParse)
     // console.log('parse caused', Date.now() - start, 'ms')
     // console.log('[genParserWithRules]parser results', parser.results)
-    parser.finish()
     let results = compact(parser.results)
 
     if (opts.postProcess) {

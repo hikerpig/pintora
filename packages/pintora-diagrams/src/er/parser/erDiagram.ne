@@ -1,5 +1,6 @@
 @preprocessor typescript
 @lexer lexer
+@skip_unmatch %WS
 @include "../../util/parser-grammars/whitespace.ne"
 @include "../../util/parser-grammars/config.ne"
 @include "../../util/parser-grammars/comment.ne"
@@ -54,23 +55,23 @@ line ->
 	| %NL
 
 statement ->
-    entityName _ relSpec _ entityName _ %COLON _ role %WS:* %NL
+    entityName %WS:* relSpec %WS:* entityName %COLON role %NL
     {%
       function(d) {
-        yy.addEntity(tv(d[0]));
-        yy.addEntity(tv(d[4]));
-        yy.addRelationship(tv(d[0]), d[8], tv(d[4]), d[2])
+        yy.addEntity(d[0]);
+        yy.addEntity(d[4]);
+        yy.addRelationship(d[0], d[6], d[4], d[2])
       }
     %}
-  | entityName _ "{" _ attributes _ "}" %WS:* %NL
+  | entityName __ "{" __ attributes __ "}" %NL
     {%
       function(d) {
-        yy.addEntity(tv(d[0]));
-        yy.addAttributes(tv(d[0]), d[4]);
+        yy.addEntity(d[0]);
+        yy.addAttributes(d[0], d[4]);
       }
     %}
-  | entityName "{":? "}":? {% (d) => yy.addEntity(tv(d[0])) %}
-  | entityName {% (d) => yy.addEntity(tv(d[0])) %}
+  | entityName "{" "}" %NL {% (d) => yy.addEntity(d[0]) %}
+  | entityName %WS:* %NL {% (d) => yy.addEntity(d[0]) %}
   | paramClause %WS:* %NL {%
       function(d) {
         const { type, ...styleParam } = d[0]
@@ -82,29 +83,33 @@ statement ->
         yy.addOverrideConfig(d[0])
       }
     %}
-  | comment _ %NL
+  | comment %NL
   | %NL
 
 entityName ->
-    %VALID_TEXT {% id %}
+    %VALID_TEXT {% (d) => tv(d[0]) %}
 
 attributes ->
-      attribute {% (d) => [d[0]] %}
+      attribute {% (d) => {
+        return [d[0]]
+      } %}
     | attribute __ attributes {% (d) => {
         return [d[0]].concat(d[2]) }
       %}
 
 attribute ->
-      attributeType __ attributeName __ %VALID_TEXT %WS:* %NL {%
+      attributeType %WS attributeName %NL {% (d) => { 
+        return { attributeType: d[0], attributeName: d[2] } }
+      %}
+    | attributeType %WS attributeName %VALID_TEXT %WS:* %NL {%
         function(d) {
-          return { attributeType: tv(d[0]), attributeName: tv(d[2]), attributeKey: tv(d[4]) }
+          return { attributeType: d[0], attributeName: d[2], attributeKey: tv(d[3]) }
         }
       %}
-    | attributeType __ attributeName %WS:* %NL {% (d) => { return { attributeType: tv(d[0]), attributeName: tv(d[2]) } } %}
 
-attributeType -> %VALID_TEXT {% id %}
+attributeType -> %VALID_TEXT {% (d) => tv(d[0]) %}
 
-attributeName -> %VALID_TEXT {% id %}
+attributeName -> %VALID_TEXT {% (d) => tv(d[0]) %}
 
 relSpec ->
       cardinality relType cardinality {%
