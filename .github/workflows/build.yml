@@ -12,18 +12,17 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
-      - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v2
+      - name: Cache pnpm modules
+        uses: actions/cache@v2
         with:
-          node-version: ${{ matrix.node-version }}
-          cache: 'npm'
-          cache-dependency-path: '**/package-lock.json'
-      - name: npm install
-        run: |
-          npm i -g npm@7
-          npm install
-        env:
-          CI: true
+          path: ~/.pnpm-store
+          key: ${{ runner.os }}-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-
+      - uses: pnpm/action-setup@v2.1.0
+        with:
+          version: 6.0.2
+          run_install: true
       - name: Turbo Cache
         id: turbo-cache
         uses: actions/cache@v2
@@ -34,9 +33,9 @@ jobs:
             turbo-${{ github.job }}-${{ github.ref_name }}-
       - name: build, and test
         run: |
-          npm run format:check
-          npm run compile
-          npm run ci:coverage
+          pnpm run format:check
+          pnpm run compile
+          pnpm run ci:coverage
         env:
           CI: true
       - name: Test Report
