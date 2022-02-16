@@ -1,5 +1,6 @@
 @preprocessor typescript
 @lexer lexer
+@skip_unmatch %WS
 @include "../../util/parser-grammars/whitespace.ne"
 @include "../../util/parser-grammars/config.ne"
 @include "../../util/parser-grammars/comment.ne"
@@ -19,6 +20,7 @@ import {
   R_PAREN_REGEXP,
   MOO_NEWLINE,
 } from '../../util/parser-shared'
+import db from '../db'
 
 let lexer = moo.states({
   main: {
@@ -64,7 +66,7 @@ let lexer = moo.states({
   },
 })
 
-let yy
+let yy: typeof db
 
 export function setYY(v) {
   yy = v
@@ -90,34 +92,33 @@ document -> null
 
 line ->
 	  %WS:* statement {% (d) => {
-      // console.log('[line]', JSON.stringify(d[1], null, 2))
       return d[1]
     } %}
 	| %NL
 
 statement ->
-	  participantWord __ classifiableActor __ "as" __ %QUOTED_WORD _ %NL {%
+	  participantWord %WS classifiableActor %WS "as" %WS %QUOTED_WORD %NL {%
       function(d) {
         const aliasWithQuotes = tv(d[6])
         d[2].description = yy.parseMessage(aliasWithQuotes.slice(1, aliasWithQuotes.length - 1))
         return d[2]
       }
     %}
-	| participantWord __ classifiableActor %WS:? %NL {%
+	| participantWord %WS classifiableActor %WS:? %NL {%
       function(d) {
         return d[2]
       }
     %}
 	| signal %NL {% id %}
 	| "autonumber" %WS:? %NL {% (d) => yy.enableSequenceNumbers() %}
-	| "activate" _ actor %WS:? %NL {%
+	| "activate" %WS actor %NL {%
       function(d) {
         return {
           type: 'activeStart', signalType: yy.LINETYPE.ACTIVE_START, actor: d[2]
         }
       }
     %}
-	| "deactivate" _ actor %WS:? %NL {%
+	| "deactivate" %WS  actor %NL {%
       function(d) {
         return {
           type: 'activeEnd', signalType: yy.LINETYPE.ACTIVE_END, actor: d[2]
@@ -129,7 +130,7 @@ statement ->
     return d[0]
   } %}
 	| "title" textWithColon %NL {% (d) => ({ type:'setTitle', text: d[1] }) %}
-	| ("loop"|"opt") __ color:? words %NL document _ "end" _ %NL {%
+	| ("loop"|"opt") %WS color:? words %NL document _ "end" _ %NL {%
       function(d) {
         // console.log('[loop]', d[5])
         const groupType = tv(d[0][0])
@@ -143,7 +144,7 @@ statement ->
         return result
       }
     %}
-	| ("par") __ color:? words %NL par_sections _ "end" _ %NL {%
+	| ("par") %WS color:? words %NL par_sections _ "end" _ %NL {%
       function(d) {
         const groupType = tv(d[0][0])
         const text = yy.parseMessage(d[3])
@@ -156,7 +157,7 @@ statement ->
         return result
       }
     %}
-	| ("alt") __ color:? words %NL else_sections _ "end" _ %NL {%
+	| ("alt") %WS color:? words %NL else_sections _ "end" _ %NL {%
       function(d) {
         const groupType = tv(d[0][0])
         const text = yy.parseMessage(d[3])
@@ -169,15 +170,15 @@ statement ->
         return result
       }
     %}
-  | "==" __ (%WORD | %WS):+ __ "==" _ %NL {%
+  | "==" %WS (%WORD | %WS):+ %WS "==" _ %NL {%
       function(d) {
         const text = d[2].map(o => tv(o[0])).join('').trim()
         return { type: 'addDivider', text, signalType: yy.LINETYPE.DIVIDER }
       }
     %}
-  | paramClause _ %NL
-  | configOpenCloseClause _ %NL
-  | comment _ %NL
+  | paramClause %NL
+  | configOpenCloseClause %NL
+  | comment %NL
 
 participantWord ->
     "participant"
@@ -209,10 +210,10 @@ signaltype ->
 	| %DOTTED_POINT      {% (d) => yy.LINETYPE.DOTTED_POINT %}
 
 signal ->
-	  actor _ signaltype (%PLUS | %MINUS) _ actor _ textWithColon {%
+	  actor signaltype (%PLUS | %MINUS) actor textWithColon {%
       function(d) {
-        const toActor = d[5]
-        const activeMark = d[3][0]
+        const toActor = d[3]
+        const activeMark = d[2][0]
         let activeAction
         if (activeMark.type === 'MINUS') {
           activeAction = {type: 'activeEnd', signalType: yy.LINETYPE.ACTIVE_END, actor: toActor }
@@ -221,18 +222,18 @@ signal ->
         }
         return [
           d[0], toActor,
-          { type: 'addSignal', from: d[0].actor, to: toActor.actor, signalType: d[2], msg: d[7] },
+          { type: 'addSignal', from: d[0].actor, to: toActor.actor, signalType: d[1], msg: d[4] },
           activeAction,
         ]
       }
     %}
-	| actor _ signaltype _ actor _ textWithColon {%
+	| actor signaltype actor textWithColon {%
       function(d) {
         // console.log('got message', d)
-        const toActor = d[4]
+        const toActor = d[2]
         return [
           d[0], toActor,
-          {type: 'addSignal', from: d[0].actor, to: toActor.actor, signalType: d[2], msg: d[6]},
+          {type: 'addSignal', from: d[0].actor, to: toActor.actor, signalType: d[1], msg: d[3]},
         ]
       }
     %}
@@ -263,26 +264,26 @@ placement ->
 	| %RIGHT_OF {% (d) => yy.PLACEMENT.RIGHTOF %}
 
 note_statement ->
-	  ("note"|%START_NOTE) _ placement _ actor _ textWithColon %NL {%
+	  ("note"|%START_NOTE) placement actor textWithColon %NL {%
       function(d) {
         // console.log('[note one]\n', d)
-        return [d[4], { type:'addNote', placement: d[2], actor: d[4].actor, text: d[6] }]
+        return [d[2], { type:'addNote', placement: d[1], actor: d[2].actor, text: d[3] }]
       }
     %}
-	| ("note"|%START_NOTE) _ placement _ actor multilineNoteText %NL {%
+	| ("note"|%START_NOTE) placement actor multilineNoteText %NL {%
       function(d) {
         // console.log('[note multi]\n', d[5])
-        const text = d[5]
+        const text = d[3]
         const message = yy.parseMessage(text)
-        return [d[4], { type:'addNote', placement: d[2], actor: d[4].actor, text: message }]
+        return [d[2], { type:'addNote', placement: d[1], actor: d[2].actor, text: message }]
       }
     %}
-	| ("note"|%START_NOTE) _ "over" _ actor_pair _ textWithColon %NL {%
+	| ("note"|%START_NOTE) "over" actor_pair textWithColon %NL {%
       function(d) {
         // console.log('[note over]\n', d[5])
-        const actors = [d[4][0].actor, d[4][1].actor]
+        const actors = [d[2][0].actor, d[2][1].actor]
         return [
-          d[4], {type:'addNote', placement: yy.PLACEMENT.OVER, actor: actors, text: d[6]}
+          d[2], {type:'addNote', placement: yy.PLACEMENT.OVER, actor: actors, text: d[3]}
         ]
       }
     %}
@@ -291,7 +292,7 @@ actor_pair -> actor %COMMA actor {% (d) => ([d[0], d[2]]) %}
 	| actor {% id %}
 
 else_sections -> document
-	| document _ "else" __ color:? words %NL else_sections {%
+	| document _ "else" %WS color:? words %NL else_sections {%
     function(d) {
       const background = d[4] ? d[4]: null
       const text = yy.parseMessage(d[5])
@@ -304,7 +305,7 @@ else_sections -> document
 
 par_sections ->
 	  document
-	| document _ "and" __ color:? words %NL par_sections {%
+	| document _ "and" %WS color:? words %NL par_sections {%
     function(d) {
       const background = d[4] ? d[4]: null
       const text = yy.parseMessage(d[5])
