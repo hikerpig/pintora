@@ -1,5 +1,6 @@
 @preprocessor typescript
 @lexer lexer
+@skip_unmatch %WS
 @include "../../util/parser-grammars/whitespace.ne"
 @include "../../util/parser-grammars/config.ne"
 @include "../../util/parser-grammars/comment.ne"
@@ -81,7 +82,7 @@ line ->
       // console.log('[line]', JSON.stringify(d[1], null, 2))
       return d[1]
     } %}
-	| %NL
+	| %WS:? %NL
 
 statement ->
     action
@@ -106,64 +107,64 @@ statement ->
   | comment _ %NL
 
 conditionSentence ->
-    "if" %WS wordsInParens %WS "then" (%WS wordsInParens):? %WS:* %NL line:* elseClause:? _ "endif" _ %NL {%
+    "if" wordsInParens "then" (_ wordsInParens):? %NL line:* elseClause:? _ "endif" _ %NL {%
       function(d) {
         // console.log('[conditions]', d[2])
-        const thenLabel = (d[5] ? d[5][1]: null) || ''
-        const elseResult = d[9]
+        const thenLabel = (d[3] ? d[3][1]: null) || ''
+        const elseResult = d[6]
         return {
           type: 'condition',
-          message: d[2],
-          then: { label: thenLabel, children: d[8].map(o => Array.isArray(o) ? o[0]: o) },
+          message: d[1],
+          then: { label: thenLabel, children: d[5].map(o => Array.isArray(o) ? o[0]: o) },
           else: elseResult,
         }
       }
     %}
 
 elseClause ->
-    %WS:* "else" __ wordsInParens:? %WS:* %NL line:* {%
+    %WS:* "else" wordsInParens:? %NL line:* {%
       function(d) {
-        return { label: d[3], children: d[6].map(o => Array.isArray(o) ? o[0]: o) }
+        return { label: d[2], children: d[4].map(o => Array.isArray(o) ? o[0]: o) }
       }
     %}
 
 whileSentence ->
-    "while" __ wordsInParens (%WS "is" __ wordsInParens):? _ %NL line:* %WS:* "endwhile" (%WS wordsInParens):? %WS:? %NL {%
+    "while" wordsInParens (%WS "is" %WS wordsInParens):? _ %NL line:* %WS:* "endwhile" (_ wordsInParens):? %WS:? %NL {%
       function(d) {
         // console.log('[whileSentence]', d[6])
-        const confirmLabel = d[3] ? d[3][3]: undefined
-        const denyLabel = d[9] ? d[9][1]: undefined
+        const confirmLabel = d[2] ? d[2][3]: undefined
+        const denyLabel = d[8] ? d[8][1]: undefined
         return {
           type: 'while',
-          message: d[2],
+          message: d[1],
           confirmLabel,
           denyLabel,
-          children: d[6].map(o => Array.isArray(o) ? o[0]: o),
+          children: d[5].map(o => Array.isArray(o) ? o[0]: o),
         }
       }
     %}
 
 switchSentence ->
-    "switch" __ wordsInParens %WS:* %NL (%WS:* caseClause):* %WS:* "endswitch" %WS:* %NL {%
+    "switch" wordsInParens %WS:* %NL (%WS:* caseClause):* %WS:* "endswitch" %WS:* %NL {%
       function(d) {
-        const message = d[2]
-        const children = d[5].map(o => o[1])
+        const message = d[1]
+        const children = d[4].map(o => o[1])
         // console.log('switch', message)
         return { type: 'switch', message, children }
       }
     %}
 
 caseClause ->
-    "case" __ wordsInParens %WS:* %NL line:* {%
+    "case" wordsInParens %WS:* %NL line:* {%
       function(d) {
-        const confirmLabel = d[2].trim()
-        const children = d[5].map(o => Array.isArray(o) ? o[0]: o)
+        const confirmLabel = d[1].trim()
+        const children = d[4].map(o => Array.isArray(o) ? o[0]: o)
         return { type: 'case', confirmLabel, children }
       }
     %}
 
 forkSentence ->
-    "fork" %WS:* %NL (__ statement):+ (_ forkAgainClause):* _ ("endfork"|"endmerge") %NL {%
+    "fork" %WS:* %NL (%WS statement):+ (_ forkAgainClause):* _ ("endfork"|"endmerge") %NL {%
       function(d) {
         const firstActions = d[3].map(a => extractChildren(a[1]))
         const forkAgains = d[4].map(a => a[1])
@@ -175,7 +176,7 @@ forkSentence ->
     %}
 
 forkAgainClause ->
-    "forkagain" %WS:* %NL (__ statement):+ {%
+    "forkagain" %WS:* %NL (%WS statement):+ {%
       function(d) {
         const statements = d[3].map(a => extractChildren(a[1]))
         return { type: 'forkBranch', children: statements }
@@ -193,7 +194,7 @@ words ->
     %}
 
 action ->
-    %COLON multilineText %SEMICOLON _ %NL {%
+    %COLON multilineText %SEMICOLON %NL {%
       function(d) {
         return { type: 'addAction', action: { actionType: 'normal', message: d[1] } }
       }
@@ -215,7 +216,7 @@ groupType ->
   | "partition"
 
 group ->
-    groupType __ (color %WS):? (%QUOTED_WORD | %VALID_TEXT) __ %L_BRACKET (__ statement):+ %WS:* %R_BRACKET %WS:* %NL {%
+    groupType __ (color %WS):? (%QUOTED_WORD | %VALID_TEXT) _ %L_BRACKET (__ statement):+ %WS:* %R_BRACKET %WS:* %NL {%
       function(d) {
         const groupType = tv(d[0][0])
         const background = d[2] ? (d[2][0]): null
