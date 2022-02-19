@@ -1,5 +1,6 @@
 @preprocessor typescript
 @lexer lexer
+@skip_unmatch %WS
 @include "../../util/parser-grammars/whitespace.ne"
 @include "../../util/parser-grammars/config.ne"
 @include "../../util/parser-grammars/comment.ne"
@@ -18,7 +19,7 @@ import {
 
 const commonTopRules = {
   NL: MOO_NEWLINE,
-  WS: { match: /\s+/, lineBreaks: true },
+  WS: { match: / +/, lineBreaks: true },
   L_SQ_BRACKET: { match: /\[/ },
   R_SQ_BRACKET: { match: /\]/ },
   COMMENT_LINE: COMMENT_LINE_REGEXP,
@@ -34,6 +35,7 @@ let lexer = moo.states({
     ...commonTopRules,
     L_BRACKET: { match: /\{/ },
     R_BRACKET: { match: /\}/ },
+    COLON: /:/,
     ...configLexerMainState,
     ...commonTextRules,
   },
@@ -70,7 +72,7 @@ document -> null
 
 line ->
     %WS:* statement
-	| %NL {% (d) => null %}
+	| %WS:* %NL {% (d) => null %}
 
 statement ->
     UMLElement {%
@@ -79,9 +81,9 @@ statement ->
         return d[0]
       }
     %}
-  | paramClause _ %NL
-  | configOpenCloseClause _ %NL
-  | comment _ %NL
+  | paramClause %NL
+  | configOpenCloseClause %NL
+  | comment %NL
 
 UMLElement ->
     group {%
@@ -109,7 +111,7 @@ UMLElement ->
 
 # group can include UMLElement recursively
 group ->
-    groupType __ textInsideQuote __ %L_BRACKET __ (__ UMLElement _):* %R_BRACKET _ %NL {%
+    groupType %WS:? textInsideQuote _ %L_BRACKET _ (_ UMLElement _):* %R_BRACKET %NL {%
         function(d) {
           const groupType = tv(d[0][0])
           const label = d[2] || groupType
@@ -131,28 +133,21 @@ groupType ->
   | "component"
 
 component ->
-    "component" __ %WORD %WS:* %NL {%
+    "component" %WS:? %WORD %NL {%
       function(d) {
         const name = tv(d[2])
         return { type: 'component', name,  }
       }
     %}
-  | "component" __ %WORD __ %L_SQ_BRACKET elementLabel:+ %R_SQ_BRACKET %WS:? %NL {%
+  | "component" %WS:? %WORD %WS:? %L_SQ_BRACKET elementLabel:+ %R_SQ_BRACKET %NL {%
       function(d) {
         const name = tv(d[2])
         const label = d[5].join('').trim()
         return { type: 'component', name, label }
       }
     %}
-  # | "component" __ textInsideQuote _ %L_BRACKET _ (__ UMLElement _):* %R_BRACKET {%
-  #     function(d) {
-  #       const name = d[2]
-  #       const children = d[6].map(l => l[1]).filter(o => o)
-  #       return { type: 'component', isGroup: true, name, children }
-  #     }
-  #   %}
-  | shortComponent %WS:? %NL {% id %}
-  | shortComponent __ "as" __ %WORD %WS:* %NL {%
+  | shortComponent %NL {% id %}
+  | shortComponent %WS:? "as" %WS:? %WORD %NL {%
       function(d) {
         const comp = d[0]
         const name = tv(d[4])
@@ -168,9 +163,7 @@ shortComponent ->
       }
     %}
 
-elementLabel -> %WORD {% (d) => tv(d[0]) %}
-  | %WS {% (d) => tv(d[0]) %}
-  | %NL {% (d) => tv(d[0]) %}
+elementLabel -> (%WORD | %NL | %WS) {% (d) => tv(d[0][0]) %}
 
 textInsideQuote -> %TEXT_INSIDE_QUOTES {%
     function(d) {
@@ -180,14 +173,14 @@ textInsideQuote -> %TEXT_INSIDE_QUOTES {%
   %}
 
 interface ->
-    ("interface" | "()") __ (textInsideQuote | %WORD) %WS:* %NL {%
+    interfaceStart %WS:? (textInsideQuote | %WORD) %NL {%
       function(d) {
         const _l = d[2][0]
         const name = typeof _l === 'string' ? _l: tv(_l)
         return { type: 'interface', name, }
       }
     %}
-  | ("interface" | "()") __ (textInsideQuote | %WORD) %WS:* "as" __ %WORD %WS:* %NL {%
+  | interfaceStart %WS:? (textInsideQuote | %WORD) %WS:* "as" __ %WORD %NL {%
       function(d) {
         const _l = d[2][0]
         const label = typeof _l === 'string' ? _l: tv(_l)
@@ -196,8 +189,10 @@ interface ->
       }
     %}
 
+interfaceStart -> ("interface" | "()")
+
 relationship ->
-    elementReference _ relationLine _ elementReference (__ ":" __ (%WORD | %WS):+):? %NL {%
+    elementReference _ relationLine _ elementReference (__ %COLON __ (%WORD | %WS):+):? %NL {%
       function(d) {
         // console.log('[relationship] with message', d)
         const from = d[0]
