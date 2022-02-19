@@ -1,5 +1,13 @@
 # Change Log
 
+## 0.1.3
+
+### Patch Changes
+
+- 41cb7da: Make diagram grammars more tolerant to spaces (and the lack of them)
+- Updated dependencies [41cb7da]
+  - @pintora/standalone@0.1.3
+
 ## 0.1.2
 
 ### Patch Changes
