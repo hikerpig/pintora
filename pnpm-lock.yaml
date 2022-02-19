@@ -4,6 +4,7 @@ importers:
 
   .:
     specifiers:
+      '@changesets/changelog-git': ^0.1.9
       '@changesets/cli': ^2.20.0
       '@types/jest': ^27.0.3
       '@typescript-eslint/eslint-plugin': ^5.8.0
@@ -22,6 +23,7 @@ importers:
       turbo: ^1.1.2
       typescript: 4.5.4
     devDependencies:
+      '@changesets/changelog-git': 0.1.9
       '@changesets/cli': 2.20.0
       '@types/jest': 27.4.0
       '@typescript-eslint/eslint-plugin': 5.11.0_1659739a34b564cc1aa1228518173088
@@ -1962,6 +1964,12 @@ packages:
       '@changesets/types': 4.0.2
       '@manypkg/get-packages': 1.1.3
       semver: 5.7.1
+    dev: true
+
+  /@changesets/changelog-git/0.1.9:
+    resolution: {integrity: sha512-iidOVQVLwOF5nkQ33iNVrrsIyp4csywKK9DwyatnybXsksvybE68axAq3qqYQP7dLZayDJYCP2rhINUJf1zPXw==}
+    dependencies:
+      '@changesets/types': 4.0.2
     dev: true
 
   /@changesets/cli/2.20.0:

@@ -22,6 +22,7 @@
     "vercel-build": "npm run compile:browser && npm run build-site"
   },
   "devDependencies": {
+    "@changesets/changelog-git": "^0.1.9",
     "@changesets/cli": "^2.20.0",
     "@types/jest": "^27.0.3",
     "@typescript-eslint/eslint-plugin": "^5.8.0",
