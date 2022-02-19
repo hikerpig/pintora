@@ -63,7 +63,7 @@ const componentArtist: IDiagramArtist<ComponentDiagramIR, ComponentConf> = {
       compound: true,
     }).setGraph({
       nodesep: 20,
-      edgesep: 20,
+      edgesep: conf.edgesep,
       ranksep: 60,
       splines: getGraphSplinesOption(conf.edgeType),
       avoid_label_on_border: true,
@@ -284,13 +284,17 @@ function drawGroupsTo(parentMark: Group, ir: ComponentDiagramIR, g: LayoutGraph)
       })
     }
 
+    const groupMinWidth = labelTextDims.width + 10
+
     g.setNode(groupId, {
       id: groupId,
+      minwidth: groupMinWidth,
       ...nodeMargin,
       onLayout(data: LayoutNode) {
         const { x, y, width, height } = data
         const containerWidth = Math.max(width, labelTextDims.width + 10)
         // console.log('[group] onLayout', data, 'containerWidth', containerWidth)
+        const node = g.node(groupId) as unknown as LayoutNode
         if (bgMark && bgMark.type === 'rect') {
           safeAssign(bgMark.attrs, { x: x - containerWidth / 2, y: y - height / 2, width: containerWidth, height })
           group.children.unshift(bgMark)
@@ -307,7 +311,6 @@ function drawGroupsTo(parentMark: Group, ir: ComponentDiagramIR, g: LayoutGraph)
           })
           if (bgMark) {
             // console.log('bgMark', groupId, bgMark, 'bounds', bgMark.symbolBounds)
-            const node: LayoutNode = g.node(groupId) as any
             // node.outerTop = bgMark.symbolBounds.top + y
             // node.outerBottom = bgMark.symbolBounds.bottom + y
             // node.outerLeft = bgMark.symbolBounds.left + x
@@ -317,15 +320,25 @@ function drawGroupsTo(parentMark: Group, ir: ComponentDiagramIR, g: LayoutGraph)
             group.children.unshift(bgMark)
           }
         }
+
         safeAssign(labelMark.attrs, { x, y: y - height / 2 + labelTextDims.height + 5 })
         safeAssign(typeMark.attrs, { x: x - containerWidth / 2 + 2, y: y + height / 2 - 2 - typeTextDims.height })
+
+        // debug
+        // const centerMark = makeCircleWithCoordInPoint(data)
+        // const leftMark = makeCircleWithCoordInPoint({ ...data, x: data.x - containerWidth / 2 })
+        // const rightMark = makeCircleWithCoordInPoint({ ...data, x: data.x + containerWidth / 2 })
+        // group.children.push(centerMark, leftMark, rightMark)
       },
     })
+
+    let sumChildNodesWidth = 0
     for (const child of cGroup.children) {
       if ('name' in child) {
         const childNode: LayoutNodeOption = g.node(child.name)
         if (childNode) {
           g.setParent(childNode.id, groupId)
+          sumChildNodesWidth += (childNode.outerWidth || childNode.width) + conf.edgesep * 2
 
           if (childNode.dummyBoxId) {
             g.setParent(childNode.id, childNode.dummyBoxId)
@@ -333,6 +346,19 @@ function drawGroupsTo(parentMark: Group, ir: ComponentDiagramIR, g: LayoutGraph)
           }
         }
       }
+    }
+
+    // sometimes the label is too wide,
+    // so we need to add a dummy node to expand the group so it can hold the label,
+    // we assume nodes are of the same ranks so their widths sum up to an horizontal bound
+    const groupSpaceShort = groupMinWidth - sumChildNodesWidth
+    if (groupSpaceShort > 0) {
+      const fakeLabelNode: LayoutNodeOption = {
+        id: `${groupId}-placeholder`,
+        width: Math.max(1, groupSpaceShort - conf.edgesep),
+      }
+      g.setNode(fakeLabelNode.id, fakeLabelNode)
+      g.setParent(fakeLabelNode.id, groupId)
     }
 
     const group = makeMark(
