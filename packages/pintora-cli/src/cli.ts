@@ -26,6 +26,7 @@ type CliRenderArgs = {
   pixelRatio?: string
   backgroundColor?: string
   theme?: string
+  width?: number
 }
 
 yargs
@@ -55,6 +56,10 @@ yargs
         alias: 't',
         default: 'default',
         describe: 'Pintora theme',
+      },
+      width: {
+        alias: 'w',
+        describe: 'Width of output image',
       },
       // config: {
       //   alias: 'c',
@@ -103,6 +108,7 @@ async function handleRenderCommand(args: CliRenderArgs) {
     mimeType,
     backgroundColor: args.backgroundColor || config.backgroundColor,
     pintoraConfig,
+    width: args.width,
   })
   if (!buf) {
     consola.error(`Error during generating image`)

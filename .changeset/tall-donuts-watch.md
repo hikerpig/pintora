@@ -1,8 +1,8 @@
 ---
-'@pintora/diagrams': minor
-'@pintora/renderer': minor
-'@pintora/standalone': minor
 '@pintora/cli': minor
+'@pintora/core': minor
+'@pintora/diagrams': minor
+'@pintora/standalone': minor
 ---
 
-support `useMaxWidth` option for diagrams
+Add the ability to scale diagram width with `useMaxWidth`, #20

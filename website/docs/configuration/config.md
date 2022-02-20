@@ -47,6 +47,7 @@ export type PintoraConfig = {
     /** by default it's 'svg' */
     defaultRenderer: string
     defaultFontFamily: string
+    useMaxWidth: boolean
   }
   themeConfig: {
     theme: string

@@ -1,7 +1,7 @@
 import { DEFAULT_FONT_FAMILY, MarkAttrs } from '@pintora/core'
 import { PALETTE } from '../util/theme'
 import { safeAssign } from '@pintora/core'
-import { interpreteConfigs, makeConfigurator } from '../util/config'
+import { baseGetConfigFromGlobalConfig, interpreteConfigs, makeConfigurator } from '../util/config'
 
 export type SequenceConf = {
   noteWidth: number
@@ -118,8 +118,11 @@ export const configKey = 'sequence'
 const configurator = makeConfigurator<SequenceConf>({
   defaultConfig,
   configKey,
-  getConfigFromGlobalConfig(globalConfig) {
-    return safeAssign({ messageFontFamily: globalConfig.core.defaultFontFamily })
+  getConfigFromGlobalConfig(globalConfig, configContext, configKey) {
+    return safeAssign({
+      ...baseGetConfigFromGlobalConfig(globalConfig, configContext, configKey),
+      messageFontFamily: globalConfig.core.defaultFontFamily,
+    })
   },
   getConfigFromParamDirectives(configParams) {
     return interpreteConfigs(SEQUENCE_PARAM_DIRECTIVE_RULES, configParams)
