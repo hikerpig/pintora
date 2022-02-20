@@ -68,8 +68,9 @@ There are some common diagram config keys those - if they appears in the `*Conf`
 
 | name            | value type   | description                                                        |
 |-----------------|--------------|--------------------------------------------------------------------|
-| layoutDirection | 'TB' or 'LR' | A config for dagre-layout, stands for (top-down) or (left-right)   |
+| layoutDirection | 'TB' or 'LR' | A config for dagre-layout, stands for (top-bottom) or (left-right) |
 | diagramPadding  | number       | Padding of the diagram, distance from visual content to the border |
+| useMaxWidth     | boolean      | Whether the diagram should be resized to fit container width       |
 
 ### sequence
 
@@ -115,6 +116,7 @@ export type SequenceConf = {
   dividerFontWeight: MarkAttrs['fontWeight']
 
   showSequenceNumbers: boolean
+  useMaxWidth: boolean
 }
 ```
 
@@ -128,6 +130,7 @@ export type ErConf = {
   layoutDirection: string
 
   curvedEdge: boolean
+  useMaxWidth: boolean
 
   minEntityWidth: number
   minEntityHeight: number
@@ -175,6 +178,8 @@ export type ComponentConf = {
   labelBackground: string
 
   interfaceSize: number
+
+  useMaxWidth: boolean
 }
 ```
 
@@ -186,6 +191,7 @@ export type ActivityConf = {
 
   edgesep: number
   curvedEdge: boolean
+  useMaxWidth: boolean
 
   actionPaddingX: number
   actionPaddingY: number
@@ -218,6 +224,7 @@ export type ActivityConf = {
 export type MindmapConf = {
   diagramPadding: number
   layoutDirection: 'LR' | 'TB'
+  useMaxWidth: boolean
 
   borderRadius: number
 
