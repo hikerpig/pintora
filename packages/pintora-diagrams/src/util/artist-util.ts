@@ -175,13 +175,14 @@ export function adjustRootMarkBounds({
 }) {
   const containerWidth = containerSize?.width
   const doublePadX = padX * 2
-  const scaleX = useMaxWidth && containerWidth ? (containerWidth - doublePadX) / gBounds.width : 1
+  const scaleX = useMaxWidth && containerWidth ? containerWidth / (gBounds.width + doublePadX) : 1
   rootMark.matrix = mat3.translate(mat3.create(), mat3.fromScaling(mat3.create(), [scaleX, scaleX]), [
-    -Math.min(0, gBounds.left) + padX,
-    -Math.min(0, gBounds.top) + padY,
+    -Math.min(0, gBounds.left) + padX / scaleX,
+    -Math.min(0, gBounds.top) + padY / scaleX,
   ])
+  const width = (gBounds.width + doublePadX) * scaleX
   return {
-    width: gBounds.width * scaleX + doublePadX,
+    width,
     height: gBounds.height * scaleX + padY * 2,
   }
 }

@@ -1,9 +1,10 @@
-import pintora, { configApi, PintoraConfig, themeRegistry, GraphicsIR, Mark } from '@pintora/core'
+import pintora, { configApi, PintoraConfig, themeRegistry, GraphicsIR, Mark, DiagramArtistOptions } from '@pintora/core'
 // import cloneDeep from 'clone-deep'
 
-export function testDraw(code: string) {
+export function testDraw(code: string, extraOptions: Partial<DiagramArtistOptions> = {}) {
   let success = true
   const result = pintora.parseAndDraw(code, {
+    ...extraOptions,
     onError(err) {
       console.error(err)
       success = false

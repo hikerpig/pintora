@@ -230,9 +230,9 @@ const sequenceArtist: IDiagramArtist<SequenceDiagramIR, SequenceConf> = {
       contentHeight = contentHeight + conf.boxMargin
     }
     const containerWidth = opts.containerSize?.width
-    const scaleX = (conf.useMaxWidth && containerWidth && (containerWidth - doublePadX) / contentWidth) || 1
-    const width = scaleX * contentWidth + doublePadX
-    const height = scaleX * contentHeight + doublePadY
+    const scaleX = (conf.useMaxWidth && containerWidth && containerWidth / (contentWidth + doublePadX)) || 1
+    const width = Math.round(scaleX * (contentWidth + doublePadX))
+    const height = Math.round(scaleX * (contentHeight + doublePadY))
 
     const leftPad = Math.abs(Math.min(0, box.startx)) // to compensate negative stopx
     rootMark.matrix = mat3.translate(mat3.create(), mat3.fromScaling(mat3.create(), [scaleX, scaleX]), [
