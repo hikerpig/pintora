@@ -3,7 +3,7 @@ import { IGroup, AbstractCanvas, CanvasCfg, IShape } from '@antv/g-base'
 import { IRenderer } from '../type'
 import { Stack } from '../util'
 
-type Visitor<T extends Mark, Actions = any> = {
+type Visitor<T extends Mark, Actions = unknown> = {
   enter(mark: T, actions?: Actions): boolean | void
   exit?(mark: T, actions?: Actions): void
 }
@@ -13,7 +13,7 @@ type Visitors = {
   [K in MarkType]: VisitorInput<K extends keyof MarkTypeMap ? MarkTypeMap[K] : Mark>
 }
 
-function traverseScene<Actions = any>(
+function traverseScene<Actions = unknown>(
   mark: Mark,
   visitors: Partial<Visitors> & { default?: VisitorInput<Mark> },
   actions: Actions,
@@ -30,7 +30,7 @@ function traverseScene<Actions = any>(
     }
   }
   if (visitorEnter) {
-    visitorEnter(mark as any, actions)
+    visitorEnter(mark, actions)
   }
   if (mark.type === 'group' && mark.children) {
     mark.children.forEach(child => {
@@ -40,7 +40,7 @@ function traverseScene<Actions = any>(
     traverseScene(mark.mark, visitors, actions)
   }
   if (visitorExit) {
-    visitorExit(mark as any, actions)
+    visitorExit(mark, actions)
   }
 }
 

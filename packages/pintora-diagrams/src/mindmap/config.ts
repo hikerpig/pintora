@@ -7,6 +7,7 @@ export type MindmapConf = {
   layoutDirection: 'LR' | 'TB'
 
   // curvedEdge: boolean
+  useMaxWidth: boolean
 
   borderRadius: number
 
@@ -56,6 +57,7 @@ export const defaultConfig: MindmapConf = {
   layoutDirection: 'LR',
 
   // curvedEdge: true,
+  useMaxWidth: false,
 
   borderRadius: 4,
 
@@ -80,6 +82,7 @@ export const defaultConfig: MindmapConf = {
 
 export const MINDMAP_PARAM_DIRECTIVE_RULES = {
   // curvedEdge: { valueType: 'boolean' },
+  useMaxWidth: { valueType: 'boolean' },
   diagramPadding: { valueType: 'size' },
   layoutDirection: { valueType: 'layoutDirection' },
   borderRadius: { valueType: 'size' },

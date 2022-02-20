@@ -11,14 +11,13 @@ import {
   getPointAt,
   symbolRegistry,
   GSymbol,
-  mat3,
   IFont,
   Bounds,
 } from '@pintora/core'
 import { ComponentDiagramIR, LineType, Relationship } from './db'
 import { ComponentConf, getConf } from './config'
 import { createLayoutGraph, getGraphBounds, LayoutEdge, LayoutGraph, LayoutNode, LayoutNodeOption } from '../util/graph'
-import { makeMark, drawArrowTo, calcDirection, makeLabelBg } from '../util/artist-util'
+import { makeMark, drawArrowTo, calcDirection, makeLabelBg, adjustRootMarkBounds } from '../util/artist-util'
 import dagre from '@pintora/dagre'
 import { Edge } from '@pintora/graphlib'
 import { isDev } from '../util/env'
@@ -40,7 +39,7 @@ type EdgeData = {
 }
 
 const componentArtist: IDiagramArtist<ComponentDiagramIR, ComponentConf> = {
-  draw(ir, config) {
+  draw(ir, config, opts?) {
     // console.info('[artist] component', ir)
     conf = getConf(ir, config)
 
@@ -77,17 +76,17 @@ const componentArtist: IDiagramArtist<ComponentDiagramIR, ComponentConf> = {
     }
 
     const { labelBounds } = adjustMarkInGraph(g)
-
     const gBounds = tryExpandBounds(getGraphBounds(g), labelBounds)
-
     const pad = conf.diagramPadding
-    rootMark.matrix = mat3.fromTranslation(mat3.create(), [
-      -Math.min(0, gBounds.left) + pad,
-      -Math.min(0, gBounds.top) + pad,
-    ])
 
-    const width = gBounds.width + pad * 2
-    const height = gBounds.height + pad * 2
+    const { width, height } = adjustRootMarkBounds({
+      rootMark,
+      gBounds,
+      padX: pad,
+      padY: pad,
+      useMaxWidth: conf.useMaxWidth,
+      containerSize: opts?.containerSize,
+    })
 
     return {
       mark: rootMark,

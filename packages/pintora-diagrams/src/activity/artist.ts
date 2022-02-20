@@ -69,7 +69,7 @@ function isEndAlikeKeyword(keyword: Keyword) {
 }
 
 const erArtist: IDiagramArtist<ActivityDiagramIR, ActivityConf> = {
-  draw(ir, config) {
+  draw(ir, config, opts?) {
     conf = getConf(ir, config)
     model = new ArtistModel(ir)
     theme = (configApi.getConfig() as PintoraConfig).themeConfig.themeVariables
@@ -117,7 +117,14 @@ const erArtist: IDiagramArtist<ActivityDiagramIR, ActivityConf> = {
     const bounds = tryExpandBounds(getGraphBounds(g), edgeBounds)
 
     // console.log('bounds', bounds)
-    const { width, height } = adjustRootMarkBounds(rootMark, bounds, conf.diagramPadding, conf.diagramPadding)
+    const { width, height } = adjustRootMarkBounds({
+      rootMark,
+      gBounds: bounds,
+      padX: conf.diagramPadding,
+      padY: conf.diagramPadding,
+      useMaxWidth: conf.useMaxWidth,
+      containerSize: opts?.containerSize,
+    })
 
     return {
       mark: rootMark,
