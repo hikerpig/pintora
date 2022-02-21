@@ -52,7 +52,7 @@ const GROUP_LABEL_MAP = {
 }
 
 const sequenceArtist: IDiagramArtist<SequenceDiagramIR, SequenceConf> = {
-  draw(ir, config?) {
+  draw(ir, config?, opts?) {
     // console.log('[draw]', ir, config)
     conf = getConf(ir, config)
     theme = (configApi.getConfig() as PintoraConfig).themeConfig.themeVariables
@@ -201,15 +201,6 @@ const sequenceArtist: IDiagramArtist<SequenceDiagramIR, SequenceConf> = {
 
     const box = model.getBounds()
 
-    let height = box.stopy - box.starty + 2 * conf.diagramMarginY
-    if (conf.mirrorActors) {
-      height = height - conf.boxMargin + conf.diagramMarginY
-    }
-
-    const width = box.stopx - box.startx + 2 * conf.diagramMarginX
-    const extraVertForTitle = title ? 40 : 0
-    height += extraVertForTitle
-
     if (title) {
       const titleFont = actorFont(conf)
       rootMark.children.push({
@@ -229,8 +220,22 @@ const sequenceArtist: IDiagramArtist<SequenceDiagramIR, SequenceConf> = {
 
     model.emitBoundsFinish()
 
+    const doublePadX = 2 * conf.diagramMarginX
+    const doublePadY = 2 * conf.diagramMarginY
+
+    const extraVertForTitle = title ? 40 : 0
+    const contentWidth = box.stopx - box.startx
+    let contentHeight = box.stopy - box.starty + extraVertForTitle
+    if (conf.mirrorActors) {
+      contentHeight = contentHeight + conf.boxMargin
+    }
+    const containerWidth = opts.containerSize?.width
+    const scaleX = (conf.useMaxWidth && containerWidth && containerWidth / (contentWidth + doublePadX)) || 1
+    const width = Math.round(scaleX * (contentWidth + doublePadX))
+    const height = Math.round(scaleX * (contentHeight + doublePadY))
+
     const leftPad = Math.abs(Math.min(0, box.startx)) // to compensate negative stopx
-    rootMark.matrix = mat3.fromTranslation(mat3.create(), [
+    rootMark.matrix = mat3.translate(mat3.create(), mat3.fromScaling(mat3.create(), [scaleX, scaleX]), [
       conf.diagramMarginX + leftPad,
       conf.diagramMarginY + extraVertForTitle,
     ])

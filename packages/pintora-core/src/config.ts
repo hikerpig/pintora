@@ -10,6 +10,7 @@ export interface PintoraConfig {
     /** by default it's 'svg' */
     defaultRenderer: string
     defaultFontFamily: string
+    useMaxWidth: boolean
   }
   themeConfig: {
     theme: string
@@ -22,6 +23,7 @@ let config: PintoraConfig = {
   core: {
     defaultRenderer: 'svg',
     defaultFontFamily: DEFAULT_FONT_FAMILY,
+    useMaxWidth: false,
   },
   themeConfig: {
     theme: 'default',

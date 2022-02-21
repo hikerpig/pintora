@@ -1,6 +1,13 @@
-import pintora, { configApi, GraphicsIR, PintoraConfig, tinycolor } from '@pintora/core'
+import pintora, {
+  configApi,
+  GraphicsIR,
+  PintoraConfig,
+  tinycolor,
+  safeAssign,
+  DiagramArtistOptions,
+} from '@pintora/core'
 export * from '@pintora/core'
-import { DIAGRAMS, BaseDiagramIR } from '@pintora/diagrams'
+import { DIAGRAMS } from '@pintora/diagrams'
 import { render, RenderOptions, BaseRenderer, rendererRegistry } from '@pintora/renderer'
 
 function initDiagrams() {
@@ -13,7 +20,7 @@ initDiagrams()
 type InitBrowserOptions = {
   startOnLoad?: boolean
 }
-interface RenderToOptions extends RenderOptions {
+interface RenderToOptions extends RenderOptions, DiagramArtistOptions {
   onError?(error: Error): void
   enhanceGraphicIR?(ir: GraphicsIR): GraphicsIR
   config?: PintoraConfig
@@ -60,7 +67,10 @@ const pintoraStandalone = {
 
     let drawResult: ReturnType<typeof pintoraStandalone.parseAndDraw>
     try {
-      drawResult = pintoraStandalone.parseAndDraw(code, options)
+      const containerSize = {
+        width: container.clientWidth,
+      }
+      drawResult = pintoraStandalone.parseAndDraw(code, safeAssign<RenderToOptions>({ containerSize }, options))
     } catch (error) {
       const onError = options.onError || console.warn
       onError(error)
@@ -71,7 +81,7 @@ const pintoraStandalone = {
         let graphicIR = drawResult.graphicIR
         if (options.enhanceGraphicIR) graphicIR = options.enhanceGraphicIR(graphicIR)
         if (!graphicIR.bgColor) {
-          const diagramIR: BaseDiagramIR = drawResult.diagramIR
+          const diagramIR: any = drawResult.diagramIR
           const conf = configApi.gnernateNewConfig<PintoraConfig>(diagramIR.overrideConfig || {})
           const canvasBackground = conf.themeConfig.themeVariables?.canvasBackground
 

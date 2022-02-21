@@ -7,6 +7,7 @@ export type ErConf = {
   layoutDirection: string
 
   curvedEdge: boolean
+  useMaxWidth: boolean
 
   minEntityWidth: number
   minEntityHeight: number
@@ -33,6 +34,7 @@ export const defaultConfig: ErConf = {
   layoutDirection: 'TB',
 
   curvedEdge: true,
+  useMaxWidth: false,
 
   minEntityWidth: 90,
 
@@ -59,6 +61,7 @@ export const defaultConfig: ErConf = {
 
 export const ER_PARAM_DIRECTIVE_RULES = {
   curvedEdge: { valueType: 'boolean' },
+  useMaxWidth: { valueType: 'boolean' },
   layoutDirection: { valueType: 'string' },
   borderRadius: { valueType: 'size' },
   stroke: { valueType: 'color' },

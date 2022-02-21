@@ -11,7 +11,7 @@ export type CLIRenderOptions = {
   mimeType?: string
   backgroundColor?: string
   pintoraConfig?: Partial<PintoraConfig>
-  // width?: number
+  width?: number
   // height?: number
 }
 
@@ -36,10 +36,18 @@ function renderPrepare(opts: CLIRenderOptions) {
         pintoraStandalone.setConfig(pintoraConfig)
       }
 
+      const containerSize = opts.width ? { width: opts.width } : undefined
+      if (opts.width) {
+        pintoraStandalone.setConfig({
+          core: { useMaxWidth: true },
+        })
+      }
+
       return new Promise<IRenderer>((resolve, reject) => {
         pintoraStandalone.renderTo(code, {
           container,
           renderer: renderOpts.renderer || 'canvas',
+          containerSize,
           enhanceGraphicIR(ir) {
             if (!ir.bgColor) {
               const themeVariables = pintoraStandalone.getConfig<PintoraConfig>().themeConfig.themeVariables

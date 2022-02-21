@@ -32,7 +32,7 @@ let conf: MindmapConf
 let mmDraw: MMDraw
 
 const mmArtist: IDiagramArtist<MindmapIR, MindmapConf> = {
-  draw(ir, config) {
+  draw(ir, config, opts?) {
     conf = Object.assign(getConf(ir), config || {})
     mmDraw = new MMDraw(ir)
     if (isDev) {
@@ -48,7 +48,14 @@ const mmArtist: IDiagramArtist<MindmapIR, MindmapConf> = {
     mmDraw.drawTo(rootMark)
 
     const bounds = getGraphBounds(mmDraw.g)
-    const { width, height } = adjustRootMarkBounds(rootMark, bounds, conf.diagramPadding, conf.diagramPadding)
+    const { width, height } = adjustRootMarkBounds({
+      rootMark,
+      gBounds: bounds,
+      padX: conf.diagramPadding,
+      padY: conf.diagramPadding,
+      useMaxWidth: conf.useMaxWidth,
+      containerSize: opts?.containerSize,
+    })
     return {
       width,
       height,
@@ -177,7 +184,6 @@ class MMDraw {
       // console.log('edge', edge, e, fromNode, toNode)
       let fromOutPoint: Point
       let toInPoint: Point
-      // const isReverse = false
       const { isReverse } = edge
       if (isVertical) {
         fromOutPoint = getPositionOfRect(

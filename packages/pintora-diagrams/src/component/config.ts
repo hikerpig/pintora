@@ -22,6 +22,8 @@ export type ComponentConf = {
   labelBackground: string
 
   interfaceSize: number
+
+  useMaxWidth: boolean
 }
 
 export const defaultConfig: ComponentConf = {
@@ -44,6 +46,8 @@ export const defaultConfig: ComponentConf = {
   labelBackground: PALETTE.white,
 
   interfaceSize: 16,
+
+  useMaxWidth: false,
 }
 
 export const COMPONENT_PARAM_DIRECTIVE_RULES = {
@@ -60,6 +64,7 @@ export const COMPONENT_PARAM_DIRECTIVE_RULES = {
   lineWidth: { valueType: 'size' },
   labelBackground: { valueType: 'color' },
   interfaceSize: { valueType: 'size' },
+  useMaxWidth: { valueType: 'boolean' },
 } as const
 
 export const configKey = 'component'

@@ -20,4 +20,18 @@ describe('sequence-artist', () => {
     `
     expect(stripDrawResultForSnapshot(testDraw(code))).toMatchSnapshot()
   })
+
+  it('will process containerSize and @useMaxWidth', () => {
+    const code = `
+    sequenceDiagram
+      @config({
+        "sequence": {
+          "useMaxWidth": true
+        }
+      })
+      A--xB : Message
+    `
+    const result = testDraw(code, { containerSize: { width: 300 } })
+    expect(Math.round(result.graphicIR.width)).toBe(300)
+  })
 })

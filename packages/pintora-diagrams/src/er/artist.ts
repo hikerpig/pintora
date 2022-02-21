@@ -14,7 +14,7 @@ import {
 import { ErDiagramIR, Identification, Entity, Relationship } from './db'
 import { ErConf, getConf } from './config'
 import { createLayoutGraph, getGraphBounds, LayoutGraph, LayoutNode } from '../util/graph'
-import { makeMark, getBaseText, calcDirection, makeLabelBg } from '../util/artist-util'
+import { makeMark, getBaseText, calcDirection, makeLabelBg, adjustRootMarkBounds } from '../util/artist-util'
 import dagre from '@pintora/dagre'
 import { drawMarkerTo } from './artist-util'
 import { getPointsCurvePath, getPointsLinearPath } from '../util/line-util'
@@ -22,7 +22,7 @@ import { getPointsCurvePath, getPointsLinearPath } from '../util/line-util'
 let conf: ErConf
 
 const erArtist: IDiagramArtist<ErDiagramIR, ErConf> = {
-  draw(ir, config) {
+  draw(ir, config, opts) {
     conf = getConf(ir)
     // Now we have to construct the diagram in a specific way:
     // ---
@@ -81,16 +81,16 @@ const erArtist: IDiagramArtist<ErDiagramIR, ErConf> = {
     rootMark.children.unshift(relationsGroup)
 
     const gBounds = getGraphBounds(g)
-    // console.log('bounds', gBounds)
-
     const pad = conf.diagramPadding
-    rootMark.matrix = mat3.fromTranslation(mat3.create(), [
-      -Math.min(0, gBounds.left) + pad,
-      -Math.min(0, gBounds.top) + pad,
-    ])
 
-    const width = gBounds.width + pad * 2
-    const height = gBounds.height + pad * 2
+    const { width, height } = adjustRootMarkBounds({
+      rootMark,
+      gBounds,
+      padX: pad,
+      padY: pad,
+      useMaxWidth: conf.useMaxWidth,
+      containerSize: opts?.containerSize,
+    })
 
     return {
       mark: rootMark,

@@ -1,6 +1,7 @@
 import { diagramRegistry } from './diagram-registry'
 
 export * from './type'
+import { DiagramArtistOptions } from './type'
 import { logger, setLogLevel } from './logger'
 import configApi, { PintoraConfig } from './config'
 
@@ -26,12 +27,13 @@ export {
   ITheme,
   themeRegistry,
   DEFAULT_FONT_FAMILY,
+  DiagramArtistOptions,
 }
 
 type DrawOptions = {
   onError?(error: Error): void
   config?: PintoraConfig
-}
+} & DiagramArtistOptions
 
 const pintora = {
   configApi,
@@ -57,7 +59,7 @@ const pintora = {
     if (config && diagram.configKey && (config as any)[diagram.configKey]) {
       configForArtist = (config as any)[diagram.configKey]
     }
-    const graphicIR = diagram.artist.draw(diagramIR, configForArtist)
+    const graphicIR = diagram.artist.draw(diagramIR, configForArtist, opts)
 
     return {
       diagramIR,

@@ -24,11 +24,27 @@ export type DiagramConfigContext = {
   overrideConfig: Partial<PintoraConfig>
 }
 
+export function baseGetConfigFromGlobalConfig(
+  globalConfig: PintoraConfig,
+  configContext: DiagramConfigContext,
+  configKey: string,
+) {
+  const coreConfig = safeAssign<PintoraConfig['core']>({}, globalConfig.core, configContext.overrideConfig?.core)
+  return safeAssign(
+    { fontFamily: coreConfig.defaultFontFamily, useMaxWidth: coreConfig.useMaxWidth },
+    globalConfig[configKey] || {},
+  )
+}
+
 export function makeConfigurator<C>(opts: {
   defaultConfig: C
   configKey: string
   getConfigFromParamDirectives?(params: ConfigParam[]): Partial<C>
-  getConfigFromGlobalConfig?(config: PintoraConfig): Partial<C>
+  getConfigFromGlobalConfig?(
+    globalConfig: PintoraConfig,
+    configContext: DiagramConfigContext,
+    configKey: string,
+  ): Partial<C>
   getConfigFromTheme(t: ITheme, conf: C): Partial<C>
 }) {
   const { configKey, defaultConfig } = opts
@@ -40,13 +56,8 @@ export function makeConfigurator<C>(opts: {
 
     safeAssign(conf, opts.getConfigFromTheme(t, conf))
 
-    const getConfigFromGlobalConfig =
-      opts.getConfigFromGlobalConfig ||
-      (_globalConfig => {
-        const coreConfig = safeAssign({}, _globalConfig.core, configContext.overrideConfig?.core)
-        return safeAssign({ fontFamily: coreConfig.defaultFontFamily }, _globalConfig[configKey] || {})
-      })
-    safeAssign(conf, getConfigFromGlobalConfig(globalConfig))
+    const getConfigFromGlobalConfig = opts.getConfigFromGlobalConfig || baseGetConfigFromGlobalConfig
+    safeAssign(conf, getConfigFromGlobalConfig(globalConfig, configContext, configKey))
 
     if (extraConfig) safeAssign(conf, extraConfig)
 

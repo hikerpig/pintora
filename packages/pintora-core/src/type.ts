@@ -4,7 +4,7 @@ export * from './types/graphics'
 
 export { Maybe, OrNull, DeepPartial } from './types/helper'
 
-export interface IDiagram<D = any, Config = any> {
+export interface IDiagram<D = unknown, Config = unknown> {
   /**
    * A pattern used to detect if the input text should be handled by this diagram.
    * @example /^\s*sequenceDiagram/
@@ -19,13 +19,20 @@ export interface IDiagram<D = any, Config = any> {
 /**
  * Parse input text to DiagramIR
  */
-export interface IDiagramParser<D, Config = any> {
+export interface IDiagramParser<D, Config = unknown> {
   parse(text: string, config?: Config): D
+}
+
+export type DiagramArtistOptions = {
+  containerSize?: {
+    width: number
+    height?: number
+  }
 }
 
 /**
  * Convert DiagramIR to GraphicsIR
  */
-export interface IDiagramArtist<D, Config = any> {
-  draw(diagramIR: D, config?: Config): GraphicsIR
+export interface IDiagramArtist<D, Config = unknown> {
+  draw(diagramIR: D, config?: Config, opts?: DiagramArtistOptions): GraphicsIR
 }

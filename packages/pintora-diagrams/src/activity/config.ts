@@ -7,6 +7,7 @@ export type ActivityConf = {
 
   edgesep: number
   curvedEdge: boolean
+  useMaxWidth: boolean
 
   actionPaddingX: number
   actionPaddingY: number
@@ -37,6 +38,7 @@ export const defaultConfig: ActivityConf = {
 
   edgesep: 60,
   curvedEdge: true,
+  useMaxWidth: false,
 
   actionPaddingX: 10,
   actionPaddingY: 10,
@@ -65,6 +67,7 @@ export const ACTIVITY_PARAM_DIRECTIVE_RULES = {
   diagramPadding: { valueType: 'size' },
 
   curvedEdge: { valueType: 'boolean' },
+  useMaxWidth: { valueType: 'boolean' },
 
   actionPaddingX: { valueType: 'size' },
   actionPaddingY: { valueType: 'size' },

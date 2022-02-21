@@ -1,7 +1,7 @@
 import { DEFAULT_FONT_FAMILY, MarkAttrs } from '@pintora/core'
 import { PALETTE } from '../util/theme'
 import { safeAssign } from '@pintora/core'
-import { interpreteConfigs, makeConfigurator } from '../util/config'
+import { baseGetConfigFromGlobalConfig, interpreteConfigs, makeConfigurator } from '../util/config'
 
 export type SequenceConf = {
   noteWidth: number
@@ -43,6 +43,7 @@ export type SequenceConf = {
   dividerTextColor: string
 
   showSequenceNumbers: boolean
+  useMaxWidth: boolean
 }
 
 export const defaultConfig: SequenceConf = {
@@ -82,6 +83,7 @@ export const defaultConfig: SequenceConf = {
   dividerTextColor: PALETTE.normalDark,
 
   showSequenceNumbers: false,
+  useMaxWidth: false,
 }
 
 export const SEQUENCE_PARAM_DIRECTIVE_RULES = {
@@ -108,6 +110,7 @@ export const SEQUENCE_PARAM_DIRECTIVE_RULES = {
   noteTextColor: { valueType: 'color' },
   activationBackground: { valueType: 'color' },
   dividerTextColor: { valueType: 'color' },
+  useMaxWidth: { valueType: 'boolean' },
 } as const
 
 export const configKey = 'sequence'
@@ -115,8 +118,11 @@ export const configKey = 'sequence'
 const configurator = makeConfigurator<SequenceConf>({
   defaultConfig,
   configKey,
-  getConfigFromGlobalConfig(globalConfig) {
-    return safeAssign({ messageFontFamily: globalConfig.core.defaultFontFamily })
+  getConfigFromGlobalConfig(globalConfig, configContext, configKey) {
+    return safeAssign({
+      ...baseGetConfigFromGlobalConfig(globalConfig, configContext, configKey),
+      messageFontFamily: globalConfig.core.defaultFontFamily,
+    })
   },
   getConfigFromParamDirectives(configParams) {
     return interpreteConfigs(SEQUENCE_PARAM_DIRECTIVE_RULES, configParams)
@@ -137,28 +143,3 @@ const configurator = makeConfigurator<SequenceConf>({
 })
 
 export const getConf = configurator.getConfig
-
-// export function getConf(configParams: ConfigParam[], extraConfig: SequenceConf | undefined) {
-//   const globalConfig: PintoraConfig = configApi.getConfig()
-//   const t = globalConfig.themeConfig.themeVariables
-//   const conf = { ...defaultConfig }
-//   safeAssign(conf, {
-//     actorBackground: t.primaryColor,
-//     actorBorderColor: t.primaryBorderColor,
-//     messageTextColor: t.textColor,
-//     loopLineColor: t.primaryColor,
-//     actorTextColor: t.textColor,
-//     actorLineColor: t.primaryLineColor,
-//     noteTextColor: t.noteTextColor || t.textColor,
-//     activationBackground: t.background1,
-//     dividerTextColor: t.secondaryTextColor,
-//   })
-//   safeAssign(
-//     conf,
-//     { messageFontFamily: globalConfig.core.defaultFontFamily },
-//     globalConfig.sequence || {},
-//     extraConfig || {},
-//   )
-//   safeAssign(conf, interpreteConfigs(SEQUENCE_PARAM_DIRECTIVE_RULES, configParams))
-//   return conf
-// }

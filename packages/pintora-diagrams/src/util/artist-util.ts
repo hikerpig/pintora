@@ -14,6 +14,7 @@ import {
   safeAssign,
   Circle,
   ITheme,
+  DiagramArtistOptions,
 } from '@pintora/core'
 import { PALETTE } from './theme'
 
@@ -152,14 +153,37 @@ export function makeLabelBg(labelDims: TSize, center: Point, attrs: Partial<Rect
   return labelBg
 }
 
-export function adjustRootMarkBounds(rootMark: Group, gBounds: Bounds, padX: number, padY: number) {
-  rootMark.matrix = mat3.fromTranslation(mat3.create(), [
-    -Math.min(0, gBounds.left) + padX,
-    -Math.min(0, gBounds.top) + padY,
+/**
+ * A util function to adjust rootMark's position and size
+ *   according to dagre graph's layout information and container size,
+ * so that the visual content is well positioned in the canvas
+ */
+export function adjustRootMarkBounds({
+  rootMark,
+  gBounds,
+  padX,
+  padY,
+  containerSize,
+  useMaxWidth,
+}: {
+  rootMark: Group
+  gBounds: Bounds
+  padX: number
+  padY: number
+  containerSize?: DiagramArtistOptions['containerSize']
+  useMaxWidth?: boolean
+}) {
+  const containerWidth = containerSize?.width
+  const doublePadX = padX * 2
+  const scaleX = useMaxWidth && containerWidth ? containerWidth / (gBounds.width + doublePadX) : 1
+  rootMark.matrix = mat3.translate(mat3.create(), mat3.fromScaling(mat3.create(), [scaleX, scaleX]), [
+    -Math.min(0, gBounds.left) + padX / scaleX,
+    -Math.min(0, gBounds.top) + padY / scaleX,
   ])
+  const width = (gBounds.width + doublePadX) * scaleX
   return {
-    width: gBounds.width + padX * 2,
-    height: gBounds.height + padY * 2,
+    width,
+    height: gBounds.height * scaleX + padY * 2,
   }
 }
 
