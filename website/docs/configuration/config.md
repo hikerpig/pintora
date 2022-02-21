@@ -315,7 +315,8 @@ mindmap
 
 @config({
   "core": {
-    "defaultFontFamily": "serif"
+    "defaultFontFamily": "serif",
+    "useMaxWidth": true
   },
   "themeConfig": {
     "theme": "larkDark"
