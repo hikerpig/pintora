@@ -1,5 +1,19 @@
 # Change Log
 
+## 0.2.0
+
+### Minor Changes
+
+- 540f20c: Add the ability to scale diagram width with `useMaxWidth`, #20
+
+### Patch Changes
+
+- Updated dependencies [540f20c]
+  - @pintora/core@0.2.0
+  - @pintora/diagrams@0.2.0
+  - @pintora/standalone@0.2.0
+  - @pintora/renderer@0.1.3
+
 ## 0.1.3
 
 ### Patch Changes

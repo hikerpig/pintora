@@ -1,5 +1,11 @@
 # Change Log
 
+## 0.2.0
+
+### Minor Changes
+
+- 540f20c: Add the ability to scale diagram width with `useMaxWidth`, #20
+
 ## 0.1.2
 
 ### Patch Changes

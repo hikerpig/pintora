@@ -1,6 +1,6 @@
 {
   "name": "pintora-website",
-  "version": "0.1.2",
+  "version": "0.2.0",
   "private": true,
   "scripts": {
     "docusaurus": "docusaurus",
@@ -18,7 +18,7 @@
     "@docusaurus/preset-classic": "2.0.0-beta.15",
     "@docusaurus/theme-common": "^2.0.0-beta.15",
     "@mdx-js/react": "^1.6.22",
-    "@pintora/standalone": "workspace:^0.1.2",
+    "@pintora/standalone": "workspace:^0.2.0",
     "@pintora/test-shared": "workspace:^0.1.2-beta.0",
     "@svgr/webpack": "^6.1.2",
     "clsx": "^1.1.1",
