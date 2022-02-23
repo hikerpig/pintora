@@ -3,7 +3,7 @@ const path = require('path')
 const lightCodeTheme = require('prism-react-renderer/themes/palenight')
 const darkCodeTheme = require('prism-react-renderer/themes/dracula')
 
-const vercelUrl = process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}`: null
+const vercelUrl = process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : null
 
 const SITE_URL = process.env.SITE_URL || vercelUrl || 'https://pintorajs.vercel.app'
 
@@ -17,10 +17,7 @@ module.exports = {
   title: 'Pintora',
   tagline: 'An extensible text-to-diagrams library that works in both browser and node.js',
   customFields: {
-    keywords: [
-      'diagram as code',
-      'text tot diagram',
-    ],
+    keywords: ['diagram as code', 'text tot diagram'],
   },
   url: SITE_URL,
   baseUrl: '/',
@@ -32,18 +29,21 @@ module.exports = {
   trailingSlash: true,
   i18n: {
     defaultLocale: 'en',
-    locales: ['en', 'zh-CN']
+    locales: ['en', 'zh-CN'],
   },
   themeConfig: {
+    image: 'img/logo.jpg',
     navbar: {
-      title: isProduction ? 'Pintora': `Pintora Preview${gitRefName ? ` ${gitRefName}`: ''}`,
-      logo: isProduction ? {
-        alt: 'Pintora Logo',
-        src: 'img/logo.svg',
-      }: {
-        alt: 'Pintora Logo',
-        src: 'img/logo-preview.svg',
-      },
+      title: isProduction ? 'Pintora' : `Pintora Preview${gitRefName ? ` ${gitRefName}` : ''}`,
+      logo: isProduction
+        ? {
+            alt: 'Pintora Logo',
+            src: 'img/logo.svg',
+          }
+        : {
+            alt: 'Pintora Logo',
+            src: 'img/logo-preview.svg',
+          },
       items: [
         {
           type: 'doc',
@@ -127,9 +127,7 @@ module.exports = {
       },
     ],
   ],
-  themes: [
-    require.resolve('./plugins/docusaurus-theme-pintora/index.js'),
-  ],
+  themes: [require.resolve('./plugins/docusaurus-theme-pintora/index.js')],
   plugins: [
     [
       'docusaurus-plugin-module-alias',
@@ -141,5 +139,6 @@ module.exports = {
     ],
     'docusaurus-plugin-less',
     require.resolve('./plugins/webpack5-plugin'),
+    require.resolve('./plugins/site-ad-plugin'),
   ],
 }
