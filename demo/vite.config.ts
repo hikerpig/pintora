@@ -6,6 +6,8 @@ import { VitePWA } from 'vite-plugin-pwa'
 
 const BASE = '/demo/'
 
+const mode = process.env.NODE_ENV === 'production' ? 'production' : 'development'
+
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [
@@ -32,6 +34,7 @@ export default defineConfig({
     }),
   ],
   base: BASE,
+  mode,
   build: {
     rollupOptions: {
       input: {

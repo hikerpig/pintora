@@ -139,5 +139,6 @@ module.exports = {
     ],
     'docusaurus-plugin-less',
     require.resolve('./plugins/webpack5-plugin'),
+    require.resolve('./plugins/site-ad-plugin'),
   ],
 }
