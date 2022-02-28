@@ -111,6 +111,15 @@ module.exports = {
     colorMode: {
       respectPrefersColorScheme: true,
     },
+    algolia: {
+      appId: 'AVSER9MTC5',
+      apiKey: '56a1350feaae0257bfebd4b48526de16',
+      indexName: 'pintorajs',
+
+      contextualSearch: false,
+
+      externalUrlRegex: 'pintorajs.vercel.app',
+    },
   },
   presets: [
     [
