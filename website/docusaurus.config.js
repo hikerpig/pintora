@@ -116,7 +116,7 @@ module.exports = {
       apiKey: '56a1350feaae0257bfebd4b48526de16',
       indexName: 'pintorajs',
 
-      contextualSearch: false,
+      contextualSearch: true,
 
       externalUrlRegex: 'pintorajs.vercel.app',
     },
