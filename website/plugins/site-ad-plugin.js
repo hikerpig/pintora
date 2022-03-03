@@ -1,11 +1,15 @@
-const isProd = process.env.NODE_ENV === 'production';
+const path = require('path')
+const isProd = process.env.NODE_ENV === 'production'
 
 module.exports = function () {
   return {
     name: 'pintora-site-ad-plugin',
+    getClientModules() {
+      return isProd ? [path.resolve(__dirname, './site-ad/client-module')] : []
+    },
     injectHtmlTags() {
       if (!isProd) {
-        return {};
+        return {}
       }
       return {
         postBodyTags: [
@@ -25,7 +29,7 @@ module.exports = function () {
             },
           },
         ],
-      };
+      }
     },
-  };
-};
+  }
+}
