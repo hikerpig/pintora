@@ -1,5 +1,13 @@
 # Change Log
 
+## 0.2.1
+
+### Patch Changes
+
+- 3c4b25a: improve parser performance by eliminating some ambiguity
+- Updated dependencies [3c4b25a]
+  - @pintora/standalone@0.2.1
+
 ## 0.2.0
 
 ### Minor Changes

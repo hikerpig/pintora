@@ -1,5 +1,11 @@
 # Change Log
 
+## 0.2.1
+
+### Patch Changes
+
+- 3c4b25a: improve parser performance by eliminating some ambiguity
+
 ## 0.2.0
 
 ### Minor Changes
