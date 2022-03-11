@@ -7,7 +7,6 @@
 
 @{%
 import * as moo from '@hikerpig/moo'
-// import { tv, textToCaseInsensitiveRegex, VALID_TEXT_REGEXP, COMMENT_LINE_REGEXP } from '../../util/parser-shared'
 import {
   tv,
   textToCaseInsensitiveRegex,
@@ -34,6 +33,7 @@ let lexer = moo.states({
     QUOTED_WORD: QUOTED_WORD_REGEXP,
     SEMICOLON: /;/,
     COLON: /:/,
+    ACTIVITY_DIAGRAM: /activityDiagram/,
     L_PAREN: L_PAREN_REGEXP,
     R_PAREN: R_PAREN_REGEXP,
     L_BRACKET: { match: /\{/ },
@@ -62,9 +62,9 @@ function extractChildren(o) {
 %}
 
 start -> __ start {% (d) => d[1] %}
-	| "activityDiagram" _ document __:? {%
+	| %ACTIVITY_DIAGRAM document {%
       function(d) {
-        return d[2]
+        return d[1]
       }
     %}
 
@@ -82,11 +82,11 @@ line ->
       // console.log('[line]', JSON.stringify(d[1], null, 2))
       return d[1]
     } %}
-	| %WS:? %NL
+	| %WS:? %NL {% null %}
 
 statement ->
     action
-  | ("start"|"stop"|"end"|"detach"|"kill") %WS:? %NL {%
+  | ("start"|"stop"|"end"|"detach"|"kill") %NL {%
       function(d) {
         const keyword = tv(d[0][0])
         return {
@@ -104,7 +104,7 @@ statement ->
   | arrowLabelStatement
   | paramClause _ %NL
   | configClause _ %NL
-  | comment _ %NL
+  | comment _ %NL {% null %}
 
 conditionSentence ->
     "if" wordsInParens "then" (_ wordsInParens):? %NL line:* elseClause:? _ "endif" _ %NL {%

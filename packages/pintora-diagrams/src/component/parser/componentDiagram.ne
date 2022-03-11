@@ -27,7 +27,7 @@ const commonTopRules = {
 
 const commonTextRules = {
   TEXT_INSIDE_QUOTES: /\"[^"]*\"/,
-  WORD: { match: VALID_TEXT_REGEXP, fallback: true },
+  VALID_TEXT: { match: VALID_TEXT_REGEXP, fallback: true },
 }
 
 let lexer = moo.states({
@@ -71,8 +71,8 @@ document -> null
     %}
 
 line ->
-    %WS:* statement
-	| %WS:* %NL {% (d) => null %}
+    %WS:? statement
+	| %WS:? %NL {% (d) => null %}
 
 statement ->
     UMLElement {%
@@ -111,12 +111,12 @@ UMLElement ->
 
 # group can include UMLElement recursively
 group ->
-    groupType %WS:? textInsideQuote _ %L_BRACKET _ (_ UMLElement _):* %R_BRACKET %NL {%
+    groupType %WS:? textInsideQuote _ %L_BRACKET (_ UMLElement):* _ %R_BRACKET %NL {%
         function(d) {
           const groupType = tv(d[0][0])
           const label = d[2] || groupType
           const name = d[2] || `${groupType}_${Date.now()}`
-          const children = d[6].map(l => l[1]).filter(o => o)
+          const children = d[5].map(l => l[1]).filter(o => o)
           children.forEach(child => child.parent = name)
           return { type: 'group', name, groupType, label, children }
         }
@@ -133,13 +133,13 @@ groupType ->
   | "component"
 
 component ->
-    "component" %WS:? %WORD %NL {%
+    "component" %WS:? %VALID_TEXT %NL {%
       function(d) {
         const name = tv(d[2])
         return { type: 'component', name,  }
       }
     %}
-  | "component" %WS:? %WORD %WS:? %L_SQ_BRACKET elementLabel:+ %R_SQ_BRACKET %NL {%
+  | "component" %WS:? %VALID_TEXT %WS:? %L_SQ_BRACKET elementLabel:+ %R_SQ_BRACKET %NL {%
       function(d) {
         const name = tv(d[2])
         const label = d[5].join('').trim()
@@ -147,7 +147,7 @@ component ->
       }
     %}
   | shortComponent %NL {% id %}
-  | shortComponent %WS:? "as" %WS:? %WORD %NL {%
+  | shortComponent %WS:? "as" %WS:? %VALID_TEXT %NL {%
       function(d) {
         const comp = d[0]
         const name = tv(d[4])
@@ -163,7 +163,7 @@ shortComponent ->
       }
     %}
 
-elementLabel -> (%WORD | %NL | %WS) {% (d) => tv(d[0][0]) %}
+elementLabel -> (%VALID_TEXT | %NL | %WS) {% (d) => tv(d[0][0]) %}
 
 textInsideQuote -> %TEXT_INSIDE_QUOTES {%
     function(d) {
@@ -173,14 +173,14 @@ textInsideQuote -> %TEXT_INSIDE_QUOTES {%
   %}
 
 interface ->
-    interfaceStart %WS:? (textInsideQuote | %WORD) %NL {%
+    interfaceStart %WS:? (textInsideQuote | %VALID_TEXT) %NL {%
       function(d) {
         const _l = d[2][0]
         const name = typeof _l === 'string' ? _l: tv(_l)
         return { type: 'interface', name, }
       }
     %}
-  | interfaceStart %WS:? (textInsideQuote | %WORD) %WS:* "as" __ %WORD %NL {%
+  | interfaceStart %WS:? (textInsideQuote | %VALID_TEXT) %WS:* "as" __ %VALID_TEXT %NL {%
       function(d) {
         const _l = d[2][0]
         const label = typeof _l === 'string' ? _l: tv(_l)
@@ -192,7 +192,7 @@ interface ->
 interfaceStart -> ("interface" | "()")
 
 relationship ->
-    elementReference _ relationLine _ elementReference (__ %COLON __ (%WORD | %WS):+):? %NL {%
+    elementReference _ relationLine _ elementReference (__ %COLON __ (%VALID_TEXT | %WS):+):? %NL {%
       function(d) {
         // console.log('[relationship] with message', d)
         const from = d[0]
@@ -210,7 +210,7 @@ relationship ->
 
 elementReference ->
     shortComponent {% id %}
-  | ("()" __):? %WORD {%
+  | ("()" __):? %VALID_TEXT {%
     function(d) {
       const interf = { type: 'interface', name: tv(d[1]) }
       return interf

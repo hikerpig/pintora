@@ -74,10 +74,10 @@ export function setYY(v) {
 %}
 
 start -> __ start {% (d) => d[1] %}
-	| "sequenceDiagram" _ document __:? {%
+	| "sequenceDiagram" document {%
       function(d) {
         // console.log('[sequenceDiagram]', JSON.stringify(d, null, 2))
-        return d[2]
+        return d[1]
       }
     %}
 
@@ -91,10 +91,10 @@ document -> null
     %}
 
 line ->
-	  %WS:* statement {% (d) => {
+	  %WS:? statement {% (d) => {
       return d[1]
     } %}
-	| %NL
+  | %WS:? %NL {% null %}
 
 statement ->
 	  participantWord %WS classifiableActor %WS "as" %WS %QUOTED_WORD %NL {%

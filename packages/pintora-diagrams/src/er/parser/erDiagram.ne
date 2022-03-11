@@ -51,20 +51,18 @@ document -> null
   | document line
 
 line ->
-    %WS:* statement
-	| %NL
+    %WS:? statement
+	| %NL {% null %}
 
 statement ->
-    entityName %WS:* relSpec %WS:* entityName %COLON role %NL
-    {%
+    entityName %WS:* relSpec %WS:* entityName %COLON role %NL {%
       function(d) {
         yy.addEntity(d[0]);
         yy.addEntity(d[4]);
         yy.addRelationship(d[0], d[6], d[4], d[2])
       }
     %}
-  | entityName __ "{" __ attributes __ "}" %NL
-    {%
+  | entityName __ "{" __ attributes _ "}" %NL {%
       function(d) {
         yy.addEntity(d[0]);
         yy.addAttributes(d[0], d[4]);
@@ -98,7 +96,7 @@ attributes ->
       %}
 
 attribute ->
-      attributeType %WS attributeName %NL {% (d) => { 
+      attributeType %WS attributeName %NL {% (d) => {
         return { attributeType: d[0], attributeName: d[2] } }
       %}
     | attributeType %WS attributeName %VALID_TEXT %WS:* %NL {%

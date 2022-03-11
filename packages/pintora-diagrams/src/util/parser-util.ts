@@ -5,6 +5,11 @@ import { compact } from '@pintora/core'
 type Options<T> = {
   prepare?(): void
   postProcess?(results: T[]): T[]
+  /**
+   * Some grammars have ambiguity, a certain input may have multiple results - they are all correct,
+   *   but we will only pick the first valid outcome
+   */
+  dedupeAmbigousResults?: boolean
 }
 
 export function genParserWithRules<T = any>(grammar: nearley.CompiledRules, opts: Options<T> = {}) {
@@ -32,8 +37,14 @@ export function genParserWithRules<T = any>(grammar: nearley.CompiledRules, opts
     // const start = Date.now()
     parser.feed(textToParse)
     // console.log('parse caused', Date.now() - start, 'ms')
-    // console.log('[genParserWithRules]parser results', parser.results)
+    // console.log('[genParserWithRules]parser results', parser.results.length, parser.results)
     let results = compact(parser.results)
+
+    if (opts.dedupeAmbigousResults) {
+      if (Array.isArray(results[0])) {
+        results = results[0]
+      }
+    }
 
     if (opts.postProcess) {
       results = opts.postProcess(results)
