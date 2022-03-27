@@ -10,6 +10,7 @@ import {
   getPointAt,
   Rect,
   PathCommand,
+  Mark,
 } from '@pintora/core'
 import { ErDiagramIR, Identification, Entity, Relationship } from './db'
 import { ErConf, getConf } from './config'

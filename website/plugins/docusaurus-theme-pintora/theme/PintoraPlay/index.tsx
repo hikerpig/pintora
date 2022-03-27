@@ -1,14 +1,13 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react'
 import { useColorMode } from '@docusaurus/theme-common'
 import pintora from '@pintora/standalone'
-import { stripStartEmptyLines } from '@pintora/test-shared'
 import { PINTORA_LIVE_EDITOR_URL } from '../../../../src/const'
 import { startShiki, shikiLightTheme, shikiDarkTheme } from './highlight'
 import './PintoraPlay.less'
 
 const PintoraPlay = props => {
   // console.log('[PintoraPlay] props', props)
-  const code = stripStartEmptyLines(props.code)
+  const code = props.code
   const containerRef = useRef<HTMLDivElement>()
   const renderer = 'svg'
   const [errorMessage, setErrorMessage] = useState('')
@@ -22,7 +21,7 @@ const PintoraPlay = props => {
       themeConfig: {
         theme: isDarkTheme ? 'dark' : 'default',
       },
-    } as any)
+    })
 
     pintora.renderTo(code, {
       container: containerRef.current,

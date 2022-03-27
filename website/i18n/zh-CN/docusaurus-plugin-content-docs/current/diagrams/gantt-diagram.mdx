@@ -1,0 +1,86 @@
+---
+title: Gantt Diagram 甘特图
+---
+
+> 甘特图（Gantt Chart）是条状图的一种流行类型，显示项目、进度以及其他与时间相关的系统进展的内在关系随着时间进展的情况，是由亨利·甘特 (Henry Laurence Gantt) 于 1910 年开发出。在项目管理中，甘特图显示项目的终端元素的开始和结束，概要元素或终端元素的依赖关系，管理者可透过甘特图，监控项目当前各任务的进度。若想要同时显示多个不同的项目开始与结束的时间，就可以利用甘特图呈现，监控项目当前各任务的进度。
+>
+> <cite>
+>   <a href="https://www.wikiwand.com/zh-cn/甘特图">维基百科</a>
+> </cite>
+
+甘特图的语法和绘制逻辑基于 Mermaid 8.14 ，但都有一些细微的区别。
+
+## 简单展示
+
+```pintora play
+gantt
+  title Gantt example
+
+  dateFormat YYYY-MM-DDTHH
+  axisFormat MM-DD
+
+  section Develop Prototype
+  "Write grammar rules" : t-a, 2022-2-17, 2022-2-23
+  "Write artist"        : t-b, 2022-2-23, 2022-3-15
+
+  %% the day I started typing the docs
+  markDate 2022-3-15T20
+
+  section Documentation
+  "Write docs"          : t-c, 2022-3-15, 5d
+```
+
+## 设置甘特图的属性
+
+| 字段名     | 描述                               | 例子                    |
+|------------|------------------------------------|-------------------------|
+| title      | 图表标题                           | `title My day`          |
+| dateFormat | 使用怎样的格式来指定时间和日期     | `dateFormat YYYY-MM-DD` |
+| axisFormat | 使用怎样的格式来显示时间轴上的文字 | `axisFormat hh:mm:ss`   |
+
+
+## 时间和日期格式
+
+Pintora 采用 dayjs 来对时间进行格式化和解析，更多细节请见 [dayjs 文档](https://day.js.org/docs/en/display/format)。
+
+| Format | Output           | Description                           |
+|--------|------------------|---------------------------------------|
+| YY     | 18               | Two-digit year                        |
+| YYYY   | 2018             | Four-digit year                       |
+| M      | 1-12             | The month, beginning at 1             |
+| MM     | 01-12            | The month, 2-digits                   |
+| MMM    | Jan-Dec          | The abbreviated month name            |
+| MMMM   | January-December | The full month name                   |
+| D      | 1-31             | The day of the month                  |
+| DD     | 01-31            | The day of the month, 2-digits        |
+| d      | 0-6              | The day of the week, with Sunday as 0 |
+| dd     | Su-Sa            | The min name of the day of the week   |
+| ddd    | Sun-Sat          | The short name of the day of the week |
+| dddd   | Sunday-Saturday  | The name of the day of the week       |
+| H      | 0-23             | The hour                              |
+| HH     | 00-23            | The hour, 2-digits                    |
+| h      | 1-12             | The hour, 12-hour clock               |
+| hh     | 01-12            | The hour, 12-hour clock, 2-digits     |
+| m      | 0-59             | The minute                            |
+| mm     | 00-59            | The minute, 2-digits                  |
+| s      | 0-59             | The second                            |
+| ss     | 00-59            | The second, 2-digits                  |
+| SSS    | 000-999          | The millisecond, 3-digits             |
+| Z      | +05:00           | The offset from UTC, ±HH:mm           |
+| ZZ     | +0500            | The offset from UTC, ±HHmm            |
+| A      | AM PM            |                                       |
+| a      | am pm            |                                       |
+
+## 添加任务
+
+```pintora play
+gantt
+  %% 使用 section 来分组
+  section Normal tasks
+  "With start and end" : 2022-3-15, 2022-3-16
+  "With start and duration" : 2022-3-16, 2d
+
+  section Ids and Relations
+  "With id" : task-1, 2022-3-15, 2d
+  "After another task" : after task-1, 3d
+```

@@ -8,6 +8,7 @@ const grammarFiles = [
   { input: 'src/component/parser/componentDiagram.ne', output: 'src/component/parser/componentDiagram.ts' },
   { input: 'src/activity/parser/activityDiagram.ne', output: 'src/activity/parser/activityDiagram.ts' },
   { input: 'src/mindmap/parser/mindmap.ne', output: 'src/mindmap/parser/mindmap.ts' },
+  { input: 'src/gantt/parser/gantt.ne', output: 'src/gantt/parser/gantt.ts' },
 ]
 
 grammarFiles.forEach(async ({ input, output }) => {
