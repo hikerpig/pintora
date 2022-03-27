@@ -12,7 +12,7 @@ const PintoraPlay = props => {
   const renderer = 'svg'
   const [errorMessage, setErrorMessage] = useState('')
   const [highlightedCode, setHighlightedCode] = useState('')
-  const { isDarkTheme } = useColorMode()
+  const isDarkTheme = useColorMode().colorMode === 'dark'
 
   useEffect(() => {
     if (!containerRef.current) return

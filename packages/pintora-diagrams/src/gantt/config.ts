@@ -1,6 +1,6 @@
 import { PALETTE } from '../util/theme'
 import { DEFAULT_FONT_FAMILY, tinycolor } from '@pintora/core'
-import { interpreteConfigs, makeConfigurator } from '../util/config'
+import { interpreteConfigs, makeConfigurator, getParamRulesFromConfig } from '../util/config'
 import { DateFormat } from './type'
 
 export type GanttConf = {
@@ -65,7 +65,10 @@ export const defaultConfig: GanttConf = {
   fontFamily: DEFAULT_FONT_FAMILY,
 }
 
-export const GANTT_PARAM_DIRECTIVE_RULES = {} as const
+export const GANTT_PARAM_DIRECTIVE_RULES = {
+  ...getParamRulesFromConfig(defaultConfig),
+  axisFormat: { valueType: 'string' },
+} as const
 
 export const configKey = 'gantt'
 

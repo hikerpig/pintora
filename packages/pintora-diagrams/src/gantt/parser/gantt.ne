@@ -95,6 +95,8 @@ statement ->
         return { type: 'addTask', label: d[0], extraValue: d[2] } as Action
       }
     %}
+  | paramClause %NL {% nth(0) %}
+  | configOpenCloseClause %NL {% nth(0) %}
   | comment %NL {% null %}
 
 attrKey ->

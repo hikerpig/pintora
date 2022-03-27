@@ -304,7 +304,7 @@ class GanttDraw {
 
     const taskXOffset = this.sectionLabelWidth + sidePadding
 
-    taskArray.map((task, i) => {
+    taskArray.forEach((task, i) => {
       const sectionGroup = makeEmptyGroup()
       this.layerManager.addMark('bar', sectionGroup)
 

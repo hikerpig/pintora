@@ -1,9 +1,9 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
 import { BaseDiagramIR } from '../util/ir'
 import { dayjs } from '../util/time'
-// import { ConfigParam } from '../util/config'
+import { OverrideAction } from '../util/config'
 import { BaseDb } from '../util/base-db'
-import { logger, makeIdCounter } from '@pintora/core'
+import { ConfigParam, logger, makeIdCounter } from '@pintora/core'
 import { DateFormat } from './type'
 
 // with all respect to https://mermaid-js.github.io/mermaid/#/gantt
@@ -50,6 +50,8 @@ type ActionPayloadMap = {
   markDate: {
     value: string
   }
+  overrideConfig: OverrideAction
+  addParam: ConfigParam
 }
 
 type ActionPayload<T extends keyof ActionPayloadMap> = { type: T } & ActionPayloadMap[T]
@@ -105,6 +107,12 @@ export class GanttDb extends BaseDb {
     },
     markDate(action) {
       this.processMarkDate(action.value)
+    },
+    overrideConfig(action) {
+      this.addOverrideConfig(action)
+    },
+    addParam(action) {
+      this.configParams.push(action)
     },
   }
 

@@ -1,6 +1,6 @@
-import { ConfigParam, interpreteConfigs, PintoraConfig, safeAssign, configApi, ITheme } from '@pintora/core'
+import { ConfigParam, ConfigMeta, interpreteConfigs, PintoraConfig, safeAssign, configApi, ITheme } from '@pintora/core'
 
-export { ConfigParam, interpreteConfigs }
+export { ConfigParam, ConfigMeta, interpreteConfigs }
 
 /** parser action */
 export type ParamAction = {
@@ -71,4 +71,29 @@ export function makeConfigurator<C>(opts: {
   return {
     getConfig,
   }
+}
+
+/**
+ * Guess config rules based on default config field and value type
+ */
+export function getParamRulesFromConfig<C>(config: C) {
+  const out: { [key: string]: ConfigMeta } = {}
+  for (const [key, value] of Object.entries(config)) {
+    const t = typeof value
+    let valueType: ConfigMeta['valueType']
+    if (t === 'number') {
+      valueType = 'size'
+    } else if (t === 'string') {
+      if (/color|background/.test(key.toLowerCase())) {
+        valueType = 'color'
+      } else {
+        valueType = 'string'
+      }
+    }
+
+    if (valueType) {
+      out[key] = { valueType }
+    }
+  }
+  return out
 }
