@@ -1,5 +1,12 @@
 # Change Log
 
+## 0.1.4-alpha.0
+
+### Patch Changes
+
+- Updated dependencies [bd214c7]
+  - @pintora/core@0.3.0-alpha.0
+
 ## 0.1.3
 
 ### Patch Changes

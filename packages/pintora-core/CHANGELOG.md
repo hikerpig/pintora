@@ -1,5 +1,11 @@
 # Change Log
 
+## 0.3.0-alpha.0
+
+### Minor Changes
+
+- bd214c7: Add gantt diagram
+
 ## 0.2.0
 
 ### Minor Changes

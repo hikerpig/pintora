@@ -1,0 +1,17 @@
+{
+  "mode": "pre",
+  "tag": "alpha",
+  "initialVersions": {
+    "pintora-demo": "0.2.1",
+    "@pintora/cli": "0.2.1",
+    "@pintora/core": "0.2.0",
+    "@pintora/diagrams": "0.2.1",
+    "@pintora/renderer": "0.1.3",
+    "@pintora/standalone": "0.2.1",
+    "@pintora/test-shared": "0.1.2-beta.0",
+    "pintora-website": "0.2.0"
+  },
+  "changesets": [
+    "green-planets-hope"
+  ]
+}

@@ -1,5 +1,17 @@
 # Change Log
 
+## 0.3.0-alpha.0
+
+### Minor Changes
+
+- bd214c7: Add gantt diagram
+
+### Patch Changes
+
+- Updated dependencies [bd214c7]
+  - @pintora/test-shared@0.2.0-alpha.1
+  - @pintora/standalone@0.3.0-alpha.0
+
 ## 0.2.0
 
 ### Minor Changes
