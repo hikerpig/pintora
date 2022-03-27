@@ -1,5 +1,11 @@
 # Change Log
 
+## 0.2.0-alpha.2
+
+### Patch Changes
+
+- 235cc0e: add @config and @param to gantt diagram; update tmLanguage;
+
 ## 0.2.0-alpha.1
 
 ### Minor Changes

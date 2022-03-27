@@ -1,5 +1,15 @@
 # Change Log
 
+## 0.3.0-alpha.1
+
+### Patch Changes
+
+- 235cc0e: add @config and @param to gantt diagram; update tmLanguage;
+- Updated dependencies [235cc0e]
+  - @pintora/core@0.3.0-alpha.1
+  - @pintora/diagrams@0.3.0-alpha.1
+  - @pintora/renderer@0.1.4-alpha.1
+
 ## 0.3.0-alpha.0
 
 ### Minor Changes
