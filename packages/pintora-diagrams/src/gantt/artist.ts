@@ -10,12 +10,11 @@ import {
   TSize,
 } from '@pintora/core'
 import { scaleTime, ScaleTime } from 'd3-scale'
-import { timeDay, timeHour, timeMinute, timeMonth, timeYear } from 'd3-time'
 import dayjs from 'dayjs'
 import { LayerManager, makeEmptyGroup } from '../util/artist-util'
 import { isDev } from '../util/env'
 import { GanttConf, getConf } from './config'
-import { GanttIR, Task, isInvalidDate } from './db'
+import { GanttIR, Task, isInvalidDate, getAxisTimeInterval } from './db'
 
 function makeArtist<IR, Conf, A extends IDiagramArtist<IR, Conf> = IDiagramArtist<IR, Conf>>(opts: {
   draw: (this: A, ...args: Parameters<A['draw']>) => GraphicsIR
@@ -128,35 +127,7 @@ class GanttDraw {
       }).width
 
       // get time interval from axisFormat and date range
-      let timeInterval = timeDay.every(1)
-      const RANGE_CONFIGS = [
-        {
-          pattern: /y/i,
-          rangeMaker: timeYear,
-        },
-        {
-          pattern: /M/,
-          rangeMaker: timeMonth,
-        },
-        {
-          pattern: /d/i,
-          rangeMaker: timeDay,
-        },
-        {
-          pattern: /h/i,
-          rangeMaker: timeHour,
-        },
-        {
-          pattern: /m/,
-          rangeMaker: timeMinute,
-        },
-      ]
-      for (const rangeConfig of RANGE_CONFIGS) {
-        if (rangeConfig.pattern.test(axisFormat)) {
-          timeInterval = rangeConfig.rangeMaker.every(1)
-        }
-      }
-      timeInterval.length
+      const timeInterval = getAxisTimeInterval({ axisFormat, axisInterval: this.ir.attrs.axisInterval })
 
       const timeScale = scaleTime()
         .domain([this.startDate, this.endDate])
@@ -204,6 +175,7 @@ class GanttDraw {
       this.layerManager.addLayer(name as GanttLayerName, zIndex)
     }
   }
+
   makeGant() {
     const { taskArray } = this
 
@@ -485,18 +457,5 @@ class GanttDraw {
     return { width: this.width, height: this.height }
   }
 }
-
-// compare task for sort
-// function taskCompare(a: Task, b: Task) {
-//   const taskA = a.startTime
-//   const taskB = b.startTime
-//   let result = 0
-//   if (taskA > taskB) {
-//     result = 1
-//   } else if (taskA < taskB) {
-//     result = -1
-//   }
-//   return result
-// }
 
 export default artist

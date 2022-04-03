@@ -5,6 +5,7 @@ import { OverrideAction } from '../util/config'
 import { BaseDb } from '../util/base-db'
 import { ConfigParam, logger, makeIdCounter } from '@pintora/core'
 import { DateFormat } from './type'
+import { timeDay, timeHour, TimeInterval, timeMinute, timeMonth, timeYear, timeWeek, timeSecond } from 'd3-time'
 
 // with all respect to https://mermaid-js.github.io/mermaid/#/gantt
 // the syntax is a little different
@@ -28,9 +29,13 @@ type GanttAttrs = {
   title: string
   dateFormat: DateFormat
   axisFormat: DateFormat
+  /** time interval in the axis */
+  axisInterval: string | null
   excludes: string[]
   includes: string[]
 }
+
+export type AxisIntervalFormat = string
 
 export type GanttIR = BaseDiagramIR & {
   tasks: Record<string, Task>
@@ -94,7 +99,7 @@ export class GanttDb extends BaseDb {
     addAttr(action) {
       // console.log('add attr', action)
       let value = action.value
-      if (['excludes', 'includes'].includes(action.type)) {
+      if (['excludes', 'includes'].includes(action.key)) {
         value = (action.value as string).toLowerCase().split(/[\s,]+/)
       }
       this.attrs[action.key] = value
@@ -297,6 +302,7 @@ export class GanttDb extends BaseDb {
       title: '',
       dateFormat: DEFAULT_TIME_FORMAT,
       axisFormat: '',
+      axisInterval: null,
       excludes: [],
       includes: [],
     }
@@ -409,6 +415,69 @@ function createDictByKeys<K extends string>(keys: K[], defaultValue = true) {
     acc[current] = defaultValue
     return acc
   }, {} as Record<K, boolean>)
+}
+
+export function getAxisTimeInterval(opts: { axisFormat: string; axisInterval: string }) {
+  const { axisFormat, axisInterval } = opts
+  let timeInterval = timeDay.every(1)
+
+  const RANGE_CONFIGS = [
+    {
+      pattern: /y/i,
+      rangeMaker: timeYear,
+    },
+    {
+      pattern: /M/,
+      rangeMaker: timeMonth,
+    },
+    {
+      pattern: /d/i,
+      rangeMaker: timeDay,
+    },
+    {
+      pattern: /w/i,
+      rangeMaker: timeWeek,
+    },
+    {
+      pattern: /h/i,
+      rangeMaker: timeHour,
+    },
+    {
+      pattern: /m/,
+      rangeMaker: timeMinute,
+    },
+    {
+      pattern: /s/,
+      rangeMaker: timeSecond,
+    },
+  ]
+
+  let intervalFromIR: TimeInterval
+  if (axisInterval) {
+    const match = /(\d+)(\w)/.exec(axisInterval.trim())
+    if (match) {
+      const count = parseInt(match[1])
+      const format = match[2]
+      if (!isNaN(count)) {
+        for (const rangeConfig of RANGE_CONFIGS) {
+          if (rangeConfig.pattern.test(format)) {
+            intervalFromIR = rangeConfig.rangeMaker.every(count)
+          }
+        }
+      }
+    }
+  }
+
+  if (intervalFromIR) {
+    timeInterval = intervalFromIR
+  } else {
+    for (const rangeConfig of RANGE_CONFIGS) {
+      if (rangeConfig.pattern.test(axisFormat)) {
+        timeInterval = rangeConfig.rangeMaker.every(1)
+      }
+    }
+  }
+  return timeInterval
 }
 // end - utils
 

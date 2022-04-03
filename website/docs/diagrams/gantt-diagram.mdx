@@ -18,9 +18,10 @@ gantt
 
   dateFormat YYYY-MM-DDTHH
   axisFormat MM-DD
+  axisInterval 1w
 
   section Develop Prototype
-  "Write grammar rules" : t-a, 2022-2-17, 2022-2-23
+  "Write grammar"       : t-a, 2022-2-17, 2022-2-23
   "Write artist"        : t-b, 2022-2-23, 2022-3-15
 
   %% the day I started typing the docs
@@ -28,16 +29,19 @@ gantt
 
   section Documentation
   "Write docs"          : t-c, 2022-3-15, 5d
+
+  section Optimize
+  "Add axisInterval" : 2022-3-28, 2022-4-04
 ```
 
 ## Set attributes
 
-| Name       | Description                                 | Example                 |
-|------------|---------------------------------------------|-------------------------|
-| title      | Title of the diagram                        | `title My day`          |
-| dateFormat | The format you use to specify time and date | `dateFormat YYYY-MM-DD` |
-| axisFormat | The format to display axis labels           | `axisFormat hh:mm:ss`   |
-
+| Name         | Description                                                                                                                | Example                 |
+|--------------|----------------------------------------------------------------------------------------------------------------------------|-------------------------|
+| title        | Title of the diagram                                                                                                       | `title My day`          |
+| dateFormat   | The format you use to specify time and date                                                                                | `dateFormat YYYY-MM-DD` |
+| axisFormat   | The format to display axis labels                                                                                          | `axisFormat hh:mm:ss`   |
+| axisInterval | [Time interval](#time-interval) between two labels in the axis, if not specified, this can be inferred from __axisFormat__ | `axisInterval 1w`       |
 
 ## Date and time format
 
@@ -70,6 +74,27 @@ Pintora uses dayjs to parse and format date and time, for more details please re
 | ZZ     | +0500            | The offset from UTC, ±HHmm            |
 | A      | AM PM            |                                       |
 | a      | am pm            |                                       |
+
+### Time Interval
+
+The time interval setting consists of number and format.
+
+```
+axisInterval 1d
+axisInterval 2w
+axisInterval 30m
+```
+
+The supported time formats are as follows.
+
+- `y`, year
+- `M`, month
+- `w`, week, this is an addition to dayjs format
+- `d`, day
+- `h`, hour
+- `m`, minute
+- `s`, second
+
 
 ## Add Tasks
 

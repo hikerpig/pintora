@@ -18,9 +18,10 @@ gantt
 
   dateFormat YYYY-MM-DDTHH
   axisFormat MM-DD
+  axisInterval 1w
 
   section Develop Prototype
-  "Write grammar rules" : t-a, 2022-2-17, 2022-2-23
+  "Write grammar"       : t-a, 2022-2-17, 2022-2-23
   "Write artist"        : t-b, 2022-2-23, 2022-3-15
 
   %% the day I started typing the docs
@@ -28,15 +29,19 @@ gantt
 
   section Documentation
   "Write docs"          : t-c, 2022-3-15, 5d
+
+  section Optimize
+  "Add axisInterval" : 2022-3-28, 2022-4-04
 ```
 
 ## 设置甘特图的属性
 
-| 字段名     | 描述                               | 例子                    |
-|------------|------------------------------------|-------------------------|
-| title      | 图表标题                           | `title My day`          |
-| dateFormat | 使用怎样的格式来指定时间和日期     | `dateFormat YYYY-MM-DD` |
-| axisFormat | 使用怎样的格式来显示时间轴上的文字 | `axisFormat hh:mm:ss`   |
+| 字段名       | 描述                                                                                | 例子                    |
+|--------------|-------------------------------------------------------------------------------------|-------------------------|
+| title        | 图表标题                                                                            | `title My day`          |
+| dateFormat   | 使用怎样的格式来指定时间和日期                                                      | `dateFormat YYYY-MM-DD` |
+| axisFormat   | 使用怎样的格式来显示时间轴上的文字                                                  | `axisFormat hh:mm:ss`   |
+| axisInterval | 时间轴相邻两标签的[时间间隔](#时间间隔)，如果未指定，会根据 __axisFormat__ 自动计算 | `axisInterval 1w`       |
 
 
 ## 时间和日期格式
@@ -70,6 +75,26 @@ Pintora 采用 dayjs 来对时间进行格式化和解析，更多细节请见 [
 | ZZ     | +0500            | The offset from UTC, ±HHmm            |
 | A      | AM PM            |                                       |
 | a      | am pm            |                                       |
+
+### 时间间隔
+
+时间间隔设置由数量和格式组成。
+
+```
+axisInterval 1d
+axisInterval 2w
+axisInterval 30m
+```
+
+支持的时间格式如下：
+
+- `y`，年
+- `M`，月
+- `w`，周，这个与 dayjs 稍有不同
+- `d`，天
+- `h`，小时
+- `m`，分钟
+- `s`，秒
 
 ## 添加任务
 

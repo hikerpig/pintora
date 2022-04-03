@@ -19,7 +19,7 @@ import {
 } from '../../util/parser-shared'
 import { Action } from '../db'
 
-const ATTR_KEYWORDS = ['title', 'dateFormat', 'axisFormat']
+const ATTR_KEYWORDS = ['title', 'dateFormat', 'axisFormat', 'axisInterval']
 const OTHER_KEYWORDS = ['section', 'markDate', 'excludes', 'includes']
 
 const keywordRules = [...ATTR_KEYWORDS, ...OTHER_KEYWORDS].reduce((acc, text) => {
@@ -55,7 +55,6 @@ let lexer = moo.states({
   }
 })
 %}
-
 
 start -> __ start
   | "gantt" document
@@ -100,7 +99,7 @@ statement ->
   | comment %NL {% null %}
 
 attrKey ->
-    (%TITLE | %DATEFORMAT | %AXISFORMAT | %EXCLUDES | %INCLUDES) {% (d) => {
+    (%TITLE | %DATEFORMAT | %AXISFORMAT | %AXISINTERVAL | %EXCLUDES | %INCLUDES) {% (d) => {
       return tv(d[0][0])
     } %}
 
