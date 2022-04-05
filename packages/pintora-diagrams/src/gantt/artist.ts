@@ -5,7 +5,11 @@ import {
   IDiagramArtist,
   IFont,
   makeMark,
+  Mark,
+  MarkAttrs,
+  Point,
   Rect,
+  safeAssign,
   Text,
   TSize,
 } from '@pintora/core'
@@ -14,7 +18,7 @@ import dayjs from 'dayjs'
 import { LayerManager, makeEmptyGroup } from '../util/artist-util'
 import { isDev } from '../util/env'
 import { GanttConf, getConf } from './config'
-import { GanttIR, Task, isInvalidDate, getAxisTimeInterval } from './db'
+import { GanttIR, getAxisTimeInterval, isInvalidDate, Task } from './db'
 
 function makeArtist<IR, Conf, A extends IDiagramArtist<IR, Conf> = IDiagramArtist<IR, Conf>>(opts: {
   draw: (this: A, ...args: Parameters<A['draw']>) => GraphicsIR
@@ -317,9 +321,10 @@ class GanttDraw {
 
       const taskX = taskXOffset + this.getScaledTimeX(task.startTime)
       const barStartX = taskXOffset + this.getScaledTimeX(task.startTime)
-      const barEndX = taskXOffset + this.getScaledTimeX(task.renderEndTime || task.endTime)
-      const barWidth = barEndX - barStartX
-      const taskRect = makeMark('rect', {
+      let barEndX = taskXOffset + this.getScaledTimeX(task.renderEndTime || task.endTime)
+      let barWidth = barEndX - barStartX
+
+      const baseAttrs: Partial<MarkAttrs> = {
         radius: conf.barBorderRadius,
         x: taskX,
         y: task.order * sectionUnitHeight + yStart + barGap / 2,
@@ -327,19 +332,38 @@ class GanttDraw {
         height: barHeight,
         fill: conf.barBackground,
         stroke: conf.barBorderColor,
+      }
+
+      const taskRect = makeMark('rect', { ...baseAttrs })
+      const appearanceInfo = getTaskAppearanceInfo({
+        baseAttrs,
+        task,
+        taskMark: taskRect,
+        originTaskMark: taskRect,
+        conf: this.conf,
       })
 
+      let taskMark: Mark
+      if (appearanceInfo) {
+        taskMark = appearanceInfo.taskMark
+        barWidth = appearanceInfo.width
+        barEndX = barStartX + barWidth
+      } else {
+        taskMark = taskRect
+      }
+
       let textX: number
+      const taskMarkOffset = appearanceInfo?.taskMarkOffset || { x: 0, y: 0 }
       const textWidth = calculateTextDimensions(task.label, this.fontConfig).width
       if (textWidth > barWidth) {
-        const distanceToRightEdge = w - barEndX // distance between bar end to diagram right edge
+        const distanceToRightEdge = w - barEndX - taskMarkOffset.x // distance between bar end to diagram right edge
         if (textWidth < distanceToRightEdge) {
-          textX = barEndX + textWidth / 2 + gridLineWidth
+          textX = barEndX + textWidth / 2 + gridLineWidth + taskMarkOffset.x
         } else {
-          textX = barStartX - textWidth / 2
+          textX = barStartX - textWidth / 2 + taskMarkOffset.x
         }
       } else {
-        textX = barStartX + barWidth / 2
+        textX = barStartX + barWidth / 2 + taskMarkOffset.x
       }
 
       const textY = i * sectionUnitHeight + conf.barHeight / 2 + yStart
@@ -355,7 +379,7 @@ class GanttDraw {
         fill: conf.fontColor,
       })
 
-      sectionGroup.children.push(taskRect, textMark)
+      sectionGroup.children.push(taskMark, textMark)
     })
 
     // center section label mark vertically
@@ -456,6 +480,105 @@ class GanttDraw {
   getPageSize() {
     return { width: this.width, height: this.height }
   }
+}
+
+type AppearanceInfo = {
+  taskMark: Mark
+  width: number
+  taskMarkOffset: Point
+}
+
+type AppearanceInfoOpts = {
+  baseAttrs: Partial<MarkAttrs>
+  task: Task
+  originTaskMark: Mark
+  taskMark: Mark
+  conf: GanttConf
+}
+
+type TaskTagsInfo = {
+  decorate(opts: AppearanceInfoOpts): Partial<AppearanceInfo>
+}
+
+const TASK_TAGS_INFO_MAP: Record<string, Partial<TaskTagsInfo>> = {
+  MILESTONE: {
+    decorate(opts) {
+      const { taskMark, conf } = opts
+      const curAttrs = taskMark.attrs
+      const axisWidth = Math.min(20, conf.barHeight)
+      const diamondSide = axisWidth / 2
+      const centerX = curAttrs.x
+      const centerY = curAttrs.y + curAttrs.height / 2
+
+      const diamondMark = makeMark('path', {
+        ...curAttrs,
+        width: axisWidth,
+        height: axisWidth,
+        path: [
+          ['m', centerX - diamondSide, centerY],
+          ['l', diamondSide, diamondSide],
+          ['l', diamondSide, -diamondSide],
+          ['l', -diamondSide, -diamondSide],
+          ['Z'],
+        ],
+      })
+      return {
+        taskMark: diamondMark,
+        width: axisWidth,
+        taskMarkOffset: { x: -axisWidth, y: 0 },
+      }
+    },
+  },
+  DONE: {
+    decorate(opts) {
+      const { taskMark } = opts
+      safeAssign(taskMark.attrs, {
+        fillOpacity: 0.6,
+      })
+      return {
+        taskMark,
+      }
+    },
+  },
+  CRIT: {
+    decorate(opts) {
+      const { taskMark } = opts
+      safeAssign(taskMark.attrs, {
+        stroke: 'red',
+      })
+      return {
+        taskMark,
+      }
+    },
+  },
+}
+
+function getTaskAppearanceInfo(opts: AppearanceInfoOpts): AppearanceInfo {
+  const task = opts.task
+  if (!task.tags) return
+  const info: AppearanceInfo = {
+    taskMark: opts.taskMark,
+    width: opts.taskMark.attrs.width,
+    taskMarkOffset: { x: 0, y: 0 },
+  }
+  let currentTaskMark = opts.taskMark
+  task.tags.forEach(tag => {
+    const decorator = TASK_TAGS_INFO_MAP[tag]
+    if (decorator) {
+      if (decorator.decorate) {
+        Object.assign(
+          info,
+          decorator.decorate({
+            ...opts,
+            taskMark: currentTaskMark,
+          }),
+        )
+        if (info.taskMark) currentTaskMark = info.taskMark
+      }
+    }
+  })
+  info.taskMark = currentTaskMark
+  return info
 }
 
 export default artist

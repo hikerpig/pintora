@@ -18,7 +18,7 @@ export type Task = {
   endTime: Date
   duration?: string
   isManualEndTime?: boolean
-  tag?: string
+  tags?: string[]
   /** section name */
   section: string | undefined
   order: number
@@ -184,10 +184,16 @@ export class GanttDb extends BaseDb {
     // find match tag
     if (segs[0]) {
       const v = segs[0].toUpperCase()
-      if (this.tags[v]) {
-        task.tag = v
-        segs.shift()
-      }
+      const maybeTaskSegs = v.split(' ')
+      let isTagsMatched = false
+      maybeTaskSegs.forEach(str => {
+        if (this.tags[str]) {
+          isTagsMatched = true
+          if (!task.tags) task.tags = []
+          task.tags.push(str)
+        }
+      })
+      if (isTagsMatched) segs.shift()
     }
 
     const segsLen = segs.length
