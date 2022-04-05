@@ -82,13 +82,13 @@ describe('gantt parser', () => {
     expect(Object.values(ir.tasks).map(t => prepareTaskForTest(t))).toMatchObject([
       {
         label: 'A',
-        tag: 'ACTIVE',
+        tags: ['ACTIVE'],
         startTime: '2022-02-23',
         endTime: '2022-02-24',
       },
       {
         label: 'B',
-        tag: 'DONE',
+        tags: ['DONE'],
       },
     ])
   })
