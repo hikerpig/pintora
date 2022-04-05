@@ -1,5 +1,16 @@
 # Change Log
 
+## 0.3.0-alpha.2
+
+### Patch Changes
+
+- bc16cae: [gantt] add support for axisInterval
+- 46a1a9f: [gantt] add support for axisInterval
+- Updated dependencies [bc16cae]
+- Updated dependencies [46a1a9f]
+  - @pintora/standalone@0.3.0-alpha.2
+  - @pintora/test-shared@0.2.0-alpha.3
+
 ## 0.3.0-alpha.1
 
 ### Patch Changes

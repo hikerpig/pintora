@@ -1,5 +1,12 @@
 # Change Log
 
+## 0.2.0-alpha.3
+
+### Patch Changes
+
+- bc16cae: [gantt] add support for axisInterval
+- 46a1a9f: [gantt] add support for axisInterval
+
 ## 0.2.0-alpha.2
 
 ### Patch Changes
