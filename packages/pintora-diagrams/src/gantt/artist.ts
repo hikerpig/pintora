@@ -209,7 +209,7 @@ class GanttDraw {
         text: title,
         x: (this.width - titleWidth) / 2,
         y: this.conf.topPadding,
-        stroke: this.conf.fontColor,
+        fill: this.conf.fontColor,
         textBaseline: 'middle',
         ...this.fontConfig,
       })
