@@ -13,7 +13,7 @@ const grammarFiles = [
 
 grammarFiles.forEach(async ({ input, output }) => {
   const outputPath = path.join(__dirname, '..', output)
-  await shellExec(`npx nearleyc ${path.join(__dirname, '..', input)} -o ${outputPath}`)
+  await shellExec(`pnpx nearleyc ${path.join(__dirname, '..', input)} -o ${outputPath}`)
     .then(console.log)
     .catch(console.error)
 
