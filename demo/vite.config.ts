@@ -16,6 +16,8 @@ export default defineConfig({
     VitePWA({
       base: BASE,
       registerType: 'autoUpdate',
+      srcDir: 'src',
+      filename: 'sw.ts',
       manifest: {
         name: 'Pintora Live Editor',
         short_name: 'Pintora',

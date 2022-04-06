@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
     "target": "ESNext",
-    "lib": ["DOM", "DOM.Iterable", "ESNext"],
+    "lib": ["DOM", "DOM.Iterable", "ESNext", "WebWorker"],
     "types": ["vite/client", "vite-plugin-pwa/client", "@percy/cypress", "cypress"],
     "allowJs": false,
     "skipLibCheck": true,
@@ -23,5 +23,5 @@
   "include": ["./src"],
   "exclude": [
     "./dist/**/*"
-  ] 
+  ]
 }
