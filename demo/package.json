@@ -53,9 +53,11 @@
     "start-server-and-test": "^1.14.0",
     "tailwindcss": "*",
     "typescript": "^4.5.4",
-    "vite": "^2.8.4",
+    "vite": "^2.9.1",
     "vite-plugin-pwa": "^0.11.13",
     "vite-tsconfig-paths": "^3.3.17",
-    "workbox-window": "^6.4.2"
+    "workbox-core": "^6.5.2",
+    "workbox-precaching": "^6.5.2",
+    "workbox-window": "^6.5.2"
   }
 }
