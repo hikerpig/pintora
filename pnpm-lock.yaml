@@ -67,8 +67,10 @@ importers:
       '@reduxjs/toolkit': ^1.7.1
       '@types/react': ^17.0.38
       '@types/react-dom': ^17.0.11
+      '@types/throttle-debounce': ^2.1.0
       '@vitejs/plugin-react-refresh': ^1.3.6
       autoprefixer: '*'
+      browser-fs-access: ^0.26.1
       classnames: ^2.3.1
       cypress: ^9.3.1
       daisyui: ^1.22.2
@@ -82,6 +84,7 @@ importers:
       shiki: ^0.10.0
       start-server-and-test: ^1.14.0
       tailwindcss: '*'
+      throttle-debounce: ^3.0.1
       typescript: ^4.5.4
       vite: ^2.9.1
       vite-plugin-pwa: ^0.11.13
@@ -109,6 +112,7 @@ importers:
       '@pintora/test-shared': link:../packages/test-shared
       '@react-hook/debounce': 4.0.0_react@17.0.2
       '@reduxjs/toolkit': 1.7.2_react-redux@7.2.6+react@17.0.2
+      browser-fs-access: 0.26.1
       classnames: 2.3.1
       daisyui: 1.25.4
       react: 17.0.2
@@ -117,11 +121,13 @@ importers:
       react-redux: 7.2.6_react-dom@17.0.2+react@17.0.2
       react-router-dom: 6.2.1_react-dom@17.0.2+react@17.0.2
       shiki: 0.10.0
+      throttle-debounce: 3.0.1
     devDependencies:
       '@percy/cli': 1.0.0-beta.75
       '@percy/cypress': 3.1.1_cypress@9.4.1
       '@types/react': 17.0.39
       '@types/react-dom': 17.0.11
+      '@types/throttle-debounce': 2.1.0
       '@vitejs/plugin-react-refresh': 1.3.6
       autoprefixer: 10.4.2_postcss@8.4.6
       cypress: 9.4.1
@@ -5516,6 +5522,10 @@ packages:
     resolution: {integrity: sha512-Hl219/BT5fLAaz6NDkSuhzasy49dwQS/DSdu4MdggFB8zcXv7vflBI3xp7FEmkmdDkBUI2bPUNeMttp2knYdxw==}
     dev: true
 
+  /@types/throttle-debounce/2.1.0:
+    resolution: {integrity: sha512-5eQEtSCoESnh2FsiLTxE121IiE60hnMqcb435fShf4bpLRjEu1Eoekht23y6zXS9Ts3l+Szu3TARnTsA0GkOkQ==}
+    dev: true
+
   /@types/tinycolor2/1.4.3:
     resolution: {integrity: sha512-Kf1w9NE5HEgGxCRyIcRXR/ZYtDv0V8FVPtYHwLxl0O+maGX0erE77pQlD0gpP+/KByMZ87mOA79SjifhSB3PjQ==}
     dev: true
@@ -6665,6 +6675,10 @@ packages:
     dependencies:
       duplexer: 0.1.1
     dev: true
+
+  /browser-fs-access/0.26.1:
+    resolution: {integrity: sha512-TMloUX9rl/MWe0CniUj5aDKzLuspvOzsxZhRFhG1LThtYqqwk2YaSzzDXhwMbX++fUJqs57+Z7kDocR4zsEGwQ==}
+    dev: false
 
   /browser-process-hrtime/1.0.0:
     resolution: {integrity: sha512-9o5UecI3GhkpM6DrXr69PblIuWxPKk9Y0jHBRhdocZ2y7YECBFCsHm79Pr3OyR2AvjhDkabFJaDJMYRazHgsow==}
@@ -15670,6 +15684,11 @@ packages:
   /throat/6.0.1:
     resolution: {integrity: sha512-8hmiGIJMDlwjg7dlJ4yKGLK8EsYqKgPWbG3b4wjJddKNwc7N7Dpn08Df4szr/sZdMVeOstrdYSsqzX6BYbcB+w==}
     dev: true
+
+  /throttle-debounce/3.0.1:
+    resolution: {integrity: sha512-dTEWWNu6JmeVXY0ZYoPuH5cRIwc0MeGbJwah9KUNYSJwommQpCzTySTpEe8Gs1J23aeWEuAobe4Ag7EHVt/LOg==}
+    engines: {node: '>=10'}
+    dev: false
 
   /throttleit/1.0.0:
     resolution: {integrity: sha1-nnhYNtr0Z0MUWlmEtiaNgoUorGw=}

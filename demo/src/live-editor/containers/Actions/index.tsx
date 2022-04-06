@@ -1,7 +1,10 @@
 import React from 'react'
 import pintora from '@pintora/standalone'
 import Buttons from 'src/live-editor/components/Buttons'
+import { fileSave, fileOpen } from 'src/utils/filesystem'
 import store from '../../redux/store'
+import { MIME_TYPES } from 'src/const'
+import { actions } from 'src/live-editor/redux/slice'
 
 interface ActionsProps {}
 
@@ -64,13 +67,42 @@ const ACION_BUTTONS: ActionButtonDef[] = [
       renderPintora(state.main.editor.code, 'svg').then(renderer => {
         const str = getSvgString(renderer)
         if (str) {
-          var element = document.createElement('a')
+          const element = document.createElement('a')
           const filename = `pintora-output-${Date.now()}.svg`
           element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(str))
           element.setAttribute('download', filename)
           element.click()
         }
       })
+    },
+  },
+  {
+    label: 'Save Code',
+    description: 'Save code to disk',
+    action() {
+      const state = store.getState()
+      const content = state.main.editor.code
+      fileSave(new Blob([content], { type: MIME_TYPES.pintora }), {
+        name: 'pintora-code',
+        extension: 'pintora',
+        description: 'Save file',
+      })
+    },
+  },
+  {
+    label: 'Load Code',
+    description: 'Load code from disk',
+    async action() {
+      const file = await fileOpen({
+        description: 'Pintora code',
+        extensions: ['pintora'],
+      })
+      const text = await file.text()
+      store.dispatch(
+        actions.updateEditorCode({
+          code: text,
+        }),
+      )
     },
   },
 ]
