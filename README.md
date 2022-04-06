@@ -82,6 +82,12 @@ Heavily inspired by [Mermaid.js](https://mermaid-js.github.io/mermaid/#/) and [P
         <img src="https://i.imgur.com/jT6HQg6.jpg" title="Mind Map" width="300" />
       </td>
     </tr>
+    <tr>
+      <td>Gantt Diagram</td>
+      <td>
+        <img src="https://i.imgur.com/rSA2IQb.jpg" title="Gantt Diagram" width="300" />
+      </td>
+    </tr>
   </tbody>
 </table>
 
@@ -106,7 +112,7 @@ Check the online [documentation and demo](http://pintorajs.vercel.app/docs/intro
 - [x] Theme config
 - [x] PlantUML style Activity Diagram
 - [x] Mind Map
-- [ ] Gantt diagram
+- [x] Gantt diagram
 - [ ] PlantUML style Deploy Diagram
 - [ ] Load diagram implementation and canvas renderer only when needed
 

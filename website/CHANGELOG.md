@@ -1,5 +1,23 @@
 # Change Log
 
+## 0.3.0
+
+### Minor Changes
+
+- 634affd: Add gantt diagram
+
+### Patch Changes
+
+- 634affd: add @config and @param to gantt diagram; update tmLanguage;
+- 634affd: [gantt] add support for axisInterval
+- 634affd: [gantt] add support for axisInterval
+- Updated dependencies [634affd]
+- Updated dependencies [634affd]
+- Updated dependencies [634affd]
+- Updated dependencies [634affd]
+  - @pintora/standalone@0.3.0
+  - @pintora/test-shared@0.2.0
+
 ## 0.3.0-alpha.2
 
 ### Patch Changes

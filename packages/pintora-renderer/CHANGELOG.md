@@ -1,5 +1,18 @@
 # Change Log
 
+## 0.1.4
+
+### Patch Changes
+
+- 634affd: add @config and @param to gantt diagram; update tmLanguage;
+- 634affd: [gantt] add support for axisInterval
+- 634affd: [gantt] add support for axisInterval
+- Updated dependencies [634affd]
+- Updated dependencies [634affd]
+- Updated dependencies [634affd]
+- Updated dependencies [634affd]
+  - @pintora/core@0.3.0
+
 ## 0.1.4-alpha.2
 
 ### Patch Changes
