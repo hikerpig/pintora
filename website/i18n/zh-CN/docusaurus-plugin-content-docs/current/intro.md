@@ -36,6 +36,7 @@ mindmap
 ** Non-UML Diagrams
 *** 实体关系图 Entity Relationship Diagram
 *** 思维导图 Mind Map
+*** 甘特图 Diagram
 ```
 
 ## 💻 编辑器支持

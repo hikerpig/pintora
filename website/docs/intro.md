@@ -37,6 +37,7 @@ mindmap
 ** Non-UML Diagrams
 *** Entity Relationship Diagram
 *** Mind Map
+*** Gantt Diagram
 ```
 
 ## 💻 Editor Support

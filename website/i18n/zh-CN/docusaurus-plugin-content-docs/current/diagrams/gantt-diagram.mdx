@@ -14,7 +14,7 @@ title: Gantt Diagram 甘特图
 
 ```pintora play
 gantt
-  title Gantt example
+  title Gantt 图示例
 
   dateFormat YYYY-MM-DDTHH
   axisFormat MM-DD
@@ -24,7 +24,7 @@ gantt
   "Write grammar"       : t-a, 2022-2-17, 2022-2-23
   "Write artist"        : t-b, 2022-2-23, 2022-3-15
 
-  %% the day I started typing the docs
+  %% 开始写文档的时间
   markDate 2022-3-15T20
 
   section Documentation
@@ -34,7 +34,7 @@ gantt
   "Add axisInterval" : 2022-3-28, 2022-4-04
 
   section Release
-  "Milestone" : milestone, 2022-4-05, 0d
+  "Release" : milestone, 2022-4-06, 0d
 ```
 
 ## 设置甘特图的属性
@@ -83,7 +83,7 @@ Pintora 采用 dayjs 来对时间进行格式化和解析，更多细节请见 [
 
 时间间隔设置由数量和格式组成。
 
-```
+```text
 axisInterval 1d
 axisInterval 2w
 axisInterval 30m
