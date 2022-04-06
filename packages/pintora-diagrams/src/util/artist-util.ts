@@ -101,6 +101,27 @@ export function drawCrossTo(dest: Point, baseLength: number, rad: number, attrs?
   }
 }
 
+export function drawDiamondTo(dest: Point, halfW: number, attrs: Partial<MarkAttrs>): Path {
+  const width = halfW * 2
+  const centerX = dest.x
+  const centerY = dest.y
+
+  const diamondMark = makeMark('path', {
+    ...attrs,
+    width: width,
+    height: width,
+    /* prettier-ignore */
+    path: [
+      ['m', centerX - halfW, centerY],
+      ['l', halfW, halfW],
+      ['l', halfW, -halfW],
+      ['l', -halfW, -halfW],
+      ['Z'],
+    ],
+  })
+  return diamondMark
+}
+
 /**
  * Given start and end point, return the angle of the direction vector, in radian
  */

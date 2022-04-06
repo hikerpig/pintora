@@ -2,7 +2,6 @@ import {
   calculateTextDimensions,
   GraphicsIR,
   Group,
-  IDiagramArtist,
   IFont,
   makeMark,
   Mark,
@@ -12,28 +11,16 @@ import {
   safeAssign,
   Text,
   TSize,
+  makeArtist,
+  min,
+  max,
 } from '@pintora/core'
 import { scaleTime, ScaleTime } from 'd3-scale'
 import dayjs from 'dayjs'
-import { LayerManager, makeEmptyGroup } from '../util/artist-util'
+import { drawDiamondTo, LayerManager, makeEmptyGroup } from '../util/artist-util'
 import { isDev } from '../util/env'
 import { GanttConf, getConf } from './config'
 import { GanttIR, getAxisTimeInterval, isInvalidDate, Task } from './db'
-
-function makeArtist<IR, Conf, A extends IDiagramArtist<IR, Conf> = IDiagramArtist<IR, Conf>>(opts: {
-  draw: (this: A, ...args: Parameters<A['draw']>) => GraphicsIR
-}) {
-  const artist = opts
-  return artist as IDiagramArtist<IR, Conf>
-}
-
-function min<T>(arr: T[], fn: (v: T) => number) {
-  return Math.min(...arr.map(fn))
-}
-
-function max<T>(arr: T[], fn: (v: T) => number) {
-  return Math.max(...arr.map(fn))
-}
 
 const artist = makeArtist<GanttIR, GanttConf>({
   draw(ir, config, opts) {
@@ -178,6 +165,10 @@ class GanttDraw {
     for (const [name, zIndex] of Object.entries(GANTT_LAYER_CONFIG)) {
       this.layerManager.addLayer(name as GanttLayerName, zIndex)
     }
+  }
+
+  getPageSize() {
+    return { width: this.width, height: this.height }
   }
 
   makeGant() {
@@ -397,8 +388,6 @@ class GanttDraw {
     // TODO: links
     // const links = ganttDb.getLinks()
 
-    // draw exclude days
-
     return { sectionsHeight }
   }
 
@@ -476,10 +465,6 @@ class GanttDraw {
       markLineGroup.children.push(lineMark)
     })
   }
-
-  getPageSize() {
-    return { width: this.width, height: this.height }
-  }
 }
 
 type AppearanceInfo = {
@@ -505,23 +490,13 @@ const TASK_TAGS_INFO_MAP: Record<string, Partial<TaskTagsInfo>> = {
     decorate(opts) {
       const { taskMark, conf } = opts
       const curAttrs = taskMark.attrs
-      const axisWidth = Math.min(20, conf.barHeight)
+      const axisWidth = Math.min(20, conf.barHeight) // width in x axis direction
       const diamondSide = axisWidth / 2
       const centerX = curAttrs.x
       const centerY = curAttrs.y + curAttrs.height / 2
 
-      const diamondMark = makeMark('path', {
-        ...curAttrs,
-        width: axisWidth,
-        height: axisWidth,
-        path: [
-          ['m', centerX - diamondSide, centerY],
-          ['l', diamondSide, diamondSide],
-          ['l', diamondSide, -diamondSide],
-          ['l', -diamondSide, -diamondSide],
-          ['Z'],
-        ],
-      })
+      const diamondMark = drawDiamondTo({ x: centerX, y: centerY }, diamondSide, curAttrs)
+
       return {
         taskMark: diamondMark,
         width: axisWidth,

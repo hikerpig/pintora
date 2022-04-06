@@ -83,6 +83,8 @@ export function getParamRulesFromConfig<C>(config: C) {
     let valueType: ConfigMeta['valueType']
     if (t === 'number') {
       valueType = 'size'
+    } else if (t === 'boolean') {
+      valueType = 'boolean'
     } else if (t === 'string') {
       if (/color|background/.test(key.toLowerCase())) {
         valueType = 'color'
