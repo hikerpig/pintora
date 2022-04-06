@@ -1,0 +1,115 @@
+---
+title: Gantt Diagram
+---
+
+> A Gantt chart is a type of bar chart that illustrates a project schedule, named after its popularizer, Henry Gantt (1861–1919), who designed such a chart around the years 1910–1915.[1][2] Modern Gantt charts also show the dependency relationships between activities and the current schedule status.
+>
+> <cite>
+>   <a href="https://en.wikipedia.org/wiki/Gantt_chart">Wikipedia</a>
+> </cite>
+
+The syntax and layout logic of Gantt diagrams is based on Mermaid 8.14, but there are some subtle differences.
+
+## Simple Demo
+
+```pintora play
+gantt
+  title Gantt example
+
+  dateFormat YYYY-MM-DDTHH
+  axisFormat MM-DD
+  axisInterval 1w
+
+  section Develop Prototype
+  "Write grammar"       : t-a, 2022-2-17, 2022-2-23
+  "Write artist"        : t-b, 2022-2-23, 2022-3-15
+
+  %% the day I started typing the docs
+  markDate 2022-3-15T20
+
+  section Documentation
+  "Write docs"          : t-c, 2022-3-15, 5d
+
+  section Optimize
+  "Add axisInterval" : 2022-3-28, 2022-4-04
+
+  section Release
+  "Milestone" : milestone, 2022-4-05, 0d
+```
+
+## Set attributes
+
+| Name         | Description                                                                                                                | Example                 |
+|--------------|----------------------------------------------------------------------------------------------------------------------------|-------------------------|
+| title        | Title of the diagram                                                                                                       | `title My day`          |
+| dateFormat   | The format you use to specify time and date                                                                                | `dateFormat YYYY-MM-DD` |
+| axisFormat   | The format to display axis labels                                                                                          | `axisFormat hh:mm:ss`   |
+| axisInterval | [Time interval](#time-interval) between two labels in the axis, if not specified, this can be inferred from __axisFormat__ | `axisInterval 1w`       |
+
+## Date and time format
+
+Pintora uses dayjs to parse and format date and time, for more details please refer to [dayjs docs](https://day.js.org/docs/en/display/format).
+
+| Format | Output           | Description                           |
+|--------|------------------|---------------------------------------|
+| YY     | 18               | Two-digit year                        |
+| YYYY   | 2018             | Four-digit year                       |
+| M      | 1-12             | The month, beginning at 1             |
+| MM     | 01-12            | The month, 2-digits                   |
+| MMM    | Jan-Dec          | The abbreviated month name            |
+| MMMM   | January-December | The full month name                   |
+| D      | 1-31             | The day of the month                  |
+| DD     | 01-31            | The day of the month, 2-digits        |
+| d      | 0-6              | The day of the week, with Sunday as 0 |
+| dd     | Su-Sa            | The min name of the day of the week   |
+| ddd    | Sun-Sat          | The short name of the day of the week |
+| dddd   | Sunday-Saturday  | The name of the day of the week       |
+| H      | 0-23             | The hour                              |
+| HH     | 00-23            | The hour, 2-digits                    |
+| h      | 1-12             | The hour, 12-hour clock               |
+| hh     | 01-12            | The hour, 12-hour clock, 2-digits     |
+| m      | 0-59             | The minute                            |
+| mm     | 00-59            | The minute, 2-digits                  |
+| s      | 0-59             | The second                            |
+| ss     | 00-59            | The second, 2-digits                  |
+| SSS    | 000-999          | The millisecond, 3-digits             |
+| Z      | +05:00           | The offset from UTC, ±HH:mm           |
+| ZZ     | +0500            | The offset from UTC, ±HHmm            |
+| A      | AM PM            |                                       |
+| a      | am pm            |                                       |
+
+### Time Interval
+
+The time interval setting consists of number and format.
+
+```
+axisInterval 1d
+axisInterval 2w
+axisInterval 30m
+```
+
+The supported time formats are as follows.
+
+- `y`, year
+- `M`, month
+- `w`, week, this is an addition to dayjs format
+- `d`, day
+- `h`, hour
+- `m`, minute
+- `s`, second
+
+
+## Add Tasks
+
+```pintora play
+gantt
+  %% group tasks with 'section' sentence
+  section Normal tasks
+  "With start and end" : 2022-3-15, 2022-3-16
+  "With start and duration" : 2022-3-16, 2d
+  "With only duration" : 1d
+
+  section Ids and Relations
+  "With id" : task-1, 2022-3-15, 2d
+  "After another task" : after task-1, 3d
+```

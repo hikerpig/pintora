@@ -4,6 +4,7 @@ import { erDiagram, ErDiagramIR } from './er'
 import { componentDiagram, ComponentDiagramIR } from './component'
 import { activityDiagram, ActivityDiagramIR } from './activity'
 import { mindmap, MindmapIR } from './mindmap'
+import { gantt, GanttIR } from './gantt'
 import './type' // type augmentation
 import './util/symbols'
 import { BaseDiagramIR } from './util/ir'
@@ -16,6 +17,7 @@ export const DIAGRAMS = {
   componentDiagram,
   activityDiagram,
   mindmap,
+  gantt,
 }
 
 export {
@@ -29,4 +31,6 @@ export {
   ActivityDiagramIR,
   MindmapIR,
   mindmap,
+  GanttIR,
+  gantt,
 }

@@ -1,5 +1,42 @@
 # Change Log
 
+## 0.2.2-alpha.2
+
+### Patch Changes
+
+- bc16cae: [gantt] add support for axisInterval
+- 46a1a9f: [gantt] add support for axisInterval
+- Updated dependencies [bc16cae]
+- Updated dependencies [46a1a9f]
+  - @pintora/core@0.3.0-alpha.2
+  - @pintora/diagrams@0.3.0-alpha.2
+  - @pintora/renderer@0.1.4-alpha.2
+  - @pintora/standalone@0.3.0-alpha.2
+  - @pintora/test-shared@0.2.0-alpha.3
+
+## 0.2.2-alpha.1
+
+### Patch Changes
+
+- 235cc0e: add @config and @param to gantt diagram; update tmLanguage;
+- Updated dependencies [235cc0e]
+  - @pintora/core@0.3.0-alpha.1
+  - @pintora/diagrams@0.3.0-alpha.1
+  - @pintora/renderer@0.1.4-alpha.1
+  - @pintora/standalone@0.3.0-alpha.1
+  - @pintora/test-shared@0.2.0-alpha.2
+
+## 0.2.2-alpha.0
+
+### Patch Changes
+
+- Updated dependencies [bd214c7]
+  - @pintora/core@0.3.0-alpha.0
+  - @pintora/diagrams@0.3.0-alpha.0
+  - @pintora/test-shared@0.2.0-alpha.1
+  - @pintora/standalone@0.3.0-alpha.0
+  - @pintora/renderer@0.1.4-alpha.0
+
 ## 0.2.1
 
 ### Patch Changes

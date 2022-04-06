@@ -8,11 +8,12 @@ const grammarFiles = [
   { input: 'src/component/parser/componentDiagram.ne', output: 'src/component/parser/componentDiagram.ts' },
   { input: 'src/activity/parser/activityDiagram.ne', output: 'src/activity/parser/activityDiagram.ts' },
   { input: 'src/mindmap/parser/mindmap.ne', output: 'src/mindmap/parser/mindmap.ts' },
+  { input: 'src/gantt/parser/gantt.ne', output: 'src/gantt/parser/gantt.ts' },
 ]
 
 grammarFiles.forEach(async ({ input, output }) => {
   const outputPath = path.join(__dirname, '..', output)
-  await shellExec(`npx nearleyc ${path.join(__dirname, '..', input)} -o ${outputPath}`)
+  await shellExec(`pnpx nearleyc ${path.join(__dirname, '..', input)} -o ${outputPath}`)
     .then(console.log)
     .catch(console.error)
 

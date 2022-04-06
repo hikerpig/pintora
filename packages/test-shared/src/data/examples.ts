@@ -258,6 +258,25 @@ mindmap
 `),
 }
 
+export const ganttExample: DiagramExample = {
+  name: 'Gantt Diagram',
+  description: 'Sample for a gantt diagram',
+  code: stripStartEmptyLines(`
+gantt
+  title Gantt example
+
+  excludes weekends
+
+  section First
+  A : t-a, 2022-2-17, 2022-2-23
+  section Second
+  B : t-b, after t-a, 2d
+  C : t-c, after t-b, 2w
+  section Third
+  D : t-d, after t-c, 2d
+`),
+}
+
 export const EXAMPLES = {
   sequence: sequenceExample,
   er: erExample,
@@ -265,4 +284,5 @@ export const EXAMPLES = {
   component: componentExample,
   activity: activityExample,
   mindmap: mindmapExample,
+  gantt: ganttExample,
 }

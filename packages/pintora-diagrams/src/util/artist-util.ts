@@ -1,4 +1,5 @@
 import {
+  Mark,
   MarkAttrs,
   Rect,
   Text,
@@ -98,6 +99,27 @@ export function drawCrossTo(dest: Point, baseLength: number, rad: number, attrs?
       path: p,
     },
   }
+}
+
+export function drawDiamondTo(dest: Point, halfW: number, attrs: Partial<MarkAttrs>): Path {
+  const width = halfW * 2
+  const centerX = dest.x
+  const centerY = dest.y
+
+  const diamondMark = makeMark('path', {
+    ...attrs,
+    width: width,
+    height: width,
+    /* prettier-ignore */
+    path: [
+      ['m', centerX - halfW, centerY],
+      ['l', halfW, halfW],
+      ['l', halfW, -halfW],
+      ['l', -halfW, -halfW],
+      ['Z'],
+    ],
+  })
+  return diamondMark
 }
 
 /**
@@ -216,4 +238,34 @@ export function makeCircleInPoint(p: Point, opts: Partial<Circle['attrs']> = {})
     fill: 'red',
     ...opts,
   })
+}
+
+export type Layer = {
+  zIndex: number
+  marks: Mark[]
+}
+
+export class LayerManager<Name extends string = string> {
+  protected layers: Record<string, Layer> = {}
+  addLayer(name: Name, zIndex: number) {
+    if (!this.layers[name]) {
+      this.layers[name] = { zIndex: 0, marks: [] }
+    }
+    this.layers[name].zIndex = zIndex
+    return this.layers[name]
+  }
+  getLayer(name: Name) {
+    return this.layers[name]
+  }
+  sortLayerMarks() {
+    const layerList = Object.values(this.layers).sort((a, b) => a.zIndex - b.zIndex)
+    const marks: Mark[] = layerList.reduce((acc, layer) => {
+      acc.push(...layer.marks)
+      return acc
+    }, [])
+    return marks
+  }
+  addMark(name: Name, mark: Mark) {
+    this.getLayer(name)?.marks.push(mark)
+  }
 }

@@ -18,6 +18,9 @@
       "console": "integratedTerminal",
       "internalConsoleOptions": "neverOpen",
       "disableOptimisticBPs": true,
+      "outFiles": ["${workspaceFolder}/packages/pintora-diagrams/lib/**/*.js"],
+      "resolveSourceMapLocations": ["${workspaceFolder}/packages/pintora-diagrams/lib/**/*.js"],
+      "sourceMaps": true,
       "windows": {
         "program": "${workspaceFolder}/node_modules/jest/bin/jest"
       }

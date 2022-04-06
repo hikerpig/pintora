@@ -128,6 +128,162 @@
           "end": "(^|\\G)(?=\\s*[`~]{3,}\\s*$)"
         },
         {
+          "comment": "Gantt Diagram",
+          "begin": "\\b(gantt)",
+          "beginCaptures": {
+            "1": {
+              "name": "keyword.control.pintora"
+            }
+          },
+          "end": "(^|\\G)(?=\\s*[`~]{3,}\\s*$)",
+          "patterns": [
+            {
+              "comment": "attr value",
+              "match": "(title|section|dateFormat|axisFormat|axisInterval|markDate)\\s*(.*)",
+              "captures": {
+                "1": {
+                  "name": "keyword.control.pintora"
+                },
+                "2": {
+                  "name": "string"
+                }
+              }
+            },
+            {
+              "comment": "excludes or includes",
+              "match": "(excludes|includes)\\s*(.*)",
+              "captures": {
+                "1": {
+                  "name": "keyword.control.pintora"
+                },
+                "2": {
+                  "name": "string"
+                }
+              }
+            },
+            {
+              "comment": "Task : id, start, endOrDuration",
+              "match": "(\".*\")\\s*(:)\\s*(.*)\\s*(,)\\s*(.*)\\s*(,)\\s*(.*)\\s*",
+              "captures": {
+                "1": {
+                  "name": "string"
+                },
+                "2": {
+                  "name": "keyword.control.pintora"
+                },
+                "3": {
+                  "name": "variable"
+                },
+                "4": {
+                  "name": "keyword.control.pintora"
+                },
+                "5": {
+                  "name": "string"
+                },
+                "6": {
+                  "name": "keyword.control.pintora"
+                },
+                "7": {
+                  "name": "string"
+                },
+                "8": {
+                  "name": "keyword.control.pintora"
+                }
+              }
+            },
+            {
+              "comment": "Task : after id, endOrDuration",
+              "match": "(\".*\")\\s*(:)\\s*(after)(.*)\\s*(,)\\s*(.*)\\s*",
+              "captures": {
+                "1": {
+                  "name": "string"
+                },
+                "2": {
+                  "name": "keyword.control.pintora"
+                },
+                "3": {
+                  "name": "keyword.control.pintora"
+                },
+                "4": {
+                  "name": "variable"
+                },
+                "5": {
+                  "name": "keyword.control.pintora"
+                },
+                "6": {
+                  "name": "string"
+                }
+              }
+            },
+            {
+              "comment": "Task : start, endOrDuration",
+              "match": "(\".*\")\\s*(:)\\s*(.*)\\s*(,)\\s*(.*)",
+              "captures": {
+                "1": {
+                  "name": "string"
+                },
+                "2": {
+                  "name": "keyword.control.pintora"
+                },
+                "3": {
+                  "name": "string"
+                },
+                "4": {
+                  "name": "keyword.control.pintora"
+                },
+                "5": {
+                  "name": "string"
+                }
+              }
+            },
+            {
+              "comment": "Task : after id, endOrDuration",
+              "match": "(\".*\")\\s*(:)\\s*(after)(.*)\\s*(,)\\s*(.*)\\s*",
+              "captures": {
+                "1": {
+                  "name": "string"
+                },
+                "2": {
+                  "name": "keyword.control.pintora"
+                },
+                "3": {
+                  "name": "entity.name.function.pintora"
+                },
+                "4": {
+                  "name": "variable"
+                },
+                "5": {
+                  "name": "keyword.control.pintora"
+                },
+                "6": {
+                  "name": "string"
+                }
+              }
+            },
+            {
+              "comment": "Task : endOrDuration",
+              "match": "(\".*\")\\s*(:)\\s*(.*)",
+              "captures": {
+                "1": {
+                  "name": "string"
+                },
+                "2": {
+                  "name": "keyword.control.pintora"
+                },
+                "3": {
+                  "name": "string"
+                }
+              }
+            },
+            {
+              "include": "#config__clause"
+            },
+            {
+              "include": "#comment"
+            }
+          ]
+        },
+        {
           "comment": "Mind Map",
           "begin": "\\b(mindmap)",
           "beginCaptures": {
@@ -191,10 +347,13 @@
               "name": "keyword.control.pintora"
             }
           },
+          "end": "(^|\\G)(?=\\s*[`~]{3,}\\s*$)",
           "patterns": [
             {
-              "match": "(\\%%|#).*",
-              "name": "comment"
+              "include": "#config__clause"
+            },
+            {
+              "include": "#comment"
             },
             {
               "comment": "(title)",
@@ -323,18 +482,6 @@
               }
             },
             {
-              "comment": "(loop)(loop text)",
-              "match": "\\s*(loop)(?:\\s+([^;#]*))?",
-              "captures": {
-                "1": {
-                  "name": "keyword.control.pintora"
-                },
-                "2": {
-                  "name": "string"
-                }
-              }
-            },
-            {
               "comment": "(end)",
               "match": "\\s*(end)",
               "captures": {
@@ -344,20 +491,32 @@
               }
             },
             {
-              "comment": "(alt/else/opt/par/and/autonumber)(text)",
-              "match": "\\s*(alt|else|opt|par|and|rect|autonumber)(?:\\s+([^#;]*))?",
+              "comment": "keywords",
+              "match": "(autonumber)",
+              "captures": {
+                "1": {
+                  "name": "keyword.control.pintora"
+                }
+              }
+            },
+            {
+              "comment": "(loop/alt/else/opt/par/and)(text)",
+              "match": "(loop|alt|else|opt|par|and|rect)\\s*(#[0-9a-fA-F]{3,})\\s+(.*)",
               "captures": {
                 "1": {
                   "name": "keyword.control.pintora"
                 },
                 "2": {
+                  "name": "entity.name.tag"
+                },
+                "3": {
                   "name": "string"
                 }
               }
             },
             {
               "comment": "(Actor)(Arrow)(Actor)(:)(Message)",
-              "match": "\\s*(\\b[\"\\(\\)$&%\\^/#.?!*=<>\\'\\\\\\w\\s]+\\b)\\s*(-?-(?:\\>|x|\\))\\>?[+-]?)\\s*([\"\\(\\)$&%\\^/#.?!*=<>\\'\\\\\\w\\s]+\\b)\\s*(:)\\s*([^;#]*)",
+              "match": "(\\b[\"\\(\\)$&%\\^/#.?!*=<>\\'\\\\\\w\\s]+\\b)\\s*(-?-(?:\\>|x|\\))\\>?[+-]?)\\s*([\"\\(\\)$&%\\^/#.?!*=<>\\'\\\\\\w\\s]+\\b)\\s*(:)\\s*([^;#]*)",
               "captures": {
                 "1": {
                   "name": "variable"
@@ -390,15 +549,8 @@
                   "name": "keyword.control.pintora"
                 }
               }
-            },
-            {
-              "include": "#config__clause"
-            },
-            {
-              "include": "#comment"
             }
-          ],
-          "end": "(^|\\G)(?=\\s*[`~]{3,}\\s*$)"
+          ]
         }
       ]
     },
@@ -884,16 +1036,13 @@
               "name": "keyword.control.pintora"
             },
             "2": {
-              "name": "support.type.property-name.pintora"
-            },
-            "3": {
-              "name": "string.value"
+              "name": "meta.brace.round"
             }
           },
-          "end": "\\)",
+          "end": "(\\))",
           "endCaptures": {
             "1": {
-              "name": "keyword.control.pintora"
+              "name": "meta.brace.round"
             }
           },
           "patterns": [

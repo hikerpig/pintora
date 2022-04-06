@@ -1,6 +1,7 @@
 // ayu light
 export const AYU_LIGHT = {
   white: '#fff',
+  lightDark: '#5E666D',
   normalDark: '#3b4044',
   neutralGray: '#f8f8f2',
   cyan: '#55b4d4',

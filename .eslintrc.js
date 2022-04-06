@@ -15,6 +15,7 @@ module.exports = {
     '@typescript-eslint/no-explicit-any': 'warn',
     '@typescript-eslint/no-this-alias': 'warn',
     '@typescript-eslint/no-extra-semi': 'off',
+    '@typescript-eslint/no-unused-vars': ['warn', { varsIgnorePattern: '^_' }],
     'unused-imports/no-unused-imports': 'error',
     'prefer-spread': 0,
     'prettier/prettier': 'warn',

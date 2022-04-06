@@ -50,3 +50,11 @@ export function last<T>(list: T[] | undefined) {
   if (!(list && list.length)) return
   return list[list.length - 1]
 }
+
+export function min<T>(arr: T[], fn: (v: T) => number) {
+  return Math.min(...arr.map(fn))
+}
+
+export function max<T>(arr: T[], fn: (v: T) => number) {
+  return Math.max(...arr.map(fn))
+}
