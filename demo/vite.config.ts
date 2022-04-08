@@ -3,10 +3,31 @@ import { defineConfig } from 'vite'
 import reactRefresh from '@vitejs/plugin-react-refresh'
 import tsconfigPaths from 'vite-tsconfig-paths'
 import { VitePWA } from 'vite-plugin-pwa'
+import { MIME_TYPES } from './src/const'
 
 const BASE = '/demo/'
 
 const mode = process.env.NODE_ENV === 'production' ? 'production' : 'development'
+
+const FILE_HANDLER_PART = {
+  file_handlers: [
+    {
+      action: '/demo/live-editor/',
+      accept: {
+        [MIME_TYPES.pintora]: ['.pintora'],
+      },
+      icons: [
+        {
+          src: '/demo/img/logo.svg',
+          sizes: 'any',
+          type: 'image/svg+xml',
+          // src: '/img/logo.jpg',
+          // type: 'image/jpeg',
+        },
+      ],
+    },
+  ],
+}
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -30,6 +51,7 @@ export default defineConfig({
             sizes: 'any',
           },
         ],
+        ...FILE_HANDLER_PART,
       },
       strategies: 'injectManifest',
       workbox: {},

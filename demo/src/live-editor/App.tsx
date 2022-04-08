@@ -98,4 +98,24 @@ const AppLayout = () => {
   )
 }
 
+// interface Blob {
+//   handle?: import("browser-fs-acces").FileSystemHandle;
+//   name?: string;
+// }
+
+if ('launchQueue' in window && 'LaunchParams' in window) {
+  ;(window as any).launchQueue.setConsumer(async (launchParams: { files: any[] }) => {
+    if (!launchParams.files.length) {
+      return
+    }
+    console.log('launchFiles', launchParams.files)
+    const fileHandle = launchParams.files[0]
+    const blob: Blob = await fileHandle.getFile()
+    ;(blob as any).handle = fileHandle
+
+    const text = await blob.text()
+    console.log('text is', text)
+  })
+}
+
 export default App
