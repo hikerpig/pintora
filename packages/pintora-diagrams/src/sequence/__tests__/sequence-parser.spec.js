@@ -108,7 +108,7 @@ sequenceDiagram
     const example = stripStartEmptyLines(`
 sequenceDiagram 
   participant A as "Alice"
-  participant B as "Bob" 
+  participant B as Bobby Bob
   participant C  
   A-->B: hello
   A-->C: yoho
@@ -126,7 +126,7 @@ sequenceDiagram
       },
       B: {
         name: 'B',
-        description: 'Bob',
+        description: 'Bobby Bob',
         wrap: false,
         prevActorId: 'A',
         nextActorId: 'C',
@@ -285,8 +285,8 @@ sequenceDiagram
   it('can parse activations with plus/minus token', () => {
     const example = stripStartEmptyLines(`
   sequenceDiagram
-    A-->>+ B: m1
-    A-->>-B: m2
+    A-->>+B: m1
+    B-->>-A: m2
   `)
     parse(example)
     const ir = db.getDiagramIR()
@@ -306,8 +306,8 @@ sequenceDiagram
         type: 17,
       },
       {
-        from: 'A',
-        to: 'B',
+        from: 'B',
+        to: 'A',
         text: 'm2',
         wrap: false,
         type: 1,
