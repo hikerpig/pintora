@@ -104,6 +104,13 @@ statement ->
         return d[2]
       }
     %}
+  | participantWord %WS classifiableActor %WS "as" %WS words %NL {%
+      function(d) {
+        const alias = d[6]
+        d[2].description = yy.parseMessage(alias)
+        return d[2]
+      }
+    %}
 	| participantWord %WS classifiableActor %WS:? %NL {%
       function(d) {
         return d[2]
@@ -118,7 +125,7 @@ statement ->
         }
       }
     %}
-	| "deactivate" %WS  actor %NL {%
+	| "deactivate" %WS actor %NL {%
       function(d) {
         return {
           type: 'activeEnd', signalType: yy.LINETYPE.ACTIVE_END, actor: d[2]
@@ -213,16 +220,17 @@ signal ->
 	  actor signaltype (%PLUS | %MINUS) actor textWithColon {%
       function(d) {
         const toActor = d[3]
+        const fromActor = d[0]
         const activeMark = d[2][0]
         let activeAction
         if (activeMark.type === 'MINUS') {
-          activeAction = {type: 'activeEnd', signalType: yy.LINETYPE.ACTIVE_END, actor: toActor }
+          activeAction = {type: 'activeEnd', signalType: yy.LINETYPE.ACTIVE_END, actor: fromActor }
         } else {
           activeAction = { type: 'activeStart', signalType: yy.LINETYPE.ACTIVE_START, actor: toActor }
         }
         return [
-          d[0], toActor,
-          { type: 'addSignal', from: d[0].actor, to: toActor.actor, signalType: d[1], msg: d[4] },
+          fromActor, toActor,
+          { type: 'addSignal', from: fromActor.actor, to: toActor.actor, signalType: d[1], msg: d[4] },
           activeAction,
         ]
       }
@@ -264,13 +272,13 @@ placement ->
 	| %RIGHT_OF {% (d) => yy.PLACEMENT.RIGHTOF %}
 
 note_statement ->
-	  ("note"|%START_NOTE) placement actor textWithColon %NL {%
+	  ("note" | %START_NOTE) placement actor textWithColon %NL {%
       function(d) {
         // console.log('[note one]\n', d)
         return [d[2], { type:'addNote', placement: d[1], actor: d[2].actor, text: d[3] }]
       }
     %}
-	| ("note"|%START_NOTE) placement actor multilineNoteText %NL {%
+	| ("note" | %START_NOTE) placement actor multilineNoteText %NL {%
       function(d) {
         // console.log('[note multi]\n', d[5])
         const text = d[3]
@@ -278,7 +286,7 @@ note_statement ->
         return [d[2], { type:'addNote', placement: d[1], actor: d[2].actor, text: message }]
       }
     %}
-	| ("note"|%START_NOTE) "over" actor_pair textWithColon %NL {%
+	| ("note" | %START_NOTE) "over" actor_pair textWithColon %NL {%
       function(d) {
         // console.log('[note over]\n', d[5])
         const actors = [d[2][0].actor, d[2][1].actor]
