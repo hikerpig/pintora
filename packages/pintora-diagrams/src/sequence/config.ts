@@ -41,6 +41,7 @@ export type SequenceConf = {
 
   dividerFontWeight: MarkAttrs['fontWeight']
   dividerTextColor: string
+  dividerMargin: number
 
   showSequenceNumbers: boolean
   useMaxWidth: boolean
@@ -81,6 +82,7 @@ export const defaultConfig: SequenceConf = {
 
   dividerFontWeight: 600,
   dividerTextColor: PALETTE.normalDark,
+  dividerMargin: 15,
 
   showSequenceNumbers: false,
   useMaxWidth: false,
