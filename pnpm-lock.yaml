@@ -45,17 +45,17 @@ importers:
   demo:
     specifiers:
       '@codemirror/basic-setup': ^0.19.1
-      '@codemirror/commands': ^0.19.7
+      '@codemirror/commands': ^0.19.8
       '@codemirror/gutter': ^0.19.9
       '@codemirror/history': ^0.19.2
-      '@codemirror/lang-javascript': ^0.19.6
-      '@codemirror/lang-json': ^0.19.1
+      '@codemirror/lang-javascript': ^0.19.7
+      '@codemirror/lang-json': ^0.19.2
       '@codemirror/lint': ^0.19.3
       '@codemirror/search': ^0.19.6
-      '@codemirror/state': ^0.19.6
+      '@codemirror/state': ^0.19.9
       '@codemirror/theme-one-dark': ^0.19.1
       '@codemirror/tooltip': ^0.19.12
-      '@codemirror/view': ^0.19.39
+      '@codemirror/view': ^0.19.48
       '@percy/cli': ^1.0.0-beta.73
       '@percy/cypress': ^3.1.1
       '@pintora/core': workspace:*
@@ -98,13 +98,13 @@ importers:
       '@codemirror/gutter': 0.19.9
       '@codemirror/history': 0.19.2
       '@codemirror/lang-javascript': 0.19.7
-      '@codemirror/lang-json': 0.19.1
+      '@codemirror/lang-json': 0.19.2
       '@codemirror/lint': 0.19.3
       '@codemirror/search': 0.19.6
-      '@codemirror/state': 0.19.6
+      '@codemirror/state': 0.19.9
       '@codemirror/theme-one-dark': 0.19.1
       '@codemirror/tooltip': 0.19.13
-      '@codemirror/view': 0.19.42
+      '@codemirror/view': 0.19.48
       '@pintora/core': link:../packages/pintora-core
       '@pintora/diagrams': link:../packages/pintora-diagrams
       '@pintora/renderer': link:../packages/pintora-renderer
@@ -3229,10 +3229,10 @@ packages:
     resolution: {integrity: sha512-zUQYo5gMdv7vhxlKoAY/vnNCGzlE9AU7+P649v3ovpQpoFdo3U1Nt01EJqFb4Sfaw6l1U/Elc9Iksd1lDy+MVw==}
     dependencies:
       '@codemirror/language': 0.19.7
-      '@codemirror/state': 0.19.6
+      '@codemirror/state': 0.19.9
       '@codemirror/text': 0.19.6
       '@codemirror/tooltip': 0.19.13
-      '@codemirror/view': 0.19.42
+      '@codemirror/view': 0.19.48
       '@lezer/common': 0.15.11
     dev: false
 
@@ -3252,8 +3252,8 @@ packages:
       '@codemirror/matchbrackets': 0.19.3
       '@codemirror/rectangular-selection': 0.19.1
       '@codemirror/search': 0.19.6
-      '@codemirror/state': 0.19.6
-      '@codemirror/view': 0.19.42
+      '@codemirror/state': 0.19.9
+      '@codemirror/view': 0.19.48
     dev: false
 
   /@codemirror/closebrackets/0.19.0:
@@ -3261,9 +3261,9 @@ packages:
     dependencies:
       '@codemirror/language': 0.19.7
       '@codemirror/rangeset': 0.19.6
-      '@codemirror/state': 0.19.6
+      '@codemirror/state': 0.19.9
       '@codemirror/text': 0.19.6
-      '@codemirror/view': 0.19.42
+      '@codemirror/view': 0.19.48
     dev: false
 
   /@codemirror/commands/0.19.8:
@@ -3271,18 +3271,18 @@ packages:
     dependencies:
       '@codemirror/language': 0.19.7
       '@codemirror/matchbrackets': 0.19.3
-      '@codemirror/state': 0.19.6
+      '@codemirror/state': 0.19.9
       '@codemirror/text': 0.19.6
-      '@codemirror/view': 0.19.42
+      '@codemirror/view': 0.19.48
       '@lezer/common': 0.15.11
     dev: false
 
   /@codemirror/comment/0.19.0:
     resolution: {integrity: sha512-3hqAd0548fxqOBm4khFMcXVIivX8p0bSlbAuZJ6PNoUn/0wXhxkxowPp0FmFzU2+y37Z+ZQF5cRB5EREWPRIiQ==}
     dependencies:
-      '@codemirror/state': 0.19.6
+      '@codemirror/state': 0.19.9
       '@codemirror/text': 0.19.6
-      '@codemirror/view': 0.19.42
+      '@codemirror/view': 0.19.48
     dev: false
 
   /@codemirror/fold/0.19.3:
@@ -3291,16 +3291,16 @@ packages:
       '@codemirror/gutter': 0.19.9
       '@codemirror/language': 0.19.7
       '@codemirror/rangeset': 0.19.6
-      '@codemirror/state': 0.19.6
-      '@codemirror/view': 0.19.42
+      '@codemirror/state': 0.19.9
+      '@codemirror/view': 0.19.48
     dev: false
 
   /@codemirror/gutter/0.19.9:
     resolution: {integrity: sha512-PFrtmilahin1g6uL27aG5tM/rqR9DZzZYZsIrCXA5Uc2OFTFqx4owuhoU9hqfYxHp5ovfvBwQ+txFzqS4vog6Q==}
     dependencies:
       '@codemirror/rangeset': 0.19.6
-      '@codemirror/state': 0.19.6
-      '@codemirror/view': 0.19.42
+      '@codemirror/state': 0.19.9
+      '@codemirror/view': 0.19.48
     dev: false
 
   /@codemirror/highlight/0.19.7:
@@ -3308,8 +3308,8 @@ packages:
     dependencies:
       '@codemirror/language': 0.19.7
       '@codemirror/rangeset': 0.19.6
-      '@codemirror/state': 0.19.6
-      '@codemirror/view': 0.19.42
+      '@codemirror/state': 0.19.9
+      '@codemirror/view': 0.19.48
       '@lezer/common': 0.15.11
       style-mod: 4.0.0
     dev: false
@@ -3317,8 +3317,8 @@ packages:
   /@codemirror/history/0.19.2:
     resolution: {integrity: sha512-unhP4t3N2smzmHoo/Yio6ueWi+il8gm9VKrvi6wlcdGH5fOfVDNkmjHQ495SiR+EdOG35+3iNebSPYww0vN7ow==}
     dependencies:
-      '@codemirror/state': 0.19.6
-      '@codemirror/view': 0.19.42
+      '@codemirror/state': 0.19.9
+      '@codemirror/view': 0.19.48
     dev: false
 
   /@codemirror/lang-javascript/0.19.7:
@@ -3328,13 +3328,13 @@ packages:
       '@codemirror/highlight': 0.19.7
       '@codemirror/language': 0.19.7
       '@codemirror/lint': 0.19.3
-      '@codemirror/state': 0.19.6
-      '@codemirror/view': 0.19.42
+      '@codemirror/state': 0.19.9
+      '@codemirror/view': 0.19.48
       '@lezer/javascript': 0.15.3
     dev: false
 
-  /@codemirror/lang-json/0.19.1:
-    resolution: {integrity: sha512-66K5TT9HO0ODtpjY+3Ub6t3r0OB1d27P+Kl5oygk4tDavHUBpsyHTJRFw/CdeRM2VwjbpBfctGm/cTrSthFDZg==}
+  /@codemirror/lang-json/0.19.2:
+    resolution: {integrity: sha512-fgUWR58Is59P5D/tiazX6oTczioOCDYqjFT5PEBAmLBFMSsRqcnJE0xNO1snrhg7pWEFDq5wR/oN0eZhkeR6Gg==}
     dependencies:
       '@codemirror/highlight': 0.19.7
       '@codemirror/language': 0.19.7
@@ -3344,9 +3344,9 @@ packages:
   /@codemirror/language/0.19.7:
     resolution: {integrity: sha512-pNNUtYWMIMG0lUSKyUXJr8U0rFiCKsKFXbA2Oj17PC+S1FY99hV0z1vcntW67ekAIZw9DMEUQnLsKBuIbAUX7Q==}
     dependencies:
-      '@codemirror/state': 0.19.6
+      '@codemirror/state': 0.19.9
       '@codemirror/text': 0.19.6
-      '@codemirror/view': 0.19.42
+      '@codemirror/view': 0.19.48
       '@lezer/common': 0.15.11
       '@lezer/lr': 0.15.8
     dev: false
@@ -3357,9 +3357,9 @@ packages:
       '@codemirror/gutter': 0.19.9
       '@codemirror/panel': 0.19.1
       '@codemirror/rangeset': 0.19.6
-      '@codemirror/state': 0.19.6
+      '@codemirror/state': 0.19.9
       '@codemirror/tooltip': 0.19.13
-      '@codemirror/view': 0.19.42
+      '@codemirror/view': 0.19.48
       crelt: 1.0.5
     dev: false
 
@@ -3367,30 +3367,30 @@ packages:
     resolution: {integrity: sha512-ljkrBxaLgh8jesroUiBa57pdEwqJamxkukXrJpL9LdyFZVJaF+9TldhztRaMsMZO1XnCSSHQ9sg32iuHo7Sc2g==}
     dependencies:
       '@codemirror/language': 0.19.7
-      '@codemirror/state': 0.19.6
-      '@codemirror/view': 0.19.42
+      '@codemirror/state': 0.19.9
+      '@codemirror/view': 0.19.48
       '@lezer/common': 0.15.11
     dev: false
 
   /@codemirror/panel/0.19.1:
     resolution: {integrity: sha512-sYeOCMA3KRYxZYJYn5PNlt9yNsjy3zTNTrbYSfVgjgL9QomIVgOJWPO5hZ2sTN8lufO6lw0vTBsIPL9MSidmBg==}
     dependencies:
-      '@codemirror/state': 0.19.6
-      '@codemirror/view': 0.19.42
+      '@codemirror/state': 0.19.9
+      '@codemirror/view': 0.19.48
     dev: false
 
   /@codemirror/rangeset/0.19.6:
     resolution: {integrity: sha512-wYtgGnW2Jtrh2nj7vpcBoEZib+jfyilrLN6w7YMTzzSRN8xXhYRorOUg4VQIa1JwFcMQrjSCkIdqXsDqOX1cYg==}
     dependencies:
-      '@codemirror/state': 0.19.6
+      '@codemirror/state': 0.19.9
     dev: false
 
   /@codemirror/rectangular-selection/0.19.1:
     resolution: {integrity: sha512-9ElnqOg3mpZIWe0prPRd1SZ48Q9QB3bR8Aocq8UtjboJSUG8ABhRrbuTZMW/rMqpBPSjVpCe9xkCCkEQMYQVmw==}
     dependencies:
-      '@codemirror/state': 0.19.6
+      '@codemirror/state': 0.19.9
       '@codemirror/text': 0.19.6
-      '@codemirror/view': 0.19.42
+      '@codemirror/view': 0.19.48
     dev: false
 
   /@codemirror/search/0.19.6:
@@ -3398,14 +3398,14 @@ packages:
     dependencies:
       '@codemirror/panel': 0.19.1
       '@codemirror/rangeset': 0.19.6
-      '@codemirror/state': 0.19.6
+      '@codemirror/state': 0.19.9
       '@codemirror/text': 0.19.6
-      '@codemirror/view': 0.19.42
+      '@codemirror/view': 0.19.48
       crelt: 1.0.5
     dev: false
 
-  /@codemirror/state/0.19.6:
-    resolution: {integrity: sha512-sqIQZE9VqwQj7D4c2oz9mfLhlT1ElAzGB5lO1lE33BPyrdNy1cJyCIOecT4cn4VeJOFrnjOeu+IftZ3zqdFETw==}
+  /@codemirror/state/0.19.9:
+    resolution: {integrity: sha512-psOzDolKTZkx4CgUqhBQ8T8gBc0xN5z4gzed109aF6x7D7umpDRoimacI/O6d9UGuyl4eYuDCZmDFr2Rq7aGOw==}
     dependencies:
       '@codemirror/text': 0.19.6
     dev: false
@@ -3418,22 +3418,22 @@ packages:
     resolution: {integrity: sha512-8gc4c2k2o/EhyHoWkghCxp5vyDT96JaFGtRy35PHwIom0LZdx7aU4AbDUnITvwiFB+0+i54VO+WQjBqgTyJvqg==}
     dependencies:
       '@codemirror/highlight': 0.19.7
-      '@codemirror/state': 0.19.6
-      '@codemirror/view': 0.19.42
+      '@codemirror/state': 0.19.9
+      '@codemirror/view': 0.19.48
     dev: false
 
   /@codemirror/tooltip/0.19.13:
     resolution: {integrity: sha512-7vgvjQjwFQ9hPejw2s+w3UR1XAYjQ5M0F9HRwutXkZHP1tBFV7LnNJ3xBD7F9SR9kAh8WgdL3BpUsEwX1aqoQg==}
     dependencies:
-      '@codemirror/state': 0.19.6
-      '@codemirror/view': 0.19.42
+      '@codemirror/state': 0.19.9
+      '@codemirror/view': 0.19.48
     dev: false
 
-  /@codemirror/view/0.19.42:
-    resolution: {integrity: sha512-sGpuHYesqNThkAdJHTf4BO0hBeYnAHwamnCGkM6a2G/W5svRJGsFb5Vk/LQPQurDKK9V5fBTRqXH8nKGrIszng==}
+  /@codemirror/view/0.19.48:
+    resolution: {integrity: sha512-0eg7D2Nz4S8/caetCTz61rK0tkHI17V/d15Jy0kLOT8dTLGGNJUponDnW28h2B6bERmPlVHKh8MJIr5OCp1nGw==}
     dependencies:
       '@codemirror/rangeset': 0.19.6
-      '@codemirror/state': 0.19.6
+      '@codemirror/state': 0.19.9
       '@codemirror/text': 0.19.6
       style-mod: 4.0.0
       w3c-keyname: 2.2.4
@@ -6211,7 +6211,7 @@ packages:
   /axios/0.21.4_debug@4.3.2:
     resolution: {integrity: sha512-ut5vewkiu8jjGBdqpM44XxjuCjq9LAKeHVmoVfHVzy8eHgxxq8SbAVQNovDA8mVi05kP0Ea/n/UzcSHcTJQfNg==}
     dependencies:
-      follow-redirects: 1.14.8_debug@4.3.2
+      follow-redirects: 1.14.8
     transitivePeerDependencies:
       - debug
     dev: true
@@ -9302,19 +9302,6 @@ packages:
     peerDependenciesMeta:
       debug:
         optional: true
-    dev: false
-
-  /follow-redirects/1.14.8_debug@4.3.2:
-    resolution: {integrity: sha512-1x0S9UVJHsQprFcEC/qnNzBLcIxsjAV905f/UkQxbclCsoTWlacCNOpQa/anodLl2uaEKFhfWOvM2Qg77+15zA==}
-    engines: {node: '>=4.0'}
-    peerDependencies:
-      debug: '*'
-    peerDependenciesMeta:
-      debug:
-        optional: true
-    dependencies:
-      debug: 4.3.2
-    dev: true
 
   /for-in/1.0.2:
     resolution: {integrity: sha1-gQaNKVqBQuwKxybG4iAMMPttXoA=}
