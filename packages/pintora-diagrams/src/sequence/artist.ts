@@ -20,6 +20,7 @@ import {
   clamp,
   PintoraConfig,
   ITheme,
+  compact,
 } from '@pintora/core'
 import { db, SequenceDiagramIR, LINETYPE, Message, PLACEMENT, WrappedText } from './db'
 import { ActivationData, LoopModel, LoopSection, SequenceDiagramBounds } from './artist/type'
@@ -550,11 +551,8 @@ const drawMessage = function (msgModel: MessageModel): DrawResult<Group> {
   }
   const { verticalPos } = model
 
-  let isLineLoop = false
-
   let lineMark
   if (startx === stopx) {
-    isLineLoop = true
     lineStarty = model.verticalPos + totalOffset
     totalOffset += conf.boxMargin
 
@@ -675,11 +673,12 @@ const drawMessage = function (msgModel: MessageModel): DrawResult<Group> {
       { class: 'sequence-number' },
     )
     const circleColor = conf.actorBorderColor
+    const circleRadius = 8
     const circleMark = makeMark('marker', {
       symbol: 'circle',
       x: startx,
       y: lineStarty,
-      r: 8,
+      r: circleRadius,
       fill: circleColor,
       stroke: circleColor,
     })
@@ -690,6 +689,7 @@ const drawMessage = function (msgModel: MessageModel): DrawResult<Group> {
         children: [circleMark, numberTextMark],
       },
     )
+    totalOffset += circleRadius
   }
   // console.log('bumpVerticalPos , totalOffset', totalOffset)
   model.bumpVerticalPos(totalOffset)
@@ -701,7 +701,7 @@ const drawMessage = function (msgModel: MessageModel): DrawResult<Group> {
     mark: {
       type: 'group',
       class: 'message',
-      children: [
+      children: compact([
         lineMark,
         lineEndMark,
         {
@@ -710,13 +710,14 @@ const drawMessage = function (msgModel: MessageModel): DrawResult<Group> {
           class: 'message__text',
         },
         numberMark,
-      ].filter(o => Boolean(o)) as Mark[],
+      ]),
     },
   }
 }
 
 function drawDividerTo(divider: MessageModel, container: Group) {
-  model.bumpVerticalPos(conf.boxMargin)
+  const dividerMargin = conf.dividerMargin
+  model.bumpVerticalPos(dividerMargin)
   const dividerTextFont = {
     ...messageFont(conf),
     fontWeight: conf.dividerFontWeight,
@@ -743,6 +744,7 @@ function drawDividerTo(divider: MessageModel, container: Group) {
     lineWidth: 2,
   })
 
+  const textDims = calculateTextDimensions(divider.text)
   const textMark = makeMark('text', {
     text: divider.text,
     fill: conf.dividerTextColor,
@@ -779,7 +781,7 @@ function drawDividerTo(divider: MessageModel, container: Group) {
   )
   container.children.push(g)
 
-  model.bumpVerticalPos(conf.boxMargin + 2 * padding)
+  model.bumpVerticalPos(dividerMargin + textDims.height + padding)
 
   model.onBoundsFinish(({ bounds }) => {
     const boundWidth = Math.abs(bounds.stopx - bounds.startx)

@@ -115,6 +115,8 @@ export type SequenceConf = {
   activationBackground: string
 
   dividerFontWeight: MarkAttrs['fontWeight']
+  dividerTextColor: string
+  dividerMargin: number
 
   showSequenceNumbers: boolean
   useMaxWidth: boolean
