@@ -173,6 +173,8 @@ Config for component diagram. For more detail, check the [latest code](https://g
 export type ComponentConf = {
   diagramPadding: number
 
+  edgeType: EdgeType
+
   componentPadding: number
   componentBackground: string
   componentBorderColor: string
