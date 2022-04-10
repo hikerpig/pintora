@@ -34,7 +34,15 @@ import {
   Repeat,
 } from './db'
 import { ActivityConf, getConf } from './config'
-import { adjustEntities, createLayoutGraph, getGraphBounds, LayoutEdge, LayoutGraph, LayoutNode } from '../util/graph'
+import {
+  adjustEntities,
+  createLayoutGraph,
+  getGraphBounds,
+  getGraphSplinesOption,
+  LayoutEdge,
+  LayoutGraph,
+  LayoutNode,
+} from '../util/graph'
 import {
   makeMark,
   calcDirection,
@@ -90,8 +98,7 @@ const erArtist: IDiagramArtist<ActivityDiagramIR, ActivityConf> = {
         nodesep: 60,
         edgesep: conf.edgesep,
         ranksep: 30,
-        // splines: getGraphSplinesOption(conf.edgeType),
-        splines: 'polyline', // only polyline is supported for now
+        splines: getGraphSplinesOption(conf.edgeType),
       })
       .setDefaultEdgeLabel(function () {
         return {}
@@ -1327,7 +1334,7 @@ function drawEdges(parent: Group, g: LayoutGraph) {
     })
 
     // Find the half-way point
-    const labelPoint = getPointAt(edge.points, 0.4, true)
+    const labelPoint = edge.labelPoint || getPointAt(edge.points, 0.4, true)
     if (!labelPoint) return
     const labelX = labelPoint.x
     const labelY = labelPoint.y
@@ -1360,6 +1367,10 @@ function drawEdges(parent: Group, g: LayoutGraph) {
     }
 
     edgeGroup.children.push(...compact([linePath, labelBgMark, labelMark, arrowMark]))
+
+    // debug
+    // const debugMark = makeCircleWithCoordInPoint(labelPoint)
+    // edgeGroup.children.push(debugMark)
   })
   parent.children.push(edgeGroup)
   return { bounds }
