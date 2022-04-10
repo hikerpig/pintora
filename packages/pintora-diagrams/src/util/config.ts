@@ -2,6 +2,12 @@ import { ConfigParam, ConfigMeta, interpreteConfigs, PintoraConfig, safeAssign, 
 
 export { ConfigParam, ConfigMeta, interpreteConfigs }
 
+/**
+ * How edges are routed
+ * - 'ortho' stands for orthogonal
+ */
+export type EdgeType = 'polyline' | 'ortho' | 'curved'
+
 /** parser action */
 export type ParamAction = {
   type: 'addParam'

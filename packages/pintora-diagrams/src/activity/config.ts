@@ -1,12 +1,16 @@
 import { PALETTE } from '../util/theme'
-import { interpreteConfigs, makeConfigurator } from '../util/config'
+import { EdgeType, getParamRulesFromConfig, interpreteConfigs, makeConfigurator } from '../util/config'
 import { DEFAULT_FONT_FAMILY } from '../util/text'
 
 export type ActivityConf = {
   diagramPadding: number
 
   edgesep: number
-  curvedEdge: boolean
+  /**
+   * Only 'polyline' and 'curved' is supported for now,
+   * 'ortho' is more complex and needs more refinement
+   */
+  edgeType: EdgeType
   useMaxWidth: boolean
 
   actionPaddingX: number
@@ -37,7 +41,7 @@ export const defaultConfig: ActivityConf = {
   diagramPadding: 15,
 
   edgesep: 60,
-  curvedEdge: true,
+  edgeType: 'polyline',
   useMaxWidth: false,
 
   actionPaddingX: 10,
@@ -61,13 +65,10 @@ export const defaultConfig: ActivityConf = {
 
   fontSize: 14,
   fontFamily: DEFAULT_FONT_FAMILY,
-}
+} as const
 
 export const ACTIVITY_PARAM_DIRECTIVE_RULES = {
-  diagramPadding: { valueType: 'size' },
-
-  curvedEdge: { valueType: 'boolean' },
-  useMaxWidth: { valueType: 'boolean' },
+  ...getParamRulesFromConfig(defaultConfig),
 
   actionPaddingX: { valueType: 'size' },
   actionPaddingY: { valueType: 'size' },

@@ -1,12 +1,12 @@
 import { PALETTE } from '../util/theme'
 import { DEFAULT_FONT_FAMILY } from '@pintora/core'
-import { interpreteConfigs, makeConfigurator } from '../util/config'
+import { EdgeType, getParamRulesFromConfig, interpreteConfigs, makeConfigurator } from '../util/config'
 
 export type ErConf = {
   diagramPadding: number
   layoutDirection: string
 
-  curvedEdge: boolean
+  edgeType: EdgeType
   useMaxWidth: boolean
 
   minEntityWidth: number
@@ -33,7 +33,7 @@ export const defaultConfig: ErConf = {
   diagramPadding: 15,
   layoutDirection: 'TB',
 
-  curvedEdge: true,
+  edgeType: 'polyline',
   useMaxWidth: false,
 
   minEntityWidth: 90,
@@ -47,7 +47,6 @@ export const defaultConfig: ErConf = {
 
   stroke: PALETTE.normalDark,
   fill: PALETTE.orange,
-  // fill: 'transparent', // for debugging markers
   edgeColor: PALETTE.normalDark,
   attributeFill: '#fffbf9',
 
@@ -60,7 +59,7 @@ export const defaultConfig: ErConf = {
 }
 
 export const ER_PARAM_DIRECTIVE_RULES = {
-  curvedEdge: { valueType: 'boolean' },
+  ...getParamRulesFromConfig(defaultConfig),
   useMaxWidth: { valueType: 'boolean' },
   layoutDirection: { valueType: 'string' },
   borderRadius: { valueType: 'size' },
@@ -86,6 +85,7 @@ const configurator = makeConfigurator<ErConf>({
     return {
       stroke: t.primaryBorderColor,
       fill: t.primaryColor,
+      // fill: 'transparent', // for debugging markers
       edgeColor: t.primaryLineColor,
       textColor: t.textColor,
       labelBackground: t.canvasBackground || t.background1,

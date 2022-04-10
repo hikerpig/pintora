@@ -90,6 +90,8 @@ const erArtist: IDiagramArtist<ActivityDiagramIR, ActivityConf> = {
         nodesep: 60,
         edgesep: conf.edgesep,
         ranksep: 30,
+        // splines: getGraphSplinesOption(conf.edgeType),
+        splines: 'polyline', // only polyline is supported for now
       })
       .setDefaultEdgeLabel(function () {
         return {}
@@ -1229,7 +1231,8 @@ function drawEdges(parent: Group, g: LayoutGraph) {
       })
     }
 
-    const path = conf.curvedEdge ? getPointsCurvePath(edge.points) : getPointsLinearPath(edge.points)
+    const shouldUseCurvePath = conf.edgeType === 'curved'
+    const path = shouldUseCurvePath ? getPointsCurvePath(edge.points) : getPointsLinearPath(edge.points)
 
     const linePath = makeMark('path', {
       path,

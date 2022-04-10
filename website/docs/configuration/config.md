@@ -67,11 +67,20 @@ export type PintoraConfig = {
 
 There are some common diagram config keys those - if they appears in the `*Conf` below - share common meaning and possible values.
 
-| name            | value type   | description                                                        |
-|-----------------|--------------|--------------------------------------------------------------------|
-| layoutDirection | 'TB' or 'LR' | A config for dagre-layout, stands for (top-bottom) or (left-right) |
-| diagramPadding  | number       | Padding of the diagram, distance from visual content to the border |
-| useMaxWidth     | boolean      | Whether the diagram should be resized to fit container width       |
+| name            | value type             | description                                                        |
+|-----------------|------------------------|--------------------------------------------------------------------|
+| layoutDirection | 'TB' or 'LR'           | A config for dagre-layout, stands for (top-bottom) or (left-right) |
+| diagramPadding  | number                 | Padding of the diagram, distance from visual content to the border |
+| useMaxWidth     | boolean                | Whether the diagram should be resized to fit container width       |
+| edgeType        | [EdgeType](#edge-type) | Edge splines type                                                  |
+
+#### EdgeType
+
+- `polyline`, this is the default value
+- `ortho`, stands for orthogonal, edges are axis-aligned and bendings are right-angled
+- `curved`, similar to 'polyline' control points, but draws curved line instead of straight one
+
+![edge type demo](https://i.imgur.com/9v3toF1.png)
 
 ### sequence
 
@@ -132,7 +141,7 @@ export type ErConf = {
   diagramPadding: number
   layoutDirection: string
 
-  curvedEdge: boolean
+  edgeType: EdgeType
   useMaxWidth: boolean
 
   minEntityWidth: number
@@ -193,7 +202,11 @@ export type ActivityConf = {
   diagramPadding: number
 
   edgesep: number
-  curvedEdge: boolean
+  /**
+   * Only 'polyline' and 'curved' is supported for now,
+   * 'ortho' is more complex and needs more refinement
+   */
+  edgeType: EdgeType
   useMaxWidth: boolean
 
   actionPaddingX: number

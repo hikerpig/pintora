@@ -39,7 +39,7 @@ activityDiagram
     "activity": {
       "edgesep": 4,
       "edgeColor": "rgba(0, 0, 0, 1)",
-      "curvedEdge": true
+      "edgeType": "ortho"
     }
   })
     `
@@ -49,7 +49,7 @@ activityDiagram
     expect(conf).toMatchObject({
       edgesep: 4,
       edgeColor: 'rgba(0, 0, 0, 1)',
-      curvedEdge: true,
+      edgeType: 'ortho',
     })
   })
 })

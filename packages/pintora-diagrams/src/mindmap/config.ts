@@ -1,12 +1,11 @@
 import { DEFAULT_FONT_FAMILY, MarkAttrs, tinycolor } from '@pintora/core'
-import { interpreteConfigs, makeConfigurator } from '../util/config'
+import { getParamRulesFromConfig, interpreteConfigs, makeConfigurator } from '../util/config'
 import { PALETTE } from '../util/theme'
 
 export type MindmapConf = {
   diagramPadding: number
   layoutDirection: 'LR' | 'TB'
 
-  // curvedEdge: boolean
   useMaxWidth: boolean
 
   borderRadius: number
@@ -56,7 +55,6 @@ export const defaultConfig: MindmapConf = {
   diagramPadding: 15,
   layoutDirection: 'LR',
 
-  // curvedEdge: true,
   useMaxWidth: false,
 
   borderRadius: 4,
@@ -81,7 +79,7 @@ export const defaultConfig: MindmapConf = {
 }
 
 export const MINDMAP_PARAM_DIRECTIVE_RULES = {
-  // curvedEdge: { valueType: 'boolean' },
+  ...getParamRulesFromConfig(defaultConfig),
   useMaxWidth: { valueType: 'boolean' },
   diagramPadding: { valueType: 'size' },
   layoutDirection: { valueType: 'layoutDirection' },
