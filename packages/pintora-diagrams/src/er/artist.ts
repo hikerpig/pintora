@@ -5,7 +5,6 @@ import {
   Text,
   mat3,
   safeAssign,
-  Point,
   calculateTextDimensions,
   getPointAt,
   Rect,
@@ -13,7 +12,14 @@ import {
 } from '@pintora/core'
 import { ErDiagramIR, Identification, Entity, Relationship } from './db'
 import { ErConf, getConf } from './config'
-import { createLayoutGraph, getGraphBounds, LayoutGraph, LayoutNode } from '../util/graph'
+import {
+  BaseEdgeData,
+  createLayoutGraph,
+  getGraphBounds,
+  LayoutGraph,
+  LayoutNode,
+  getGraphSplinesOption,
+} from '../util/graph'
 import { makeMark, getBaseText, calcDirection, makeLabelBg, adjustRootMarkBounds } from '../util/artist-util'
 import dagre from '@pintora/dagre'
 import { drawMarkerTo } from './artist-util'
@@ -54,6 +60,7 @@ const erArtist: IDiagramArtist<ErDiagramIR, ErConf> = {
         nodesep: 80,
         edgesep: 80,
         ranksep: 100,
+        splines: getGraphSplinesOption(conf.edgeType),
       })
       .setDefaultEdgeLabel(function () {
         return {}
@@ -434,10 +441,9 @@ const getEdgeName = function (rel) {
   return (rel.entityA + rel.roleA + rel.entityB).replace(/\s/g, '')
 }
 
-type EdgeData = {
+type EdgeData = BaseEdgeData & {
   name: string
   relationship: Relationship
-  points: Point[]
 }
 
 /**
@@ -471,7 +477,7 @@ const drawRelationshipFromLayout = function (group: Group, rel: Relationship, g:
   const lastPoint = restPoints[restPoints.length - 1]
 
   let pathCommands: PathCommand[] | string
-  if (conf.curvedEdge) {
+  if (conf.edgeType === 'curved') {
     const pathString = getPointsCurvePath(edge.points)
     pathCommands = pathString
   } else {
@@ -502,7 +508,7 @@ const drawRelationshipFromLayout = function (group: Group, rel: Relationship, g:
   // Now label the relationship
 
   // Find the half-way point
-  const labelPoint = getPointAt(edge.points, 0.4, true)
+  const labelPoint = edge.labelPoint || getPointAt(edge.points, 0.4, true)
   const labelX = labelPoint.x
   const labelY = labelPoint.y
 
@@ -533,6 +539,10 @@ const drawRelationshipFromLayout = function (group: Group, rel: Relationship, g:
   const insertingMarks = [linePath, labelBg, labelMark, startMarker, endMarker].filter(o => !!o)
 
   group.children.push(...insertingMarks)
+
+  // // debug
+  // const secondPointMarker = makeCircleWithCoordInPoint(secondPoint)
+  // group.children.push(secondPointMarker)
 }
 
 export default erArtist

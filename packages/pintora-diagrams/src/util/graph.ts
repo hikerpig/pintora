@@ -1,11 +1,12 @@
 import { Mark, Bounds, Point } from '@pintora/core'
 import { Graph, GraphOptions } from '@pintora/graphlib'
-import { GraphData } from '@pintora/dagre/dist/types/type'
+import { GraphOpts, SplinesType } from '@pintora/dagre/dist/types/type'
+import { EdgeType } from './config'
 
-export type LayoutGraph = Graph<LayoutNodeOption, any, GraphData>
+export type LayoutGraph = Graph<LayoutNodeOption, any, GraphOpts>
 
-export function createLayoutGraph(opts?: GraphOptions) {
-  return new Graph(opts)
+export function createLayoutGraph(opts?: GraphOptions & GraphOpts) {
+  return new Graph(opts) as LayoutGraph
 }
 
 type DagreGraphOpts = {
@@ -38,7 +39,7 @@ export function getGraphBounds(g: LayoutGraph, opts: GetGraphBoundsOpts = {}): B
     bottom = Math.max(node.outerBottom || node.y + height / 2, bottom)
   })
 
-  const graphOpts: DagreGraphOpts = g.graph() as any
+  const graphOpts: DagreGraphOpts = g.graph()
   const marginx = graphOpts.marginx || 0
   const marginy = graphOpts.marginy || 0
 
@@ -110,4 +111,16 @@ export function adjustEntities(graph: LayoutGraph) {
 /** is topdown */
 export function isGraphVertical(g: LayoutGraph) {
   return g.graph().rankdir === 'TB'
+}
+
+export type BaseEdgeData = {
+  points: Point[]
+  labelPoint?: Point
+}
+
+export function getGraphSplinesOption(edgeType: EdgeType): SplinesType {
+  if (['polyline', 'ortho'].includes(edgeType)) {
+    return edgeType as any
+  }
+  return 'polyline'
 }

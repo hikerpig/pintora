@@ -37,6 +37,12 @@ export default defineConfig({
   ],
   base: BASE,
   mode,
+  // server: {
+  //   fs: {
+  //     // Allow serving files from one level up to the project root
+  //     allow: ['../../..'],
+  //   },
+  // },
   build: {
     rollupOptions: {
       input: {

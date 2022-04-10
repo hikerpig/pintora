@@ -1,6 +1,6 @@
 erDiagram 
   %% should support CRLR as eol 
-  @param curvedEdge false 
+  @param edgeType ortho
   CUSTOMER ||--o{ ORDER : places 
   ORDER ||--|{ LINE-ITEM : contains
   CUSTOMER }|..|{ DELIVERY-ADDRESS : uses 

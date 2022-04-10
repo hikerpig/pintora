@@ -240,6 +240,25 @@ export function makeCircleInPoint(p: Point, opts: Partial<Circle['attrs']> = {})
   })
 }
 
+/**
+ * can be used to create position marker
+ */
+export function makeCircleWithCoordInPoint(p: Point, opts: Partial<Circle['attrs']> = {}) {
+  const g = makeEmptyGroup()
+  g.children.push(
+    makeCircleInPoint(p, opts),
+    makeMark('text', {
+      text: `${Math.floor(p.x)}, ${Math.floor(p.y)}`,
+      x: p.x,
+      y: p.y,
+      fill: 'red',
+      textAlign: 'center',
+      ...opts,
+    }),
+  )
+  return g
+}
+
 export type Layer = {
   zIndex: number
   marks: Mark[]
