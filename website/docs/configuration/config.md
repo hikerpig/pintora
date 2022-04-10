@@ -76,9 +76,11 @@ There are some common diagram config keys those - if they appears in the `*Conf`
 
 #### EdgeType
 
-- 'polyline', this is the default value
-- 'ortho', stands for orthogonal, edges are axis-aligned and bendings are right-angled
-- 'curved', similar to 'polyline' control points, but draws curved line instead of straight one
+- `polyline`, this is the default value
+- `ortho`, stands for orthogonal, edges are axis-aligned and bendings are right-angled
+- `curved`, similar to 'polyline' control points, but draws curved line instead of straight one
+
+![edge type demo](https://i.imgur.com/9v3toF1.png)
 
 ### sequence
 
