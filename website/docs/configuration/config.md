@@ -267,6 +267,41 @@ export type MindmapConf = {
 }
 ```
 
+### gantt
+
+Config for gantt diagram. For more detail, check the [latest code](https://github.com/hikerpig/pintora/blob/master/packages/pintora-diagrams/src/gantt/config.ts).
+
+```ts
+export type GanttConf = {
+  barHeight: number
+  barGap: number
+  topPadding: number
+  sidePadding: number
+  gridLineStartPadding: number
+
+  numberSectionStyles: number
+
+  axisFormat: DateFormat
+  axisLabelFontSize: number
+  axisLabelColor: string
+  gridLineWidth: number
+  gridLineColor: string
+
+  markLineColor: string
+
+  barBackground: string
+  barBorderColor: string
+  barBorderRadius: number
+
+  sectionBackgrounds: Array<string | undefined>
+  sectionLabelColor: string
+
+  fontColor: string
+  fontSize: number
+  fontFamily: string
+}
+```
+
 ## Override config by directive
 
 If you don't have the access to add JS script into the page or in the Node.js module, it's also possible to override some configs of the builtin diagrams through the `@param` or `@config` directive.
@@ -327,7 +362,6 @@ For example:
 
 ```pintora play
 mindmap
-
 @config({
   "core": {
     "defaultFontFamily": "serif",

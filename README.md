@@ -43,6 +43,7 @@ Heavily inspired by [Mermaid.js](https://mermaid-js.github.io/mermaid/#/) and [P
 - Component Diagram
 - Activity Diagram
 - Mind Map
+- Gantt Diagram
 
 <table>
   <thead>
