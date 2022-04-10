@@ -113,3 +113,30 @@ gantt
   "With id" : task-1, 2022-3-15, 2d
   "After another task" : after task-1, 3d
 ```
+
+## 覆盖设置
+
+可以使用 `@param` 指令覆盖图表的部分设置。
+
+可设置项的说明请见 [Config page](../configuration/config.md#gantt).
+
+```pintora play
+gantt
+  @param barHeight 20
+  @config({
+    "gantt": {
+      "barBackground": "#F2C1C1",
+      "sectionBackgrounds": ["#ccdd77", "#EAF4AF", null],
+      "sectionLabelColor": "#00000"
+    }
+  })
+  section One
+  "Task A" : 2022-3-15, 2022-3-16
+  "Task B" : 1d
+
+  section Two
+  "Task C" : 1d
+
+  section Three
+  "Task D" : 1d
+```

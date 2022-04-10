@@ -4,8 +4,6 @@ import { interpreteConfigs, makeConfigurator, getParamRulesFromConfig } from '..
 import { DateFormat } from './type'
 
 export type GanttConf = {
-  diagramPadding: number
-
   barHeight: number
   barGap: number
   topPadding: number
@@ -35,8 +33,6 @@ export type GanttConf = {
 }
 
 export const defaultConfig: GanttConf = {
-  diagramPadding: 15,
-
   barHeight: 20,
   barGap: 2,
   topPadding: 30,
