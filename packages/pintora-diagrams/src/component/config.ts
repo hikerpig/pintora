@@ -1,9 +1,11 @@
 import { PALETTE } from '../util/theme'
 import { DEFAULT_FONT_FAMILY } from '@pintora/core'
-import { interpreteConfigs, makeConfigurator } from '../util/config'
+import { EdgeType, getParamRulesFromConfig, interpreteConfigs, makeConfigurator } from '../util/config'
 
 export type ComponentConf = {
   diagramPadding: number
+
+  edgeType: EdgeType
 
   componentPadding: number
   componentBackground: string
@@ -29,6 +31,8 @@ export type ComponentConf = {
 export const defaultConfig: ComponentConf = {
   diagramPadding: 15,
 
+  edgeType: 'polyline',
+
   componentPadding: 15,
   componentBackground: PALETTE.yellow,
   componentBorderColor: PALETTE.orange,
@@ -51,20 +55,14 @@ export const defaultConfig: ComponentConf = {
 }
 
 export const COMPONENT_PARAM_DIRECTIVE_RULES = {
-  diagramPadding: { valueType: 'size' },
-  componentPadding: { valueType: 'size' },
+  ...getParamRulesFromConfig(defaultConfig),
   componentBackground: { valueType: 'color' },
   componentBorderColor: { valueType: 'color' },
   groupBackground: { valueType: 'color' },
   groupBorderColor: { valueType: 'color' },
-  groupBorderWidth: { valueType: 'size' },
   relationLineColor: { valueType: 'color' },
   textColor: { valueType: 'color' },
-  fontFamily: { valueType: 'string' },
-  lineWidth: { valueType: 'size' },
   labelBackground: { valueType: 'color' },
-  interfaceSize: { valueType: 'size' },
-  useMaxWidth: { valueType: 'boolean' },
 } as const
 
 export const configKey = 'component'

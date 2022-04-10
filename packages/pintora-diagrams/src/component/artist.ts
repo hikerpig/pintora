@@ -5,7 +5,6 @@ import {
   Group,
   safeAssign,
   calculateTextDimensions,
-  PointTuple,
   Rect,
   TSize,
   getPointAt,
@@ -16,12 +15,21 @@ import {
 } from '@pintora/core'
 import { ComponentDiagramIR, LineType, Relationship } from './db'
 import { ComponentConf, getConf } from './config'
-import { createLayoutGraph, getGraphBounds, LayoutEdge, LayoutGraph, LayoutNode, LayoutNodeOption } from '../util/graph'
+import {
+  createLayoutGraph,
+  getGraphBounds,
+  getGraphSplinesOption,
+  LayoutEdge,
+  LayoutGraph,
+  LayoutNode,
+  LayoutNodeOption,
+} from '../util/graph'
 import { makeMark, drawArrowTo, calcDirection, makeLabelBg, adjustRootMarkBounds } from '../util/artist-util'
 import dagre from '@pintora/dagre'
 import { Edge } from '@pintora/graphlib'
 import { isDev } from '../util/env'
 import { makeBounds, tryExpandBounds } from '../util/mark-positioner'
+import { getPointsCurvePath, getPointsLinearPath } from '../util/line-util'
 
 let conf: ComponentConf
 
@@ -57,6 +65,8 @@ const componentArtist: IDiagramArtist<ComponentDiagramIR, ComponentConf> = {
       nodesep: 20,
       edgesep: 20,
       ranksep: 60,
+      splines: getGraphSplinesOption(conf.edgeType),
+      avoid_label_on_border: true,
     })
 
     drawComponentsTo(rootMark, ir, g)
@@ -340,9 +350,9 @@ function drawRelationshipsTo(parentMark: Group, ir: ComponentDiagramIR, g: Layou
   ir.relationships.forEach(function (r) {
     // console.log('draw relationship', r)
     const lineMark = makeMark(
-      'polyline',
+      'path',
       {
-        points: [],
+        path: [],
         stroke: conf.relationLineColor,
         lineCap: 'round',
       },
@@ -376,7 +386,7 @@ function drawRelationshipsTo(parentMark: Group, ir: ComponentDiagramIR, g: Layou
       name: getEdgeName(r),
       relationship: r,
       labelpos: 'r',
-      labeloffset: 100,
+      // labeloffset: 100,
       labelSize: labelDims,
       onLayout(data, edge, context) {
         // console.log(
@@ -386,13 +396,16 @@ function drawRelationshipsTo(parentMark: Group, ir: ComponentDiagramIR, g: Layou
         //   'points',
         //   data.points.map(t => `${t.x},${t.y}`),
         // )
-        const points = data.points.map(p => [p.x, p.y]) as PointTuple[]
-        lineMark.attrs.points = points
+        const newPath = conf.edgeType === 'curved' ? getPointsCurvePath(data.points) : getPointsLinearPath(data.points)
+        lineMark.attrs.path = newPath
         if (relText) {
           // do not choose 0.5, otherwise label would probably cover other nodes
-          const anchorPoint = getPointAt(data.points, 0.4, true)
-          safeAssign(relText.attrs, { x: anchorPoint.x + labelDims.width / 2, y: anchorPoint.y })
-          safeAssign(relTextBg.attrs, { x: anchorPoint.x, y: anchorPoint.y - labelDims.height / 2 })
+          const anchorPoint = data.labelPoint || getPointAt(data.points, 0.4, true)
+          safeAssign(relText.attrs, { x: anchorPoint.x, y: anchorPoint.y })
+          safeAssign(relTextBg.attrs, {
+            x: anchorPoint.x - labelDims.width / 2,
+            y: anchorPoint.y - labelDims.height / 2,
+          })
           const bgAttrs = relTextBg.attrs
           context.updateBounds({
             left: bgAttrs.x,
@@ -402,6 +415,9 @@ function drawRelationshipsTo(parentMark: Group, ir: ComponentDiagramIR, g: Layou
             width: bgAttrs.width,
             height: bgAttrs.height,
           })
+          // // debug
+          // const labelPointMark = makeCircleWithCoordInPoint(anchorPoint)
+          // relationGroupMark.children.push(labelPointMark)
         }
 
         if (shouldDrawArrow) {
