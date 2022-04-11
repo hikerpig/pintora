@@ -52,6 +52,8 @@ const GROUP_LABEL_MAP = {
   [LINETYPE.PAR_START]: 'par',
 }
 
+const SHOW_NUMBER_CIRCLE_RADIUS = 8
+
 const sequenceArtist: IDiagramArtist<SequenceDiagramIR, SequenceConf> = {
   draw(ir, config?, opts?) {
     // console.log('[draw]', ir, config)
@@ -253,6 +255,14 @@ const sequenceArtist: IDiagramArtist<SequenceDiagramIR, SequenceConf> = {
 
 type OnBoundsFinishCallback = (opts: { bounds: SequenceDiagramBounds }) => void
 
+type PosTempInfo = Partial<{
+  extraMarginForBox: number
+}>
+
+enum BumpType {
+  Box = 1,
+}
+
 class Model {
   sequenceItems: LoopModel[]
   activations: ActivationData[] = []
@@ -268,6 +278,7 @@ class Model {
   dividerMap = new Map<string, MessageModel>()
   /** backgrounds for groups like loop and opt */
   groupBgs: Rect[]
+  posTempInfo: PosTempInfo = {}
 
   actorHeight: number
 
@@ -301,6 +312,7 @@ class Model {
     this.onBoundsFinishCbs = []
     this.groupBgs = []
     this.loopMinWidths = {}
+    this.posTempInfo = {}
   }
   updateVal(obj, key, val, fun) {
     if (typeof obj[key] === 'undefined') {
@@ -309,7 +321,7 @@ class Model {
       obj[key] = fun(val, obj[key])
     }
   }
-  updateBounds(startx, starty, stopx, stopy) {
+  updateBounds(startx: number, starty: number, stopx: number, stopy: number) {
     const _self = this
     let cnt = 0
     // console.log('updateBounds', startx, starty, stopx, stopy)
@@ -409,10 +421,21 @@ class Model {
     loop.sections.push({ y: this.verticalPos, width, height: 0, fill, message })
     this.sequenceItems.push(loop)
   }
-  bumpVerticalPos(bump) {
+  bumpVerticalPos(bump: number, tempInfo?: PosTempInfo) {
     this.verticalPos = this.verticalPos + bump
     this.data.stopy = this.verticalPos
+
+    this.posTempInfo = tempInfo || {}
   }
+  tryBumpType(types: Partial<Record<BumpType, boolean>>) {
+    const { posTempInfo } = this
+    let pos = 0
+    if (types[BumpType.Box] && posTempInfo.extraMarginForBox) {
+      pos += posTempInfo.extraMarginForBox
+    }
+    this.bumpVerticalPos(pos)
+  }
+
   getBounds() {
     return this.data
   }
@@ -477,6 +500,7 @@ function adjustLoopSizeForWrap(
   postMargin,
   addLoopFn: ({ message, width }) => void,
 ) {
+  model.tryBumpType({ [BumpType.Box]: true })
   model.bumpVerticalPos(preMargin)
   let heightAdjust = postMargin
   let loopWidth = 0
@@ -627,13 +651,16 @@ const drawMessage = function (msgModel: MessageModel): DrawResult<Group> {
   let lineEndMark: Path = null
 
   let lineEndType: LineEndType = LineEndType.NONE
+  let lineEndHalfH = 0
 
   if (type === LINETYPE.SOLID || type === LINETYPE.DOTTED) {
     lineEndType = LineEndType.ARROWHEAD
-    lineEndMark = drawArrowTo({ x: lineAttrs.x2, y: lineAttrs.y2 }, 10, arrowRad, {
+    const side = 10
+    lineEndMark = drawArrowTo({ x: lineAttrs.x2, y: lineAttrs.y2 }, side, arrowRad, {
       type: 'triangle',
       color: lineAttrs.stroke,
     })
+    lineEndHalfH = side / 2
   }
   if (type === LINETYPE.SOLID_POINT || type === LINETYPE.DOTTED_POINT) {
     lineEndType = LineEndType.NONE
@@ -642,8 +669,9 @@ const drawMessage = function (msgModel: MessageModel): DrawResult<Group> {
   if (type === LINETYPE.SOLID_CROSS || type === LINETYPE.DOTTED_CROSS) {
     lineEndType = LineEndType.CROSS
     const crossOffset = 5
+    const arrowHeight = 10
     const crossCenterX = lineAttrs.x2 + crossOffset * (isRightArrow ? -1 : 1)
-    lineEndMark = drawCrossTo({ x: crossCenterX, y: lineAttrs.y2 }, 10, arrowRad, {
+    lineEndMark = drawCrossTo({ x: crossCenterX, y: lineAttrs.y2 }, arrowHeight, arrowRad, {
       stroke: lineAttrs.stroke,
       lineWidth: 2,
     })
@@ -652,6 +680,7 @@ const drawMessage = function (msgModel: MessageModel): DrawResult<Group> {
     } else {
       lineAttrs.x2 += crossOffset
     }
+    lineEndHalfH = arrowHeight / 2
   }
 
   let numberMark: Group
@@ -673,12 +702,11 @@ const drawMessage = function (msgModel: MessageModel): DrawResult<Group> {
       { class: 'sequence-number' },
     )
     const circleColor = conf.actorBorderColor
-    const circleRadius = 8
     const circleMark = makeMark('marker', {
       symbol: 'circle',
       x: startx,
       y: lineStarty,
-      r: circleRadius,
+      r: SHOW_NUMBER_CIRCLE_RADIUS,
       fill: circleColor,
       stroke: circleColor,
     })
@@ -689,10 +717,9 @@ const drawMessage = function (msgModel: MessageModel): DrawResult<Group> {
         children: [circleMark, numberTextMark],
       },
     )
-    totalOffset += circleRadius
   }
   // console.log('bumpVerticalPos , totalOffset', totalOffset)
-  model.bumpVerticalPos(totalOffset)
+  model.bumpVerticalPos(totalOffset, { extraMarginForBox: lineEndHalfH })
   msgModel.height += totalOffset
   msgModel.stopy = msgModel.starty + msgModel.height
   model.insert(msgModel.fromBound, msgModel.starty, msgModel.toBound, msgModel.stopy)
@@ -717,6 +744,7 @@ const drawMessage = function (msgModel: MessageModel): DrawResult<Group> {
 
 function drawDividerTo(divider: MessageModel, container: Group) {
   const dividerMargin = conf.dividerMargin
+  model.tryBumpType({ [BumpType.Box]: true })
   model.bumpVerticalPos(dividerMargin)
   const dividerTextFont = {
     ...messageFont(conf),
@@ -904,8 +932,8 @@ export const drawActors = function (rootMark: Group, ir: SequenceDiagramIR, opts
       // const symbolDef = symbolRegistry.get(actor.classifier)
       const symbolHeight = areaHeight - labelDims.height
       const contentArea: ContentArea = {
-        x: attrs.x! + areaWidth / 2,
-        y: attrs.y! + (areaHeight - labelDims.height) / 2,
+        x: attrs.x + areaWidth / 2,
+        y: attrs.y + (areaHeight - labelDims.height) / 2,
         width: clamp(symbolHeight * 1.4, areaWidth / 2, areaWidth),
         height: symbolHeight,
       }
