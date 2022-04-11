@@ -13,7 +13,7 @@ function Editor(props: Props) {
   const { editorCode, show, errorInfo } = props
   const dispatch = useDispatch()
 
-  const onCodeChange = useCallback(code => {
+  const onCodeChange = useCallback((code: string) => {
     dispatch(actions.updateEditorCode({ code }))
   }, [])
 

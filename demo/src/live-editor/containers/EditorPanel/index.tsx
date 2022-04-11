@@ -27,7 +27,7 @@ const EditorPanel = ({ autoSync, currentEditor }: EditorPanelProps) => {
     dispatch(actions.refreshPreview())
   }, [])
 
-  const onAutoSyncChange = useCallback(e => {
+  const onAutoSyncChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     const autoSync = e.target.checked
     dispatch(actions.updateAutoSync(autoSync))
   }, [])
