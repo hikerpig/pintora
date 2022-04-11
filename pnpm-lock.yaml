@@ -65,8 +65,8 @@ importers:
       '@pintora/test-shared': workspace:*
       '@react-hook/debounce': ^4.0.0
       '@reduxjs/toolkit': ^1.7.1
-      '@types/react': ^17.0.38
-      '@types/react-dom': ^17.0.11
+      '@types/react': ^18.0.0
+      '@types/react-dom': ^18.0.0
       '@types/throttle-debounce': ^2.1.0
       '@vitejs/plugin-react-refresh': ^1.3.6
       autoprefixer: '*'
@@ -76,8 +76,8 @@ importers:
       daisyui: ^1.22.2
       less: ^4.1.2
       postcss: '*'
-      react: ^17.0.2
-      react-dom: ^17.0.2
+      react: ^18.0.0
+      react-dom: ^18.0.0
       react-error-boundary: ^3.1.4
       react-redux: ^7.2.6
       react-router-dom: ^6.2.1
@@ -110,23 +110,23 @@ importers:
       '@pintora/renderer': link:../packages/pintora-renderer
       '@pintora/standalone': link:../packages/pintora-standalone
       '@pintora/test-shared': link:../packages/test-shared
-      '@react-hook/debounce': 4.0.0_react@17.0.2
-      '@reduxjs/toolkit': 1.7.2_react-redux@7.2.6+react@17.0.2
+      '@react-hook/debounce': 4.0.0_react@18.0.0
+      '@reduxjs/toolkit': 1.7.2_react-redux@7.2.6+react@18.0.0
       browser-fs-access: 0.26.1
       classnames: 2.3.1
       daisyui: 1.25.4
-      react: 17.0.2
-      react-dom: 17.0.2_react@17.0.2
-      react-error-boundary: 3.1.4_react@17.0.2
-      react-redux: 7.2.6_react-dom@17.0.2+react@17.0.2
-      react-router-dom: 6.2.1_react-dom@17.0.2+react@17.0.2
+      react: 18.0.0
+      react-dom: 18.0.0_react@18.0.0
+      react-error-boundary: 3.1.4_react@18.0.0
+      react-redux: 7.2.6_react-dom@18.0.0+react@18.0.0
+      react-router-dom: 6.2.1_react-dom@18.0.0+react@18.0.0
       shiki: 0.10.0
       throttle-debounce: 3.0.1
     devDependencies:
       '@percy/cli': 1.0.0-beta.75
       '@percy/cypress': 3.1.1_cypress@9.4.1
-      '@types/react': 17.0.39
-      '@types/react-dom': 17.0.11
+      '@types/react': 18.0.1
+      '@types/react-dom': 18.0.0
       '@types/throttle-debounce': 2.1.0
       '@vitejs/plugin-react-refresh': 1.3.6
       autoprefixer: 10.4.2_postcss@8.4.6
@@ -3969,7 +3969,7 @@ packages:
     peerDependencies:
       react: '*'
     dependencies:
-      '@types/react': 17.0.39
+      '@types/react': 18.0.1
       prop-types: 15.8.1
       react: 17.0.2
     dev: false
@@ -4801,24 +4801,24 @@ packages:
     resolution: {integrity: sha512-a5Sab1C4/icpTZVzZc5Ghpz88yQtGOyNqYXcZgOssB2uuAr+wF/MvN6bgtW32q7HHrvBki+BsZ0OuNv6EV3K9g==}
     dev: false
 
-  /@react-hook/debounce/4.0.0_react@17.0.2:
+  /@react-hook/debounce/4.0.0_react@18.0.0:
     resolution: {integrity: sha512-706Xcg+KKWHk9BuZQUQ0ZQKp9zhv3/MbqFenWVfHcynYpSGRVwQTzJRGvPxvsdtXxJv+HfgKTY/O/hEejakwmA==}
     peerDependencies:
       react: '>=16.8'
     dependencies:
-      '@react-hook/latest': 1.0.3_react@17.0.2
-      react: 17.0.2
+      '@react-hook/latest': 1.0.3_react@18.0.0
+      react: 18.0.0
     dev: false
 
-  /@react-hook/latest/1.0.3_react@17.0.2:
+  /@react-hook/latest/1.0.3_react@18.0.0:
     resolution: {integrity: sha512-dy6duzl+JnAZcDbNTfmaP3xHiKtbXYOaz3G51MGVljh548Y8MWzTr+PHLOfvpypEVW9zwvl+VyKjbWKEVbV1Rg==}
     peerDependencies:
       react: '>=16.8'
     dependencies:
-      react: 17.0.2
+      react: 18.0.0
     dev: false
 
-  /@reduxjs/toolkit/1.7.2_react-redux@7.2.6+react@17.0.2:
+  /@reduxjs/toolkit/1.7.2_react-redux@7.2.6+react@18.0.0:
     resolution: {integrity: sha512-wwr3//Ar8ZhM9bS58O+HCIaMlR4Y6SNHfuszz9hKnQuFIKvwaL3Kmjo6fpDKUOjo4Lv54Yi299ed8rofCJ/Vjw==}
     peerDependencies:
       react: ^16.9.0 || ^17.0.0 || 18.0.0-beta
@@ -4830,8 +4830,8 @@ packages:
         optional: true
     dependencies:
       immer: 9.0.12
-      react: 17.0.2
-      react-redux: 7.2.6_react-dom@17.0.2+react@17.0.2
+      react: 18.0.0
+      react-redux: 7.2.6_react-dom@18.0.0+react@18.0.0
       redux: 4.1.2
       redux-thunk: 2.4.1_redux@4.1.2
       reselect: 4.1.5
@@ -5300,7 +5300,7 @@ packages:
   /@types/hoist-non-react-statics/3.3.1:
     resolution: {integrity: sha512-iMIqiko6ooLrTh1joXodJK5X9xeEALT1kM5G3ZLhD3hszxBdIEd5C75U834D9mLcINgD4OyZf5uQXjkuYydWvA==}
     dependencies:
-      '@types/react': 17.0.39
+      '@types/react': 18.0.1
       hoist-non-react-statics: 3.3.2
     dev: false
 
@@ -5420,10 +5420,10 @@ packages:
     resolution: {integrity: sha512-EEhsLsD6UsDM1yFhAvy0Cjr6VwmpMWqFBCb9w07wVugF7w9nfajxLuVmngTIpgS6svCnm6Vaw+MZhoDCKnOfsw==}
     dev: false
 
-  /@types/react-dom/17.0.11:
-    resolution: {integrity: sha512-f96K3k+24RaLGVu/Y2Ng3e1EbZ8/cVJvypZWd7cy0ofCBaf2lcM46xNhycMZ2xGwbBjRql7hOlZ+e2WlJ5MH3Q==}
+  /@types/react-dom/18.0.0:
+    resolution: {integrity: sha512-49897Y0UiCGmxZqpC8Blrf6meL8QUla6eb+BBhn69dTXlmuOlzkfr7HHY/O8J25e1lTUMs+YYxSlVDAaGHCOLg==}
     dependencies:
-      '@types/react': 17.0.39
+      '@types/react': 18.0.1
     dev: true
 
   /@types/react-helmet/6.1.5:
@@ -5436,7 +5436,7 @@ packages:
     resolution: {integrity: sha512-GxIA1kM7ClU73I6wg9IRTVwSO9GS+SAKZKe0Enj+82HMU6aoESFU2HNAdNi3+J53IaOHPiUfT3kSG4L828joDQ==}
     dependencies:
       '@types/hoist-non-react-statics': 3.3.1
-      '@types/react': 17.0.39
+      '@types/react': 18.0.1
       hoist-non-react-statics: 3.3.2
       redux: 4.1.2
     dev: false
@@ -5463,6 +5463,13 @@ packages:
 
   /@types/react/17.0.39:
     resolution: {integrity: sha512-UVavlfAxDd/AgAacMa60Azl7ygyQNRwC/DsHZmKgNvPmRR5p70AJ5Q9EAmL2NWOJmeV+vVUI4IAP7GZrN8h8Ug==}
+    dependencies:
+      '@types/prop-types': 15.7.4
+      '@types/scheduler': 0.16.2
+      csstype: 3.0.10
+
+  /@types/react/18.0.1:
+    resolution: {integrity: sha512-VnWlrVgG0dYt+NqlfMI0yUYb8Rdl4XUROyH+c6gq/iFCiZ805Vi//26UW38DHnxQkbDhnrIWTBiy6oKZqL11cw==}
     dependencies:
       '@types/prop-types': 15.7.4
       '@types/scheduler': 0.16.2
@@ -6211,7 +6218,7 @@ packages:
   /axios/0.21.4_debug@4.3.2:
     resolution: {integrity: sha512-ut5vewkiu8jjGBdqpM44XxjuCjq9LAKeHVmoVfHVzy8eHgxxq8SbAVQNovDA8mVi05kP0Ea/n/UzcSHcTJQfNg==}
     dependencies:
-      follow-redirects: 1.14.8
+      follow-redirects: 1.14.8_debug@4.3.2
     transitivePeerDependencies:
       - debug
     dev: true
@@ -9302,6 +9309,19 @@ packages:
     peerDependenciesMeta:
       debug:
         optional: true
+    dev: false
+
+  /follow-redirects/1.14.8_debug@4.3.2:
+    resolution: {integrity: sha512-1x0S9UVJHsQprFcEC/qnNzBLcIxsjAV905f/UkQxbclCsoTWlacCNOpQa/anodLl2uaEKFhfWOvM2Qg77+15zA==}
+    engines: {node: '>=4.0'}
+    peerDependencies:
+      debug: '*'
+    peerDependenciesMeta:
+      debug:
+        optional: true
+    dependencies:
+      debug: 4.3.2
+    dev: true
 
   /for-in/1.0.2:
     resolution: {integrity: sha1-gQaNKVqBQuwKxybG4iAMMPttXoA=}
@@ -13897,14 +13917,24 @@ packages:
       scheduler: 0.20.2
     dev: false
 
-  /react-error-boundary/3.1.4_react@17.0.2:
+  /react-dom/18.0.0_react@18.0.0:
+    resolution: {integrity: sha512-XqX7uzmFo0pUceWFCt7Gff6IyIMzFUn7QMZrbrQfGxtaxXZIcGQzoNpRLE3fQLnS4XzLLPMZX2T9TRcSrasicw==}
+    peerDependencies:
+      react: ^18.0.0
+    dependencies:
+      loose-envify: 1.4.0
+      react: 18.0.0
+      scheduler: 0.21.0
+    dev: false
+
+  /react-error-boundary/3.1.4_react@18.0.0:
     resolution: {integrity: sha512-uM9uPzZJTF6wRQORmSrvOIgt4lJ9MC1sNgEOj2XGsDTRE4kmpWxg7ENK9EWNKJRMAOY9z0MuF4yIfl6gp4sotA==}
     engines: {node: '>=10', npm: '>=6'}
     peerDependencies:
       react: '>=16.13.1'
     dependencies:
       '@babel/runtime': 7.17.2
-      react: 17.0.2
+      react: 18.0.0
     dev: false
 
   /react-error-overlay/6.0.10:
@@ -13967,7 +13997,7 @@ packages:
       webpack: 5.70.0
     dev: false
 
-  /react-redux/7.2.6_react-dom@17.0.2+react@17.0.2:
+  /react-redux/7.2.6_react-dom@18.0.0+react@18.0.0:
     resolution: {integrity: sha512-10RPdsz0UUrRL1NZE0ejTkucnclYSgXp5q+tB5SWx2qeG2ZJQJyymgAhwKy73yiL/13btfB6fPr+rgbMAaZIAQ==}
     peerDependencies:
       react: ^16.8.3 || ^17
@@ -13984,8 +14014,8 @@ packages:
       hoist-non-react-statics: 3.3.2
       loose-envify: 1.4.0
       prop-types: 15.8.1
-      react: 17.0.2
-      react-dom: 17.0.2_react@17.0.2
+      react: 18.0.0
+      react-dom: 18.0.0_react@18.0.0
       react-is: 17.0.2
     dev: false
 
@@ -14020,16 +14050,16 @@ packages:
       tiny-warning: 1.0.3
     dev: false
 
-  /react-router-dom/6.2.1_react-dom@17.0.2+react@17.0.2:
+  /react-router-dom/6.2.1_react-dom@18.0.0+react@18.0.0:
     resolution: {integrity: sha512-I6Zax+/TH/cZMDpj3/4Fl2eaNdcvoxxHoH1tYOREsQ22OKDYofGebrNm6CTPUcvLvZm63NL/vzCYdjf9CUhqmA==}
     peerDependencies:
       react: '>=16.8'
       react-dom: '>=16.8'
     dependencies:
       history: 5.2.0
-      react: 17.0.2
-      react-dom: 17.0.2_react@17.0.2
-      react-router: 6.2.1_react@17.0.2
+      react: 18.0.0
+      react-dom: 18.0.0_react@18.0.0
+      react-router: 6.2.1_react@18.0.0
     dev: false
 
   /react-router/5.2.1_react@17.0.2:
@@ -14050,13 +14080,13 @@ packages:
       tiny-warning: 1.0.3
     dev: false
 
-  /react-router/6.2.1_react@17.0.2:
+  /react-router/6.2.1_react@18.0.0:
     resolution: {integrity: sha512-2fG0udBtxou9lXtK97eJeET2ki5//UWfQSl1rlJ7quwe6jrktK9FCCc8dQb5QY6jAv3jua8bBQRhhDOM/kVRsg==}
     peerDependencies:
       react: '>=16.8'
     dependencies:
       history: 5.2.0
-      react: 17.0.2
+      react: 18.0.0
     dev: false
 
   /react-textarea-autosize/8.3.3_a0c521d4794c7ad97f5f4c1c4a7d5818:
@@ -14079,6 +14109,13 @@ packages:
     dependencies:
       loose-envify: 1.4.0
       object-assign: 4.1.1
+    dev: false
+
+  /react/18.0.0:
+    resolution: {integrity: sha512-x+VL6wbT4JRVPm7EGxXhZ8w8LTROaxPXOqhlGyVSrv0sB1jkyFGgXxJ8LVoPRLvPR6/CIZGFmfzqUa2NYeMr2A==}
+    engines: {node: '>=0.10.0'}
+    dependencies:
+      loose-envify: 1.4.0
     dev: false
 
   /read-pkg-up/7.0.1:
@@ -14633,6 +14670,12 @@ packages:
     dependencies:
       loose-envify: 1.4.0
       object-assign: 4.1.1
+    dev: false
+
+  /scheduler/0.21.0:
+    resolution: {integrity: sha512-1r87x5fz9MXqswA2ERLo0EbOAU74DpIUO090gIasYTqlVoJeMcl+Z1Rg7WHz+qtPujhS/hGIt9kxZOYBV3faRQ==}
+    dependencies:
+      loose-envify: 1.4.0
     dev: false
 
   /schema-utils/2.7.0:

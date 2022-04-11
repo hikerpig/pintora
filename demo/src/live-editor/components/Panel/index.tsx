@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react'
+import React, { PropsWithChildren, useCallback, useState } from 'react'
 import PanelHeader, { Tabs, PanelHeaderProps } from '../PanelHeader'
 import './Panel.less'
 
@@ -11,7 +11,7 @@ interface PanelProps {
   headerAppendix?: PanelHeaderProps['appendix']
 }
 
-const Panel: React.FC<PanelProps> = ({
+const Panel: React.FC<PropsWithChildren<PanelProps>> = ({
   className,
   title,
   tabs,
@@ -22,7 +22,7 @@ const Panel: React.FC<PanelProps> = ({
 }) => {
   const [currentTab, setCurrentTab] = useState(initialTab || tabs?.[0]?.key)
   const setCurrentTabProp = useCallback(
-    key => {
+    (key: string) => {
       setCurrentTab(key)
       onCurrentTabChange && onCurrentTabChange(key)
     },
