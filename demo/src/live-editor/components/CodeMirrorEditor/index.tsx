@@ -1,13 +1,13 @@
 import React, { useEffect, useRef } from 'react'
 import { ErrorInfo } from 'src/live-editor/type'
-import { keymap, EditorView, highlightActiveLine, Decoration } from '@codemirror/view'
+import { keymap, EditorView, highlightActiveLine } from '@codemirror/view'
 import { history, historyKeymap } from '@codemirror/history'
 import { EditorState, Extension } from '@codemirror/state'
 import { standardKeymap } from '@codemirror/commands'
 import { setDiagnostics } from '@codemirror/lint'
 import { oneDarkTheme, oneDarkHighlightStyle } from '@codemirror/theme-one-dark'
 import { lineNumbers } from '@codemirror/gutter'
-import { searchConfig, searchKeymap } from '@codemirror/search'
+import { search, searchKeymap } from '@codemirror/search'
 import { json } from '@codemirror/lang-json'
 import { tabKeymaps } from './utils'
 import './CMEditor.less'
@@ -50,7 +50,7 @@ const Editor = (props: Props) => {
         onUpdateExtension,
         keymap.of(searchKeymap),
         lineNumbers(),
-        searchConfig({ top: true }),
+        search({ top: true }),
         highlightActiveLine(),
         oneDarkHighlightStyle.fallback,
         keymap.of(tabKeymaps),

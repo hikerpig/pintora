@@ -6,18 +6,18 @@ importers:
     specifiers:
       '@changesets/changelog-git': ^0.1.9
       '@changesets/cli': ^2.20.0
-      '@types/jest': ^27.0.3
-      '@typescript-eslint/eslint-plugin': ^5.8.0
-      '@typescript-eslint/parser': ^5.8.0
+      '@types/jest': ^27.4.0
+      '@typescript-eslint/eslint-plugin': ^5.11.0
+      '@typescript-eslint/parser': ^5.11.0
       codecov: ^3.8.3
       esbuild-jest: ^0.5.0
-      eslint: ^8.5.0
+      eslint: ^8.8.0
       eslint-plugin-prettier: ^4.0.0
       eslint-plugin-unused-imports: ^2.0.0
       husky: ^7.0.4
-      jest: ^27.4.5
+      jest: ^27.5.1
       jest-junit: ^13.0.0
-      lint-staged: ^12.1.4
+      lint-staged: ^12.3.3
       prettier: 2.5.1
       rimraf: 3.0.2
       turbo: ^1.1.2
@@ -44,19 +44,19 @@ importers:
 
   demo:
     specifiers:
-      '@codemirror/basic-setup': ^0.19.1
+      '@codemirror/basic-setup': ^0.19.3
       '@codemirror/commands': ^0.19.8
       '@codemirror/gutter': ^0.19.9
       '@codemirror/history': ^0.19.2
       '@codemirror/lang-javascript': ^0.19.7
       '@codemirror/lang-json': ^0.19.2
-      '@codemirror/lint': ^0.19.3
-      '@codemirror/search': ^0.19.6
+      '@codemirror/lint': ^0.19.6
+      '@codemirror/search': ^0.19.10
       '@codemirror/state': ^0.19.9
       '@codemirror/theme-one-dark': ^0.19.1
-      '@codemirror/tooltip': ^0.19.12
+      '@codemirror/tooltip': ^0.19.16
       '@codemirror/view': ^0.19.48
-      '@percy/cli': ^1.0.0-beta.73
+      '@percy/cli': ^1.0.5
       '@percy/cypress': ^3.1.1
       '@pintora/core': workspace:*
       '@pintora/diagrams': workspace:*
@@ -64,7 +64,7 @@ importers:
       '@pintora/standalone': workspace:*
       '@pintora/test-shared': workspace:*
       '@react-hook/debounce': ^4.0.0
-      '@reduxjs/toolkit': ^1.7.1
+      '@reduxjs/toolkit': ^1.8.1
       '@types/react': ^18.0.0
       '@types/react-dom': ^18.0.0
       '@types/throttle-debounce': ^2.1.0
@@ -79,8 +79,8 @@ importers:
       react: ^18.0.0
       react-dom: ^18.0.0
       react-error-boundary: ^3.1.4
-      react-redux: ^7.2.6
-      react-router-dom: ^6.2.1
+      react-redux: ^7.2.8
+      react-router-dom: ^6.3.0
       shiki: ^0.10.0
       start-server-and-test: ^1.14.0
       tailwindcss: '*'
@@ -93,17 +93,17 @@ importers:
       workbox-precaching: ^6.5.2
       workbox-window: ^6.5.2
     dependencies:
-      '@codemirror/basic-setup': 0.19.1
+      '@codemirror/basic-setup': 0.19.3
       '@codemirror/commands': 0.19.8
       '@codemirror/gutter': 0.19.9
       '@codemirror/history': 0.19.2
       '@codemirror/lang-javascript': 0.19.7
       '@codemirror/lang-json': 0.19.2
-      '@codemirror/lint': 0.19.3
-      '@codemirror/search': 0.19.6
+      '@codemirror/lint': 0.19.6
+      '@codemirror/search': 0.19.10
       '@codemirror/state': 0.19.9
       '@codemirror/theme-one-dark': 0.19.1
-      '@codemirror/tooltip': 0.19.13
+      '@codemirror/tooltip': 0.19.16
       '@codemirror/view': 0.19.48
       '@pintora/core': link:../packages/pintora-core
       '@pintora/diagrams': link:../packages/pintora-diagrams
@@ -111,19 +111,19 @@ importers:
       '@pintora/standalone': link:../packages/pintora-standalone
       '@pintora/test-shared': link:../packages/test-shared
       '@react-hook/debounce': 4.0.0_react@18.0.0
-      '@reduxjs/toolkit': 1.7.2_react-redux@7.2.6+react@18.0.0
+      '@reduxjs/toolkit': 1.8.1_react-redux@7.2.8+react@18.0.0
       browser-fs-access: 0.26.1
       classnames: 2.3.1
       daisyui: 1.25.4
       react: 18.0.0
       react-dom: 18.0.0_react@18.0.0
       react-error-boundary: 3.1.4_react@18.0.0
-      react-redux: 7.2.6_react-dom@18.0.0+react@18.0.0
-      react-router-dom: 6.2.1_react-dom@18.0.0+react@18.0.0
+      react-redux: 7.2.8_react-dom@18.0.0+react@18.0.0
+      react-router-dom: 6.3.0_react-dom@18.0.0+react@18.0.0
       shiki: 0.10.0
       throttle-debounce: 3.0.1
     devDependencies:
-      '@percy/cli': 1.0.0-beta.75
+      '@percy/cli': 1.0.5
       '@percy/cypress': 3.1.1_cypress@9.4.1
       '@types/react': 18.0.1
       '@types/react-dom': 18.0.0
@@ -3231,13 +3231,13 @@ packages:
       '@codemirror/language': 0.19.7
       '@codemirror/state': 0.19.9
       '@codemirror/text': 0.19.6
-      '@codemirror/tooltip': 0.19.13
+      '@codemirror/tooltip': 0.19.16
       '@codemirror/view': 0.19.48
       '@lezer/common': 0.15.11
     dev: false
 
-  /@codemirror/basic-setup/0.19.1:
-    resolution: {integrity: sha512-gLjD7YgZU/we6BzS/ecCmD3viw83dsgv5ZUaSydYbYx9X4w4w9RqYnckcJ+0GDyHfNr5Jtfv2Z5ZtFQnBj0UDA==}
+  /@codemirror/basic-setup/0.19.3:
+    resolution: {integrity: sha512-2hfO+QDk/HTpQzeYk1NyL1G9D5L7Sj78dtaQP8xBU42DKU9+OBPF5MdjLYnxP0jKzm6IfQfsLd89fnqW3rBVfQ==}
     dependencies:
       '@codemirror/autocomplete': 0.19.12
       '@codemirror/closebrackets': 0.19.0
@@ -3248,10 +3248,10 @@ packages:
       '@codemirror/highlight': 0.19.7
       '@codemirror/history': 0.19.2
       '@codemirror/language': 0.19.7
-      '@codemirror/lint': 0.19.3
+      '@codemirror/lint': 0.19.6
       '@codemirror/matchbrackets': 0.19.3
-      '@codemirror/rectangular-selection': 0.19.1
-      '@codemirror/search': 0.19.6
+      '@codemirror/rectangular-selection': 0.19.2
+      '@codemirror/search': 0.19.10
       '@codemirror/state': 0.19.9
       '@codemirror/view': 0.19.48
     dev: false
@@ -3327,7 +3327,7 @@ packages:
       '@codemirror/autocomplete': 0.19.12
       '@codemirror/highlight': 0.19.7
       '@codemirror/language': 0.19.7
-      '@codemirror/lint': 0.19.3
+      '@codemirror/lint': 0.19.6
       '@codemirror/state': 0.19.9
       '@codemirror/view': 0.19.48
       '@lezer/javascript': 0.15.3
@@ -3351,14 +3351,14 @@ packages:
       '@lezer/lr': 0.15.8
     dev: false
 
-  /@codemirror/lint/0.19.3:
-    resolution: {integrity: sha512-+c39s05ybD2NjghxkPFsUbH/qBL0cdzKmtHbzUm0RVspeL2OiP7uHYJ6J5+Qr9RjMIPWzcqSauRqxfmCrctUfg==}
+  /@codemirror/lint/0.19.6:
+    resolution: {integrity: sha512-Pbw1Y5kHVs2J+itQ0uez3dI4qY9ApYVap7eNfV81x1/3/BXgBkKfadaw0gqJ4h4FDG7OnJwb0VbPsjJQllHjaA==}
     dependencies:
       '@codemirror/gutter': 0.19.9
       '@codemirror/panel': 0.19.1
       '@codemirror/rangeset': 0.19.6
       '@codemirror/state': 0.19.9
-      '@codemirror/tooltip': 0.19.13
+      '@codemirror/tooltip': 0.19.16
       '@codemirror/view': 0.19.48
       crelt: 1.0.5
     dev: false
@@ -3385,16 +3385,16 @@ packages:
       '@codemirror/state': 0.19.9
     dev: false
 
-  /@codemirror/rectangular-selection/0.19.1:
-    resolution: {integrity: sha512-9ElnqOg3mpZIWe0prPRd1SZ48Q9QB3bR8Aocq8UtjboJSUG8ABhRrbuTZMW/rMqpBPSjVpCe9xkCCkEQMYQVmw==}
+  /@codemirror/rectangular-selection/0.19.2:
+    resolution: {integrity: sha512-AXK/p5eGwFJ9GJcLfntqN4dgY+XiIF7eHfXNQJX5HhQLSped2wJE6WuC1rMEaOlcpOqlb9mrNi/ZdUjSIj9mbA==}
     dependencies:
       '@codemirror/state': 0.19.9
       '@codemirror/text': 0.19.6
       '@codemirror/view': 0.19.48
     dev: false
 
-  /@codemirror/search/0.19.6:
-    resolution: {integrity: sha512-Wx3AyZ5/hFv6+YklNMeW2sHbVmnhSNC027Rc/pk7Cy51g09ZBHqMMAwJlpNcWmGYjf+SYzomIUpd+DgkVCmvLw==}
+  /@codemirror/search/0.19.10:
+    resolution: {integrity: sha512-qjubm69HJixPBWzI6HeEghTWOOD8NXiHOTRNvdizqs8xWRuFChq9zkjD3XiAJ7GXSTzCuQJnAP9DBBGCLq4ZIA==}
     dependencies:
       '@codemirror/panel': 0.19.1
       '@codemirror/rangeset': 0.19.6
@@ -3422,8 +3422,8 @@ packages:
       '@codemirror/view': 0.19.48
     dev: false
 
-  /@codemirror/tooltip/0.19.13:
-    resolution: {integrity: sha512-7vgvjQjwFQ9hPejw2s+w3UR1XAYjQ5M0F9HRwutXkZHP1tBFV7LnNJ3xBD7F9SR9kAh8WgdL3BpUsEwX1aqoQg==}
+  /@codemirror/tooltip/0.19.16:
+    resolution: {integrity: sha512-zxKDHryUV5/RS45AQL+wOeN+i7/l81wK56OMnUPoTSzCWNITfxHn7BToDsjtrRKbzHqUxKYmBnn/4hPjpZ4WJQ==}
     dependencies:
       '@codemirror/state': 0.19.9
       '@codemirror/view': 0.19.48
@@ -4612,50 +4612,47 @@ packages:
       '@nodelib/fs.scandir': 2.1.5
       fastq: 1.13.0
 
-  /@percy/cli-build/1.0.0-beta.75:
-    resolution: {integrity: sha512-wup3ZKTNln+NvyKkz7f3EUAerjdzNPvQtxcuZxiu0qUa2gfuDPGUqQDUPoAcit4Mm9QqkcuSq0BDz0fejp50xg==}
-    engines: {node: '>=12'}
+  /@percy/cli-build/1.0.5:
+    resolution: {integrity: sha512-AVRVcL8MZhM0Dm3yWvIctPvyPupZVHejU3Qymgwk4l6e3kU92R8R86ilAMbq/XUedjA16/FK7/SqrVAR5Lr97A==}
+    engines: {node: '>=14'}
     dependencies:
-      '@percy/cli-command': 1.0.0-beta.75
-      '@percy/logger': 1.0.0-beta.75
+      '@percy/cli-command': 1.0.5
     transitivePeerDependencies:
       - bufferutil
       - supports-color
       - utf-8-validate
     dev: true
 
-  /@percy/cli-command/1.0.0-beta.75:
-    resolution: {integrity: sha512-VxzianYAkjzDhkp3Wu7aGaB+rfPBwufUB3u3zDepKNyTFd1DBJvzev6JC9EBRLj7/98fF9jSysY1sXCV0LFfHw==}
-    engines: {node: '>=12'}
+  /@percy/cli-command/1.0.5:
+    resolution: {integrity: sha512-bu9WmRgVllfKj1aN1n+wK3YhHX3+4EdLwKQ84H2z7iXMMiTDx6JVtw8ubzdqND3V0IHTgequfVy9NbiBIjY+Zg==}
+    engines: {node: '>=14'}
     hasBin: true
     dependencies:
-      '@percy/config': 1.0.0-beta.75
-      '@percy/core': 1.0.0-beta.75
-      '@percy/logger': 1.0.0-beta.75
+      '@percy/config': 1.0.5
+      '@percy/core': 1.0.5
+      '@percy/logger': 1.0.5
     transitivePeerDependencies:
       - bufferutil
       - supports-color
       - utf-8-validate
     dev: true
 
-  /@percy/cli-config/1.0.0-beta.75:
-    resolution: {integrity: sha512-fBIP7V6ULpkzWJ0djvpLjG9xxxp2M7tH3lxqyo8UiJYlelfNW/hI8ThYknfJBWr4CV9e+bo/dBmprtLE0gRbOA==}
-    engines: {node: '>=12'}
+  /@percy/cli-config/1.0.5:
+    resolution: {integrity: sha512-dqBUkqp+AOWxkCHsw983clDvJHSHK+QglnXOGYaNoCZmnvclyrGhGr3niz9CC+fQsUTJHUIDJm5u2psyCaVfKg==}
+    engines: {node: '>=14'}
     dependencies:
-      '@percy/cli-command': 1.0.0-beta.75
-      '@percy/config': 1.0.0-beta.75
+      '@percy/cli-command': 1.0.5
     transitivePeerDependencies:
       - bufferutil
       - supports-color
       - utf-8-validate
     dev: true
 
-  /@percy/cli-exec/1.0.0-beta.75:
-    resolution: {integrity: sha512-csCTzqSx3ItzNJh+TjRhx5ccb53ERjTSmPsZpzmnSSmQ0dwVoxf1+TmEpKOmROL2szswrPXZfV/4lhkiaXF5OQ==}
-    engines: {node: '>=12'}
+  /@percy/cli-exec/1.0.5:
+    resolution: {integrity: sha512-dGFssEcSBgpeeEwfmxLUvsK3AyAS6Mrc/JI5gVA1EFl9Nu4+NdYRMYHKX/zysv1DcD2ORx0a7KqTx6fVg7u8Eg==}
+    engines: {node: '>=14'}
     dependencies:
-      '@percy/cli-command': 1.0.0-beta.75
-      '@percy/core': 1.0.0-beta.75
+      '@percy/cli-command': 1.0.5
       cross-spawn: 7.0.3
       which: 2.0.2
     transitivePeerDependencies:
@@ -4664,17 +4661,11 @@ packages:
       - utf-8-validate
     dev: true
 
-  /@percy/cli-snapshot/1.0.0-beta.75:
-    resolution: {integrity: sha512-Ww5cRtAO46o0YMhzpt5wxpQ8NgPLt5PYRxJ77GWrOv5PDQOz2twZWH9QStj+XSn24yfVGN+OwpWIS/COzpqWtg==}
-    engines: {node: '>=12'}
+  /@percy/cli-snapshot/1.0.5:
+    resolution: {integrity: sha512-oNrVyu/tjNl6u8peG/ZmuCTM7KQZdAwE6RiGb/KB4mQXLve7Yip1hUfJ4lmt7+cFPKykXHDN2v3glGPzbMO9yA==}
+    engines: {node: '>=14'}
     dependencies:
-      '@percy/cli-command': 1.0.0-beta.75
-      '@percy/config': 1.0.0-beta.75
-      '@percy/core': 1.0.0-beta.75
-      globby: 11.1.0
-      path-to-regexp: 6.2.0
-      picomatch: 2.3.1
-      serve-handler: 6.1.3
+      '@percy/cli-command': 1.0.5
       yaml: 1.10.2
     transitivePeerDependencies:
       - bufferutil
@@ -4682,14 +4673,12 @@ packages:
       - utf-8-validate
     dev: true
 
-  /@percy/cli-upload/1.0.0-beta.75:
-    resolution: {integrity: sha512-Fh5eaEH8+GS582GXLcbbgvDPRBSC/xffcIVwIVnI3txVvzvCybSWDdLePzBUp1iHp1XWqbFa3qZvsoZu+6Twaw==}
-    engines: {node: '>=12'}
+  /@percy/cli-upload/1.0.5:
+    resolution: {integrity: sha512-JboTr5s9CVsVf8TrSTkYmJiMrm1Nkm2PqlWbwkviNUqqhzqZniwPfbbzESPl5KMz9HIeoVP6AXcdcX3N70FpwA==}
+    engines: {node: '>=14'}
     dependencies:
-      '@percy/cli-command': 1.0.0-beta.75
-      '@percy/client': 1.0.0-beta.75
-      '@percy/logger': 1.0.0-beta.75
-      globby: 11.1.0
+      '@percy/cli-command': 1.0.5
+      fast-glob: 3.2.11
       image-size: 1.0.1
     transitivePeerDependencies:
       - bufferutil
@@ -4697,54 +4686,59 @@ packages:
       - utf-8-validate
     dev: true
 
-  /@percy/cli/1.0.0-beta.75:
-    resolution: {integrity: sha512-BKqvdxJ3srxneqnKsmRIgpCkbEG065KRhtrQ28evSiXv/M7AtcEgdL676eAJ5joGjAfCtnZeKROR5H1hIi7Fkw==}
-    engines: {node: '>=12'}
+  /@percy/cli/1.0.5:
+    resolution: {integrity: sha512-BJfyz44eHdZffz9xO6l/zwgVVuNA7MloJqm+eCl1plQukPx01NDRNoU4l8CwxkY2Afk3adgswuVolQ+msAmr+Q==}
+    engines: {node: '>=14'}
     hasBin: true
     dependencies:
-      '@percy/cli-build': 1.0.0-beta.75
-      '@percy/cli-command': 1.0.0-beta.75
-      '@percy/cli-config': 1.0.0-beta.75
-      '@percy/cli-exec': 1.0.0-beta.75
-      '@percy/cli-snapshot': 1.0.0-beta.75
-      '@percy/cli-upload': 1.0.0-beta.75
-      '@percy/client': 1.0.0-beta.75
-      '@percy/logger': 1.0.0-beta.75
+      '@percy/cli-build': 1.0.5
+      '@percy/cli-command': 1.0.5
+      '@percy/cli-config': 1.0.5
+      '@percy/cli-exec': 1.0.5
+      '@percy/cli-snapshot': 1.0.5
+      '@percy/cli-upload': 1.0.5
+      '@percy/client': 1.0.5
+      '@percy/logger': 1.0.5
     transitivePeerDependencies:
       - bufferutil
       - supports-color
       - utf-8-validate
     dev: true
 
-  /@percy/client/1.0.0-beta.75:
-    resolution: {integrity: sha512-QHyTQOBLj8iEminAUaIS8QV7CpGdKp6RwHLCTIHaUCGprzU+FZ8+/hhlHVbWwx0EYqeK2DrWr5ruEDdHC9C4oQ==}
-    engines: {node: '>=12'}
+  /@percy/client/1.0.5:
+    resolution: {integrity: sha512-wbV5yaZXjVbaEcmBdSh3i1NcBEHZeJrSNvQ43tou5ErgQk6UXdCcaM1npi0EwToSC7AyE9UIFOazAMqVEU/l1w==}
+    engines: {node: '>=14'}
     dependencies:
-      '@percy/env': 1.0.0-beta.75
-      '@percy/logger': 1.0.0-beta.75
+      '@percy/env': 1.0.5
+      '@percy/logger': 1.0.5
     dev: true
 
-  /@percy/config/1.0.0-beta.75:
-    resolution: {integrity: sha512-UcbMCYlp0NpQcUJo7X6Vwo67OVa/l0XEG00OwOE+XF/aB083Zo4usXO7rRBdn3UuJ4zj5/mqpK/+hiSMdK8PPg==}
-    engines: {node: '>=12'}
+  /@percy/config/1.0.5:
+    resolution: {integrity: sha512-ml0vlk4HCDtJYs8OzyB0pf+AuUw7ifyAoH6hInzObm6TnfpP4ebsJr6lUZmvDqUBChdU23lN8U7wr20TNbz7Pg==}
+    engines: {node: '>=14'}
     dependencies:
-      '@percy/logger': 1.0.0-beta.75
-      ajv: 8.10.0
+      '@percy/logger': 1.0.5
+      ajv: 8.11.0
       cosmiconfig: 7.0.1
       yaml: 1.10.2
     dev: true
 
-  /@percy/core/1.0.0-beta.75:
-    resolution: {integrity: sha512-VyaMT6DgOTvqRt55SeVXnCAyX1+4AAqzwHPWksFHPdmtuwpOw7ptDucX/503RTk6KNHsauZ1IxqPipb0fJkKJw==}
-    engines: {node: '>=12'}
+  /@percy/core/1.0.5:
+    resolution: {integrity: sha512-P7B2LcE+5Hz2rIw2Z6HR3FI4eC17nYsjfpMJnpsNNNkgwT/eOwZGxzIbTpsOOVoZIErIOEMTn0LYVIrfwSTDwQ==}
+    engines: {node: '>=14'}
     requiresBuild: true
     dependencies:
-      '@percy/client': 1.0.0-beta.75
-      '@percy/config': 1.0.0-beta.75
-      '@percy/dom': 1.0.0-beta.75
-      '@percy/logger': 1.0.0-beta.75
+      '@percy/client': 1.0.5
+      '@percy/config': 1.0.5
+      '@percy/dom': 1.0.5
+      '@percy/logger': 1.0.5
+      content-disposition: 0.5.4
       cross-spawn: 7.0.3
       extract-zip: 2.0.1
+      fast-glob: 3.2.11
+      micromatch: 4.0.5
+      mime-types: 2.1.35
+      path-to-regexp: 6.2.0
       rimraf: 3.0.2
       ws: 8.5.0
     transitivePeerDependencies:
@@ -4762,18 +4756,23 @@ packages:
       cypress: 9.4.1
     dev: true
 
-  /@percy/dom/1.0.0-beta.75:
-    resolution: {integrity: sha512-H+H8141JTTUGHh2w/VslK2Z4UxgH8YWkKTxJ3VPoqbmXoke+jbqdxW++Qe7RFe5gCJAD7u2LvcCNtYvUTckbRQ==}
+  /@percy/dom/1.0.5:
+    resolution: {integrity: sha512-7iuPU/ri+oVwjgAVmX/nsQQaBgSffWFlMn0Lj+ZqqOKEluSWXquXsCXWMmBug3QU33qRdOOgqr5zvu7jPxFNlw==}
     dev: true
 
-  /@percy/env/1.0.0-beta.75:
-    resolution: {integrity: sha512-hu23XMUdkhnSug9XiUgnO9ktzauqE1b+hBwpy/NPR0laFVE1e/v7qJhh8z298L2itisYoNcIBMyej1M7XsM7FQ==}
-    engines: {node: '>=12'}
+  /@percy/env/1.0.5:
+    resolution: {integrity: sha512-S9sA+rmDldLCIUDN87LWlf27t1SmxIl5bDlJ/15B7kxNMRqdJPjTvFr99NHgDF8iBZOu50YFsytySS0KdzBWFw==}
+    engines: {node: '>=14'}
     dev: true
 
   /@percy/logger/1.0.0-beta.75:
     resolution: {integrity: sha512-/0otHJcPUAiJwOzyFwwlolp2lGz2Bx11rHy27kUYZpzMoA6mx/9uY6q2rfhuG8/dWbkgAt1Upc7fuMkaGK4P0g==}
     engines: {node: '>=12'}
+    dev: true
+
+  /@percy/logger/1.0.5:
+    resolution: {integrity: sha512-OT3/Xiuo1V4cHwqdDQfuvfMDRf7GhMrHK9HCiHE2dOakLqmIM0fexiCoD0k5Bd7fgjZ9G5YmFT9k5ymBmT9oOA==}
+    engines: {node: '>=14'}
     dev: true
 
   /@percy/sdk-utils/1.0.0-beta.75:
@@ -4818,10 +4817,10 @@ packages:
       react: 18.0.0
     dev: false
 
-  /@reduxjs/toolkit/1.7.2_react-redux@7.2.6+react@18.0.0:
-    resolution: {integrity: sha512-wwr3//Ar8ZhM9bS58O+HCIaMlR4Y6SNHfuszz9hKnQuFIKvwaL3Kmjo6fpDKUOjo4Lv54Yi299ed8rofCJ/Vjw==}
+  /@reduxjs/toolkit/1.8.1_react-redux@7.2.8+react@18.0.0:
+    resolution: {integrity: sha512-Q6mzbTpO9nOYRnkwpDlFOAbQnd3g7zj7CtHAZWz5SzE5lcV97Tf8f3SzOO8BoPOMYBFgfZaqTUZqgGu+a0+Fng==}
     peerDependencies:
-      react: ^16.9.0 || ^17.0.0 || 18.0.0-beta
+      react: ^16.9.0 || ^17.0.0 || ^18
       react-redux: ^7.2.1 || ^8.0.0-beta
     peerDependenciesMeta:
       react:
@@ -4831,7 +4830,7 @@ packages:
     dependencies:
       immer: 9.0.12
       react: 18.0.0
-      react-redux: 7.2.6_react-dom@18.0.0+react@18.0.0
+      react-redux: 7.2.8_react-dom@18.0.0+react@18.0.0
       redux: 4.1.2
       redux-thunk: 2.4.1_redux@4.1.2
       reselect: 4.1.5
@@ -5571,8 +5570,8 @@ packages:
       '@types/yargs-parser': 20.2.1
     dev: true
 
-  /@types/yauzl/2.9.2:
-    resolution: {integrity: sha512-8uALY5LTvSuHgloDVUvWP3pIauILm+8/0pDMokuDYIoNsOkSwd5AiHBTSEJjKTDcZr5z8UpgOWZkxBF4iJftoA==}
+  /@types/yauzl/2.10.0:
+    resolution: {integrity: sha512-Cn6WYCm0tXv8p6k+A8PvbDG763EDpBoTzHdA+Q/MF6H3sapGjCm9NzoaJncJS9tUKSuCoDs9XHxYYsQDgxR6kw==}
     requiresBuild: true
     dependencies:
       '@types/node': 14.18.10
@@ -5938,6 +5937,15 @@ packages:
       json-schema-traverse: 1.0.0
       require-from-string: 2.0.2
       uri-js: 4.4.1
+
+  /ajv/8.11.0:
+    resolution: {integrity: sha512-wGgprdCvMalC0BztXvitD2hC04YffAvtsUn93JbGXYLAtCUO4xd17mCCZQxUOItiBwZvJScWo8NIvQMQ71rdpg==}
+    dependencies:
+      fast-deep-equal: 3.1.3
+      json-schema-traverse: 1.0.0
+      require-from-string: 2.0.2
+      uri-js: 4.4.1
+    dev: true
 
   /algoliasearch-helper/3.7.4_algoliasearch@4.13.0:
     resolution: {integrity: sha512-KmJrsHVm5TmxZ9Oj53XdXuM4CQeu7eVFnB15tpSFt+7is1d1yVCv3hxCLMqYSw/rH42ccv013miQpRr268P8vw==}
@@ -6744,6 +6752,7 @@ packages:
   /bytes/3.0.0:
     resolution: {integrity: sha1-0ygVQE1olpn4Wk6k+odV3ROpYEg=}
     engines: {node: '>= 0.8'}
+    dev: false
 
   /bytes/3.1.1:
     resolution: {integrity: sha512-dWe4nWO/ruEOY7HkUJ5gFt1DCFV9zPRoJr8pV0/ASQermOZjtq8jMjOprC0Kd10GLN+l7xaUPvxzJFWtxGu8Fg==}
@@ -7278,13 +7287,13 @@ packages:
   /content-disposition/0.5.2:
     resolution: {integrity: sha1-DPaLud318r55YcOoUXjLhdunjLQ=}
     engines: {node: '>= 0.6'}
+    dev: false
 
   /content-disposition/0.5.4:
     resolution: {integrity: sha512-FveZTNuGw04cxlAiWbzi6zTAL/lhehaWbTtgluJh4/E95DqMwTmha3KZN1aAWA8cFIhHzMZUvLevkw5Rqk+tSQ==}
     engines: {node: '>= 0.6'}
     dependencies:
       safe-buffer: 5.2.1
-    dev: false
 
   /content-type/1.0.4:
     resolution: {integrity: sha512-hIP3EEPs8tB9AT1L+NUqtwOAps4mk2Zob89MWXMHjHWg9milF/j4osnnQLXBCBFBk/tvIG/tUc9mOUJiPBhPXA==}
@@ -9044,7 +9053,7 @@ packages:
       get-stream: 5.2.0
       yauzl: 2.10.0
     optionalDependencies:
-      '@types/yauzl': 2.9.2
+      '@types/yauzl': 2.10.0
     transitivePeerDependencies:
       - supports-color
     dev: true
@@ -9058,7 +9067,7 @@ packages:
       get-stream: 5.2.0
       yauzl: 2.10.0
     optionalDependencies:
-      '@types/yauzl': 2.9.2
+      '@types/yauzl': 2.10.0
     transitivePeerDependencies:
       - supports-color
     dev: true
@@ -9675,6 +9684,11 @@ packages:
       to-readable-stream: 1.0.0
       url-parse-lax: 3.0.0
     dev: false
+
+  /graceful-fs/4.2.10:
+    resolution: {integrity: sha512-9ByhssR2fPVsNZj478qUUbKfmL0+t5BDVyjShtyZZLiK7ZDAArFFfopyOTj0M05wE2tJPisA4iTnnXl2YoPvOA==}
+    dev: true
+    optional: true
 
   /graceful-fs/4.2.9:
     resolution: {integrity: sha512-NtNxqUcXgpW2iMrfqSfR73Glt39K+BLwWsPs94yR63v45T0Wbej7eRmL5cWfwEgqXnmjQp3zaJTshdRW/qC2ZQ==}
@@ -11515,7 +11529,7 @@ packages:
       tslib: 2.3.1
     optionalDependencies:
       errno: 0.1.8
-      graceful-fs: 4.2.9
+      graceful-fs: 4.2.10
       image-size: 0.5.5
       make-dir: 2.1.0
       mime: 1.6.0
@@ -12043,27 +12057,40 @@ packages:
     dependencies:
       braces: 3.0.2
       picomatch: 2.3.1
-    dev: false
 
   /mime-db/1.33.0:
     resolution: {integrity: sha512-BHJ/EKruNIqJf/QahvxwQZXKygOQ256myeN/Ew+THcAa5q+PjyTTMMeNQC4DZw5AwfvelsUrA6B67NKMqXDbzQ==}
     engines: {node: '>= 0.6'}
+    dev: false
 
   /mime-db/1.51.0:
     resolution: {integrity: sha512-5y8A56jg7XVQx2mbv1lu49NR4dokRnhZYTtL+KGfaa27uq4pSTXkwQkFJl4pkRMyNFz/EtYDSkiiEHx3F7UN6g==}
     engines: {node: '>= 0.6'}
+
+  /mime-db/1.52.0:
+    resolution: {integrity: sha512-sPU4uV7dYlvtWJxwwxHD0PuihVNiE7TyAbQ5SWxDCB9mUYvOgroQOwYQQOKPJ8CIbE+1ETVlOoK1UC2nU3gYvg==}
+    engines: {node: '>= 0.6'}
+    dev: true
 
   /mime-types/2.1.18:
     resolution: {integrity: sha512-lc/aahn+t4/SWV/qcmumYjymLsWfN3ELhpmVuUFjgsORruuZPVSwAQryq+HHGvO/SI2KVX26bx+En+zhM8g8hQ==}
     engines: {node: '>= 0.6'}
     dependencies:
       mime-db: 1.33.0
+    dev: false
 
   /mime-types/2.1.34:
     resolution: {integrity: sha512-6cP692WwGIs9XXdOO4++N+7qjqv0rqxxVvJ3VHPh/Sc9mVZcQP+ZGhkKiTvWMQRr2tbHkJP/Yn7Y0npb3ZBs4A==}
     engines: {node: '>= 0.6'}
     dependencies:
       mime-db: 1.51.0
+
+  /mime-types/2.1.35:
+    resolution: {integrity: sha512-ZDY+bPm5zTTF+YpCrAU9nK0UgICYPT0QtT1NZWFv4s++TNkcgVaT0g6+4R2uI4MjQjzysHB1zxuWL50hzaeXiw==}
+    engines: {node: '>= 0.6'}
+    dependencies:
+      mime-db: 1.52.0
+    dev: true
 
   /mime/1.6.0:
     resolution: {integrity: sha512-x0Vn8spI+wuJ1O6S7gnbaQg8Pxh4NNHb7KSINmEWKiPE4RKOplvijn+NkmYmmRgP68mc70j2EbeTFRsrswaQeg==}
@@ -12120,6 +12147,7 @@ packages:
     resolution: {integrity: sha512-yJHVQEhyqPLUTgt9B83PXu6W3rx4MvvHvSUvToogpwoGDOUQ+yDrR0HRot+yOCdCO7u4hX3pWft6kWBBcqh0UA==}
     dependencies:
       brace-expansion: 1.1.11
+    dev: false
 
   /minimatch/3.0.5:
     resolution: {integrity: sha512-tUpxzX0VAzJHjLu0xUfFv1gwVp9ba3IOuRAVH2EGuRW8a5emA2FlACLqiT/lDVtS1W+TGNwqz3sWaNyLgDJWuw==}
@@ -12716,6 +12744,7 @@ packages:
 
   /path-is-inside/1.0.2:
     resolution: {integrity: sha1-NlQX3t5EQw0cEa9hAn+s8HS9/FM=}
+    dev: false
 
   /path-key/2.0.1:
     resolution: {integrity: sha1-QRyttXTFoUDTpLGRDUDYDMn0C0A=}
@@ -12741,6 +12770,7 @@ packages:
 
   /path-to-regexp/2.2.1:
     resolution: {integrity: sha512-gu9bD6Ta5bwGrrU8muHzVOBFFREpp2iRkVfhBJahwJ6p6Xw20SjT0MxLnwkjOibQmGSYhiUnf2FLe7k+jcFmGQ==}
+    dev: false
 
   /path-to-regexp/6.2.0:
     resolution: {integrity: sha512-f66KywYG6+43afgE/8j/GoiNyygk/bnoCbps++3ErRKsIYkGGupyv07R2Ok5m9i67Iqc+T2g1eAUGUPzWhYTyg==}
@@ -13836,6 +13866,7 @@ packages:
   /range-parser/1.2.0:
     resolution: {integrity: sha1-9JvmtIeJTdxA3MlKMi9hEJLgDV4=}
     engines: {node: '>= 0.6'}
+    dev: false
 
   /range-parser/1.2.1:
     resolution: {integrity: sha512-Hrgsx+orqoygnmhFbKaHE6c296J+HTAQXoxEF6gNupROmmGJRoyzfG3ccAveqCBrwr/2yxQ5BVd/GTl5agOwSg==}
@@ -13997,10 +14028,10 @@ packages:
       webpack: 5.70.0
     dev: false
 
-  /react-redux/7.2.6_react-dom@18.0.0+react@18.0.0:
-    resolution: {integrity: sha512-10RPdsz0UUrRL1NZE0ejTkucnclYSgXp5q+tB5SWx2qeG2ZJQJyymgAhwKy73yiL/13btfB6fPr+rgbMAaZIAQ==}
+  /react-redux/7.2.8_react-dom@18.0.0+react@18.0.0:
+    resolution: {integrity: sha512-6+uDjhs3PSIclqoCk0kd6iX74gzrGc3W5zcAjbrFgEdIjRSQObdIwfx80unTkVUYvbQ95Y8Av3OvFHq1w5EOUw==}
     peerDependencies:
-      react: ^16.8.3 || ^17
+      react: ^16.8.3 || ^17 || ^18
       react-dom: '*'
       react-native: '*'
     peerDependenciesMeta:
@@ -14050,8 +14081,8 @@ packages:
       tiny-warning: 1.0.3
     dev: false
 
-  /react-router-dom/6.2.1_react-dom@18.0.0+react@18.0.0:
-    resolution: {integrity: sha512-I6Zax+/TH/cZMDpj3/4Fl2eaNdcvoxxHoH1tYOREsQ22OKDYofGebrNm6CTPUcvLvZm63NL/vzCYdjf9CUhqmA==}
+  /react-router-dom/6.3.0_react-dom@18.0.0+react@18.0.0:
+    resolution: {integrity: sha512-uaJj7LKytRxZNQV8+RbzJWnJ8K2nPsOOEuX7aQstlMZKQT0164C+X2w6bnkqU3sjtLvpd5ojrezAyfZ1+0sStw==}
     peerDependencies:
       react: '>=16.8'
       react-dom: '>=16.8'
@@ -14059,7 +14090,7 @@ packages:
       history: 5.2.0
       react: 18.0.0
       react-dom: 18.0.0_react@18.0.0
-      react-router: 6.2.1_react@18.0.0
+      react-router: 6.3.0_react@18.0.0
     dev: false
 
   /react-router/5.2.1_react@17.0.2:
@@ -14080,8 +14111,8 @@ packages:
       tiny-warning: 1.0.3
     dev: false
 
-  /react-router/6.2.1_react@18.0.0:
-    resolution: {integrity: sha512-2fG0udBtxou9lXtK97eJeET2ki5//UWfQSl1rlJ7quwe6jrktK9FCCc8dQb5QY6jAv3jua8bBQRhhDOM/kVRsg==}
+  /react-router/6.3.0_react@18.0.0:
+    resolution: {integrity: sha512-7Wh1DzVQ+tlFjkeo+ujvjSqSJmkt1+8JO+T5xklPlgrh70y7ogx75ODRW0ThWhY7S+6yEDks8TYrtQe/aoboBQ==}
     peerDependencies:
       react: '>=16.8'
     dependencies:
@@ -14800,6 +14831,7 @@ packages:
       path-is-inside: 1.0.2
       path-to-regexp: 2.2.1
       range-parser: 1.2.0
+    dev: false
 
   /serve-index/1.9.1:
     resolution: {integrity: sha1-03aNabHn2C5c4FD/9bRTvqEqkjk=}
