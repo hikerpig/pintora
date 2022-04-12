@@ -145,10 +145,10 @@ importers:
 
   packages/pintora-cli:
     specifiers:
-      '@pintora/core': workspace:^0.3.0
-      '@pintora/renderer': ^0.1.4
-      '@pintora/standalone': workspace:^0.3.0
-      '@pintora/test-shared': workspace:^0.2.0
+      '@pintora/core': workspace:^0.4.0
+      '@pintora/renderer': ^0.4.0
+      '@pintora/standalone': workspace:^0.4.0
+      '@pintora/test-shared': workspace:^0.3.0
       '@types/jsdom': ^16.2.10
       '@types/mime-types': ^2.1.0
       '@types/node': ^14.11.8
@@ -199,10 +199,10 @@ importers:
     specifiers:
       '@hikerpig/moo': ^0.5.2-beta.2
       '@hikerpig/nearley': ^2.21.0-beta.0
-      '@pintora/core': workspace:^0.3.0
+      '@pintora/core': workspace:^0.4.0
       '@pintora/dagre': ^0.10.4
       '@pintora/graphlib': 2.2.2
-      '@pintora/test-shared': workspace:^0.2.0
+      '@pintora/test-shared': workspace:^0.3.0
       '@types/d3-interpolate': ^3.0.1
       '@types/d3-scale': ^4.0.2
       '@types/d3-shape': ^3.0.2
@@ -251,7 +251,7 @@ importers:
       '@antv/g-base': ^0.5.9
       '@antv/g-canvas': ^0.5.10
       '@antv/g-svg': ^0.5.6
-      '@pintora/core': workspace:^0.3.0
+      '@pintora/core': workspace:^0.4.0
       '@types/node': ^14.11.8
       typescript: ^4.4.4
     dependencies:
@@ -265,9 +265,9 @@ importers:
 
   packages/pintora-standalone:
     specifiers:
-      '@pintora/core': workspace:^0.3.0
-      '@pintora/diagrams': workspace:^0.3.0
-      '@pintora/renderer': ^0.1.4
+      '@pintora/core': workspace:^0.4.0
+      '@pintora/diagrams': workspace:^0.4.0
+      '@pintora/renderer': ^0.4.0
       '@types/node': ^14.11.8
       '@types/tinycolor2': ^1.4.3
       microbundle: ^0.14.2
@@ -292,8 +292,8 @@ importers:
       '@docusaurus/preset-classic': 2.0.0-beta.18
       '@docusaurus/theme-common': ^2.0.0-beta.18
       '@mdx-js/react': ^1.6.22
-      '@pintora/standalone': workspace:^0.3.0
-      '@pintora/test-shared': workspace:^0.2.0
+      '@pintora/standalone': workspace:^0.4.0
+      '@pintora/test-shared': workspace:^0.3.0
       '@svgr/webpack': ^6.1.2
       '@tsconfig/docusaurus': ^1.0.4
       '@types/react': ^17.0.38
@@ -6226,7 +6226,7 @@ packages:
   /axios/0.21.4_debug@4.3.2:
     resolution: {integrity: sha512-ut5vewkiu8jjGBdqpM44XxjuCjq9LAKeHVmoVfHVzy8eHgxxq8SbAVQNovDA8mVi05kP0Ea/n/UzcSHcTJQfNg==}
     dependencies:
-      follow-redirects: 1.14.8_debug@4.3.2
+      follow-redirects: 1.14.8
     transitivePeerDependencies:
       - debug
     dev: true
@@ -8335,7 +8335,7 @@ packages:
     resolution: {integrity: sha512-weDYmzbBygL7HzGGS26M3hGQx68vehdEg6VUmqSOaFzXExFqlnKuSvsEJCVGQHScS8CQMbrAqftT+AzzHNt/YA==}
     engines: {node: '>=10.13.0'}
     dependencies:
-      graceful-fs: 4.2.9
+      graceful-fs: 4.2.10
       tapable: 2.2.1
     dev: true
 
@@ -9318,19 +9318,6 @@ packages:
     peerDependenciesMeta:
       debug:
         optional: true
-    dev: false
-
-  /follow-redirects/1.14.8_debug@4.3.2:
-    resolution: {integrity: sha512-1x0S9UVJHsQprFcEC/qnNzBLcIxsjAV905f/UkQxbclCsoTWlacCNOpQa/anodLl2uaEKFhfWOvM2Qg77+15zA==}
-    engines: {node: '>=4.0'}
-    peerDependencies:
-      debug: '*'
-    peerDependenciesMeta:
-      debug:
-        optional: true
-    dependencies:
-      debug: 4.3.2
-    dev: true
 
   /for-in/1.0.2:
     resolution: {integrity: sha1-gQaNKVqBQuwKxybG4iAMMPttXoA=}
@@ -9687,8 +9674,6 @@ packages:
 
   /graceful-fs/4.2.10:
     resolution: {integrity: sha512-9ByhssR2fPVsNZj478qUUbKfmL0+t5BDVyjShtyZZLiK7ZDAArFFfopyOTj0M05wE2tJPisA4iTnnXl2YoPvOA==}
-    dev: true
-    optional: true
 
   /graceful-fs/4.2.9:
     resolution: {integrity: sha512-NtNxqUcXgpW2iMrfqSfR73Glt39K+BLwWsPs94yR63v45T0Wbej7eRmL5cWfwEgqXnmjQp3zaJTshdRW/qC2ZQ==}
@@ -11437,7 +11422,7 @@ packages:
     dependencies:
       universalify: 2.0.0
     optionalDependencies:
-      graceful-fs: 4.2.9
+      graceful-fs: 4.2.10
 
   /jsonpointer/5.0.0:
     resolution: {integrity: sha512-PNYZIdMjVIvVgDSYKTT63Y+KZ6IZvGRNNWcxwD+GNnUz1MKPfv30J8ueCjdwcN0nDx2SlshgyB7Oy0epAzVRRg==}

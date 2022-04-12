@@ -1,5 +1,27 @@
 # Change Log
 
+## 0.4.0
+
+### Minor Changes
+
+- 5f3c738: **BREAKING** replace `curvedEdge` option with `edgeType` and support orthogonal lines
+
+### Patch Changes
+
+- 5f68ca7: optimize: [gantt] adjust section label to section background vertical center
+- c9f6409: optimize: [sequence] apply extraMarginForBox if follows one message drawn with sequence number
+
+## 0.3.0
+
+### Minor Changes
+
+- 634affd: Add gantt diagram
+
+### Patch Changes
+
+- 634affd: add @config and @param to gantt diagram; update tmLanguage;
+- 634affd: [gantt] add support for axisInterval
+
 ## 0.2.0
 
 ### Minor Changes

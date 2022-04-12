@@ -1,5 +1,16 @@
 # Change Log
 
+## 0.4.0
+
+### Minor Changes
+
+- 5f3c738: **BREAKING** replace `curvedEdge` option with `edgeType` and support orthogonal lines
+
+### Patch Changes
+
+- Updated dependencies [5f3c738]
+  - @pintora/core@0.4.0
+
 ## 0.1.4
 
 ### Patch Changes

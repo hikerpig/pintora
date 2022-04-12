@@ -1,5 +1,20 @@
 # Change Log
 
+## 0.4.0
+
+### Minor Changes
+
+- 5f3c738: **BREAKING** replace `curvedEdge` option with `edgeType` and support orthogonal lines
+
+### Patch Changes
+
+- 71c84d1: optimize: [sequence] optimize dividerMargin
+- 5f68ca7: optimize: [gantt] adjust section label to section background vertical center
+- 5271156: fix sequenceDiagram activation parsing problem
+- c9f6409: optimize: [sequence] apply extraMarginForBox if follows one message drawn with sequence number
+- Updated dependencies [5f3c738]
+  - @pintora/core@0.4.0
+
 ## 0.3.0
 
 ### Minor Changes
