@@ -296,11 +296,11 @@ class GanttDraw {
           labelMark = makeMark('text', {
             text: task.section,
             x: sidePadding,
-            y: sectionY,
+            y: sectionY + sectionUnitHeight / 2,
             ...this.fontConfig,
             fill: conf.sectionLabelColor,
             textAlign: 'left',
-            textBaseline: 'top',
+            textBaseline: 'middle',
           })
           sectionBackgrounGroup.children.push(labelMark)
         }
