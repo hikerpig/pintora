@@ -86,7 +86,7 @@ Heavily inspired by [Mermaid.js](https://mermaid-js.github.io/mermaid/#/) and [P
     <tr>
       <td>Gantt Diagram</td>
       <td>
-        <img src="https://i.imgur.com/rSA2IQb.jpg" title="Gantt Diagram" width="300" />
+        <img src="https://i.imgur.com/hwcK3cT.jpg" title="Gantt Diagram" width="300" />
       </td>
     </tr>
   </tbody>
