@@ -60,8 +60,8 @@ const erArtist: IDiagramArtist<ErDiagramIR, ErConf> = {
       .setGraph({
         rankdir: conf.layoutDirection,
         nodesep: 80,
-        edgesep: 80,
-        ranksep: 100,
+        edgesep: conf.edgesep,
+        ranksep: conf.ranksep,
         splines: getGraphSplinesOption(conf.edgeType),
       })
       .setDefaultEdgeLabel(function () {

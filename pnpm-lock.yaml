@@ -200,7 +200,7 @@ importers:
       '@hikerpig/moo': ^0.5.2-beta.2
       '@hikerpig/nearley': ^2.21.0-beta.0
       '@pintora/core': workspace:^0.4.0
-      '@pintora/dagre': ^0.10.4
+      '@pintora/dagre': ^0.10.5
       '@pintora/graphlib': 2.2.2
       '@pintora/test-shared': workspace:^0.3.0
       '@types/d3-interpolate': ^3.0.1
@@ -224,7 +224,7 @@ importers:
       '@hikerpig/moo': 0.5.2-beta.2
       '@hikerpig/nearley': 2.21.0-beta.0
       '@pintora/core': link:../pintora-core
-      '@pintora/dagre': 0.10.4
+      '@pintora/dagre': 0.10.5
       '@pintora/graphlib': 2.2.2
       d3-interpolate: 3.0.1
       d3-scale: 4.0.2
@@ -4365,7 +4365,7 @@ packages:
       collect-v8-coverage: 1.0.1
       exit: 0.1.2
       glob: 7.2.0
-      graceful-fs: 4.2.9
+      graceful-fs: 4.2.10
       istanbul-lib-coverage: 3.2.0
       istanbul-lib-instrument: 5.1.0
       istanbul-lib-report: 3.0.0
@@ -4389,7 +4389,7 @@ packages:
     engines: {node: ^10.13.0 || ^12.13.0 || ^14.15.0 || >=15.0.0}
     dependencies:
       callsites: 3.1.0
-      graceful-fs: 4.2.9
+      graceful-fs: 4.2.10
       source-map: 0.6.1
     dev: true
 
@@ -4408,7 +4408,7 @@ packages:
     engines: {node: ^10.13.0 || ^12.13.0 || ^14.15.0 || >=15.0.0}
     dependencies:
       '@jest/test-result': 27.5.1
-      graceful-fs: 4.2.9
+      graceful-fs: 4.2.10
       jest-haste-map: 27.5.1
       jest-runtime: 27.5.1
     transitivePeerDependencies:
@@ -4782,8 +4782,8 @@ packages:
       '@percy/logger': 1.0.0-beta.75
     dev: true
 
-  /@pintora/dagre/0.10.4:
-    resolution: {integrity: sha512-9Gxr3SGYLtI739zYZTlanVKG/CSphmYpX0yn0j2bDWhBWl5kd78jEsqUzuMQO6Jd7J39q5AL0SvRyadMHLxiUw==}
+  /@pintora/dagre/0.10.5:
+    resolution: {integrity: sha512-1/naDsHlpPFoV5y/kQiX2G1faq9PEur2I65oT1fTtuT7zbx3i3dYjT/ZfbaF9yKHB09u6YK1ToOEJarivjslkg==}
     dependencies:
       '@pintora/graphlib': 2.2.2
       lodash-es: 4.17.21
@@ -10795,7 +10795,7 @@ packages:
       ci-info: 3.3.0
       deepmerge: 4.2.2
       glob: 7.2.0
-      graceful-fs: 4.2.9
+      graceful-fs: 4.2.10
       jest-circus: 27.5.1
       jest-environment-jsdom: 27.5.1
       jest-environment-node: 27.5.1
@@ -10911,7 +10911,7 @@ packages:
       '@types/node': 14.18.10
       anymatch: 3.1.2
       fb-watchman: 2.0.1
-      graceful-fs: 4.2.9
+      graceful-fs: 4.2.10
       jest-regex-util: 27.5.1
       jest-serializer: 27.5.1
       jest-util: 27.5.1
@@ -10983,7 +10983,7 @@ packages:
       '@jest/types': 27.5.1
       '@types/stack-utils': 2.0.1
       chalk: 4.1.2
-      graceful-fs: 4.2.9
+      graceful-fs: 4.2.10
       micromatch: 4.0.4
       pretty-format: 27.5.1
       slash: 3.0.0
@@ -11037,7 +11037,7 @@ packages:
     dependencies:
       '@jest/types': 27.5.1
       chalk: 4.1.2
-      graceful-fs: 4.2.9
+      graceful-fs: 4.2.10
       jest-haste-map: 27.5.1
       jest-pnp-resolver: 1.2.2_jest-resolve@27.5.1
       jest-util: 27.5.1
@@ -11059,7 +11059,7 @@ packages:
       '@types/node': 17.0.16
       chalk: 4.1.2
       emittery: 0.8.1
-      graceful-fs: 4.2.9
+      graceful-fs: 4.2.10
       jest-docblock: 27.5.1
       jest-environment-jsdom: 27.5.1
       jest-environment-node: 27.5.1
@@ -11095,7 +11095,7 @@ packages:
       collect-v8-coverage: 1.0.1
       execa: 5.1.1
       glob: 7.2.0
-      graceful-fs: 4.2.9
+      graceful-fs: 4.2.10
       jest-haste-map: 27.5.1
       jest-message-util: 27.5.1
       jest-mock: 27.5.1
@@ -11122,7 +11122,7 @@ packages:
     engines: {node: ^10.13.0 || ^12.13.0 || ^14.15.0 || >=15.0.0}
     dependencies:
       '@types/node': 14.18.10
-      graceful-fs: 4.2.9
+      graceful-fs: 4.2.10
     dev: true
 
   /jest-snapshot/27.5.1:
@@ -11141,7 +11141,7 @@ packages:
       babel-preset-current-node-syntax: 1.0.1_@babel+core@7.17.2
       chalk: 4.1.2
       expect: 27.5.1
-      graceful-fs: 4.2.9
+      graceful-fs: 4.2.10
       jest-diff: 27.5.1
       jest-get-type: 27.5.1
       jest-haste-map: 27.5.1
@@ -11175,7 +11175,7 @@ packages:
       '@types/node': 14.18.10
       chalk: 4.1.2
       ci-info: 3.3.0
-      graceful-fs: 4.2.9
+      graceful-fs: 4.2.10
       picomatch: 2.3.1
     dev: true
 
@@ -11414,7 +11414,7 @@ packages:
   /jsonfile/4.0.0:
     resolution: {integrity: sha1-h3Gq4HmbZAdrdmQPygWPnBDjPss=}
     optionalDependencies:
-      graceful-fs: 4.2.9
+      graceful-fs: 4.2.10
     dev: true
 
   /jsonfile/6.1.0:
@@ -11613,7 +11613,7 @@ packages:
     resolution: {integrity: sha512-OfCBkGEw4nN6JLtgRidPX6QxjBQGQf72q3si2uvqyFEMbycSFFHwAZeXx6cJgFM9wmLrf9zBwCP3Ivqa+LLZPw==}
     engines: {node: '>=6'}
     dependencies:
-      graceful-fs: 4.2.9
+      graceful-fs: 4.2.10
       js-yaml: 3.14.1
       pify: 4.0.1
       strip-bom: 3.0.0
