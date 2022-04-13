@@ -1,5 +1,15 @@
 # Change Log
 
+## 0.4.1
+
+### Patch Changes
+
+- a17ca84: optimize: a not-so-perfect solution to avoid edge crossing with othogonal edges
+- 1b71a87: fix: [er] extend graph bounds with relation edge bounds
+- Updated dependencies [a17ca84]
+- Updated dependencies [1b71a87]
+  - @pintora/diagrams@0.4.1
+
 ## 0.4.0
 
 ### Minor Changes

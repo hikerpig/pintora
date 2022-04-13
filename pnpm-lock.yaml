@@ -147,7 +147,7 @@ importers:
     specifiers:
       '@pintora/core': workspace:^0.4.0
       '@pintora/renderer': ^0.4.0
-      '@pintora/standalone': workspace:^0.4.0
+      '@pintora/standalone': workspace:^0.4.1
       '@pintora/test-shared': workspace:^0.3.0
       '@types/jsdom': ^16.2.10
       '@types/mime-types': ^2.1.0
@@ -266,7 +266,7 @@ importers:
   packages/pintora-standalone:
     specifiers:
       '@pintora/core': workspace:^0.4.0
-      '@pintora/diagrams': workspace:^0.4.0
+      '@pintora/diagrams': workspace:^0.4.1
       '@pintora/renderer': ^0.4.0
       '@types/node': ^14.11.8
       '@types/tinycolor2': ^1.4.3
@@ -6226,7 +6226,7 @@ packages:
   /axios/0.21.4_debug@4.3.2:
     resolution: {integrity: sha512-ut5vewkiu8jjGBdqpM44XxjuCjq9LAKeHVmoVfHVzy8eHgxxq8SbAVQNovDA8mVi05kP0Ea/n/UzcSHcTJQfNg==}
     dependencies:
-      follow-redirects: 1.14.8
+      follow-redirects: 1.14.8_debug@4.3.2
     transitivePeerDependencies:
       - debug
     dev: true
@@ -6234,7 +6234,7 @@ packages:
   /axios/0.25.0:
     resolution: {integrity: sha512-cD8FOb0tRH3uuEe6+evtAbgJtfxr7ly3fQjYcMcuPlgkwVS9xboaVIpcDV+cYQe+yGykgwZCs1pzjntcGa6l5g==}
     dependencies:
-      follow-redirects: 1.14.8
+      follow-redirects: 1.14.8_debug@4.3.2
     transitivePeerDependencies:
       - debug
     dev: false
@@ -9310,7 +9310,7 @@ packages:
       - encoding
     dev: false
 
-  /follow-redirects/1.14.8:
+  /follow-redirects/1.14.8_debug@4.3.2:
     resolution: {integrity: sha512-1x0S9UVJHsQprFcEC/qnNzBLcIxsjAV905f/UkQxbclCsoTWlacCNOpQa/anodLl2uaEKFhfWOvM2Qg77+15zA==}
     engines: {node: '>=4.0'}
     peerDependencies:
@@ -9318,6 +9318,8 @@ packages:
     peerDependenciesMeta:
       debug:
         optional: true
+    dependencies:
+      debug: 4.3.2
 
   /for-in/1.0.2:
     resolution: {integrity: sha1-gQaNKVqBQuwKxybG4iAMMPttXoA=}
@@ -10053,7 +10055,7 @@ packages:
     engines: {node: '>=8.0.0'}
     dependencies:
       eventemitter3: 4.0.7
-      follow-redirects: 1.14.8
+      follow-redirects: 1.14.8_debug@4.3.2
       requires-port: 1.0.0
     transitivePeerDependencies:
       - debug
