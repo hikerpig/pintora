@@ -4,7 +4,10 @@ import { EdgeType, getParamRulesFromConfig, interpreteConfigs, makeConfigurator 
 
 export type ErConf = {
   diagramPadding: number
+
   layoutDirection: string
+  ranksep: number
+  edgesep: number
 
   edgeType: EdgeType
   useMaxWidth: boolean
@@ -31,7 +34,10 @@ export type ErConf = {
 
 export const defaultConfig: ErConf = {
   diagramPadding: 15,
+
   layoutDirection: 'TB',
+  ranksep: 100,
+  edgesep: 80,
 
   edgeType: 'polyline',
   useMaxWidth: false,

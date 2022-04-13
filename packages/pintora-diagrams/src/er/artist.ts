@@ -24,6 +24,8 @@ import { makeMark, getBaseText, calcDirection, makeLabelBg, adjustRootMarkBounds
 import dagre from '@pintora/dagre'
 import { drawMarkerTo } from './artist-util'
 import { getPointsCurvePath, getPointsLinearPath } from '../util/line-util'
+import { makeBounds, tryExpandBounds } from '../util/mark-positioner'
+import { calcBound, updateBoundsByPoints } from '../util/bound'
 
 let conf: ErConf
 
@@ -58,8 +60,8 @@ const erArtist: IDiagramArtist<ErDiagramIR, ErConf> = {
       .setGraph({
         rankdir: conf.layoutDirection,
         nodesep: 80,
-        edgesep: 80,
-        ranksep: 100,
+        edgesep: conf.edgesep,
+        ranksep: conf.ranksep,
         splines: getGraphSplinesOption(conf.edgeType),
       })
       .setDefaultEdgeLabel(function () {
@@ -81,13 +83,17 @@ const erArtist: IDiagramArtist<ErDiagramIR, ErConf> = {
       children: [],
       class: 'er__relations',
     }
+    const relationshipsBounds = makeBounds()
     // Draw the relationships
     relationships.forEach(function (rel) {
-      drawRelationshipFromLayout(relationsGroup, rel, g)
+      const { bounds: relationBounds } = drawRelationshipFromLayout(relationsGroup, rel, g)
+      tryExpandBounds(relationshipsBounds, relationBounds)
     })
     rootMark.children.unshift(relationsGroup)
 
     const gBounds = getGraphBounds(g)
+    tryExpandBounds(gBounds, relationshipsBounds)
+
     const pad = conf.diagramPadding
 
     const { width, height } = adjustRootMarkBounds({
@@ -437,7 +443,7 @@ const adjustEntities = function (graph: LayoutGraph) {
   })
 }
 
-const getEdgeName = function (rel) {
+const getEdgeName = function (rel: Relationship) {
   return (rel.entityA + rel.roleA + rel.entityB).replace(/\s/g, '')
 }
 
@@ -469,12 +475,15 @@ let relCnt = 0
 const drawRelationshipFromLayout = function (group: Group, rel: Relationship, g: LayoutGraph) {
   relCnt++
 
+  const bounds = makeBounds()
+
   // Find the edge relating to this relationship
   const edge: EdgeData = g.edge(rel.entityA, rel.entityB)
 
   const [startPoint, ...restPoints] = edge.points
   const secondPoint = restPoints[0]
   const lastPoint = restPoints[restPoints.length - 1]
+  updateBoundsByPoints(bounds, edge.points)
 
   let pathCommands: PathCommand[] | string
   if (conf.edgeType === 'curved') {
@@ -536,13 +545,17 @@ const drawRelationshipFromLayout = function (group: Group, rel: Relationship, g:
   labelDims.height += conf.fontSize / 2
   const labelBg = makeLabelBg(labelDims, { x: labelX, y: labelY }, { id: `#${labelId}`, fill: conf.labelBackground })
 
+  const labelBgBound = calcBound([labelBg])
+  tryExpandBounds(bounds, labelBgBound)
+
   const insertingMarks = [linePath, labelBg, labelMark, startMarker, endMarker].filter(o => !!o)
 
   group.children.push(...insertingMarks)
 
-  // // debug
+  // debug
   // const secondPointMarker = makeCircleWithCoordInPoint(secondPoint)
   // group.children.push(secondPointMarker)
+  return { bounds }
 }
 
 export default erArtist

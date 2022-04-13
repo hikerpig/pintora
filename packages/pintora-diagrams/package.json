@@ -26,7 +26,7 @@
     "@hikerpig/moo": "^0.5.2-beta.2",
     "@hikerpig/nearley": "^2.21.0-beta.0",
     "@pintora/core": "workspace:^0.4.0",
-    "@pintora/dagre": "^0.10.4",
+    "@pintora/dagre": "^0.10.5",
     "@pintora/graphlib": "2.2.2",
     "d3-interpolate": "^3.0.1",
     "d3-scale": "^4.0.2",
