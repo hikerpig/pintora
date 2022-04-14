@@ -24,6 +24,6 @@
   },
   "devDependencies": {
     "@antv/g-base": "^0.5.9",
-    "typescript": "^4.4.4"
+    "typescript": "^4.6.3"
   }
 }
