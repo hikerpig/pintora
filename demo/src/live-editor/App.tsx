@@ -23,10 +23,28 @@ function App() {
       localStorage.setItem(LAST_EDITOR_CODE_KEY, JSON.stringify(dataToSave))
     }
 
-    window.addEventListener('beforeunload', handler)
+    window.addEventListener('beforeunload', handler, false)
 
     return () => {
-      window.removeEventListener('beforeunload', handler)
+      window.removeEventListener('beforeunload', handler, false)
+    }
+  }, [])
+
+  useEffect(() => {
+    const disableEvent = (e: Event) => {
+      e.preventDefault()
+    }
+
+    const DRAG_EVENT_LIST = ['dragenter', 'dragover', 'dragleave', 'drop']
+    const dropArea = document.body
+    DRAG_EVENT_LIST.forEach(eventName => {
+      dropArea.addEventListener(eventName, disableEvent, false)
+    })
+
+    return () => {
+      DRAG_EVENT_LIST.forEach(eventName => {
+        dropArea.removeEventListener(eventName, disableEvent, false)
+      })
     }
   }, [])
 
