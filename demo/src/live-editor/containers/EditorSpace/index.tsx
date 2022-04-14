@@ -1,5 +1,5 @@
 import React, { useCallback } from 'react'
-import { connect, ConnectedProps } from 'react-redux'
+import { connect, ConnectedProps, useDispatch } from 'react-redux'
 import { StoreState } from 'src/live-editor/redux/store'
 import pintora from '@pintora/standalone'
 import Preview from 'src/live-editor/containers/Preview'
@@ -8,10 +8,13 @@ import Examples from 'src/live-editor/containers/Examples'
 import Actions from 'src/live-editor/containers/Actions'
 import EditorPanel from 'src/live-editor/containers/EditorPanel'
 import store from 'src/live-editor/redux/store'
-import { DEMO_BASE_URL } from 'src/const'
+import { DEMO_BASE_URL, MIME_TYPES } from 'src/const'
+import { actions } from 'src/live-editor/redux/slice'
 // import './App.css'
 
 function EditorSpace(props: Props) {
+  const dispatch = useDispatch()
+
   const onOpenPreviewPage = useCallback(() => {
     try {
       const state = store.getState()
@@ -21,6 +24,28 @@ function EditorSpace(props: Props) {
       window.open(`${DEMO_BASE_URL}preview/?code=${encodedCode}&config=${encodedPintoraConfig}`)
     } catch (error) {}
   }, [])
+
+  const handleDrop = useCallback(
+    async (e: React.DragEvent) => {
+      try {
+        e.preventDefault()
+        e.stopPropagation()
+        const file = e.dataTransfer.files.item(0)
+        if (file) {
+          const { name, type } = file
+          const extname = name.split('.').pop()
+          if (extname === 'pintora' || type === MIME_TYPES.pintora) {
+            const code = await file.text()
+            dispatch(actions.updateEditorCode({ code }))
+          }
+        }
+      } catch (error) {
+        console.warn('error', error)
+      }
+    },
+    [dispatch],
+  )
+
   const previewHeaderSuffix = (
     <div>
       <button className="btn btn-primary btn-xs" onClick={onOpenPreviewPage}>
@@ -30,7 +55,7 @@ function EditorSpace(props: Props) {
   )
 
   return (
-    <div className="EditorSpace flex flex-grow">
+    <div className="EditorSpace flex flex-grow" onDrop={handleDrop}>
       <div className="App__left">
         <EditorPanel />
         <Panel title="Examples">
