@@ -33,5 +33,20 @@ componentDiagram
         c.get('.component__type').should('exist')
       },
     },
+    {
+      description: 'Should pad group node if label is too wide',
+      code: stripStartEmptyLines(`
+componentDiagram
+  package "loooooooooooooong" {
+    () "render()" as renderFn
+  }
+  folder "labbbbbbbbbbbbbbel" {
+    [standalone]
+  }
+`),
+      onRender(c) {
+        c.get('.component__type').should('exist')
+      },
+    },
   ])
 })

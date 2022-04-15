@@ -6,6 +6,7 @@ export type ComponentConf = {
   diagramPadding: number
 
   edgeType: EdgeType
+  edgesep: number
 
   componentPadding: number
   componentBackground: string
@@ -32,6 +33,7 @@ export const defaultConfig: ComponentConf = {
   diagramPadding: 15,
 
   edgeType: 'polyline',
+  edgesep: 20,
 
   componentPadding: 15,
   componentBackground: PALETTE.yellow,

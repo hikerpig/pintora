@@ -35,7 +35,7 @@ export function getGraphBounds(g: LayoutGraph, opts: GetGraphBoundsOpts = {}): B
     // assuming the node is positioned with anchor point centered
     right = Math.max(node.outerRight || node.x + width / 2, right)
     top = Math.min(node.outerTop || node.y, top)
-    const height = node.outerHeight || node.height
+    const height = node.outerHeight || node.height || 0
     bottom = Math.max(node.outerBottom || node.y + height / 2, bottom)
   })
 
@@ -73,6 +73,8 @@ export interface LayoutNodeOption {
   /** if this is a dummy node */
   isDummy?: boolean
   onLayout?(data: LayoutNode): void
+  /** assign to a group */
+  minwidth?: number
 }
 
 export interface LayoutNode extends LayoutNodeOption {

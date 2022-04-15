@@ -51,3 +51,9 @@ jobs:
           files: coverage/coverage-final.json
           flags: unittests # optional
           name: codecov-umbrella # optional
+      # visual e2e test
+      - name: Percy Test
+        run: |
+          cd demo
+          pnpm run build
+          pnpm run ci:visual
