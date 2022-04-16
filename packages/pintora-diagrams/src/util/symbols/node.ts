@@ -7,6 +7,10 @@ const PROJECT_Y = 12
 pintora.symbolRegistry.register('node', {
   type: 'factory',
   modes: ['container', 'icon'],
+  symbolMargin: {
+    top: PROJECT_Y,
+    right: PROJECT_X,
+  },
   factory(contentArea, { mode }) {
     if (mode === 'icon') {
       const height = contentArea.height - PROJECT_Y

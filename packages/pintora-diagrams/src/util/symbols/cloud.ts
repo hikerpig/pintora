@@ -4,10 +4,8 @@ import { makeMark } from '../artist-util'
 pintora.symbolRegistry.register('cloud', {
   type: 'factory',
   // symbolMargin: {
-  //   left: 0,
+  //   left: 20,
   //   right: 20,
-  //   top: 20,
-  //   bottom: 0,
   // },
   factory({ width, height, x, y }) {
     const halfWidth = width / 2

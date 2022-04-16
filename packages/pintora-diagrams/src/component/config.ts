@@ -7,6 +7,7 @@ export type ComponentConf = {
 
   edgeType: EdgeType
   edgesep: number
+  ranksep: number
 
   componentPadding: number
   componentBackground: string
@@ -34,6 +35,7 @@ export const defaultConfig: ComponentConf = {
 
   edgeType: 'polyline',
   edgesep: 20,
+  ranksep: 40, // at leat twice of bold fontsize + linewidth
 
   componentPadding: 15,
   componentBackground: PALETTE.yellow,
