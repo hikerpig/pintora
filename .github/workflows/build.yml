@@ -57,3 +57,5 @@ jobs:
           cd demo
           pnpm run build
           pnpm run ci:visual
+        env:
+          PERCY_TOKEN: ${{ secrets.PERCY_TOKEN }}
