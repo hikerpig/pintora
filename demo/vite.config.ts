@@ -8,6 +8,8 @@ const BASE = '/demo/'
 
 const mode = process.env.NODE_ENV === 'production' ? 'production' : 'development'
 
+const serverAllow = process.env.SERVER_ALLOW || '..'
+
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [
@@ -37,12 +39,12 @@ export default defineConfig({
   ],
   base: BASE,
   mode,
-  // server: {
-  //   fs: {
-  //     // Allow serving files from one level up to the project root
-  //     allow: ['../../..'],
-  //   },
-  // },
+  server: {
+    fs: {
+      // Allow serving files from one level up to the project root
+      allow: [serverAllow],
+    },
+  },
   build: {
     rollupOptions: {
       input: {

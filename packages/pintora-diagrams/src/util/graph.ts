@@ -1,6 +1,6 @@
 import { Mark, Bounds, Point } from '@pintora/core'
 import { Graph, GraphOptions } from '@pintora/graphlib'
-import { GraphOpts, SplinesType } from '@pintora/dagre'
+import { GraphOpts, NodeOpts, SplinesType } from '@pintora/dagre'
 import { EdgeType } from './config'
 
 export type LayoutGraph = Graph<LayoutNodeOption, any, GraphOpts>
@@ -52,7 +52,7 @@ export function getGraphBounds(g: LayoutGraph, opts: GetGraphBoundsOpts = {}): B
     height: bottom - top + marginy,
   }
 }
-export interface LayoutNodeOption {
+export interface LayoutNodeOption extends Omit<NodeOpts, 'width' | 'height'> {
   width?: number
   height?: number
   id?: string

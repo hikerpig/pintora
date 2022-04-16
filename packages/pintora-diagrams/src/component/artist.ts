@@ -64,7 +64,7 @@ const componentArtist: IDiagramArtist<ComponentDiagramIR, ComponentConf> = {
     }).setGraph({
       nodesep: 20,
       edgesep: conf.edgesep,
-      ranksep: 60,
+      ranksep: conf.ranksep,
       splines: getGraphSplinesOption(conf.edgeType),
       avoid_label_on_border: true,
     })
@@ -274,7 +274,11 @@ function drawGroupsTo(parentMark: Group, ir: ComponentDiagramIR, g: LayoutGraph)
     const labelTextDims = calculateTextDimensions(groupLabel, { ...fontConfig, fontWeight: labelMark.attrs.fontWeight })
     const typeTextDims = calculateTextDimensions(typeText, fontConfig)
 
-    const nodeMargin = {}
+    const nodeMargin: Partial<LayoutNodeOption> = {
+      // paddingt: labelTextDims.height,
+      // paddingb: typeTextDims.height,
+    }
+
     if (symbolDef && symbolDef.symbolMargin) {
       Object.assign(nodeMargin, {
         marginl: symbolDef.symbolMargin.left,
@@ -328,7 +332,10 @@ function drawGroupsTo(parentMark: Group, ir: ComponentDiagramIR, g: LayoutGraph)
         // const centerMark = makeCircleWithCoordInPoint(data)
         // const leftMark = makeCircleWithCoordInPoint({ ...data, x: data.x - containerWidth / 2 })
         // const rightMark = makeCircleWithCoordInPoint({ ...data, x: data.x + containerWidth / 2 })
+        // const topMark = makeCircleWithCoordInPoint({ ...data, y: data.y - data.height / 2 })
+        // const bottomMark = makeCircleWithCoordInPoint({ ...data, y: data.y + data.height / 2 })
         // group.children.push(centerMark, leftMark, rightMark)
+        // group.children.push(centerMark, topMark, bottomMark)
       },
     })
 

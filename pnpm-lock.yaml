@@ -200,7 +200,7 @@ importers:
       '@hikerpig/moo': ^0.5.2-beta.2
       '@hikerpig/nearley': ^2.21.0-beta.0
       '@pintora/core': workspace:^0.4.0
-      '@pintora/dagre': ^0.10.5
+      '@pintora/dagre': ^0.10.7
       '@pintora/graphlib': 2.2.2
       '@pintora/test-shared': workspace:^0.3.0
       '@types/d3-interpolate': ^3.0.1
@@ -224,7 +224,7 @@ importers:
       '@hikerpig/moo': 0.5.2-beta.2
       '@hikerpig/nearley': 2.21.0-beta.0
       '@pintora/core': link:../pintora-core
-      '@pintora/dagre': 0.10.5
+      '@pintora/dagre': 0.10.7
       '@pintora/graphlib': 2.2.2
       d3-interpolate: 3.0.1
       d3-scale: 4.0.2
@@ -4782,8 +4782,8 @@ packages:
       '@percy/logger': 1.0.0-beta.75
     dev: true
 
-  /@pintora/dagre/0.10.5:
-    resolution: {integrity: sha512-1/naDsHlpPFoV5y/kQiX2G1faq9PEur2I65oT1fTtuT7zbx3i3dYjT/ZfbaF9yKHB09u6YK1ToOEJarivjslkg==}
+  /@pintora/dagre/0.10.7:
+    resolution: {integrity: sha512-8ybSOnpBd5+sPPa/xDdgQ1CooJF28eqroQaevPlTcnRqeM5BJIj1etLgsKuWweR8VEj0CGUvruwqv+AfIcvxWQ==}
     dependencies:
       '@pintora/graphlib': 2.2.2
       lodash-es: 4.17.21

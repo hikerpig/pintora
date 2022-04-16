@@ -2,10 +2,15 @@ import pintora, { safeAssign, ContentArea } from '@pintora/core'
 import { makeMark } from '../artist-util'
 import { PALETTE } from '../theme'
 
+const HEADER_ELLIPSE_RY = 12
+
 // a cylinder
 pintora.symbolRegistry.register('database', {
   type: 'factory',
   modes: ['container', 'icon'],
+  symbolMargin: {
+    top: HEADER_ELLIPSE_RY * 2,
+  },
   factory(contentArea, { mode }) {
     if (mode === 'container') {
       return makeDatabaseContainer(contentArea)
@@ -14,14 +19,14 @@ pintora.symbolRegistry.register('database', {
   },
   styleMark(mark, def, attrs) {
     mark.children.forEach(child => {
-      safeAssign(child.attrs!, attrs)
+      safeAssign(child.attrs, attrs)
     })
   },
 })
 
 function makeDatabaseIcon({ width, height, x, y }: ContentArea) {
   const rx = width / 2
-  const ry = 12
+  const ry = HEADER_ELLIPSE_RY
   const halfHeight = height / 2
   const ellipseY = y - halfHeight + ry
   const lineBottomY = y + halfHeight - ry
