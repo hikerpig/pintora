@@ -4,7 +4,7 @@ export function startRender(opts: { code: string }) {
   const { code } = opts
   const DEMO_HOST = 'http://localhost:3001'
   const encodedCode = encodeForUrl(code)
-  const demoUrl = `${DEMO_HOST}/demo/preview/?code=${encodedCode}`
+  const demoUrl = `${DEMO_HOST}/demo/preview/?code=${encodedCode}&e2e=true`
   return cy.visit(demoUrl)
 }
 

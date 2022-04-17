@@ -51,12 +51,29 @@ const App = () => {
   )
 }
 
-const container = document.getElementById('root')
-if (container) {
-  const root = createRoot(container)
-  root.render(
-    <React.StrictMode>
-      <App />
-    </React.StrictMode>,
-  )
+function start() {
+  const container = document.getElementById('root')
+  if (container) {
+    const root = createRoot(container)
+    root.render(
+      <React.StrictMode>
+        <App />
+      </React.StrictMode>,
+    )
+  }
+}
+
+// start after fonts are loaded
+if (/e2e=true/.test(location.search)) {
+  console.log('in e2e test, wait till fonts are loaded')
+  document.body.style.fontFamily = "'Source Code Pro', sans-serif"
+
+  const fontToBeTested = '12px Source Code Pro'
+  document.fonts.load(fontToBeTested, 'essential font').then(() => {
+    const loaded = document.fonts.check(fontToBeTested)
+    console.log('font loaded', loaded)
+    start()
+  })
+} else {
+  start()
 }

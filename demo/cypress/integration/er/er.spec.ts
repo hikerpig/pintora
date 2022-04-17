@@ -16,16 +16,20 @@ erDiagram
   C ||--o{ B : "c2" 
 `),
       onRender(c) {
-        c.document().then(doc => {
-          const entityA = doc.getElementById('entity-A')
-          const entityB = doc.getElementById('entity-B')
-          expect(entityA.getBoundingClientRect().y).to.greaterThan(entityB.getBoundingClientRect().y)
+        c.get('.er__entity-box', { timeout: 1000 })
+          .should('exist')
+          .then($ele => {
+            const ele = $ele[0]
+            const doc = (ele as unknown as SVGPathElement).ownerSVGElement
+            const entityA = doc.getElementById('entity-A')
+            const entityB = doc.getElementById('entity-B')
+            expect(entityA.getBoundingClientRect().y).to.greaterThan(entityB.getBoundingClientRect().y)
 
-          const labels = Array.from(doc.querySelectorAll('.er__relationship-label').values())
-          const b1Ele = labels.find(ele => ele.textContent === 'b1') as SVGTextElement
-          const c2Ele = labels.find(ele => ele.textContent === 'c2') as SVGTextElement
-          expect(c2Ele.getBBox().x).to.greaterThan(b1Ele.getBBox().x)
-        })
+            const labels = Array.from(doc.querySelectorAll('.er__relationship-label').values())
+            const b1Ele = labels.find(ele => ele.textContent === 'b1') as SVGTextElement
+            const c2Ele = labels.find(ele => ele.textContent === 'c2') as SVGTextElement
+            expect(c2Ele.getBBox().x).to.greaterThan(b1Ele.getBBox().x)
+          })
       },
     },
   ])
