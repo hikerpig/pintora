@@ -16,6 +16,9 @@
   <a href="https://bundlephobia.com/package/@pintora/standalone">
     <img src="https://img.shields.io/bundlephobia/min/@pintora/standalone" />
   </a>
+  <a href="https://percy.io/3f73ea87/pintora">
+    <img src="https://percy.io/static/images/percy-badge.svg" />
+  </a>
 </a>
 </p>
 
