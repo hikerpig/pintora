@@ -1,5 +1,14 @@
 # Change Log
 
+## 0.3.2
+
+### Patch Changes
+
+- Updated dependencies [199e096]
+- Updated dependencies [fed231e]
+  - @pintora/diagrams@0.4.2
+  - @pintora/standalone@0.4.2
+
 ## 0.3.1
 
 ### Patch Changes

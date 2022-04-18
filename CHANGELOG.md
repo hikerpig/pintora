@@ -1,5 +1,19 @@
 # Change Log
 
+## 0.4.2
+
+### Patch Changes
+
+- 199e096: optimize: [component] pad group node if label is too wide
+- fed231e: optimize: [component] consider symbolMargin.margint during layout
+
+## 0.4.1
+
+### Patch Changes
+
+- a17ca84: optimize: a not-so-perfect solution to avoid edge crossing with othogonal edges
+- 1b71a87: fix: [er] extend graph bounds with relation edge bounds
+
 ## 0.4.0
 
 ### Minor Changes

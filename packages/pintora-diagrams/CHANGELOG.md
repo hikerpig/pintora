@@ -1,5 +1,12 @@
 # Change Log
 
+## 0.4.2
+
+### Patch Changes
+
+- 199e096: optimize: [component] pad group node if label is too wide
+- fed231e: optimize: [component] consider symbolMargin.margint during layout
+
 ## 0.4.1
 
 ### Patch Changes
