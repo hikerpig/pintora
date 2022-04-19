@@ -1,0 +1,12 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "composite": true
+  },
+  "references": [
+    { "path": "./packages/pintora-core" },
+    { "path": "./packages/pintora-diagrams" },
+    { "path": "./packages/pintora-renderer" }
+  ],
+  "include": []
+}

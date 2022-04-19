@@ -7,6 +7,9 @@
     "checkJs": false,
     "allowJs": true
   },
+  "references": [
+    { "path": "../pintora-core" }
+  ],
   "include": [
     "./src/**/*"
   ]

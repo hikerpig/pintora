@@ -4,5 +4,10 @@
     "rootDir": "src",
     "outDir": "lib",
     "module": "commonjs"
-  }
+  },
+  "references": [
+    { "path": "../pintora-core" },
+    { "path": "../pintora-renderer" },
+    { "path": "../pintora-standalone" }
+  ]
 }

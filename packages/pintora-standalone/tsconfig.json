@@ -8,5 +8,10 @@
     "allowJs": true,
     "resolveJsonModule": true,
     "types": ["tinycolor2"]
-  }
+  },
+  "references": [
+    { "path": "../pintora-core" },
+    { "path": "../pintora-diagrams" },
+    { "path": "../pintora-renderer" }
+  ]
 }
