@@ -16,12 +16,12 @@ import {
   QUOTED_WORD_REGEXP,
   MOO_NEWLINE,
 } from '../../util/parser-shared'
-import { ErDb } from '../db'
+import type { ErDb, Attribute } from '../db'
 
 let lexer = moo.compile({
   NL: MOO_NEWLINE,
   WS: { match: / +/, lineBreaks: false },
-  WORD: /\"[^"]*\"/,
+  QUOTED_WORD: QUOTED_WORD_REGEXP,
   ZERO_OR_ONE: /\|o|o\|/,
   ZERO_OR_MORE: /\}o|o\{/,
   ONE_OR_MORE: /\}\||\|\{/,
@@ -36,6 +36,10 @@ let lexer = moo.compile({
   CONFIG_DIRECTIVE,
   VALID_TEXT: { match: VALID_TEXT_REGEXP, fallback: true },
 })
+
+function getQuotedWord(token) {
+  return tv(token).replace(/"/g, '')
+}
 
 let yy: ErDb
 
@@ -96,12 +100,14 @@ attributes ->
       %}
 
 attribute ->
-      attributeType %WS attributeName %NL {% (d) => {
-        return { attributeType: d[0], attributeName: d[2] } }
+      attributeType %WS attributeName %WS:* %QUOTED_WORD:? %WS:* %NL {% (d): Attribute => {
+        const comment = d[4] ? getQuotedWord(d[4]): ''
+        return { attributeType: d[0], attributeName: d[2], comment } }
       %}
-    | attributeType %WS attributeName %VALID_TEXT %WS:* %NL {%
-        function(d) {
-          return { attributeType: d[0], attributeName: d[2], attributeKey: tv(d[3]) }
+    | attributeType %WS attributeName %WS %VALID_TEXT %WS:* %QUOTED_WORD:? %NL {%
+        function(d): Attribute {
+          const comment = d[6] ? getQuotedWord(d[6]): ''
+          return { attributeType: d[0], attributeName: d[2], attributeKey: tv(d[4]), comment }
         }
       %}
 
@@ -129,7 +135,7 @@ relType ->
     | %IDENTIFYING                  {% (d) => yy.Identification.IDENTIFYING %}
 
 role ->
-      %WORD {% (d) => {
-        return tv(d[0]).replace(/"/g, '')
+      %QUOTED_WORD {% (d) => {
+        return getQuotedWord(d[0])
       } %}
     | %VALID_TEXT {% (d) => tv(d[0]) %}

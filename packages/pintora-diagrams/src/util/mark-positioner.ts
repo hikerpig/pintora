@@ -130,14 +130,18 @@ export function positionGroupContents(group: Group, p: TRect) {
 
   group.children.forEach(mark => {
     const { type } = mark
-    const transformer: MarkTransformer<typeof type> = MARK_TRANSFORMERS[type]
     // console.log('transformer', type, transformer, info)
-    if (transformer) {
-      transformer(mark, info)
+    if (mark.type === 'group') {
+      positionGroupContents(mark, { ...offsets, width: mark.attrs.width, height: mark.attrs.height })
     } else {
-      const cAttrs = mark.attrs
-      cAttrs.x = (cAttrs.x || 0) + offsets.x
-      cAttrs.y = (cAttrs.y || 0) + offsets.y
+      const transformer: MarkTransformer<typeof type> = MARK_TRANSFORMERS[type]
+      if (transformer) {
+        transformer(mark, info)
+      } else {
+        const cAttrs = mark.attrs
+        cAttrs.x = (cAttrs.x || 0) + offsets.x
+        cAttrs.y = (cAttrs.y || 0) + offsets.y
+      }
     }
   })
 

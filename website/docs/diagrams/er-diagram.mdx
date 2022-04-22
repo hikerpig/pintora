@@ -10,13 +10,14 @@ The syntax is based on Mermaid 8.9. This diagram should start with `erDiagram`.
 ## Basic syntax
 
 ```
-<entity-a> [<relationship> <entity-b> : <relationship-label> [<key>]]
+<entity-a> [<relationship> <entity-b> : <relationship-label> [<key>] ["<comment>"]]
 ```
 
 - `<entity-a>` and `<entity-b>` are the names of entities.
 - `<relationship>` shows how the two entities are related.
 - `<relationship-label>` is a label that describes the relationship from entity-a's perspective.
 - `<key>` is a decoration field that - if specified - appears in the first row, pretty useful for database diagram.
+- `<comment>` is a double-quoted string for comments.
 
 ```pintora play
 erDiagram
@@ -29,7 +30,7 @@ erDiagram
   CUSTOMER }|..|{ DELIVERY-ADDRESS : uses
   ORDER {
     int orderNumber PK
-    int customer FK
+    int customer FK "customer id"
     string deliveryAddress
   }
 ```
