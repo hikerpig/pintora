@@ -1,15 +1,4 @@
-import {
-  GraphicsIR,
-  IDiagramArtist,
-  Group,
-  Text,
-  mat3,
-  safeAssign,
-  calculateTextDimensions,
-  getPointAt,
-  Rect,
-  PathCommand,
-} from '@pintora/core'
+import { GraphicsIR, IDiagramArtist, Group, Text, mat3, safeAssign, getPointAt, Rect, PathCommand } from '@pintora/core'
 import { ErDiagramIR, Identification, Entity, Relationship } from './db'
 import { ErConf, getConf } from './config'
 import {
@@ -20,12 +9,21 @@ import {
   LayoutNode,
   getGraphSplinesOption,
 } from '../util/graph'
-import { makeMark, getBaseText, calcDirection, makeLabelBg, adjustRootMarkBounds } from '../util/artist-util'
+import {
+  makeMark,
+  getBaseText,
+  calcDirection,
+  makeLabelBg,
+  adjustRootMarkBounds,
+  makeEmptyGroup,
+} from '../util/artist-util'
 import dagre from '@pintora/dagre'
 import { drawMarkerTo } from './artist-util'
 import { getPointsCurvePath, getPointsLinearPath } from '../util/line-util'
-import { makeBounds, tryExpandBounds } from '../util/mark-positioner'
+import { makeBounds, positionGroupContents, tryExpandBounds } from '../util/mark-positioner'
 import { calcBound, updateBoundsByPoints } from '../util/bound'
+import { getTextDimensionsInPresicion } from '../util/text'
+import { toFixed } from '../util/number'
 
 let conf: ErConf
 
@@ -113,12 +111,6 @@ const erArtist: IDiagramArtist<ErDiagramIR, ErConf> = {
   },
 }
 
-type AttributePair = {
-  type: Text
-  name: Text
-  key?: Text
-}
-
 function getFontConfig(conf: ErConf) {
   return {
     fontSize: conf.fontSize,
@@ -126,42 +118,94 @@ function getFontConfig(conf: ErConf) {
   }
 }
 
+type CellName = 'type' | 'name' | 'key' | 'comment'
+
+class TableCell<T = Text> {
+  mark: T
+  name: CellName
+  /** inner width */
+  width = 0
+  height = 0
+  order = 0
+
+  static fromMark(mark: Text, name: CellName, opts: Partial<TableCell> = {}) {
+    const cell = new TableCell()
+    cell.mark = mark
+    cell.name = name
+    cell.width = mark.attrs.width
+    cell.height = mark.attrs.height
+
+    Object.assign(cell, opts)
+    if (!('order' in opts)) {
+      if (name in CELL_ORDER) {
+        cell.order = CELL_ORDER[name]
+      }
+    }
+    return cell
+  }
+}
+
+class TableRow {
+  cellMap = new Map<string, TableCell>()
+
+  addCells(cells: TableCell[]) {
+    const validCells = cells.filter(o => Boolean(o))
+    validCells.forEach(cell => {
+      this.cellMap.set(cell.name, cell)
+    })
+  }
+
+  getCell(name: string) {
+    return this.cellMap.get(name)
+  }
+
+  map<V>(fn: (cell: TableCell) => V) {
+    return Array.from(this.cellMap.values()).map(fn)
+  }
+}
+
+class TableBuilder {
+  rows: TableRow[] = []
+  addRow(row: TableRow) {
+    this.rows.push(row)
+  }
+}
+
+const CELL_ORDER: Record<CellName, number> = {
+  key: 1,
+  type: 2,
+  name: 3,
+  comment: 4,
+}
+
 /**
  * Draw attributes for an entity
- * @param groupNode the svg group node for the entity
- * @param entityTextNode the svg node for the entity label text
- * @param attributes an array of attributes defined for the entity (each attribute has a type and a name)
- * @return the bounding box of the entity, after attributes have been added
  */
 const drawAttributes = (group: Group, entityText: Text, attributes: Entity['attributes']) => {
   const attribPaddingY = conf.entityPaddingY / 2 // Padding internal to attribute boxes
   const attribPaddingX = conf.entityPaddingX / 2 // Ditto
   const attrFontSize = conf.fontSize * 0.85
-  const labelBBox = entityText.attrs
-  const attributeNodes: AttributePair[] = [] // Intermediate storage for attribute nodes created so that we can do a second pass
-  let maxTypeWidth = 0
-  let maxNameWidth = 0
-  let maxKeyWidth = 0
+  const labelBBox = { width: Math.ceil(entityText.attrs.width), height: Math.ceil(entityText.attrs.height) }
+  let maxRowContentWidth = 0
   let cumulativeHeight = labelBBox.height + attribPaddingY * 2
   let attrNum = 1
-  const hasKeyAttribute = attributes.some(item => Boolean(item.attributeKey))
 
-  const attributeGroup = makeMark('group', {}, { children: [] })
+  const attributeGroup = makeEmptyGroup()
   group.children.push(attributeGroup)
+
+  const tableBuilder = new TableBuilder()
 
   attributes.forEach(item => {
     const attrPrefix = `${entityText.attrs.id}-attr-${attrNum}`
 
-    const fontConfig = { ...getFontConfig(conf), fontSize: attrFontSize }
-    let keyText: Text
-    if (item.attributeKey) {
-      keyText = makeMark(
+    const makeLabelTextMark = (name: CellName, text: string) => {
+      return makeMark(
         'text',
         {
-          ...calculateTextDimensions(item.attributeKey, fontConfig),
+          ...getTextDimensionsInPresicion(text, fontConfig),
           ...getBaseText(),
-          text: item.attributeKey,
-          id: `${attrPrefix}-key`,
+          text: text,
+          id: `${attrPrefix}-${name}`,
           textAlign: 'left',
           textBaseline: 'middle',
           ...fontConfig,
@@ -170,60 +214,67 @@ const drawAttributes = (group: Group, entityText: Text, attributes: Entity['attr
       )
     }
 
-    const typeText = makeMark(
-      'text',
-      {
-        ...calculateTextDimensions(item.attributeType, fontConfig),
-        ...getBaseText(),
-        text: item.attributeType,
-        id: `${attrPrefix}-type`,
-        textAlign: 'left',
-        textBaseline: 'middle',
-        ...fontConfig,
-      },
-      { class: 'er__entity-label' },
-    )
-    const nameText = makeMark(
-      'text',
-      {
-        ...calculateTextDimensions(item.attributeName, fontConfig),
-        ...getBaseText(),
-        text: item.attributeName,
-        id: `${attrPrefix}-name`,
-        textAlign: 'left',
-        textBaseline: 'middle',
-        ...fontConfig,
-      },
-      { class: 'er__entity-label' },
-    )
-
-    if (item.attributeKey) attributeGroup.children.push(keyText)
-    attributeGroup.children.push(typeText, nameText)
-
-    // Keep a reference to the nodes so that we can iterate through them later
-    attributeNodes.push({ type: typeText, name: nameText, key: keyText })
-
+    const fontConfig = { ...getFontConfig(conf), fontSize: attrFontSize }
+    let keyCell: TableCell
     if (item.attributeKey) {
-      maxKeyWidth = Math.max(maxKeyWidth, keyText.attrs.width)
+      keyCell = TableCell.fromMark(makeLabelTextMark('key', item.attributeKey), 'key')
     }
-    maxTypeWidth = Math.max(maxTypeWidth, typeText.attrs.width)
-    maxNameWidth = Math.max(maxNameWidth, nameText.attrs.width)
 
-    cumulativeHeight +=
-      Math.max(typeText.attrs.height, nameText.attrs.height, keyText?.attrs.height || 0) + attribPaddingY * 2
+    const typeCell = TableCell.fromMark(makeLabelTextMark('type', item.attributeType), 'type')
+    const nameCell = TableCell.fromMark(makeLabelTextMark('name', item.attributeName), 'name')
+
+    let commentCell: TableCell
+    if (item.comment) {
+      commentCell = TableCell.fromMark(makeLabelTextMark('name', item.comment), 'comment')
+    }
+
+    const row = new TableRow()
+    row.addCells([typeCell, nameCell, keyCell, commentCell])
+
+    maxRowContentWidth = Math.max(
+      maxRowContentWidth,
+      row.map(v => v.mark?.attrs.width || 0).reduce((acc, num) => acc + num, 0),
+    )
+    const cellUnitHeights = row.map(v => v.mark?.attrs.height || 0)
+    cumulativeHeight += Math.max(...cellUnitHeights) + attribPaddingY * 2
     attrNum += 1
+
+    tableBuilder.addRow(row)
   })
 
-  const paddingXCount = hasKeyAttribute ? 6 : 4
+  const columnMaxWidths: Record<CellName, number> = {
+    key: 0,
+    type: 0,
+    name: 0,
+    comment: 0,
+  }
+
+  tableBuilder.rows.forEach(row => {
+    row.map(cell => {
+      columnMaxWidths[cell.name] = Math.floor(Math.max(columnMaxWidths[cell.name], cell.width))
+    })
+  })
+
+  const cellOffsets: Record<CellName, number> = {
+    key: 0,
+    type: 0,
+    name: 0,
+    comment: 0,
+  }
+  let cumulativeOffsetX = 0
+  Object.keys(cellOffsets)
+    .sort((a, b) => CELL_ORDER[a] - CELL_ORDER[b])
+    .forEach(k => {
+      cellOffsets[k] = cumulativeOffsetX
+      if (columnMaxWidths[k]) {
+        // cumulativeOffsetX += columnMaxWidths[k] + 2 * attribPaddingX
+        cumulativeOffsetX += Math.floor(columnMaxWidths[k] + 2 * attribPaddingX)
+      }
+    })
+
   // Calculate the new bounding box of the overall entity, now that attributes have been added
   const bBox = {
-    width: Math.max(
-      conf.minEntityWidth,
-      Math.max(
-        labelBBox.width + conf.entityPaddingX * 2,
-        maxTypeWidth + maxNameWidth + maxKeyWidth + attribPaddingX * paddingXCount,
-      ),
-    ),
+    width: Math.ceil(Math.max(conf.minEntityWidth, cumulativeOffsetX, labelBBox.width + attribPaddingX * 2)),
     height:
       attributes.length > 0
         ? cumulativeHeight
@@ -231,16 +282,6 @@ const drawAttributes = (group: Group, entityText: Text, attributes: Entity['attr
   }
 
   if (attributes.length > 0) {
-    const nodeXOffsets: Record<keyof AttributePair, number> = {
-      key: 0,
-      type: maxKeyWidth,
-      name: maxKeyWidth + maxTypeWidth + 2 * attribPaddingX,
-    }
-    if (hasKeyAttribute) {
-      nodeXOffsets.type += 2 * attribPaddingX
-      nodeXOffsets.name += 2 * attribPaddingX
-    }
-
     // Position the entity label near the top of the entity bounding box
     entityText.matrix = mat3.fromTranslation(mat3.create(), [bBox.width / 2, attribPaddingY + labelBBox.height / 2])
 
@@ -258,72 +299,44 @@ const drawAttributes = (group: Group, entityText: Text, attributes: Entity['attr
       })
     }
 
-    attributeNodes.forEach(nodePair => {
-      const rowSegs: Text[] = []
-      if (nodePair.key) {
-        rowSegs.push(nodePair.key)
-      }
-      rowSegs.push(nodePair.type)
-      rowSegs.push(nodePair.name)
+    tableBuilder.rows.forEach((row, i) => {
+      const rowSegs: Text[] = row.map(v => v.mark)
 
       const rowTextHeight = rowSegs.reduce((out, mark) => Math.max(out, mark.attrs.height), 0)
-      const rowHeight = rowTextHeight + attribPaddingY * 2
-      // Calculate the alignment y co-ordinate for the type/name of the attribute
-      const alignY = heightOffset + attribPaddingY + rowTextHeight / 2
+      const rowHeight = toFixed(rowTextHeight + attribPaddingY * 2)
 
-      if (nodePair.key) {
-        const keyRect = makeAttribLabelRect({
-          x: entityText.attrs.x,
+      // Calculate the alignment y co-ordinate for the text attribute
+      const alignY = toFixed(heightOffset + attribPaddingY + rowTextHeight / 2)
+
+      const rowGroup = makeEmptyGroup()
+      attributeGroup.children.push(rowGroup)
+
+      Object.keys(CELL_ORDER).forEach(name => {
+        if (!columnMaxWidths[name]) return
+        const cell = row.getCell(name)
+        const offsetX = cellOffsets[name]
+        const rect = makeAttribLabelRect({
+          x: offsetX,
           y: heightOffset,
-          width: maxKeyWidth + attribPaddingX * 2,
+          width: columnMaxWidths[name] + attribPaddingX * 2,
           height: rowHeight,
         })
-        attributeGroup.children.unshift(keyRect)
-        nodePair.key.matrix = mat3.fromTranslation(mat3.create(), [nodeXOffsets.key + attribPaddingX, alignY])
-      }
-
-      // Position the type of the attribute
-      nodePair.type.matrix = mat3.fromTranslation(mat3.create(), [nodeXOffsets.type + attribPaddingX, alignY])
-
-      // Insert a rectangle for the type
-      const typeRect = makeAttribLabelRect({
-        x: entityText.attrs.x + nodeXOffsets.type,
-        y: heightOffset,
-        width: maxTypeWidth + attribPaddingX * 2,
-        height: rowHeight,
+        // console.table({ offsetX, heightOffset, rowHeight, width: rect.attrs.width, alignY })
+        rowGroup.children.push(rect)
+        if (cell) {
+          rowGroup.children.push(cell.mark)
+          cell.mark.matrix = mat3.fromTranslation(mat3.create(), [offsetX + attribPaddingX, alignY])
+        }
       })
 
-      // Position the name of the attribute
-      nodePair.name.matrix = mat3.fromTranslation(mat3.create(), [nodeXOffsets.name + attribPaddingX, alignY])
-
-      // Insert a rectangle for the name
-      const nameRect = makeAttribLabelRect({
-        x: entityText.attrs.x + nodeXOffsets.name,
-        y: heightOffset,
-        width: maxNameWidth + attribPaddingX * 2,
-        height: rowHeight,
-      })
+      const nodeUnitHeights = row.map(v => v?.mark.attrs.height || 0)
 
       // Increment the height offset to move to the next row
-      heightOffset += Math.max(nodePair.name.attrs.height, nodePair.name.attrs.height) + attribPaddingY * 2
+      heightOffset += Math.ceil(Math.max(...nodeUnitHeights) + attribPaddingY * 2)
 
       // Flip the attribute style for row banding
       attribStyle = attribStyle == 'attributeBoxOdd' ? 'attributeBoxEven' : 'attributeBoxOdd'
-
-      attributeGroup.children.unshift(typeRect, nameRect)
     })
-
-    if (hasKeyAttribute) {
-      // a background rect for key column
-      const entityLabelOuterHeight = labelBBox.height + attribPaddingY * 2
-      const keyColBgRect = makeAttribLabelRect({
-        x: entityText.attrs.x,
-        y: entityText.attrs.y + entityLabelOuterHeight,
-        width: maxKeyWidth + attribPaddingX * 2,
-        height: cumulativeHeight - entityLabelOuterHeight,
-      })
-      attributeGroup.children.unshift(keyColBgRect)
-    }
   } else {
     // Ensure the entity box is a decent size without any attributes
     bBox.height = Math.max(conf.minEntityHeight, cumulativeHeight)
@@ -364,7 +377,7 @@ const drawEntities = function (rootMark: Group, ir: ErDiagramIR, graph: LayoutGr
       'text',
       {
         ...getBaseText(),
-        ...calculateTextDimensions(id, fontConfig),
+        ...getTextDimensionsInPresicion(id, fontConfig),
         text: id,
         id: textId,
         textAlign: 'center',
@@ -408,7 +421,6 @@ const drawEntities = function (rootMark: Group, ir: ErDiagramIR, graph: LayoutGr
       onLayout(data) {
         const x = Math.floor(data.x)
         const y = Math.floor(data.y)
-        // console.log('on layout', x, y)
         const marks = [rectMark, textMark]
         marks.forEach(mark => {
           // center the marks to dest point
@@ -416,11 +428,11 @@ const drawEntities = function (rootMark: Group, ir: ErDiagramIR, graph: LayoutGr
         })
 
         if (attributeGroup) {
-          attributeGroup.children.forEach(child => {
-            safeAssign(child.attrs, {
-              x: x + child.attrs.x - entityWidth / 2,
-              y: y + child.attrs.y - entityHeight / 2,
-            })
+          positionGroupContents(attributeGroup, {
+            x: toFixed(x - entityWidth / 2),
+            y: toFixed(y - entityHeight / 2),
+            width: data.width,
+            height: data.height,
           })
         }
       },
@@ -433,7 +445,7 @@ const drawEntities = function (rootMark: Group, ir: ErDiagramIR, graph: LayoutGr
 
 const adjustEntities = function (graph: LayoutGraph) {
   graph.nodes().forEach(function (v) {
-    const nodeData: LayoutNode = graph.node(v) as any
+    const nodeData = graph.node(v) as LayoutNode
     if (nodeData) {
       // console.log('adjustEntities, graph node: ', nodeData)
       if (nodeData.onLayout) {
@@ -540,7 +552,7 @@ const drawRelationshipFromLayout = function (group: Group, rel: Relationship, g:
     { class: 'er__relationship-label' },
   )
 
-  const labelDims = calculateTextDimensions(rel.roleA, fontConfig)
+  const labelDims = getTextDimensionsInPresicion(rel.roleA, fontConfig)
   labelDims.width += conf.fontSize / 2
   labelDims.height += conf.fontSize / 2
   const labelBg = makeLabelBg(labelDims, { x: labelX, y: labelY }, { id: `#${labelId}`, fill: conf.labelBackground })

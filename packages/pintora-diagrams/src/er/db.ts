@@ -19,6 +19,7 @@ export type Attribute = {
   attributeType: string
   attributeName: string
   attributeKey?: string
+  comment?: string
 }
 
 export type Entity = {

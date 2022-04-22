@@ -1,3 +1,4 @@
+/// <reference types="@percy/cypress" />
 import { encodeForUrl } from '@pintora/core'
 
 export function startRender(opts: { code: string }) {
