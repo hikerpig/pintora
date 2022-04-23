@@ -63,6 +63,7 @@ end`),
     :action 2;
     kill
   endfork`),
+      existSelectors: ['.activity__keyword'],
     },
   ])
 })

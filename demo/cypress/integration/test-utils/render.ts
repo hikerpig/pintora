@@ -12,6 +12,7 @@ export function startRender(opts: { code: string }) {
 export type SnapshotCaseItem = {
   description: string
   code: string
+  existSelectors?: string[]
   onRender?(c: ReturnType<typeof startRender>): void
 }
 
@@ -22,6 +23,12 @@ export function makeSnapshotCases(items: SnapshotCaseItem[]) {
       c.get('svg').should('exist') // svg
 
       if (item.onRender) item.onRender(c)
+
+      if (item.existSelectors) {
+        item.existSelectors.forEach(selector => {
+          c.get(selector).should('exist')
+        })
+      }
 
       cy.percySnapshot()
     })
