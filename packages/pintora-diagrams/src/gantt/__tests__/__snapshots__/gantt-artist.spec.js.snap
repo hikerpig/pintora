@@ -1,0 +1,645 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`gantt-artist match example snapshot 1`] = `
+Object {
+  "mark": Object {
+    "attrs": Object {},
+    "children": Array [
+      Object {
+        "attrs": Object {},
+        "children": Array [
+          Object {
+            "attrs": Object {
+              "fill": "#f9e096",
+            },
+            "class": "gantt__section",
+            "type": "rect",
+          },
+          Object {
+            "attrs": Object {
+              "fill": "#3b4044",
+              "fontFamily": "Source Code Pro, sans-serif",
+              "fontSize": 14,
+              "text": "First",
+              "textAlign": "left",
+              "textBaseline": "middle",
+            },
+            "type": "text",
+          },
+          Object {
+            "attrs": Object {
+              "fill": "transparent",
+            },
+            "class": "gantt__section",
+            "type": "rect",
+          },
+          Object {
+            "attrs": Object {
+              "fill": "#3b4044",
+              "fontFamily": "Source Code Pro, sans-serif",
+              "fontSize": 14,
+              "text": "Second",
+              "textAlign": "left",
+              "textBaseline": "middle",
+            },
+            "type": "text",
+          },
+          Object {
+            "attrs": Object {
+              "fill": "#f9e096",
+            },
+            "class": "gantt__section",
+            "type": "rect",
+          },
+          Object {
+            "attrs": Object {
+              "fill": "#3b4044",
+              "fontFamily": "Source Code Pro, sans-serif",
+              "fontSize": 14,
+              "text": "Third",
+              "textAlign": "left",
+              "textBaseline": "middle",
+            },
+            "type": "text",
+          },
+        ],
+        "type": "group",
+      },
+      Object {
+        "attrs": Object {},
+        "children": Array [
+          Object {
+            "attrs": Object {
+              "fill": "#6a737b",
+              "fillOpacity": 0.2,
+            },
+            "type": "rect",
+          },
+          Object {
+            "attrs": Object {
+              "fill": "#6a737b",
+              "fillOpacity": 0.2,
+            },
+            "type": "rect",
+          },
+          Object {
+            "attrs": Object {
+              "fill": "#6a737b",
+              "fillOpacity": 0.2,
+            },
+            "type": "rect",
+          },
+          Object {
+            "attrs": Object {
+              "fill": "#6a737b",
+              "fillOpacity": 0.2,
+            },
+            "type": "rect",
+          },
+        ],
+        "type": "group",
+      },
+      Object {
+        "attrs": Object {},
+        "children": Array [
+          Object {
+            "attrs": Object {
+              "stroke": "#6a737b",
+            },
+            "type": "line",
+          },
+          Object {
+            "attrs": Object {
+              "fill": "#3b4044",
+              "fontSize": 10,
+              "text": "22-02-17",
+              "textAlign": "center",
+              "textBaseline": "top",
+            },
+            "type": "text",
+          },
+          Object {
+            "attrs": Object {
+              "stroke": "#6a737b",
+            },
+            "type": "line",
+          },
+          Object {
+            "attrs": Object {
+              "fill": "#3b4044",
+              "fontSize": 10,
+              "text": "22-02-18",
+              "textAlign": "center",
+              "textBaseline": "top",
+            },
+            "type": "text",
+          },
+          Object {
+            "attrs": Object {
+              "stroke": "#6a737b",
+            },
+            "type": "line",
+          },
+          Object {
+            "attrs": Object {
+              "fill": "#3b4044",
+              "fontSize": 10,
+              "text": "22-02-19",
+              "textAlign": "center",
+              "textBaseline": "top",
+            },
+            "type": "text",
+          },
+          Object {
+            "attrs": Object {
+              "stroke": "#6a737b",
+            },
+            "type": "line",
+          },
+          Object {
+            "attrs": Object {
+              "fill": "#3b4044",
+              "fontSize": 10,
+              "text": "22-02-20",
+              "textAlign": "center",
+              "textBaseline": "top",
+            },
+            "type": "text",
+          },
+          Object {
+            "attrs": Object {
+              "stroke": "#6a737b",
+            },
+            "type": "line",
+          },
+          Object {
+            "attrs": Object {
+              "fill": "#3b4044",
+              "fontSize": 10,
+              "text": "22-02-21",
+              "textAlign": "center",
+              "textBaseline": "top",
+            },
+            "type": "text",
+          },
+          Object {
+            "attrs": Object {
+              "stroke": "#6a737b",
+            },
+            "type": "line",
+          },
+          Object {
+            "attrs": Object {
+              "fill": "#3b4044",
+              "fontSize": 10,
+              "text": "22-02-22",
+              "textAlign": "center",
+              "textBaseline": "top",
+            },
+            "type": "text",
+          },
+          Object {
+            "attrs": Object {
+              "stroke": "#6a737b",
+            },
+            "type": "line",
+          },
+          Object {
+            "attrs": Object {
+              "fill": "#3b4044",
+              "fontSize": 10,
+              "text": "22-02-23",
+              "textAlign": "center",
+              "textBaseline": "top",
+            },
+            "type": "text",
+          },
+          Object {
+            "attrs": Object {
+              "stroke": "#6a737b",
+            },
+            "type": "line",
+          },
+          Object {
+            "attrs": Object {
+              "fill": "#3b4044",
+              "fontSize": 10,
+              "text": "22-02-24",
+              "textAlign": "center",
+              "textBaseline": "top",
+            },
+            "type": "text",
+          },
+          Object {
+            "attrs": Object {
+              "stroke": "#6a737b",
+            },
+            "type": "line",
+          },
+          Object {
+            "attrs": Object {
+              "fill": "#3b4044",
+              "fontSize": 10,
+              "text": "22-02-25",
+              "textAlign": "center",
+              "textBaseline": "top",
+            },
+            "type": "text",
+          },
+          Object {
+            "attrs": Object {
+              "stroke": "#6a737b",
+            },
+            "type": "line",
+          },
+          Object {
+            "attrs": Object {
+              "fill": "#3b4044",
+              "fontSize": 10,
+              "text": "22-02-26",
+              "textAlign": "center",
+              "textBaseline": "top",
+            },
+            "type": "text",
+          },
+          Object {
+            "attrs": Object {
+              "stroke": "#6a737b",
+            },
+            "type": "line",
+          },
+          Object {
+            "attrs": Object {
+              "fill": "#3b4044",
+              "fontSize": 10,
+              "text": "22-02-27",
+              "textAlign": "center",
+              "textBaseline": "top",
+            },
+            "type": "text",
+          },
+          Object {
+            "attrs": Object {
+              "stroke": "#6a737b",
+            },
+            "type": "line",
+          },
+          Object {
+            "attrs": Object {
+              "fill": "#3b4044",
+              "fontSize": 10,
+              "text": "22-02-28",
+              "textAlign": "center",
+              "textBaseline": "top",
+            },
+            "type": "text",
+          },
+          Object {
+            "attrs": Object {
+              "stroke": "#6a737b",
+            },
+            "type": "line",
+          },
+          Object {
+            "attrs": Object {
+              "fill": "#3b4044",
+              "fontSize": 10,
+              "text": "22-03-01",
+              "textAlign": "center",
+              "textBaseline": "top",
+            },
+            "type": "text",
+          },
+          Object {
+            "attrs": Object {
+              "stroke": "#6a737b",
+            },
+            "type": "line",
+          },
+          Object {
+            "attrs": Object {
+              "fill": "#3b4044",
+              "fontSize": 10,
+              "text": "22-03-02",
+              "textAlign": "center",
+              "textBaseline": "top",
+            },
+            "type": "text",
+          },
+          Object {
+            "attrs": Object {
+              "stroke": "#6a737b",
+            },
+            "type": "line",
+          },
+          Object {
+            "attrs": Object {
+              "fill": "#3b4044",
+              "fontSize": 10,
+              "text": "22-03-03",
+              "textAlign": "center",
+              "textBaseline": "top",
+            },
+            "type": "text",
+          },
+          Object {
+            "attrs": Object {
+              "stroke": "#6a737b",
+            },
+            "type": "line",
+          },
+          Object {
+            "attrs": Object {
+              "fill": "#3b4044",
+              "fontSize": 10,
+              "text": "22-03-04",
+              "textAlign": "center",
+              "textBaseline": "top",
+            },
+            "type": "text",
+          },
+          Object {
+            "attrs": Object {
+              "stroke": "#6a737b",
+            },
+            "type": "line",
+          },
+          Object {
+            "attrs": Object {
+              "fill": "#3b4044",
+              "fontSize": 10,
+              "text": "22-03-05",
+              "textAlign": "center",
+              "textBaseline": "top",
+            },
+            "type": "text",
+          },
+          Object {
+            "attrs": Object {
+              "stroke": "#6a737b",
+            },
+            "type": "line",
+          },
+          Object {
+            "attrs": Object {
+              "fill": "#3b4044",
+              "fontSize": 10,
+              "text": "22-03-06",
+              "textAlign": "center",
+              "textBaseline": "top",
+            },
+            "type": "text",
+          },
+          Object {
+            "attrs": Object {
+              "stroke": "#6a737b",
+            },
+            "type": "line",
+          },
+          Object {
+            "attrs": Object {
+              "fill": "#3b4044",
+              "fontSize": 10,
+              "text": "22-03-07",
+              "textAlign": "center",
+              "textBaseline": "top",
+            },
+            "type": "text",
+          },
+          Object {
+            "attrs": Object {
+              "stroke": "#6a737b",
+            },
+            "type": "line",
+          },
+          Object {
+            "attrs": Object {
+              "fill": "#3b4044",
+              "fontSize": 10,
+              "text": "22-03-08",
+              "textAlign": "center",
+              "textBaseline": "top",
+            },
+            "type": "text",
+          },
+          Object {
+            "attrs": Object {
+              "stroke": "#6a737b",
+            },
+            "type": "line",
+          },
+          Object {
+            "attrs": Object {
+              "fill": "#3b4044",
+              "fontSize": 10,
+              "text": "22-03-09",
+              "textAlign": "center",
+              "textBaseline": "top",
+            },
+            "type": "text",
+          },
+          Object {
+            "attrs": Object {
+              "stroke": "#6a737b",
+            },
+            "type": "line",
+          },
+          Object {
+            "attrs": Object {
+              "fill": "#3b4044",
+              "fontSize": 10,
+              "text": "22-03-10",
+              "textAlign": "center",
+              "textBaseline": "top",
+            },
+            "type": "text",
+          },
+          Object {
+            "attrs": Object {
+              "stroke": "#6a737b",
+            },
+            "type": "line",
+          },
+          Object {
+            "attrs": Object {
+              "fill": "#3b4044",
+              "fontSize": 10,
+              "text": "22-03-11",
+              "textAlign": "center",
+              "textBaseline": "top",
+            },
+            "type": "text",
+          },
+          Object {
+            "attrs": Object {
+              "stroke": "#6a737b",
+            },
+            "type": "line",
+          },
+          Object {
+            "attrs": Object {
+              "fill": "#3b4044",
+              "fontSize": 10,
+              "text": "22-03-12",
+              "textAlign": "center",
+              "textBaseline": "top",
+            },
+            "type": "text",
+          },
+          Object {
+            "attrs": Object {
+              "stroke": "#6a737b",
+            },
+            "type": "line",
+          },
+          Object {
+            "attrs": Object {
+              "fill": "#3b4044",
+              "fontSize": 10,
+              "text": "22-03-13",
+              "textAlign": "center",
+              "textBaseline": "top",
+            },
+            "type": "text",
+          },
+          Object {
+            "attrs": Object {
+              "stroke": "#6a737b",
+            },
+            "type": "line",
+          },
+          Object {
+            "attrs": Object {
+              "fill": "#3b4044",
+              "fontSize": 10,
+              "text": "22-03-14",
+              "textAlign": "center",
+              "textBaseline": "top",
+            },
+            "type": "text",
+          },
+        ],
+        "class": "gantt__grid",
+        "type": "group",
+      },
+      Object {
+        "attrs": Object {},
+        "children": Array [
+          Object {
+            "attrs": Object {
+              "fill": "#fdb05e",
+              "radius": 2,
+              "stroke": "#3b4044",
+            },
+            "type": "rect",
+          },
+          Object {
+            "attrs": Object {
+              "fill": "#3b4044",
+              "fontFamily": "Source Code Pro, sans-serif",
+              "fontSize": 14,
+              "text": "A",
+              "textAlign": "center",
+              "textBaseline": "middle",
+            },
+            "type": "text",
+          },
+        ],
+        "type": "group",
+      },
+      Object {
+        "attrs": Object {},
+        "children": Array [
+          Object {
+            "attrs": Object {
+              "fill": "#fdb05e",
+              "radius": 2,
+              "stroke": "#3b4044",
+            },
+            "type": "rect",
+          },
+          Object {
+            "attrs": Object {
+              "fill": "#3b4044",
+              "fontFamily": "Source Code Pro, sans-serif",
+              "fontSize": 14,
+              "text": "B",
+              "textAlign": "center",
+              "textBaseline": "middle",
+            },
+            "type": "text",
+          },
+        ],
+        "type": "group",
+      },
+      Object {
+        "attrs": Object {},
+        "children": Array [
+          Object {
+            "attrs": Object {
+              "fill": "#fdb05e",
+              "radius": 2,
+              "stroke": "#3b4044",
+            },
+            "type": "rect",
+          },
+          Object {
+            "attrs": Object {
+              "fill": "#3b4044",
+              "fontFamily": "Source Code Pro, sans-serif",
+              "fontSize": 14,
+              "text": "C",
+              "textAlign": "center",
+              "textBaseline": "middle",
+            },
+            "type": "text",
+          },
+        ],
+        "type": "group",
+      },
+      Object {
+        "attrs": Object {},
+        "children": Array [
+          Object {
+            "attrs": Object {
+              "fill": "#fdb05e",
+              "radius": 2,
+              "stroke": "#3b4044",
+            },
+            "type": "rect",
+          },
+          Object {
+            "attrs": Object {
+              "fill": "#3b4044",
+              "fontFamily": "Source Code Pro, sans-serif",
+              "fontSize": 14,
+              "text": "D",
+              "textAlign": "center",
+              "textBaseline": "middle",
+            },
+            "type": "text",
+          },
+        ],
+        "type": "group",
+      },
+      Object {
+        "attrs": Object {},
+        "children": Array [],
+        "type": "group",
+      },
+      Object {
+        "attrs": Object {
+          "fill": "#3b4044",
+          "fontFamily": "Source Code Pro, sans-serif",
+          "fontSize": 14,
+          "fontWeight": "bold",
+          "text": "Gantt example",
+          "textBaseline": "middle",
+        },
+        "type": "text",
+      },
+    ],
+    "type": "group",
+  },
+}
+`;
