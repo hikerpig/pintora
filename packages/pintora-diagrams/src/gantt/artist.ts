@@ -203,6 +203,7 @@ class GanttDraw {
         fill: this.conf.fontColor,
         textBaseline: 'middle',
         ...this.fontConfig,
+        fontWeight: 'bold',
       })
       this.layerManager.addMark('title', titleMark)
     }
