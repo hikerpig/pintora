@@ -31,6 +31,7 @@ let lexer = moo.compile({
   COLON: /:/,
   LEFT_BRACE: /\{/,
   RIGHT_BRACE: /\}/,
+  INHERIT: /inherit/,
   PARAM_DIRECTIVE: /@param/, // for config.ne
   COMMENT_LINE: COMMENT_LINE_REGEXP,
   CONFIG_DIRECTIVE,
@@ -66,6 +67,13 @@ statement ->
         yy.addRelationship(d[0], d[6], d[4], d[2])
       }
     %}
+  | entityName %WS %INHERIT %WS entityName %WS:* %NL {% (d) => {
+      yy.addEntity(d[4])
+      yy.addEntity(d[0])
+      const sup = d[4]
+      const sub = d[0]
+      yy.addInheritance(sup, sub)
+    } %}
   | entityName __ "{" __ attributes _ "}" %NL {%
       function(d) {
         yy.addEntity(d[0]);
@@ -74,6 +82,7 @@ statement ->
     %}
   | entityName "{" "}" %NL {% (d) => yy.addEntity(d[0]) %}
   | entityName %WS:* %NL {% (d) => yy.addEntity(d[0]) %}
+
   | paramClause %WS:* %NL {%
       function(d) {
         const { type, ...styleParam } = d[0]

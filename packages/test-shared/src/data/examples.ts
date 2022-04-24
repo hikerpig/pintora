@@ -39,13 +39,22 @@ export const erExample: DiagramExample = {
   description: 'Sample for erDiagram',
   code: stripStartEmptyLines(`
 erDiagram
+  PERSON {
+    string phone "phone number"
+  }
+  
+  CUSTOMER inherit PERSON
+  DELIVERER inherit PERSON
+
   CUSTOMER ||--o{ ORDER : places
   ORDER ||--|{ LINE-ITEM : contains
   CUSTOMER }|..|{ DELIVERY-ADDRESS : uses
   ORDER {
     int order_number PK 
-    string adress "delivery"
+    string adress "delivery address"
   }
+  
+  DELIVERER ||--o{ DELIVERY : completes
 `),
 }
 

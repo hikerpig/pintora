@@ -1,4 +1,15 @@
-import { GraphicsIR, IDiagramArtist, Group, Text, mat3, safeAssign, getPointAt, Rect, PathCommand } from '@pintora/core'
+import {
+  GraphicsIR,
+  IDiagramArtist,
+  Group,
+  Text,
+  mat3,
+  safeAssign,
+  getPointAt,
+  Rect,
+  PathCommand,
+  Point,
+} from '@pintora/core'
 import { ErDiagramIR, Identification, Entity, Relationship } from './db'
 import { ErConf, getConf } from './config'
 import {
@@ -16,9 +27,10 @@ import {
   makeLabelBg,
   adjustRootMarkBounds,
   makeEmptyGroup,
+  makeTriangle,
 } from '../util/artist-util'
 import dagre from '@pintora/dagre'
-import { drawMarkerTo } from './artist-util'
+import { drawMarkerTo, CELL_ORDER, CellName, TableBuilder, TableCell, TableRow } from './artist-util'
 import { getPointsCurvePath, getPointsLinearPath } from '../util/line-util'
 import { makeBounds, positionGroupContents, tryExpandBounds } from '../util/mark-positioner'
 import { calcBound, updateBoundsByPoints } from '../util/bound'
@@ -71,6 +83,8 @@ const erArtist: IDiagramArtist<ErDiagramIR, ErConf> = {
     // Add all the relationships to the graph
     const relationships = addRelationships(ir.relationships, g)
 
+    drawInheritances(ir, g, rootMark)
+
     dagre.layout(g, {})
 
     // Adjust the positions of the entities so that they adhere to the layout
@@ -116,66 +130,6 @@ function getFontConfig(conf: ErConf) {
     fontSize: conf.fontSize,
     fontFamily: conf.fontFamily,
   }
-}
-
-type CellName = 'type' | 'name' | 'key' | 'comment'
-
-class TableCell<T = Text> {
-  mark: T
-  name: CellName
-  /** inner width */
-  width = 0
-  height = 0
-  order = 0
-
-  static fromMark(mark: Text, name: CellName, opts: Partial<TableCell> = {}) {
-    const cell = new TableCell()
-    cell.mark = mark
-    cell.name = name
-    cell.width = mark.attrs.width
-    cell.height = mark.attrs.height
-
-    Object.assign(cell, opts)
-    if (!('order' in opts)) {
-      if (name in CELL_ORDER) {
-        cell.order = CELL_ORDER[name]
-      }
-    }
-    return cell
-  }
-}
-
-class TableRow {
-  cellMap = new Map<string, TableCell>()
-
-  addCells(cells: TableCell[]) {
-    const validCells = cells.filter(o => Boolean(o))
-    validCells.forEach(cell => {
-      this.cellMap.set(cell.name, cell)
-    })
-  }
-
-  getCell(name: string) {
-    return this.cellMap.get(name)
-  }
-
-  map<V>(fn: (cell: TableCell) => V) {
-    return Array.from(this.cellMap.values()).map(fn)
-  }
-}
-
-class TableBuilder {
-  rows: TableRow[] = []
-  addRow(row: TableRow) {
-    this.rows.push(row)
-  }
-}
-
-const CELL_ORDER: Record<CellName, number> = {
-  key: 1,
-  type: 2,
-  name: 3,
-  comment: 4,
 }
 
 /**
@@ -286,7 +240,7 @@ const drawAttributes = (group: Group, entityText: Text, attributes: Entity['attr
     entityText.matrix = mat3.fromTranslation(mat3.create(), [bBox.width / 2, attribPaddingY + labelBBox.height / 2])
 
     // Add rectangular boxes for the attribute types/names
-    let heightOffset = labelBBox.height + attribPaddingY * 2 // Start at the bottom of the entity label
+    let heightOffset = toFixed(labelBBox.height + attribPaddingY * 2) // Start at the bottom of the entity label
     let attribStyle = 'attributeBoxOdd' // We will flip the style on alternate rows to achieve a banded effect
 
     const attributeFill = conf.attributeFill
@@ -332,7 +286,7 @@ const drawAttributes = (group: Group, entityText: Text, attributes: Entity['attr
       const nodeUnitHeights = row.map(v => v?.mark.attrs.height || 0)
 
       // Increment the height offset to move to the next row
-      heightOffset += Math.ceil(Math.max(...nodeUnitHeights) + attribPaddingY * 2)
+      heightOffset += toFixed(Math.max(...nodeUnitHeights) + attribPaddingY * 2)
 
       // Flip the attribute style for row banding
       attribStyle = attribStyle == 'attributeBoxOdd' ? 'attributeBoxEven' : 'attributeBoxOdd'
@@ -453,16 +407,30 @@ const adjustEntities = function (graph: LayoutGraph) {
       }
     }
   })
+  graph.edges().forEach(function (e) {
+    const edgeData = graph.edge(e) as EdgeData
+    if (edgeData) {
+      if (edgeData.onLayout) edgeData.onLayout(edgeData)
+    }
+  })
 }
 
 const getEdgeName = function (rel: Relationship) {
   return (rel.entityA + rel.roleA + rel.entityB).replace(/\s/g, '')
 }
 
-type EdgeData = BaseEdgeData & {
-  name: string
-  relationship: Relationship
-}
+type EdgeData = BaseEdgeData &
+  (
+    | {
+        name: string
+        relationship: Relationship
+      }
+    | {
+        isInheritance: true
+      }
+  ) & {
+    onLayout(data: EdgeData): void
+  }
 
 /**
  * Add each relationship to the graph
@@ -480,9 +448,6 @@ const addRelationships = function (relationships: ErDiagramIR['relationships'], 
 let relCnt = 0
 /**
  * Draw a relationship using edge information from the graph
- * @param svg the svg node
- * @param rel the relationship to draw in the svg
- * @param g the graph containing the edge information
  */
 const drawRelationshipFromLayout = function (group: Group, rel: Relationship, g: LayoutGraph) {
   relCnt++
@@ -491,6 +456,7 @@ const drawRelationshipFromLayout = function (group: Group, rel: Relationship, g:
 
   // Find the edge relating to this relationship
   const edge: EdgeData = g.edge(rel.entityA, rel.entityB)
+  if (!('relationship' in edge)) return
 
   const [startPoint, ...restPoints] = edge.points
   const secondPoint = restPoints[0]
@@ -568,6 +534,91 @@ const drawRelationshipFromLayout = function (group: Group, rel: Relationship, g:
   // const secondPointMarker = makeCircleWithCoordInPoint(secondPoint)
   // group.children.push(secondPointMarker)
   return { bounds }
+}
+
+function drawInheritances(ir: ErDiagramIR, g: LayoutGraph, rootMark: Group) {
+  const fontConfig = getFontConfig(conf)
+  const inheritanceGroup = makeEmptyGroup()
+  rootMark.children.push(inheritanceGroup)
+
+  ir.inheritances.forEach(inh => {
+    const LABEL_TEXT = 'ISA'
+    const labelDims = getTextDimensionsInPresicion(LABEL_TEXT, fontConfig)
+
+    const labelMark = makeMark(
+      'text',
+      {
+        text: LABEL_TEXT,
+        textAlign: 'center',
+        textBaseline: 'middle',
+        fill: conf.textColor,
+        ...fontConfig,
+      },
+      { class: 'er__relationship-label' },
+    )
+    inheritanceGroup.children.push(labelMark)
+
+    const labelId = `inherit-${inh.sup}-${inh.sub}`
+    const triangleBaseLength = Math.max(labelDims.width, labelDims.height) * 1.8
+    const size = {
+      width: triangleBaseLength,
+      // add extra height, otherwise edge will point through the triangle
+      height: Math.ceil(triangleBaseLength * Math.sin(Math.PI / 3)) + 5,
+    }
+
+    let inheritNodeCenter: Point
+
+    g.setNode(labelId, {
+      ...size,
+      onLayout(data) {
+        inheritNodeCenter = {
+          x: toFixed(data.x),
+          y: toFixed(data.y),
+        }
+      },
+    })
+
+    g.setEdge(labelId, inh.sup, {
+      isInheritance: true,
+      onLayout(edge) {
+        const linePath = makeLinePath(edge, conf)
+        inheritanceGroup.children.push(linePath)
+
+        const rad = calcDirection(edge.points[0], edge.points[1])
+        const { mark: triangle } = makeTriangle(inheritNodeCenter, triangleBaseLength, rad + Math.PI / 2, {
+          stroke: conf.edgeColor,
+          fill: conf.attributeFill,
+          lineJoin: 'round',
+        })
+        inheritanceGroup.children.unshift(triangle)
+
+        const labelOffseX = (-labelDims.width * Math.cos(rad)) / 4
+        const labelOffseY = -labelDims.height * Math.sin(rad)
+        safeAssign(labelMark.attrs, {
+          x: inheritNodeCenter.x + labelOffseX,
+          y: inheritNodeCenter.y + labelOffseY,
+        })
+      },
+    } as EdgeData)
+
+    g.setEdge(inh.sub, labelId, {
+      isInheritance: true,
+      onLayout(edge) {
+        const linePath = makeLinePath(edge, conf)
+        inheritanceGroup.children.push(linePath)
+      },
+    } as EdgeData)
+  })
+}
+
+function makeLinePath(edge: EdgeData, conf: ErConf) {
+  const pathCommands = conf.edgeType === 'curved' ? getPointsCurvePath(edge.points) : getPointsLinearPath(edge.points)
+  const linePath = makeMark('path', {
+    path: pathCommands,
+    stroke: conf.edgeColor,
+    lineJoin: 'round',
+  })
+  return linePath
 }
 
 export default erArtist

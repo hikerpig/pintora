@@ -1,0 +1,445 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`component-artist will draw inheritance 1`] = `
+Object {
+  "mark": Object {
+    "attrs": Object {},
+    "children": Array [
+      Object {
+        "children": Array [],
+        "class": "er__relations",
+        "type": "group",
+      },
+      Object {
+        "attrs": Object {
+          "id": "person",
+        },
+        "children": Array [
+          Object {
+            "attrs": Object {
+              "fill": "#fdb05e",
+              "radius": 2,
+              "stroke": "#3b4044",
+              "text": "",
+            },
+            "class": "er__entity-box",
+            "type": "rect",
+          },
+          Object {
+            "attrs": Object {
+              "fill": "#3b4044",
+              "fontFamily": "Source Code Pro, sans-serif",
+              "fontSize": 14,
+              "fontWeight": "bold",
+              "id": "entity-person",
+              "text": "person",
+              "textAlign": "center",
+              "textBaseline": "middle",
+            },
+            "class": "er__entity-label",
+            "type": "text",
+          },
+          Object {
+            "attrs": Object {},
+            "children": Array [
+              Object {
+                "attrs": Object {},
+                "children": Array [
+                  Object {
+                    "attrs": Object {
+                      "fill": "#fffbf9",
+                      "stroke": "#3b4044",
+                    },
+                    "type": "rect",
+                  },
+                  Object {
+                    "attrs": Object {
+                      "fill": "#3b4044",
+                      "fontFamily": "Source Code Pro, sans-serif",
+                      "fontSize": 11.9,
+                      "id": "entity-person-attr-1-type",
+                      "text": "int",
+                      "textAlign": "left",
+                      "textBaseline": "middle",
+                    },
+                    "class": "er__entity-label",
+                    "type": "text",
+                  },
+                  Object {
+                    "attrs": Object {
+                      "fill": "#fffbf9",
+                      "stroke": "#3b4044",
+                    },
+                    "type": "rect",
+                  },
+                  Object {
+                    "attrs": Object {
+                      "fill": "#3b4044",
+                      "fontFamily": "Source Code Pro, sans-serif",
+                      "fontSize": 11.9,
+                      "id": "entity-person-attr-1-name",
+                      "text": "age",
+                      "textAlign": "left",
+                      "textBaseline": "middle",
+                    },
+                    "class": "er__entity-label",
+                    "type": "text",
+                  },
+                ],
+                "type": "group",
+              },
+              Object {
+                "attrs": Object {},
+                "children": Array [
+                  Object {
+                    "attrs": Object {
+                      "fill": "#fffbf9",
+                      "stroke": "#3b4044",
+                    },
+                    "type": "rect",
+                  },
+                  Object {
+                    "attrs": Object {
+                      "fill": "#3b4044",
+                      "fontFamily": "Source Code Pro, sans-serif",
+                      "fontSize": 11.9,
+                      "id": "entity-person-attr-2-type",
+                      "text": "string",
+                      "textAlign": "left",
+                      "textBaseline": "middle",
+                    },
+                    "class": "er__entity-label",
+                    "type": "text",
+                  },
+                  Object {
+                    "attrs": Object {
+                      "fill": "#fffbf9",
+                      "stroke": "#3b4044",
+                    },
+                    "type": "rect",
+                  },
+                  Object {
+                    "attrs": Object {
+                      "fill": "#3b4044",
+                      "fontFamily": "Source Code Pro, sans-serif",
+                      "fontSize": 11.9,
+                      "id": "entity-person-attr-2-name",
+                      "text": "phone_number",
+                      "textAlign": "left",
+                      "textBaseline": "middle",
+                    },
+                    "class": "er__entity-label",
+                    "type": "text",
+                  },
+                ],
+                "type": "group",
+              },
+            ],
+            "type": "group",
+          },
+        ],
+        "class": "er__entity",
+        "type": "group",
+      },
+      Object {
+        "attrs": Object {
+          "id": "customer",
+        },
+        "children": Array [
+          Object {
+            "attrs": Object {
+              "fill": "#fdb05e",
+              "radius": 2,
+              "stroke": "#3b4044",
+              "text": "",
+            },
+            "class": "er__entity-box",
+            "type": "rect",
+          },
+          Object {
+            "attrs": Object {
+              "fill": "#3b4044",
+              "fontFamily": "Source Code Pro, sans-serif",
+              "fontSize": 14,
+              "fontWeight": "bold",
+              "id": "entity-customer",
+              "text": "customer",
+              "textAlign": "center",
+              "textBaseline": "middle",
+            },
+            "class": "er__entity-label",
+            "type": "text",
+          },
+          Object {
+            "attrs": Object {},
+            "children": Array [
+              Object {
+                "attrs": Object {},
+                "children": Array [
+                  Object {
+                    "attrs": Object {
+                      "fill": "#fffbf9",
+                      "stroke": "#3b4044",
+                    },
+                    "type": "rect",
+                  },
+                  Object {
+                    "attrs": Object {
+                      "fill": "#fffbf9",
+                      "stroke": "#3b4044",
+                    },
+                    "type": "rect",
+                  },
+                  Object {
+                    "attrs": Object {
+                      "fill": "#3b4044",
+                      "fontFamily": "Source Code Pro, sans-serif",
+                      "fontSize": 11.9,
+                      "id": "entity-customer-attr-1-type",
+                      "text": "string",
+                      "textAlign": "left",
+                      "textBaseline": "middle",
+                    },
+                    "class": "er__entity-label",
+                    "type": "text",
+                  },
+                  Object {
+                    "attrs": Object {
+                      "fill": "#fffbf9",
+                      "stroke": "#3b4044",
+                    },
+                    "type": "rect",
+                  },
+                  Object {
+                    "attrs": Object {
+                      "fill": "#3b4044",
+                      "fontFamily": "Source Code Pro, sans-serif",
+                      "fontSize": 11.9,
+                      "id": "entity-customer-attr-1-name",
+                      "text": "address",
+                      "textAlign": "left",
+                      "textBaseline": "middle",
+                    },
+                    "class": "er__entity-label",
+                    "type": "text",
+                  },
+                  Object {
+                    "attrs": Object {
+                      "fill": "#fffbf9",
+                      "stroke": "#3b4044",
+                    },
+                    "type": "rect",
+                  },
+                  Object {
+                    "attrs": Object {
+                      "fill": "#3b4044",
+                      "fontFamily": "Source Code Pro, sans-serif",
+                      "fontSize": 11.9,
+                      "id": "entity-customer-attr-1-name",
+                      "text": "deliver address",
+                      "textAlign": "left",
+                      "textBaseline": "middle",
+                    },
+                    "class": "er__entity-label",
+                    "type": "text",
+                  },
+                ],
+                "type": "group",
+              },
+              Object {
+                "attrs": Object {},
+                "children": Array [
+                  Object {
+                    "attrs": Object {
+                      "fill": "#fffbf9",
+                      "stroke": "#3b4044",
+                    },
+                    "type": "rect",
+                  },
+                  Object {
+                    "attrs": Object {
+                      "fill": "#3b4044",
+                      "fontFamily": "Source Code Pro, sans-serif",
+                      "fontSize": 11.9,
+                      "id": "entity-customer-attr-2-key",
+                      "text": "PK",
+                      "textAlign": "left",
+                      "textBaseline": "middle",
+                    },
+                    "class": "er__entity-label",
+                    "type": "text",
+                  },
+                  Object {
+                    "attrs": Object {
+                      "fill": "#fffbf9",
+                      "stroke": "#3b4044",
+                    },
+                    "type": "rect",
+                  },
+                  Object {
+                    "attrs": Object {
+                      "fill": "#3b4044",
+                      "fontFamily": "Source Code Pro, sans-serif",
+                      "fontSize": 11.9,
+                      "id": "entity-customer-attr-2-type",
+                      "text": "string",
+                      "textAlign": "left",
+                      "textBaseline": "middle",
+                    },
+                    "class": "er__entity-label",
+                    "type": "text",
+                  },
+                  Object {
+                    "attrs": Object {
+                      "fill": "#fffbf9",
+                      "stroke": "#3b4044",
+                    },
+                    "type": "rect",
+                  },
+                  Object {
+                    "attrs": Object {
+                      "fill": "#3b4044",
+                      "fontFamily": "Source Code Pro, sans-serif",
+                      "fontSize": 11.9,
+                      "id": "entity-customer-attr-2-name",
+                      "text": "id",
+                      "textAlign": "left",
+                      "textBaseline": "middle",
+                    },
+                    "class": "er__entity-label",
+                    "type": "text",
+                  },
+                  Object {
+                    "attrs": Object {
+                      "fill": "#fffbf9",
+                      "stroke": "#3b4044",
+                    },
+                    "type": "rect",
+                  },
+                ],
+                "type": "group",
+              },
+            ],
+            "type": "group",
+          },
+        ],
+        "class": "er__entity",
+        "type": "group",
+      },
+      Object {
+        "attrs": Object {
+          "id": "deliverer",
+        },
+        "children": Array [
+          Object {
+            "attrs": Object {
+              "fill": "#fdb05e",
+              "radius": 2,
+              "stroke": "#3b4044",
+              "text": "",
+            },
+            "class": "er__entity-box",
+            "type": "rect",
+          },
+          Object {
+            "attrs": Object {
+              "fill": "#3b4044",
+              "fontFamily": "Source Code Pro, sans-serif",
+              "fontSize": 14,
+              "fontWeight": "bold",
+              "id": "entity-deliverer",
+              "text": "deliverer",
+              "textAlign": "center",
+              "textBaseline": "middle",
+            },
+            "class": "er__entity-label",
+            "type": "text",
+          },
+          Object {
+            "attrs": Object {},
+            "children": Array [],
+            "type": "group",
+          },
+        ],
+        "class": "er__entity",
+        "type": "group",
+      },
+      Object {
+        "attrs": Object {},
+        "children": Array [
+          Object {
+            "attrs": Object {
+              "fill": "#fffbf9",
+              "lineJoin": "round",
+              "stroke": "#3b4044",
+            },
+            "type": "path",
+          },
+          Object {
+            "attrs": Object {
+              "fill": "#fffbf9",
+              "lineJoin": "round",
+              "stroke": "#3b4044",
+            },
+            "type": "path",
+          },
+          Object {
+            "attrs": Object {
+              "fill": "#3b4044",
+              "fontFamily": "Source Code Pro, sans-serif",
+              "fontSize": 14,
+              "text": "ISA",
+              "textAlign": "center",
+              "textBaseline": "middle",
+            },
+            "class": "er__relationship-label",
+            "type": "text",
+          },
+          Object {
+            "attrs": Object {
+              "fill": "#3b4044",
+              "fontFamily": "Source Code Pro, sans-serif",
+              "fontSize": 14,
+              "text": "ISA",
+              "textAlign": "center",
+              "textBaseline": "middle",
+            },
+            "class": "er__relationship-label",
+            "type": "text",
+          },
+          Object {
+            "attrs": Object {
+              "lineJoin": "round",
+              "stroke": "#3b4044",
+            },
+            "type": "path",
+          },
+          Object {
+            "attrs": Object {
+              "lineJoin": "round",
+              "stroke": "#3b4044",
+            },
+            "type": "path",
+          },
+          Object {
+            "attrs": Object {
+              "lineJoin": "round",
+              "stroke": "#3b4044",
+            },
+            "type": "path",
+          },
+          Object {
+            "attrs": Object {
+              "lineJoin": "round",
+              "stroke": "#3b4044",
+            },
+            "type": "path",
+          },
+        ],
+        "type": "group",
+      },
+    ],
+    "type": "group",
+  },
+}
+`;

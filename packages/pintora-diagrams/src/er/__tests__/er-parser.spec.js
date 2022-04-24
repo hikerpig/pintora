@@ -79,6 +79,49 @@ erDiagram
     })
   })
 
+  it('will parse specialisation', () => {
+    const example = stripStartEmptyLines(`
+    erDiagram
+      person {
+        int age
+      }
+
+      teacher inherit person
+      student inherit person
+
+      teacher }|..|{ student : teach
+    `)
+    parse(example)
+    const ir = db.getDiagramIR()
+    // console.log(JSON.stringify(ir, null, 2))
+    expect(ir.entities).toMatchObject({
+      person: {
+        attributes: [
+          {
+            attributeType: 'int',
+            attributeName: 'age',
+            comment: '',
+          },
+        ],
+      },
+      teacher: {
+        attributes: [],
+      },
+      student: {
+        attributes: [],
+      },
+    })
+    expect(ir.inheritances).toMatchObject([
+      {
+        sup: 'person',
+        sub: 'teacher',
+      },
+      {
+        sup: 'person',
+        sub: 'student',
+      },
+    ])
+  })
   it('can parse comments', () => {
     parse(
       stripStartEmptyLines(`

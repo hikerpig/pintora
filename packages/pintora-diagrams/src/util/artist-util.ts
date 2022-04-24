@@ -17,6 +17,7 @@ import {
   ITheme,
   DiagramArtistOptions,
 } from '@pintora/core'
+import { toFixed } from './number'
 import { PALETTE } from './theme'
 
 export { makeMark }
@@ -286,5 +287,35 @@ export class LayerManager<Name extends string = string> {
   }
   addMark(name: Name, mark: Mark) {
     this.getLayer(name)?.marks.push(mark)
+  }
+}
+
+/**
+ * by default upwards
+ */
+export function makeTriangle(center: Point, baseLength: number, rad: number, attrs: Partial<MarkAttrs>) {
+  const { x, y } = center
+  const offsetX = toFixed(baseLength / 2)
+  const offsetY = (baseLength * Math.sign(Math.PI / 3)) / 2
+  const p: PathCommand[] = [
+    ['M', x, y - offsetY], // top
+    ['L', x - offsetX, y + offsetY],
+    ['L', x + offsetX, y + offsetY],
+    ['Z'],
+  ]
+
+  const matrix = createRotateAtPoint(x, y, rad)
+  const mark = makeMark(
+    'path',
+    {
+      ...(attrs || {}),
+      path: p,
+    },
+    { matrix },
+  )
+  return {
+    mark,
+    width: baseLength,
+    height: offsetY * 2,
   }
 }
