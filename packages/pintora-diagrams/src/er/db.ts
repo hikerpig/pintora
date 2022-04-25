@@ -39,9 +39,15 @@ export type RelSpec = {
   relType: Identification
 }
 
+export type Inheritance = {
+  sup: string
+  sub: string
+}
+
 export type ErDiagramIR = BaseDiagramIR & {
   entities: Record<string, Entity>
   relationships: Relationship[]
+  inheritances: Inheritance[]
 }
 
 export class ErDb extends BaseDb {
@@ -50,6 +56,7 @@ export class ErDb extends BaseDb {
 
   entities: Record<string, Entity> = {}
   relationships: Relationship[] = []
+  inheritances: Inheritance[] = []
 
   addEntity(name: string) {
     if (!this.entities[name]) {
@@ -67,12 +74,16 @@ export class ErDb extends BaseDb {
 
     this.relationships.push(rel)
   }
+  addInheritance(sup: string, sub: string) {
+    this.inheritances.push({ sup, sub })
+  }
   getDiagramIR(): ErDiagramIR {
     return {
       entities: this.entities,
       relationships: this.relationships,
       configParams: this.configParams,
       overrideConfig: this.overrideConfig,
+      inheritances: this.inheritances,
     }
   }
   addAttributes(name: string, attributes: Attribute[]) {
@@ -87,6 +98,7 @@ export class ErDb extends BaseDb {
     super.clear()
     this.entities = {}
     this.relationships = []
+    this.inheritances = []
     this.configParams = []
   }
 }

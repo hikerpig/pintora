@@ -35,6 +35,28 @@ erDiagram
   }
 ```
 
+## Inheritance
+
+You can specificy specialization - or inheritance in the other word - with the `inherit` keyword.
+
+This is a useful feature for expressing your design in [extended entity-relationship model](https://en.wikipedia.org/wiki/Enhanced_entity%E2%80%93relationship_model).
+
+```pintora play
+erDiagram
+  person {
+    int age
+    string phone_number
+  }
+
+  customer inherit person
+  deliverer inherit person
+
+  %% some extra attributes for customer
+  customer {
+    string address
+  }
+```
+
 ## Override config
 
 You can override diagarm config through `@param` directive.
