@@ -1,0 +1,53 @@
+name: Update Tests
+
+on:
+  workflow_dispatch:
+    inputs:
+      input_branch:
+        description: 'Branch To Checkout'
+        required: false
+        default: 'master'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [14.x]
+
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          ref: '${{ inputs.input_branch }}'
+      - name: Cache pnpm modules
+        uses: actions/cache@v2
+        with:
+          path: ~/.pnpm-store
+          key: ${{ runner.os }}-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-
+      - uses: pnpm/action-setup@v2.2.1
+        with:
+          version: 6.32.3
+          run_install: true
+      - name: Turbo Cache
+        id: turbo-cache
+        uses: actions/cache@v2
+        with:
+          path: node_modules/.cache/turbo
+          key: turbo-${{ github.job }}-${{ github.ref_name }}-${{ github.sha }}
+          restore-keys: |
+            turbo-${{ github.job }}-${{ github.ref_name }}-
+      - name: build
+        run: |
+          pnpm run compile
+        env:
+          CI: true
+      # visual e2e test
+      - name: Percy Test
+        run: |
+          cd demo
+          pnpm run build
+          pnpm run ci:visual
+        env:
+          PERCY_TOKEN: ${{ secrets.PERCY_TOKEN }}
