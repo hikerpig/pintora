@@ -1,6 +1,6 @@
 {
   "name": "@pintora/standalone",
-  "version": "0.4.2",
+  "version": "0.4.3",
   "description": "A standalone version of pintora that has all the default diagrams",
   "keywords": [
     "pintora",
@@ -49,8 +49,8 @@
   },
   "dependencies": {
     "@pintora/core": "workspace:^0.4.0",
-    "@pintora/diagrams": "workspace:^0.4.2",
-    "@pintora/renderer": "^0.4.0"
+    "@pintora/diagrams": "workspace:^0.4.3",
+    "@pintora/renderer": "^0.4.1"
   },
   "devDependencies": {
     "@types/node": "^14.11.8",

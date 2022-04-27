@@ -1,6 +1,6 @@
 {
   "name": "@pintora/renderer",
-  "version": "0.4.0",
+  "version": "0.4.1",
   "description": "Pintora's default renderer",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",

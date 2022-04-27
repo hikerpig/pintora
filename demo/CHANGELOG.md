@@ -1,5 +1,17 @@
 # Change Log
 
+## 0.3.3
+
+### Patch Changes
+
+- 8216f4d: optimize: [er] can parse and display attribute comment
+- Updated dependencies [3d99b10]
+- Updated dependencies [8216f4d]
+  - @pintora/diagrams@0.4.3
+  - @pintora/test-shared@0.3.1
+  - @pintora/renderer@0.4.1
+  - @pintora/standalone@0.4.3
+
 ## 0.3.2
 
 ### Patch Changes

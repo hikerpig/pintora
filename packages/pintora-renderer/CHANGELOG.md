@@ -1,5 +1,11 @@
 # Change Log
 
+## 0.4.1
+
+### Patch Changes
+
+- 8216f4d: optimize: [er] can parse and display attribute comment
+
 ## 0.4.0
 
 ### Minor Changes

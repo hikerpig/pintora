@@ -1,5 +1,12 @@
 # Change Log
 
+## 0.4.3
+
+### Patch Changes
+
+- 3d99b10: feat: [er] parse and draw inheritance to present extended er diagram
+- 8216f4d: optimize: [er] can parse and display attribute comment
+
 ## 0.4.2
 
 ### Patch Changes
