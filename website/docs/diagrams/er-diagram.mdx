@@ -5,11 +5,11 @@ title: Entity Relationship Diagram
 > An entity–relationship model (or ER model) describes interrelated things of interest in a specific domain of knowledge. A basic ER model is composed of entity types (which classify the things of interest) and specifies relationships that can exist between entities (instances of those entity types).
 > <cite><a href="https://en.wikipedia.org/wiki/Entity%E2%80%93relationship_model">Wikipedia</a></cite>
 
-The syntax is based on Mermaid 8.9. This diagram should start with `erDiagram`.
+The syntax is based on [Mermaid](https://mermaid-js.github.io/mermaid/#/entityRelationshipDiagram) 8.9. This diagram should start with `erDiagram`.
 
 ## Basic syntax
 
-```
+```text
 <entity-a> [<relationship> <entity-b> : <relationship-label> [<key>] ["<comment>"]]
 ```
 
@@ -34,6 +34,39 @@ erDiagram
     string deliveryAddress
   }
 ```
+
+## Relationship Syntax
+
+```text
+CUSTOMER ||--o{ ORDER : places
+```
+
+This can be read as `a CUSTOMER can places zero or more ORDERs, where as an ORDER belongs to only one CUSTOMER`.
+
+The relationship part of each statement can be broken down into three sub-components:
+
+1. the cardinality of the first entity with respect to the second,
+2. whether the relationship confers identity on a 'child' entity
+3. the cardinality of the second entity with respect to the first
+
+### Cardinality
+
+**Cardinality** defines the numerical attributes of the relationship between two entities. In the above example an CUSTOMER can have zero or more ORDER instances associated to it, whereas a ORDER can only be associated with one CUSTOMER.
+
+In each cardinality marker there are two characters. The outermost character represents a maximum value, and the innermost character represents a minimum value. The table below summarises possible cardinalities.
+
+| Value (left) | Value (right) | Meaning                       |
+|--------------|---------------|-------------------------------|
+| \|o          | o\|           | Zero or one                   |
+| \|\|         | \|\|          | Exactly one                   |
+| }o           | o{            | Zero or more (no upper limit) |
+| }\|          | \|{           | One or more (no upper limit)  |
+
+### Identification
+
+Relationships may be classified as either identifying or non-identifying and these are rendered with either solid or dashed lines respectively.
+
+This is relevant when one of the entities in question can not have independent existence without the other.
 
 ## Inheritance
 
