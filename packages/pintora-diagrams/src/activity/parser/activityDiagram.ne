@@ -97,6 +97,7 @@ statement ->
     %}
   | group
   | conditionSentence
+  | repeatSentence
   | whileSentence
   | switchSentence
   | forkSentence
@@ -140,6 +141,43 @@ whileSentence ->
           confirmLabel,
           denyLabel,
           children: d[5].map(o => Array.isArray(o) ? o[0]: o),
+        }
+      }
+    %}
+
+repeatSentence ->
+    "repeat" %WS oneLineAction repeatBodyAndEnd {%
+      function(d) {
+        const firstAction = d[2].action
+        const bodyAndEnd = d[3]
+        return {
+          type: 'repeat',
+          firstAction,
+          ...bodyAndEnd,
+        } as ApplyPart
+      }
+    %}
+  | "repeat" %WS:? %NL repeatBodyAndEnd {%
+      function(d) {
+        const bodyAndEnd = d[3]
+        return {
+          type: 'repeat',
+          ...bodyAndEnd,
+        } as ApplyPart
+      }
+    %}
+
+repeatBodyAndEnd ->
+    line:* %WS:* "repeatwhile" wordsInParens (%WS "is" %WS wordsInParens):? (%WS "not" %WS wordsInParens):? %WS:? %NL {%
+      function(d) {
+        const message = d[3]
+        const confirmLabel = d[4] ? d[4][3]: undefined
+        const denyLabel = d[5] ? d[5][3]: undefined
+        return {
+          message,
+          confirmLabel,
+          denyLabel,
+          children: d[0].map(o => Array.isArray(o) ? o[0]: o),
         }
       }
     %}
@@ -195,6 +233,13 @@ words ->
 
 action ->
     %COLON multilineText %SEMICOLON %NL {%
+      function(d) {
+        return { type: 'addAction', action: { actionType: 'normal', message: d[1] } }
+      }
+    %}
+
+oneLineAction ->
+    %COLON words %SEMICOLON %NL {%
       function(d) {
         return { type: 'addAction', action: { actionType: 'normal', message: d[1] } }
       }

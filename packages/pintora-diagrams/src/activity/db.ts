@@ -26,9 +26,18 @@ export type Condition = {
 export type While = {
   id: string
   message: string
-  children: any[]
+  children: Step[]
   confirmLabel: string | undefined
   denyLabel: string | undefined
+}
+
+export type Repeat = {
+  id: string
+  message: string
+  confirmLabel: string | undefined
+  firstAction: Action | undefined
+  denyLabel: string | undefined
+  children: Step[]
 }
 
 export type Keyword = {
@@ -82,7 +91,7 @@ export type ArrowLabel = {
   target?: string
 }
 
-type StepValue = Action | Condition | While | Keyword | AGroup | Switch | Case | Fork | ForkBranch | ArrowLabel
+type StepValue = Action | Condition | While | Repeat | Keyword | AGroup | Switch | Case | Fork | ForkBranch | ArrowLabel
 
 export type Step<T extends StepValue = StepValue> = {
   type: string
@@ -120,6 +129,14 @@ export type ApplyPart =
       message: string
       confirmLabel: string
       denyLabel: string
+      children: ApplyPart[]
+    }
+  | {
+      type: 'repeat'
+      message: string
+      confirmLabel: string
+      denyLabel: string
+      firstAction: Action
       children: ApplyPart[]
     }
   | {
@@ -236,6 +253,20 @@ class ActivityDb extends BaseDb {
           denyLabel: part.denyLabel,
         }
         step = { type: 'while', value: whileSentence }
+        break
+      }
+      case 'repeat': {
+        const id = this.makeId()
+        const loopResult = this.apply(part.children, true, { ...state, parentId: id })
+        const sentence: Repeat = {
+          id,
+          message: part.message,
+          children: loopResult,
+          confirmLabel: part.confirmLabel,
+          denyLabel: part.denyLabel,
+          firstAction: part.firstAction,
+        }
+        step = { type: 'repeat', value: sentence }
         break
       }
       case 'switch': {

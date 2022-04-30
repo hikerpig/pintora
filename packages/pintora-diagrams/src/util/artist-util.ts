@@ -214,6 +214,10 @@ export function makeEmptyGroup() {
   return makeMark('group', { x: 0, y: 0 }, { children: [] })
 }
 
+export function makeCircle(attrs: Partial<Circle['attrs']>) {
+  return makeMark('circle', { x: 0, y: 0, r: 0, ...attrs })
+}
+
 export const getBaseNote = function (theme: ITheme): Rect['attrs'] {
   return {
     x: 0,

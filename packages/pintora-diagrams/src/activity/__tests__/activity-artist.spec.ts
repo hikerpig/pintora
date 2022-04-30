@@ -31,4 +31,20 @@ describe('activity-artist', () => {
     `)
     expect(stripDrawResultForSnapshot(testDraw(code))).toMatchSnapshot()
   })
+
+  it('draw repeat', () => {
+    const code = stripStartEmptyLines(`
+    activityDiagram
+    start
+    repeat :prepare for each loop;
+      :read data;
+    repeatwhile (there is more data ?) is (alright then) not (nope)
+
+    repeat
+      :do something;
+    repeatwhile (not done ?)
+    end
+    `)
+    expect(stripDrawResultForSnapshot(testDraw(code))).toMatchSnapshot()
+  })
 })
