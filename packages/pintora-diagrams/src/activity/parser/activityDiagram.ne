@@ -18,6 +18,7 @@ import {
   configLexerConfigClauseState,
   L_PAREN_REGEXP,
   R_PAREN_REGEXP,
+  COLOR_REGEXP,
   MOO_NEWLINE,
 } from '../../util/parser-shared'
 import type { ApplyPart } from '../db'
@@ -31,6 +32,7 @@ let lexer = moo.states({
     NL: MOO_NEWLINE,
     WS: { match: / +/, lineBreaks: false },
     QUOTED_WORD: QUOTED_WORD_REGEXP,
+    COLOR: COLOR_REGEXP,
     SEMICOLON: /;/,
     COLON: /:/,
     ACTIVITY_DIAGRAM: /activityDiagram/,
