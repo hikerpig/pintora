@@ -102,8 +102,8 @@
               },
               "patterns": [
                 {
-                  "comment": "propType propName keyType",
-                  "match": "(\\w+)\\s*([^\\s]+)\\s*(.*)?",
+                  "comment": "propType propName keyType \"comment\"",
+                  "match": "(\\w+)\\s*([^\\s]+)\\s*(\\w+)?\\s*(\".*\")?",
                   "captures": {
                     "1": {
                       "name": "entity.name.type.pintora"
@@ -113,10 +113,28 @@
                     },
                     "3": {
                       "name": "keyword.pintora"
+                    },
+                    "4": {
+                      "name": "string.pintora"
                     }
                   }
                 }
               ]
+            },
+            {
+              "comment": "entityName inherit entityName",
+              "match": "(\\w+)\\s*(inherit)\\s*(\\w+)",
+              "captures": {
+                "1": {
+                  "name": "variable"
+                },
+                "2": {
+                  "name": "keyword.control.pintora"
+                },
+                "3": {
+                  "name": "variable"
+                }
+              }
             },
             {
               "include": "#config__clause"
@@ -877,6 +895,68 @@
               "name": "string"
             },
             "4": {
+              "name": "keyword.control.pintora"
+            }
+          },
+          "patterns": [
+            {
+              "include": "#activity__element"
+            }
+          ]
+        },
+        {
+          "comment": "repeat",
+          "begin": "(repeat)\\s+(?:\\s+(:)\\s+([^;]+)(;))?",
+          "beginCaptures": {
+            "1": {
+              "name": "keyword.control.pintora"
+            },
+            "2": {
+              "name": "keyword.control.pintora"
+            },
+            "3": {
+              "name": "string"
+            },
+            "4": {
+              "name": "keyword.control.pintora"
+            }
+          },
+          "end": "(repeatwhile)\\s+(\\()([^)]+)(\\))(?:\\s+(is)\\s*(\\()([^)]+)(\\)))?(?:\\s+(not)\\s*(\\()([^)]+)(\\)))?",
+          "endCaptures": {
+            "1": {
+              "name": "keyword.control.pintora"
+            },
+            "2": {
+              "name": "keyword.control.pintora"
+            },
+            "3": {
+              "name": "string"
+            },
+            "4": {
+              "name": "keyword.control.pintora"
+            },
+            "5": {
+              "name": "keyword.control.pintora"
+            },
+            "6": {
+              "name": "keyword.control.pintora"
+            },
+            "7": {
+              "name": "string"
+            },
+            "8": {
+              "name": "keyword.control.pintora"
+            },
+            "9": {
+              "name": "keyword.control.pintora"
+            },
+            "10": {
+              "name": "keyword.control.pintora"
+            },
+            "11": {
+              "name": "string"
+            },
+            "12": {
               "name": "keyword.control.pintora"
             }
           },
