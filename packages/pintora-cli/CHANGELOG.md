@@ -1,5 +1,15 @@
 # Change Log
 
+## 0.4.4
+
+### Patch Changes
+
+- f575b91: fix: [activity] group color before quoted sentence
+- 30a2f49: optimize: [activity] support repeat loop
+- Updated dependencies [f575b91]
+- Updated dependencies [30a2f49]
+  - @pintora/standalone@0.4.4
+
 ## 0.4.3
 
 ### Patch Changes

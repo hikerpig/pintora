@@ -1,5 +1,12 @@
 # Change Log
 
+## 0.4.4
+
+### Patch Changes
+
+- f575b91: fix: [activity] group color before quoted sentence
+- 30a2f49: optimize: [activity] support repeat loop
+
 ## 0.4.3
 
 ### Patch Changes
