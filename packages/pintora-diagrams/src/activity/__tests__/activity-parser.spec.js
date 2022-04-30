@@ -533,10 +533,10 @@ activityDiagram
 
   it('can parse fork sentence', () => {
     const example = stripStartEmptyLines(`
-activityDiagram 
+activityDiagram
   fork
     :action 1;
-  forkagain 
+  forkagain
     :action 2;
   endfork
 `)
@@ -631,6 +631,73 @@ activityDiagram
       type: 'keyword',
       value: {
         label: 'kill',
+      },
+    })
+  })
+
+  it('can parse repeat loop', () => {
+    const example = stripStartEmptyLines(`
+activityDiagram
+repeat
+  :a;
+repeatwhile (data available) is (yes) not (no)
+`)
+    parse(example)
+    const ir = db.getDiagramIR()
+    // console.log('ir', JSON.stringify(ir, null, 2))
+    expect(ir.steps[0]).toMatchObject({
+      type: 'repeat',
+      value: {
+        id: '1',
+        message: 'data available',
+        children: [
+          {
+            type: 'action',
+            value: {
+              actionType: 'normal',
+              message: 'a',
+              id: '2',
+            },
+            parentId: '1',
+          },
+        ],
+        confirmLabel: 'yes',
+        denyLabel: 'no',
+      },
+    })
+  })
+
+  it('can parse repeat loop that has first action', () => {
+    const example = stripStartEmptyLines(`
+  activityDiagram
+  repeat :in a loop;
+    :a;
+  repeatwhile (data available) is (yes)
+  `)
+    parse(example)
+    const ir = db.getDiagramIR()
+    // console.log('ir', JSON.stringify(ir, null, 2))
+    expect(ir.steps[0]).toMatchObject({
+      type: 'repeat',
+      value: {
+        id: '1',
+        message: 'data available',
+        children: [
+          {
+            type: 'action',
+            value: {
+              actionType: 'normal',
+              message: 'a',
+              id: '2',
+            },
+            parentId: '1',
+          },
+        ],
+        confirmLabel: 'yes',
+        firstAction: {
+          actionType: 'normal',
+          message: 'in a loop',
+        },
       },
     })
   })

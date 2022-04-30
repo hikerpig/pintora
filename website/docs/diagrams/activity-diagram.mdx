@@ -48,7 +48,7 @@ activityDiagram
 
 ## While Loop
 
-You can use `while` and `endwhile` to make repeat loops.
+You can use `while` and `endwhile` to make while loops.
 
 And it's possibleto provide a label after the `endwhile` keyword, or using the `is` keyword to provide label for the link.
 
@@ -63,6 +63,30 @@ activityDiagram
   while (met another test) is (yes)
     :do something;
   endwhile (done)
+  end
+```
+
+## Repeat Loop
+
+You can use `repeat` and `repeatwhile` to make repeat loops.
+
+```pintora play
+activityDiagram
+  start
+  repeat
+    :read data;
+    :generate diagrams;
+  repeatwhile (data available ?)
+  end
+```
+
+```pintora play
+activityDiagram
+  start
+  repeat :prepare for each loop;
+    :read data;
+    :generate diagrams;
+  repeatwhile (there is more data ?) is (alright then) not (nope)
   end
 ```
 

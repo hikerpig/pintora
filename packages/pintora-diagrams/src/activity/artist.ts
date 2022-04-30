@@ -31,6 +31,7 @@ import {
   ArrowLabel,
   Fork,
   ForkBranch,
+  Repeat,
 } from './db'
 import { ActivityConf, getConf } from './config'
 import { adjustEntities, createLayoutGraph, getGraphBounds, LayoutEdge, LayoutGraph, LayoutNode } from '../util/graph'
@@ -42,6 +43,7 @@ import {
   makeEmptyGroup,
   adjustRootMarkBounds,
   getBaseNote,
+  makeCircle,
 } from '../util/artist-util'
 import dagre from '@pintora/dagre'
 import { makeBounds, positionGroupContents, tryExpandBounds } from '../util/mark-positioner'
@@ -49,6 +51,7 @@ import { isDev } from '../util/env'
 import { getPointsCurvePath, getPointsLinearPath } from '../util/line-util'
 import { makeTextMark } from './artist-util'
 import { calcBound, updateBoundsByPoints } from '../util/bound'
+import { getTextDimensionsInPresicion } from '../util/text'
 
 let conf: ActivityConf
 let model: ArtistModel
@@ -75,10 +78,7 @@ const erArtist: IDiagramArtist<ActivityDiagramIR, ActivityConf> = {
     theme = (configApi.getConfig() as PintoraConfig).themeConfig.themeVariables
     // console.log('ir', JSON.stringify(ir, null, 2))
 
-    const rootMark: Group = {
-      type: 'group',
-      children: [],
-    }
+    const rootMark: Group = makeEmptyGroup()
 
     const g = createLayoutGraph({
       multigraph: true,
@@ -254,6 +254,10 @@ class ArtistModel {
           })
           break
         }
+        case 'repeat': {
+          processRecursiveStep(step, stepModel)
+          break
+        }
         case 'group': {
           processRecursiveStep(step, stepModel)
           const aGroup = step.value as AGroup
@@ -355,7 +359,9 @@ class ArtistModel {
 type DrawStepResult = {
   id: string
   endId?: string
-  startMark: Group | Rect
+  // startMark: Group | Rect
+  startMark: Mark
+  outLabel?: string
   stepModel?: StepModel
   hasEnded?: boolean
   hasDetached?: boolean
@@ -363,6 +369,7 @@ type DrawStepResult = {
 
 class ActivityDraw {
   private keywordStepResults: { [key: string]: DrawStepResult } = {}
+  private results: { [key: string]: DrawStepResult } = {}
 
   constructor(public model: ArtistModel, public g: LayoutGraph) {}
 
@@ -391,6 +398,10 @@ class ActivityDraw {
         result = this.drawCase(rootMark, step.value as Case)
         break
       }
+      case 'repeat': {
+        result = this.drawRepeat(rootMark, step.value as Repeat)
+        break
+      }
       case 'group': {
         result = this.drawGroup(rootMark, step.value as AGroup)
         break
@@ -414,6 +425,9 @@ class ActivityDraw {
     }
 
     if (result && result.stepModel) {
+      this.results[result.id] = result
+      if (result.endId) this.results[result.endId] = result
+
       const prevId = result.stepModel.prevId
       const startIdOfCurrent = result.stepModel.startId || result.stepModel.id
       let label = ''
@@ -423,6 +437,10 @@ class ActivityDraw {
       }
       if (prevId) {
         const prevStepModel = this.model.stepModelMap.get(prevId)
+        const prevResult = this.results[prevId]
+        if (!label && prevResult?.outLabel) {
+          label = prevResult.outLabel
+        }
         if (prevId === this.keywordStepResults.start?.id) {
           g.setEdge(prevId, startIdOfCurrent, { label })
         } else if (prevStepModel && prevStepModel.type === 'keyword') {
@@ -450,14 +468,7 @@ class ActivityDraw {
 
   drawCondition(parentMark: Group, condition: Condition): DrawStepResult {
     // console.log('[drawCondition] condition', condition)
-    const group = makeMark(
-      'group',
-      {
-        x: 0,
-        y: 0,
-      },
-      { children: [] },
-    )
+    const group = makeEmptyGroup()
     const stepModel = model.stepModelMap.get(condition.id)
 
     const { bgMark: decisionBg, textMark, rectWidth, rectHeight } = this.drawDecisionMarks(condition.message)
@@ -606,14 +617,7 @@ class ActivityDraw {
 
   drawWhile(parentMark: Group, wh: While): DrawStepResult {
     const { message, id } = wh
-    const group = makeMark(
-      'group',
-      {
-        x: 0,
-        y: 0,
-      },
-      { children: [] },
-    )
+    const group = makeEmptyGroup()
     const stepModel = model.stepModelMap.get(wh.id)
 
     const { bgMark: decisionBg, textMark, rectWidth, rectHeight } = this.drawDecisionMarks(message)
@@ -661,14 +665,7 @@ class ActivityDraw {
 
   drawGroup(parentMark: Group, aGroup: AGroup): DrawStepResult {
     const { id } = aGroup
-    const group = makeMark(
-      'group',
-      {
-        x: 0,
-        y: 0,
-      },
-      { children: [] },
-    )
+    const group = makeEmptyGroup()
 
     const stepModel = model.stepModelMap.get(id)
 
@@ -813,9 +810,7 @@ class ActivityDraw {
         this.drawStep(parentMark, caseClause)
       })
     } else {
-      const holderMark = makeMark('circle', {
-        x: 0,
-        y: 0,
+      const holderMark = makeCircle({
         r: 1,
       })
       parentMark.children.push(holderMark)
@@ -829,6 +824,90 @@ class ActivityDraw {
     return result
   }
 
+  drawRepeat(parentMark: Group, repeat: Repeat): DrawStepResult {
+    const { message, id } = repeat
+    const denyLabel = repeat.denyLabel || 'no'
+    const group = makeEmptyGroup()
+    const stepModel = model.stepModelMap.get(id)
+
+    const { bgMark: decisionBg, textMark, rectWidth, rectHeight } = this.drawDecisionMarks(message)
+
+    const endId = stepModel.endId
+    const startId = stepModel.id
+    const result: DrawStepResult = {
+      id,
+      startMark: group,
+      stepModel,
+      endId,
+      outLabel: denyLabel,
+    }
+
+    let startMark: Mark
+    if (repeat.firstAction) {
+      const firstActionGroup = makeEmptyGroup()
+      firstActionGroup.class = 'activity__repeat-start'
+      const { rectMark, textMark, actionInfo } = drawActionMarks({ message: repeat.firstAction.message, conf })
+      firstActionGroup.children.push(rectMark, textMark)
+      startMark = firstActionGroup
+
+      this.g.setNode(startId, {
+        id: startId,
+        mark: firstActionGroup,
+        width: actionInfo.rectWidth,
+        height: actionInfo.rectHeight,
+        onLayout(data) {
+          positionGroupContents(firstActionGroup, { ...data, x: data.x - data.width / 2, y: data.y - data.height / 2 })
+        },
+      })
+    } else {
+      const diamondResult = this.drawDiamondMark(startId, {}, { class: 'activity__repeat-start' })
+
+      startMark = diamondResult.mark
+
+      this.g.setNode(startId, {
+        mark: startMark,
+        width: diamondResult.diamondSide * 2,
+        height: diamondResult.diamondSide * 2,
+        onLayout(data) {
+          diamondResult.moveDiamond(data.x, data.y)
+        },
+      })
+    }
+
+    result.startMark = startMark
+
+    this.g.setNode(endId, {
+      id: endId,
+      mark: group,
+      width: rectWidth,
+      height: rectHeight,
+      onLayout(data) {
+        positionGroupContents(group, { ...data, x: data.x - data.width / 2, y: data.y - data.height / 2 })
+      },
+    })
+
+    parentMark.children.push(group, startMark)
+    group.children.push(decisionBg, textMark)
+
+    const childrenResults = repeat.children.map((s, i) => {
+      const childResult = this.drawStep(parentMark, s)
+      return childResult
+    })
+    const firstChildResult = childrenResults[0]
+    if (firstChildResult) {
+      this.linkResult(startId, firstChildResult)
+    }
+
+    const lastChildResult = last(childrenResults)
+    if (lastChildResult) {
+      const hasEnded = lastChildResult.hasDetached || lastChildResult.hasEnded
+      this.g.setEdge(lastChildResult.endId || lastChildResult.id, endId, { isDummyEdge: hasEnded } as EdgeData)
+    }
+    this.g.setEdge(endId, startId, { label: repeat.confirmLabel || '' })
+
+    return result
+  }
+
   drawKeyword(parentMark: Group, keyword: Keyword): DrawStepResult {
     const stepModel = model.stepModelMap.get(keyword.id)
     const group = makeEmptyGroup()
@@ -838,24 +917,18 @@ class ActivityDraw {
     const stroke = conf.keywordBackground
     const fill = conf.keywordBackground
     if (label === 'start') {
-      const bgMark = makeMark('circle', {
+      const bgMark = makeCircle({
         r,
-        x: 0,
-        y: 0,
         fill,
       })
       group.children.push(bgMark)
     } else if (label === 'stop' || label === 'end') {
-      const bgMark = makeMark('circle', {
+      const bgMark = makeCircle({
         r,
-        x: 0,
-        y: 0,
         stroke,
       })
-      const centerCircle = makeMark('circle', {
+      const centerCircle = makeCircle({
         r: r * 0.6,
-        x: 0,
-        y: 0,
         fill,
       })
       group.children.push(bgMark, centerCircle)
@@ -1139,33 +1212,9 @@ class ActivityDraw {
 
 function drawAction(parentMark: Group, action: Action, g: LayoutGraph): DrawStepResult {
   const stepModel = model.stepModelMap.get(action.id)
-  const group = makeMark(
-    'group',
-    {
-      x: 0,
-      y: 0,
-    },
-    { children: [] },
-  )
-  const textDims = calcTextDims(action.message)
-  const rectWidth = stepModel.width
-  const rectHeight = stepModel.height
-  const rectMark = makeMark('rect', {
-    width: rectWidth,
-    height: rectHeight,
-    x: 0,
-    y: 0,
-    fill: conf.actionBackground,
-    stroke: conf.actionBorderColor,
-  })
-  const textMark = makeTextMark(conf, action.message, textDims, {
-    y: rectHeight / 2,
-    x: rectWidth / 2,
-    fontSize: conf.fontSize,
-    textBaseline: 'middle',
-    textAlign: 'center',
-  })
-
+  const group = makeEmptyGroup()
+  const { textMark, rectMark, actionInfo } = drawActionMarks({ message: action.message, conf })
+  const { rectWidth, rectHeight } = actionInfo
   group.children.push(rectMark, textMark)
 
   g.setNode(action.id, {
@@ -1185,6 +1234,38 @@ function drawAction(parentMark: Group, action: Action, g: LayoutGraph): DrawStep
     id: action.id,
     startMark: group,
     stepModel,
+  }
+}
+
+type DrawActionMarksOpts = {
+  message: string
+  conf: ActivityConf
+}
+
+function drawActionMarks({ message, conf }: DrawActionMarksOpts) {
+  const fontConfig = getFontConfig(conf)
+  const textDims = getTextDimensionsInPresicion(message, fontConfig)
+  const actionInfo = getActionRectSize(message)
+  const rectMark = makeMark('rect', {
+    width: actionInfo.rectWidth,
+    height: actionInfo.rectHeight,
+    x: 0,
+    y: 0,
+    fill: conf.actionBackground,
+    stroke: conf.actionBorderColor,
+  })
+  const textMark = makeTextMark(conf, message, textDims, {
+    y: actionInfo.rectHeight / 2,
+    x: actionInfo.rectWidth / 2,
+    ...fontConfig,
+    textBaseline: 'middle',
+    textAlign: 'center',
+  })
+
+  return {
+    rectMark,
+    textMark,
+    actionInfo,
   }
 }
 

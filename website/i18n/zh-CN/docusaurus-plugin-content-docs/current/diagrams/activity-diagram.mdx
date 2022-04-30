@@ -68,6 +68,30 @@ activityDiagram
   end
 ```
 
+## Repeat 循环语句
+
+使用关键词 `repeat` 和 `repeatwhile` 可指定 Repeat 循环语句。
+
+```pintora play
+activityDiagram
+  start
+  repeat
+    :read data;
+    :generate diagrams;
+  repeatwhile (data available ?)
+  end
+```
+
+```pintora play
+activityDiagram
+  start
+  repeat :prepare for each loop;
+    :read data;
+    :generate diagrams;
+  repeatwhile (there is more data ?) is (alright then) not (nope)
+  end
+```
+
 ## Switch/Case 语句
 
 使用 `switch` 和 `case` 关键字可组成分支选择语句。

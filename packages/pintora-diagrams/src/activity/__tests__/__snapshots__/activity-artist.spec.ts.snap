@@ -3,6 +3,7 @@
 exports[`activity-artist draw fork 1`] = `
 Object {
   "mark": Object {
+    "attrs": Object {},
     "children": Array [
       Object {
         "attrs": Object {
@@ -475,6 +476,406 @@ Object {
               "stroke": "#fdb05e",
             },
             "type": "path",
+          },
+          Object {
+            "attrs": Object {
+              "lineCap": "round",
+              "stroke": "#fdb05e",
+            },
+            "type": "path",
+          },
+        ],
+        "type": "group",
+      },
+    ],
+    "type": "group",
+  },
+}
+`;
+
+exports[`activity-artist draw repeat 1`] = `
+Object {
+  "mark": Object {
+    "attrs": Object {},
+    "children": Array [
+      Object {
+        "attrs": Object {
+          "id": "1",
+          "mark": [Circular],
+          "onLayout": [Function],
+        },
+        "children": Array [
+          Object {
+            "attrs": Object {
+              "fill": "#3b4044",
+              "r": 10,
+            },
+            "type": "circle",
+          },
+        ],
+        "class": "activity__keyword",
+        "type": "group",
+      },
+      Object {
+        "attrs": Object {
+          "id": "2-end",
+          "mark": [Circular],
+          "onLayout": [Function],
+        },
+        "children": Array [
+          Object {
+            "attrs": Object {
+              "fill": "#fdb05e",
+              "stroke": "#3b4044",
+            },
+            "class": "activity__decision-bg",
+            "type": "path",
+          },
+          Object {
+            "attrs": Object {
+              "fill": "#3b4044",
+              "fontFamily": "Source Code Pro, sans-serif",
+              "fontSize": 14,
+              "text": "there is more data ?",
+              "textAlign": "center",
+              "textBaseline": "middle",
+            },
+            "type": "text",
+          },
+        ],
+        "type": "group",
+      },
+      Object {
+        "attrs": Object {
+          "id": "2",
+          "mark": [Circular],
+          "onLayout": [Function],
+        },
+        "children": Array [
+          Object {
+            "attrs": Object {
+              "fill": "#fdb05e",
+              "stroke": "#3b4044",
+            },
+            "type": "rect",
+          },
+          Object {
+            "attrs": Object {
+              "fill": "#3b4044",
+              "fontFamily": "Source Code Pro, sans-serif",
+              "fontSize": 14,
+              "text": "prepare for each loop",
+              "textAlign": "center",
+              "textBaseline": "middle",
+            },
+            "type": "text",
+          },
+        ],
+        "class": "activity__repeat-start",
+        "type": "group",
+      },
+      Object {
+        "attrs": Object {
+          "id": "3",
+          "mark": [Circular],
+          "onLayout": [Function],
+        },
+        "children": Array [
+          Object {
+            "attrs": Object {
+              "fill": "#fdb05e",
+              "stroke": "#3b4044",
+            },
+            "type": "rect",
+          },
+          Object {
+            "attrs": Object {
+              "fill": "#3b4044",
+              "fontFamily": "Source Code Pro, sans-serif",
+              "fontSize": 14,
+              "text": "read data",
+              "textAlign": "center",
+              "textBaseline": "middle",
+            },
+            "type": "text",
+          },
+        ],
+        "type": "group",
+      },
+      Object {
+        "attrs": Object {
+          "id": "4-end",
+          "mark": [Circular],
+          "onLayout": [Function],
+        },
+        "children": Array [
+          Object {
+            "attrs": Object {
+              "fill": "#fdb05e",
+              "stroke": "#3b4044",
+            },
+            "class": "activity__decision-bg",
+            "type": "path",
+          },
+          Object {
+            "attrs": Object {
+              "fill": "#3b4044",
+              "fontFamily": "Source Code Pro, sans-serif",
+              "fontSize": 14,
+              "text": "not done ?",
+              "textAlign": "center",
+              "textBaseline": "middle",
+            },
+            "type": "text",
+          },
+        ],
+        "type": "group",
+      },
+      Object {
+        "attrs": Object {
+          "fill": "#fdb05e",
+          "stroke": "#3b4044",
+        },
+        "class": "activity__repeat-start",
+        "type": "path",
+      },
+      Object {
+        "attrs": Object {
+          "id": "5",
+          "mark": [Circular],
+          "onLayout": [Function],
+        },
+        "children": Array [
+          Object {
+            "attrs": Object {
+              "fill": "#fdb05e",
+              "stroke": "#3b4044",
+            },
+            "type": "rect",
+          },
+          Object {
+            "attrs": Object {
+              "fill": "#3b4044",
+              "fontFamily": "Source Code Pro, sans-serif",
+              "fontSize": 14,
+              "text": "do something",
+              "textAlign": "center",
+              "textBaseline": "middle",
+            },
+            "type": "text",
+          },
+        ],
+        "type": "group",
+      },
+      Object {
+        "attrs": Object {
+          "id": "6",
+          "mark": [Circular],
+          "onLayout": [Function],
+        },
+        "children": Array [
+          Object {
+            "attrs": Object {
+              "r": 10,
+              "stroke": "#3b4044",
+            },
+            "type": "circle",
+          },
+          Object {
+            "attrs": Object {
+              "fill": "#3b4044",
+              "r": 6,
+            },
+            "type": "circle",
+          },
+        ],
+        "class": "activity__keyword",
+        "type": "group",
+      },
+      Object {
+        "attrs": Object {},
+        "children": Array [
+          Object {
+            "attrs": Object {
+              "lineJoin": "round",
+              "stroke": "#fdb05e",
+            },
+            "type": "path",
+          },
+          Object {
+            "attrs": Object {
+              "lineCap": "round",
+              "stroke": "#fdb05e",
+            },
+            "type": "path",
+          },
+          Object {
+            "attrs": Object {
+              "lineJoin": "round",
+              "stroke": "#fdb05e",
+            },
+            "type": "path",
+          },
+          Object {
+            "attrs": Object {
+              "lineCap": "round",
+              "stroke": "#fdb05e",
+            },
+            "type": "path",
+          },
+          Object {
+            "attrs": Object {
+              "lineJoin": "round",
+              "stroke": "#fdb05e",
+            },
+            "type": "path",
+          },
+          Object {
+            "attrs": Object {
+              "fill": "#f8f8f2",
+              "opacity": 0.85,
+            },
+            "class": "label-bg",
+            "type": "rect",
+          },
+          Object {
+            "attrs": Object {
+              "fill": "#3b4044",
+              "fontFamily": "Source Code Pro, sans-serif",
+              "fontSize": 14,
+              "id": "2-end-2",
+              "text": "alright then",
+              "textAlign": "center",
+              "textBaseline": "middle",
+            },
+            "class": "activity__edge-label",
+            "type": "text",
+          },
+          Object {
+            "attrs": Object {
+              "lineCap": "round",
+              "stroke": "#fdb05e",
+            },
+            "type": "path",
+          },
+          Object {
+            "attrs": Object {
+              "lineJoin": "round",
+              "stroke": "#fdb05e",
+            },
+            "type": "path",
+          },
+          Object {
+            "attrs": Object {
+              "lineCap": "round",
+              "stroke": "#fdb05e",
+            },
+            "type": "path",
+          },
+          Object {
+            "attrs": Object {
+              "lineJoin": "round",
+              "stroke": "#fdb05e",
+            },
+            "type": "path",
+          },
+          Object {
+            "attrs": Object {
+              "lineCap": "round",
+              "stroke": "#fdb05e",
+            },
+            "type": "path",
+          },
+          Object {
+            "attrs": Object {
+              "lineJoin": "round",
+              "stroke": "#fdb05e",
+            },
+            "type": "path",
+          },
+          Object {
+            "attrs": Object {
+              "lineCap": "round",
+              "stroke": "#fdb05e",
+            },
+            "type": "path",
+          },
+          Object {
+            "attrs": Object {
+              "lineJoin": "round",
+              "stroke": "#fdb05e",
+            },
+            "type": "path",
+          },
+          Object {
+            "attrs": Object {
+              "lineCap": "round",
+              "stroke": "#fdb05e",
+            },
+            "type": "path",
+          },
+          Object {
+            "attrs": Object {
+              "lineJoin": "round",
+              "stroke": "#fdb05e",
+            },
+            "type": "path",
+          },
+          Object {
+            "attrs": Object {
+              "fill": "#f8f8f2",
+              "opacity": 0.85,
+            },
+            "class": "label-bg",
+            "type": "rect",
+          },
+          Object {
+            "attrs": Object {
+              "fill": "#3b4044",
+              "fontFamily": "Source Code Pro, sans-serif",
+              "fontSize": 14,
+              "id": "2-end-4",
+              "text": "nope",
+              "textAlign": "center",
+              "textBaseline": "middle",
+            },
+            "class": "activity__edge-label",
+            "type": "text",
+          },
+          Object {
+            "attrs": Object {
+              "lineCap": "round",
+              "stroke": "#fdb05e",
+            },
+            "type": "path",
+          },
+          Object {
+            "attrs": Object {
+              "lineJoin": "round",
+              "stroke": "#fdb05e",
+            },
+            "type": "path",
+          },
+          Object {
+            "attrs": Object {
+              "fill": "#f8f8f2",
+              "opacity": 0.85,
+            },
+            "class": "label-bg",
+            "type": "rect",
+          },
+          Object {
+            "attrs": Object {
+              "fill": "#3b4044",
+              "fontFamily": "Source Code Pro, sans-serif",
+              "fontSize": 14,
+              "id": "4-end-6",
+              "text": "no",
+              "textAlign": "center",
+              "textBaseline": "middle",
+            },
+            "class": "activity__edge-label",
+            "type": "text",
           },
           Object {
             "attrs": Object {
