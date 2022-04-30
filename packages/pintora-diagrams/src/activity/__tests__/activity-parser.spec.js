@@ -380,7 +380,7 @@ group Init {
   it('can parse nested groups', () => {
     const example = stripStartEmptyLines(`
 activityDiagram
-group Init {
+group #eeeeee "Init phase" {
   partition Inner {
     :Text;
   }
@@ -394,10 +394,10 @@ group Init {
       value: {
         id: '1',
         type: 'group',
-        name: 'Init',
+        name: 'Init phase',
         groupType: 'group',
-        label: 'Init',
-        background: null,
+        label: 'Init phase',
+        background: '#eeeeee',
         children: [
           {
             type: 'group',
@@ -419,7 +419,7 @@ group Init {
                   parentId: '2',
                 },
               ],
-              parent: 'Init',
+              parent: 'Init phase',
             },
             parentId: '1',
           },
