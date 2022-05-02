@@ -1,0 +1,30 @@
+{
+  "name": "@pintora/development-kit",
+  "version": "0.0.1",
+  "description": "Diagram development kit for pintora extensions",
+  "main": "lib/index.js",
+  "types": "lib/index.d.ts",
+  "keywords": [
+    "pintora"
+  ],
+  "author": "hikerpigwinnie@gmail.com",
+  "license": "MIT",
+  "files": [
+    "lib",
+    "CHANGELOG.md"
+  ],
+  "scripts": {
+    "compile": "tsc",
+    "watch": "tsc -w",
+    "prepare": "tsc"
+  },
+  "dependencies": {
+    "shell-exec": "^1.0.2"
+  },
+  "devDependencies": {
+    "typescript": "^4.6.3"
+  },
+  "peerDependencies": {
+    "@hikerpig/nearley": "^2.21.0-beta.2"
+  }
+}
