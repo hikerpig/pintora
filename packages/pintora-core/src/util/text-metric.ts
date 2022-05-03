@@ -9,7 +9,7 @@ export function calculateTextDimensions(text: string, font?: IFont) {
   let width = 0
   let height = 0
   const fontSize = font?.fontSize || 14
-  lines.forEach((line, i) => {
+  lines.forEach(line => {
     const lineMetric = getLineMetric(line, font)
     // console.log('line metric', line, lineMetric)
     const w = lineMetric.width
@@ -32,7 +32,8 @@ let ctx: CanvasRenderingContext2D
 const getCanvasContext = () => {
   if (!ctx) {
     const canvas = document.createElement('canvas')
-    ctx = canvas.getContext('2d') as any
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    ctx = canvas.getContext('2d')!
   }
   return ctx
 }

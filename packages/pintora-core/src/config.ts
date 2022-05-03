@@ -29,7 +29,6 @@ let config: PintoraConfig = {
     theme: 'default',
     darkTheme: 'dark',
     themeVariables: themeRegistry.themes.default,
-    // themeVariables: themeRegistry.themes.dark,
   },
 }
 
