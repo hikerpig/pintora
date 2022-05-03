@@ -1,5 +1,13 @@
 # Change Log
 
+## 0.4.2
+
+### Patch Changes
+
+- d4895eb: optimize: graphic ir docs
+- Updated dependencies [d4895eb]
+  - @pintora/core@0.4.1
+
 ## 0.4.1
 
 ### Patch Changes

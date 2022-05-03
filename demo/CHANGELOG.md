@@ -1,5 +1,15 @@
 # Change Log
 
+## 0.3.5
+
+### Patch Changes
+
+- Updated dependencies [d4895eb]
+- Updated dependencies [79f4887]
+  - @pintora/core@0.4.1
+  - @pintora/renderer@0.4.2
+  - @pintora/diagrams@0.4.5
+
 ## 0.3.4
 
 ### Patch Changes

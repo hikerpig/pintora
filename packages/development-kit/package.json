@@ -1,6 +1,6 @@
 {
   "name": "@pintora/development-kit",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "Diagram development kit for pintora extensions",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",

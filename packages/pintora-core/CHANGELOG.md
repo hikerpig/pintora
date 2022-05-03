@@ -1,5 +1,11 @@
 # Change Log
 
+## 0.4.1
+
+### Patch Changes
+
+- d4895eb: optimize: graphic ir docs
+
 ## 0.4.0
 
 ### Minor Changes

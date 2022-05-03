@@ -1,6 +1,6 @@
 {
   "name": "@pintora/diagrams",
-  "version": "0.4.4",
+  "version": "0.4.5",
   "description": "Core diagrams of pintora",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
@@ -29,7 +29,7 @@
   "dependencies": {
     "@hikerpig/moo": "^0.5.2-beta.2",
     "@hikerpig/nearley": "^2.21.0-beta.1",
-    "@pintora/core": "workspace:^0.4.0",
+    "@pintora/core": "workspace:^0.4.1",
     "@pintora/dagre": "^0.10.7",
     "@pintora/graphlib": "2.2.2",
     "d3-interpolate": "^3.0.1",
@@ -41,7 +41,7 @@
   },
   "devDependencies": {
     "@pintora/test-shared": "workspace:^0.3.1",
-    "@pintora/development-kit": "workspace:^0.0.1",
+    "@pintora/development-kit": "workspace:^0.1.0",
     "@types/d3-interpolate": "^3.0.1",
     "@types/d3-scale": "^4.0.2",
     "@types/d3-shape": "^3.0.2",

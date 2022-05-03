@@ -1,5 +1,13 @@
 # Change Log
 
+## 0.4.5
+
+### Patch Changes
+
+- 79f4887: feat: add @pintora/development-kit package for grammar development
+- Updated dependencies [d4895eb]
+  - @pintora/core@0.4.1
+
 ## 0.4.4
 
 ### Patch Changes
