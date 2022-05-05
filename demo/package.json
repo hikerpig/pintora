@@ -57,7 +57,7 @@
     "tailwindcss": "*",
     "typescript": "^4.5.4",
     "vite": "^2.9.6",
-    "vite-plugin-pwa": "^0.11.13",
+    "vite-plugin-pwa": "^0.12.0",
     "vite-tsconfig-paths": "^3.4.1",
     "workbox-core": "^6.5.2",
     "workbox-precaching": "^6.5.2",
