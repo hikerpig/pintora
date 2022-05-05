@@ -262,13 +262,13 @@ importers:
   packages/pintora-renderer:
     specifiers:
       '@antv/g-base': ^0.5.9
-      '@antv/g-canvas': ^0.5.10
+      '@antv/g-canvas': ^1.0.0
       '@antv/g-svg': ^0.5.6
       '@pintora/core': workspace:^0.4.1
       '@types/node': ^14.11.8
       typescript: ^4.6.3
     dependencies:
-      '@antv/g-canvas': 0.5.12
+      '@antv/g-canvas': 1.0.21
       '@antv/g-svg': 0.5.6
       '@pintora/core': link:../pintora-core
       '@types/node': 14.18.10
@@ -500,16 +500,18 @@ packages:
       detect-browser: 5.3.0
       tslib: 2.3.1
 
-  /@antv/g-canvas/0.5.12:
-    resolution: {integrity: sha512-iJ/muwwqCCNONVlPIzv/7OL5iLguaKRj2BxNMytUO3TWwamM+kHkiyYEOkS0dPn9h/hBsHYlLUluSVz2Fp6/bw==}
+  /@antv/g-canvas/1.0.21:
+    resolution: {integrity: sha512-tIUQh1Cm0JsHjBibyUBJqdWIB24I9oUaKOz90zRT1mHBoam06SbWzOyJktqlbKQ+q6EyQKdEQyjZveFtGijQHQ==}
+    peerDependencies:
+      '@antv/g': ^5.0.1
+      mana-syringe: ^0.3.0
     dependencies:
-      '@antv/g-base': 0.5.9
-      '@antv/g-math': 0.1.7
-      '@antv/matrix-util': 3.1.0-beta.3
-      '@antv/path-util': 2.0.15
-      '@antv/util': 2.0.17
-      gl-matrix: 3.4.3
-      tslib: 2.3.1
+      '@antv/g-plugin-canvas-picker': 1.0.19_c7dba6e82194829ddcb57e27973b74ff
+      '@antv/g-plugin-canvas-renderer': 1.0.19
+      '@antv/g-plugin-dom-interaction': 1.0.19
+      '@antv/g-plugin-html-renderer': 1.0.20
+      lodash-es: 4.17.21
+      tslib: 2.4.0
     dev: false
 
   /@antv/g-math/0.1.7:
@@ -517,6 +519,55 @@ packages:
     dependencies:
       '@antv/util': 2.0.17
       gl-matrix: 3.4.3
+
+  /@antv/g-math/1.0.19:
+    resolution: {integrity: sha512-eeyVsKg29KE1NebGNwJ0ES2CTN3EchFHIwvLqV3wTXXoyuqihWlyBKAY8nC5ouM4+KBPcblQsxzhPI03lq+iOQ==}
+    dependencies:
+      gl-matrix: 3.4.3
+      lodash-es: 4.17.21
+      tslib: 2.4.0
+    dev: false
+
+  /@antv/g-plugin-canvas-picker/1.0.19_c7dba6e82194829ddcb57e27973b74ff:
+    resolution: {integrity: sha512-BahxOe3qZlsHK2EPs6/UHgk07HoQ/IUs31TyFjDrhdv0NHBXxpbrN6GCG5jh8WxWYOMmVuAL9xDCKrtRTic78Q==}
+    peerDependencies:
+      '@antv/g': ^5.0.1
+      '@antv/g-plugin-canvas-renderer': ^1.0.1
+      mana-syringe: ^0.3.0
+    dependencies:
+      '@antv/g-plugin-canvas-renderer': 1.0.19
+      tslib: 2.4.0
+    dev: false
+
+  /@antv/g-plugin-canvas-renderer/1.0.19:
+    resolution: {integrity: sha512-fCs82guLmjOXwfAZrjgWCI87Wsl7n0NsRbqWtkvl2PqOtPy9gsUaW2CUtz79RuDFP7Mt+VguIm6GO4UM3kAEkQ==}
+    peerDependencies:
+      '@antv/g': ^5.0.1
+      mana-syringe: ^0.3.0
+    dependencies:
+      '@antv/g-math': 1.0.19
+      '@antv/path-util': 3.0.1
+      rbush: 3.0.1
+      tslib: 2.4.0
+    dev: false
+
+  /@antv/g-plugin-dom-interaction/1.0.19:
+    resolution: {integrity: sha512-MqlUkKcV9msuEOGwoE+aF/MXX3+kaBFMHd+s3FbRFPg4dKcQXTI7xCQ2V2/IPJql7RXpf96V/qbndlZA90m5ew==}
+    peerDependencies:
+      '@antv/g': ^5.0.1
+      mana-syringe: ^0.3.0
+    dependencies:
+      tslib: 2.4.0
+    dev: false
+
+  /@antv/g-plugin-html-renderer/1.0.20:
+    resolution: {integrity: sha512-O6A41qf7lb2+JKe10CiBoIEY9fMgy0Litz7X+s465SQMG+qrkg6WTkNZ4/QI7/VgcMxAmAPg571Ss9oHtaYxNA==}
+    peerDependencies:
+      '@antv/g': ^5.0.1
+      mana-syringe: ^0.3.0
+    dependencies:
+      tslib: 2.4.0
+    dev: false
 
   /@antv/g-svg/0.5.6:
     resolution: {integrity: sha512-Xve1EUGk4HMbl2nq4ozR4QLh6GyoZ8Xw/+9kHYI4B5P2lIUQU95MuRsaLFfW5NNpZDx85ZeH97tqEmC9L96E7A==}
@@ -540,14 +591,22 @@ packages:
     dependencies:
       '@antv/util': 2.0.17
       gl-matrix: 3.4.3
-      tslib: 2.3.1
+      tslib: 2.4.0
 
   /@antv/path-util/2.0.15:
     resolution: {integrity: sha512-R2VLZ5C8PLPtr3VciNyxtjKqJ0XlANzpFb5sE9GE61UQqSRuSVSzIakMxjEPrpqbgc+s+y8i+fmc89Snu7qbNw==}
     dependencies:
       '@antv/matrix-util': 3.0.4
       '@antv/util': 2.0.17
-      tslib: 2.3.1
+      tslib: 2.4.0
+
+  /@antv/path-util/3.0.1:
+    resolution: {integrity: sha512-tpvAzMpF9Qm6ik2YSMqICNU5tco5POOW7S4XoxZAI/B0L26adU+Md/SmO0BBo2SpuywKvzPH3hPT3xmoyhr04Q==}
+    dependencies:
+      gl-matrix: 3.4.3
+      lodash-es: 4.17.21
+      tslib: 2.4.0
+    dev: false
 
   /@antv/util/2.0.17:
     resolution: {integrity: sha512-o6I9hi5CIUvLGDhth0RxNSFDRwXeywmt6ExR4+RmVAzIi48ps6HUy+svxOCayvrPBN37uE6TAc2KDofRo0nK9Q==}
@@ -13505,6 +13564,10 @@ packages:
     engines: {node: '>=10'}
     dev: true
 
+  /quickselect/2.0.0:
+    resolution: {integrity: sha512-RKJ22hX8mHe3Y6wH/N3wCM6BWtjaxIyyUIkpHOvfFnxdI4yD4tBXEBKSbriGujF6jnSVkJrffuo6vxACiSSxIw==}
+    dev: false
+
   /railroad-diagrams/1.0.0:
     resolution: {integrity: sha1-635iZ1SN3t+4mcG5Dlc3RVnN234=}
     dev: false
@@ -13540,6 +13603,12 @@ packages:
       http-errors: 2.0.0
       iconv-lite: 0.4.24
       unpipe: 1.0.0
+    dev: false
+
+  /rbush/3.0.1:
+    resolution: {integrity: sha512-XRaVO0YecOpEuIvbhbpTrZgoiI6xBlz6hnlr6EHhd+0x9ase6EmeN+hdwwUaJvLcsFFQ8iWVF1GAK1yB0BWi0w==}
+    dependencies:
+      quickselect: 2.0.0
     dev: false
 
   /rc/1.2.8:
