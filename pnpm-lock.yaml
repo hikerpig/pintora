@@ -315,7 +315,7 @@ importers:
       docusaurus-plugin-module-alias: ^0.0.2
       file-loader: ^6.2.0
       less-loader: ^10.2.0
-      mdx-embed: ^0.0.22
+      mdx-embed: ^0.0.23
       path-browserify: ^1.0.1
       prism-react-renderer: ^1.2.1
       react: ^17.0.2
@@ -336,7 +336,7 @@ importers:
       docusaurus-plugin-module-alias: 0.0.2
       file-loader: 6.2.0
       less-loader: 10.2.0
-      mdx-embed: 0.0.22_f5e160408787c83703822bac205321c8
+      mdx-embed: 0.0.23_f5e160408787c83703822bac205321c8
       path-browserify: 1.0.1
       prism-react-renderer: 1.3.1_react@17.0.2
       react: 17.0.2
@@ -11552,7 +11552,7 @@ packages:
   /jsonfile/4.0.0:
     resolution: {integrity: sha1-h3Gq4HmbZAdrdmQPygWPnBDjPss=}
     optionalDependencies:
-      graceful-fs: 4.2.9
+      graceful-fs: 4.2.10
     dev: true
 
   /jsonfile/6.1.0:
@@ -12044,8 +12044,8 @@ packages:
     resolution: {integrity: sha1-/oWy7HWlkDfyrf7BAP1sYBdhFS4=}
     dev: false
 
-  /mdx-embed/0.0.22_f5e160408787c83703822bac205321c8:
-    resolution: {integrity: sha512-Wf9zsrPAYk+QVssBvKKOCqiGcWXOa0z76PObdEY5Oaq8rDvqlbSM/wv7YZ4LWiVOkNsK0mUF44A8o9QXxT+LLQ==}
+  /mdx-embed/0.0.23_f5e160408787c83703822bac205321c8:
+    resolution: {integrity: sha512-Gp50YydnRiOucjWF4UzG8p4q5dm4BxYvWpHpQFFia5vE/S8PwTdLbWo/VqPhP2PdM8RlwqNpprZqXF0zWW/ZCA==}
     peerDependencies:
       '@mdx-js/mdx': ^1.6.16
       '@mdx-js/react': ^1.6.16
