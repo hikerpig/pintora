@@ -8,7 +8,8 @@
     "allowJs": true
   },
   "references": [
-    { "path": "../pintora-core" }
+    { "path": "../pintora-core" },
+    { "path": "../development-kit" }
   ],
   "include": [
     "./src/**/*"
