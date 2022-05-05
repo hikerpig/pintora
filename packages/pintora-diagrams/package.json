@@ -22,7 +22,7 @@
     "compile": "tsc",
     "watch": "tsc -w",
     "test": "jest",
-    "prepare": "npx tsc --build && npm run gen-parser",
+    "prepare-setup": "npm run gen-parser",
     "gen-parser": "node ./scripts/build-grammar.js",
     "coverage": "npx jest --collect-coverage"
   },

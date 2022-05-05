@@ -28,6 +28,16 @@
         "dist/**"
       ],
       "cache": false
+    },
+    "prepare-setup": {
+      "dependsOn": [
+        "^prepare-setup"
+      ],
+      "outputs": [
+        "lib/**",
+        "dist/**",
+        "types/**"
+      ]
     }
   }
 }

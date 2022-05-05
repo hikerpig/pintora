@@ -18,6 +18,7 @@
     "coverage": "pnpx jest --coverage",
     "upload-coverage": "codecov -f coverage/coverage-final.json",
     "ci:coverage": "pnpx jest --coverage --ci",
+    "prepare": "turbo run prepare-setup",
     "build-site": "sh ./scripts/build-site.sh",
     "vercel-build": "npm run compile:browser && npm run build-site"
   },

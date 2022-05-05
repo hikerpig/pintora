@@ -16,7 +16,7 @@
   "scripts": {
     "compile": "tsc",
     "watch": "tsc -w",
-    "prepare": "tsc --build"
+    "prepare-setup": "tsc --build"
   },
   "dependencies": {
     "shell-exec": "^1.0.2"
