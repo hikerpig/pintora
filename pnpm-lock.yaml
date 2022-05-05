@@ -263,13 +263,13 @@ importers:
     specifiers:
       '@antv/g-base': ^0.5.9
       '@antv/g-canvas': ^0.5.10
-      '@antv/g-svg': ^0.5.6
+      '@antv/g-svg': ^1.0.0
       '@pintora/core': workspace:^0.4.1
       '@types/node': ^14.11.8
       typescript: ^4.6.3
     dependencies:
       '@antv/g-canvas': 0.5.12
-      '@antv/g-svg': 0.5.6
+      '@antv/g-svg': 1.0.19
       '@pintora/core': link:../pintora-core
       '@types/node': 14.18.10
     devDependencies:
@@ -518,14 +518,47 @@ packages:
       '@antv/util': 2.0.17
       gl-matrix: 3.4.3
 
-  /@antv/g-svg/0.5.6:
-    resolution: {integrity: sha512-Xve1EUGk4HMbl2nq4ozR4QLh6GyoZ8Xw/+9kHYI4B5P2lIUQU95MuRsaLFfW5NNpZDx85ZeH97tqEmC9L96E7A==}
+  /@antv/g-plugin-dom-interaction/1.0.19:
+    resolution: {integrity: sha512-MqlUkKcV9msuEOGwoE+aF/MXX3+kaBFMHd+s3FbRFPg4dKcQXTI7xCQ2V2/IPJql7RXpf96V/qbndlZA90m5ew==}
+    peerDependencies:
+      '@antv/g': ^5.0.1
+      mana-syringe: ^0.3.0
     dependencies:
-      '@antv/g-base': 0.5.9
-      '@antv/g-math': 0.1.7
-      '@antv/util': 2.0.17
+      tslib: 2.4.0
+    dev: false
+
+  /@antv/g-plugin-svg-picker/1.0.19_1d50498b98467dd2396b0c6f72a20b6b:
+    resolution: {integrity: sha512-ioaSe0YdraMXhEYL6BoXJV0w3W3YstF1Ytm0LWBMyAHVN9r8j6xZjNTKYqoCyYaR6qmaBorGzqXe2bpq7UThhg==}
+    peerDependencies:
+      '@antv/g': ^5.0.1
+      '@antv/g-plugin-svg-renderer': ^1.0.1
+      mana-syringe: ^0.3.0
+    dependencies:
+      '@antv/g-plugin-svg-renderer': 1.0.19
+      tslib: 2.4.0
+    dev: false
+
+  /@antv/g-plugin-svg-renderer/1.0.19:
+    resolution: {integrity: sha512-umrAQ0sRzslInQLfgECKEdWpxvsjMXWO0+hNEOzxYCgXNg/+aPR9zCl0BirEcXaZuYAlAcVhhj8+scXy7396mg==}
+    peerDependencies:
+      '@antv/g': ^5.0.1
+      mana-syringe: ^0.3.0
+    dependencies:
       detect-browser: 5.3.0
-      tslib: 2.3.1
+      tslib: 2.4.0
+    dev: false
+
+  /@antv/g-svg/1.0.19:
+    resolution: {integrity: sha512-jVGm/jrMZgSVU/satbhf+98Qq4WobJ4wyDiCNmZwLZeCl8l6SQjLU88AaFTLwU16x3dzYGi7UA3fUZmEqwIj5g==}
+    peerDependencies:
+      '@antv/g': ^5.0.1
+      mana-syringe: ^0.3.0
+    dependencies:
+      '@antv/g-plugin-dom-interaction': 1.0.19
+      '@antv/g-plugin-svg-picker': 1.0.19_1d50498b98467dd2396b0c6f72a20b6b
+      '@antv/g-plugin-svg-renderer': 1.0.19
+      lodash-es: 4.17.21
+      tslib: 2.4.0
     dev: false
 
   /@antv/matrix-util/3.0.4:
@@ -540,14 +573,14 @@ packages:
     dependencies:
       '@antv/util': 2.0.17
       gl-matrix: 3.4.3
-      tslib: 2.3.1
+      tslib: 2.4.0
 
   /@antv/path-util/2.0.15:
     resolution: {integrity: sha512-R2VLZ5C8PLPtr3VciNyxtjKqJ0XlANzpFb5sE9GE61UQqSRuSVSzIakMxjEPrpqbgc+s+y8i+fmc89Snu7qbNw==}
     dependencies:
       '@antv/matrix-util': 3.0.4
       '@antv/util': 2.0.17
-      tslib: 2.3.1
+      tslib: 2.4.0
 
   /@antv/util/2.0.17:
     resolution: {integrity: sha512-o6I9hi5CIUvLGDhth0RxNSFDRwXeywmt6ExR4+RmVAzIi48ps6HUy+svxOCayvrPBN37uE6TAc2KDofRo0nK9Q==}
