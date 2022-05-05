@@ -15,6 +15,7 @@ export default function PintoraPreview(props: Props) {
   const { code, renderer, pintoraConfig, onError, onSuccess } = props
   const containerRef = useRef<HTMLDivElement>()
   const [errorMessage, setErrorMessage] = useState<string | null>('')
+  const [fontReady, setFontReady] = useState(false)
 
   useEffect(() => {
     if (!containerRef.current) return
@@ -43,7 +44,17 @@ export default function PintoraPreview(props: Props) {
     return () => {
       if (containerRef.current) containerRef.current.innerHTML = ''
     }
-  }, [code, renderer, pintoraConfig])
+  }, [code, renderer, pintoraConfig, fontReady])
+
+  useEffect(() => {
+    const fontFamily = 'Source Code Pro'
+    const fontToBeTested = `12px ${fontFamily}`
+    document.fonts.load(fontToBeTested, 'essential font').then(() => {
+      const loaded = document.fonts.check(fontToBeTested)
+      // refresh the preview once font is ready
+      setFontReady(loaded)
+    })
+  }, [])
 
   return (
     <div className="PintoraPreview">

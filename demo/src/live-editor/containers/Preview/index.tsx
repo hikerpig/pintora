@@ -25,7 +25,6 @@ interface NearlyError extends Error {
 
 const Preview = ({ previewCode, previewConfig, pintoraConfig, className }: Props) => {
   const dispatch = useDispatch()
-  const [fontReady, setFontReady] = useState(false)
 
   const handleRendererChange = useCallback(
     (e: any) => {
@@ -48,16 +47,6 @@ const Preview = ({ previewCode, previewConfig, pintoraConfig, className }: Props
 
   const handleSuccess = useCallback(() => {
     dispatch(actions.updateEditorError({ errorInfo: null }))
-  }, [])
-
-  useEffect(() => {
-    const fontFamily = 'Source Code Pro'
-    const fontToBeTested = `12px ${fontFamily}`
-    document.fonts.load(fontToBeTested, 'essential font').then(() => {
-      const loaded = document.fonts.check(fontToBeTested)
-      // refresh the preview once font is ready
-      setFontReady(loaded)
-    })
   }, [])
 
   const cls = classnames({
