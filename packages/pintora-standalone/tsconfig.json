@@ -7,11 +7,14 @@
     "checkJs": false,
     "allowJs": true,
     "resolveJsonModule": true,
-    "types": ["tinycolor2"]
+    "types": ["tinycolor2", "jest"]
   },
   "references": [
     { "path": "../pintora-core" },
     { "path": "../pintora-diagrams" },
     { "path": "../pintora-renderer" }
+  ],
+  "include": [
+    "./src/**/*"
   ]
 }
