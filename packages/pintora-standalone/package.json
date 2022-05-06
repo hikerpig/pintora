@@ -42,6 +42,8 @@
     "watch": "microbundle --no-compress --no-sourcemap -f esm watch",
     "watch-all": "microbundle --no-compress --no-sourcemap --external none --name pintora -f umd,esm watch",
     "dev-demo:esm": "microbundle --no-compress --no-sourcemap -f esm watch",
+    "test": "jest",
+    "coverage": "npx jest --collect-coverage",
     "gen-types": "tsc --declaration"
   },
   "bugs": {
@@ -53,6 +55,7 @@
     "@pintora/renderer": "^0.4.1"
   },
   "devDependencies": {
+    "@pintora/test-shared": "workspace:*",
     "@types/node": "^14.11.8",
     "@types/tinycolor2": "^1.4.3",
     "microbundle": "^0.15.0",

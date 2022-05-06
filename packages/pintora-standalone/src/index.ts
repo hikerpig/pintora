@@ -5,6 +5,7 @@ import pintora, {
   tinycolor,
   safeAssign,
   DiagramArtistOptions,
+  DeepPartial,
 } from '@pintora/core'
 export * from '@pintora/core'
 import { DIAGRAMS } from '@pintora/diagrams'
@@ -20,10 +21,16 @@ initDiagrams()
 type InitBrowserOptions = {
   startOnLoad?: boolean
 }
-interface RenderToOptions extends RenderOptions, DiagramArtistOptions {
+interface RenderToOptions extends Omit<RenderOptions, 'container'>, DiagramArtistOptions {
+  container: HTMLElement | string
   onError?(error: Error): void
   enhanceGraphicIR?(ir: GraphicsIR): GraphicsIR
-  config?: PintoraConfig
+  config?: DeepPartial<PintoraConfig>
+}
+
+type ConfigOnElement = {
+  renderer: string
+  theme: string
 }
 
 const CLASSES = {
@@ -68,7 +75,7 @@ const pintoraStandalone = {
     let drawResult: ReturnType<typeof pintoraStandalone.parseAndDraw>
     try {
       const containerSize = {
-        width: container.clientWidth,
+        width: ctn.clientWidth,
       }
       drawResult = pintoraStandalone.parseAndDraw(code, safeAssign<RenderToOptions>({ containerSize }, options))
     } catch (error) {
@@ -94,7 +101,10 @@ const pintoraStandalone = {
         })
       }
     } finally {
-      if (config && backupConfig) configApi.replaceConfig(backupConfig)
+      if (config && backupConfig) {
+        configApi.replaceConfig(backupConfig)
+        configStack.pop()
+      }
     }
   },
   /**
@@ -120,14 +130,44 @@ const pintoraStandalone = {
     wrapper.classList.add(CLASSES.wrapper)
     container.style.display = 'none'
 
-    const renderer: any =
-      container.dataset.renderer || configApi.getConfig<PintoraConfig>().core?.defaultRenderer || 'svg'
+    const configFromEle = pintoraStandalone.getConfigFromElement(container)
+    const renderer: any = configFromEle.renderer || configApi.getConfig<PintoraConfig>().core?.defaultRenderer || 'svg'
 
-    container.parentNode.insertBefore(wrapper, container)
+    let config: DeepPartial<PintoraConfig> | null = null
+    if (configFromEle.theme) {
+      config = {
+        themeConfig: {
+          theme: configFromEle.theme,
+        },
+      }
+    }
+
+    if (container.parentNode) {
+      container.parentNode.insertBefore(wrapper, container)
+    }
+
     pintoraStandalone.renderTo(container.innerText, {
       container: wrapper,
       renderer,
+      config,
     })
+
+    return wrapper
+  },
+  /**
+   * Get pintora config from element's dataset, some available configs:
+   * - `data-renderer`
+   * - `data-theme`
+   */
+  getConfigFromElement(ele: HTMLElement) {
+    const output = ['renderer', 'theme'].reduce((acc, k) => {
+      const v = ele.dataset[k]
+      if (v) {
+        acc[k] = v
+      }
+      return acc
+    }, {} as Partial<ConfigOnElement>)
+    return output
   },
   getConfig: configApi.getConfig,
   setConfig: configApi.setConfig,
