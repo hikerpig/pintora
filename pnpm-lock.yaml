@@ -160,7 +160,7 @@ importers:
       '@pintora/test-shared': workspace:^0.3.1
       '@types/jsdom': ^16.2.10
       '@types/mime-types': ^2.1.0
-      '@types/node': ^14.11.8
+      '@types/node': ^16.0.0
       '@types/yargs': ^16.0.0
       canvas: '*'
       consola: ^2.15.3
@@ -181,7 +181,7 @@ importers:
       '@pintora/test-shared': link:../test-shared
       '@types/jsdom': 16.2.14
       '@types/mime-types': 2.1.1
-      '@types/node': 14.18.10
+      '@types/node': 16.11.33
       '@types/yargs': 16.0.4
       typescript: 4.6.3
 
@@ -189,7 +189,7 @@ importers:
     specifiers:
       '@antv/matrix-util': ^3.0.4
       '@types/clone-deep': ^4.0.1
-      '@types/node': ^14.11.8
+      '@types/node': ^16.0.0
       '@types/tinycolor2': ^1.4.3
       clone-deep: ^4.0.1
       deepmerge: ^4.2.2
@@ -197,7 +197,7 @@ importers:
       typescript: ^4.6.3
     dependencies:
       '@antv/matrix-util': 3.0.4
-      '@types/node': 14.18.10
+      '@types/node': 16.11.33
       clone-deep: 4.0.1
       deepmerge: 4.2.2
       tinycolor2: 1.4.2
@@ -220,7 +220,7 @@ importers:
       '@types/d3-shape': ^3.0.2
       '@types/dedent': ^0.7.0
       '@types/nearley': ^2.11.1
-      '@types/node': ^14.11.8
+      '@types/node': ^16.0.0
       '@types/tinycolor2': ^1.4.3
       d3-interpolate: ^3.0.1
       d3-scale: ^4.0.2
@@ -252,7 +252,7 @@ importers:
       '@types/d3-shape': 3.0.2
       '@types/dedent': 0.7.0
       '@types/nearley': 2.11.2
-      '@types/node': 14.18.10
+      '@types/node': 16.11.33
       '@types/tinycolor2': 1.4.3
       esbuild-jest: 0.5.0
       jest-environment-jsdom: 28.0.2
@@ -265,13 +265,13 @@ importers:
       '@antv/g-canvas': ^0.5.10
       '@antv/g-svg': ^0.5.6
       '@pintora/core': workspace:^0.4.1
-      '@types/node': ^14.11.8
+      '@types/node': ^16.0.0
       typescript: ^4.6.3
     dependencies:
       '@antv/g-canvas': 0.5.12
       '@antv/g-svg': 0.5.6
       '@pintora/core': link:../pintora-core
-      '@types/node': 14.18.10
+      '@types/node': 16.11.33
     devDependencies:
       '@antv/g-base': 0.5.9
       typescript: 4.6.3
@@ -282,7 +282,7 @@ importers:
       '@pintora/diagrams': workspace:^0.4.4
       '@pintora/renderer': ^0.4.1
       '@pintora/test-shared': workspace:*
-      '@types/node': ^14.11.8
+      '@types/node': ^16.0.0
       '@types/tinycolor2': ^1.4.3
       microbundle: ^0.15.0
       typescript: ^4.6.3
@@ -292,7 +292,7 @@ importers:
       '@pintora/renderer': link:../pintora-renderer
     devDependencies:
       '@pintora/test-shared': link:../test-shared
-      '@types/node': 14.18.10
+      '@types/node': 16.11.33
       '@types/tinycolor2': 1.4.3
       microbundle: 0.15.0
       typescript: 4.6.3
@@ -5418,6 +5418,10 @@ packages:
 
   /@types/node/14.18.10:
     resolution: {integrity: sha512-6iihJ/Pp5fsFJ/aEDGyvT4pHGmCpq7ToQ/yf4bl5SbVAvwpspYJ+v3jO7n8UyjhQVHTy+KNszOozDdv+O6sovQ==}
+    dev: true
+
+  /@types/node/16.11.33:
+    resolution: {integrity: sha512-0PJ0vg+JyU0MIan58IOIFRtSvsb7Ri+7Wltx2qAg94eMOrpg4+uuP3aUHCpxXc1i0jCXiC+zIamSZh3l9AbcQA==}
 
   /@types/node/17.0.16:
     resolution: {integrity: sha512-ydLaGVfQOQ6hI1xK2A5nVh8bl0OGoIfYMxPWHqqYe9bTkWCfqiVvZoh2I/QF2sNSkZzZyROBoTefIEI+PB6iIA==}
