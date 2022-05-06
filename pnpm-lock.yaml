@@ -79,7 +79,7 @@ importers:
       react: ^18.1.0
       react-dom: ^18.1.0
       react-error-boundary: ^3.1.4
-      react-redux: ^7.2.8
+      react-redux: ^8.0.0
       react-router-dom: ^6.3.0
       shiki: ^0.10.0
       start-server-and-test: ^1.14.0
@@ -111,14 +111,14 @@ importers:
       '@pintora/standalone': link:../packages/pintora-standalone
       '@pintora/test-shared': link:../packages/test-shared
       '@react-hook/debounce': 4.0.0_react@18.1.0
-      '@reduxjs/toolkit': 1.8.1_react-redux@7.2.8+react@18.1.0
+      '@reduxjs/toolkit': 1.8.1_react-redux@8.0.1+react@18.1.0
       browser-fs-access: 0.29.5
       classnames: 2.3.1
       daisyui: 1.25.4
       react: 18.1.0
       react-dom: 18.1.0_react@18.1.0
       react-error-boundary: 3.1.4_react@18.1.0
-      react-redux: 7.2.8_react-dom@18.1.0+react@18.1.0
+      react-redux: 8.0.1_dd5346d96c16c0aadfa6cad1ff4d1193
       react-router-dom: 6.3.0_react-dom@18.1.0+react@18.1.0
       shiki: 0.10.0
       throttle-debounce: 3.0.1
@@ -4794,7 +4794,7 @@ packages:
       react: 18.1.0
     dev: false
 
-  /@reduxjs/toolkit/1.8.1_react-redux@7.2.8+react@18.1.0:
+  /@reduxjs/toolkit/1.8.1_react-redux@8.0.1+react@18.1.0:
     resolution: {integrity: sha512-Q6mzbTpO9nOYRnkwpDlFOAbQnd3g7zj7CtHAZWz5SzE5lcV97Tf8f3SzOO8BoPOMYBFgfZaqTUZqgGu+a0+Fng==}
     peerDependencies:
       react: ^16.9.0 || ^17.0.0 || ^18
@@ -4807,7 +4807,7 @@ packages:
     dependencies:
       immer: 9.0.12
       react: 18.1.0
-      react-redux: 7.2.8_react-dom@18.1.0+react@18.1.0
+      react-redux: 8.0.1_dd5346d96c16c0aadfa6cad1ff4d1193
       redux: 4.1.2
       redux-thunk: 2.4.1_redux@4.1.2
       reselect: 4.1.5
@@ -5467,15 +5467,6 @@ packages:
       '@types/react': 18.0.8
     dev: true
 
-  /@types/react-redux/7.1.22:
-    resolution: {integrity: sha512-GxIA1kM7ClU73I6wg9IRTVwSO9GS+SAKZKe0Enj+82HMU6aoESFU2HNAdNi3+J53IaOHPiUfT3kSG4L828joDQ==}
-    dependencies:
-      '@types/hoist-non-react-statics': 3.3.1
-      '@types/react': 18.0.8
-      hoist-non-react-statics: 3.3.2
-      redux: 4.1.2
-    dev: false
-
   /@types/react-router-config/5.0.6:
     resolution: {integrity: sha512-db1mx37a1EJDf1XeX8jJN7R3PZABmJQXR8r28yUjVMFSjkmnQo6X6pOEEmNl+Tp2gYQOGPdYbFIipBtdElZ3Yg==}
     dependencies:
@@ -5575,6 +5566,10 @@ packages:
 
   /@types/unist/2.0.6:
     resolution: {integrity: sha512-PBjIUxZHOuj0R15/xuwJYjFi+KZdNFrehocChv4g5hu6aFroHue8m0lBP0POdK2nKzbw0cgV1mws8+V/JAcEkQ==}
+    dev: false
+
+  /@types/use-sync-external-store/0.0.3:
+    resolution: {integrity: sha512-EwmlvuaxPNej9+T4v5AuBPJa2x2UOJVdjCtDHgcDqitUeOtjnJKJ+apYjVcAoBEMjKW1VVFGZLUb5+qqa09XFA==}
     dev: false
 
   /@types/ws/8.5.3:
@@ -13624,10 +13619,10 @@ packages:
 
   /react-is/17.0.2:
     resolution: {integrity: sha512-w2GsyukL62IJnlaff/nRegPQR94C/XXamvMWmSHRJ4y7Ts/4ocGRmTHvOs8PSE6pB3dWOrD/nueuU5sduBsQ4w==}
+    dev: true
 
   /react-is/18.1.0:
     resolution: {integrity: sha512-Fl7FuabXsJnV5Q1qIOQwx/sagGF18kogb4gpfcG4gjLBWO0WDiiz1ko/ExayuxE7InyQkBLkxRFG5oxY6Uu3Kg==}
-    dev: true
 
   /react-json-view/1.21.3_daeb7318e0745db8ebd9bf57131bb72b:
     resolution: {integrity: sha512-13p8IREj9/x/Ye4WI/JpjhoIwuzEgUAtgJZNBJckfzJt1qyh24BdTm6UQNGnyTq9dapQdrqvquZTo3dz1X6Cjw==}
@@ -13662,26 +13657,37 @@ packages:
       webpack: 5.72.0
     dev: false
 
-  /react-redux/7.2.8_react-dom@18.1.0+react@18.1.0:
-    resolution: {integrity: sha512-6+uDjhs3PSIclqoCk0kd6iX74gzrGc3W5zcAjbrFgEdIjRSQObdIwfx80unTkVUYvbQ95Y8Av3OvFHq1w5EOUw==}
+  /react-redux/8.0.1_dd5346d96c16c0aadfa6cad1ff4d1193:
+    resolution: {integrity: sha512-LMZMsPY4DYdZfLJgd7i79n5Kps5N9XVLCJJeWAaPYTV+Eah2zTuBjTxKtNEbjiyitbq80/eIkm55CYSLqAub3w==}
     peerDependencies:
-      react: ^16.8.3 || ^17 || ^18
-      react-dom: '*'
-      react-native: '*'
+      '@types/react': ^16.8 || ^17.0 || ^18.0
+      '@types/react-dom': ^16.8 || ^17.0 || ^18.0
+      react: ^16.8 || ^17.0 || ^18.0
+      react-dom: ^16.8 || ^17.0 || ^18.0
+      react-native: '>=0.59'
+      redux: ^4
     peerDependenciesMeta:
+      '@types/react':
+        optional: true
+      '@types/react-dom':
+        optional: true
       react-dom:
         optional: true
       react-native:
         optional: true
+      redux:
+        optional: true
     dependencies:
-      '@babel/runtime': 7.17.2
-      '@types/react-redux': 7.1.22
+      '@babel/runtime': 7.17.9
+      '@types/hoist-non-react-statics': 3.3.1
+      '@types/react': 18.0.8
+      '@types/react-dom': 18.0.3
+      '@types/use-sync-external-store': 0.0.3
       hoist-non-react-statics: 3.3.2
-      loose-envify: 1.4.0
-      prop-types: 15.8.1
       react: 18.1.0
       react-dom: 18.1.0_react@18.1.0
-      react-is: 17.0.2
+      react-is: 18.1.0
+      use-sync-external-store: 1.1.0_react@18.1.0
     dev: false
 
   /react-refresh/0.10.0:
@@ -16064,6 +16070,14 @@ packages:
       '@types/react': 18.0.8
       react: 17.0.2
       use-isomorphic-layout-effect: 1.1.1_@types+react@18.0.8+react@17.0.2
+    dev: false
+
+  /use-sync-external-store/1.1.0_react@18.1.0:
+    resolution: {integrity: sha512-SEnieB2FPKEVne66NpXPd1Np4R1lTNKfjuy3XdIoPQKYBAFdzbzSZlSn1KJZUiihQLQC5Znot4SBz1EOTBwQAQ==}
+    peerDependencies:
+      react: ^16.8.0 || ^17.0.0 || ^18.0.0
+    dependencies:
+      react: 18.1.0
     dev: false
 
   /use/3.1.1:
