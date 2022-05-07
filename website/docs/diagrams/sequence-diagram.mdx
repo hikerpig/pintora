@@ -11,6 +11,7 @@ The syntax is based on Mermaid 8.9, with some other good stuff:
 - [Multiline text for message](#multiline-text-for-message)
 - [Color group messages](#color-group-messages)
 - [Divider](#divider)
+- [Participants Boxes](#participants-boxes)
 - [Override config](#override-config)
 - [Classifier types](#classifier-types) <span className="badge badge--info">experimenting</span>
 
@@ -85,6 +86,23 @@ sequenceDiagram
   Georgia->>Frida: I like your portraits
   == They didn't have this conversation ==
   Frida-->>Frida: I like flowers on my hair, too
+```
+
+## Participants Boxes
+
+You can draw participants in boxes, just declare them between `box` and `endbox`.
+
+Background color and title are optional.
+
+```pintora play
+sequenceDiagram
+  box #e7f2ff "English Corner"
+  participant A
+  participant B
+  endbox
+
+  A ->> B: Hello
+  B ->> C: Hola
 ```
 
 ## Override config

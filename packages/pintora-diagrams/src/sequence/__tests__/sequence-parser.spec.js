@@ -10,7 +10,7 @@ describe('sequence parser', () => {
   it('can parse unicode chars', () => {
     const backquoteExample = stripStartEmptyLines(`
 sequenceDiagram
-  autonumber 
+  autonumber
   用户 ->> Pintora: 帮我画张时序图
   activate Pintora
   alt DSL 正确
@@ -106,10 +106,10 @@ sequenceDiagram
 
   it('can parse participant', () => {
     const example = stripStartEmptyLines(`
-sequenceDiagram 
+sequenceDiagram
   participant A as "Alice"
   participant B as Bobby Bob
-  participant C  
+  participant C
   A-->B: hello
   A-->C: yoho
   `)
@@ -171,6 +171,58 @@ sequenceDiagram
         description: '[B]',
         wrap: false,
         prevActorId: 'A',
+      },
+    })
+  })
+
+  it('can parse participant inside box', () => {
+    const example = stripStartEmptyLines(`
+sequenceDiagram
+  box #d6d3fa "group participants"
+  participant A as "Alice"
+  participant B
+  endbox
+  `)
+    parse(example)
+    const ir = db.getDiagramIR()
+    // console.log(JSON.stringify(ir, null, 2))
+    expect(ir.participantBoxes).toMatchObject({
+      1: {
+        id: '1',
+        text: 'group participants',
+        actors: ['A', 'B'],
+        background: '#d6d3fa',
+      },
+    })
+    expect(ir.actors).toMatchObject({
+      A: {
+        name: 'A',
+        description: 'Alice',
+        boxId: '1',
+      },
+      B: {
+        name: 'B',
+        boxId: '1',
+      },
+    })
+  })
+
+  it('can parse participant box without title', () => {
+    const example = stripStartEmptyLines(`
+sequenceDiagram
+  box
+  participant A as "Alice"
+  participant B
+  endbox
+  `)
+    parse(example)
+    const ir = db.getDiagramIR()
+    // console.log(JSON.stringify(ir, null, 2))
+    expect(ir.participantBoxes).toMatchObject({
+      1: {
+        id: '1',
+        text: null,
+        actors: ['A', 'B'],
       },
     })
   })

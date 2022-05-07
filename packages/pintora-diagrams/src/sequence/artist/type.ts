@@ -35,3 +35,17 @@ export type SequenceDiagramBounds = {
   starty: number
   stopy: number
 }
+
+export type MessageModel = {
+  width: number
+  height: number
+  startx: number
+  stopx: number
+  starty: number
+  stopy: number
+  text: Message['text']
+  type: Message['type']
+  sequenceIndex?: number
+  fromBound?: number
+  toBound?: number
+}
