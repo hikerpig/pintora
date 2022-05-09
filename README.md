@@ -107,6 +107,7 @@ Check the online [documentation and demo](http://pintorajs.vercel.app/docs/intro
 
 - [gatsby-remark-pintora](https://github.com/hikerpig/gatsby-remark-pintora) A gatsby remark plugin for converting pintora codeblock to diagrams in markdown files.
 - [Pintora.js - Diagram as text / hikerpig / Observable](https://observablehq.com/@hikerpig/pintora-js-diagram-as-text), use pintora in Observable interactive notebook.
+- [pintora-stencil - Pintora Web Components](https://github.com/hikerpig/pintora-stencil), web component for showing pintora diagram preview, add it into your website simply by import some script tags.
 
 ## 🔭 Roadmap
 
