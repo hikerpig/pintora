@@ -34,4 +34,15 @@ describe('sequence-artist', () => {
     const result = testDraw(code, { containerSize: { width: 300 } })
     expect(Math.round(result.graphicIR.width)).toBe(300)
   })
+
+  it('will render boxes', () => {
+    const code = `
+    sequenceDiagram
+    box #d6d3fa "group participants"
+    participant A as "Alice"
+    participant B
+    endbox
+    `
+    expect(stripDrawResultForSnapshot(testDraw(code))).toMatchSnapshot()
+  })
 })

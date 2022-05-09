@@ -687,3 +687,164 @@ Object {
   },
 }
 `;
+
+exports[`sequence-artist will render boxes 1`] = `
+Object {
+  "mark": Object {
+    "attrs": Object {},
+    "children": Array [
+      Object {
+        "attrs": Object {},
+        "children": Array [
+          Object {
+            "attrs": Object {
+              "fill": "#d6d3fa",
+              "stroke": "#3b4044",
+            },
+            "type": "rect",
+          },
+          Object {
+            "attrs": Object {
+              "fill": "#3b4044",
+              "fontFamily": "Source Code Pro, sans-serif",
+              "fontSize": 16,
+              "fontWeight": "bold",
+              "text": "group participants",
+              "textAlign": "center",
+              "textBaseline": "top",
+            },
+            "type": "text",
+          },
+        ],
+        "class": "sequence__participant-boxes",
+        "type": "group",
+      },
+      Object {
+        "children": Array [
+          Object {
+            "attrs": Object {
+              "stroke": "#3b4044",
+            },
+            "class": "actor__line",
+            "type": "line",
+          },
+          Object {
+            "attrs": Object {
+              "fill": "#fdb05e",
+              "radius": 4,
+              "stroke": "#3b4044",
+            },
+            "type": "rect",
+          },
+          Object {
+            "attrs": Object {
+              "fill": "#3b4044",
+              "fontFamily": "Source Code Pro, sans-serif",
+              "fontSize": 16,
+              "fontWeight": 400,
+              "text": "Alice",
+              "textAlign": "center",
+              "textBaseline": "middle",
+            },
+            "type": "text",
+          },
+        ],
+        "class": "actor",
+        "type": "group",
+      },
+      Object {
+        "children": Array [
+          Object {
+            "attrs": Object {
+              "stroke": "#3b4044",
+            },
+            "class": "actor__line",
+            "type": "line",
+          },
+          Object {
+            "attrs": Object {
+              "fill": "#fdb05e",
+              "radius": 4,
+              "stroke": "#3b4044",
+            },
+            "type": "rect",
+          },
+          Object {
+            "attrs": Object {
+              "fill": "#3b4044",
+              "fontFamily": "Source Code Pro, sans-serif",
+              "fontSize": 16,
+              "fontWeight": 400,
+              "text": "B",
+              "textAlign": "center",
+              "textBaseline": "middle",
+            },
+            "type": "text",
+          },
+        ],
+        "class": "actor",
+        "type": "group",
+      },
+      Object {
+        "attrs": Object {},
+        "children": Array [],
+        "class": "activations",
+        "type": "group",
+      },
+      Object {
+        "children": Array [
+          Object {
+            "attrs": Object {
+              "fill": "#fdb05e",
+              "radius": 4,
+              "stroke": "#3b4044",
+            },
+            "type": "rect",
+          },
+          Object {
+            "attrs": Object {
+              "fill": "#3b4044",
+              "fontFamily": "Source Code Pro, sans-serif",
+              "fontSize": 16,
+              "fontWeight": 400,
+              "text": "Alice",
+              "textAlign": "center",
+              "textBaseline": "middle",
+            },
+            "type": "text",
+          },
+        ],
+        "class": "actor",
+        "type": "group",
+      },
+      Object {
+        "children": Array [
+          Object {
+            "attrs": Object {
+              "fill": "#fdb05e",
+              "radius": 4,
+              "stroke": "#3b4044",
+            },
+            "type": "rect",
+          },
+          Object {
+            "attrs": Object {
+              "fill": "#3b4044",
+              "fontFamily": "Source Code Pro, sans-serif",
+              "fontSize": 16,
+              "fontWeight": 400,
+              "text": "B",
+              "textAlign": "center",
+              "textBaseline": "middle",
+            },
+            "type": "text",
+          },
+        ],
+        "class": "actor",
+        "type": "group",
+      },
+    ],
+    "type": "group",
+  },
+}
+`;
