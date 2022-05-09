@@ -11,6 +11,7 @@ title: Sequence Diagram 时序图
 - [消息文本支持多行](#消息文本支持多行)
 - [自定义分组颜色](#自定义分组颜色)
 - [分隔符](#分隔符)
+- [Participants 包裹盒](#participants-包裹盒)
 - [覆盖设置](#覆盖设置)
 - [分类](#分类) <span className="badge badge--info">experimenting</span>
 
@@ -112,6 +113,23 @@ sequenceDiagram
   Georgia->>Frida: 你的自画像很有特色
   == 另一段时间后 ==
   Frida-->>Frida: 花在我身上很美
+```
+
+## Participants 包裹盒
+
+在 `box` 和 `endbox` 关键字区域内声明的 participant 会被盒子包裹。
+
+背景色和双引号括起来的盒子标题都是可选的。
+
+```pintora play
+sequenceDiagram
+  box #e7f2ff "英语角"
+  participant A
+  participant B
+  endbox
+
+  A ->> B: Hello
+  B ->> C: 你好
 ```
 
 ## 覆盖设置

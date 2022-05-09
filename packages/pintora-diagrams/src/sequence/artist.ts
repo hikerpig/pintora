@@ -21,24 +21,24 @@ import {
   PintoraConfig,
   ITheme,
   compact,
+  Bounds,
+  TSize,
 } from '@pintora/core'
-import { db, SequenceDiagramIR, LINETYPE, Message, PLACEMENT, WrappedText } from './db'
-import { ActivationData, LoopModel, LoopSection, SequenceDiagramBounds } from './artist/type'
+import { db, SequenceDiagramIR, LINETYPE, Message, PLACEMENT, WrappedText, ParticipantBox } from './db'
+import { ActivationData, LoopModel, SequenceDiagramBounds, MessageModel } from './artist/type'
 import { SequenceConf, getConf } from './config'
-import { getBaseNote, drawArrowTo, drawCrossTo, getBaseText, makeMark, makeLoopLabelBox } from './artist-util'
+import { getBaseNote, drawArrowTo, drawCrossTo, getBaseText, makeMark } from './artist-util'
+import { makeBounds, tryExpandBounds } from '../util/mark-positioner'
+import { drawDivider } from './artist/divider'
+import { drawLoopTo } from './artist/loop'
+import { makeEmptyGroup } from '../util/artist-util'
+import { getTextDimensionsInPresicion } from '../util/text'
 
 let conf: SequenceConf
 let theme: ITheme
 
 type DrawResult<T extends Mark = Mark> = {
   mark: T
-}
-
-// message line end
-enum LineEndType {
-  NONE = 'none',
-  ARROWHEAD = 'arrowhead',
-  CROSS = 'cross',
 }
 
 const GROUP_LABEL_MAP = {
@@ -52,6 +52,13 @@ const GROUP_LABEL_MAP = {
   [LINETYPE.PAR_START]: 'par',
 }
 
+export type SequenceArtistContext = {
+  rootMark: Group
+  ir: SequenceDiagramIR
+  conf: SequenceConf
+  model: Model
+}
+
 const SHOW_NUMBER_CIRCLE_RADIUS = 8
 
 const sequenceArtist: IDiagramArtist<SequenceDiagramIR, SequenceConf> = {
@@ -60,27 +67,40 @@ const sequenceArtist: IDiagramArtist<SequenceDiagramIR, SequenceConf> = {
     conf = getConf(ir, config)
     theme = (configApi.getConfig() as PintoraConfig).themeConfig.themeVariables
     model.init()
-    logger.debug(`C:${JSON.stringify(conf, null, 2)}`)
+    // logger.debug(`C:${JSON.stringify(conf, null, 2)}`)
 
     // Fetch data from the parsing
-    const { actors, messages, title } = ir
+    const { messages, title } = ir
     const actorKeys = db.getActorKeys()
 
-    const rootMark: Group = {
-      type: 'group',
-      attrs: {},
-      children: [],
+    const rootMark = makeEmptyGroup()
+
+    const context: SequenceArtistContext = {
+      ir,
+      rootMark,
+      conf,
+      model,
     }
+
     actorKeys.forEach(key => {
       model.actorAttrsMap.set(key, { fill: conf.actorBackground, stroke: conf.actorBorderColor })
     })
 
+    model.initBoxInfos(ir)
+
+    let startVerticalPos = 0
+    if (model.hasParticipantBox()) {
+      const vPos = conf.participantBoxPadding * 2 + model.participantBoxStats.maxTitleHeight
+      startVerticalPos = model.bumpVerticalPos(vPos)
+    }
+
     calcLoopMinWidths(ir.messages)
     const maxMessageWidthPerActor = getMaxMessageWidthPerActor(ir)
     model.maxMessageWidthPerActor = maxMessageWidthPerActor
-    model.actorHeight = calculateActorMargins(actors, maxMessageWidthPerActor)
+    const actorsCalcResult = calculateActorMargins(context, maxMessageWidthPerActor)
+    model.actorHeight = actorsCalcResult.actorHeight
 
-    drawActors(rootMark, ir, { verticalPos: 0 })
+    drawActors(rootMark, ir, { verticalPos: startVerticalPos })
     const loopWidths = calculateLoopBounds(messages)
 
     const activationGroup = makeMark(
@@ -93,7 +113,7 @@ const sequenceArtist: IDiagramArtist<SequenceDiagramIR, SequenceConf> = {
     )
     // push this group early so it won't lay on top of other messages
     rootMark.children.push(activationGroup)
-    function activeEnd(msg: Message, verticalPos) {
+    function activeEnd(msg: Message, verticalPos: number) {
       const activationData = model.endActivation(msg)
       if (activationData.starty + 18 > verticalPos) {
         activationData.starty = verticalPos - 6
@@ -154,13 +174,13 @@ const sequenceArtist: IDiagramArtist<SequenceDiagramIR, SequenceConf> = {
         case LINETYPE.PAR_END:
           loopModel = model.endLoop()
           const label = GROUP_LABEL_MAP[msg.type]
-          drawLoopTo(rootMark, loopModel, label, conf)
+          drawLoopTo(context, loopModel, label)
           model.bumpVerticalPos(loopModel.stopy - model.verticalPos)
           model.loops.push(loopModel)
           break
         case LINETYPE.DIVIDER:
           msgModel = model.dividerMap.get(msg.id)
-          drawDividerTo(msgModel, rootMark)
+          drawDivider(context, msgModel)
           break
         default:
           try {
@@ -200,7 +220,13 @@ const sequenceArtist: IDiagramArtist<SequenceDiagramIR, SequenceConf> = {
       drawActors(rootMark, ir, { verticalPos: model.verticalPos, isMirror: true })
     }
 
-    rootMark.children = model.groupBgs.concat(rootMark.children as any)
+    if (model.hasParticipantBox()) {
+      model.bumpVerticalPos(conf.participantBoxPadding)
+    }
+
+    rootMark.children = [...model.groupBgs, ...rootMark.children]
+
+    drawParticipantBoxes(context)
 
     const box = model.getBounds()
 
@@ -259,8 +285,17 @@ type PosTempInfo = Partial<{
   extraMarginForBox: number
 }>
 
-enum BumpType {
+export enum BumpType {
+  /** box like loop and alt */
   Box = 1,
+}
+
+type BoxInfo = {
+  width: number
+  actorMarks: Mark[]
+  bounds: Bounds
+  textDims: TSize
+  participantBox: ParticipantBox
 }
 
 class Model {
@@ -279,6 +314,9 @@ class Model {
   /** backgrounds for groups like loop and opt */
   groupBgs: Rect[]
   posTempInfo: PosTempInfo = {}
+  // participant boxes
+  boxInfos = new Map<string, BoxInfo>()
+  participantBoxStats = { maxTitleHeight: 0 }
 
   actorHeight: number
 
@@ -313,6 +351,7 @@ class Model {
     this.groupBgs = []
     this.loopMinWidths = {}
     this.posTempInfo = {}
+    this.boxInfos.clear()
   }
   updateVal(obj, key, val, fun) {
     if (typeof obj[key] === 'undefined') {
@@ -322,6 +361,7 @@ class Model {
     }
   }
   updateBounds(startx: number, starty: number, stopx: number, stopy: number) {
+    // eslint-disable-next-line @typescript-eslint/no-this-alias
     const _self = this
     let cnt = 0
     // console.log('updateBounds', startx, starty, stopx, stopy)
@@ -426,6 +466,7 @@ class Model {
     this.data.stopy = this.verticalPos
 
     this.posTempInfo = tempInfo || {}
+    return this.verticalPos
   }
   tryBumpType(types: Partial<Record<BumpType, boolean>>) {
     const { posTempInfo } = this
@@ -456,6 +497,39 @@ class Model {
 
     const loopsHeight = this.loops.reduce((acc, h) => acc + h.height, 0)
     return actorHeight + messagesHeight + notesHeight + loopsHeight
+  }
+
+  getBoxInfo(boxId: string) {
+    return this.boxInfos.get(boxId)
+  }
+
+  initBoxInfos(ir: SequenceDiagramIR) {
+    let maxTitleHeight = 0
+    for (const actorBox of Object.values(ir.participantBoxes)) {
+      const id = actorBox.id
+      let boxInfo = this.boxInfos.get(id)
+      if (id) {
+        if (!boxInfo) {
+          const fontConfig = messageFont(conf)
+          boxInfo = {
+            width: 0,
+            actorMarks: [],
+            bounds: makeBounds(),
+            textDims: getTextDimensionsInPresicion(actorBox.text || '', fontConfig),
+            participantBox: actorBox,
+          }
+          if (actorBox.text) {
+            maxTitleHeight = Math.max(maxTitleHeight, boxInfo.textDims.height)
+          }
+          this.boxInfos.set(id, boxInfo)
+        }
+      }
+    }
+    this.participantBoxStats = { maxTitleHeight }
+  }
+
+  hasParticipantBox() {
+    return this.boxInfos.size > 0
   }
 
   /**
@@ -521,7 +595,7 @@ function adjustLoopSizeForWrap(
 }
 
 /** get message font config from conf */
-const messageFont = (cnf: SequenceConf) => {
+export const messageFont = (cnf: SequenceConf) => {
   return {
     fontFamily: cnf.messageFontFamily,
     fontSize: cnf.messageFontSize,
@@ -532,7 +606,7 @@ const messageFont = (cnf: SequenceConf) => {
 const actorFont = messageFont
 const noteFont = messageFont
 
-function splitBreaks(text) {
+function splitBreaks(text: string) {
   return text.split('\n')
 }
 
@@ -650,11 +724,9 @@ const drawMessage = function (msgModel: MessageModel): DrawResult<Group> {
   const arrowRad = isRightArrow ? 0 : -Math.PI
   let lineEndMark: Path = null
 
-  let lineEndType: LineEndType = LineEndType.NONE
   let lineEndHalfH = 0
 
   if (type === LINETYPE.SOLID || type === LINETYPE.DOTTED) {
-    lineEndType = LineEndType.ARROWHEAD
     const side = 10
     lineEndMark = drawArrowTo({ x: lineAttrs.x2, y: lineAttrs.y2 }, side, arrowRad, {
       type: 'triangle',
@@ -662,12 +734,8 @@ const drawMessage = function (msgModel: MessageModel): DrawResult<Group> {
     })
     lineEndHalfH = side / 2
   }
-  if (type === LINETYPE.SOLID_POINT || type === LINETYPE.DOTTED_POINT) {
-    lineEndType = LineEndType.NONE
-  }
 
   if (type === LINETYPE.SOLID_CROSS || type === LINETYPE.DOTTED_CROSS) {
-    lineEndType = LineEndType.CROSS
     const crossOffset = 5
     const arrowHeight = 10
     const crossCenterX = lineAttrs.x2 + crossOffset * (isRightArrow ? -1 : 1)
@@ -675,11 +743,7 @@ const drawMessage = function (msgModel: MessageModel): DrawResult<Group> {
       stroke: lineAttrs.stroke,
       lineWidth: 2,
     })
-    if (isRightArrow) {
-      lineAttrs.x2 -= crossOffset
-    } else {
-      lineAttrs.x2 += crossOffset
-    }
+    lineAttrs.x2 += isRightArrow ? -crossOffset : crossOffset
     lineEndHalfH = arrowHeight / 2
   }
 
@@ -742,90 +806,8 @@ const drawMessage = function (msgModel: MessageModel): DrawResult<Group> {
   }
 }
 
-function drawDividerTo(divider: MessageModel, container: Group) {
-  const dividerMargin = conf.dividerMargin
-  model.tryBumpType({ [BumpType.Box]: true })
-  model.bumpVerticalPos(dividerMargin)
-  const dividerTextFont = {
-    ...messageFont(conf),
-    fontWeight: conf.dividerFontWeight,
-  }
-
-  const bounds = model.getBounds()
-  const starty = model.verticalPos
-  const startx = bounds.startx
-
-  const { width, height } = divider
-
-  const padding = conf.wrapPadding
-
-  const rectWidth = width + conf.wrapPadding * 2
-  const rectX = startx + (bounds.stopx - rectWidth) / 2
-
-  const rect = makeMark('rect', {
-    x: rectX,
-    y: starty,
-    width: rectWidth,
-    height: height + conf.wrapPadding * 2,
-    fill: conf.activationBackground,
-    stroke: conf.actorBorderColor,
-    lineWidth: 2,
-  })
-
-  const textDims = calculateTextDimensions(divider.text)
-  const textMark = makeMark('text', {
-    text: divider.text,
-    fill: conf.dividerTextColor,
-    x: rectX + width / 2 + padding,
-    y: starty + height / 2 + padding,
-    textAlign: 'center',
-    textBaseline: 'middle',
-    ...dividerTextFont,
-  })
-
-  const lineGap = 3
-  const line1Y = starty + rect.attrs.height / 2 - lineGap / 2
-  const line2Y = line1Y + lineGap
-  const line1 = makeMark('line', {
-    x1: 0,
-    y1: line1Y,
-    x2: bounds.stopx,
-    y2: line1Y,
-    stroke: conf.actorLineColor,
-  })
-  const line2 = makeMark('line', {
-    ...line1.attrs,
-    y1: line2Y,
-    y2: line2Y,
-  })
-
-  const g = makeMark(
-    'group',
-    {},
-    {
-      children: [line1, line2, rect, textMark],
-      class: 'divider',
-    },
-  )
-  container.children.push(g)
-
-  model.bumpVerticalPos(dividerMargin + textDims.height + padding)
-
-  model.onBoundsFinish(({ bounds }) => {
-    const boundWidth = Math.abs(bounds.stopx - bounds.startx)
-    const newCenterX = bounds.startx + boundWidth / 2
-    const newRectX = newCenterX - rect.attrs.width / 2
-    safeAssign(rect.attrs, { x: newRectX })
-    safeAssign(textMark.attrs, { x: newCenterX })
-
-    safeAssign(line1.attrs, { x1: bounds.startx })
-    safeAssign(line2.attrs, { x1: bounds.startx })
-  })
-}
-
 /**
  * Draws an note in the diagram with the attached line
- * @param elem - The diagram to draw to.
  * @param noteModel:{x: number, y: number, message: string, width: number} - startx: x axis start position, verticalPos: y axis position, messsage: the message to be shown, width: Set this with a custom width to override the default configured width.
  */
 const drawNoteTo = function (noteModel: NoteModel, container: Group) {
@@ -881,23 +863,43 @@ type DrawActorsOptions = {
 
 export const drawActors = function (rootMark: Group, ir: SequenceDiagramIR, opts: DrawActorsOptions) {
   // Draw the actors
-  let prevWidth = 0
-  let prevMargin = 0
   const { verticalPos = 0, isMirror } = opts
-  const actorKeys = Object.keys(ir.actors)
+  let actorKeys = Object.keys(ir.actors)
+
+  const boxIds = Object.keys(ir.participantBoxes)
+
+  actorKeys = actorKeys.sort((a, b) => {
+    // actors not in boxes should come after those in boxes
+    let aOrder = 1000
+    let bOrder = 1000
+    const actorA = ir.actors[a]
+    const actorB = ir.actors[b]
+    if (actorA.boxId) {
+      aOrder = boxIds.indexOf(actorA.boxId)
+    }
+    if (actorB.boxId) {
+      bOrder = boxIds.indexOf(actorB.boxId)
+    }
+    return aOrder - bOrder
+  })
+
+  let nextActorX = 0
 
   for (let i = 0; i < actorKeys.length; i++) {
     const key = actorKeys[i]
     const actor = ir.actors[key]
     const attrsKey = isMirror ? `${key}_mirror` : key
+    const { boxId } = actor
 
+    const boxInfo = model.getBoxInfo(boxId)
+    const participantBox = boxInfo?.participantBox
     const actorMark: Group = {
       type: 'group',
       class: 'actor',
       children: [],
     }
 
-    let attrs: MarkAttrs
+    let attrs: Rect['attrs']
     if (isMirror) {
       attrs = { ...model.actorAttrsMap.get(key) }
     } else {
@@ -906,12 +908,16 @@ export const drawActors = function (rootMark: Group, ir: SequenceDiagramIR, opts
 
     const areaWidth = attrs.width || conf.actorWidth
     const areaHeight = Math.max(attrs.height || 0, model.actorHeight)
-    // Add some rendering data to the object
+
+    let actorX = nextActorX
+    if (participantBox && participantBox.actors[0] === key) {
+      actorX += conf.participantBoxPadding
+    }
     safeAssign(attrs, {
       width: areaWidth,
       height: areaHeight,
       margin: attrs.margin || conf.actorMargin,
-      x: prevWidth + prevMargin,
+      x: actorX,
       y: verticalPos,
       radius: 4,
     })
@@ -928,8 +934,8 @@ export const drawActors = function (rootMark: Group, ir: SequenceDiagramIR, opts
     }
     const labelDims = calculateTextDimensions(actor.description, labelFontFonfig)
 
+    let lineStartOffsetY = 0
     if (actor.classifier && symbolRegistry.get(actor.classifier)) {
-      // const symbolDef = symbolRegistry.get(actor.classifier)
       const symbolHeight = areaHeight - labelDims.height
       const contentArea: ContentArea = {
         x: attrs.x + areaWidth / 2,
@@ -937,6 +943,7 @@ export const drawActors = function (rootMark: Group, ir: SequenceDiagramIR, opts
         width: clamp(symbolHeight * 1.4, areaWidth / 2, areaWidth),
         height: symbolHeight,
       }
+      lineStartOffsetY += labelDims.height / 2
       const sym = symbolRegistry.create(actor.classifier, {
         mode: 'icon',
         attrs: {
@@ -969,7 +976,7 @@ export const drawActors = function (rootMark: Group, ir: SequenceDiagramIR, opts
         attrs: {
           x1: actorCenter.x,
           x2: actorCenter.x,
-          y1: attrs.y + areaHeight + labelDims.height / 2,
+          y1: attrs.y + areaHeight + lineStartOffsetY,
           y2: 2000,
           stroke: conf.actorLineColor,
         },
@@ -987,16 +994,70 @@ export const drawActors = function (rootMark: Group, ir: SequenceDiagramIR, opts
 
     model.insert(attrs.x, verticalPos, attrs.x + attrs.width, attrs.height)
 
-    prevWidth += attrs.width
-    prevMargin += attrs.margin
+    nextActorX = actorX + attrs.width + attrs.margin
+
+    if (participantBox && participantBox.actors.indexOf(key) === participantBox.actors.length - 1) {
+      nextActorX += conf.participantBoxPadding
+    }
     // console.log('actorMark', attrsKey, actorMark)
 
     rootMark.children.push(actorMark)
     model.actorAttrsMap.set(attrsKey, attrs)
+
+    if (boxInfo) {
+      boxInfo.actorMarks.push(actorMark)
+      const newBound = makeBounds()
+      newBound.left = attrs.x
+      newBound.right = attrs.x + attrs.width
+      newBound.top = 0
+      tryExpandBounds(boxInfo.bounds, newBound)
+    }
   }
 
   // Add a margin between the actor boxes and the first arrow
   model.bumpVerticalPos(model.actorHeight)
+}
+
+function drawParticipantBoxes(context: SequenceArtistContext) {
+  const { model, rootMark, conf } = context
+
+  if (!model.hasParticipantBox()) return
+
+  const boxesGroup = makeEmptyGroup()
+  boxesGroup.class = 'sequence__participant-boxes'
+  const padding = conf.participantBoxPadding
+  rootMark.children.unshift(boxesGroup)
+  const modelBounds = model.getBounds()
+  for (const boxInfo of model.boxInfos.values()) {
+    const { participantBox, bounds, textDims } = boxInfo
+    const width = Math.max(textDims.width, bounds.width) + padding * 2
+    if (!isFinite(width)) continue
+    const startx = bounds.left - padding
+    const rect = makeMark('rect', {
+      x: startx,
+      y: 0,
+      width,
+      height: modelBounds.stopy - modelBounds.starty,
+      fill: participantBox.background || conf.participantBackground,
+      stroke: conf.actorTextColor,
+    })
+    boxesGroup.children.push(rect)
+    if (participantBox.text) {
+      const fontConfig = messageFont(conf)
+      const textMark = makeMark('text', {
+        text: participantBox.text,
+        x: startx + width / 2,
+        y: conf.participantBoxPadding,
+        textBaseline: 'top',
+        textAlign: 'center',
+        fill: conf.actorTextColor,
+        ...fontConfig,
+        fontWeight: 'bold',
+      })
+      boxesGroup.children.push(textMark)
+    }
+    model.insert(startx, 0, startx + width, rect.attrs.height)
+  }
 }
 
 function drawActivationTo(mark: Group, data: ActivationData) {
@@ -1016,146 +1077,6 @@ function drawActivationTo(mark: Group, data: ActivationData) {
   mark.children.push(rect)
 }
 
-function drawLoopTo(mark: Group, loopModel: LoopModel, labelText: string, conf: SequenceConf) {
-  // console.log('draw loop', labelText, loopModel)
-  const loopLineColor = conf.loopLineColor
-  const group = makeMark('group', {}, { children: [], class: 'loop' })
-  function drawLoopLine(startx: number, starty: number, stopx: number, stopy: number) {
-    const line = makeMark(
-      'line',
-      {
-        x1: startx,
-        x2: stopx,
-        y1: starty,
-        y2: stopy,
-        stroke: loopLineColor,
-        lineWidth: 2,
-        lineDash: [2, 2],
-      },
-      { class: 'loopline' },
-    )
-    group.children.push(line)
-  }
-
-  function drawSectionBg(section: LoopSection) {
-    const sectionBgRect = makeMark('rect', {
-      x: startx,
-      y: section.y,
-      width: stopx - startx,
-      height: stopy - section.y,
-      fill: section.fill,
-      stroke: loopLineColor,
-      lineWidth: 2,
-      lineDash: [2, 2],
-    })
-    model.groupBgs.push(sectionBgRect)
-  }
-  const { startx, starty, stopx, stopy } = loopModel
-
-  const bgRect = makeMark('rect', {
-    x: startx,
-    y: starty,
-    width: stopx - startx,
-    height: stopy - starty,
-    fill: loopModel.fill,
-    stroke: loopLineColor,
-    lineWidth: 2,
-    lineDash: [2, 2],
-  })
-  model.groupBgs.push(bgRect)
-
-  if (loopModel.sections) {
-    loopModel.sections.forEach(function (item) {
-      drawLoopLine(startx, item.y, loopModel.stopx, item.y)
-      if (item.fill) {
-        drawSectionBg(item)
-      }
-    })
-  }
-
-  const {
-    boxMargin,
-    boxTextMargin,
-    labelBoxWidth,
-    labelBoxHeight,
-    messageFontFamily: fontFamily,
-    messageFontSize: fontSize,
-    messageFontWeight: fontWeight,
-    messageTextColor: textColor,
-  } = conf
-
-  const tAttrs = getBaseText()
-  safeAssign(tAttrs, {
-    text: labelText,
-    x: startx + boxTextMargin,
-    y: starty + boxTextMargin,
-    textBaseline: 'top',
-    fontFamily,
-    fontSize,
-    fontWeight,
-    fill: textColor,
-  })
-  const labelTextMark = makeMark('text', tAttrs, { class: 'label-text' })
-
-  const labelTextSize = calculateTextDimensions(labelText, messageFont(conf))
-  const labelWidth = Math.max(labelTextSize.width + 2 * boxTextMargin, labelBoxWidth)
-  const labelHeight = Math.max(labelTextSize.height + 2 * boxTextMargin, labelBoxHeight)
-
-  const labelWrap = makeLoopLabelBox({ x: startx, y: starty }, labelWidth, labelHeight, 5)
-  safeAssign(labelWrap.attrs, {
-    fill: conf.actorBackground,
-    stroke: loopLineColor,
-  })
-
-  const loopWidth = stopx - startx
-
-  const titleMark = makeMark(
-    'text',
-    {
-      text: loopModel.title,
-      x: startx + loopWidth / 2 + labelBoxWidth / 2,
-      y: starty + boxTextMargin,
-      textBaseline: 'top',
-      textAlign: 'center',
-      fontFamily,
-      fontSize,
-      fontWeight,
-      fill: textColor,
-    },
-    { class: 'loop__title' },
-  )
-  group.children.push(labelWrap, labelTextMark, titleMark)
-
-  if (loopModel.sections) {
-    loopModel.sections.forEach(function (item, idx) {
-      const sectionTitle = item.message.text
-      if (sectionTitle) {
-        const sectionTitleMark = makeMark(
-          'text',
-          {
-            ...getBaseText(),
-            text: sectionTitle,
-            x: startx + loopWidth / 2,
-            y: loopModel.sections[idx].y + boxTextMargin,
-            textAlign: 'center',
-            textBaseline: 'top',
-            fontFamily,
-            fontSize,
-            fontWeight,
-            fill: conf.messageTextColor,
-          },
-          { class: 'loop__title' },
-        )
-        const { height: sectionHeight } = calculateTextDimensions(sectionTitle, messageFont(conf))
-        loopModel.sections[idx].height += sectionHeight - (boxMargin + boxTextMargin)
-        group.children.push(sectionTitleMark)
-      }
-    })
-  }
-
-  mark.children.push(group)
-}
-
 /**
  * Retrieves the max message width of each actor, supports signals (messages, loops)
  * and notes.
@@ -1165,7 +1086,7 @@ function drawLoopTo(mark: Group, loopModel: LoopModel, labelText: string, conf: 
  */
 const getMaxMessageWidthPerActor = function (ir: SequenceDiagramIR) {
   const { actors, messages } = ir
-  const maxMessageWidthPerActor = {}
+  const maxMessageWidthPerActor: Record<string, number> = {}
 
   messages.forEach(function (msg) {
     if (actors[msg.to] && actors[msg.from]) {
@@ -1245,10 +1166,12 @@ const getMaxMessageWidthPerActor = function (ir: SequenceDiagramIR) {
  * An actor's margin is determined by the width of the actor, the width of the
  * largest message that originates from it, and the configured conf.actorMargin.
  *
- * @param actors - The actors map to calculate margins for
+ * @param context
  * @param actorToMessageWidth - A map of actor key -> max message width it holds
  */
-const calculateActorMargins = function (actors: SequenceDiagramIR['actors'], actorToMessageWidth) {
+const calculateActorMargins = function (context: SequenceArtistContext, actorToMessageWidth: Record<string, number>) {
+  const { ir, model } = context
+  const { actors } = ir
   let maxHeight = 0
   Object.keys(actors).forEach(prop => {
     const actorAttrs = model.actorAttrsMap.get(prop) || {}
@@ -1261,7 +1184,7 @@ const calculateActorMargins = function (actors: SequenceDiagramIR['actors'], act
     //   );
     // }
     const actDims = calculateTextDimensions(actor.description, actorFont(conf))
-    actorAttrs.width = actor.wrap ? conf.actorHeight : Math.max(conf.actorWidth, actDims.width + 2 * conf.wrapPadding)
+    actorAttrs.width = actor.wrap ? conf.actorWidth : Math.max(conf.actorWidth, actDims.width + 2 * conf.wrapPadding)
 
     actorAttrs.height = actor.wrap ? Math.max(actDims.height, conf.actorHeight) : conf.actorHeight
     maxHeight = Math.max(maxHeight, actorAttrs.height)
@@ -1288,21 +1211,9 @@ const calculateActorMargins = function (actors: SequenceDiagramIR['actors'], act
     actorAttrs.margin = Math.max(actorWidth, conf.actorMargin)
   }
 
-  return Math.max(maxHeight, conf.actorHeight)
-}
-
-type MessageModel = {
-  width: number
-  height: number
-  startx: number
-  stopx: number
-  starty: number
-  stopy: number
-  text: Message['text']
-  type: Message['type']
-  sequenceIndex?: number
-  fromBound?: number
-  toBound?: number
+  return {
+    actorHeight: Math.max(maxHeight, conf.actorHeight),
+  }
 }
 
 const buildMessageModel = function (msg: Message): MessageModel {

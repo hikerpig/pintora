@@ -20,7 +20,7 @@ import {
   R_PAREN_REGEXP,
   MOO_NEWLINE,
 } from '../../util/parser-shared'
-import db from '../db'
+import db, { ApplyParam } from '../db'
 
 let lexer = moo.states({
   main: {
@@ -71,6 +71,11 @@ let yy: typeof db
 export function setYY(v) {
   yy = v
 }
+
+function getQuotedWord(token) {
+  const v = tv(token);
+  return v.slice(1, v.length - 1)
+}
 %}
 
 start -> __ start {% (d) => d[1] %}
@@ -97,23 +102,17 @@ line ->
   | %WS:? %NL {% null %}
 
 statement ->
-	  participantWord %WS classifiableActor %WS "as" %WS %QUOTED_WORD %NL {%
+    participantStatement {% id %}
+	| "box" color:? %QUOTED_WORD:? %NL participantStatement:* "endbox" %NL {%
       function(d) {
-        const aliasWithQuotes = tv(d[6])
-        d[2].description = yy.parseMessage(aliasWithQuotes.slice(1, aliasWithQuotes.length - 1))
-        return d[2]
-      }
-    %}
-  | participantWord %WS classifiableActor %WS "as" %WS words %NL {%
-      function(d) {
-        const alias = d[6]
-        d[2].description = yy.parseMessage(alias)
-        return d[2]
-      }
-    %}
-	| participantWord %WS classifiableActor %WS:? %NL {%
-      function(d) {
-        return d[2]
+        const title = d[2] ? getQuotedWord(d[2]): null
+        const background = d[1] ? d[1]: null
+        return {
+          type: 'addBox',
+          text: title,
+          children: d[4],
+          background,
+        } as ApplyParam
       }
     %}
 	| signal %NL {% id %}
@@ -199,6 +198,26 @@ classifiableActor ->
       }
     %}
   | actor {% id %}
+
+participantStatement ->
+	  participantWord %WS classifiableActor %WS "as" %WS %QUOTED_WORD %NL {%
+      function(d) {
+        d[2].description = yy.parseMessage(getQuotedWord(d[6]))
+        return d[2]
+      }
+    %}
+  | participantWord %WS classifiableActor %WS "as" %WS words %NL {%
+      function(d) {
+        const alias = d[6]
+        d[2].description = yy.parseMessage(alias)
+        return d[2]
+      }
+    %}
+	| participantWord %WS classifiableActor %WS:? %NL {%
+      function(d) {
+        return d[2]
+      }
+    %}
 
 words -> (%WORD | %WS):+ {%
       function(d) {

@@ -35,6 +35,9 @@ export type SequenceConf = {
   actorTextColor: string
   actorLineColor: string
 
+  participantBoxPadding: number
+  participantBackground: string
+
   noteTextColor: string
 
   activationBackground: string
@@ -75,6 +78,9 @@ export const defaultConfig: SequenceConf = {
   actorBorderColor: PALETTE.normalDark,
   actorTextColor: PALETTE.normalDark,
   actorLineColor: PALETTE.normalDark,
+
+  participantBoxPadding: 10,
+  participantBackground: 'transparent',
 
   noteTextColor: PALETTE.normalDark,
 

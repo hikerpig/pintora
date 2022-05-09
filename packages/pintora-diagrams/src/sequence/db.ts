@@ -1,4 +1,4 @@
-import { logger, OrNull, parseColor } from '@pintora/core'
+import { logger, makeIdCounter, OrNull, parseColor } from '@pintora/core'
 import { ConfigParam, OverrideAction, ParamAction } from '../util/config'
 import { BaseDb } from '../util/base-db'
 import { BaseDiagramIR } from '../util/ir'
@@ -55,6 +55,7 @@ export type Actor = {
   classifier?: string
   prevActorId?: OrNull<string>
   nextActorId?: OrNull<string>
+  boxId?: string
 }
 
 export interface Message extends WrappedText {
@@ -87,10 +88,18 @@ export type GroupAttrs = {
   background: string | null
 }
 
+export type ParticipantBox = {
+  actors: string[]
+  id: string
+  text: string | null
+  background: string | null
+}
+
 export type SequenceDiagramIR = BaseDiagramIR & {
   messages: Message[]
   notes: Note[]
   actors: { [key: string]: Actor }
+  participantBoxes: { [key: string]: ParticipantBox }
   title: string
   showSequenceNumbers: boolean
   // titleWrapped: boolean
@@ -101,10 +110,13 @@ class SequenceDB extends BaseDb {
   messages: Message[] = []
   notes: Note[] = []
   actors: { [key: string]: Actor } = {}
+  participantBoxes: { [key: string]: ParticipantBox } = {}
   title = ''
   titleWrapped = false
   wrapEnabled = false
   showSequenceNumbers = false
+
+  protected idCounter = makeIdCounter()
 
   addActor(param: AddActorParam) {
     const { actor: name, classifier } = param
@@ -248,6 +260,24 @@ class SequenceDB extends BaseDb {
     this.configParams.push(sp)
   }
 
+  addBox(param: ActionPayloadMap['addBox']) {
+    this.apply(param.children)
+    const participantBox: ParticipantBox = {
+      actors: [],
+      text: param.text,
+      id: this.idCounter.next(),
+      background: param.background,
+    }
+    param.children.forEach(childAction => {
+      if (childAction.type === 'addActor') {
+        participantBox.actors.push(childAction.actor)
+      }
+    })
+    if (participantBox.actors.length) {
+      this.participantBoxes[participantBox.id] = participantBox
+    }
+  }
+
   getActor(id: string) {
     return this.actors[id]
   }
@@ -262,15 +292,31 @@ class SequenceDB extends BaseDb {
     this.messages = []
     this.notes = []
     this.actors = {}
+    this.participantBoxes = {}
     this.title = ''
     this.showSequenceNumbers = false
+
+    this.idCounter.reset()
+  }
+
+  prepareBeforeGetIR() {
+    for (const box of Object.values(this.participantBoxes)) {
+      for (const actorId of box.actors) {
+        const actor = this.getActor(actorId)
+        if (actor) {
+          actor.boxId = box.id
+        }
+      }
+    }
   }
 
   getDiagramIR(): SequenceDiagramIR {
+    this.prepareBeforeGetIR()
     return {
       messages: this.messages,
       notes: this.notes,
       actors: this.actors,
+      participantBoxes: this.participantBoxes,
       title: this.title,
       showSequenceNumbers: this.showSequenceNumbers,
       configParams: this.configParams,
@@ -312,6 +358,9 @@ class SequenceDB extends BaseDb {
         // case 'rectEnd':
         //   addSignal(undefined, undefined, undefined, param.signalType)
         //   break
+        case 'addBox':
+          this.addBox(param)
+          break
         case 'setTitle':
           this.setTitle(param.text)
           break
@@ -363,10 +412,18 @@ type AddActorParam = {
   classifier?: string
 }
 
+type ActionPayloadMap = {
+  addBox: {
+    children: ApplyParam[]
+    text: string
+    background: string | null
+  }
+}
+
 /**
  * action param that will be handled by `apply`
  */
-type ApplyParam =
+export type ApplyParam =
   | ParamAction
   | OverrideAction
   | ({
@@ -409,6 +466,7 @@ type ApplyParam =
       signalType: LINETYPE
       text: string
     }
+  | ({ type: 'addBox' } & ActionPayloadMap['addBox'])
 
 export { db }
 
