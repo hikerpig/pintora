@@ -417,7 +417,7 @@
             },
             {
               "comment": "(participant)(Actor)(as)?(Label)?",
-              "match": "\\s*(participant)# participant\\s+([\"\\(\\)$&%\\^/#.?!*=<>\\'\\\\\\w\\s]+?)# Actor(?:\\s+(as))?\\s([\"\\(\\)$&%\\^/#.,?!*=<>\\'\\\\\\w\\s]+)?",
+              "match": "(participant)\\s+([^ ]+)(?:\\s+(as))?(?:\\s+(.+))?",
               "captures": {
                 "1": {
                   "name": "keyword.control.pintora"
@@ -502,6 +502,30 @@
             {
               "comment": "(end)",
               "match": "\\s*(end)",
+              "captures": {
+                "1": {
+                  "name": "keyword.control.pintora"
+                }
+              }
+            },
+            {
+              "comment": "box",
+              "match": "(box)\\s*(#[0-9a-fA-F]{3,})?\\s*(\".*\")?",
+              "captures": {
+                "1": {
+                  "name": "keyword.control.pintora"
+                },
+                "2": {
+                  "name": "entity.name.tag"
+                },
+                "3": {
+                  "name": "string"
+                }
+              }
+            },
+            {
+              "comment": "(endbox)",
+              "match": "\\s*(endbox)",
               "captures": {
                 "1": {
                   "name": "keyword.control.pintora"
