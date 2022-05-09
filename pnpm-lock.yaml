@@ -156,7 +156,7 @@ importers:
     specifiers:
       '@pintora/core': workspace:^0.4.0
       '@pintora/renderer': ^0.4.1
-      '@pintora/standalone': workspace:^0.4.4
+      '@pintora/standalone': workspace:^0.5.0
       '@pintora/test-shared': workspace:^0.3.1
       '@types/jsdom': ^16.2.10
       '@types/mime-types': ^2.1.0
@@ -279,7 +279,7 @@ importers:
   packages/pintora-standalone:
     specifiers:
       '@pintora/core': workspace:^0.4.0
-      '@pintora/diagrams': workspace:^0.4.4
+      '@pintora/diagrams': workspace:^0.5.0
       '@pintora/renderer': ^0.4.1
       '@pintora/test-shared': workspace:*
       '@types/node': ^14.11.8
@@ -307,7 +307,7 @@ importers:
       '@docusaurus/preset-classic': 2.0.0-beta.19
       '@docusaurus/theme-common': ^2.0.0-beta.19
       '@mdx-js/react': ^1.6.22
-      '@pintora/standalone': workspace:^0.4.3
+      '@pintora/standalone': workspace:^0.5.0
       '@pintora/test-shared': workspace:^0.3.1
       '@svgr/webpack': ^6.1.2
       '@tsconfig/docusaurus': ^1.0.5

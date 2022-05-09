@@ -1,5 +1,14 @@
 # Change Log
 
+## 0.4.2
+
+### Patch Changes
+
+- Updated dependencies [35c6103]
+- Updated dependencies [f22f85c]
+- Updated dependencies [76d45d5]
+  - @pintora/standalone@0.5.0
+
 ## 0.4.1
 
 ### Patch Changes

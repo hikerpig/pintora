@@ -1,5 +1,17 @@
 # Change Log
 
+## 0.5.0
+
+### Minor Changes
+
+- f22f85c: feat: [sequence] add participant boxes
+  - fix: actor line start offset
+
+### Patch Changes
+
+- 87ad4ab: optimize: [activity] support ortho edgeType
+- 76d45d5: optimize: improve orthogonal edge by reducing bendpoints under some conditions
+
 ## 0.4.5
 
 ### Patch Changes

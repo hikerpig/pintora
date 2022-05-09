@@ -1,5 +1,21 @@
 # Change Log
 
+## 0.5.0
+
+### Minor Changes
+
+- f22f85c: feat: [sequence] add participant boxes
+  - fix: actor line start offset
+
+### Patch Changes
+
+- 35c6103: optimize: add method `pintoraStandalone.getConfigFromElement`
+- 76d45d5: optimize: improve orthogonal edge by reducing bendpoints under some conditions
+- 87ad4ab: optimize: [activity] support ortho edgeType
+- Updated dependencies [f22f85c]
+- Updated dependencies [76d45d5]
+  - @pintora/diagrams@0.5.0
+
 ## 0.4.4
 
 ### Patch Changes
