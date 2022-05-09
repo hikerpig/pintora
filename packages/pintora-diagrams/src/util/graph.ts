@@ -1,6 +1,6 @@
 import { Mark, Bounds, Point } from '@pintora/core'
 import { Graph, GraphOptions } from '@pintora/graphlib'
-import { GraphOpts, NodeOpts, SplinesType } from '@pintora/dagre'
+import type { GraphOpts, NodeOpts, SplinesType } from '@pintora/dagre'
 import { EdgeType } from './config'
 
 export type LayoutGraph = Graph<LayoutNodeOption, any, GraphOpts>
