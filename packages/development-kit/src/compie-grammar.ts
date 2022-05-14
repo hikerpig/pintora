@@ -7,13 +7,20 @@ type Options = {
   output: string
   basePath?: string
   includePaths?: string[]
+  /**
+   * - npx
+   * - pnpx
+   * - yarn run
+   */
+  executeCommand?: string
 }
 
 export async function compileGrammar(opts: Options) {
   const { input, output } = opts
   const basePath = opts.basePath || process.cwd()
   const outputPath = output
-  let cmd = `pnpx nearleyc ${path.join(basePath, input)} -o ${outputPath}`
+  const runCommand = opts.executeCommand || 'npx'
+  let cmd = `${runCommand} nearleyc ${path.join(basePath, input)} -o ${outputPath}`
   if (opts.includePaths) {
     const includePaths = opts.includePaths || []
     cmd += ` --include-paths ${includePaths.join(',')}`
