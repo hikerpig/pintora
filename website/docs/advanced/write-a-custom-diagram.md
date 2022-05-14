@@ -14,7 +14,7 @@ You can check out [the code for this tutorial](https://github.com/hikerpig/pinto
 Before implementing custom diagrams, please learn about Pintora's [technical brief](./technical-brief.md).
 :::
 
-## Baisic syntax and DiagramIR
+## Basic syntax and DiagramIR
 
 ```text
 pie
@@ -217,7 +217,7 @@ const conf: PieConf = {
 
 This part is tedious with details, it can be summarized as: each item includes the sectors in the pie chart as well as the legend on the right, so corresponding to each part, it is necessary to:
 
-- Plot the sector with an angle proportional to the number of items in the overall `sum`, denoted hereafter by `sectorMark`. It is a `Path` type marker, and the shape is described by `path`. For the syntax of paths, see the document [Paths - SVG: Scalable Vector Graphics | MDN](https://developer.mozilla.org/en-US/docs/Web/SVG/ Tutorial/Paths).
+- Plot the sector with an angle proportional to the number of items in the overall `sum`, denoted hereafter by `sectorMark`. It is a `Path` type marker, and the shape is described by `path`. For the syntax of paths, see the document [Paths - SVG: Scalable Vector Graphics | MDN](https://developer.mozilla.org/en-US/docs/Web/SVG/Tutorial/Paths).
 - `pLabel` is a text type label that displays the percentage associated with the area in the sector.
 - `legendSquare` is a small square of the same color as the sector, displayed in the legend area to the right of the pie chart.
 - `legendLabel` appears to the right of `legendSquare` and shows the name of the legend.
