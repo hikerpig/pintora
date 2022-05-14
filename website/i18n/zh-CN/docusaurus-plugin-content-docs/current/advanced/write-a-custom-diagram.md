@@ -7,7 +7,7 @@ title: 实现你自己的图表
 ![pie chart example](/img/docs/pie.svg)
 
 :::info
-你可于 github 查看[此教程的代码](https://github.com/hikerpig/pintora-diagram-pie-chart)。
+你可于 github 查看[此教程的代码](https://github.com/hikerpig/pintora-diagram-pie-chart/tree/archive/simple-regexp-parser)。
 :::
 
 :::tip

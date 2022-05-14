@@ -7,7 +7,7 @@ This tutorial will try to extend a Mermaid.js-style pie chart diagram to Pintora
 ![pie chart example](/img/docs/pie.svg)
 
 :::info
-You can check out [the code for this tutorial](https://github.com/hikerpig/pintora-diagram-pie-chart) on github.
+You can check out [the code for this tutorial](https://github.com/hikerpig/pintora-diagram-pie-chart/tree/archive/simple-regexp-parser) on github.
 :::
 
 :::tip
@@ -66,6 +66,12 @@ pintora.diagramRegistry.registerDiagram('pieChart', pieChartDiagram)
 ```
 
 ## The parser
+
+:::info
+__NOTE__: Currently I am rewriting the pie chart parser - using nearley to generate the parser as all the builtin diagrams do.
+I will update this tutorial once I finish [this issue](https://github.com/hikerpig/pintora-diagram-pie-chart/issues/1).
+:::
+
 
 Since the syntax is really simple, we can quickly implement a parser using regular expressions based on line content matching:
 
