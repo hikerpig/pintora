@@ -18,7 +18,19 @@ Here are some usefule APIs.
 ```ts
 interface PintoraStandalone {
   renderTo(code: string, options: RenderToOptions): void
-  renderContentOf(container: HTMLDivElement): void;
+  renderContentOf(container: HTMLElement, options: RenderContentOptions = {}): void;
+}
+
+type RenderContentOptions = {
+  /**
+   * sometimes you want to customize content rather than simply `innerText`
+   */
+  getContent?(container: HTMLElement): string | undefined
+  /**
+   * destination container for result element,
+   * if not specified, pintora will create a '.pintora-wrapper' element and insert it before the container
+   */
+  resultContainer?: HTMLElement
 }
 ```
 
@@ -51,7 +63,7 @@ pintora.renderTo(code, {
 })
 ```
 
-### renderContentOf(container)
+### renderContentOf(container, options?)
 
 This function will call `pintora.renderTo` underneath, and will read some dataset of the container element to get some options for one render.
 
