@@ -1,6 +1,6 @@
 {
   "name": "@pintora/diagrams",
-  "version": "0.5.0",
+  "version": "0.5.1",
   "description": "Core diagrams of pintora",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
@@ -40,7 +40,7 @@
     "dedent": "^0.7.0"
   },
   "devDependencies": {
-    "@pintora/development-kit": "workspace:^0.1.0",
+    "@pintora/development-kit": "workspace:^0.1.1",
     "@pintora/test-shared": "workspace:^0.3.1",
     "@types/d3-interpolate": "^3.0.1",
     "@types/d3-scale": "^4.0.2",

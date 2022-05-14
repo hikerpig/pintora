@@ -1,5 +1,11 @@
 # Change Log
 
+## 0.5.1
+
+### Patch Changes
+
+- fc12ccb: optimize(development-kit): specify executeCommand rather than 'npx'
+
 ## 0.5.0
 
 ### Minor Changes

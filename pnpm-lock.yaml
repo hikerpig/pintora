@@ -156,7 +156,7 @@ importers:
     specifiers:
       '@pintora/core': workspace:^0.4.0
       '@pintora/renderer': ^0.4.1
-      '@pintora/standalone': workspace:^0.5.0
+      '@pintora/standalone': workspace:^0.5.1
       '@pintora/test-shared': workspace:^0.3.1
       '@types/jsdom': ^16.2.10
       '@types/mime-types': ^2.1.0
@@ -212,7 +212,7 @@ importers:
       '@hikerpig/nearley': ^2.21.0-beta.1
       '@pintora/core': workspace:^0.4.1
       '@pintora/dagre': ^0.10.9
-      '@pintora/development-kit': workspace:^0.1.0
+      '@pintora/development-kit': workspace:^0.1.1
       '@pintora/graphlib': 2.2.2
       '@pintora/test-shared': workspace:^0.3.1
       '@types/d3-interpolate': ^3.0.1
@@ -279,7 +279,7 @@ importers:
   packages/pintora-standalone:
     specifiers:
       '@pintora/core': workspace:^0.4.0
-      '@pintora/diagrams': workspace:^0.5.0
+      '@pintora/diagrams': workspace:^0.5.1
       '@pintora/renderer': ^0.4.1
       '@pintora/test-shared': workspace:*
       '@types/node': ^14.11.8

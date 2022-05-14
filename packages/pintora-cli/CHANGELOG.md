@@ -1,5 +1,13 @@
 # Change Log
 
+## 0.5.1
+
+### Patch Changes
+
+- 98992e2: optimize: options `getContent()` for `pintora.getContentOf`
+- Updated dependencies [98992e2]
+  - @pintora/standalone@0.5.1
+
 ## 0.5.0
 
 ### Minor Changes
