@@ -81,5 +81,23 @@ describe('pintora standalone', () => {
 
       expect(parent.children).toHaveLength(2)
     })
+
+    it('can use options.getContent', () => {
+      const innerEle = document.createElement('pre')
+      innerEle.innerText = EXAMPLES.sequence.code
+
+      const sibling = document.createElement('div')
+      sibling.innerText = 'unrelevant content'
+
+      container.appendChild(innerEle)
+      container.appendChild(sibling)
+
+      const resultElement = pintoraStandalone.renderContentOf(container, {
+        getContent() {
+          return innerEle.innerText
+        },
+      })
+      expect(resultElement.querySelector('svg')).toBeTruthy()
+    })
   })
 })

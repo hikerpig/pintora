@@ -21,11 +21,24 @@ initDiagrams()
 type InitBrowserOptions = {
   startOnLoad?: boolean
 }
+
 interface RenderToOptions extends Omit<RenderOptions, 'container'>, DiagramArtistOptions {
   container: HTMLElement | string
   onError?(error: Error): void
   enhanceGraphicIR?(ir: GraphicsIR): GraphicsIR
   config?: DeepPartial<PintoraConfig>
+}
+
+type RenderContentOptions = {
+  /**
+   * sometimes you want to customize content rather than simply `innerText`
+   */
+  getContent?(container: HTMLElement): string | undefined
+  /**
+   * destination container for result element,
+   * if not specified, pintora will create a '.pintora-wrapper' element and insert it before the container
+   */
+  resultContainer?: HTMLElement
 }
 
 type ConfigOnElement = {
@@ -120,15 +133,25 @@ const pintoraStandalone = {
       pintoraStandalone.renderContentOf(container)
     })
   },
-  renderContentOf(container: HTMLDivElement) {
-    const prevSibling = container.previousElementSibling
-    if (prevSibling && prevSibling.classList.contains(CLASSES.wrapper)) {
-      prevSibling.remove()
-    }
+  renderContentOf(container: HTMLElement, opts: RenderContentOptions = {}) {
+    let resultContainer = opts.resultContainer
 
-    const wrapper = document.createElement('div')
-    wrapper.classList.add(CLASSES.wrapper)
-    container.style.display = 'none'
+    if (!resultContainer) {
+      const prevSibling = container.previousElementSibling
+      if (prevSibling && prevSibling.classList.contains(CLASSES.wrapper)) {
+        prevSibling.remove()
+      }
+
+      const wrapper = document.createElement('div')
+      wrapper.classList.add(CLASSES.wrapper)
+      container.style.display = 'none'
+
+      if (container.parentNode) {
+        container.parentNode.insertBefore(wrapper, container)
+      }
+
+      resultContainer = wrapper
+    }
 
     const configFromEle = pintoraStandalone.getConfigFromElement(container)
     const renderer: any = configFromEle.renderer || configApi.getConfig<PintoraConfig>().core?.defaultRenderer || 'svg'
@@ -142,17 +165,15 @@ const pintoraStandalone = {
       }
     }
 
-    if (container.parentNode) {
-      container.parentNode.insertBefore(wrapper, container)
-    }
+    const code = opts.getContent ? opts.getContent(container) : container.innerText
 
-    pintoraStandalone.renderTo(container.innerText, {
-      container: wrapper,
+    pintoraStandalone.renderTo(code, {
+      container: resultContainer,
       renderer,
       config,
     })
 
-    return wrapper
+    return resultContainer
   },
   /**
    * Get pintora config from element's dataset, some available configs:
