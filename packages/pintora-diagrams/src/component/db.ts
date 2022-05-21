@@ -1,6 +1,6 @@
 import { BaseDb } from '../util/base-db'
 import { BaseDiagramIR } from '../util/ir'
-import { OverrideAction, ParamAction } from '../util/config'
+import { OverrideConfigAction, ParamAction } from '../util/config'
 
 type Component = {
   name: string
@@ -48,7 +48,7 @@ type UMLElement = Component | Interface | CGroup | Relationship
 
 type ApplyPart =
   | ParamAction
-  | OverrideAction
+  | OverrideConfigAction
   | {
       type: 'component'
       name: string

@@ -2,9 +2,9 @@
 @lexer lexer
 @skip_unmatch %WS
 @builtin "postprocessors.ne"
-@include "../../util/parser-grammars/whitespace.ne"
-@include "../../util/parser-grammars/config.ne"
-@include "../../util/parser-grammars/comment.ne"
+@include "whitespace.ne"
+@include "config.ne"
+@include "comment.ne"
 
 @{%
 import * as moo from '@hikerpig/moo'
@@ -13,7 +13,6 @@ import {
   textToCaseInsensitiveRegex,
   VALID_TEXT_REGEXP,
   COMMENT_LINE_REGEXP,
-  CONFIG_DIRECTIVE,
   QUOTED_WORD_REGEXP,
   MOO_NEWLINE,
 } from '../../util/parser-shared'
@@ -94,8 +93,8 @@ statement ->
         return { type: 'addTask', label: d[0], extraValue: d[2] } as Action
       }
     %}
-  | paramClause %NL {% nth(0) %}
-  | configOpenCloseClause %NL {% nth(0) %}
+  | paramStatement %NL {% nth(0) %}
+  | configOpenCloseStatement %NL {% nth(0) %}
   | comment %NL {% null %}
 
 attrKey ->

@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
 import { BaseDiagramIR } from '../util/ir'
 import { dayjs } from '../util/time'
-import { OverrideAction } from '../util/config'
+import { OverrideConfigAction } from '../util/config'
 import { BaseDb } from '../util/base-db'
 import { ConfigParam, logger, makeIdCounter } from '@pintora/core'
 import { DateFormat } from './type'
@@ -55,7 +55,7 @@ type ActionPayloadMap = {
   markDate: {
     value: string
   }
-  overrideConfig: OverrideAction
+  overrideConfig: OverrideConfigAction
   addParam: ConfigParam
 }
 

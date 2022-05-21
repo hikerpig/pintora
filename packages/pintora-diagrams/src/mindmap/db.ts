@@ -1,7 +1,7 @@
 import { makeIdCounter } from '@pintora/core'
 import { BaseDb } from '../util/base-db'
 import { BaseDiagramIR } from '../util/ir'
-import { OverrideAction, ParamAction } from '../util/config'
+import { OverrideConfigAction, ParamAction } from '../util/config'
 
 export type LevelNotation = {
   depth: number
@@ -96,7 +96,7 @@ export class MMTree {
 
 export type ApplyPart =
   | ParamAction
-  | OverrideAction
+  | OverrideConfigAction
   | {
       type: 'addItem'
       depth: number

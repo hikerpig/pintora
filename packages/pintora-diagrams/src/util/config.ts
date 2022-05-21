@@ -2,28 +2,13 @@ import { ConfigParam, ConfigMeta, interpreteConfigs, PintoraConfig, safeAssign, 
 
 export { ConfigParam, ConfigMeta, interpreteConfigs }
 
+export { ParamAction, OverrideConfigAction } from '../../shared-grammars/config'
+
 /**
  * How edges are routed
  * - 'ortho' stands for orthogonal
  */
 export type EdgeType = 'polyline' | 'ortho' | 'curved'
-
-/** parser action */
-export type ParamAction = {
-  type: 'addParam'
-  key: string
-  value: string
-}
-
-export type OverrideAction<T = unknown> =
-  | {
-      type: 'overrideConfig'
-      value: T
-    }
-  | {
-      type: 'overrideConfig'
-      error: Error
-    }
 
 export type DiagramConfigContext = {
   configParams: ConfigParam[]

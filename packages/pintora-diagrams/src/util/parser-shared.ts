@@ -28,8 +28,6 @@ export const COLOR_REGEXP = /#[a-zA-Z0-9]+/
 
 export const MOO_NEWLINE = { match: /[\n\r]/, lineBreaks: true }
 
-// export const PARAM_DIRECTIVE = /@param/
-
 export const COMMENT_LINE_REGEXP = /%%.*/
 
 export const L_PAREN_REGEXP = /\(/
@@ -37,16 +35,18 @@ export const R_PAREN_REGEXP = /\)/
 
 export const QUOTED_WORD_REGEXP = /\"[^"]*\"/
 
+// export const PARAM_DIRECTIVE = /@param/
+
 export const CONFIG_DIRECTIVE = /@config/
 
 export const configLexerMainState = {
   CONFIG_DIRECTIVE: {
     match: CONFIG_DIRECTIVE,
-    push: 'configClause',
+    push: 'configStatement',
   },
 }
 
-export const configLexerConfigClauseState = {
+export const configLexerconfigStatementState = {
   QUOTED_WORD: QUOTED_WORD_REGEXP,
   L_PAREN: L_PAREN_REGEXP,
   R_PAREN: { match: R_PAREN_REGEXP, pop: 1 },

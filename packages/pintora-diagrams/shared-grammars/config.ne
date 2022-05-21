@@ -1,7 +1,7 @@
 @{%
 export const COLOR = /#[a-zA-Z0-9]+/
 export const PARAM_DIRECTIVE = /@param/
-// export const CONFIG_DIRECTIVE = /@config/
+export const CONFIG_DIRECTIVE = /@config/
 
 //@ts-ignore
 let L_PAREN = /\(/
@@ -14,7 +14,7 @@ export function getTokenValue(token) {
   return token
 }
 
-function handleConfigOpenCloseClause(d) {
+function handleConfigOpenCloseStatement(d) {
   const text = d[2].map((v) => {
     if (v.type) return getTokenValue(v)
     return v
@@ -27,20 +27,23 @@ function handleConfigOpenCloseClause(d) {
     return { type: 'overrideConfig', error: error }
   }
 }
-
 %}
+
+# non-terminal, needs
+# - `COLOR` token
 color -> %COLOR {% (d) => tv(d[0]) %}
 
-paramClause ->
+# `@param` statement, with some prerequisites:
+# - `PARAM_DIRECTIVE` token
+paramStatement ->
     %PARAM_DIRECTIVE __ paramPart {%
       function(d) {
-        // console.log('[paramClause]', d[2], JSON.stringify(d[4]))
         return d[2]
       }
     %}
   | %PARAM_DIRECTIVE __ "{" _ ([\n] _ paramPart):* [\n] _ "}" {%
       function(d) {
-        // console.log('[paramClause]', JSON.stringify(d[4]))
+        // console.log('[paramStatement]', JSON.stringify(d[4]))
         const params = []
         d[4].forEach((seg) => {
           params.push(seg[2])
@@ -57,23 +60,14 @@ paramPart -> [a-zA-Z0-9]:+ __ [^ \n]:+ {%
       return { type: 'addParam', key, value }
     }%}
 
-configClause ->
-    %CONFIG_DIRECTIVE "(" [^\)]:+ ")" {%
-      function(d) {
-        // console.log('[configClause]', JSON.stringify(d[2]))
-        const text = d[2].map((v) => {
-          if (v.type) return getTokenValue(v)
-          return v
-        }).join('')
+# `@config` statement
+# - `CONFIG_DIRECTIVE` token
+configStatement ->
+    %CONFIG_DIRECTIVE "(" [^\)]:+ ")" {% handleConfigOpenCloseStatement %}
 
-        try {
-          const v = JSON.parse(text)
-          return { type: 'overrideConfig', value: v }
-        } catch (error) {
-          return { type: 'overrideConfig', error: error }
-        }
-      }
-    %}
-
-configOpenCloseClause ->
-    %CONFIG_DIRECTIVE %L_PAREN [^\)]:+ %R_PAREN {% handleConfigOpenCloseClause %}
+# `@config` statement, with some prerequisites:
+# - `CONFIG_DIRECTIVE` token
+# - `L_PAREN` token
+# - `R_PAREN` token
+configOpenCloseStatement ->
+    %CONFIG_DIRECTIVE %L_PAREN [^\)]:+ %R_PAREN {% handleConfigOpenCloseStatement %}

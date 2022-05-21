@@ -1,7 +1,7 @@
 import { makeIdCounter } from '@pintora/core'
 import { BaseDb } from '../util/base-db'
 import { BaseDiagramIR } from '../util/ir'
-import { OverrideAction, ParamAction } from '../util/config'
+import { OverrideConfigAction, ParamAction } from '../util/config'
 import { dedent } from '../util/text'
 
 export type Action = {
@@ -107,7 +107,7 @@ export type ActivityDiagramIR = BaseDiagramIR & {
 
 export type ApplyPart =
   | ParamAction
-  | OverrideAction
+  | OverrideConfigAction
   | {
       type: 'addAction'
       action: Action

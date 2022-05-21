@@ -1,12 +1,12 @@
 import { PintoraConfig } from '@pintora/core'
 import { BaseDiagramIR } from './ir'
-import { ConfigParam, OverrideAction } from './config'
+import { ConfigParam, OverrideConfigAction } from './config'
 
 export class BaseDb {
   configParams: ConfigParam[] = []
   overrideConfig: Partial<PintoraConfig> = {}
 
-  addOverrideConfig(action: OverrideAction) {
+  addOverrideConfig(action: OverrideConfigAction) {
     if ('error' in action) {
       console.error(action.error)
     } else {
