@@ -3,6 +3,7 @@
   "version": "0.5.1",
   "description": "Core diagrams of pintora",
   "main": "lib/index.js",
+  "module": "lib/index.js",
   "types": "lib/index.d.ts",
   "keywords": [
     "pintora",
@@ -12,11 +13,13 @@
   "license": "MIT",
   "files": [
     "lib",
+    "shared-grammars",
     "CHANGELOG.md"
   ],
   "exports": {
     ".": "./lib/index.js",
-    "./parser-shared": "./lib/util/parser-shared.js"
+    "./parser-shared": "./lib/util/parser-shared.js",
+    "./shared-grammars/*": "./shared-grammars/*"
   },
   "scripts": {
     "compile": "tsc",

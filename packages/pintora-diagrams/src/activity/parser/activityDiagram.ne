@@ -1,9 +1,9 @@
 @preprocessor typescript
 @lexer lexer
 @skip_unmatch %WS
-@include "../../util/parser-grammars/whitespace.ne"
-@include "../../util/parser-grammars/config.ne"
-@include "../../util/parser-grammars/comment.ne"
+@include "whitespace.ne"
+@include "config.ne"
+@include "comment.ne"
 
 @{%
 import * as moo from '@hikerpig/moo'
@@ -12,10 +12,9 @@ import {
   textToCaseInsensitiveRegex,
   VALID_TEXT_REGEXP,
   COMMENT_LINE_REGEXP,
-  CONFIG_DIRECTIVE,
   QUOTED_WORD_REGEXP,
   configLexerMainState,
-  configLexerConfigClauseState,
+  configLexerconfigStatementState,
   L_PAREN_REGEXP,
   R_PAREN_REGEXP,
   COLOR_REGEXP,
@@ -46,8 +45,8 @@ let lexer = moo.states({
     ...configLexerMainState,
     VALID_TEXT: { match: VALID_TEXT_REGEXP, fallback: true },
   },
-  configClause: {
-    ...configLexerConfigClauseState,
+  configStatement: {
+    ...configLexerconfigStatementState,
     ...COMMON_TOKEN_RULES,
   },
 })
@@ -105,8 +104,8 @@ statement ->
   | forkSentence
   | noteStatement
   | arrowLabelStatement
-  | paramClause _ %NL
-  | configClause _ %NL
+  | paramStatement _ %NL
+  | configStatement _ %NL
   | comment _ %NL {% null %}
 
 conditionSentence ->

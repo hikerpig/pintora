@@ -116,7 +116,11 @@ const parser: IDiagramParser<PieChartDiagramIR> = {
 export default parser
 ```
 
+### 进阶: 使用 nearley.js 生成 parser
+
 Pintora 的内置图表使用 nearley.js 作为 parser generator，有一些通用的语法片段（例如 `@param` 和 `@config` 指令），关于如何使用 nearley.js 和复用语法规则，今后会写另一篇教程来阐述。
+
+[pintora-diagram-pie-chart 的最新代码](https://github.com/hikerpig/pintora-diagram-pie-chart/blob/master/src/parser/pieChart.ne) 使用一个 fork 了的 [nearley 版本](https://github.com/hikerpig/nearley) 来生成 parser。
 
 ## 艺术家 artist
 
@@ -238,6 +242,7 @@ const conf: PieConf = {
         x: radius * Math.cos(destRad),
         y: radius * Math.sin(destRad),
       }
+      const largeArcFlag = rad > Math.PI ? 1 : 0
       const sectorMark = pintora.util.makeMark('path', {
         path: [
           ['M', circleCenter.x, circleCenter.y],
@@ -247,7 +252,7 @@ const conf: PieConf = {
             radius,
             radius,
             currentRad,
-            0,
+            largeArcFlag,
             1,
             arcEndRel.x - arcStartX,
             arcEndRel.y - arcStartY,
@@ -418,6 +423,9 @@ pintora.default.setConfig({
 
 我们使用任意 bundler 将此图表的源码打包为 `dist/pintora-diagram-pie-chart.umd.js`，可以在 html 页面中简单测试一下效果。
 
+`pintora-diagram-pie-chart.umd.js` 会将自定义图表注册到 pintora，请确保全局的 `pintora` 对象在自定义图表脚本加载前已经加载。
+
+
 ```html
   <section>
     <div class="pintora">
@@ -435,3 +443,7 @@ pintora.default.setConfig({
     pintora.default.initBrowser()
   </script>
 ```
+
+## 看看效果
+
+前往 [stackblitz 上的在线开发 demo](https://stackblitz.com/edit/pintora-diagram-pie-chart?file=README.md) 查看效果.

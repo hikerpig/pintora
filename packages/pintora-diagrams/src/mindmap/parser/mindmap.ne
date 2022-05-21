@@ -1,8 +1,8 @@
 @preprocessor typescript
 @lexer lexer
-@include "../../util/parser-grammars/whitespace.ne"
-@include "../../util/parser-grammars/config.ne"
-@include "../../util/parser-grammars/comment.ne"
+@include "whitespace.ne"
+@include "config.ne"
+@include "comment.ne"
 
 @{%
 import * as moo from '@hikerpig/moo'
@@ -11,11 +11,10 @@ import {
   MOO_NEWLINE,
   VALID_TEXT_REGEXP,
   COMMENT_LINE_REGEXP,
-  CONFIG_DIRECTIVE,
   L_PAREN_REGEXP,
   R_PAREN_REGEXP,
   configLexerMainState,
-  configLexerConfigClauseState,
+  configLexerconfigStatementState,
 } from '../../util/parser-shared'
 
 import type { ApplyPart } from '../db'
@@ -40,8 +39,8 @@ let lexer = moo.states({
     COMMENT_LINE: COMMENT_LINE_REGEXP,
     ...COMMON_TOKEN_RULES,
   },
-  configClause: {
-    ...configLexerConfigClauseState,
+  configStatement: {
+    ...configLexerconfigStatementState,
     ...COMMON_TOKEN_RULES,
   },
 })
@@ -85,8 +84,8 @@ statement ->
         return { type: 'addItem', label, depth: notation.depth, isReverse: notation.isReverse } as ApplyPart
       }
     %}
-  | paramClause _ %NL
-  | configOpenCloseClause _ %NL
+  | paramStatement _ %NL
+  | configOpenCloseStatement _ %NL
   | comment _ %NL
 
 levelNotation ->

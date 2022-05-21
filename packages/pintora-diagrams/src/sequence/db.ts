@@ -1,5 +1,5 @@
 import { logger, makeIdCounter, OrNull, parseColor } from '@pintora/core'
-import { ConfigParam, OverrideAction, ParamAction } from '../util/config'
+import { ConfigParam, OverrideConfigAction, ParamAction } from '../util/config'
 import { BaseDb } from '../util/base-db'
 import { BaseDiagramIR } from '../util/ir'
 
@@ -425,7 +425,7 @@ type ActionPayloadMap = {
  */
 export type ApplyParam =
   | ParamAction
-  | OverrideAction
+  | OverrideConfigAction
   | ({
       type: 'addActor'
     } & AddActorParam)

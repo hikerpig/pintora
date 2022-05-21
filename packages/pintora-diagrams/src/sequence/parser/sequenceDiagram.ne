@@ -1,9 +1,10 @@
 @preprocessor typescript
 @lexer lexer
 @skip_unmatch %WS
-@include "../../util/parser-grammars/whitespace.ne"
-@include "../../util/parser-grammars/config.ne"
-@include "../../util/parser-grammars/comment.ne"
+
+@include "whitespace.ne"
+@include "config.ne"
+@include "comment.ne"
 
 @{%
 import * as moo from '@hikerpig/moo'
@@ -12,10 +13,9 @@ import {
   textToCaseInsensitiveRegex,
   VALID_TEXT_REGEXP,
   COMMENT_LINE_REGEXP,
-  CONFIG_DIRECTIVE,
   QUOTED_WORD_REGEXP,
   configLexerMainState,
-  configLexerConfigClauseState,
+  configLexerconfigStatementState,
   L_PAREN_REGEXP,
   R_PAREN_REGEXP,
   MOO_NEWLINE,
@@ -60,8 +60,8 @@ let lexer = moo.states({
   line: {
     REST_OF_LINE: { match: /[^#\n;]+/, pop: 1 },
   },
-  configClause: {
-    ...configLexerConfigClauseState,
+  configStatement: {
+    ...configLexerconfigStatementState,
     WORD: { match: VALID_TEXT_REGEXP, fallback: true },
   },
 })
@@ -182,8 +182,8 @@ statement ->
         return { type: 'addDivider', text, signalType: yy.LINETYPE.DIVIDER }
       }
     %}
-  | paramClause %NL
-  | configOpenCloseClause %NL
+  | paramStatement %NL
+  | configOpenCloseStatement %NL
   | comment %NL
 
 participantWord ->

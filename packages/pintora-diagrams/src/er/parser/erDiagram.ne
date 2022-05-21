@@ -1,9 +1,10 @@
 @preprocessor typescript
 @lexer lexer
 @skip_unmatch %WS
-@include "../../util/parser-grammars/whitespace.ne"
-@include "../../util/parser-grammars/config.ne"
-@include "../../util/parser-grammars/comment.ne"
+
+@include "whitespace.ne"
+@include "config.ne"
+@include "comment.ne"
 
 @{%
 import * as moo from '@hikerpig/moo'
@@ -12,7 +13,6 @@ import {
   textToCaseInsensitiveRegex,
   VALID_TEXT_REGEXP,
   COMMENT_LINE_REGEXP,
-  CONFIG_DIRECTIVE,
   QUOTED_WORD_REGEXP,
   MOO_NEWLINE,
 } from '../../util/parser-shared'
@@ -83,13 +83,13 @@ statement ->
   | entityName "{" "}" %NL {% (d) => yy.addEntity(d[0]) %}
   | entityName %WS:* %NL {% (d) => yy.addEntity(d[0]) %}
 
-  | paramClause %WS:* %NL {%
+  | paramStatement %WS:* %NL {%
       function(d) {
         const { type, ...styleParam } = d[0]
         yy.addParam(styleParam)
       }
     %}
-  | configClause %WS:* %NL {%
+  | configStatement %WS:* %NL {%
       function(d) {
         yy.addOverrideConfig(d[0])
       }

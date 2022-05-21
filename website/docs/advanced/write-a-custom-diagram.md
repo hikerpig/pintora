@@ -67,12 +67,6 @@ pintora.diagramRegistry.registerDiagram('pieChart', pieChartDiagram)
 
 ## The parser
 
-:::info
-__NOTE__: Currently I am rewriting the pie chart parser - using nearley to generate the parser as all the builtin diagrams do.
-I will update this tutorial once I finish [this issue](https://github.com/hikerpig/pintora-diagram-pie-chart/issues/1).
-:::
-
-
 Since the syntax is really simple, we can quickly implement a parser using regular expressions based on line content matching:
 
 - `TITLE_REGEXP` corresponds to syntax rule 2
@@ -122,7 +116,11 @@ const parser: IDiagramParser<PieChartDiagramIR> = {
 export default parser
 ```
 
-Pintora itself uses nearley.js as parser generator, and has some common grammar rules (like the `@param` and `@config` directive), we will write another tutorial about it in the future.
+### Advanced: Using nearley.js to generate parser
+
+Pintora's built-in diagrams use nearley.js as parser generator, and has some common grammar rules (such as the `@param` and `@config` directives), we will write another tutorial about it in the future.
+
+The latest version of [pintora-diagram-pie-chart](https://github.com/hikerpig/pintora-diagram-pie-chart/blob/master/src/parser/pieChart.ne) uses a forked version of [nearley](https://github.com/hikerpig/nearley) to generate the parser.
 
 ## The artist
 
@@ -244,6 +242,7 @@ Notice the `class` attribute on `itemGroup`, which will be carried in the SVG ou
         x: radius * Math.cos(destRad),
         y: radius * Math.sin(destRad),
       }
+      const largeArcFlag = rad > Math.PI ? 1 : 0
       const sectorMark = pintora.util.makeMark('path', {
         path: [
           ['M', circleCenter.x, circleCenter.y],
@@ -253,7 +252,7 @@ Notice the `class` attribute on `itemGroup`, which will be carried in the SVG ou
             radius,
             radius,
             currentRad,
-            0,
+            largeArcFlag,
             1,
             arcEndRel.x - arcStartX,
             arcEndRel.y - arcStartY,
@@ -410,6 +409,8 @@ import pintora, { IFont, PintoraConfig } from '@pintora/standalone'
 
 We can use any bundler to package the source code of this diagram as `dist/pintora-diagram-pie-chart.umd.js`, which can be tested in an html page to see the effect.
 
+The `pintora-diagram-pie-chart.umd.js` will register the custom diagram to pintora, please make sure that global `pintora` object is loaded before the custom diagram script loads.
+
 ```html
   <section>
     <div class="pintora">
@@ -427,3 +428,7 @@ We can use any bundler to package the source code of this diagram as `dist/pinto
     pintora.default.initBrowser()
   </script>
 ```
+
+## Show time
+
+You can check the [online dev demo on stackblitz](https://stackblitz.com/edit/pintora-diagram-pie-chart?file=README.md).

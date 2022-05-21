@@ -14,7 +14,7 @@ const grammarFiles = [
 grammarFiles.forEach(async ({ input, output }) => {
   const packagePath = path.join(__dirname, '..')
   const outputPath = path.join(__dirname, '..', output)
-  const includePath = path.join(packagePath, 'src/util/parser-grammars/')
+  const includePath = path.join(packagePath, 'shared-grammars/')
   compileGrammar({
     input,
     output: outputPath,

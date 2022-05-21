@@ -1,9 +1,9 @@
 @preprocessor typescript
 @lexer lexer
 @skip_unmatch %WS
-@include "../../util/parser-grammars/whitespace.ne"
-@include "../../util/parser-grammars/config.ne"
-@include "../../util/parser-grammars/comment.ne"
+@include "whitespace.ne"
+@include "config.ne"
+@include "comment.ne"
 
 @{%
 import * as moo from '@hikerpig/moo'
@@ -11,9 +11,8 @@ import {
   tv,
   VALID_TEXT_REGEXP,
   COMMENT_LINE_REGEXP,
-  CONFIG_DIRECTIVE,
   configLexerMainState,
-  configLexerConfigClauseState,
+  configLexerconfigStatementState,
   MOO_NEWLINE,
 } from '../../util/parser-shared'
 
@@ -39,8 +38,8 @@ let lexer = moo.states({
     ...configLexerMainState,
     ...commonTextRules,
   },
-  configClause: {
-    ...configLexerConfigClauseState,
+  configStatement: {
+    ...configLexerconfigStatementState,
     ...commonTextRules,
   },
 })
@@ -81,8 +80,8 @@ statement ->
         return d[0]
       }
     %}
-  | paramClause %NL
-  | configOpenCloseClause %NL
+  | paramStatement %NL
+  | configOpenCloseStatement %NL
   | comment %NL
 
 UMLElement ->

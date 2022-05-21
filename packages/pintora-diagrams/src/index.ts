@@ -5,9 +5,10 @@ import { componentDiagram, ComponentDiagramIR } from './component'
 import { activityDiagram, ActivityDiagramIR } from './activity'
 import { mindmap, MindmapIR } from './mindmap'
 import { gantt, GanttIR } from './gantt'
+import { BaseDiagramIR } from './util/ir'
+import * as PARSER_SHARED from './util/parser-shared'
 import './type' // type augmentation
 import './util/symbols'
-import { BaseDiagramIR } from './util/ir'
 
 export { PintoraConfig }
 
@@ -33,4 +34,5 @@ export {
   mindmap,
   GanttIR,
   gantt,
+  PARSER_SHARED,
 }
