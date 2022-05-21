@@ -409,6 +409,8 @@ import pintora, { IFont, PintoraConfig } from '@pintora/standalone'
 
 We can use any bundler to package the source code of this diagram as `dist/pintora-diagram-pie-chart.umd.js`, which can be tested in an html page to see the effect.
 
+The `pintora-diagram-pie-chart.umd.js` will register the custom diagram to pintora, please make sure that global `pintora` object is loaded before the custom diagram script loads.
+
 ```html
   <section>
     <div class="pintora">
@@ -426,3 +428,7 @@ We can use any bundler to package the source code of this diagram as `dist/pinto
     pintora.default.initBrowser()
   </script>
 ```
+
+## Show time
+
+You can check the [online dev demo on stackblitz](https://stackblitz.com/edit/pintora-diagram-pie-chart?file=README.md).

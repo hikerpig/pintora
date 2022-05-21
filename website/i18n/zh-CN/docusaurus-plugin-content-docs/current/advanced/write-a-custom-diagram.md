@@ -423,6 +423,9 @@ pintora.default.setConfig({
 
 我们使用任意 bundler 将此图表的源码打包为 `dist/pintora-diagram-pie-chart.umd.js`，可以在 html 页面中简单测试一下效果。
 
+`pintora-diagram-pie-chart.umd.js` 会将自定义图表注册到 pintora，请确保全局的 `pintora` 对象在自定义图表脚本加载前已经加载。
+
+
 ```html
   <section>
     <div class="pintora">
@@ -440,3 +443,7 @@ pintora.default.setConfig({
     pintora.default.initBrowser()
   </script>
 ```
+
+## 看看效果
+
+前往 [stackblitz 上的在线开发 demo](https://stackblitz.com/edit/pintora-diagram-pie-chart?file=README.md) 查看效果.
