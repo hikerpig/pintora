@@ -158,8 +158,8 @@ const drawAttributes = (group: Group, entityText: Text, attributes: Entity['attr
         {
           ...getTextDimensionsInPresicion(text, fontConfig),
           ...getBaseText(),
-          text: text,
           id: `${attrPrefix}-${name}`,
+          text: text,
           textAlign: 'left',
           textBaseline: 'middle',
           ...fontConfig,
@@ -305,14 +305,14 @@ const drawAttributes = (group: Group, entityText: Text, attributes: Entity['attr
   }
 }
 
-/**
- */
 const drawEntities = function (rootMark: Group, ir: ErDiagramIR, graph: LayoutGraph) {
   const keys = Object.keys(ir.entities)
   const groups: Group[] = []
 
   keys.forEach(function (id) {
     // Create a group for each entity
+    const entity = ir.entities[id]
+    const itemId = entity.itemId
     const group = makeMark(
       'group',
       {
@@ -324,7 +324,6 @@ const drawEntities = function (rootMark: Group, ir: ErDiagramIR, graph: LayoutGr
 
     // Label the entity - this is done first so that we can get the bounding box
     // which then determines the size of the rectangle
-    const textId = 'entity-' + id
     const fontConfig = { ...getFontConfig(conf), fontWeight: 'bold' as const }
 
     const textMark = makeMark(
@@ -333,13 +332,13 @@ const drawEntities = function (rootMark: Group, ir: ErDiagramIR, graph: LayoutGr
         ...getBaseText(),
         ...getTextDimensionsInPresicion(id, fontConfig),
         text: id,
-        id: textId,
+        id: itemId,
         textAlign: 'center',
         textBaseline: 'middle',
         fill: conf.textColor,
         ...fontConfig,
       },
-      { class: 'er__entity-label' },
+      { itemId, class: 'er__entity-label' },
     )
 
     // Draw the rectangle - insert it before the text so that the text is not obscured
@@ -353,7 +352,7 @@ const drawEntities = function (rootMark: Group, ir: ErDiagramIR, graph: LayoutGr
         y: 0,
         radius: conf.borderRadius,
       },
-      { class: 'er__entity-box' },
+      { itemId, class: 'er__entity-box' },
     )
     group.children.push(rectMark, textMark)
 
@@ -366,6 +365,7 @@ const drawEntities = function (rootMark: Group, ir: ErDiagramIR, graph: LayoutGr
       width: entityWidth,
       height: entityHeight,
     })
+    attributeGroup.itemId = itemId
 
     // Add the entity to the graph
     graph.setNode(id, {
@@ -471,11 +471,16 @@ const drawRelationshipFromLayout = function (group: Group, rel: Relationship, g:
     pathCommands = getPointsLinearPath(edge.points)
   }
 
-  const linePath = makeMark('path', {
-    path: pathCommands,
-    stroke: conf.edgeColor,
-    lineJoin: 'round',
-  })
+  const itemId = rel.itemId
+  const linePath = makeMark(
+    'path',
+    {
+      path: pathCommands,
+      stroke: conf.edgeColor,
+      lineJoin: 'round',
+    },
+    { itemId },
+  )
 
   // with dashes if necessary
   if (rel.relSpec.relType === Identification.NON_IDENTIFYING) {
@@ -515,7 +520,7 @@ const drawRelationshipFromLayout = function (group: Group, rel: Relationship, g:
       fill: conf.textColor,
       ...fontConfig,
     },
-    { class: 'er__relationship-label' },
+    { itemId, class: 'er__relationship-label' },
   )
 
   const labelDims = getTextDimensionsInPresicion(rel.roleA, fontConfig)

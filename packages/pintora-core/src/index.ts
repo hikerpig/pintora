@@ -1,7 +1,8 @@
-import { diagramRegistry } from './diagram-registry'
-
 export * from './type'
+import { diagramRegistry } from './diagram-registry'
+import { diagramEventManager, DiagramEvent, diagramEventMakerFactory } from './diagram-event'
 import { DiagramArtistOptions } from './type'
+import { IDiagramEvent, IGraphicEvent } from './types/event'
 import { logger, setLogLevel } from './logger'
 import configApi, { PintoraConfig } from './config'
 
@@ -18,17 +19,25 @@ export {
   setLogLevel,
   configApi,
   symbolRegistry,
+  interpreteConfigs,
+  tinycolor,
+  themeRegistry,
+  DEFAULT_FONT_FAMILY,
+  diagramEventManager,
+  DiagramEvent,
+  diagramEventMakerFactory,
+}
+
+export type {
   SymbolDef,
   SymbolStyleAttrs,
   ConfigParam,
   ConfigMeta,
-  interpreteConfigs,
   PintoraConfig,
-  tinycolor,
   ITheme,
-  themeRegistry,
-  DEFAULT_FONT_FAMILY,
   DiagramArtistOptions,
+  IGraphicEvent,
+  IDiagramEvent,
 }
 
 type DrawOptions = {
@@ -42,6 +51,7 @@ const pintora = {
   symbolRegistry,
   configEngine,
   themeRegistry,
+  diagramEventManager,
   parseAndDraw(text: string, opts: DrawOptions) {
     const { onError, config } = opts
     const diagram = diagramRegistry.detectDiagram(text)

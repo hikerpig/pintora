@@ -50,6 +50,7 @@ export enum PLACEMENT {
 
 export type Actor = {
   name: string
+  itemId: string
   description: string
   wrap: boolean
   classifier?: string
@@ -64,7 +65,7 @@ export interface Message extends WrappedText {
   text: string
   wrap: any
   id?: string
-  answer?: any
+  itemId: string
   type?: LINETYPE
   placement?: any
   attrs?: GroupAttrs
@@ -137,22 +138,13 @@ class SequenceDB extends BaseDb {
       wrap: (description.wrap === undefined && this.wrapEnabled) || !!description.wrap,
       prevActorId: this.prevActorId,
       classifier,
+      itemId: `actor-${id}`,
     }
     if (this.prevActorId && this.actors[this.prevActorId]) {
       this.actors[this.prevActorId].nextActorId = id
     }
 
     this.prevActorId = id
-  }
-
-  addMessage(idFrom: string, idTo: string, message: Message, answer: any) {
-    this.messages.push({
-      from: idFrom,
-      to: idTo,
-      text: message.text,
-      wrap: (message.wrap === undefined && this.wrapEnabled) || !!message.wrap,
-      answer: answer,
-    })
   }
 
   addSignal(
@@ -182,17 +174,20 @@ class SequenceDB extends BaseDb {
         throw error
       }
     }
+    const msgIndex = this.messages.length
     this.messages.push({
       from: from.actor,
       to: to ? to.actor : '',
       text: message.text || '',
       wrap: (message.wrap === undefined && this.wrapEnabled) || !!message.wrap,
       type: messageType,
+      itemId: `message-${msgIndex}-${messageType}`,
     })
     return true
   }
 
   addSignalWithoutActor(message: WrappedText = { text: '', wrap: false }, messageType: LINETYPE, attrs?: GroupAttrs) {
+    const msgIndex = this.messages.length
     this.messages.push({
       from: undefined,
       to: undefined,
@@ -200,6 +195,7 @@ class SequenceDB extends BaseDb {
       wrap: (message.wrap === undefined && this.wrapEnabled) || !!message.wrap,
       type: messageType,
       attrs,
+      itemId: `message-${msgIndex}-${messageType}`,
     })
   }
 
@@ -230,6 +226,8 @@ class SequenceDB extends BaseDb {
     const toActor = Array.isArray(actor) ? actor[1] : actor
 
     this.notes.push(note)
+
+    const msgIndex = this.messages.length
     this.messages.push({
       from: fromActor,
       to: toActor,
@@ -237,6 +235,7 @@ class SequenceDB extends BaseDb {
       wrap: (message.wrap === undefined && this.wrapEnabled) || !!message.wrap,
       type: LINETYPE.NOTE,
       placement: placement,
+      itemId: `message-${msgIndex}-${LINETYPE.NOTE}`,
     })
     // console.log('addNote, message', actor, this.messages[this.messages.length - 1])
   }
@@ -472,7 +471,6 @@ export { db }
 
 export default {
   addActor: db.addActor,
-  addMessage: db.addMessage,
   addSignal: db.addSignal,
   enableSequenceNumbers,
   parseMessage: db.parseMessage,

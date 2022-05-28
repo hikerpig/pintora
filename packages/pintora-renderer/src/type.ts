@@ -1,5 +1,5 @@
-export interface IRenderer {
-  render(): void
-  setContainer(container: any): void
-  getRootElement(): Element
-}
+import { IRenderer, GrahpicEventHandler } from '@pintora/core'
+
+export type EventHandler = GrahpicEventHandler
+
+export { IRenderer }

@@ -1,5 +1,6 @@
-import { stripStartEmptyLines } from '@pintora/test-shared'
-import { makeSnapshotCases } from '../test-utils/render'
+import { EXAMPLES, stripStartEmptyLines } from '@pintora/test-shared'
+import { pintoraStandalone } from '@pintora/standalone'
+import { makeSnapshotCases, startRender } from '../test-utils/render'
 
 describe('ER Diagram', () => {
   makeSnapshotCases([
@@ -33,4 +34,19 @@ erDiagram
       },
     },
   ])
+
+  it('recognize event on entity', () => {
+    const code = EXAMPLES.er.code
+    const c = startRender({ code })
+    c.get('.er__entity-box').should('exist')
+    c.window().then(win => {
+      const pintora = (win as any).pintora as typeof pintoraStandalone
+      pintora.diagramEventManager.once('click', evt => {
+        expect(evt.item.diagram).to.equal('er')
+        expect(evt.item.type).to.equal('entity')
+        expect(evt.item.id).to.equal(evt.item.data.itemId)
+      })
+    })
+    c.get('.er__entity:first').click()
+  })
 })

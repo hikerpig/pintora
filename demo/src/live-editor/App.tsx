@@ -15,6 +15,9 @@ const LAST_EDITOR_CODE_KEY = 'pintoraEditorCode'
 
 function App() {
   useEffect(() => {
+    // attach pintora to global scope
+    window.pintora = pintora
+
     const handler = () => {
       const state = store.getState()
       const dataToSave = {

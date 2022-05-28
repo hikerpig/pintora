@@ -8,6 +8,8 @@ export class SvgRenderer extends BaseRenderer {
   }
 
   onShapeAdd(shape: IShape, mark: Mark) {
+    super.onShapeAdd(shape, mark)
+
     if (mark.class) {
       const el = shape.get('el')
       if (el) {

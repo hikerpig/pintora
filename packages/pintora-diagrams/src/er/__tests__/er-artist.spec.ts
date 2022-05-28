@@ -3,7 +3,7 @@ import { EXAMPLES } from '@pintora/test-shared'
 import { testDraw, prepareDiagramConfig, stripDrawResultForSnapshot } from '../../__tests__/test-util'
 import { erDiagram } from '../index'
 
-describe('component-artist', () => {
+describe('er-artist', () => {
   beforeAll(() => {
     prepareDiagramConfig()
     pintora.diagramRegistry.registerDiagram('erDiagram', erDiagram)

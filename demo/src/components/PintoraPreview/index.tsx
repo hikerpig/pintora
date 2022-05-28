@@ -39,6 +39,12 @@ export default function PintoraPreview(props: Props) {
         setErrorMessage(error.stack || error.message)
         if (onError) onError(error)
       },
+      // an example for @pintora/standalone's eventsHandlers option
+      eventsHandlers: {
+        click(diagramEvent) {
+          console.log('diagramEvent, click', diagramEvent)
+        },
+      },
     })
 
     return () => {

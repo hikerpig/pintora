@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`component-artist will draw inheritance 1`] = `
+exports[`er-artist will draw inheritance 1`] = `
 Object {
   "mark": Object {
     "attrs": Object {},
@@ -23,6 +23,7 @@ Object {
               "text": "",
             },
             "class": "er__entity-box",
+            "itemId": "entity-person",
             "type": "rect",
           },
           Object {
@@ -37,6 +38,7 @@ Object {
               "textBaseline": "middle",
             },
             "class": "er__entity-label",
+            "itemId": "entity-person",
             "type": "text",
           },
           Object {
@@ -135,6 +137,7 @@ Object {
                 "type": "group",
               },
             ],
+            "itemId": "entity-person",
             "type": "group",
           },
         ],
@@ -154,6 +157,7 @@ Object {
               "text": "",
             },
             "class": "er__entity-box",
+            "itemId": "entity-customer",
             "type": "rect",
           },
           Object {
@@ -168,6 +172,7 @@ Object {
               "textBaseline": "middle",
             },
             "class": "er__entity-label",
+            "itemId": "entity-customer",
             "type": "text",
           },
           Object {
@@ -320,6 +325,7 @@ Object {
                 "type": "group",
               },
             ],
+            "itemId": "entity-customer",
             "type": "group",
           },
         ],
@@ -339,6 +345,7 @@ Object {
               "text": "",
             },
             "class": "er__entity-box",
+            "itemId": "entity-deliverer",
             "type": "rect",
           },
           Object {
@@ -353,11 +360,13 @@ Object {
               "textBaseline": "middle",
             },
             "class": "er__entity-label",
+            "itemId": "entity-deliverer",
             "type": "text",
           },
           Object {
             "attrs": Object {},
             "children": Array [],
+            "itemId": "entity-deliverer",
             "type": "group",
           },
         ],

@@ -3,8 +3,9 @@ import { db, SequenceDiagramIR } from './db'
 import artist from './artist'
 import { parse } from './parser'
 import { SequenceConf } from './config'
+import { eventRecognizer, SequenceDiagramItemDatas } from './event-recognizer'
 
-export { SequenceDiagramIR, SequenceConf }
+export { SequenceDiagramIR, SequenceConf, SequenceDiagramItemDatas }
 
 export const sequenceDiagram: IDiagram<SequenceDiagramIR, SequenceConf> = {
   pattern: /^\s*sequenceDiagram/,
@@ -16,6 +17,7 @@ export const sequenceDiagram: IDiagram<SequenceDiagramIR, SequenceConf> = {
   },
   artist,
   configKey: 'sequence',
+  eventRecognizer,
   clear() {
     db.clear()
   },

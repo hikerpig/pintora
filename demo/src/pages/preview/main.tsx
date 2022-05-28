@@ -9,6 +9,9 @@ const App = () => {
   const [pintoraRenderer, setPintoraRenderer] = useState<any>('svg')
 
   useEffect(() => {
+    // attach pintora to global scope
+    window.pintora = pintora
+
     const params = new URLSearchParams(location.search)
 
     const encodedConfig = params.get('config')

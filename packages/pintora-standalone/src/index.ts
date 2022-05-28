@@ -6,6 +6,9 @@ import pintora, {
   safeAssign,
   DiagramArtistOptions,
   DeepPartial,
+  diagramEventManager,
+  DiagramEventType,
+  IDiagramEvent,
 } from '@pintora/core'
 export * from '@pintora/core'
 import { DIAGRAMS } from '@pintora/diagrams'
@@ -27,6 +30,14 @@ interface RenderToOptions extends Omit<RenderOptions, 'container'>, DiagramArtis
   onError?(error: Error): void
   enhanceGraphicIR?(ir: GraphicsIR): GraphicsIR
   config?: DeepPartial<PintoraConfig>
+  /**
+   * An option dict to specify different types of diagram event listeners
+   */
+  eventsHandlers?: Partial<DiagramEventsHandlers>
+}
+
+export type DiagramEventsHandlers = {
+  [K in DiagramEventType]: (diagramEvent: IDiagramEvent) => void
 }
 
 type RenderContentOptions = {
@@ -39,7 +50,7 @@ type RenderContentOptions = {
    * if not specified, pintora will create a '.pintora-wrapper' element and insert it before the container
    */
   resultContainer?: HTMLElement
-}
+} & Pick<RenderToOptions, 'eventsHandlers'>
 
 type ConfigOnElement = {
   renderer: string
@@ -108,9 +119,26 @@ const pintoraStandalone = {
           if (canvasBackground) graphicIR.bgColor = canvasBackground
         }
 
+        const originOnRender = options.onRender
         render(graphicIR, {
           ...options,
           container: ctn,
+          onRender(renderer) {
+            diagramEventManager.bindEventsToRenderer(renderer)
+
+            if (options.eventsHandlers) {
+              for (const [eventName, handler] of Object.entries(options.eventsHandlers)) {
+                renderer.on(eventName, graphicEvent => {
+                  const dEvents = diagramEventManager.feedGraphicEvent(graphicEvent, drawResult.diagramIR)
+                  for (const dEvent of dEvents) {
+                    handler(dEvent)
+                  }
+                })
+              }
+            }
+
+            if (originOnRender) originOnRender(renderer)
+          },
         })
       }
     } finally {
@@ -171,6 +199,7 @@ const pintoraStandalone = {
       container: resultContainer,
       renderer,
       config,
+      eventsHandlers: opts.eventsHandlers,
     })
 
     return resultContainer

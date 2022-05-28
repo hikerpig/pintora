@@ -1,5 +1,6 @@
 ---
 title: API Usage
+sidebar_position: 1
 ---
 
 ## pintora API
@@ -84,4 +85,39 @@ mindmap
     pintora.renderContentOf(codeElement)
   })
 </script>
+```
+
+### pintora.diagramEventMananger
+
+An event manager for [Diagram Event](diagram-event.md). Let's see the types.
+
+```ts
+/**
+ * A DiagramEvent eventbus
+ */
+class DiagramEventManager extends EventEmitter {
+  addRecognizer(recognizer: IDiagramEventRecognizer): void
+
+  on<D extends keyof PintoraDiagramItemDatas = any, T extends keyof PintoraDiagramItemDatas[D] = any>(
+    evt: DiagramEventType,
+    handler: (dEvent: IDiagramEvent<D, T>) => void,
+    once?: boolean,
+  ): this
+}
+
+const diagramEventManager: DiagramEventManager
+```
+
+#### on(evt, handler)
+
+For example:
+ 
+```ts
+pintora.diagramEventManager.on('click', (item) => {
+  console.log('diagramEvent click', item)
+})
+
+pintora.diagramEventManager.on('mouseenter', (item) => {
+  console.log('diagramEvent mouseenter', item)
+})
 ```

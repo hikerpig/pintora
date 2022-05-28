@@ -23,10 +23,12 @@ export type Attribute = {
 }
 
 export type Entity = {
+  itemId: string
   attributes: Attribute[]
 }
 
 export type Relationship = {
+  itemId: string
   entityA: string
   roleA: string
   entityB: string
@@ -60,16 +62,18 @@ export class ErDb extends BaseDb {
 
   addEntity(name: string) {
     if (!this.entities[name]) {
-      this.entities[name] = { attributes: [] }
+      this.entities[name] = { attributes: [], itemId: `entity-${name}` }
     }
     return this.entities[name]
   }
   addRelationship(entityA: string, roleA: string, entityB: string, relSpec: RelSpec) {
+    const itemId = `relationship-${entityA}-${entityB}`
     const rel: Relationship = {
       entityA,
       roleA,
       entityB,
       relSpec,
+      itemId,
     }
 
     this.relationships.push(rel)

@@ -3,8 +3,9 @@ import db, { ErDiagramIR } from './db'
 import artist from './artist'
 import { parse } from './parser'
 import { configKey, ErConf } from './config'
+import { eventRecognizer, ErDiagramItemDatas } from './event-recognizer'
 
-export { ErDiagramIR, ErConf }
+export { ErDiagramIR, ErConf, ErDiagramItemDatas }
 
 export const erDiagram: IDiagram<ErDiagramIR, ErConf> = {
   pattern: /^\s*erDiagram/,
@@ -16,6 +17,7 @@ export const erDiagram: IDiagram<ErDiagramIR, ErConf> = {
   },
   artist,
   configKey,
+  eventRecognizer,
   clear() {
     db.clear()
   },
