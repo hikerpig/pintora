@@ -1,12 +1,10 @@
 import React, { useEffect, useRef } from 'react'
 import { ErrorInfo } from 'src/live-editor/type'
-import { keymap, EditorView, highlightActiveLine } from '@codemirror/view'
-import { history, historyKeymap } from '@codemirror/history'
+import { keymap, EditorView, highlightActiveLine, lineNumbers } from '@codemirror/view'
 import { EditorState, Extension } from '@codemirror/state'
-import { standardKeymap } from '@codemirror/commands'
+import { standardKeymap, history, historyKeymap } from '@codemirror/commands'
 import { setDiagnostics } from '@codemirror/lint'
-import { oneDarkTheme, oneDarkHighlightStyle } from '@codemirror/theme-one-dark'
-import { lineNumbers } from '@codemirror/gutter'
+import { oneDark } from '@codemirror/theme-one-dark'
 import { search, searchKeymap } from '@codemirror/search'
 import { json } from '@codemirror/lang-json'
 import { tabKeymaps } from './utils'
@@ -45,14 +43,13 @@ const Editor = (props: Props) => {
       const extensions: Extension[] = [
         keymap.of(standardKeymap),
         history(),
-        oneDarkTheme,
         keymap.of(historyKeymap),
         onUpdateExtension,
         keymap.of(searchKeymap),
         lineNumbers(),
         search({ top: true }),
         highlightActiveLine(),
-        oneDarkHighlightStyle.fallback,
+        oneDark,
         keymap.of(tabKeymaps),
       ]
       if (editorOptions.language === 'json') {
