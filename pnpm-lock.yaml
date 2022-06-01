@@ -46,8 +46,6 @@ importers:
     specifiers:
       '@codemirror/basic-setup': ^0.20.0
       '@codemirror/commands': ^0.20.0
-      '@codemirror/gutter': ^0.19.9
-      '@codemirror/history': ^0.19.2
       '@codemirror/lang-javascript': ^0.20.0
       '@codemirror/lang-json': ^0.20.0
       '@codemirror/lint': ^0.20.0
@@ -95,8 +93,6 @@ importers:
     dependencies:
       '@codemirror/basic-setup': 0.20.0
       '@codemirror/commands': 0.20.0
-      '@codemirror/gutter': 0.19.9
-      '@codemirror/history': 0.19.2
       '@codemirror/lang-javascript': 0.20.0
       '@codemirror/lang-json': 0.20.0
       '@codemirror/lint': 0.20.2
@@ -3212,21 +3208,6 @@ packages:
       '@codemirror/state': 0.20.0
       '@codemirror/view': 0.20.4
       '@lezer/common': 0.16.0
-    dev: false
-
-  /@codemirror/gutter/0.19.9:
-    resolution: {integrity: sha512-PFrtmilahin1g6uL27aG5tM/rqR9DZzZYZsIrCXA5Uc2OFTFqx4owuhoU9hqfYxHp5ovfvBwQ+txFzqS4vog6Q==}
-    dependencies:
-      '@codemirror/rangeset': 0.19.6
-      '@codemirror/state': 0.19.9
-      '@codemirror/view': 0.19.48
-    dev: false
-
-  /@codemirror/history/0.19.2:
-    resolution: {integrity: sha512-unhP4t3N2smzmHoo/Yio6ueWi+il8gm9VKrvi6wlcdGH5fOfVDNkmjHQ495SiR+EdOG35+3iNebSPYww0vN7ow==}
-    dependencies:
-      '@codemirror/state': 0.19.9
-      '@codemirror/view': 0.19.48
     dev: false
 
   /@codemirror/lang-javascript/0.20.0:
@@ -10065,7 +10046,7 @@ packages:
     engines: {node: '>= 4'}
 
   /image-size/0.5.5:
-    resolution: {integrity: sha1-Cd/Uq50g4p6xw+gLiZA3jfnjy5w=}
+    resolution: {integrity: sha512-6TDAlDPZxUFCv+fuOkIoXT/V/f3Qbq8e37p+YOiYrUv3v9cc3/6x78VdfPgFVaB9dZYeLUfKgHRebpkm/oP2VQ==}
     engines: {node: '>=0.10.0'}
     hasBin: true
     requiresBuild: true
