@@ -87,9 +87,9 @@ export function clamp(num: number, min: number, max: number) {
   return Math.min(Math.max(num, min), max)
 }
 
-// function radToDegree(rad: number) {
-//   return rad / Math.PI * 180
-// }
+export function radToDegree(rad: number) {
+  return (rad / Math.PI) * 180
+}
 
 /* eslint-disable prettier/prettier */
 export enum PositionH {

@@ -170,8 +170,8 @@ function drawInterfacesTo(parentMark: Group, ir: ComponentDiagramIR, g: LayoutGr
     const circleMark = makeMark(
       'circle',
       {
-        x: 0,
-        y: 0,
+        cx: 0,
+        cy: 0,
         r: interfaceSize / 2,
         fill: conf.componentBackground,
         stroke: conf.componentBorderColor,
@@ -207,7 +207,7 @@ function drawInterfacesTo(parentMark: Group, ir: ComponentDiagramIR, g: LayoutGr
       outerWidth,
       onLayout(data: LayoutNode) {
         const { x, y } = data // the center of the node
-        safeAssign(circleMark.attrs, { x, y: y - labelDims.height / 2 + 2 })
+        safeAssign(circleMark.attrs, { cx: x, cy: y - labelDims.height / 2 + 2 })
         safeAssign(textMark.attrs, { x, y: y + 2 })
       },
     }
@@ -313,7 +313,6 @@ function drawGroupsTo(parentMark: Group, ir: ComponentDiagramIR, g: LayoutGraph)
               lineWidth: conf.groupBorderWidth,
             },
           })
-          console.log('bgMark', bgMark)
           if (bgMark) {
             // console.log('bgMark', groupId, bgMark, 'bounds', bgMark.symbolBounds)
             // node.outerTop = bgMark.symbolBounds.top + y

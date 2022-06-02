@@ -53,7 +53,7 @@
   "dependencies": {
     "@pintora/core": "workspace:^0.5.0",
     "@pintora/diagrams": "workspace:^0.5.2",
-    "@pintora/renderer": "^0.5.0"
+    "@pintora/renderer": "workspace:^0.5.0"
   },
   "devDependencies": {
     "@pintora/test-shared": "workspace:*",

@@ -3,7 +3,6 @@ import {
   IDiagramArtist,
   Group,
   Text,
-  mat3,
   safeAssign,
   getPointAt,
   Rect,
@@ -28,6 +27,7 @@ import {
   adjustRootMarkBounds,
   makeEmptyGroup,
   makeTriangle,
+  // makeCircleInPoint,
 } from '../util/artist-util'
 import dagre from '@pintora/dagre'
 import { drawMarkerTo, CELL_ORDER, CellName, TableBuilder, TableCell, TableRow } from './artist-util'
@@ -221,7 +221,6 @@ const drawAttributes = (group: Group, entityText: Text, attributes: Entity['attr
     .forEach(k => {
       cellOffsets[k] = cumulativeOffsetX
       if (columnMaxWidths[k]) {
-        // cumulativeOffsetX += columnMaxWidths[k] + 2 * attribPaddingX
         cumulativeOffsetX += Math.floor(columnMaxWidths[k] + 2 * attribPaddingX)
       }
     })
@@ -237,7 +236,8 @@ const drawAttributes = (group: Group, entityText: Text, attributes: Entity['attr
 
   if (attributes.length > 0) {
     // Position the entity label near the top of the entity bounding box
-    entityText.matrix = mat3.fromTranslation(mat3.create(), [bBox.width / 2, attribPaddingY + labelBBox.height / 2])
+    entityText.attrs.x += bBox.width / 2
+    entityText.attrs.y += attribPaddingY + labelBBox.height / 2
 
     // Add rectangular boxes for the attribute types/names
     let heightOffset = toFixed(labelBBox.height + attribPaddingY * 2) // Start at the bottom of the entity label
@@ -279,7 +279,10 @@ const drawAttributes = (group: Group, entityText: Text, attributes: Entity['attr
         rowGroup.children.push(rect)
         if (cell) {
           rowGroup.children.push(cell.mark)
-          cell.mark.matrix = mat3.fromTranslation(mat3.create(), [offsetX + attribPaddingX, alignY])
+          // cell.mark.attrs.x += offsetX + attribPaddingX
+          // cell.mark.attrs.y += alignY
+          cell.mark.attrs.x = offsetX + attribPaddingX
+          cell.mark.attrs.y = alignY
         }
       })
 
@@ -296,7 +299,8 @@ const drawAttributes = (group: Group, entityText: Text, attributes: Entity['attr
     bBox.height = Math.max(conf.minEntityHeight, cumulativeHeight)
 
     // Position the entity label in the middle of the box
-    entityText.matrix = mat3.fromTranslation(mat3.create(), [bBox.width / 2, bBox.height / 2])
+    entityText.attrs.x += bBox.width / 2
+    entityText.attrs.y += bBox.height / 2
   }
 
   return {
@@ -378,7 +382,10 @@ const drawEntities = function (rootMark: Group, ir: ErDiagramIR, graph: LayoutGr
         const marks = [rectMark, textMark]
         marks.forEach(mark => {
           // center the marks to dest point
-          safeAssign(mark.attrs, { x: x - rectMark.attrs.width / 2, y: y - rectMark.attrs.height / 2 })
+          safeAssign(mark.attrs, {
+            x: mark.attrs.x + x - rectMark.attrs.width / 2,
+            y: mark.attrs.y + y - rectMark.attrs.height / 2,
+          })
         })
 
         if (attributeGroup) {
@@ -492,11 +499,13 @@ const drawRelationshipFromLayout = function (group: Group, rel: Relationship, g:
     id: `${edge.name}-end`,
   })
 
+  // const startMarker = null
   const startMarkerDirection = calcDirection(startPoint, secondPoint)
   const startMarker = drawMarkerTo(startPoint, rel.relSpec.cardB, startMarkerDirection, {
     stroke: conf.stroke,
     id: `${edge.name}-start`,
   })
+
   // Now label the relationship
 
   // Find the half-way point
@@ -536,8 +545,9 @@ const drawRelationshipFromLayout = function (group: Group, rel: Relationship, g:
   group.children.push(...insertingMarks)
 
   // debug
-  // const secondPointMarker = makeCircleWithCoordInPoint(secondPoint)
-  // group.children.push(secondPointMarker)
+  // const secondPointMarker = makeCircleInPoint(secondPoint)
+  // const lastPointMarker = makeCircleInPoint(lastPoint)
+  // group.children.push(secondPointMarker, lastPointMarker)
   return { bounds }
 }
 

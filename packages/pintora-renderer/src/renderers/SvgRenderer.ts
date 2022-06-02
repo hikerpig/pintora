@@ -1,21 +1,20 @@
 import { Mark } from '@pintora/core'
 import { BaseRenderer } from './base'
-import { Canvas, IShape } from '@antv/g-svg'
+import { Element as GElement } from '@antv/g'
+import { Renderer } from '@antv/g-svg'
 
 export class SvgRenderer extends BaseRenderer {
-  getCanvasClass() {
-    return Canvas
+  getGRenderer() {
+    return new Renderer()
   }
 
-  onShapeAdd(shape: IShape, mark: Mark) {
+  onShapeAdd(shape: GElement, mark: Mark) {
     super.onShapeAdd(shape, mark)
 
     if (mark.class) {
-      const el = shape.get('el')
+      const el = shape
       if (el) {
-        mark.class.split(' ').forEach(cls => {
-          if (cls) el.classList.add(cls)
-        })
+        shape.style.class = mark.class
       }
     }
   }
