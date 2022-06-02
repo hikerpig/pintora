@@ -37,7 +37,7 @@
   "devDependencies": {
     "@changesets/changelog-git": "^0.1.9",
     "@changesets/cli": "^2.20.0",
-    "@types/jest": "^27.4.0",
+    "@types/jest": "^28.0.0",
     "@typescript-eslint/eslint-plugin": "^5.11.0",
     "@typescript-eslint/parser": "^5.11.0",
     "codecov": "^3.8.3",
