@@ -1,5 +1,5 @@
-import { SequenceConf } from './sequence'
-import { ErConf } from './er'
+import { SequenceConf, SequenceDiagramItemDatas } from './sequence'
+import { ErConf, ErDiagramItemDatas } from './er'
 import { ComponentConf } from './component'
 import { ActivityConf } from './activity'
 import { MindmapConf } from './mindmap'
@@ -12,5 +12,10 @@ declare module '@pintora/core' {
     sequence: SequenceConf
     activity: ActivityConf
     mindmap: MindmapConf
+  }
+
+  interface PintoraDiagramItemDatas {
+    er: ErDiagramItemDatas
+    sequence: SequenceDiagramItemDatas
   }
 }

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-empty-function */
 import { pintoraStandalone } from '../index'
 import { EXAMPLES } from '@pintora/test-shared'
 
@@ -57,6 +58,39 @@ describe('pintora standalone', () => {
       })
 
       expect(parent.querySelector('svg')).toBeTruthy()
+    })
+
+    it('calls `renderer.on` and diagramEventManager methods if `eventsHandlers` is passed', () => {
+      cleanup = () => {
+        removeRecognizer()
+      }
+
+      const code = EXAMPLES.er.code
+
+      const dblclick = jest.fn()
+      const removeRecognizer = pintoraStandalone.diagramEventManager.addRecognizer({
+        recognize: e => {
+          return { graphicEvent: e } as any
+        },
+      })
+      pintoraStandalone.renderTo(code, {
+        container,
+        eventsHandlers: {
+          dblclick,
+        },
+        onRender(_renderer) {
+          const fakeGEvent = {
+            type: 'dblclick',
+            shape: {},
+            propagationPath: [],
+          }
+          ;(_renderer as any).gcvs.emit('dblclick', fakeGEvent)
+        },
+      })
+
+      expect(dblclick).toBeCalledWith(expect.any(Object))
+
+      removeRecognizer()
     })
   })
 

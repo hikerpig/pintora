@@ -1,6 +1,7 @@
 import { GraphicsIR } from '@pintora/core'
 import { IRenderer } from './type'
 import { makeRenderer, RendererType, BaseRenderer, rendererRegistry } from './renderers'
+import { GraphicEvent } from './event'
 
 export type RenderOptions = {
   container: HTMLElement
@@ -8,7 +9,7 @@ export type RenderOptions = {
   onRender?(renderer: IRenderer): void
 }
 
-export { BaseRenderer, rendererRegistry, IRenderer }
+export { BaseRenderer, rendererRegistry, IRenderer, GraphicEvent }
 
 export function render(ir: GraphicsIR, opts: RenderOptions) {
   // console.log('TBD, render', ir)

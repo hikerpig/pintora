@@ -615,7 +615,7 @@ function splitBreaks(text: string) {
  */
 const drawMessage = function (msgModel: MessageModel): DrawResult<Group> {
   model.bumpVerticalPos(conf.boxMargin)
-  const { startx, stopx, starty, text, fromBound, type, sequenceIndex } = msgModel
+  const { startx, stopx, starty, text, fromBound, type, sequenceIndex, itemId } = msgModel
   const linesCount = splitBreaks(text).length
   const textDims = calculateTextDimensions(text, messageFont(conf))
   const lineHeight = textDims.height / linesCount
@@ -681,7 +681,7 @@ const drawMessage = function (msgModel: MessageModel): DrawResult<Group> {
       x2: stopx,
       y2: lineEndy,
     })
-    lineMark = makeMark('path', lineAttrs as any, { class: 'message__line' })
+    lineMark = makeMark('path', lineAttrs as any, { class: 'message__line', itemId })
 
     safeAssign(tAttrs, {
       x: startx,
@@ -704,6 +704,7 @@ const drawMessage = function (msgModel: MessageModel): DrawResult<Group> {
       type: 'line',
       attrs: lineAttrs,
       class: 'message__line',
+      itemId,
     }
     model.insert(startx, lineStarty - 10, stopx, lineStarty)
   }
@@ -792,6 +793,7 @@ const drawMessage = function (msgModel: MessageModel): DrawResult<Group> {
     mark: {
       type: 'group',
       class: 'message',
+      itemId,
       children: compact([
         lineMark,
         lineEndMark,
@@ -897,6 +899,7 @@ export const drawActors = function (rootMark: Group, ir: SequenceDiagramIR, opts
       type: 'group',
       class: 'actor',
       children: [],
+      itemId: actor.itemId,
     }
 
     let attrs: Rect['attrs']
@@ -1243,6 +1246,7 @@ const buildMessageModel = function (msg: Message): MessageModel {
       type: msg.type,
       stopx: msgDims.width,
       stopy: msgDims.height,
+      itemId: msg.itemId,
     }
   }
   const fromBound = activationBounds(msg.from)
@@ -1276,6 +1280,7 @@ const buildMessageModel = function (msg: Message): MessageModel {
     fromBound: Math.min.apply(null, allBounds),
     toBound: Math.max.apply(null, allBounds),
     attrs: msg.attrs,
+    itemId: msg.itemId,
   } as MessageModel
 }
 

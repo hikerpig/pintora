@@ -18,6 +18,7 @@
     "test": "jest"
   },
   "dependencies": {
+    "@antv/event-emitter": "^0.1.2",
     "@antv/matrix-util": "^3.0.4",
     "@types/node": "^14.11.8",
     "clone-deep": "^4.0.1",

@@ -1,5 +1,13 @@
-import pintora, { configApi, PintoraConfig, themeRegistry, GraphicsIR, Mark, DiagramArtistOptions } from '@pintora/core'
-// import cloneDeep from 'clone-deep'
+import pintora, {
+  configApi,
+  PintoraConfig,
+  themeRegistry,
+  GraphicsIR,
+  Mark,
+  DiagramArtistOptions,
+  DiagramEventType,
+  IGraphicEvent,
+} from '@pintora/core'
 
 export function testDraw(code: string, extraOptions: Partial<DiagramArtistOptions> = {}) {
   let success = true
@@ -68,4 +76,62 @@ export function stripGraphicIRForSnapshot(ir: GraphicsIR) {
 
 export function stripDrawResultForSnapshot(result: ReturnType<typeof pintora.parseAndDraw>) {
   return stripGraphicIRForSnapshot(result.graphicIR)
+}
+
+type VisitorActions = {
+  stop(): void
+}
+
+export function traverseGraphicsIR(ir: GraphicsIR, visitor: (mark: Mark, actions: VisitorActions) => void) {
+  const visited: Map<Mark, boolean> = new Map()
+
+  let stopped = false
+  const actions: VisitorActions = {
+    stop() {
+      stopped = true
+    },
+  }
+
+  function _visit(mark: Mark) {
+    if (!mark) return
+    if (visited.has(mark)) return
+
+    visited.set(mark, true)
+
+    visitor(mark, actions)
+    if (stopped) return
+
+    if ('children' in mark) {
+      mark.children.forEach(child => _visit(child))
+    }
+  }
+
+  _visit(ir.mark)
+}
+
+export function findMarkInGraphicsIR(ir: GraphicsIR, predicate: (mark: Mark) => boolean) {
+  let result = null
+  traverseGraphicsIR(ir, (mark, acitons) => {
+    if (predicate(mark)) {
+      result = mark
+      acitons.stop()
+    }
+  })
+  return result
+}
+
+/**
+ * simulate a graphic event
+ */
+export function makeGraphicEvent(type: DiagramEventType, mark: Mark) {
+  const graphicEvent: IGraphicEvent = {
+    type,
+    x: 10,
+    y: 10,
+    clientX: 20,
+    clientY: 20,
+    mark,
+    markPath: [mark],
+  }
+  return graphicEvent
 }

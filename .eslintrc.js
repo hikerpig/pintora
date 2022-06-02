@@ -12,7 +12,7 @@ module.exports = {
   },
   plugins: ['@typescript-eslint', 'prettier', 'unused-imports'],
   rules: {
-    '@typescript-eslint/no-explicit-any': 'warn',
+    '@typescript-eslint/no-explicit-any': 'off',
     '@typescript-eslint/no-this-alias': 'warn',
     '@typescript-eslint/no-extra-semi': 'off',
     '@typescript-eslint/no-unused-vars': ['warn', { varsIgnorePattern: '^_' }],

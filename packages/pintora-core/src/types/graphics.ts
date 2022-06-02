@@ -25,6 +25,7 @@ export interface IMark {
     v: TransformPolicy
     all: TransformPolicy
   }>
+  itemId?: string
 }
 
 export interface Group extends IMark {

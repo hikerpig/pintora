@@ -45,6 +45,7 @@ export type MessageModel = {
   stopy: number
   text: Message['text']
   type: Message['type']
+  itemId: string
   sequenceIndex?: number
   fromBound?: number
   toBound?: number

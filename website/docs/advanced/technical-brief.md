@@ -1,5 +1,6 @@
 ---
 title: Technical Brief
+sidebar_position: 2
 ---
 
 Pintora builds a simplified tool chain for diagrammers from DSL-parsing to diagram-drawing through sensible layering and abstraction.

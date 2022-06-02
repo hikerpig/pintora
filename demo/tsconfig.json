@@ -15,6 +15,7 @@
     "isolatedModules": true,
     "noEmit": true,
     "jsx": "react",
+    "composite": true,
     "baseUrl": "./",
     "paths": {
       "src/*": ["./src/*"]
@@ -23,5 +24,8 @@
   "include": ["./src"],
   "exclude": [
     "./dist/**/*"
-  ]
+  ],
+  "references": [{
+    "path": "../packages/pintora-standalone"
+  }]
 }
