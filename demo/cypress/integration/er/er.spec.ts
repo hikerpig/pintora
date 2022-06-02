@@ -39,14 +39,21 @@ erDiagram
     const code = EXAMPLES.er.code
     const c = startRender({ code })
     c.get('.er__entity-box').should('exist')
+    let handlerTriggered = false
     c.window().then(win => {
       const pintora = (win as any).pintora as typeof pintoraStandalone
       pintora.diagramEventManager.once('click', evt => {
+        handlerTriggered = true
         expect(evt.item.diagram).to.equal('er')
         expect(evt.item.type).to.equal('entity')
         expect(evt.item.id).to.equal(evt.item.data.itemId)
       })
     })
-    c.get('.er__entity:first').click()
+    c.get('.er__entity:first')
+      .click()
+      .wait(10)
+      .then(() => {
+        expect(handlerTriggered).to.eq(true)
+      })
   })
 })

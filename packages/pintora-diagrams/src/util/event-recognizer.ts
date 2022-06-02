@@ -8,7 +8,7 @@ export type RecognizerRule<D = any> = {
 export class BaseEventRecognizer<D> implements IDiagramEventRecognizer<D> {
   rules: RecognizerRule<D>[] = []
 
-  recognize(e: IGraphicEvent, ir: D): void | IDiagramEvent<any, any> {
+  recognize(e: IGraphicEvent, ir: D): undefined | IDiagramEvent<any, any> {
     let d: IDiagramEvent | undefined
     if (e.markPath) {
       for (const m of e.markPath) {
@@ -22,6 +22,7 @@ export class BaseEventRecognizer<D> implements IDiagramEventRecognizer<D> {
         }
       }
     }
+    return d
   }
 
   addPatternRecognizerRule(pattern: RegExp, createDiagramEvent: RecognizerRule<D>['createDiagramEvent']) {
