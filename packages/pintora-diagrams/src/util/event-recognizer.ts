@@ -17,8 +17,8 @@ export class BaseEventRecognizer<D> implements IDiagramEventRecognizer<D> {
             if (rule.match(m)) {
               d = rule.createDiagramEvent(e, m, ir)
             }
+            if (d) break
           }
-          if (d) break
         }
       }
     }

@@ -13,3 +13,5 @@ export class Stack<T> {
     this.list = []
   }
 }
+
+export const noop = () => undefined

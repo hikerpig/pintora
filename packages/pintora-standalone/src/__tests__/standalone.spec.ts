@@ -60,6 +60,14 @@ describe('pintora standalone', () => {
       expect(parent.querySelector('svg')).toBeTruthy()
     })
 
+    function makeFakeGraphicEvent(eventName = 'dblclick') {
+      return {
+        type: eventName,
+        shape: {},
+        propagationPath: [],
+      }
+    }
+
     it('calls `renderer.on` and diagramEventManager methods if `eventsHandlers` is passed', () => {
       cleanup = () => {
         removeRecognizer()
@@ -79,18 +87,53 @@ describe('pintora standalone', () => {
           dblclick,
         },
         onRender(_renderer) {
-          const fakeGEvent = {
-            type: 'dblclick',
-            shape: {},
-            propagationPath: [],
-          }
+          const fakeGEvent = makeFakeGraphicEvent()
           ;(_renderer as any).gcvs.emit('dblclick', fakeGEvent)
         },
       })
 
       expect(dblclick).toBeCalledWith(expect.any(Object))
+    })
 
-      removeRecognizer()
+    it('eventsHandlers will only be triggered by coresponding render', () => {
+      cleanup = () => {
+        removeRecognizer()
+      }
+
+      const code = EXAMPLES.er.code
+
+      const dblclick1 = jest.fn()
+      const dblclick2 = jest.fn()
+      const removeRecognizer = pintoraStandalone.diagramEventManager.addRecognizer({
+        recognize: e => {
+          return { graphicEvent: e } as any
+        },
+      })
+
+      pintoraStandalone.renderTo(code, {
+        container,
+        eventsHandlers: {
+          dblclick: dblclick1,
+        },
+        onRender(_renderer) {
+          const fakeGEvent = makeFakeGraphicEvent()
+          ;(_renderer as any).gcvs.emit('dblclick', fakeGEvent)
+        },
+      })
+
+      pintoraStandalone.renderTo(code, {
+        container,
+        eventsHandlers: {
+          dblclick: dblclick2,
+        },
+        onRender(_renderer) {
+          const fakeGEvent = makeFakeGraphicEvent()
+          ;(_renderer as any).gcvs.emit('dblclick', fakeGEvent)
+        },
+      })
+
+      expect(dblclick1).toBeCalledTimes(1)
+      expect(dblclick2).toBeCalledTimes(1)
     })
   })
 

@@ -18,6 +18,6 @@ export const eventRecognizer = new BaseEventRecognizer<SequenceDiagramIR>()
     return createSequenceDiagramEvent(e, m, m.itemId, 'actor', actor)
   })
   .addPatternRecognizerRule(MESSAGE_ITEM_PATTERN, (e, m, ir) => {
-    const message = ir.messages.find(m => m.itemId === m.itemId)
+    const message = ir.messages.find(message => message.itemId === m.itemId)
     return createSequenceDiagramEvent(e, m, m.itemId, 'message', message)
   })

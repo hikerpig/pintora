@@ -35,16 +35,16 @@ When it comes to event handling, this procedure is kind of in reverse order. Don
   listener
 ```
 
-For example, here is an ER Diagram, imagine you click the 'DELIVERY' entity block (not in this doc page, open it in the live editor and open the devtools console).
+For example, here is an ER Diagram, imagine you click the 'DELIVERY' entity block (not in this doc page, open it in the live editor and open the DevTools console).
 
 ```pintora play
 erDiagram
   PERSON ||--o{ DELIVERY : makes
 ```
 
-1. DOM Event is first captured by the underlying `@antv/g` lib, it emits its own `GraphEvent` to the listeners.
+1. DOM Event is first captured by the underlying `@antv/g` lib, it emits its `GraphEvent` to the listeners.
 2. `IRenderer` listens and handles those events, relates the `graphEvent.shape` with pintora GraphicsIR's `mark`, and emits `IGraphicEvent`.
-3. `IDiagram` gets `IGraphicEvent`, relates the `mark` to some logic data of its DiagramIR, this process is called recognition. Each diagram has its unique logic data, so it may implement a recognizer that procudes  several types of item. for example, an er diagram has these types of item:
+3. `IDiagram` gets `IGraphicEvent`, relates its `mark` to some logic data of its DiagramIR, this process is called recognition. Each diagram has its unique logic data, so it may implement a recognizer that produces several types of items. for example, an er diagram has these types of items:
    1. `type: 'entity'`, `data` is the entity
    2. `type: 'relationship'`, `data` is the relationship between two entities
 4. Finally, from the `IDiagramEvent`, you know an entity is clicked.
@@ -121,11 +121,40 @@ export interface PintoraDiagramItemDatas {
 }
 ```
 
+## How to bind event callbacks
+
+### Only in one render
+
+You can pass the `eventsHandlers` option to the render call, and it will only be triggered by this one render's output.
+
+```js
+pintora.renderTo(code, {
+  // ... other opitons
+  eventsHandlers: {
+    dblclick(dEvent) {
+      console.log('diagramEvent dblclick', dEvent.item)
+    }
+  }
+})
+```
+
+### Global listener
+
+If you want to listen to diagram events for all renders, there is a global `pintora.diagramEventManager`
+
+```js
+pintora.diagramEventManager.on('mouseleave', (dEvent) => {
+  console.log('diagramEvent mouseleave', dEvent.item)
+})
+```
+
+Note: only the renders that happen after the event binding will trigger the event handler.
+
 ## Available diagram events
 
-Diagram event recognition is not required for diagram implementation, only somes of the diagram will produce diagram events.
+Diagram event recognition is not required for diagram implementation, only some of the diagrams will produce diagram events.
 
-After extending by ER Diagram, the data shape is like:
+After being extended by some builtin diagrams, the data shape is like this:
 
 ```ts
 interface PintoraDiagramItemDatas {
@@ -140,7 +169,7 @@ interface PintoraDiagramItemDatas {
 }
 ```
 
-So if you listens to the events, click the entity, and you will get the callback data:
+So if you listen to the events, click the entity, and you will get the callback data:
 
 ```js
 pintora.diagramEventManager.on('click', (dEvent) => {
