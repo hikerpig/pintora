@@ -14,10 +14,55 @@ import { themeRegistry, ITheme } from './themes'
 import { DEFAULT_FONT_FAMILY } from './consts'
 import * as configEngine from './config-engine'
 
+export type DrawOptions = {
+  onError?(error: Error): void
+  config?: PintoraConfig
+} & DiagramArtistOptions
+
+/**
+ * Given input text, find diagram implementations in diagramRegistry,
+ * parse to diagramIR, and call artist to generate graphicIR
+ */
+export function parseAndDraw(text: string, opts: DrawOptions) {
+  const { onError, config } = opts
+  const diagram = diagramRegistry.detectDiagram(text)
+  if (!diagram) {
+    const errMessage = `[pintora] no diagram detected with input: ${text.slice(0, 30)}`
+    logger.warn(errMessage)
+    onError && onError(new Error(errMessage))
+    return
+  }
+
+  diagram.clear()
+  const diagramIR = diagram.parser.parse(text)
+
+  let configForArtist = undefined
+
+  if (config && diagram.configKey && (config as any)[diagram.configKey]) {
+    configForArtist = (config as any)[diagram.configKey]
+  }
+  const graphicIR = diagram.artist.draw(diagramIR, configForArtist, opts)
+
+  return {
+    diagramIR,
+    graphicIR,
+  }
+}
+
+export const util = {
+  encodeForUrl,
+  decodeCodeInUrl,
+  makeMark,
+  calculateTextDimensions,
+  parseColor,
+  tinycolor,
+}
+
 export {
   logger,
   setLogLevel,
   configApi,
+  diagramRegistry,
   symbolRegistry,
   interpreteConfigs,
   tinycolor,
@@ -26,6 +71,7 @@ export {
   diagramEventManager,
   DiagramEvent,
   diagramEventMakerFactory,
+  configEngine,
 }
 
 export type {
@@ -39,52 +85,3 @@ export type {
   IGraphicEvent,
   IDiagramEvent,
 }
-
-type DrawOptions = {
-  onError?(error: Error): void
-  config?: PintoraConfig
-} & DiagramArtistOptions
-
-const pintora = {
-  configApi,
-  diagramRegistry,
-  symbolRegistry,
-  configEngine,
-  themeRegistry,
-  diagramEventManager,
-  parseAndDraw(text: string, opts: DrawOptions) {
-    const { onError, config } = opts
-    const diagram = diagramRegistry.detectDiagram(text)
-    if (!diagram) {
-      const errMessage = `[pintora] no diagram detected with input: ${text.slice(0, 30)}`
-      logger.warn(errMessage)
-      onError && onError(new Error(errMessage))
-      return
-    }
-
-    diagram.clear()
-    const diagramIR = diagram.parser.parse(text)
-
-    let configForArtist = undefined
-
-    if (config && diagram.configKey && (config as any)[diagram.configKey]) {
-      configForArtist = (config as any)[diagram.configKey]
-    }
-    const graphicIR = diagram.artist.draw(diagramIR, configForArtist, opts)
-
-    return {
-      diagramIR,
-      graphicIR,
-    }
-  },
-  util: {
-    encodeForUrl,
-    decodeCodeInUrl,
-    makeMark,
-    calculateTextDimensions,
-    parseColor,
-    tinycolor,
-  },
-}
-
-export default pintora

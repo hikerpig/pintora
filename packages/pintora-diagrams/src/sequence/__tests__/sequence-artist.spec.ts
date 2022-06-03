@@ -1,4 +1,4 @@
-import pintora from '@pintora/core'
+import * as pintora from '@pintora/core'
 import { EXAMPLES } from '@pintora/test-shared'
 import { testDraw, prepareDiagramConfig, stripDrawResultForSnapshot } from '../../__tests__/test-util'
 import { sequenceDiagram } from '../index'

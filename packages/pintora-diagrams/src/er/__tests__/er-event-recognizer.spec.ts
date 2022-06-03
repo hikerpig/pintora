@@ -1,4 +1,4 @@
-import pintora, { Mark } from '@pintora/core'
+import { diagramRegistry, Mark } from '@pintora/core'
 import { EXAMPLES } from '@pintora/test-shared'
 import { testDraw, traverseGraphicsIR, makeGraphicEvent } from '../../__tests__/test-util'
 import { erDiagram } from '../index'
@@ -7,7 +7,7 @@ import { ErDiagramIR } from '../db'
 
 describe('er event recognizer', () => {
   beforeAll(() => {
-    pintora.diagramRegistry.registerDiagram('erDiagram', erDiagram)
+    diagramRegistry.registerDiagram('erDiagram', erDiagram)
   })
 
   it('can recognize entity', () => {

@@ -1,4 +1,4 @@
-import pintora, {
+import {
   configApi,
   PintoraConfig,
   themeRegistry,
@@ -7,11 +7,12 @@ import pintora, {
   DiagramArtistOptions,
   DiagramEventType,
   IGraphicEvent,
+  parseAndDraw,
 } from '@pintora/core'
 
 export function testDraw(code: string, extraOptions: Partial<DiagramArtistOptions> = {}) {
   let success = true
-  const result = pintora.parseAndDraw(code, {
+  const result = parseAndDraw(code, {
     ...extraOptions,
     onError(err) {
       console.error(err)
@@ -74,7 +75,7 @@ export function stripGraphicIRForSnapshot(ir: GraphicsIR) {
   return cloned
 }
 
-export function stripDrawResultForSnapshot(result: ReturnType<typeof pintora.parseAndDraw>) {
+export function stripDrawResultForSnapshot(result: ReturnType<typeof parseAndDraw>) {
   return stripGraphicIRForSnapshot(result.graphicIR)
 }
 

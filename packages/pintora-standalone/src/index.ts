@@ -1,5 +1,6 @@
-import pintora, {
+import {
   configApi,
+  configEngine,
   GraphicsIR,
   PintoraConfig,
   tinycolor,
@@ -9,6 +10,11 @@ import pintora, {
   diagramEventManager,
   DiagramEventType,
   IDiagramEvent,
+  diagramRegistry,
+  themeRegistry,
+  symbolRegistry,
+  parseAndDraw,
+  util,
 } from '@pintora/core'
 export * from '@pintora/core'
 import { DIAGRAMS } from '@pintora/diagrams'
@@ -16,7 +22,7 @@ import { render, RenderOptions, BaseRenderer, rendererRegistry } from '@pintora/
 
 function initDiagrams() {
   Object.keys(DIAGRAMS).forEach(name => {
-    pintora.diagramRegistry.registerDiagram(name, DIAGRAMS[name])
+    diagramRegistry.registerDiagram(name, DIAGRAMS[name])
   })
 }
 initDiagrams()
@@ -78,7 +84,6 @@ class ConfigStack<T> {
 const configStack = new ConfigStack<PintoraConfig>()
 
 const pintoraStandalone = {
-  ...pintora,
   renderTo(code: string, options: RenderToOptions) {
     const { container, config } = options
     let ctn: HTMLElement
@@ -96,12 +101,12 @@ const pintoraStandalone = {
       pintoraStandalone.setConfig(config)
     }
 
-    let drawResult: ReturnType<typeof pintoraStandalone.parseAndDraw>
+    let drawResult: ReturnType<typeof parseAndDraw>
     try {
       const containerSize = {
         width: ctn.clientWidth,
       }
-      drawResult = pintoraStandalone.parseAndDraw(code, safeAssign<RenderToOptions>({ containerSize }, options))
+      drawResult = parseAndDraw(code, safeAssign<RenderToOptions>({ containerSize }, options))
     } catch (error) {
       const onError = options.onError || console.warn
       onError(error)
@@ -221,6 +226,14 @@ const pintoraStandalone = {
   },
   getConfig: configApi.getConfig,
   setConfig: configApi.setConfig,
+  diagramEventManager,
+  configApi,
+  configEngine,
+  diagramRegistry,
+  themeRegistry,
+  symbolRegistry,
+  parseAndDraw,
+  util,
 }
 
 export { BaseRenderer, rendererRegistry, PintoraConfig, tinycolor }
