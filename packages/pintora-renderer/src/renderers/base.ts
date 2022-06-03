@@ -1,7 +1,7 @@
 import { GraphicsIR, Mark, MarkType, MarkTypeMap } from '@pintora/core'
 import { IGroup, AbstractCanvas, CanvasCfg, IShape, Event as GEvent, ShapeAttrs } from '@antv/g-base'
 import { EventHandler, IRenderer } from '../type'
-import { Stack } from '../util'
+import { noop, Stack } from '../util'
 import { GraphicEvent } from '../event'
 
 type Visitor<T extends Mark, Actions = unknown> = {
@@ -150,7 +150,7 @@ export abstract class BaseRenderer implements IRenderer {
   }
 
   on(name: string, handler: EventHandler) {
-    if (!this.gcvs) return
+    if (!this.gcvs) return noop
     const gcvs = this.gcvs
     const fn = (gEvent: GEvent) => {
       const mark = this.shapeToMarkMap.get(gEvent.shape)

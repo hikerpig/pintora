@@ -11,8 +11,9 @@ import {
 /**
  * A DiagramEvent eventbus
  */
-export class DiagramEventManager extends EventEmitter {
+export class DiagramEventManager {
   protected recognizers: IDiagramEventRecognizer[] = []
+  protected emitter = new EventEmitter()
 
   addRecognizer(recognizer: IDiagramEventRecognizer) {
     if (!this.recognizers.includes(recognizer)) {
@@ -38,32 +39,62 @@ export class DiagramEventManager extends EventEmitter {
   feedGraphicEvent(e: IGraphicEvent, ir: unknown) {
     const dEvents = this.recognizeGraphicEvent(e, ir)
     for (const dEvent of dEvents) {
-      this.emit(dEvent.type, dEvent)
+      this.emitter.emit(dEvent.type, dEvent)
     }
     return dEvents
   }
 
-  bindEventsToRenderer(renderer: IRenderer) {
-    for (const [eventName, listeners] of Object.entries(this.getEvents())) {
+  wireCurrentEventsToRenderer(renderer: IRenderer, diagramIR: unknown) {
+    for (const [eventName, listeners] of Object.entries(this.emitter.getEvents())) {
       for (const l of listeners) {
-        renderer.on(eventName, l.callback as any)
+        const handler = l.callback as any
+        this.wireDiagramEventToRenderer(renderer, eventName as DiagramEventType, handler, diagramIR)
       }
     }
+  }
+
+  wireDiagramEventToRenderer(
+    renderer: IRenderer,
+    eventName: DiagramEventType,
+    handler: (diagramEvent: IDiagramEvent) => void,
+    diagramIR: unknown,
+  ) {
+    return renderer.on(eventName, graphicEvent => {
+      const dEvents = diagramEventManager.feedGraphicEvent(graphicEvent, diagramIR)
+      for (const dEvent of dEvents) {
+        handler(dEvent)
+      }
+    })
   }
 
   on<D extends keyof PintoraDiagramItemDatas = any, T extends keyof PintoraDiagramItemDatas[D] = any>(
     evt: DiagramEventType,
     handler: (dEvent: IDiagramEvent<D, T>) => void,
-    once?: boolean,
   ) {
-    return super.on(evt, handler, once)
+    const { emitter } = this
+    emitter.on(evt, handler)
+    return function dispose() {
+      emitter.off(evt, handler)
+    }
   }
 
   once<D extends keyof PintoraDiagramItemDatas = any, T extends keyof PintoraDiagramItemDatas[D] = any>(
     evt: DiagramEventType,
     handler: (dEvent: IDiagramEvent<D, T>) => void,
   ) {
-    return super.once(evt, handler)
+    const { emitter } = this
+    emitter.once(evt, handler)
+    return function dispose() {
+      emitter.off(evt, handler)
+    }
+  }
+
+  /**
+   * Remove event listeners
+   * @param evt - event name, if not passed, all event listeners will be removed
+   */
+  removeListeners(evt?: DiagramEventType) {
+    this.emitter.off(evt)
   }
 
   /**

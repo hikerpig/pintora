@@ -11,10 +11,10 @@ Here is the API of `@pintora/standalone`.
 import pintora from '@pintora/standalone'
 ```
 
-- Use `pintora` if your are using the ESM lib.
-- Use `pintora.default` if your are using the UMD lib.
+- Use `pintora` if you are using the ESM lib.
+- Use `pintora.default` if you are using the UMD lib.
 
-Here are some usefule APIs.
+Here are some useful APIs.
 
 ```ts
 interface PintoraStandalone {
@@ -45,6 +45,12 @@ type RenderToOptions = {
   onError?(error: Error): void
   enhanceGraphicIR?(ir: GraphicsIR): GraphicsIR
   config?: PintoraConfig
+  /**
+   * An option dict to specify different types of diagram event listeners
+   */
+  eventsHandlers?: Partial<{
+    [K in DiagramEventType]: (diagramEvent: IDiagramEvent) => void;
+  }>;
 }
 ```
 
@@ -68,7 +74,7 @@ pintora.renderTo(code, {
 
 This function will call `pintora.renderTo` underneath, and will read some dataset of the container element to get some options for one render.
 
-- `data-renderer`, pintora RendererType, currently `svg` and `canvas` is supported.
+- `data-renderer`, pintora RendererType, currently `svg` and `canvas` are supported.
 
 For example:
 
@@ -102,7 +108,7 @@ class DiagramEventManager extends EventEmitter {
     evt: DiagramEventType,
     handler: (dEvent: IDiagramEvent<D, T>) => void,
     once?: boolean,
-  ): this
+  ): Function
 }
 
 const diagramEventManager: DiagramEventManager
@@ -110,14 +116,18 @@ const diagramEventManager: DiagramEventManager
 
 #### on(evt, handler)
 
-For example:
+Only the renders that happen after the event binding will trigger the event handler.
+
+In the example below, only the `click` handler will be triggered because it is bound before the render.
  
 ```ts
-pintora.diagramEventManager.on('click', (item) => {
+const disposeClickListener = pintora.diagramEventManager.on('click', (item) => {
   console.log('diagramEvent click', item)
 })
 
-pintora.diagramEventManager.on('mouseenter', (item) => {
+pintora.renderTo(code, {...configs})
+
+const disposeMouseenterListener = pintora.diagramEventManager.on('mouseenter', (item) => {
   console.log('diagramEvent mouseenter', item)
 })
 ```

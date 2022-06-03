@@ -124,16 +124,16 @@ const pintoraStandalone = {
           ...options,
           container: ctn,
           onRender(renderer) {
-            diagramEventManager.bindEventsToRenderer(renderer)
+            diagramEventManager.wireCurrentEventsToRenderer(renderer, drawResult.diagramIR)
 
             if (options.eventsHandlers) {
               for (const [eventName, handler] of Object.entries(options.eventsHandlers)) {
-                renderer.on(eventName, graphicEvent => {
-                  const dEvents = diagramEventManager.feedGraphicEvent(graphicEvent, drawResult.diagramIR)
-                  for (const dEvent of dEvents) {
-                    handler(dEvent)
-                  }
-                })
+                diagramEventManager.wireDiagramEventToRenderer(
+                  renderer,
+                  eventName as DiagramEventType,
+                  handler,
+                  drawResult.diagramIR,
+                )
               }
             }
 
