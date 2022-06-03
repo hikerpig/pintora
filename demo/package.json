@@ -32,7 +32,7 @@
     "@reduxjs/toolkit": "^1.8.1",
     "browser-fs-access": "^0.29.0",
     "classnames": "^2.3.1",
-    "daisyui": "^1.22.2",
+    "daisyui": "^2.0.0",
     "react": "^18.1.0",
     "react-dom": "^18.1.0",
     "react-error-boundary": "^3.1.4",
