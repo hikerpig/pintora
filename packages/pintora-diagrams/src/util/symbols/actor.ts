@@ -1,7 +1,7 @@
-import pintora, { safeAssign, ContentArea } from '@pintora/core'
+import { symbolRegistry, safeAssign, ContentArea } from '@pintora/core'
 import { makeMark } from '../artist-util'
 
-pintora.symbolRegistry.register('actor', {
+symbolRegistry.register('actor', {
   type: 'factory',
   modes: ['icon'],
   factory(contentArea) {

@@ -1,10 +1,10 @@
-import pintora, { safeAssign, ContentArea, clamp } from '@pintora/core'
+import { symbolRegistry, safeAssign, ContentArea, clamp } from '@pintora/core'
 import { makeMark } from '../artist-util'
 
 const PROJECT_X = 12
 const PROJECT_Y = 12
 
-pintora.symbolRegistry.register('node', {
+symbolRegistry.register('node', {
   type: 'factory',
   modes: ['container', 'icon'],
   symbolMargin: {

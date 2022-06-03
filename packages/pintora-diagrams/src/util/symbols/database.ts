@@ -1,11 +1,11 @@
-import pintora, { safeAssign, ContentArea } from '@pintora/core'
+import { symbolRegistry, safeAssign, ContentArea } from '@pintora/core'
 import { makeMark } from '../artist-util'
 import { PALETTE } from '../theme'
 
 const HEADER_ELLIPSE_RY = 12
 
 // a cylinder
-pintora.symbolRegistry.register('database', {
+symbolRegistry.register('database', {
   type: 'factory',
   modes: ['container', 'icon'],
   symbolMargin: {

@@ -1,4 +1,4 @@
-import pintora from '@pintora/core'
+import { diagramRegistry } from '@pintora/core'
 import { EXAMPLES, stripStartEmptyLines } from '@pintora/test-shared'
 import { testDraw, prepareDiagramConfig, stripDrawResultForSnapshot } from '../../__tests__/test-util'
 import { activityDiagram } from '../index'
@@ -6,7 +6,7 @@ import { activityDiagram } from '../index'
 describe('activity-artist', () => {
   beforeAll(() => {
     prepareDiagramConfig()
-    pintora.diagramRegistry.registerDiagram('activityDiagram', activityDiagram)
+    diagramRegistry.registerDiagram('activityDiagram', activityDiagram)
   })
 
   it('can draw', () => {

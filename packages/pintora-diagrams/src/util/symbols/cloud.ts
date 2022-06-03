@@ -1,7 +1,7 @@
-import pintora, { safeAssign, ContentArea } from '@pintora/core'
+import { symbolRegistry, safeAssign, ContentArea } from '@pintora/core'
 import { makeMark } from '../artist-util'
 
-pintora.symbolRegistry.register('cloud', {
+symbolRegistry.register('cloud', {
   type: 'factory',
   // only valid in container mode
   symbolMargin: {
