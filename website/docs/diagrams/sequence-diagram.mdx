@@ -105,29 +105,6 @@ sequenceDiagram
   B ->> C: Hola
 ```
 
-## Override config
-
-You can override diagarm config through `@param` directive.
-
-All available configs can be seen in the [Config page](../configuration/config.md#sequence).
-
-```pintora play
-sequenceDiagram
-  @param loopLineColor #79caf1
-  @param actorBackground #61afef
-  @param actorTextColor #ffffff
-  @param {
-    messageFontFamily Consolas
-    dividerTextColor #61afef
-  }
-  User->>Pintora: render this
-  activate Pintora
-  loop Check input
-    Pintora-->>Pintora: Has input changed?
-  end
-  == Divider ==
-```
-
 ## Classifier types
 
 You can specify a classifier to participant by the syntax:
@@ -152,4 +129,27 @@ sequenceDiagram
   participant [<database> B] as "Storage"
   participant [<node> C]
   A-->B: Hello
+```
+
+## Override config
+
+You can override diagarm config through `@param` directive.
+
+All available configs can be seen in the [Config page](../configuration/config.md#sequence).
+
+```pintora play
+sequenceDiagram
+  @param loopLineColor #79caf1
+  @param actorBackground #61afef
+  @param actorTextColor #ffffff
+  @param {
+    messageFontFamily Consolas
+    dividerTextColor #61afef
+  }
+  User->>Pintora: render this
+  activate Pintora
+  loop Check input
+    Pintora-->>Pintora: Has input changed?
+  end
+  == Divider ==
 ```

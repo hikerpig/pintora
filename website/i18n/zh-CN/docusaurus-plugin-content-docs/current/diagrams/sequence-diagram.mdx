@@ -132,29 +132,6 @@ sequenceDiagram
   B ->> C: 你好
 ```
 
-## 覆盖设置
-
-可以使用 `@param` 指令覆盖图表的部分设置。
-
-可设置项的说明请见 [Config page](../configuration/config.md#sequence).
-
-```pintora play
-sequenceDiagram
-  @param loopLineColor #79caf1
-  @param actorBackground #61afef
-  @param actorTextColor #ffffff
-  @param {
-    messageFontFamily Consolas
-    dividerTextColor #61afef
-  }
-  User->>Pintora: render this
-  activate Pintora
-  loop Check input
-    Pintora-->>Pintora: Has input changed?
-  end
-  == Divider ==
-```
-
 ## 分类
 
 可以使用以下语法对 participant 指定类别(classifer)。
@@ -177,4 +154,27 @@ sequenceDiagram
   participant [<database> B] as "Storage"
   participant [<node> C]
   A-->B: Hello
+```
+
+## 覆盖设置
+
+可以使用 `@param` 指令覆盖图表的部分设置。
+
+可设置项的说明请见 [Config page](../configuration/config.md#sequence).
+
+```pintora play
+sequenceDiagram
+  @param loopLineColor #79caf1
+  @param actorBackground #61afef
+  @param actorTextColor #ffffff
+  @param {
+    messageFontFamily Consolas
+    dividerTextColor #61afef
+  }
+  User->>Pintora: render this
+  activate Pintora
+  loop Check input
+    Pintora-->>Pintora: Has input changed?
+  end
+  == Divider ==
 ```

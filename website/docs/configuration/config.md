@@ -54,10 +54,10 @@ export type PintoraConfig = {
     darkTheme?: string
     themeVariables: ITheme
   }
-  activity: ActivityDiagramIR
-  component: ComponentDiagramIR
-  er: ErDiagramIR
-  sequence: SequenceDiagramIR
+  activity: ActivityConf
+  component: ComponentConf
+  er: ErConf
+  sequence: SequenceConf
 }
 ```
 
@@ -95,7 +95,7 @@ export type SequenceConf = {
   activationWidth: number
   diagramMarginX: number
   diagramMarginY: number
-  boxTextMargin: number;
+  boxTextMargin: number
 
   messageFontFamily: string
   messageFontSize: number
@@ -119,6 +119,9 @@ export type SequenceConf = {
   actorTextColor: string
   actorLineColor: string
 
+  participantBoxPadding: number
+  participantBackground: string
+
   noteTextColor: string
 
   activationBackground: string
@@ -139,7 +142,10 @@ Config for entity relationship diagram. For more detail, check the [latest code]
 ```ts
 export type ErConf = {
   diagramPadding: number
+
   layoutDirection: string
+  ranksep: number
+  edgesep: number
 
   edgeType: EdgeType
   useMaxWidth: boolean
@@ -174,6 +180,8 @@ export type ComponentConf = {
   diagramPadding: number
 
   edgeType: EdgeType
+  edgesep: number
+  ranksep: number
 
   componentPadding: number
   componentBackground: string
@@ -204,10 +212,6 @@ export type ActivityConf = {
   diagramPadding: number
 
   edgesep: number
-  /**
-   * Only 'polyline' and 'curved' is supported for now,
-   * 'ortho' is more complex and needs more refinement
-   */
   edgeType: EdgeType
   useMaxWidth: boolean
 
@@ -242,6 +246,7 @@ export type ActivityConf = {
 export type MindmapConf = {
   diagramPadding: number
   layoutDirection: 'LR' | 'TB'
+
   useMaxWidth: boolean
 
   borderRadius: number

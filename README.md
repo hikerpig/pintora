@@ -118,7 +118,7 @@ Check the online [documentation and demo](http://pintorajs.vercel.app/docs/intro
 - [x] PlantUML style Activity Diagram
 - [x] Mind Map
 - [x] Gantt diagram
-- [ ] PlantUML style Deploy Diagram
+- [ ] Universal style customization solution
 - [ ] Load diagram implementation and canvas renderer only when needed
 
 If you have good thoughts or feature requests, please feel free to [start a new discussion](https://github.com/hikerpig/pintora/discussions).

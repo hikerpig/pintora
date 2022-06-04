@@ -6,10 +6,6 @@ export type ActivityConf = {
   diagramPadding: number
 
   edgesep: number
-  /**
-   * Only 'polyline' and 'curved' is supported for now,
-   * 'ortho' is more complex and needs more refinement
-   */
   edgeType: EdgeType
   useMaxWidth: boolean
 
