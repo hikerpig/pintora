@@ -1,5 +1,17 @@
 # Change Log
 
+## 0.5.0
+
+### Minor Changes
+
+- 817ce38: feat: add diagram event callback system
+
+### Patch Changes
+
+- Updated dependencies [817ce38]
+- Updated dependencies [3c75c6a]
+  - @pintora/core@0.5.0
+
 ## 0.4.2
 
 ### Patch Changes

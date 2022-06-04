@@ -1,5 +1,12 @@
 # Change Log
 
+## 0.5.0
+
+### Minor Changes
+
+- 817ce38: feat: add diagram event callback system
+- 3c75c6a: feat: change @pintora/core export shapes
+
 ## 0.4.1
 
 ### Patch Changes

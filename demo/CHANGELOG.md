@@ -1,5 +1,18 @@
 # Change Log
 
+## 0.3.8
+
+### Patch Changes
+
+- 817ce38: feat: add diagram event callback system
+- Updated dependencies [817ce38]
+- Updated dependencies [77ad349]
+- Updated dependencies [3c75c6a]
+  - @pintora/core@0.5.0
+  - @pintora/renderer@0.5.0
+  - @pintora/diagrams@0.5.2
+  - @pintora/standalone@0.5.2
+
 ## 0.3.7
 
 ### Patch Changes

@@ -1,5 +1,17 @@
 # Change Log
 
+## 0.5.2
+
+### Patch Changes
+
+- 817ce38: feat: add diagram event callback system
+- 77ad349: optimize: add @pintora/diagrams/shared-grammars so others can use them
+- 3c75c6a: feat: change @pintora/core export shapes
+- Updated dependencies [3c75c6a]
+  - @pintora/core@0.5.0
+  - @pintora/renderer@0.5.0
+  - @pintora/diagrams@0.5.2
+
 ## 0.5.1
 
 ### Patch Changes
