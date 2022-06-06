@@ -12,6 +12,11 @@
     "lib",
     "CHANGELOG.md"
   ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hikerpig/pintora.git",
+    "directory": "packages/pintora-core"
+  },
   "scripts": {
     "compile": "tsc",
     "watch": "tsc -w",

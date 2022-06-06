@@ -25,7 +25,8 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/hikerpig/pintora.git"
+    "url": "git+https://github.com/hikerpig/pintora.git",
+    "directory": "packages/pintora-cli"
   },
   "scripts": {
     "compile": "tsc",

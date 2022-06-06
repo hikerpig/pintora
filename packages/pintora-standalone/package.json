@@ -35,7 +35,8 @@
   "types": "types/index.d.ts",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/hikerpig/pintora.git"
+    "url": "git+https://github.com/hikerpig/pintora.git",
+    "directory": "packages/pintora-standalone"
   },
   "scripts": {
     "compile": "microbundle --no-sourcemap --external none --name pintora -f umd,esm",
