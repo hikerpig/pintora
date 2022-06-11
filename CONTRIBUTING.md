@@ -24,7 +24,7 @@ pintora
 Run this command to better understand the package dependencies.
 
 ```sh
-pnpx turbo run compile --graph=dep-graph.html
+pnpm exec turbo run compile --graph=dep-graph.html
 ```
 
 ## Development

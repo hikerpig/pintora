@@ -1,4 +1,4 @@
-pnpx turbo run watch --concurrency=10 \
+pnpm exec turbo run watch --concurrency=10 \
   --no-cache --no-deps --continue --parallel \
   --scope="@pintora/renderer" \
   --scope="@pintora/diagrams" \

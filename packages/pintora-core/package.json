@@ -25,7 +25,7 @@
   "dependencies": {
     "@antv/event-emitter": "^0.1.2",
     "@antv/matrix-util": "^3.0.4",
-    "@types/node": "^14.11.8",
+    "@types/node": "^16.11.7",
     "clone-deep": "^4.0.1",
     "deepmerge": "^4.2.2",
     "tinycolor2": "^1.4.2"

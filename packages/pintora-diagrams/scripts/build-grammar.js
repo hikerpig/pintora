@@ -20,6 +20,6 @@ grammarFiles.forEach(async ({ input, output }) => {
     output: outputPath,
     includePaths: [includePath],
     basePath: packagePath,
-    executeCommand: 'pnpx',
+    executeCommand: 'pnpm exec',
   })
 })
