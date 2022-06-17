@@ -57,6 +57,7 @@
     "@types/nearley": "^2.11.1",
     "@types/node": "^16.11.7",
     "@types/tinycolor2": "^1.4.3",
+    "esbuild": "^0.14.45",
     "esbuild-jest": "^0.5.0",
     "jest-environment-jsdom": "^28.0.2",
     "shell-exec": "^1.0.2",
