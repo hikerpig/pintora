@@ -22,9 +22,9 @@
     "watch": "tsc -w"
   },
   "dependencies": {
-    "@antv/g": "^5.1.7",
-    "@antv/g-canvas": "^1.1.7",
-    "@antv/g-svg": "^1.1.7",
+    "@antv/g": "^5.4.0",
+    "@antv/g-canvas": "^1.4.0",
+    "@antv/g-svg": "^1.4.0",
     "@pintora/core": "workspace:^0.5.0",
     "@types/node": "^16.11.7"
   },
