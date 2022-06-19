@@ -3,6 +3,7 @@ import { ErConf, ErDiagramItemDatas } from './er'
 import { ComponentConf } from './component'
 import { ActivityConf } from './activity'
 import { MindmapConf } from './mindmap'
+import { DOTConf } from './dot'
 
 // type augmentation
 declare module '@pintora/core' {
@@ -12,6 +13,7 @@ declare module '@pintora/core' {
     sequence: SequenceConf
     activity: ActivityConf
     mindmap: MindmapConf
+    dot: DOTConf
   }
 
   interface PintoraDiagramItemDatas {

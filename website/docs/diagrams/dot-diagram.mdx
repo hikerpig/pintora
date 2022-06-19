@@ -1,0 +1,137 @@
+---
+title: DOT Diagram
+---
+
+<span class="badge badge--info">Experiment</span> syntax may change.
+
+## Introduction
+
+This is a subset of [Graphviz](https://graphviz.org/)'s [DOT Language](https://graphviz.org/doc/info/lang.html) and visualization.
+
+It can be used to describe a simple general graph.
+
+## Limitations
+
+Graphviz is a versatile and wonderful visualization library, dotDiagram only covers a small part of its functionality.
+
+- as the name implies, only `dot` layout is supported, and layout result is not the same as graphviz
+- ports are not supported
+- many attributes can be parsed but not supported, they do not affect the result
+- pintora theme currently does not affect dotDiagram styles
+
+## Syntax
+
+The keywords **node**, **edge**, **graph**, **digraph** and **subgraph**.
+
+A graph must be specified as either a `digraph` or a `graph`, they stand for directed and undirected graph. A digraph must specify an edge using the edge operator `->` while an undirected graph must use `--`.
+
+You can also specify attributes inside `[key=val]` square brackets.
+
+The subgraph inherit the attribute settings of its parent graph at the time of its definition.
+
+```pintora play
+dotDiagram
+  %% pintora style comment
+  %% here we declare a directed graph
+  digraph G {
+    // specify graph attributes
+    bgcolor="white"
+    
+    // specify common node attributes
+    node [color="#111",bgcolor=orange]
+
+    subgraph S1 {
+      // subgraph will inherit parent attributes
+      label="Sub";
+      a1 [fontcolor="purple",margint=10];
+    }
+
+    /* usually we put edges at the last */
+    a1 -> b1;
+    n1 -> end [color="blue"];
+    a2 -> end;
+  }
+```
+
+## Attributes
+
+Here are some supported attributes on node, edge, and graph.
+
+```ts
+export type NodeAttrs = {
+  label?: string
+  /** stroke color */
+  color?: string
+  /** label text color */
+  fontcolor?: string
+  /** background color */
+  bgcolor?: string
+  /** [pintora specific], margin top */
+  margint?: number
+  /** [pintora specific], margin bottom */
+  margintb?: number
+  /** [pintora specific], margin left */
+  marginl?: number
+  /** [pintora specific], margin right */
+  marginr?: number
+}
+
+export type EdgeStyle = 'invis'
+
+export type EdgeAttrs = {
+  label?: string
+  /** edge line color */
+  color?: string
+  /** edge label text color */
+  fontcolor?: string
+  /** edge style */
+  style?: EdgeStyle
+}
+
+export type GraphAttrs = {
+  label?: string
+  /** stroke color */
+  color?: string
+  /** background color */
+  bgcolor?: string
+}
+```
+
+## Override config
+
+You can override diagram config through `@param` directive.
+
+All available configs can be seen in the [Config page](../configuration/config.md#dot).
+
+```pintora play
+dotDiagram
+@param edgeType curved
+@param ranksep 50
+@param nodesep 30
+
+digraph mygraph {
+  "//absl/random:random"
+  "//absl/random:random" -> "//absl/random:distributions"
+  "//absl/random:random" -> "//absl/random:seed_sequences"
+  "//absl/random:random" -> "//absl/random/internal:pool_urbg"
+  "//absl/random:random" -> "//absl/random/internal:nonsecure_base"
+  "//absl/random:distributions"
+  "//absl/random:distributions" -> "//absl/strings:strings"
+  "//absl/random:seed_sequences"
+  "//absl/random:seed_sequences" -> "//absl/random/internal:seed_material"
+  "//absl/random:seed_sequences" -> "//absl/random/internal:salted_seed_seq"
+  "//absl/random:seed_sequences" -> "//absl/random/internal:pool_urbg"
+  "//absl/random:seed_sequences" -> "//absl/random/internal:nonsecure_base"
+  "//absl/random/internal:nonsecure_base"
+  "//absl/random/internal:nonsecure_base" -> "//absl/random/internal:pool_urbg"
+  "//absl/random/internal:nonsecure_base" -> "//absl/random/internal:salted_seed_seq"
+  "//absl/random/internal:nonsecure_base" -> "//absl/random/internal:seed_material"
+  "//absl/random/internal:pool_urbg"
+  "//absl/random/internal:pool_urbg" -> "//absl/random/internal:seed_material"
+  "//absl/random/internal:salted_seed_seq"
+  "//absl/random/internal:salted_seed_seq" -> "//absl/random/internal:seed_material"
+  "//absl/random/internal:seed_material"
+  "//absl/random/internal:seed_material" -> "//absl/strings:strings"
+  "//absl/strings:strings"
+}
+```

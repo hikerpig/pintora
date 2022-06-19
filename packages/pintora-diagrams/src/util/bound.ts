@@ -61,12 +61,26 @@ export const MARK_BOUND_CALCULATORS: Partial<{ [K in MarkType]: MarkBoundCalcula
 /**
  * Calculate bounds of a list of marks
  */
-export function calcBound(marks: Mark[]): Bounds {
+export function calcBound(marks: Mark[], opts: { recursive?: boolean } = {}): Bounds {
   let left = 0
   let top = 0
   let right = 0
   let bottom = 0
-  marks.forEach(mark => {
+  const allMarks = new Set<Mark>()
+  if (opts.recursive) {
+    function recursiveAddMark(m: Mark) {
+      if (allMarks.has(m)) return
+      allMarks.add(m)
+      if ('children' in m) {
+        m.children.forEach(child => recursiveAddMark(child))
+      }
+    }
+    marks.forEach(child => recursiveAddMark(child))
+  } else {
+    marks.forEach(child => allMarks.add(child))
+  }
+
+  for (const mark of allMarks.values()) {
     const { type } = mark
     const calculator: MarkBoundCalculator<typeof type> = MARK_BOUND_CALCULATORS[type]
     let bound: BoundsWithoutSize = {
@@ -84,7 +98,7 @@ export function calcBound(marks: Mark[]): Bounds {
     if (bound.top !== null) top = Math.min(bound.top, top)
     if (bound.right !== null) right = Math.max(bound.right, right)
     if (bound.bottom !== null) bottom = Math.max(bound.bottom, bottom)
-  })
+  }
   const width = right - left
   const height = bottom - top
   return { left, top, right, bottom, width, height }
@@ -100,4 +114,11 @@ export function updateBoundsByPoints(bounds: Bounds, points: Point[]) {
     bounds.height = bounds.bottom - bounds.top
   })
   return bounds
+}
+
+export function floorValues(o: Record<string, number>) {
+  for (const k of Object.keys(o)) {
+    if (o[k]) o[k] = Math.floor(o[k])
+  }
+  return o
 }

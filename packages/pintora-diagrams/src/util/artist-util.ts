@@ -323,3 +323,15 @@ export function makeTriangle(center: Point, baseLength: number, rad: number, att
     height: offsetY * 2,
   }
 }
+
+export function makeTextAtPoint(text: string, p: Point, attrs: Partial<Text['attrs']> = {}) {
+  return makeMark('text', {
+    x: p.x,
+    y: p.y,
+    text,
+    fill: PALETTE.normalDark,
+    textAlign: 'center',
+    textBaseline: 'middle',
+    ...attrs,
+  })
+}

@@ -7,6 +7,7 @@
     { "path": "./packages/pintora-core" },
     { "path": "./packages/pintora-diagrams" },
     { "path": "./packages/pintora-renderer" },
+    { "path": "./packages/pintora-standalone" },
     { "path": "./packages/development-kit" }
   ],
   "include": []

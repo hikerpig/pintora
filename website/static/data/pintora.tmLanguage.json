@@ -54,6 +54,50 @@
           "end": "(^|\\G)(?=\\s*[`~]{3,}\\s*$)"
         },
         {
+          "comment": "DOT Diagram",
+          "begin": "\\b(dotDiagram)",
+          "beginCaptures": {
+            "1": {
+              "name": "keyword.control.pintora"
+            }
+          },
+          "end": "(^|\\G)(?=\\s*[`~]{3,}\\s*$)",
+          "patterns": [
+            {
+              "include": "#config__clause"
+            },
+            {
+              "include": "#comment"
+            },
+            {
+              "comment": "graph declaration",
+              "begin": "(graph|digraph)\\s*([\\w\\d]+)?\\s*(\\{)",
+              "beginCaptures": {
+                "1": {
+                  "name": "keyword.control.pintora"
+                },
+                "2": {
+                  "name": "string"
+                },
+                "3": {
+                  "name": "punctuation.bracket.open.pintora"
+                }
+              },
+              "end": "(})",
+              "endCaptures": {
+                "1": {
+                  "name": "punctuation.bracket.open.pintora"
+                }
+              },
+              "patterns": [
+                {
+                  "include": "#dot__graph"
+                }
+              ]
+            }
+          ]
+        },
+        {
           "comment": "ER Diagram",
           "begin": "\\b(erDiagram)",
           "beginCaptures": {
@@ -1221,6 +1265,173 @@
               "name": "comment"
             },
             "2": {
+              "name": "comment"
+            }
+          }
+        }
+      ]
+    },
+    "dot__graph": {
+      "patterns": [
+        {
+          "comment": "subgraph declaration",
+          "begin": "(subgraph)\\s*([\\w\\d]+)?\\s*(\\{)",
+          "beginCaptures": {
+            "1": {
+              "name": "keyword.control.pintora"
+            },
+            "2": {
+              "name": "string"
+            },
+            "3": {
+              "name": "punctuation.bracket.open.pintora"
+            }
+          },
+          "end": "(})",
+          "endCaptures": {
+            "1": {
+              "name": "punctuation.bracket.open.pintora"
+            }
+          },
+          "patterns": [
+            {
+              "include": "#dot__graph"
+            }
+          ]
+        },
+        {
+          "comment": "edge stmt",
+          "begin": "(\"[^\"]*\"|[\\w\\d_]+)\\s*(?=--|->)\\s*",
+          "beginCaptures": {
+            "1": {
+              "name": "variable.pintora"
+            },
+            "2": {
+              "name": "keyword.control.pintora"
+            },
+            "3": {
+              "name": "variable.pintora"
+            }
+          },
+          "patterns": [
+            {
+              "include": "#dot__graph"
+            }
+          ]
+        },
+        {
+          "comment": "edge rhs",
+          "match": "(--|->)\\s*(\"[^\"]*\"|[\\w\\d_]+)\\s*",
+          "captures": {
+            "1": {
+              "name": "keyword.control.pintora"
+            },
+            "2": {
+              "name": "variable.pintora"
+            }
+          }
+        },
+        {
+          "comment": "attr stmt",
+          "begin": "(node|edge)\\s*(\\[)\\s*",
+          "beginCaptures": {
+            "1": {
+              "name": "keyword.control.pintora"
+            },
+            "2": {
+              "name": "punctuation.bracket.open.pintora"
+            },
+            "3": {
+              "name": "string"
+            }
+          },
+          "end": "(])",
+          "patterns": [
+            {
+              "include": "#dot__graph"
+            }
+          ]
+        },
+        {
+          "comment": "attr",
+          "match": "(\\w+)\\s*(=)\\s*(\"?[^\"]+\"?)\\s*",
+          "captures": {
+            "1": {
+              "name": "support.type.property-name.pintora"
+            },
+            "2": {
+              "name": "keyword.control.pintora"
+            },
+            "3": {
+              "name": "string"
+            }
+          }
+        },
+        {
+          "comment": "node stmt",
+          "begin": "([\\w\\d]+)\\s*(\\[)\\s*",
+          "beginCaptures": {
+            "1": {
+              "name": "variable.pintora"
+            },
+            "2": {
+              "name": "keyword.control.pintora"
+            },
+            "3": {
+              "name": "punctuation.bracket.open.pintora"
+            }
+          },
+          "end": "(])",
+          "patterns": [
+            {
+              "include": "#dot__graph"
+            }
+          ]
+        },
+        {
+          "comment": "node with name only",
+          "match": "(\"[^\"]*\"|[\\w\\d_]+)\\s*(;)",
+          "captures": {
+            "1": {
+              "name": "variable.pintora"
+            },
+            "2": {
+              "name": "keyword.control.pintora"
+            }
+          }
+        },
+        {
+          "comment": "node in oneline",
+          "match": "(\"[^\"]*\"|[\\w\\d_]+)\\s*(;)?$",
+          "captures": {
+            "1": {
+              "name": "variable.pintora"
+            },
+            "2": {
+              "name": "keyword.control.pintora"
+            }
+          }
+        },
+        {
+          "comment": "slash comment",
+          "match": "(\\/\\/.*)$",
+          "captures": {
+            "1": {
+              "name": "comment"
+            }
+          }
+        },
+        {
+          "comment": "block comment",
+          "match": "(\\/\\*)([\\s\\S]*)?(\\*\\/)",
+          "captures": {
+            "1": {
+              "name": "comment"
+            },
+            "2": {
+              "name": "comment"
+            },
+            "3": {
               "name": "comment"
             }
           }

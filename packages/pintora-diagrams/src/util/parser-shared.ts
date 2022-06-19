@@ -51,3 +51,8 @@ export const configLexerconfigStatementState = {
   L_PAREN: L_PAREN_REGEXP,
   R_PAREN: { match: R_PAREN_REGEXP, pop: 1 },
 }
+
+export function getQuotedWord(token) {
+  const v = tv(token)
+  return v.slice(1, v.length - 1)
+}
