@@ -74,10 +74,12 @@ statement ->
       const sub = d[0]
       yy.addInheritance(sup, sub)
     } %}
-  | entityName __ "{" __ attributes _ "}" %NL {%
+  | entityName __ "{" __ attributes:? _ "}" %NL {%
       function(d) {
         yy.addEntity(d[0]);
-        yy.addAttributes(d[0], d[4]);
+        if (d[4]) {
+          yy.addAttributes(d[0], d[4]);
+        }
       }
     %}
   | entityName "{" "}" %NL {% (d) => yy.addEntity(d[0]) %}
