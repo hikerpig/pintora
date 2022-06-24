@@ -253,7 +253,9 @@ const drawAttributes = (group: Group, entityText: Text, attributes: Entity['attr
       })
     }
 
-    tableBuilder.rows.forEach((row, i) => {
+    const cellOrderKeys = Object.keys(CELL_ORDER)
+
+    tableBuilder.rows.forEach(row => {
       const rowSegs: Text[] = row.map(v => v.mark)
 
       const rowTextHeight = rowSegs.reduce((out, mark) => Math.max(out, mark.attrs.height), 0)
@@ -265,7 +267,9 @@ const drawAttributes = (group: Group, entityText: Text, attributes: Entity['attr
       const rowGroup = makeEmptyGroup()
       attributeGroup.children.push(rowGroup)
 
-      Object.keys(CELL_ORDER).forEach(name => {
+      let lastColumnRect: Rect
+      let rectWidthSum = 0
+      cellOrderKeys.forEach(name => {
         if (!columnMaxWidths[name]) return
         const cell = row.getCell(name)
         const offsetX = cellOffsets[name]
@@ -277,11 +281,18 @@ const drawAttributes = (group: Group, entityText: Text, attributes: Entity['attr
         })
         // console.table({ offsetX, heightOffset, rowHeight, width: rect.attrs.width, alignY })
         rowGroup.children.push(rect)
+        rectWidthSum += rect.attrs.width
+        lastColumnRect = rect
         if (cell) {
           rowGroup.children.push(cell.mark)
           cell.mark.matrix = mat3.fromTranslation(mat3.create(), [offsetX + attribPaddingX, alignY])
         }
       })
+
+      if (lastColumnRect) {
+        // to make sure last rect's right bound reaches entity's right bound
+        lastColumnRect.attrs.width += Math.max(0, bBox.width - rectWidthSum)
+      }
 
       const nodeUnitHeights = row.map(v => v?.mark.attrs.height || 0)
 

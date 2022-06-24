@@ -313,7 +313,6 @@ function drawGroupsTo(parentMark: Group, ir: ComponentDiagramIR, g: LayoutGraph)
               lineWidth: conf.groupBorderWidth,
             },
           })
-          console.log('bgMark', bgMark)
           if (bgMark) {
             // console.log('bgMark', groupId, bgMark, 'bounds', bgMark.symbolBounds)
             // node.outerTop = bgMark.symbolBounds.top + y

@@ -42,8 +42,7 @@ export const defaultConfig: ErConf = {
   edgeType: 'polyline',
   useMaxWidth: false,
 
-  minEntityWidth: 90,
-
+  minEntityWidth: 80,
   minEntityHeight: 50,
 
   entityPaddingX: 15,
