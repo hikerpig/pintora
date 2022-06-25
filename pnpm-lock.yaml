@@ -77,6 +77,7 @@ importers:
       react: ^18.1.0
       react-dom: ^18.1.0
       react-error-boundary: ^3.1.4
+      react-hot-toast: ^2.2.0
       react-redux: ^8.0.0
       react-router-dom: ^6.3.0
       shiki: ^0.10.0
@@ -114,6 +115,7 @@ importers:
       react: 18.1.0
       react-dom: 18.1.0_react@18.1.0
       react-error-boundary: 3.1.4_react@18.1.0
+      react-hot-toast: 2.2.0_ef5jwxihqo6n7gxfmzogljlgcm
       react-redux: 8.0.1_3vjunwlmc3akvx5gzli76tirsm
       react-router-dom: 6.3.0_ef5jwxihqo6n7gxfmzogljlgcm
       shiki: 0.10.0
@@ -7541,7 +7543,7 @@ packages:
   /axios/0.21.4_debug@4.3.2:
     resolution: {integrity: sha512-ut5vewkiu8jjGBdqpM44XxjuCjq9LAKeHVmoVfHVzy8eHgxxq8SbAVQNovDA8mVi05kP0Ea/n/UzcSHcTJQfNg==}
     dependencies:
-      follow-redirects: 1.14.8
+      follow-redirects: 1.14.8_debug@4.3.2
     transitivePeerDependencies:
       - debug
     dev: true
@@ -10967,6 +10969,19 @@ packages:
     peerDependenciesMeta:
       debug:
         optional: true
+    dev: false
+
+  /follow-redirects/1.14.8_debug@4.3.2:
+    resolution: {integrity: sha512-1x0S9UVJHsQprFcEC/qnNzBLcIxsjAV905f/UkQxbclCsoTWlacCNOpQa/anodLl2uaEKFhfWOvM2Qg77+15zA==}
+    engines: {node: '>=4.0'}
+    peerDependencies:
+      debug: '*'
+    peerDependenciesMeta:
+      debug:
+        optional: true
+    dependencies:
+      debug: 4.3.2
+    dev: true
 
   /for-in/1.0.2:
     resolution: {integrity: sha1-gQaNKVqBQuwKxybG4iAMMPttXoA=}
@@ -11296,6 +11311,12 @@ packages:
   /globrex/0.1.2:
     resolution: {integrity: sha512-uHJgbwAMwNFf5mLst7IWLNg14x1CkeqglJb/K3doi4dw6q2IvAAmM/Y81kevy83wP+Sst+nutFTYOGg3d1lsxg==}
     dev: true
+
+  /goober/2.1.10:
+    resolution: {integrity: sha512-7PpuQMH10jaTWm33sQgBQvz45pHR8N4l3Cu3WMGEWmHShAcTuuP7I+5/DwKo39fwti5A80WAjvqgz6SSlgWmGA==}
+    peerDependencies:
+      csstype: ^3.0.10
+    dev: false
 
   /got/9.6.0:
     resolution: {integrity: sha512-R7eWptXuGYxwijs0eV+v3o6+XH1IqVK8dJOEecQfTmkncw9AV4dcw/Dhxi8MdlqPthxxpZyizMzyg8RTmEsG+Q==}
@@ -15732,6 +15753,20 @@ packages:
       react-dom: 18.1.0_react@18.1.0
       react-fast-compare: 3.2.0
       shallowequal: 1.1.0
+
+  /react-hot-toast/2.2.0_ef5jwxihqo6n7gxfmzogljlgcm:
+    resolution: {integrity: sha512-248rXw13uhf/6TNDVzagX+y7R8J183rp7MwUMNkcrBRyHj/jWOggfXTGlM8zAOuh701WyVW+eUaWG2LeSufX9g==}
+    engines: {node: '>=10'}
+    peerDependencies:
+      react: '>=16'
+      react-dom: '>=16'
+    dependencies:
+      goober: 2.1.10
+      react: 18.1.0
+      react-dom: 18.1.0_react@18.1.0
+    transitivePeerDependencies:
+      - csstype
+    dev: false
 
   /react-is/16.13.1:
     resolution: {integrity: sha512-24e6ynE2H+OKt4kqsOvNd8kBpV65zoxbA4BVsEOB3ARVWQki/DHzaUoC5KuON/BiccDaCCTZBuOcfZs70kR8bQ==}
