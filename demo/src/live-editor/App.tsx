@@ -79,9 +79,6 @@ const AppLayout = () => {
       } catch (error) {
         console.error('[live-editor] error when decoding code in url', error)
       }
-      const newParams = new URLSearchParams(params)
-      newParams.delete('code')
-      history.replaceState(null, '', `?${newParams.toString()}`)
     } else if (params.has('example')) {
       const exampleName: keyof typeof EXAMPLES = params.get('example') as any
       if (exampleName) {
@@ -101,6 +98,21 @@ const AppLayout = () => {
         console.warn('error recovering data from storage', error)
       }
     }
+
+    const encodedConfig = params.get('config')
+    if (encodedConfig) {
+      try {
+        const configCode = pintora.util.decodeCodeInUrl(encodedConfig)
+        store.dispatch(actions.updateConfigCode({ code: configCode }))
+      } catch (error) {
+        console.error('[editfor] error when processing config in url', error)
+      }
+    }
+
+    const newParams = new URLSearchParams(params)
+    newParams.delete('code')
+    newParams.delete('config')
+    history.replaceState(null, '', `?${newParams.toString()}`)
 
     if (code) {
       store.dispatch(actions.updateEditorCode({ code, syncToPreview: true }))

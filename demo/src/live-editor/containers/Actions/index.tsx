@@ -1,9 +1,10 @@
 import React from 'react'
+import toast, { Toaster } from 'react-hot-toast'
 import pintora from '@pintora/standalone'
 import Buttons from 'src/live-editor/components/Buttons'
 import { fileSave, fileOpen } from 'src/utils/filesystem'
 import store from '../../redux/store'
-import { MIME_TYPES } from 'src/const'
+import { MIME_TYPES, DEMO_BASE_URL } from 'src/const'
 import { actions } from 'src/live-editor/redux/slice'
 
 interface ActionsProps {}
@@ -77,6 +78,24 @@ const ACION_BUTTONS: ActionButtonDef[] = [
     },
   },
   {
+    label: 'Copy Editor URL',
+    description: 'Copy Current Editor URL',
+    action() {
+      const state = store.getState()
+      const previewCode = state.main.preview.code
+      const encodedCode = pintora.util.encodeForUrl(previewCode)
+      const encodedPintoraConfig = pintora.util.encodeForUrl(JSON.stringify(state.main.preview.pintoraConfig))
+      const a = document.createElement('a')
+      a.href = `${DEMO_BASE_URL}live-editor/?code=${encodedCode}&config=${encodedPintoraConfig}`
+      const url = a.href
+      navigator.clipboard.writeText(url).then(() => {
+        toast.success('Editor and code URL is copied', {
+          position: 'bottom-center',
+        })
+      })
+    },
+  },
+  {
     label: 'Save Code',
     description: 'Save code to disk',
     action() {
@@ -119,6 +138,7 @@ const Actions = ({}: ActionsProps) => {
           )
         })}
       </Buttons>
+      <Toaster />
     </div>
   )
 }
