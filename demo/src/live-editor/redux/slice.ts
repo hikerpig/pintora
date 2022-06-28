@@ -23,9 +23,12 @@ export type State = {
   }
 }
 
+const isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches
+const defaultTheme = isDarkMode ? 'dark' : 'default'
+
 const DEFAULT_CONFIG: DeepPartial<PintoraConfig> = {
   themeConfig: {
-    theme: 'default',
+    theme: defaultTheme,
   },
   sequence: {},
   er: {},
@@ -49,7 +52,7 @@ const initialState: State = {
     config: {
       renderer: 'svg',
     },
-    pintoraConfig: {},
+    pintoraConfig: JSON.parse(JSON.stringify(DEFAULT_CONFIG)),
   },
 }
 

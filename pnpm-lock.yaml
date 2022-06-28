@@ -85,6 +85,7 @@ importers:
       tailwindcss: '*'
       throttle-debounce: ^5.0.0
       typescript: ^4.5.4
+      usehooks-ts: ^2.6.0
       vite: ^2.9.6
       vite-plugin-pwa: ^0.12.0
       vite-tsconfig-paths: ^3.4.1
@@ -120,6 +121,7 @@ importers:
       react-router-dom: 6.3.0_ef5jwxihqo6n7gxfmzogljlgcm
       shiki: 0.10.0
       throttle-debounce: 5.0.0
+      usehooks-ts: 2.6.0_react@18.1.0
     devDependencies:
       '@percy/cli': 1.1.0
       '@percy/cypress': 3.1.1_cypress@10.0.2
@@ -7543,7 +7545,7 @@ packages:
   /axios/0.21.4_debug@4.3.2:
     resolution: {integrity: sha512-ut5vewkiu8jjGBdqpM44XxjuCjq9LAKeHVmoVfHVzy8eHgxxq8SbAVQNovDA8mVi05kP0Ea/n/UzcSHcTJQfNg==}
     dependencies:
-      follow-redirects: 1.14.8_debug@4.3.2
+      follow-redirects: 1.14.8
     transitivePeerDependencies:
       - debug
     dev: true
@@ -10969,19 +10971,6 @@ packages:
     peerDependenciesMeta:
       debug:
         optional: true
-    dev: false
-
-  /follow-redirects/1.14.8_debug@4.3.2:
-    resolution: {integrity: sha512-1x0S9UVJHsQprFcEC/qnNzBLcIxsjAV905f/UkQxbclCsoTWlacCNOpQa/anodLl2uaEKFhfWOvM2Qg77+15zA==}
-    engines: {node: '>=4.0'}
-    peerDependencies:
-      debug: '*'
-    peerDependenciesMeta:
-      debug:
-        optional: true
-    dependencies:
-      debug: 4.3.2
-    dev: true
 
   /for-in/1.0.2:
     resolution: {integrity: sha1-gQaNKVqBQuwKxybG4iAMMPttXoA=}
@@ -18259,6 +18248,14 @@ packages:
     resolution: {integrity: sha512-cwESVXlO3url9YWlFW/TA9cshCEhtu7IKJ/p5soJ/gGpj7vbvFrAY/eIioQ6Dw23KjZhYgiIo8HOs1nQ2vr/oQ==}
     engines: {node: '>=0.10.0'}
     dev: true
+
+  /usehooks-ts/2.6.0_react@18.1.0:
+    resolution: {integrity: sha512-Kj/4oc2nOxRDGTDb2v1ZulF7+tpeXFuqI6cUesM0Vic7TPPDlFORxKh4ivsYg+NTvX/YbM+lhqqkfFTiIt23eg==}
+    peerDependencies:
+      react: '>=16.9.0'
+    dependencies:
+      react: 18.1.0
+    dev: false
 
   /util-deprecate/1.0.2:
     resolution: {integrity: sha1-RQ1Nyfpw3nMnYvvS1KKJgUGaDM8=}
