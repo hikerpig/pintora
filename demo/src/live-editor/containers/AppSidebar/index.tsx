@@ -25,7 +25,7 @@ type SidebarItem = ArrayElement<typeof SIDEBAR_ICONS>
 const AppSidebar = ({}: Props) => {
   const navigate = useNavigate()
   const currentLocation = useLocation()
-  const cls = classnames('AppSidebar bg-warmGray-100 flex flex-col items-center')
+  const cls = classnames('AppSidebar bg-warmGray-100 dark:bg-transparent flex flex-col items-center')
 
   const handleClick = useCallback((item: SidebarItem) => {
     navigate(item.name)
@@ -39,7 +39,7 @@ const AppSidebar = ({}: Props) => {
         })
         return (
           <div key={item.name} title={item.label} className={itemCls} onClick={() => handleClick(item)}>
-            <i className="iconify-inline" data-icon={item.icon} data-width="26"></i>
+            <iconify-icon icon={item.icon} width="26"></iconify-icon>
             <br />
           </div>
         )

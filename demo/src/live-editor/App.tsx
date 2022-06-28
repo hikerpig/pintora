@@ -1,4 +1,5 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
+import { useDarkMode } from 'usehooks-ts'
 import { Provider } from 'react-redux'
 import pintora from '@pintora/standalone'
 import { EXAMPLES } from '@pintora/test-shared'
@@ -10,10 +11,14 @@ import ThemePreviewSpace from 'src/live-editor/containers/ThemePreviewSpace'
 import { actions } from 'src/live-editor/redux/slice'
 import { HashRouter, Routes, Route, Outlet } from 'react-router-dom'
 import './App.css'
+import classNames from 'classnames'
 
 const LAST_EDITOR_CODE_KEY = 'pintoraEditorCode'
 
 function App() {
+  const { isDarkMode } = useDarkMode()
+  const [daisyTheme, setDaisyTheme] = useState('bumblebee')
+
   useEffect(() => {
     // attach pintora to global scope
     window.pintora = pintora
@@ -51,9 +56,18 @@ function App() {
     }
   }, [])
 
+  useEffect(() => {
+    const newTheme = isDarkMode ? 'halloween' : 'bumblebee'
+    setDaisyTheme(newTheme)
+    document.documentElement.setAttribute('data-theme', newTheme)
+  }, [isDarkMode])
+
+  const modeCls = `${isDarkMode ? 'dark' : 'light'}-mode`
+
+  const cls = classNames(modeCls, 'App min-h-screen min-w-screen flex flex-col')
   return (
     <Provider store={store}>
-      <div className="App min-h-screen min-w-screen flex flex-col" data-theme="bumblebee">
+      <div className={cls}>
         <HashRouter>
           <Routes>
             <Route path="/" element={<AppLayout />}>

@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useCallback } from 'react'
 import { PintoraConfig } from '@pintora/core'
 import classnames from 'classnames'
 import { DeepPartial } from '@reduxjs/toolkit'

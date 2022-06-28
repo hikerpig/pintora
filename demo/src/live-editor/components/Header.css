@@ -21,3 +21,10 @@
 .Header__link:hover {
   text-decoration: underline;
 }
+
+.Header__dark-mode-icon {
+  margin-right: 0.5em;
+  position: relative;
+  top: 2px;
+  display: inline-block;
+}
