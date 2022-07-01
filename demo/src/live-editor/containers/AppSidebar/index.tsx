@@ -2,6 +2,7 @@ import React, { useCallback } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
 import classnames from 'classnames'
 import './AppSidebar.less'
+import { useDarkMode } from 'usehooks-ts'
 
 type Props = {}
 
@@ -22,10 +23,13 @@ type ArrayElement<T> = T extends Array<infer I> ? I : any
 
 type SidebarItem = ArrayElement<typeof SIDEBAR_ICONS>
 
-const AppSidebar = ({}: Props) => {
+const AppSidebar = ({ }: Props) => {
+  const { isDarkMode } = useDarkMode()
   const navigate = useNavigate()
   const currentLocation = useLocation()
-  const cls = classnames('AppSidebar bg-warmGray-100 dark:bg-transparent flex flex-col items-center')
+
+  const bgColorCls = isDarkMode ? 'bg-transparent' : 'bg-warmGray-100'
+  const cls = classnames(`AppSidebar ${bgColorCls} flex flex-col items-center`)
 
   const handleClick = useCallback((item: SidebarItem) => {
     navigate(item.name)
