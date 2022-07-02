@@ -33,7 +33,7 @@
       "eslint --fix"
     ]
   },
-  "packageManager": "pnpm@7.4.0",
+  "packageManager": "pnpm@7.5.0",
   "devDependencies": {
     "@changesets/changelog-git": "^0.1.9",
     "@changesets/cli": "^2.20.0",
