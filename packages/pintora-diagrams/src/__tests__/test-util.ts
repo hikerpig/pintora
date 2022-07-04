@@ -35,7 +35,7 @@ export function prepareDiagramConfig() {
   })
 }
 
-const GEOMETRY_ATTRS = ['x', 'y', 'width', 'height', 'x1', 'x2', 'y1', 'y2', 'path', 'points', 'margin']
+const GEOMETRY_ATTRS = ['x', 'y', 'cx', 'cy', 'width', 'height', 'x1', 'x2', 'y1', 'y2', 'path', 'points', 'margin']
 const MARK_IGNORE_FIELDS = ['matrix']
 
 /**

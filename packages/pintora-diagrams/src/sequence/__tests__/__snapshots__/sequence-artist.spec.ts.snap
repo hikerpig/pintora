@@ -270,7 +270,6 @@ Object {
         "children": Array [
           Object {
             "attrs": Object {
-              "anchor": "start",
               "fill": "#f8f8f2",
               "rx": 0,
               "ry": 0,
@@ -322,13 +321,13 @@ Object {
                   "fill": "#3b4044",
                   "r": 8,
                   "stroke": "#3b4044",
-                  "symbol": "circle",
                 },
-                "type": "marker",
+                "type": "circle",
               },
               Object {
                 "attrs": Object {
                   "fill": "#fdb05e",
+                  "fontSize": 12,
                   "fontWeight": "bold",
                   "text": "1",
                   "textAlign": "center",
@@ -388,13 +387,13 @@ Object {
                   "fill": "#3b4044",
                   "r": 8,
                   "stroke": "#3b4044",
-                  "symbol": "circle",
                 },
-                "type": "marker",
+                "type": "circle",
               },
               Object {
                 "attrs": Object {
                   "fill": "#fdb05e",
+                  "fontSize": 12,
                   "fontWeight": "bold",
                   "text": "2",
                   "textAlign": "center",
@@ -494,13 +493,13 @@ Object {
                   "fill": "#3b4044",
                   "r": 8,
                   "stroke": "#3b4044",
-                  "symbol": "circle",
                 },
-                "type": "marker",
+                "type": "circle",
               },
               Object {
                 "attrs": Object {
                   "fill": "#fdb05e",
+                  "fontSize": 12,
                   "fontWeight": "bold",
                   "text": "3",
                   "textAlign": "center",
@@ -521,7 +520,6 @@ Object {
         "children": Array [
           Object {
             "attrs": Object {
-              "anchor": "start",
               "fill": "#F8EA75",
               "rx": 0,
               "ry": 0,
@@ -550,7 +548,6 @@ Object {
         "children": Array [
           Object {
             "attrs": Object {
-              "anchor": "start",
               "fill": "#F8EA75",
               "rx": 0,
               "ry": 0,
@@ -579,7 +576,6 @@ Object {
         "children": Array [
           Object {
             "attrs": Object {
-              "anchor": "start",
               "fill": "#F8EA75",
               "rx": 0,
               "ry": 0,
