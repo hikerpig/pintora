@@ -57,7 +57,7 @@
     "start-server-and-test": "^1.14.0",
     "tailwindcss": "*",
     "typescript": "^4.5.4",
-    "vite": "^2.9.13",
+    "vite": "^3.0.0",
     "vite-plugin-pwa": "^0.12.2",
     "vite-tsconfig-paths": "^3.5.0",
     "workbox-core": "^6.5.2",

@@ -23,7 +23,7 @@ type ArrayElement<T> = T extends Array<infer I> ? I : any
 
 type SidebarItem = ArrayElement<typeof SIDEBAR_ICONS>
 
-const AppSidebar = ({ }: Props) => {
+const AppSidebar = ({}: Props) => {
   const { isDarkMode } = useDarkMode()
   const navigate = useNavigate()
   const currentLocation = useLocation()
