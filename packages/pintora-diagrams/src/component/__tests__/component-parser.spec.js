@@ -16,6 +16,7 @@ component comp4 [
   This component has
   long description
 ]
+component "component 5" as comp5
     `)
     parse(componentExample)
     const ir = db.getDiagramIR()
@@ -25,6 +26,7 @@ component comp4 [
       comp2: { type: 'component', name: 'comp2' },
       comp3: { type: 'component', name: 'comp3', label: 'component 3' },
       comp4: { type: 'component', name: 'comp4', label: 'This component has\n  long description' },
+      comp5: { type: 'component', name: 'comp5', label: 'component 5' },
     })
   })
 

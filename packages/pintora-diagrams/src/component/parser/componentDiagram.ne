@@ -145,6 +145,14 @@ component ->
         return { type: 'component', name, label }
       }
     %}
+  | "component" %WS:? (textInsideQuote | %VALID_TEXT) %WS:* "as" __ %VALID_TEXT %NL {%
+      function(d) {
+        const _l = d[2][0]
+        const label = typeof _l === 'string' ? _l: tv(_l)
+        const name = tv(d[6])
+        return { type: 'component', name, label }
+      }
+    %}
   | shortComponent %NL {% id %}
   | shortComponent %WS:? "as" %WS:? %VALID_TEXT %NL {%
       function(d) {
