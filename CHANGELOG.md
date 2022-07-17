@@ -1,5 +1,17 @@
 # Change Log
 
+## 0.6.0-alpha.0
+
+### Minor Changes
+
+- 87f80b1: feat: add dotDiagram
+
+### Patch Changes
+
+- 3e8325c: optimize: adjust er diagram width when minEntityWidth is larger than attributes width sum
+- ac510ed: optimize: erDiagram can have '{}' with 0 attributes
+- 6174d92: chore: update pintora-renderer deps
+
 ## 0.5.2
 
 ### Patch Changes

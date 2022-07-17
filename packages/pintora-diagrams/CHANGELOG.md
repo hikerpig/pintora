@@ -1,5 +1,19 @@
 # Change Log
 
+## 0.6.0-alpha.0
+
+### Minor Changes
+
+- 87f80b1: feat: add dotDiagram
+
+### Patch Changes
+
+- 3e8325c: optimize: adjust er diagram width when minEntityWidth is larger than attributes width sum
+- ac510ed: optimize: erDiagram can have '{}' with 0 attributes
+- 9b8785d: optimize: [componentDiagram] `component "desc" as alias`
+- Updated dependencies [87f80b1]
+  - @pintora/core@0.6.0-alpha.0
+
 ## 0.5.2
 
 ### Patch Changes

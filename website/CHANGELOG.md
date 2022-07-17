@@ -1,5 +1,20 @@
 # Change Log
 
+## 0.5.0-alpha.0
+
+### Minor Changes
+
+- 87f80b1: feat: add dotDiagram
+
+### Patch Changes
+
+- Updated dependencies [3e8325c]
+- Updated dependencies [ac510ed]
+- Updated dependencies [6174d92]
+- Updated dependencies [87f80b1]
+  - @pintora/standalone@0.6.0-alpha.0
+  - @pintora/test-shared@0.4.0-alpha.0
+
 ## 0.4.3
 
 ### Patch Changes

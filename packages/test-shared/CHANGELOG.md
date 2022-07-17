@@ -1,5 +1,11 @@
 # Change Log
 
+## 0.4.0-alpha.0
+
+### Minor Changes
+
+- 87f80b1: feat: add dotDiagram
+
 ## 0.3.1
 
 ### Patch Changes
