@@ -286,6 +286,23 @@ gantt
 `),
 }
 
+export const dotExample: DiagramExample = {
+  name: 'DOT Diagram',
+  description: 'Sample for a dotDiagram',
+  code: stripStartEmptyLines(`
+dotDiagram
+  digraph Test {
+    subgraph S1 {
+      label="Sub";
+      a1 [fontcolor="purple",margint=10];
+    }
+    a1 -> b1;
+    n1 -> end [color="blue"];
+    a2 -> end;
+  }
+`),
+}
+
 export const EXAMPLES = {
   sequence: sequenceExample,
   er: erExample,
@@ -294,4 +311,5 @@ export const EXAMPLES = {
   activity: activityExample,
   mindmap: mindmapExample,
   gantt: ganttExample,
+  dot: dotExample,
 }

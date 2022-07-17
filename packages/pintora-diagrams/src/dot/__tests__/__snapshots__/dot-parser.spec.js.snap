@@ -1,0 +1,185 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`dot parser should parse attr stmt 1`] = `
+Object {
+  "attrs": Object {
+    "edge": Object {
+      "color": "purple",
+      "fontcolor": "green",
+    },
+    "graph": Object {
+      "color": "lightgrey",
+    },
+    "node": Object {
+      "color": "red",
+      "fontcolor": "blue",
+    },
+  },
+  "children": Array [
+    Object {
+      "attrs": Object {
+        "graph": Object {
+          "label": "process",
+        },
+      },
+      "children": Array [],
+      "id": "sub",
+      "type": "subgraph",
+    },
+  ],
+  "id": "",
+  "type": "graph",
+}
+`;
+
+exports[`dot parser should parse directed edge 1`] = `
+Object {
+  "children": Array [
+    Object {
+      "edge_list": Array [
+        Object {
+          "id": "a",
+          "type": "node_id",
+        },
+        Object {
+          "id": "b",
+          "type": "node_id",
+        },
+      ],
+      "type": "edge_stmt",
+    },
+  ],
+  "id": "Test",
+  "type": "digraph",
+}
+`;
+
+exports[`dot parser should parse dot comment 1`] = `
+Object {
+  "children": Array [
+    Object {
+      "nodeId": Object {
+        "id": "some_node",
+        "type": "node_id",
+      },
+      "type": "node_stmt",
+    },
+  ],
+  "id": "Test",
+  "type": "graph",
+}
+`;
+
+exports[`dot parser should parse edge 1`] = `
+Object {
+  "children": Array [
+    Object {
+      "edge_list": Array [
+        Object {
+          "id": "name0",
+          "type": "node_id",
+        },
+        Object {
+          "id": "course",
+          "type": "node_id",
+        },
+      ],
+      "type": "edge_stmt",
+    },
+    Object {
+      "attrs": Object {
+        "label": "n",
+        "len": "1.00",
+      },
+      "edge_list": Array [
+        Object {
+          "id": "course",
+          "type": "node_id",
+        },
+        Object {
+          "id": "C-I",
+          "type": "node_id",
+        },
+      ],
+      "type": "edge_stmt",
+    },
+  ],
+  "id": "Test",
+  "type": "graph",
+}
+`;
+
+exports[`dot parser should parse node 1`] = `
+Object {
+  "children": Array [
+    Object {
+      "attrs": Object {
+        "shape": "box",
+      },
+      "nodeId": Object {
+        "id": "name",
+        "type": "node_id",
+      },
+      "type": "node_stmt",
+    },
+    Object {
+      "nodeId": Object {
+        "id": "course",
+        "type": "node_id",
+      },
+      "type": "node_stmt",
+    },
+    Object {
+      "nodeId": Object {
+        "id": "student",
+        "type": "node_id",
+      },
+      "type": "node_stmt",
+    },
+  ],
+  "id": "ER",
+  "type": "graph",
+}
+`;
+
+exports[`dot parser should parse subgraph 1`] = `
+Object {
+  "children": Array [
+    Object {
+      "children": Array [
+        Object {
+          "nodeId": Object {
+            "id": "n1",
+            "type": "node_id",
+          },
+          "type": "node_stmt",
+        },
+      ],
+      "id": "S1",
+      "type": "subgraph",
+    },
+    Object {
+      "nodeId": Object {
+        "id": "n2",
+        "type": "node_id",
+      },
+      "type": "node_stmt",
+    },
+    Object {
+      "edge_list": Array [
+        Object {
+          "id": "n1",
+          "type": "node_id",
+        },
+        Object {
+          "id": "n2",
+          "type": "node_id",
+        },
+      ],
+      "type": "edge_stmt",
+    },
+  ],
+  "id": "Test",
+  "type": "graph",
+}
+`;

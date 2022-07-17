@@ -309,6 +309,32 @@ export type GanttConf = {
 }
 ```
 
+### dot
+
+Config for DOT diagram. For more detail, check the [latest code](https://github.com/hikerpig/pintora/blob/master/packages/pintora-diagrams/src/dot/config.ts).
+
+```ts
+export type DOTConf = {
+  diagramPadding: number
+
+  layoutDirection: string
+  ranksep: number
+  nodesep: number
+  edgesep: number
+  edgeType: EdgeType
+
+  nodePadding: number
+  nodeBorderRadius: number
+
+  labelTextColor: string
+  edgeColor: string
+
+  fontSize: number
+  fontFamily: string
+}
+
+```
+
 ## Override config by directive
 
 If you don't have the access to add JS script into the page or in the Node.js module, it's also possible to override some configs of the builtin diagrams through the `@param` or `@config` directive.

@@ -3,6 +3,7 @@ import { sequenceDiagram, SequenceDiagramIR } from './sequence'
 import { erDiagram, ErDiagramIR } from './er'
 import { componentDiagram, ComponentDiagramIR } from './component'
 import { activityDiagram, ActivityDiagramIR } from './activity'
+import { dotDiagram, DotIR } from './dot'
 import { mindmap, MindmapIR } from './mindmap'
 import { gantt, GanttIR } from './gantt'
 import { BaseDiagramIR } from './util/ir'
@@ -19,6 +20,7 @@ export const DIAGRAMS = {
   activityDiagram,
   mindmap,
   gantt,
+  dotDiagram,
 }
 
 export {
@@ -30,6 +32,8 @@ export {
   componentDiagram,
   ComponentDiagramIR,
   ActivityDiagramIR,
+  dotDiagram,
+  DotIR,
   MindmapIR,
   mindmap,
   GanttIR,

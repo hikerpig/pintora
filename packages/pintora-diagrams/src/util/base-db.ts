@@ -26,3 +26,9 @@ export class BaseDb {
     this.overrideConfig = {}
   }
 }
+
+export type ActionPayload<ActionPayloadMap, T extends keyof ActionPayloadMap> = { type: T } & ActionPayloadMap[T]
+
+export type MakeAction<M> = ActionPayload<M, keyof M>
+
+export type ActionHandler<M, D, T extends keyof M> = (this: D, action: ActionPayload<M, T>) => unknown
