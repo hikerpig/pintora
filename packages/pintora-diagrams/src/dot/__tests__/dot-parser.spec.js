@@ -22,6 +22,18 @@ graph ER {
     expect(ir.graph).toMatchSnapshot()
   })
 
+  it('should parse node in shorthand', () => {
+    const example = stripStartEmptyLines(`
+dotDiagram
+graph ER {
+	name["a long long name"]
+}
+    `)
+    parse(example)
+    const ir = db.getDiagramIR()
+    expect(ir.graph).toMatchSnapshot()
+  })
+
   it('should parse edge', () => {
     const example = stripStartEmptyLines(`
   dotDiagram

@@ -1345,25 +1345,31 @@
               "name": "string"
             }
           },
-          "end": "(])",
+          "end": "(\\])",
           "patterns": [
             {
-              "include": "#dot__graph"
+              "include": "#dot__attrs"
             }
           ]
         },
         {
-          "comment": "attr",
-          "match": "(\\w+)\\s*(=)\\s*(\"?[^\"]+\"?)\\s*",
+          "include": "#dot__attrs"
+        },
+        {
+          "comment": "node shorthand",
+          "match": "([\\w\\d]+)(\\[)(\"[^\"]*\")(\\])",
           "captures": {
             "1": {
-              "name": "support.type.property-name.pintora"
+              "name": "variable.pintora"
             },
             "2": {
               "name": "keyword.control.pintora"
             },
             "3": {
               "name": "string"
+            },
+            "4": {
+              "name": "keyword.control.pintora"
             }
           }
         },
@@ -1381,10 +1387,15 @@
               "name": "punctuation.bracket.open.pintora"
             }
           },
-          "end": "(])",
+          "end": "(\\])",
+          "endCaptures": {
+            "1": {
+              "name": "keyword.control.pintora"
+            }
+          },
           "patterns": [
             {
-              "include": "#dot__graph"
+              "include": "#dot__attrs"
             }
           ]
         },
@@ -1401,7 +1412,7 @@
           }
         },
         {
-          "comment": "node in oneline",
+          "comment": "node in one line",
           "match": "(\"[^\"]*\"|[\\w\\d_]+)\\s*(;)?$",
           "captures": {
             "1": {
@@ -1433,6 +1444,25 @@
             },
             "3": {
               "name": "comment"
+            }
+          }
+        }
+      ]
+    },
+    "dot__attrs": {
+      "patterns": [
+        {
+          "comment": "attr=value | attr=\"value\"",
+          "match": "([\\w\\d]+)\\s*(=)\\s*(\"[^\"]*\"|[\\w\\d_]+)",
+          "captures": {
+            "1": {
+              "name": "support.type.property-name.pintora"
+            },
+            "2": {
+              "name": "keyword.control.pintora"
+            },
+            "3": {
+              "name": "string"
             }
           }
         }

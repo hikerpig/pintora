@@ -142,6 +142,25 @@ Object {
 }
 `;
 
+exports[`dot parser should parse node in shorthand 1`] = `
+Object {
+  "children": Array [
+    Object {
+      "attrs": Object {
+        "label": "a long long name",
+      },
+      "nodeId": Object {
+        "id": "name",
+        "type": "node_id",
+      },
+      "type": "node_stmt",
+    },
+  ],
+  "id": "ER",
+  "type": "graph",
+}
+`;
+
 exports[`dot parser should parse subgraph 1`] = `
 Object {
   "children": Array [
