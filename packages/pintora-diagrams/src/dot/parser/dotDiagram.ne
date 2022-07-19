@@ -48,7 +48,6 @@ let lexer = moo.states({
     SUBGRAPH: { match: /subgraph/ },
     START_NOTE: textToCaseInsensitiveRegex('@note'),
     END_NOTE: textToCaseInsensitiveRegex('@end_note'),
-    // NODE: /node/,
     COMMENT_LINE: COMMENT_LINE_REGEXP,
     DOT_SLASH_COMMENT: /\/\/.*/,
     DOT_BLOCK_COMMENT_START: { match: /\/\*/, push: 'blockComment' },
@@ -64,10 +63,6 @@ let lexer = moo.states({
     ANY_COMMENT_TEXT: { match: /(?:\s\w\d\n\r)+(?!\*\/)/, fallback: true },
   }
 })
-
-function extractChildren(o) {
-  return Array.isArray(o) ? o[0]: o
-}
 
 function rNull() {
   return null
@@ -189,15 +184,28 @@ nodeStmt ->
         return nodeStmt
       }
     %}
-  | nodeId {%
-    function(d) {
-      const nodeId = d[0]
-      return {
-        type: 'node_stmt',
-        nodeId: d[0],
+  | nodeId %L_SQ_BRACKET %QUOTED_WORD %R_SQ_BRACKET {%
+      function(d) {
+        const nodeId = d[0]
+        const label = getQuotedWord(d[2])
+        return {
+          type: 'node_stmt',
+          nodeId: d[0],
+          attrs: {
+            label,
+          }
+        }
       }
-    }
-  %}
+    %}
+  | nodeId {%
+      function(d) {
+        const nodeId = d[0]
+        return {
+          type: 'node_stmt',
+          nodeId: d[0],
+        }
+      }
+    %}
 
 # as 'edge_stmt' rule in DOT spec
 edgeStmt ->

@@ -21,6 +21,8 @@ Graphviz is a versatile and wonderful visualization library, dotDiagram only cov
 
 ## Syntax
 
+### Compatible with Graphviz
+
 The keywords **node**, **edge**, **graph**, **digraph** and **subgraph**.
 
 A graph must be specified as either a `digraph` or a `graph`, they stand for directed and undirected graph. A digraph must specify an edge using the edge operator `->` while an undirected graph must use `--`.
@@ -36,7 +38,7 @@ dotDiagram
   digraph G {
     // specify graph attributes
     bgcolor="white"
-    
+
     // specify common node attributes
     node [color="#111",bgcolor=orange]
 
@@ -50,6 +52,25 @@ dotDiagram
     a1 -> b1;
     n1 -> end [color="blue"];
     a2 -> end;
+  }
+```
+
+### Node shorthand
+
+`name["label"]` as a shorthand of `name[label="label"]`
+
+```pintora play
+dotDiagram
+  digraph {
+    bgcolor="#faf5f5";
+
+    core["@pintora/core"];
+    diagrams["@pintora/diagrams"];
+    standalone["@pintora/standalone"];
+
+    diagrams -> core;
+    standalone -> core;
+    standalone -> diagrams;
   }
 ```
 
