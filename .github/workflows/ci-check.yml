@@ -11,6 +11,11 @@ jobs:
         node-version: [16.x]
 
     steps:
+      # Make sure you put workflow kit action on top of all the steps
+      - name: Collect Workflow Telemetry
+        uses: runforesight/foresight-workflow-kit-action@v1
+        with:
+          api_key: ${{ secrets.THUNDRA_APIKEY }}
       - uses: actions/checkout@v2
       - name: Cache pnpm modules
         uses: actions/cache@v2
@@ -61,9 +66,13 @@ jobs:
           CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           PERCY_TOKEN: ${{ secrets.PERCY_TOKEN }}
-      - name: Foresight Test Report Uploader
+      - name: Analyze Test and/or Coverage Results
         if: always()
-        uses: actions/upload-artifact@v2
+        uses: thundra-io/foresight-test-kit-action@v1
         with:
-          name: test-result-jest
-          path: coverage
+          api_key: ${{ secrets.THUNDRA_APIKEY }}
+          test_format: JUNIT
+          test_framework: JEST
+          test_path: reports/junit.xml
+          coverage_format: GOLANG
+          coverage_path: coverage
