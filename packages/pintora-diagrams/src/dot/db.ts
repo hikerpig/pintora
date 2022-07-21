@@ -156,6 +156,10 @@ export type NodeAttrs = {
   fontcolor?: string
   /** background color */
   bgcolor?: string
+  /** font family for node label */
+  fontname?: string
+  /** font size for node label */
+  fontsize?: number
   /** [pintora specific], margin top */
   margint?: number
   /** [pintora specific], margin bottom */
@@ -168,6 +172,8 @@ export type NodeAttrs = {
 
 export type EdgeStyle = 'invis'
 
+export type DOTArrowType = 'normal' | 'box' | 'obox' | 'dot' | 'odot' | 'open' | 'diamond' | 'ediamond'
+
 export type EdgeAttrs = {
   label?: string
   /** edge line color */
@@ -176,6 +182,14 @@ export type EdgeAttrs = {
   fontcolor?: string
   /** edge style */
   style?: EdgeStyle
+  /** edge line width */
+  penwidth?: number
+  /** font family for edge label */
+  fontname?: string
+  /** font size for edge label */
+  fontsize?: number
+  /** arrow type for arrow head */
+  arrowhead?: DOTArrowType
 }
 
 export type GraphAttrs = {
@@ -184,6 +198,10 @@ export type GraphAttrs = {
   color?: string
   /** background color */
   bgcolor?: string
+  /** font family for graph label */
+  fontname?: string
+  /** font size for graph label */
+  fontsize?: number
 }
 
 export type AttrsCollection = Partial<{

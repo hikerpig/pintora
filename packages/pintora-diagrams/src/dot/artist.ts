@@ -8,10 +8,18 @@ import {
   makeMark,
   Mark,
   MarkAttrs,
+  pick,
   Rect,
   safeAssign,
 } from '@pintora/core'
-import { adjustRootMarkBounds, calcDirection, drawArrowTo, makeEmptyGroup, makeTextAtPoint } from '../util/artist-util'
+import {
+  adjustRootMarkBounds,
+  ArrowType,
+  calcDirection,
+  drawArrowTo,
+  makeEmptyGroup,
+  makeTextAtPoint,
+} from '../util/artist-util'
 import { floorValues } from '../util/bound'
 import { DagreWrapper } from '../util/dagre-wrapper'
 import { isDev } from '../util/env'
@@ -21,7 +29,18 @@ import { TRANSFORM_GRAPH } from '../util/mark-positioner'
 import { getTextDimensionsInPresicion } from '../util/text'
 import { StyleContext } from './artist/style-context'
 import { DOTConf, getConf } from './config'
-import { DotIR, EdgeStmt, NodeStmt, Subgraph, DOTGraph, NodeAttrs, EdgeAttrs, GraphAttrs, AttrsCollection } from './db'
+import {
+  DotIR,
+  EdgeStmt,
+  NodeStmt,
+  Subgraph,
+  DOTGraph,
+  NodeAttrs,
+  EdgeAttrs,
+  GraphAttrs,
+  AttrsCollection,
+  DOTArrowType,
+} from './db'
 
 class StyleContexts {
   node = new StyleContext<NodeAttrs>()
@@ -112,17 +131,13 @@ class DOTDraw {
       multigraph: true,
       directed: true,
       compound: true,
+    }).setGraph({
+      rankdir: conf.layoutDirection as string,
+      nodesep: conf.nodesep,
+      edgesep: conf.edgesep,
+      ranksep: conf.ranksep,
+      splines: getGraphSplinesOption(conf.edgeType),
     })
-      .setGraph({
-        rankdir: conf.layoutDirection as string,
-        nodesep: conf.nodesep,
-        edgesep: conf.edgesep,
-        ranksep: conf.ranksep,
-        splines: getGraphSplinesOption(conf.edgeType),
-      })
-      .setDefaultEdgeLabel(function () {
-        return {}
-      })
 
     this.dagreWrapper = new DagreWrapper(this.g)
   }
@@ -163,7 +178,8 @@ class DOTDraw {
 
     const conf = this.conf
 
-    const fontConfig = this.getFontConfig()
+    const graphContext = parentInfo.styleContexts.graph
+    const fontConfig = this.getFontConfig(graphContext)
 
     const graphAttrs = irGraph.attrs?.graph || {}
     const childLabel = graphAttrs.label
@@ -173,10 +189,10 @@ class DOTDraw {
       this.g.setNode(irGraph.id, {
         onLayout(data) {
           const rectGeometry = floorValues(TRANSFORM_GRAPH.graphNodeToRectStart(data))
-          const graphStyle = graphAttrMapper(graphAttrs, parentInfo.styleContexts.graph)
+          const graphStyle = graphAttrMapper(graphAttrs, graphContext)
           const subGraphRect = makeMark('rect', {
             ...rectGeometry,
-            stroke: '#000',
+            stroke: conf.nodeBorderColor,
             ...graphStyle,
           })
           parentInfo.mark.children.unshift(subGraphRect)
@@ -187,7 +203,7 @@ class DOTDraw {
               textBaseline: 'top',
               ...fontConfig,
               fill: conf.labelTextColor,
-              ...graphLabelAttrMapper(graphAttrs, parentInfo.styleContexts.graph),
+              ...graphLabelAttrMapper(graphAttrs, graphContext),
             })
             parentInfo.mark.children.push(labelMark)
           }
@@ -231,11 +247,11 @@ class DOTDraw {
 
   protected drawNode(name: string, nodeAttrs: NodeAttrs = {}, parentInfo: ParentInfo) {
     const label = nodeAttrs.label || name
-    const fontConfig = this.getFontConfig()
+    const nodeStyleContext = parentInfo.styleContexts.node
+    const fontConfig = this.getFontConfig(nodeStyleContext)
     const textDims = getTextDimensionsInPresicion(label, fontConfig)
     const width = textDims.width + this.conf.nodePadding * 2
     const height = textDims.height + this.conf.nodePadding * 2
-    const nodeStyleContext = parentInfo.styleContexts.node
     const layoutAttrs = nodeLayoutAttrMapper(nodeAttrs, nodeStyleContext)
     this.g.setNode(name, {
       width,
@@ -245,7 +261,7 @@ class DOTDraw {
         const flooredGeom = floorValues(TRANSFORM_GRAPH.graphNodeToRectStart(data))
         const nodeRect = makeMark('rect', {
           ...flooredGeom,
-          stroke: '#000',
+          stroke: this.conf.nodeBorderColor,
           radius: this.conf.nodeBorderRadius,
           ...nodeAttrsToStyle(nodeAttrs, nodeStyleContext),
         })
@@ -268,6 +284,7 @@ class DOTDraw {
     const { edge_list, attrs = {} } = stmt
     const tuples = zipTuple(edge_list.slice(0, edge_list.length - 1), edge_list.slice(1))
     const edgeGroup = makeEmptyGroup()
+    const graphAttrs = graphAttrMapper({}, parentInfo.styleContexts.graph)
     parentInfo.mark.children.push(edgeGroup)
     const isDirected = this.ir.graph.type === 'digraph'
     const isInvisible = attrs.style === 'invis'
@@ -279,15 +296,19 @@ class DOTDraw {
         onLayout: edge => {
           if (isInvisible) return
           const shouldUseCurvePath = this.conf.edgeType === 'curved'
+          const edgeStyleContext = parentInfo.styleContexts.edge
           const path = shouldUseCurvePath ? getPointsCurvePath(edge.points) : getPointsLinearPath(edge.points)
-          const pathAttrs = edgeAttrsToStyle(attrs, parentInfo.styleContexts.edge)
+          const pathAttrs = edgeAttrsToStyle(attrs, edgeStyleContext)
           const pathMark = makeMark('path', { path, stroke: conf.edgeColor, ...pathAttrs })
           edgeGroup.children.push(pathMark)
           if (isDirected) {
             const lastPoint = last(edge.points)
             const arrowDirection = calcDirection(edge.points[edge.points.length - 2], lastPoint)
+            const arrowHeadType: DOTArrowType = attrs.arrowhead || edgeStyleContext.getValue('arrowhead') || 'normal'
             const arrowMark = drawArrowTo(last(edge.points), 8, arrowDirection, {
-              attrs: { fill: pathAttrs.stroke || conf.edgeColor },
+              type: ARROW_TYPE_MAP[arrowHeadType] || 'triangle',
+              color: pathAttrs.stroke || conf.edgeColor,
+              bgColor: graphAttrs.fill || this.conf.backgroundColor,
             })
             edgeGroup.children.push(arrowMark)
           }
@@ -304,7 +325,7 @@ class DOTDraw {
                 textBaseline: 'middle',
                 ...anchorPoint,
                 fill: textColor,
-                ...this.getFontConfig(),
+                ...this.getFontConfig(edgeStyleContext),
               },
               { class: 'activity__edge-label' },
             )
@@ -326,28 +347,33 @@ class DOTDraw {
     const conf = this.conf
     const bounds = this.dagreWrapper.getGraphBounds()
     let frameRect: Rect | undefined
+    const graphContext = parentInfo.styleContexts.graph
     if (graphAttrs.bgcolor) {
       const rectGeometry = bounds
-      const graphStyle = graphAttrMapper(graphAttrs, parentInfo.styleContexts.graph)
-      frameRect = makeMark('rect', {
-        ...rectGeometry,
-        ...graphStyle,
-        stroke: 'transparent',
-      })
+      const graphStyle = graphAttrMapper(graphAttrs, graphContext)
+      frameRect = makeMark(
+        'rect',
+        {
+          ...pick(rectGeometry, ['width', 'height']),
+          ...graphStyle,
+          stroke: 'transparent',
+        },
+        { class: 'dot__frame-bg' },
+      )
       parentInfo.mark.children.unshift(frameRect)
     }
 
     const label = graphAttrs.label
     let labelHeight = 0
     if (label) {
-      const fontConfig = this.getFontConfig()
+      const fontConfig = this.getFontConfig(graphContext)
       const labelPoint = { x: bounds.left + bounds.width / 2, y: bounds.bottom }
       labelHeight = calculateTextDimensions(label, fontConfig).height
       const labelMark = makeTextAtPoint(label, labelPoint, {
         textBaseline: 'top',
         ...fontConfig,
         fill: conf.labelTextColor,
-        ...graphLabelAttrMapper(graphAttrs, parentInfo.styleContexts.graph),
+        ...graphLabelAttrMapper(graphAttrs, graphContext),
       })
       parentInfo.mark.children.push(labelMark)
     }
@@ -358,10 +384,11 @@ class DOTDraw {
     }
   }
 
-  protected getFontConfig() {
+  protected getFontConfig(styleContext?: StyleContext) {
+    const fontsizeStr = styleContext?.getValue('fontsize') as unknown as string
     return {
-      fontSize: this.conf.fontSize,
-      fontFamily: this.conf.fontFamily,
+      fontSize: (fontsizeStr && parseFloat(fontsizeStr)) || this.conf.fontSize,
+      fontFamily: styleContext?.getValue('fontname') || this.conf.fontFamily,
     } as IFont
   }
 }
@@ -427,7 +454,7 @@ function edgeAttrsToStyle(edgeAttrs: EdgeAttrs, styleContext: StyleContext): Mar
   return attrs
 }
 
-const GRAPH_ATTR_MAP = {
+const GRAPH_ATTR_MAP: Partial<Record<keyof GraphAttrs, keyof MarkAttrs>> = {
   color: 'stroke',
   bgcolor: 'fill',
 }
@@ -436,5 +463,16 @@ const graphAttrMapper = makeAttrMapper<GraphAttrs>(GRAPH_ATTR_MAP)
 const graphLabelAttrMapper = makeAttrMapper<GraphAttrs>({
   ...NODE_LABEL_ATTR_MAP,
 })
+
+const ARROW_TYPE_MAP: Record<DOTArrowType, ArrowType> = {
+  normal: 'triangle',
+  box: 'box',
+  obox: 'obox',
+  dot: 'dot',
+  odot: 'odot',
+  open: 'default',
+  diamond: 'diamond',
+  ediamond: 'ediamond',
+}
 
 export default artist

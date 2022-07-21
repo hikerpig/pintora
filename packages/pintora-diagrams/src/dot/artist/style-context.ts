@@ -1,8 +1,8 @@
-export type StyleValue<V = number> = {
+export type StyleValue<V = string> = {
   v: V
 }
 
-type ResolveResult<V = number> = {
+type ResolveResult<V = string> = {
   resolved: boolean
   value: V
 }
@@ -22,8 +22,8 @@ export class StyleContext<ValueMap = any> {
     return child
   }
 
-  getValue(key: string) {
-    const result = this.resolve(key)
+  getValue<K extends keyof ValueMap>(key: K) {
+    const result = this.resolve<K>(key)
     if (result.resolved) {
       return result.value
     }
@@ -40,14 +40,14 @@ export class StyleContext<ValueMap = any> {
     }
   }
 
-  protected resolve(key: string): ResolveResult {
+  protected resolve<K extends keyof ValueMap>(key: K): ResolveResult<ValueMap[K]> {
     // eslint-disable-next-line @typescript-eslint/no-this-alias
     let current: StyleContext | undefined = this
     while (current) {
       if (current.values[key]) {
         return {
           resolved: true,
-          value: current.values[key].v,
+          value: current.values[key].v as any,
         }
       }
       current = current.parent

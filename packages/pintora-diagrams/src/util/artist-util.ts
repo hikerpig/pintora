@@ -12,13 +12,13 @@ import {
   Group,
   mat3,
   Bounds,
-  safeAssign,
   Circle,
   ITheme,
   DiagramArtistOptions,
 } from '@pintora/core'
 import { toFixed } from './number'
 import { PALETTE } from './theme'
+export { arrowTypeRegistry, ArrowType, drawArrowTo } from './arrow'
 
 export { makeMark }
 
@@ -28,53 +28,6 @@ export function getBaseText(): Text['attrs'] {
     y: 0,
     text: '',
     fill: PALETTE.normalDark,
-  }
-}
-
-type ArrowType = 'default' | 'triangle'
-
-type DrawArrowOpts = {
-  type?: ArrowType
-  attrs?: Partial<MarkAttrs>
-  color?: string
-}
-
-/**
- * Will point to dest
- */
-export function drawArrowTo(dest: Point, baseLength: number, rad: number, opts: DrawArrowOpts): Path {
-  const { x, y } = dest
-  const xOffset = (baseLength / 2) * Math.tan(Math.PI / 3)
-  const { type = 'default', color = 'transparent' } = opts
-
-  let p: PathCommand[] = []
-  const arrowAttrs: MarkAttrs = {}
-  if (type === 'default') {
-    p = [
-      ['M', x - xOffset, y - baseLength / 2], // top
-      ['L', x, y], // right
-      ['L', x - xOffset, y + baseLength / 2], // bottom
-    ]
-    safeAssign(arrowAttrs, { stroke: color, lineCap: 'round' })
-  } else if (type === 'triangle') {
-    p = [
-      ['M', x - xOffset, y - baseLength / 2], // top
-      ['L', x - xOffset, y + baseLength / 2], // bottom
-      ['L', x, y], // right
-      ['Z'],
-    ]
-    safeAssign(arrowAttrs, { fill: color })
-  }
-
-  const matrix = createRotateAtPoint(x, y, rad)
-  return {
-    type: 'path',
-    matrix,
-    attrs: {
-      ...arrowAttrs,
-      ...(opts.attrs || {}),
-      path: p,
-    },
   }
 }
 

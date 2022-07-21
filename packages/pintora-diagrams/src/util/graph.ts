@@ -31,7 +31,7 @@ export function getGraphBounds(g: LayoutGraph, opts: GetGraphBoundsOpts = {}): B
     if (opts.filterNode && !opts.filterNode(node)) return
 
     left = Math.min(node.outerLeft || node.x, left)
-    const width = node.outerWidth || node.width
+    const width = node.outerWidth || node.width || 0
     // assuming the node is positioned with anchor point centered
     right = Math.max(node.outerRight || node.x + width / 2, right)
     top = Math.min(node.outerTop || node.y, top)
