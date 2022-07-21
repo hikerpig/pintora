@@ -426,7 +426,7 @@ Object {
           },
           Object {
             "attrs": Object {
-              "fill": "#f8f8f2",
+              "fill": "#fff",
               "opacity": 0.85,
             },
             "class": "label-bg",
@@ -467,7 +467,7 @@ Object {
           },
           Object {
             "attrs": Object {
-              "fill": "#f8f8f2",
+              "fill": "#fff",
               "opacity": 0.85,
             },
             "class": "label-bg",
@@ -508,7 +508,7 @@ Object {
           },
           Object {
             "attrs": Object {
-              "fill": "#f8f8f2",
+              "fill": "#fff",
               "opacity": 0.85,
             },
             "class": "label-bg",
@@ -553,7 +553,7 @@ Object {
           },
           Object {
             "attrs": Object {
-              "fill": "#f8f8f2",
+              "fill": "#fff",
               "opacity": 0.85,
             },
             "class": "label-bg",
@@ -594,7 +594,7 @@ Object {
           },
           Object {
             "attrs": Object {
-              "fill": "#f8f8f2",
+              "fill": "#fff",
               "opacity": 0.85,
             },
             "class": "label-bg",
@@ -635,7 +635,7 @@ Object {
           },
           Object {
             "attrs": Object {
-              "fill": "#f8f8f2",
+              "fill": "#fff",
               "opacity": 0.85,
             },
             "class": "label-bg",
@@ -676,7 +676,7 @@ Object {
           },
           Object {
             "attrs": Object {
-              "fill": "#f8f8f2",
+              "fill": "#fff",
               "opacity": 0.85,
             },
             "class": "label-bg",
@@ -717,7 +717,7 @@ Object {
           },
           Object {
             "attrs": Object {
-              "fill": "#f8f8f2",
+              "fill": "#fff",
               "opacity": 0.85,
             },
             "class": "label-bg",

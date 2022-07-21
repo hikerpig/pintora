@@ -14,7 +14,10 @@ export type DOTConf = {
   nodePadding: number
   nodeBorderRadius: number
 
+  backgroundColor: string
+
   labelTextColor: string
+  nodeBorderColor: string
   edgeColor: string
 
   fontSize: number
@@ -33,7 +36,10 @@ export const defaultConfig: DOTConf = {
   nodePadding: 8,
   nodeBorderRadius: 2,
 
+  backgroundColor: PALETTE.white,
+
   labelTextColor: PALETTE.normalDark,
+  nodeBorderColor: PALETTE.normalDark,
   edgeColor: PALETTE.normalDark,
 
   fontSize: 14,
@@ -53,7 +59,12 @@ const configurator = makeConfigurator<DOTConf>({
     return interpreteConfigs(DOT_PARAM_DIRECTIVE_RULES, configParams)
   },
   getConfigFromTheme(t) {
-    return {}
+    return {
+      backgroundColor: t.canvasBackground,
+      labelTextColor: t.textColor,
+      nodeBorderColor: t.primaryLineColor,
+      edgeColor: t.primaryLineColor,
+    }
   },
 })
 

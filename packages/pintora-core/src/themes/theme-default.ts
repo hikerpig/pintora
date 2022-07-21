@@ -19,6 +19,7 @@ export class ThemeDefault implements ITheme {
   primaryBorderColor = AYU_LIGHT.normalDark
   secondaryBorderColor = AYU_LIGHT.neutralGray
 
+  canvasBackground = AYU_LIGHT.white
   groupBackground = AYU_LIGHT.white
   background1 = AYU_LIGHT.neutralGray
 
