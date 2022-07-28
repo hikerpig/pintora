@@ -1,5 +1,14 @@
 # Change Log
 
+## 0.6.0-alpha.1
+
+### Patch Changes
+
+- c9476a7: feat: [dotDiagram] more attributes; and default theme canvasBackground is now white
+
+  - add arrowhead shape and bg color
+  - add font family and size
+
 ## 0.6.0-alpha.0
 
 ### Minor Changes

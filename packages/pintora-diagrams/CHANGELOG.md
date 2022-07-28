@@ -1,5 +1,18 @@
 # Change Log
 
+## 0.6.0-alpha.1
+
+### Patch Changes
+
+- c9476a7: feat: [dotDiagram] more attributes; and default theme canvasBackground is now white
+
+  - add arrowhead shape and bg color
+  - add font family and size
+
+- 426f251: feat: [dotDiagram] add a shorthand node grammar
+- Updated dependencies [c9476a7]
+  - @pintora/core@0.6.0-alpha.1
+
 ## 0.6.0-alpha.0
 
 ### Minor Changes
