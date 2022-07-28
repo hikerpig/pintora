@@ -1,4 +1,5 @@
 {
+  "$schema": "https://turborepo.org/schema.json",
   "baseBranch": "origin/master",
   "npmClient": "pnpm",
   "pipeline": {
@@ -13,6 +14,9 @@
       ]
     },
     "build": {
+      "dependsOn": [
+        "^build"
+      ],
       "outputs": [
         "dist/**",
         "build/**",
