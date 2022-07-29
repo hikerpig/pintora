@@ -73,7 +73,7 @@ importers:
       cypress: ^10.3.0
       daisyui: ^1.22.2
       less: ^4.1.2
-      postcss: '*'
+      postcss: ^8.4.14
       react: ^18.1.0
       react-dom: ^18.1.0
       react-error-boundary: ^3.1.4
@@ -82,7 +82,7 @@ importers:
       react-router-dom: ^6.3.0
       shiki: ^0.10.0
       start-server-and-test: ^1.14.0
-      tailwindcss: '*'
+      tailwindcss: ^3.1.7
       throttle-debounce: ^5.0.0
       typescript: ^4.5.4
       usehooks-ts: ^2.6.0
@@ -134,7 +134,7 @@ importers:
       less: 4.1.2
       postcss: 8.4.14
       start-server-and-test: 1.14.0
-      tailwindcss: 3.1.6
+      tailwindcss: 3.1.7
       typescript: 4.5.5
       vite: 3.0.3_less@4.1.2
       vite-plugin-pwa: 0.12.3_vite@3.0.3
@@ -13809,6 +13809,11 @@ packages:
     resolution: {integrity: sha512-xaYmXZtTHPAw5m+xLN8ab9C+3a8YmV3asNSPOATITbtwrfbwaLJj8h66H1WMIpALCkqsIzK3h7oQ+PdX+LQ9Eg==}
     engines: {node: '>=10'}
 
+  /lilconfig/2.0.6:
+    resolution: {integrity: sha512-9JROoBW7pobfsx+Sq2JsASvCo6Pfo6WWoUW79HuB1BCoBXD4PLWJPqDF6fNj67pqBYTbAHkE57M1kS/+L1neOg==}
+    engines: {node: '>=10'}
+    dev: true
+
   /lines-and-columns/1.2.4:
     resolution: {integrity: sha512-7ylylesZQ/PV29jhEDl3Ufjo6ZX7gCqJr5F7PKrqc93v7fzSymt1BpwEU8nAUXs8qzzvqhbjhK5QZg6Mt/HkBg==}
 
@@ -15312,7 +15317,7 @@ packages:
       ts-node:
         optional: true
     dependencies:
-      lilconfig: 2.0.5
+      lilconfig: 2.0.6
       postcss: 8.4.14
       yaml: 1.10.2
     dev: true
@@ -17978,8 +17983,8 @@ packages:
   /symbol-tree/3.2.4:
     resolution: {integrity: sha512-9QNk5KwDF+Bvz+PyObkmSYjI5ksVUYtjW7AU22r2NKcfLJcXp96hkDWU3+XndOsUb+AQ9QhfzfCT2O+CNWT5Tw==}
 
-  /tailwindcss/3.1.6:
-    resolution: {integrity: sha512-7skAOY56erZAFQssT1xkpk+kWt2NrO45kORlxFPXUt3CiGsVPhH1smuH5XoDH6sGPXLyBv+zgCKA2HWBsgCytg==}
+  /tailwindcss/3.1.7:
+    resolution: {integrity: sha512-r7mgumZ3k0InfVPpGWcX8X/Ut4xBfv+1O/+C73ar/m01LxGVzWvPxF/w6xIUPEztrCoz7axfx0SMdh8FH8ZvRQ==}
     engines: {node: '>=12.13.0'}
     hasBin: true
     dependencies:
@@ -17992,7 +17997,7 @@ packages:
       fast-glob: 3.2.11
       glob-parent: 6.0.2
       is-glob: 4.0.3
-      lilconfig: 2.0.5
+      lilconfig: 2.0.6
       normalize-path: 3.0.0
       object-hash: 3.0.0
       picocolors: 1.0.0

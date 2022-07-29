@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { DEMO_BASE_URL, GITHUB_URL, DOC_URL } from '../../const'
 import { useDarkMode } from 'usehooks-ts'
-import './Header.css'
+import './Header.less'
 
 const LIVE_EDITOR_URL = `${DEMO_BASE_URL}live-editor/`
 
