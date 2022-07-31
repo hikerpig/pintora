@@ -38,6 +38,7 @@ mindmap
 *** 实体关系图 Entity Relationship Diagram
 *** 思维导图 Mind Map
 *** 甘特图 Diagram
+*** DOT Diagram
 ```
 
 ## 💻 编辑器支持
