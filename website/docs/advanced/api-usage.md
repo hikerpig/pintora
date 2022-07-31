@@ -79,7 +79,7 @@ This function will call `pintora.renderTo` underneath, and will read some datase
 For example:
 
 ```html title=renderContentOf-example.html
-<pre class="pintora" data-renderer="canvas">
+<pre className="pintora" data-renderer="canvas">
 mindmap
 * Root
 ** Second

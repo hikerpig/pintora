@@ -23,9 +23,9 @@ Heavily inspired by [Mermaid.js](https://mermaid-js.github.io/mermaid/#/) and [P
 - [Entity Relationship Diagram](./diagrams/er-diagram.mdx)
 - [Component Diagram](./diagrams/component-diagram.mdx)
 - [Activity Diagram](./diagrams/activity-diagram.mdx)
-- [Mind Map](./diagrams/mindmap.mdx) <span class="badge badge--info">Experiment</span>
-- [Gantt Diagram](./diagrams/gantt-diagram.mdx) <span class="badge badge--info">Experiment</span>
-- [DOT Diagram](./diagrams/dot-diagram.mdx) <span class="badge badge--info">Experiment</span>
+- [Mind Map](./diagrams/mindmap.mdx) <span className="badge badge--info">Experiment</span>
+- [Gantt Diagram](./diagrams/gantt-diagram.mdx) <span className="badge badge--info">Experiment</span>
+- [DOT Diagram](./diagrams/dot-diagram.mdx) <span className="badge badge--info">Experiment</span>
 
 ```pintora play
 mindmap

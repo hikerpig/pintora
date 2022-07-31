@@ -5,7 +5,8 @@
     "outDir": "lib",
     "strict": false,
     "checkJs": false,
-    "allowJs": true
+    "allowJs": true,
+    "noImplicitThis": true
   },
   "references": [
     { "path": "../pintora-core" },

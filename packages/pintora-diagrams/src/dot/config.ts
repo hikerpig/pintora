@@ -1,3 +1,4 @@
+import { MarkAttrs } from '@pintora/core'
 import { EdgeType, getParamRulesFromConfig, interpreteConfigs, makeConfigurator } from '../util/config'
 import { DEFAULT_FONT_FAMILY } from '../util/text'
 import { PALETTE } from '../util/theme'
@@ -21,6 +22,7 @@ export type DOTConf = {
   edgeColor: string
 
   fontSize: number
+  fontWeight: MarkAttrs['fontWeight']
   fontFamily: string
 }
 
@@ -43,6 +45,7 @@ export const defaultConfig: DOTConf = {
   edgeColor: PALETTE.normalDark,
 
   fontSize: 14,
+  fontWeight: 'normal',
   fontFamily: DEFAULT_FONT_FAMILY,
 } as const
 

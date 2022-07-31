@@ -147,6 +147,8 @@ export interface HTMLString {
   html: true
 }
 
+export type DOTShapeType = 'box' | 'ellipse' | 'circle' | 'diamond' | 'plaintext'
+
 // https://graphviz.org/doc/info/attrs.html
 export type NodeAttrs = {
   label?: string
@@ -160,6 +162,8 @@ export type NodeAttrs = {
   fontname?: string
   /** font size for node label */
   fontsize?: number
+  /** shape of node */
+  shape?: DOTShapeType
   /** [pintora specific], margin top */
   margint?: number
   /** [pintora specific], margin bottom */

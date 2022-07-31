@@ -428,7 +428,7 @@ pintora.default.setConfig({
 
 ```html
   <section>
-    <div class="pintora">
+    <div className="pintora">
       pie
         title Bag of Fruits
         "apple" 5

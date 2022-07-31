@@ -326,10 +326,14 @@ export type DOTConf = {
   nodePadding: number
   nodeBorderRadius: number
 
+  backgroundColor: string
+
   labelTextColor: string
+  nodeBorderColor: string
   edgeColor: string
 
   fontSize: number
+  fontWeight: MarkAttrs['fontWeight']
   fontFamily: string
 }
 
