@@ -21,7 +21,7 @@ erDiagram
           .should('exist')
           .then($ele => {
             const ele = $ele[0]
-            const doc = (ele as unknown as SVGPathElement).ownerSVGElement
+            const doc = (ele as unknown as SVGPathElement).ownerSVGElement!
             const entityA = doc.getElementById('entity-A')
             const entityB = doc.getElementById('entity-B')
             expect(entityA.getBoundingClientRect().y).to.greaterThan(entityB.getBoundingClientRect().y)
