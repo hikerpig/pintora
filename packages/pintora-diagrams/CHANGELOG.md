@@ -1,5 +1,13 @@
 # Change Log
 
+## 0.6.0-alpha.2
+
+### Patch Changes
+
+- a997bee: feat: [dotDiagra] some common node shapes
+- 240e0af: optimize: [sequence] classifier fallback if there is no symbol icon
+- beecc00: fix: [sequence] actor order bug, #127
+
 ## 0.6.0-alpha.1
 
 ### Patch Changes

@@ -1,5 +1,12 @@
 # Change Log
 
+## 0.5.0-alpha.1
+
+### Patch Changes
+
+- 240e0af: optimize: [sequence] classifier fallback if there is no symbol icon
+- beecc00: fix: [sequence] actor order bug, #127
+
 ## 0.5.0-alpha.0
 
 ### Minor Changes
