@@ -39,6 +39,7 @@ mindmap
 *** Entity Relationship Diagram
 *** Mind Map
 *** Gantt Diagram
+*** DOT Diagram
 ```
 
 ## 💻 Editor Support
