@@ -12,7 +12,13 @@ const PintoraPlay = props => {
   const renderer = 'svg'
   const [errorMessage, setErrorMessage] = useState('')
   const [highlightedCode, setHighlightedCode] = useState('')
-  const isDarkTheme = useColorMode().colorMode === 'dark'
+  let isDarkTheme = false
+  try {
+    isDarkTheme = useColorMode().colorMode === 'dark'
+  } catch (error) {
+    // if this component is not child of <Layout>, useColorMode will throw error
+    // https://docusaurus.io/docs/api/themes/configuration#use-color-mode
+  }
 
   useEffect(() => {
     if (!containerRef.current) return
