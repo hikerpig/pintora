@@ -7,6 +7,7 @@ symbolRegistry.register('diamond', {
     if (mode === 'container') {
       return makeContainer(contentArea)
     }
+    return makeIcon(contentArea)
   },
   styleMark(mark, def, attrs) {
     mark.children.forEach(child => {
@@ -50,6 +51,31 @@ function makeContainer({ width, height, x, y }: ContentArea) {
         width: outerWidth,
         height: outerHeight,
       },
+    },
+  )
+  return sym
+}
+
+function makeIcon({ width, height, x, y }: ContentArea) {
+  const ry = height / 2
+  const rx = width / 2
+
+  const mark = makeMark(
+    'group',
+    {},
+    {
+      children: [
+        makeMark('path', {
+          path: [['M', x, y], ['m', -rx, 0], ['l', rx, ry], ['l', rx, -ry], ['l', -rx, -ry], ['Z']],
+        }),
+      ],
+    },
+  )
+  const sym = makeMark(
+    'symbol',
+    {},
+    {
+      mark,
     },
   )
   return sym

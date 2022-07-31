@@ -180,6 +180,502 @@ Object {
 }
 `;
 
+exports[`sequence-artist draw participant classifier 1`] = `
+Object {
+  "mark": Object {
+    "attrs": Object {},
+    "children": Array [
+      Object {
+        "children": Array [
+          Object {
+            "attrs": Object {
+              "stroke": "#3b4044",
+            },
+            "class": "actor__line",
+            "type": "line",
+          },
+          Object {
+            "attrs": Object {},
+            "mark": Object {
+              "attrs": Object {},
+              "children": Array [
+                Object {
+                  "attrs": Object {
+                    "fill": "#fdb05e",
+                    "height": 38,
+                    "lineWidth": 1.5,
+                    "r": 7.6,
+                    "stroke": "#3b4044",
+                    "width": 53.199999999999996,
+                    "x": 40,
+                    "y": 7.6,
+                  },
+                  "type": "circle",
+                },
+                Object {
+                  "attrs": Object {
+                    "fill": null,
+                    "lineWidth": 1.5,
+                    "path": Array [
+                      Array [
+                        "M",
+                        28.6,
+                        21.53333333333333,
+                      ],
+                      Array [
+                        "L",
+                        51.4,
+                        21.53333333333333,
+                      ],
+                      Array [
+                        "M",
+                        40,
+                        15.2,
+                      ],
+                      Array [
+                        "L",
+                        40,
+                        26.6,
+                      ],
+                      Array [
+                        "l",
+                        -7.6,
+                        15.2,
+                      ],
+                      Array [
+                        "l",
+                        7.6,
+                        -15.2,
+                      ],
+                      Array [
+                        "l",
+                        7.6,
+                        15.2,
+                      ],
+                    ],
+                    "stroke": "#3b4044",
+                  },
+                  "type": "path",
+                },
+              ],
+              "type": "group",
+            },
+            "type": "symbol",
+          },
+          Object {
+            "attrs": Object {
+              "fill": "#3b4044",
+              "fontFamily": "Source Code Pro, sans-serif",
+              "fontSize": 16,
+              "fontWeight": 400,
+              "text": "A",
+              "textAlign": "center",
+              "textBaseline": "middle",
+            },
+            "type": "text",
+          },
+        ],
+        "class": "actor",
+        "itemId": "actor-A",
+        "type": "group",
+      },
+      Object {
+        "children": Array [
+          Object {
+            "attrs": Object {
+              "stroke": "#3b4044",
+            },
+            "class": "actor__line",
+            "type": "line",
+          },
+          Object {
+            "attrs": Object {},
+            "mark": Object {
+              "attrs": Object {},
+              "children": Array [
+                Object {
+                  "attrs": Object {
+                    "fill": "#fdb05e",
+                    "path": Array [
+                      Array [
+                        "M",
+                        103.4,
+                        12,
+                      ],
+                      Array [
+                        "L",
+                        103.4,
+                        26,
+                      ],
+                      Array [
+                        "A",
+                        26.599999999999998,
+                        12,
+                        0,
+                        1,
+                        0,
+                        156.6,
+                        26,
+                      ],
+                      Array [
+                        "L",
+                        156.6,
+                        12,
+                      ],
+                    ],
+                    "stroke": "#3b4044",
+                  },
+                  "type": "path",
+                },
+                Object {
+                  "attrs": Object {
+                    "cx": 130,
+                    "cy": 19,
+                    "fill": "#fdb05e",
+                    "rx": 26.599999999999998,
+                    "ry": 12,
+                    "stroke": "#3b4044",
+                    "x": 130,
+                    "y": 12,
+                  },
+                  "type": "ellipse",
+                },
+              ],
+              "type": "group",
+            },
+            "type": "symbol",
+          },
+          Object {
+            "attrs": Object {
+              "fill": "#3b4044",
+              "fontFamily": "Source Code Pro, sans-serif",
+              "fontSize": 16,
+              "fontWeight": 400,
+              "text": "B",
+              "textAlign": "center",
+              "textBaseline": "middle",
+            },
+            "type": "text",
+          },
+        ],
+        "class": "actor",
+        "itemId": "actor-B",
+        "type": "group",
+      },
+      Object {
+        "children": Array [
+          Object {
+            "attrs": Object {
+              "stroke": "#3b4044",
+            },
+            "class": "actor__line",
+            "type": "line",
+          },
+          Object {
+            "attrs": Object {},
+            "mark": Object {
+              "attrs": Object {},
+              "children": Array [
+                Object {
+                  "attrs": Object {
+                    "fill": "#fdb05e",
+                    "path": Array [
+                      Array [
+                        "M",
+                        220,
+                        19,
+                      ],
+                      Array [
+                        "m",
+                        -26.599999999999998,
+                        0,
+                      ],
+                      Array [
+                        "l",
+                        26.599999999999998,
+                        19,
+                      ],
+                      Array [
+                        "l",
+                        26.599999999999998,
+                        -19,
+                      ],
+                      Array [
+                        "l",
+                        -26.599999999999998,
+                        -19,
+                      ],
+                      Array [
+                        "Z",
+                      ],
+                    ],
+                    "stroke": "#3b4044",
+                  },
+                  "type": "path",
+                },
+              ],
+              "type": "group",
+            },
+            "type": "symbol",
+          },
+          Object {
+            "attrs": Object {
+              "fill": "#3b4044",
+              "fontFamily": "Source Code Pro, sans-serif",
+              "fontSize": 16,
+              "fontWeight": 400,
+              "text": "C",
+              "textAlign": "center",
+              "textBaseline": "middle",
+            },
+            "type": "text",
+          },
+        ],
+        "class": "actor",
+        "itemId": "actor-C",
+        "type": "group",
+      },
+      Object {
+        "attrs": Object {},
+        "children": Array [],
+        "class": "activations",
+        "type": "group",
+      },
+      Object {
+        "children": Array [
+          Object {
+            "attrs": Object {},
+            "mark": Object {
+              "attrs": Object {},
+              "children": Array [
+                Object {
+                  "attrs": Object {
+                    "fill": "#fdb05e",
+                    "height": 38,
+                    "lineWidth": 1.5,
+                    "r": 7.6,
+                    "stroke": "#3b4044",
+                    "width": 53.199999999999996,
+                    "x": 40,
+                    "y": 77.6,
+                  },
+                  "type": "circle",
+                },
+                Object {
+                  "attrs": Object {
+                    "fill": null,
+                    "lineWidth": 1.5,
+                    "path": Array [
+                      Array [
+                        "M",
+                        28.6,
+                        91.53333333333333,
+                      ],
+                      Array [
+                        "L",
+                        51.4,
+                        91.53333333333333,
+                      ],
+                      Array [
+                        "M",
+                        40,
+                        85.2,
+                      ],
+                      Array [
+                        "L",
+                        40,
+                        96.6,
+                      ],
+                      Array [
+                        "l",
+                        -7.6,
+                        15.2,
+                      ],
+                      Array [
+                        "l",
+                        7.6,
+                        -15.2,
+                      ],
+                      Array [
+                        "l",
+                        7.6,
+                        15.2,
+                      ],
+                    ],
+                    "stroke": "#3b4044",
+                  },
+                  "type": "path",
+                },
+              ],
+              "type": "group",
+            },
+            "type": "symbol",
+          },
+          Object {
+            "attrs": Object {
+              "fill": "#3b4044",
+              "fontFamily": "Source Code Pro, sans-serif",
+              "fontSize": 16,
+              "fontWeight": 400,
+              "text": "A",
+              "textAlign": "center",
+              "textBaseline": "middle",
+            },
+            "type": "text",
+          },
+        ],
+        "class": "actor",
+        "itemId": "actor-A",
+        "type": "group",
+      },
+      Object {
+        "children": Array [
+          Object {
+            "attrs": Object {},
+            "mark": Object {
+              "attrs": Object {},
+              "children": Array [
+                Object {
+                  "attrs": Object {
+                    "fill": "#fdb05e",
+                    "path": Array [
+                      Array [
+                        "M",
+                        103.4,
+                        82,
+                      ],
+                      Array [
+                        "L",
+                        103.4,
+                        96,
+                      ],
+                      Array [
+                        "A",
+                        26.599999999999998,
+                        12,
+                        0,
+                        1,
+                        0,
+                        156.6,
+                        96,
+                      ],
+                      Array [
+                        "L",
+                        156.6,
+                        82,
+                      ],
+                    ],
+                    "stroke": "#3b4044",
+                  },
+                  "type": "path",
+                },
+                Object {
+                  "attrs": Object {
+                    "cx": 130,
+                    "cy": 89,
+                    "fill": "#fdb05e",
+                    "rx": 26.599999999999998,
+                    "ry": 12,
+                    "stroke": "#3b4044",
+                    "x": 130,
+                    "y": 82,
+                  },
+                  "type": "ellipse",
+                },
+              ],
+              "type": "group",
+            },
+            "type": "symbol",
+          },
+          Object {
+            "attrs": Object {
+              "fill": "#3b4044",
+              "fontFamily": "Source Code Pro, sans-serif",
+              "fontSize": 16,
+              "fontWeight": 400,
+              "text": "B",
+              "textAlign": "center",
+              "textBaseline": "middle",
+            },
+            "type": "text",
+          },
+        ],
+        "class": "actor",
+        "itemId": "actor-B",
+        "type": "group",
+      },
+      Object {
+        "children": Array [
+          Object {
+            "attrs": Object {},
+            "mark": Object {
+              "attrs": Object {},
+              "children": Array [
+                Object {
+                  "attrs": Object {
+                    "fill": "#fdb05e",
+                    "path": Array [
+                      Array [
+                        "M",
+                        220,
+                        89,
+                      ],
+                      Array [
+                        "m",
+                        -26.599999999999998,
+                        0,
+                      ],
+                      Array [
+                        "l",
+                        26.599999999999998,
+                        19,
+                      ],
+                      Array [
+                        "l",
+                        26.599999999999998,
+                        -19,
+                      ],
+                      Array [
+                        "l",
+                        -26.599999999999998,
+                        -19,
+                      ],
+                      Array [
+                        "Z",
+                      ],
+                    ],
+                    "stroke": "#3b4044",
+                  },
+                  "type": "path",
+                },
+              ],
+              "type": "group",
+            },
+            "type": "symbol",
+          },
+          Object {
+            "attrs": Object {
+              "fill": "#3b4044",
+              "fontFamily": "Source Code Pro, sans-serif",
+              "fontSize": 16,
+              "fontWeight": 400,
+              "text": "C",
+              "textAlign": "center",
+              "textBaseline": "middle",
+            },
+            "type": "text",
+          },
+        ],
+        "class": "actor",
+        "itemId": "actor-C",
+        "type": "group",
+      },
+    ],
+    "type": "group",
+  },
+}
+`;
+
 exports[`sequence-artist match example snapshot 1`] = `
 Object {
   "mark": Object {
