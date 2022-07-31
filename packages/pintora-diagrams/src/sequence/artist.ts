@@ -866,7 +866,7 @@ type DrawActorsOptions = {
 export const drawActors = function (rootMark: Group, ir: SequenceDiagramIR, opts: DrawActorsOptions) {
   // Draw the actors
   const { verticalPos = 0, isMirror } = opts
-  let actorKeys = Object.keys(ir.actors)
+  let actorKeys = ir.actorOrder
 
   const boxIds = Object.keys(ir.participantBoxes)
 
