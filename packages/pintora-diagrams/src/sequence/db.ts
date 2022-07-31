@@ -100,6 +100,7 @@ export type SequenceDiagramIR = BaseDiagramIR & {
   messages: Message[]
   notes: Note[]
   actors: { [key: string]: Actor }
+  actorOrder: string[]
   participantBoxes: { [key: string]: ParticipantBox }
   title: string
   showSequenceNumbers: boolean
@@ -116,6 +117,7 @@ class SequenceDB extends BaseDb {
   titleWrapped = false
   wrapEnabled = false
   showSequenceNumbers = false
+  actorOrder = new Set<string>()
 
   protected idCounter = makeIdCounter()
 
@@ -126,6 +128,8 @@ class SequenceDB extends BaseDb {
     // Don't allow description nulling
     const old = this.actors[id]
     if (old && name === old.name && description == null) return
+
+    this.actorOrder.add(id)
 
     // Don't allow null descriptions, either
     if (description == null || description.text == null) {
@@ -291,6 +295,7 @@ class SequenceDB extends BaseDb {
     this.messages = []
     this.notes = []
     this.actors = {}
+    this.actorOrder.clear()
     this.participantBoxes = {}
     this.title = ''
     this.showSequenceNumbers = false
@@ -315,6 +320,7 @@ class SequenceDB extends BaseDb {
       messages: this.messages,
       notes: this.notes,
       actors: this.actors,
+      actorOrder: Array.from(this.actorOrder),
       participantBoxes: this.participantBoxes,
       title: this.title,
       showSequenceNumbers: this.showSequenceNumbers,
