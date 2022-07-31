@@ -27,6 +27,7 @@ import { createLayoutGraph, getGraphSplinesOption, LayoutEdge, LayoutGraph } fro
 import { getPointsCurvePath, getPointsLinearPath } from '../util/line-util'
 import { TRANSFORM_GRAPH } from '../util/mark-positioner'
 import { getTextDimensionsInPresicion } from '../util/text'
+import { drawNodeShape } from './artist/draw-node'
 import { StyleContext } from './artist/style-context'
 import { DOTConf, getConf } from './config'
 import {
@@ -160,6 +161,7 @@ class DOTDraw {
     for (const edgeNodeId of this.edgeNodeIds) {
       if (!this.drawnNodeIds.has(edgeNodeId)) {
         this.drawNode(edgeNodeId, {}, parentInfo)
+        this.g.setParent(edgeNodeId, parentInfo.id)
       }
     }
 
@@ -258,13 +260,17 @@ class DOTDraw {
       height,
       ...layoutAttrs,
       onLayout: data => {
-        const flooredGeom = floorValues(TRANSFORM_GRAPH.graphNodeToRectStart(data))
-        const nodeRect = makeMark('rect', {
-          ...flooredGeom,
-          stroke: this.conf.nodeBorderColor,
-          radius: this.conf.nodeBorderRadius,
-          ...nodeAttrsToStyle(nodeAttrs, nodeStyleContext),
+        const nodeShapeResult = drawNodeShape({
+          data,
+          nodeAttrs,
+          textDims,
+          markAttrs: {
+            stroke: this.conf.nodeBorderColor,
+            radius: this.conf.nodeBorderRadius,
+            ...nodeAttrsToStyle(nodeAttrs, nodeStyleContext),
+          },
         })
+
         const textMark = makeMark('text', {
           text: label,
           x: data.x,
@@ -275,7 +281,7 @@ class DOTDraw {
           textAlign: 'center',
           textBaseline: 'middle',
         })
-        parentInfo.mark.children.push(nodeRect, textMark)
+        parentInfo.mark.children.push(nodeShapeResult.containerNode, textMark)
       },
     })
   }
@@ -389,6 +395,7 @@ class DOTDraw {
     return {
       fontSize: (fontsizeStr && parseFloat(fontsizeStr)) || this.conf.fontSize,
       fontFamily: styleContext?.getValue('fontname') || this.conf.fontFamily,
+      fontWeight: this.conf.fontWeight,
     } as IFont
   }
 }

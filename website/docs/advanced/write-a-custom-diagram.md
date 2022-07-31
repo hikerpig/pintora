@@ -413,7 +413,7 @@ The `pintora-diagram-pie-chart.umd.js` will register the custom diagram to pinto
 
 ```html
   <section>
-    <div class="pintora">
+    <div className="pintora">
       pie
         title Bag of Fruits
         "apple" 5

@@ -2,7 +2,7 @@
 title: DOT Diagram
 ---
 
-<span class="badge badge--info">Experiment</span> syntax may change.
+<span className="badge badge--info">Experiment</span> syntax may change.
 
 ## Introduction
 
@@ -78,6 +78,9 @@ dotDiagram
 Here are some supported attributes on node, edge, and graph.
 
 ```ts
+export type DOTShapeType = 'box' | 'ellipse' | 'circle' | 'diamond' | 'plaintext'
+
+// https://graphviz.org/doc/info/attrs.html
 export type NodeAttrs = {
   label?: string
   /** stroke color */
@@ -86,6 +89,12 @@ export type NodeAttrs = {
   fontcolor?: string
   /** background color */
   bgcolor?: string
+  /** font family for node label */
+  fontname?: string
+  /** font size for node label */
+  fontsize?: number
+  /** shape of node */
+  shape?: DOTShapeType
   /** [pintora specific], margin top */
   margint?: number
   /** [pintora specific], margin bottom */
@@ -98,6 +107,8 @@ export type NodeAttrs = {
 
 export type EdgeStyle = 'invis'
 
+export type DOTArrowType = 'normal' | 'box' | 'obox' | 'dot' | 'odot' | 'open' | 'diamond' | 'ediamond'
+
 export type EdgeAttrs = {
   label?: string
   /** edge line color */
@@ -106,6 +117,14 @@ export type EdgeAttrs = {
   fontcolor?: string
   /** edge style */
   style?: EdgeStyle
+  /** edge line width */
+  penwidth?: number
+  /** font family for edge label */
+  fontname?: string
+  /** font size for edge label */
+  fontsize?: number
+  /** arrow type for arrow head */
+  arrowhead?: DOTArrowType
 }
 
 export type GraphAttrs = {
@@ -114,7 +133,48 @@ export type GraphAttrs = {
   color?: string
   /** background color */
   bgcolor?: string
+  /** font family for graph label */
+  fontname?: string
+  /** font size for graph label */
+  fontsize?: number
 }
+```
+
+## Shapes
+
+### Node Shapes
+
+```pintora play
+dotDiagram
+  @param fontWeight bold
+  digraph {
+    bgcolor="#faf5f5";
+    node [color="#111",bgcolor=orange]
+
+    ellipse [shape="ellipse"];
+    circle [shape="circle"];
+    diamond [shape="diamond"];
+    plaintext [shape="plaintext"];
+
+  }
+```
+
+### Arrow Shapes
+
+```pintora play
+dotDiagram
+  digraph {
+    bgcolor="#faf5f5";
+    node [color="#111",bgcolor=orange]
+
+    s1 -> e1 [arrowhead="box"]
+    s2 -> e2 [arrowhead="obox"]
+    s3 -> e3 [arrowhead="dot"]
+    s4 -> e4 [arrowhead="odot"]
+    s5 -> e5 [arrowhead="open"]
+    s6 -> e6 [arrowhead="diamond"]
+    s7 -> e7 [arrowhead="ediamond"]
+  }
 ```
 
 ## Override config
