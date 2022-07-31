@@ -23,6 +23,7 @@ import {
   compact,
   Bounds,
   TSize,
+  GSymbol,
 } from '@pintora/core'
 import { db, SequenceDiagramIR, LINETYPE, Message, PLACEMENT, WrappedText, ParticipantBox } from './db'
 import { ActivationData, LoopModel, SequenceDiagramBounds, MessageModel } from './artist/type'
@@ -938,6 +939,7 @@ export const drawActors = function (rootMark: Group, ir: SequenceDiagramIR, opts
     const labelDims = calculateTextDimensions(actor.description, labelFontFonfig)
 
     let lineStartOffsetY = 0
+    let sym: GSymbol
     if (actor.classifier && symbolRegistry.get(actor.classifier)) {
       const symbolHeight = areaHeight - labelDims.height
       const contentArea: ContentArea = {
@@ -947,7 +949,8 @@ export const drawActors = function (rootMark: Group, ir: SequenceDiagramIR, opts
         height: symbolHeight,
       }
       lineStartOffsetY += labelDims.height / 2
-      const sym = symbolRegistry.create(actor.classifier, {
+
+      sym = symbolRegistry.create(actor.classifier, {
         mode: 'icon',
         attrs: {
           stroke: attrs.stroke,
@@ -955,9 +958,12 @@ export const drawActors = function (rootMark: Group, ir: SequenceDiagramIR, opts
         },
         contentArea,
       })
-      textAttrs.y = actorCenter.y + (areaHeight - labelDims.height) / 2 + 4
-      actorMark.children.push(sym)
-    } else {
+      if (sym) {
+        textAttrs.y = actorCenter.y + (areaHeight - labelDims.height) / 2 + 4
+        actorMark.children.push(sym)
+      }
+    }
+    if (!sym) {
       // console.log('drawActors', attrsKey, verticalPos, 'attrs', attrs)
       actorMark.children.push({
         type: 'rect',
