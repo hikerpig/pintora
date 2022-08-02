@@ -37,5 +37,27 @@ describe('DOT Diagram', () => {
       }
 `),
     },
+    {
+      description: 'Subgraph should be at least as wide as its label',
+      code: stripStartEmptyLines(`
+      dotDiagram
+      graph {
+        subgraph cluster_ground_floor {
+          bgcolor="lightgreen"
+          label="Ground Floor Long"
+          Lounge
+          Kitchen
+        }
+
+        subgraph cluster_top_floor {
+          bgcolor="lightyellow"
+          label="Top Floor"
+          Bedroom
+        }
+
+        Lounge -- Kitchen
+      }
+      `),
+    },
   ])
 })
