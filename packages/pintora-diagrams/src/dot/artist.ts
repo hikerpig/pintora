@@ -184,11 +184,16 @@ class DOTDraw {
     const fontConfig = this.getFontConfig(graphContext)
 
     const graphAttrs = irGraph.attrs?.graph || {}
-    const childLabel = graphAttrs.label
+    const graphLabel = graphAttrs.label
     if (parentInfo.isRoot) {
       this.g.setNode(irGraph.id, {})
     } else {
+      let minwidth = 0
+      if (graphLabel) {
+        minwidth = calculateTextDimensions(graphLabel, fontConfig).width
+      }
       this.g.setNode(irGraph.id, {
+        minwidth,
         onLayout(data) {
           const rectGeometry = floorValues(TRANSFORM_GRAPH.graphNodeToRectStart(data))
           const graphStyle = graphAttrMapper(graphAttrs, graphContext)
@@ -199,9 +204,9 @@ class DOTDraw {
           })
           parentInfo.mark.children.unshift(subGraphRect)
 
-          if (childLabel) {
+          if (graphLabel) {
             const labelPoint = { x: data.x, y: data.y - data.height / 2 }
-            const labelMark = makeTextAtPoint(childLabel, labelPoint, {
+            const labelMark = makeTextAtPoint(graphLabel, labelPoint, {
               textBaseline: 'top',
               ...fontConfig,
               fill: conf.labelTextColor,
