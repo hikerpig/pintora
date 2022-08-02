@@ -116,7 +116,7 @@ export function updateBoundsByPoints(bounds: Bounds, points: Point[]) {
   return bounds
 }
 
-export function floorValues(o: Record<string, number>) {
+export function floorValues<O>(o: O) {
   for (const k of Object.keys(o)) {
     if (o[k]) o[k] = Math.floor(o[k])
   }
