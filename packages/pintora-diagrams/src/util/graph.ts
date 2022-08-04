@@ -93,21 +93,6 @@ export function isSubgraph(g: LayoutGraph, id: string) {
   return Boolean(g.children(id).length)
 }
 
-/**
- * call `onLayout` on each nodeData
- */
-export function adjustEntities(graph: LayoutGraph) {
-  graph.nodes().forEach(function (v) {
-    const nodeData: LayoutNode = graph.node(v) as any
-    if (nodeData) {
-      // console.log('adjustEntities, graph node: ', nodeData)
-      if (nodeData.onLayout) {
-        nodeData.onLayout(nodeData)
-      }
-    }
-  })
-}
-
 /** is topdown */
 export function isGraphVertical(g: LayoutGraph) {
   return g.graph().rankdir === 'TB'

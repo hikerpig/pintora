@@ -34,15 +34,7 @@ import {
   Repeat,
 } from './db'
 import { ActivityConf, getConf } from './config'
-import {
-  adjustEntities,
-  createLayoutGraph,
-  getGraphBounds,
-  getGraphSplinesOption,
-  LayoutEdge,
-  LayoutGraph,
-  LayoutNode,
-} from '../util/graph'
+import { createLayoutGraph, getGraphSplinesOption, LayoutEdge, LayoutGraph, LayoutNode } from '../util/graph'
 import {
   makeMark,
   calcDirection,
@@ -53,13 +45,13 @@ import {
   getBaseNote,
   makeCircle,
 } from '../util/artist-util'
-import dagre from '@pintora/dagre'
 import { makeBounds, positionGroupContents, tryExpandBounds } from '../util/mark-positioner'
 import { isDev } from '../util/env'
 import { getPointsCurvePath, getPointsLinearPath } from '../util/line-util'
 import { makeTextMark } from './artist-util'
 import { calcBound, updateBoundsByPoints } from '../util/bound'
 import { getTextDimensionsInPresicion } from '../util/text'
+import { DagreWrapper } from '../util/dagre-wrapper'
 
 let conf: ActivityConf
 let model: ArtistModel
@@ -105,6 +97,7 @@ const erArtist: IDiagramArtist<ActivityDiagramIR, ActivityConf> = {
       })
 
     model.preProcess()
+    const dagreWrapper = new DagreWrapper(g)
     activityDraw = new ActivityDraw(model, g)
     if (isDev) {
       ;(window as any).activityDraw = activityDraw
@@ -117,13 +110,13 @@ const erArtist: IDiagramArtist<ActivityDiagramIR, ActivityConf> = {
       activityDraw.drawNote(rootMark, note)
     })
 
-    dagre.layout(g)
+    dagreWrapper.doLayout()
 
-    adjustEntities(g)
+    dagreWrapper.callNodeOnLayout()
 
     const { bounds: edgeBounds } = drawEdges(rootMark, g)
 
-    const bounds = tryExpandBounds(getGraphBounds(g), edgeBounds)
+    const bounds = tryExpandBounds(dagreWrapper.getGraphBounds(), edgeBounds)
 
     // console.log('bounds', bounds)
     const { width, height } = adjustRootMarkBounds({

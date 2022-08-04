@@ -11,22 +11,14 @@ import {
 } from '@pintora/core'
 import { MindmapIR, MMItem, MMTree } from './db'
 import { MindmapConf, getConf } from './config'
-import {
-  adjustEntities,
-  createLayoutGraph,
-  getGraphBounds,
-  isGraphVertical,
-  LayoutEdge,
-  LayoutGraph,
-  LayoutNode,
-} from '../util/graph'
+import { createLayoutGraph, isGraphVertical, LayoutEdge, LayoutGraph, LayoutNode } from '../util/graph'
 // eslint-disable-next-line unused-imports/no-unused-imports
 import { makeMark, makeEmptyGroup, adjustRootMarkBounds, makeCircleInPoint } from '../util/artist-util'
-import dagre from '@pintora/dagre'
 import { getPointsLinearPath } from '../util/line-util'
 import db from './db'
 import { makeBounds, positionGroupContents, TRANSFORM_GRAPH } from '../util/mark-positioner'
 import { isDev } from '../util/env'
+import { DagreWrapper } from '../util/dagre-wrapper'
 
 let conf: MindmapConf
 let mmDraw: MMDraw
@@ -47,7 +39,7 @@ const mmArtist: IDiagramArtist<MindmapIR, MindmapConf> = {
 
     mmDraw.drawTo(rootMark)
 
-    const bounds = getGraphBounds(mmDraw.g)
+    const bounds = mmDraw.dagreWrapper.getGraphBounds()
     const { width, height } = adjustRootMarkBounds({
       rootMark,
       gBounds: bounds,
@@ -72,6 +64,7 @@ type EdgeData = LayoutEdge<{
 class MMDraw {
   protected trees: MMTree[]
   g: LayoutGraph
+  dagreWrapper: DagreWrapper
 
   constructor(public ir: MindmapIR) {
     this.trees = ir.trees.map(data => {
@@ -92,13 +85,15 @@ class MMDraw {
       .setDefaultEdgeLabel(function () {
         return {}
       })
+
+    this.dagreWrapper = new DagreWrapper(this.g)
   }
 
   drawTo(rootMark: Group) {
     this.trees.map(tree => this.drawTree(rootMark, tree))
 
-    dagre.layout(this.g)
-    adjustEntities(this.g)
+    this.dagreWrapper.doLayout()
+    this.dagreWrapper.callNodeOnLayout()
 
     this.drawEdgesTo(rootMark)
   }
