@@ -1,5 +1,12 @@
 # Change Log
 
+## 0.3.9-alpha.3
+
+### Patch Changes
+
+- Updated dependencies [9385a0f]
+  - @pintora/diagrams@0.6.0-alpha.3
+
 ## 0.3.9-alpha.2
 
 ### Patch Changes
