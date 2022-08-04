@@ -17,7 +17,6 @@ import { ComponentDiagramIR, LineType, Relationship } from './db'
 import { ComponentConf, getConf } from './config'
 import {
   createLayoutGraph,
-  getGraphBounds,
   getGraphSplinesOption,
   LayoutEdge,
   LayoutGraph,
@@ -25,11 +24,9 @@ import {
   LayoutNodeOption,
 } from '../util/graph'
 import { makeMark, drawArrowTo, calcDirection, makeLabelBg, adjustRootMarkBounds } from '../util/artist-util'
-import dagre from '@pintora/dagre'
-import { Edge } from '@pintora/graphlib'
-import { isDev } from '../util/env'
 import { makeBounds, tryExpandBounds } from '../util/mark-positioner'
 import { getPointsCurvePath, getPointsLinearPath } from '../util/line-util'
+import { DagreWrapper } from '../util/dagre-wrapper'
 
 let conf: ComponentConf
 
@@ -37,10 +34,14 @@ function getEdgeName(relationship: Relationship) {
   return `${relationship.from.name}_${relationship.to.name}_${relationship.message}`
 }
 
+type EdgeOnLayoutContext = {
+  updateBounds(b: Bounds): void
+}
+
 type EdgeData = {
   name: string
   relationship: Relationship
-  onLayout(data: LayoutEdge<EdgeData>, edge: Edge, context: { updateBounds(b: Bounds): void }): void
+  onLayout(data: LayoutEdge<EdgeData>, context: EdgeOnLayoutContext): void
   /** this edge is for layout, should not be drawn */
   isDummyEdge?: boolean
   labelSize?: TSize
@@ -69,6 +70,8 @@ const componentArtist: IDiagramArtist<ComponentDiagramIR, ComponentConf> = {
       avoid_label_on_border: true,
     })
 
+    const dagreWrapper = new DagreWrapper(g)
+
     drawComponentsTo(rootMark, ir, g)
     drawInterfacesTo(rootMark, ir, g)
 
@@ -77,16 +80,10 @@ const componentArtist: IDiagramArtist<ComponentDiagramIR, ComponentConf> = {
     // add relationships
     drawRelationshipsTo(rootMark, ir, g)
 
-    // do layout
-    dagre.layout(g, {
-      // debugTiming: true,
-    })
-    if (isDev) {
-      ;(window as any).componentGraph = g
-    }
+    dagreWrapper.doLayout()
 
-    const { labelBounds } = adjustMarkInGraph(g)
-    const gBounds = tryExpandBounds(getGraphBounds(g), labelBounds)
+    const { labelBounds } = adjustMarkInGraph(dagreWrapper)
+    const gBounds = tryExpandBounds(dagreWrapper.getGraphBounds(), labelBounds)
     const pad = conf.diagramPadding
 
     const { width, height } = adjustRootMarkBounds({
@@ -421,7 +418,7 @@ function drawRelationshipsTo(parentMark: Group, ir: ComponentDiagramIR, g: Layou
       labelpos: 'r',
       // labeloffset: 100,
       labelSize: labelDims,
-      onLayout(data, edge, context) {
+      onLayout(data, context) {
         // console.log(
         //   'edge onLayout',
         //   edge,
@@ -493,18 +490,12 @@ function drawRelationshipsTo(parentMark: Group, ir: ComponentDiagramIR, g: Layou
   })
 }
 
-const adjustMarkInGraph = function (graph: LayoutGraph) {
-  // console.log('adjustMarkInGraphNodes', graph)
-  const labelBounds = makeBounds()
-  graph.nodes().forEach(function (v) {
-    const nodeData: LayoutNode = graph.node(v) as any
-    if (nodeData) {
-      if (nodeData.onLayout) {
-        nodeData.onLayout(nodeData)
-      }
-    }
-  })
+const adjustMarkInGraph = function (dagreWrapper: DagreWrapper) {
+  dagreWrapper.callNodeOnLayout()
 
+  const graph = dagreWrapper.g
+
+  const labelBounds = makeBounds()
   const updateLabelBounds = b => {
     tryExpandBounds(labelBounds, b)
   }
@@ -512,7 +503,7 @@ const adjustMarkInGraph = function (graph: LayoutGraph) {
     const edgeData: LayoutEdge<EdgeData> = graph.edge(e)
     if (edgeData) {
       if (edgeData.onLayout) {
-        edgeData.onLayout(edgeData, e, { updateBounds: updateLabelBounds })
+        edgeData.onLayout(edgeData, { updateBounds: updateLabelBounds })
       }
     }
   })

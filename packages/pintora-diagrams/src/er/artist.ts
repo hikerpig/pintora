@@ -12,14 +12,7 @@ import {
 } from '@pintora/core'
 import { ErDiagramIR, Identification, Entity, Relationship } from './db'
 import { ErConf, getConf } from './config'
-import {
-  BaseEdgeData,
-  createLayoutGraph,
-  getGraphBounds,
-  LayoutGraph,
-  LayoutNode,
-  getGraphSplinesOption,
-} from '../util/graph'
+import { BaseEdgeData, createLayoutGraph, LayoutGraph, getGraphSplinesOption } from '../util/graph'
 import {
   makeMark,
   getBaseText,
@@ -29,13 +22,13 @@ import {
   makeEmptyGroup,
   makeTriangle,
 } from '../util/artist-util'
-import dagre from '@pintora/dagre'
 import { drawMarkerTo, CELL_ORDER, CellName, TableBuilder, TableCell, TableRow } from './artist-util'
 import { getPointsCurvePath, getPointsLinearPath } from '../util/line-util'
 import { makeBounds, positionGroupContents, tryExpandBounds } from '../util/mark-positioner'
 import { calcBound, updateBoundsByPoints } from '../util/bound'
 import { getTextDimensionsInPresicion } from '../util/text'
 import { toFixed } from '../util/number'
+import { DagreWrapper } from '../util/dagre-wrapper'
 
 let conf: ErConf
 
@@ -78,6 +71,8 @@ const erArtist: IDiagramArtist<ErDiagramIR, ErConf> = {
         return {}
       })
 
+    const dagreWrapper = new DagreWrapper(g)
+
     drawEntities(rootMark, ir, g)
 
     // Add all the relationships to the graph
@@ -85,10 +80,11 @@ const erArtist: IDiagramArtist<ErDiagramIR, ErConf> = {
 
     drawInheritances(ir, g, rootMark)
 
-    dagre.layout(g, {})
+    dagreWrapper.doLayout()
 
     // Adjust the positions of the entities so that they adhere to the layout
-    adjustEntities(g)
+    dagreWrapper.callNodeOnLayout()
+    dagreWrapper.callEdgeOnLayout()
 
     const relationsGroup: Group = {
       type: 'group',
@@ -103,7 +99,7 @@ const erArtist: IDiagramArtist<ErDiagramIR, ErConf> = {
     })
     rootMark.children.unshift(relationsGroup)
 
-    const gBounds = getGraphBounds(g)
+    const gBounds = dagreWrapper.getGraphBounds()
     tryExpandBounds(gBounds, relationshipsBounds)
 
     const pad = conf.diagramPadding
@@ -407,24 +403,6 @@ const drawEntities = function (rootMark: Group, ir: ErDiagramIR, graph: LayoutGr
   })
   return groups
 } // drawEntities
-
-const adjustEntities = function (graph: LayoutGraph) {
-  graph.nodes().forEach(function (v) {
-    const nodeData = graph.node(v) as LayoutNode
-    if (nodeData) {
-      // console.log('adjustEntities, graph node: ', nodeData)
-      if (nodeData.onLayout) {
-        nodeData.onLayout(nodeData)
-      }
-    }
-  })
-  graph.edges().forEach(function (e) {
-    const edgeData = graph.edge(e) as EdgeData
-    if (edgeData) {
-      if (edgeData.onLayout) edgeData.onLayout(edgeData)
-    }
-  })
-}
 
 const getEdgeName = function (rel: Relationship) {
   return (rel.entityA + rel.roleA + rel.entityB).replace(/\s/g, '')
