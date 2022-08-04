@@ -271,13 +271,13 @@ function drawGroupsTo(parentMark: Group, ir: ComponentDiagramIR, g: LayoutGraph)
     const labelTextDims = calculateTextDimensions(groupLabel, { ...fontConfig, fontWeight: labelMark.attrs.fontWeight })
     const typeTextDims = calculateTextDimensions(typeText, fontConfig)
 
-    const nodeMargin: Partial<LayoutNodeOption> = {
+    const nodeMarginConfig: Partial<LayoutNodeOption> = {
       // paddingt: labelTextDims.height,
       // paddingb: typeTextDims.height,
     }
 
     if (symbolDef && symbolDef.symbolMargin) {
-      Object.assign(nodeMargin, {
+      Object.assign(nodeMarginConfig, {
         marginl: symbolDef.symbolMargin.left,
         marginr: symbolDef.symbolMargin.right,
         margint: symbolDef.symbolMargin.top,
@@ -290,7 +290,7 @@ function drawGroupsTo(parentMark: Group, ir: ComponentDiagramIR, g: LayoutGraph)
     g.setNode(groupId, {
       id: groupId,
       minwidth: groupMinWidth,
-      ...nodeMargin,
+      ...nodeMarginConfig,
       onLayout(data: LayoutNode) {
         const { x, y, width, height } = data
         const containerWidth = Math.max(width, labelTextDims.width + 10)
@@ -336,13 +336,11 @@ function drawGroupsTo(parentMark: Group, ir: ComponentDiagramIR, g: LayoutGraph)
       },
     })
 
-    let sumChildNodesWidth = 0
     for (const child of cGroup.children) {
       if ('name' in child) {
         const childNode: LayoutNodeOption = g.node(child.name)
         if (childNode) {
           g.setParent(childNode.id, groupId)
-          sumChildNodesWidth += (childNode.outerWidth || childNode.width) + conf.edgesep * 2
 
           if (childNode.dummyBoxId) {
             g.setParent(childNode.id, childNode.dummyBoxId)
@@ -350,19 +348,6 @@ function drawGroupsTo(parentMark: Group, ir: ComponentDiagramIR, g: LayoutGraph)
           }
         }
       }
-    }
-
-    // sometimes the label is too wide,
-    // so we need to add a dummy node to expand the group so it can hold the label,
-    // we assume nodes are of the same ranks so their widths sum up to an horizontal bound
-    const groupSpaceShort = groupMinWidth - sumChildNodesWidth
-    if (groupSpaceShort > 0) {
-      const fakeLabelNode: LayoutNodeOption = {
-        id: `${groupId}-placeholder`,
-        width: Math.max(1, groupSpaceShort - conf.edgesep),
-      }
-      g.setNode(fakeLabelNode.id, fakeLabelNode)
-      g.setParent(fakeLabelNode.id, groupId)
     }
 
     const group = makeMark(
