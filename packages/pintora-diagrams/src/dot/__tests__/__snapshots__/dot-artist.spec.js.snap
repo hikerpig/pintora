@@ -6,10 +6,19 @@ Object {
     "attrs": Object {},
     "children": Array [
       Object {
+        "attrs": Object {
+          "fill": "white",
+          "stroke": "transparent",
+        },
+        "class": "dot__frame-bg",
+        "type": "rect",
+      },
+      Object {
         "attrs": Object {},
         "children": Array [
           Object {
             "attrs": Object {
+              "fill": "white",
               "stroke": "#3b4044",
             },
             "type": "rect",
@@ -28,8 +37,9 @@ Object {
           },
           Object {
             "attrs": Object {
+              "fill": "orange",
               "radius": 2,
-              "stroke": "#3b4044",
+              "stroke": "#111",
             },
             "type": "rect",
           },
@@ -59,7 +69,8 @@ Object {
           },
           Object {
             "attrs": Object {
-              "fill": "#3b4044",
+              "fill": "white",
+              "stroke": "#3b4044",
             },
             "type": "path",
           },
@@ -103,9 +114,78 @@ Object {
         "type": "group",
       },
       Object {
+        "attrs": Object {},
+        "mark": Object {
+          "attrs": Object {},
+          "children": Array [
+            Object {
+              "attrs": Object {
+                "fill": "orange",
+                "path": Array [
+                  Array [
+                    "M",
+                    164.5,
+                    90.5,
+                  ],
+                  Array [
+                    "m",
+                    -20.863636363636363,
+                    0,
+                  ],
+                  Array [
+                    "l",
+                    20.863636363636363,
+                    17,
+                  ],
+                  Array [
+                    "l",
+                    20.863636363636363,
+                    -17,
+                  ],
+                  Array [
+                    "l",
+                    -20.863636363636363,
+                    -17,
+                  ],
+                  Array [
+                    "Z",
+                  ],
+                ],
+                "radius": 2,
+                "stroke": "#111",
+              },
+              "type": "path",
+            },
+          ],
+          "type": "group",
+        },
+        "symbolBounds": Object {
+          "bottom": 107.5,
+          "height": 34,
+          "left": 157.13636363636363,
+          "right": 171.86363636363637,
+          "top": 73.5,
+          "width": 41.72727272727273,
+        },
+        "type": "symbol",
+      },
+      Object {
         "attrs": Object {
+          "fill": "#3b4044",
+          "fontFamily": "Source Code Pro, sans-serif",
+          "fontSize": 14,
+          "fontWeight": "normal",
+          "text": "end",
+          "textAlign": "center",
+          "textBaseline": "middle",
+        },
+        "type": "text",
+      },
+      Object {
+        "attrs": Object {
+          "fill": "orange",
           "radius": 2,
-          "stroke": "#3b4044",
+          "stroke": "#111",
         },
         "type": "rect",
       },
@@ -123,8 +203,9 @@ Object {
       },
       Object {
         "attrs": Object {
+          "fill": "orange",
           "radius": 2,
-          "stroke": "#3b4044",
+          "stroke": "#111",
         },
         "type": "rect",
       },
@@ -134,45 +215,7 @@ Object {
           "fontFamily": "Source Code Pro, sans-serif",
           "fontSize": 14,
           "fontWeight": "normal",
-          "text": "n1",
-          "textAlign": "center",
-          "textBaseline": "middle",
-        },
-        "type": "text",
-      },
-      Object {
-        "attrs": Object {
-          "radius": 2,
-          "stroke": "#3b4044",
-        },
-        "type": "rect",
-      },
-      Object {
-        "attrs": Object {
-          "fill": "#3b4044",
-          "fontFamily": "Source Code Pro, sans-serif",
-          "fontSize": 14,
-          "fontWeight": "normal",
-          "text": "end",
-          "textAlign": "center",
-          "textBaseline": "middle",
-        },
-        "type": "text",
-      },
-      Object {
-        "attrs": Object {
-          "radius": 2,
-          "stroke": "#3b4044",
-        },
-        "type": "rect",
-      },
-      Object {
-        "attrs": Object {
-          "fill": "#3b4044",
-          "fontFamily": "Source Code Pro, sans-serif",
-          "fontSize": 14,
-          "fontWeight": "normal",
-          "text": "a2",
+          "text": "c1",
           "textAlign": "center",
           "textBaseline": "middle",
         },

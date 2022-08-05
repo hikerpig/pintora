@@ -1,12 +1,12 @@
 import { LayoutNode } from '../../util/graph'
 import { floorValues } from '../../util/bound'
 import { TRANSFORM_GRAPH } from '../../util/mark-positioner'
-import { DOTShapeType, NodeAttrs } from '../db'
+import { DOTShapeType } from '../db'
 import { ContentArea, makeMark, MarkAttrs, symbolRegistry, TSize } from '@pintora/core'
 
 type DrawNodeContext = {
   data: LayoutNode
-  nodeAttrs: NodeAttrs
+  shape: string
   markAttrs: MarkAttrs
   textDims: TSize
 }
@@ -20,12 +20,12 @@ const SHAPE_MAP: Partial<Record<DOTShapeType, string>> = {
  * Draw dot node, may be shape or just simple box
  */
 export function drawNodeShape(context: DrawNodeContext) {
-  const { data, nodeAttrs: attrs, textDims, markAttrs } = context
+  const { data, shape, textDims, markAttrs } = context
   const flooredGeom = floorValues(TRANSFORM_GRAPH.graphNodeToRectStart(data))
 
-  if (attrs.shape) {
-    const mappedShape = SHAPE_MAP[attrs.shape]
-    const symbolDef = symbolRegistry.get(mappedShape || attrs.shape)
+  if (shape) {
+    const mappedShape = SHAPE_MAP[shape]
+    const symbolDef = symbolRegistry.get(mappedShape || shape)
     if (symbolDef) {
       const contentArea: ContentArea = {
         x: data.x,
@@ -33,7 +33,7 @@ export function drawNodeShape(context: DrawNodeContext) {
         width: textDims.width,
         height: textDims.height,
       }
-      const sym = symbolRegistry.create(attrs.shape, {
+      const sym = symbolRegistry.create(shape, {
         mode: 'container',
         attrs: markAttrs,
         contentArea,
@@ -48,7 +48,7 @@ export function drawNodeShape(context: DrawNodeContext) {
     ...flooredGeom,
     ...markAttrs,
   })
-  if (attrs.shape === 'plaintext') {
+  if (shape === 'plaintext') {
     nodeRect.attrs.fill = 'transparent'
     nodeRect.attrs.stroke = 'transparent'
   }

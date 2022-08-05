@@ -68,6 +68,10 @@ export function stripGraphicIRForSnapshot(ir: GraphicsIR) {
     if ('children' in mark) {
       mark.children.forEach(child => processMark(child))
     }
+    // // symbol
+    // if ('mark' in mark) {
+    //   mark.mark.children?.forEach(child => processMark(child))
+    // }
   }
 
   processMark(cloned.mark)
