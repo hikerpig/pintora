@@ -291,14 +291,25 @@ export const dotExample: DiagramExample = {
   description: 'Sample for a dotDiagram',
   code: stripStartEmptyLines(`
 dotDiagram
-  digraph Test {
+  digraph G {
+    bgcolor="white"
+
+    // specify common node attributes
+    node [color="#111",bgcolor=orange]
+
     subgraph S1 {
+      // subgraph will inherit parent attributes
       label="Sub";
-      a1 [fontcolor="purple",margint=10];
+      a1 [fontcolor="purple"];
     }
-    a1 -> b1;
-    n1 -> end [color="blue"];
-    a2 -> end;
+
+    end [shape="diamond"];
+
+    /* usually we put edges at the last */
+    a1 -> b1 [arrowhead="odot"];
+
+    c1 -> end [color="blue"];
+    S1 -> end;
   }
 `),
 }

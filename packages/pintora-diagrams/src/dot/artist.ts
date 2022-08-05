@@ -41,6 +41,7 @@ import {
   GraphAttrs,
   AttrsCollection,
   DOTArrowType,
+  Stmt,
 } from './db'
 
 class StyleContexts {
@@ -123,6 +124,8 @@ class DOTDraw {
 
   dagreWrapper: DagreWrapper
 
+  private subgraphs = new Map<string, Subgraph>()
+
   constructor(public ir: DotIR, public conf: DOTConf, public rootMark: Group) {
     if (isDev) {
       ;(window as any).dotDraw = this
@@ -156,6 +159,9 @@ class DOTDraw {
       styleContexts: new StyleContexts(),
     }
 
+    // collect subgraph ids
+    this.updateSubgraphMap()
+
     this.drawGraphAlike(irGraph, parentInfo)
 
     for (const edgeNodeId of this.edgeNodeIds) {
@@ -171,6 +177,22 @@ class DOTDraw {
     dagreWrapper.callEdgeOnLayout()
 
     return this.drawOutmostFrame(parentInfo)
+  }
+
+  protected updateSubgraphMap() {
+    const irGraph = this.ir.graph!
+    this.subgraphs = new Map<string, Subgraph>()
+    const dfs = (stmt: Stmt) => {
+      if (stmt.type === 'subgraph') {
+        this.subgraphs.set(stmt.id, stmt)
+        for (const child of stmt.children) {
+          dfs(child)
+        }
+      }
+    }
+    for (const child of irGraph.children) {
+      dfs(child)
+    }
   }
 
   protected drawGraphAlike(irGraph: Subgraph | DOTGraph, parentInfo: ParentInfo) {
@@ -257,6 +279,11 @@ class DOTDraw {
   }
 
   protected drawNode(name: string, nodeAttrs: NodeAttrs = {}, parentInfo: ParentInfo) {
+    // if this name belongs to a subgraph, it should not be drawn as a node
+    const subgraphWithName = this.subgraphs.get(name)
+    const isSubgraph = Boolean(subgraphWithName)
+    if (isSubgraph) return
+
     const label = nodeAttrs.label || name
     const nodeStyleContext = parentInfo.styleContexts.node
     const fontConfig = this.getFontConfig(nodeStyleContext)
@@ -264,14 +291,16 @@ class DOTDraw {
     const width = textDims.width + this.conf.nodePadding * 2
     const height = textDims.height + this.conf.nodePadding * 2
     const layoutAttrs = nodeLayoutAttrMapper(nodeAttrs, nodeStyleContext)
+
     this.g.setNode(name, {
       width,
       height,
       ...layoutAttrs,
       onLayout: data => {
+        const shape = nodeAttrs.shape || nodeStyleContext.getValue('shape')
         const nodeShapeResult = drawNodeShape({
           data,
-          nodeAttrs,
+          shape,
           textDims,
           markAttrs: {
             stroke: this.conf.nodeBorderColor,
