@@ -1,6 +1,6 @@
 {
   "name": "@pintora/test-shared",
-  "version": "0.4.0-alpha.0",
+  "version": "0.4.0",
   "description": "Shared testing utils for pintora",
   "keywords": [
     "pintora"

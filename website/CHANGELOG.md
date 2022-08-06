@@ -1,5 +1,22 @@
 # Change Log
 
+## 0.5.0
+
+### Minor Changes
+
+- 87f80b1: feat: add dotDiagram
+
+### Patch Changes
+
+- 240e0af: optimize: [sequence] classifier fallback if there is no symbol icon
+- beecc00: fix: [sequence] actor order bug, #127
+- Updated dependencies [3e8325c]
+- Updated dependencies [ac510ed]
+- Updated dependencies [6174d92]
+- Updated dependencies [87f80b1]
+  - @pintora/standalone@0.6.0
+  - @pintora/test-shared@0.4.0
+
 ## 0.5.0-alpha.1
 
 ### Patch Changes

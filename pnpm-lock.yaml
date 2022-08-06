@@ -156,10 +156,10 @@ importers:
 
   packages/pintora-cli:
     specifiers:
-      '@pintora/core': workspace:^0.6.0-alpha.0
-      '@pintora/renderer': ^0.6.0-alpha.0
-      '@pintora/standalone': workspace:^0.6.0-alpha.0
-      '@pintora/test-shared': workspace:^0.4.0-alpha.0
+      '@pintora/core': workspace:^0.6.0
+      '@pintora/renderer': ^0.6.0
+      '@pintora/standalone': workspace:^0.6.0
+      '@pintora/test-shared': workspace:^0.4.0
       '@types/jsdom': ^16.2.10
       '@types/mime-types': ^2.1.0
       '@types/node': ^16.11.7
@@ -214,11 +214,11 @@ importers:
     specifiers:
       '@hikerpig/moo': ^0.5.2-beta.2
       '@hikerpig/nearley': ^2.21.0-beta.1
-      '@pintora/core': workspace:^0.6.0-alpha.1
+      '@pintora/core': workspace:^0.6.0
       '@pintora/dagre': ^0.10.10
       '@pintora/development-kit': workspace:^0.1.1
       '@pintora/graphlib': 2.2.2
-      '@pintora/test-shared': workspace:^0.4.0-alpha.0
+      '@pintora/test-shared': workspace:^0.4.0
       '@types/d3-interpolate': ^3.0.1
       '@types/d3-scale': ^4.0.2
       '@types/d3-shape': ^3.0.2
@@ -270,7 +270,7 @@ importers:
       '@antv/g-base': ^0.5.11
       '@antv/g-canvas': ^0.5.12
       '@antv/g-svg': ^0.5.6
-      '@pintora/core': workspace:^0.6.0-alpha.0
+      '@pintora/core': workspace:^0.6.0
       '@types/node': ^16.11.7
       typescript: ^4.6.3
     dependencies:
@@ -284,9 +284,9 @@ importers:
 
   packages/pintora-standalone:
     specifiers:
-      '@pintora/core': workspace:^0.6.0-alpha.0
-      '@pintora/diagrams': workspace:^0.6.0-alpha.0
-      '@pintora/renderer': ^0.6.0-alpha.0
+      '@pintora/core': workspace:^0.6.0
+      '@pintora/diagrams': workspace:^0.6.0
+      '@pintora/renderer': ^0.6.0
       '@pintora/test-shared': workspace:*
       '@types/node': ^16.11.7
       '@types/tinycolor2': ^1.4.3
@@ -313,8 +313,8 @@ importers:
       '@docusaurus/preset-classic': 2.0.0-rc.1
       '@docusaurus/theme-common': 2.0.0-rc.1
       '@mdx-js/react': ^1.6.22
-      '@pintora/standalone': workspace:^0.6.0-alpha.0
-      '@pintora/test-shared': workspace:^0.4.0-alpha.0
+      '@pintora/standalone': workspace:^0.6.0
+      '@pintora/test-shared': workspace:^0.4.0
       '@svgr/webpack': ^6.1.2
       '@tsconfig/docusaurus': ^1.0.6
       '@types/react': ^18.0.0

@@ -1,6 +1,6 @@
 # Change Log
 
-## 0.6.0-alpha.0
+## 0.6.0
 
 ### Minor Changes
 
@@ -10,7 +10,20 @@
 
 - 3e8325c: optimize: adjust er diagram width when minEntityWidth is larger than attributes width sum
 - ac510ed: optimize: erDiagram can have '{}' with 0 attributes
-- 6174d92: chore: update pintora-renderer deps
+- 9b8785d: optimize: [componentDiagram] `component "desc" as alias`
+- a997bee: feat: [dotDiagra] some common node shapes
+- bbc9fb0: optimize: [dotDiagram] edge and node border style
+- 240e0af: optimize: [sequence] classifier fallback if there is no symbol icon
+- c9476a7: feat: [dotDiagram] more attributes; and default theme canvasBackground is now white
+  - add arrowhead shape and bg color
+  - add font family and size
+- 426f251: feat: [dotDiagram] add a shorthand node grammar
+- 9385a0f: optimize: dot subgraph should have a min width of its label
+- beecc00: fix: [sequence] actor order bug, #127
+- d5c27a1: optimize: [dotDiagram] support edge between subgraph and node, update test data
+- Updated dependencies [c9476a7]
+- Updated dependencies [87f80b1]
+  - @pintora/core@0.6.0
 
 ## 0.5.2
 

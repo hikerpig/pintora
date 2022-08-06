@@ -1,5 +1,18 @@
 # Change Log
 
+## 0.6.0
+
+### Minor Changes
+
+- 87f80b1: feat: add dotDiagram
+
+### Patch Changes
+
+- 6174d92: chore: update pintora-renderer deps
+- Updated dependencies [c9476a7]
+- Updated dependencies [87f80b1]
+  - @pintora/core@0.6.0
+
 ## 0.6.0-alpha.0
 
 ### Minor Changes
