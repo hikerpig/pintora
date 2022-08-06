@@ -176,6 +176,28 @@ dotDiagram
   }
 ```
 
+### Node and Edge Style
+
+```pintora play
+dotDiagram
+  @param ranksep 30
+  digraph {
+    bgcolor="#faf5f5";
+    node [color="#111",bgcolor=orange]
+
+    s1 [style="solid"]
+    s2 [style="dashed"]
+    s3 [style="dotted"]
+    s4 [style="bold"]
+
+    s1 -> e1 [style="solid"]
+    s2 -> e2 [style="dashed"]
+    s3 -> e3 [style="dotted"]
+    s4 -> e4 [style="bold"]
+    s5 -> e5 [style="invis"]
+  }
+```
+
 ## Override config
 
 You can override diagram config through `@param` directive.
@@ -184,33 +206,41 @@ All available configs can be seen in the [Config page](../configuration/config.m
 
 ```pintora play
 dotDiagram
-@param edgeType curved
-@param ranksep 50
-@param nodesep 30
+  @param ranksep 30
+  @param edgeType curved
+  digraph G {
+    bgcolor="#faf5f5"
+    node [bgcolor="orange"]
 
-digraph mygraph {
-  "//absl/random:random"
-  "//absl/random:random" -> "//absl/random:distributions"
-  "//absl/random:random" -> "//absl/random:seed_sequences"
-  "//absl/random:random" -> "//absl/random/internal:pool_urbg"
-  "//absl/random:random" -> "//absl/random/internal:nonsecure_base"
-  "//absl/random:distributions"
-  "//absl/random:distributions" -> "//absl/strings:strings"
-  "//absl/random:seed_sequences"
-  "//absl/random:seed_sequences" -> "//absl/random/internal:seed_material"
-  "//absl/random:seed_sequences" -> "//absl/random/internal:salted_seed_seq"
-  "//absl/random:seed_sequences" -> "//absl/random/internal:pool_urbg"
-  "//absl/random:seed_sequences" -> "//absl/random/internal:nonsecure_base"
-  "//absl/random/internal:nonsecure_base"
-  "//absl/random/internal:nonsecure_base" -> "//absl/random/internal:pool_urbg"
-  "//absl/random/internal:nonsecure_base" -> "//absl/random/internal:salted_seed_seq"
-  "//absl/random/internal:nonsecure_base" -> "//absl/random/internal:seed_material"
-  "//absl/random/internal:pool_urbg"
-  "//absl/random/internal:pool_urbg" -> "//absl/random/internal:seed_material"
-  "//absl/random/internal:salted_seed_seq"
-  "//absl/random/internal:salted_seed_seq" -> "//absl/random/internal:seed_material"
-  "//absl/random/internal:seed_material"
-  "//absl/random/internal:seed_material" -> "//absl/strings:strings"
-  "//absl/strings:strings"
-}
+    label="package dependencies"
+    standalone [label="@pintora/standalone"]
+    core [label="@pintora/core"]
+    renderer [label="@pintora/renderer"]
+    diagrams [label="@pintora/diagrams"]
+    cli [label="@pintora/cli"]
+    dev-kit [label="@pintora/development-kit"]
+    test-shared [label="@pintora/test-shared"]
+
+    subgraph external {
+      label="external"
+
+      dagre-layout [label="@pintora/dagre"]
+      graphlib [label="@pintora/graphlib"]
+
+      dagre-layout -> graphlib
+    }
+
+    cli -> standalone
+    standalone -> diagrams
+    standalone -> renderer
+
+    diagrams -> core
+    diagrams -> dagre-layout
+    renderer -> core
+
+    diagrams -> dev-kit [style="dashed"]
+    diagrams -> test-shared [style="dashed"]
+    cli -> test-shared [style="dashed"]
+    standalone -> test-shared [style="dashed"]
+  }
 ```

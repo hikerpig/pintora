@@ -149,6 +149,9 @@ export interface HTMLString {
 
 export type DOTShapeType = 'box' | 'ellipse' | 'circle' | 'diamond' | 'plaintext'
 
+/** node border style */
+export type NodeStyle = 'solid' | 'dashed' | 'dotted' | 'bold'
+
 // https://graphviz.org/doc/info/attrs.html
 export type NodeAttrs = {
   label?: string
@@ -164,6 +167,8 @@ export type NodeAttrs = {
   fontsize?: number
   /** shape of node */
   shape?: DOTShapeType
+  /** node edge style */
+  style?: NodeStyle
   /** [pintora specific], margin top */
   margint?: number
   /** [pintora specific], margin bottom */
@@ -174,7 +179,7 @@ export type NodeAttrs = {
   marginr?: number
 }
 
-export type EdgeStyle = 'invis'
+export type EdgeStyle = 'solid' | 'invis' | 'dashed' | 'dotted' | 'bold'
 
 export type DOTArrowType = 'normal' | 'box' | 'obox' | 'dot' | 'odot' | 'open' | 'diamond' | 'ediamond'
 

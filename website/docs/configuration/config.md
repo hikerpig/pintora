@@ -336,7 +336,6 @@ export type DOTConf = {
   fontWeight: MarkAttrs['fontWeight']
   fontFamily: string
 }
-
 ```
 
 ## Override config by directive
