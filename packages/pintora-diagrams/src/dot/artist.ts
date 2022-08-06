@@ -29,6 +29,7 @@ import { TRANSFORM_GRAPH } from '../util/mark-positioner'
 import { getTextDimensionsInPresicion } from '../util/text'
 import { drawNodeShape } from './artist/draw-node'
 import { StyleContext } from './artist/style-context'
+import { DEFAULT_LINE_WIDTH, BOLD_LINE_WIDTH, DASHED_LINE_DASH, DOTTED_LINE_DASH } from './artist/const'
 import { DOTConf, getConf } from './config'
 import {
   DotIR,
@@ -298,6 +299,18 @@ class DOTDraw {
       ...layoutAttrs,
       onLayout: data => {
         const shape = nodeAttrs.shape || nodeStyleContext.getValue('shape')
+        const edgeStyle = nodeAttrs.style || nodeStyleContext.getValue('style')
+
+        let lineDash = null
+        let lineWidth = DEFAULT_LINE_WIDTH
+        if (edgeStyle === 'dashed') {
+          lineDash = DASHED_LINE_DASH.slice()
+        } else if (edgeStyle === 'dotted') {
+          lineDash = DOTTED_LINE_DASH.slice()
+        } else if (edgeStyle === 'bold') {
+          lineWidth = BOLD_LINE_WIDTH
+        }
+
         const nodeShapeResult = drawNodeShape({
           data,
           shape,
@@ -305,6 +318,8 @@ class DOTDraw {
           markAttrs: {
             stroke: this.conf.nodeBorderColor,
             radius: this.conf.nodeBorderRadius,
+            lineDash,
+            lineWidth,
             ...nodeAttrsToStyle(nodeAttrs, nodeStyleContext),
           },
         })
@@ -331,19 +346,35 @@ class DOTDraw {
     const graphAttrs = graphAttrMapper({}, parentInfo.styleContexts.graph)
     parentInfo.mark.children.push(edgeGroup)
     const isDirected = this.ir.graph.type === 'digraph'
-    const isInvisible = attrs.style === 'invis'
     tuples.forEach(([v1, v2]) => {
       this.edgeNodeIds.add(v1.id)
       this.edgeNodeIds.add(v2.id)
       const conf = this.conf
       this.g.setEdge(v1.id, v2.id, {
         onLayout: edge => {
+          const edgeStyleContext = parentInfo.styleContexts.edge
+          const edgeStyle = attrs.style || edgeStyleContext.getValue('style')
+          const isInvisible = edgeStyle === 'invis'
           if (isInvisible) return
           const shouldUseCurvePath = this.conf.edgeType === 'curved'
-          const edgeStyleContext = parentInfo.styleContexts.edge
           const path = shouldUseCurvePath ? getPointsCurvePath(edge.points) : getPointsLinearPath(edge.points)
           const pathAttrs = edgeAttrsToStyle(attrs, edgeStyleContext)
-          const pathMark = makeMark('path', { path, stroke: conf.edgeColor, ...pathAttrs })
+          let lineDash = null
+          let lineWidth = DEFAULT_LINE_WIDTH
+          if (edgeStyle === 'dashed') {
+            lineDash = DASHED_LINE_DASH.slice()
+          } else if (edgeStyle === 'dotted') {
+            lineDash = DOTTED_LINE_DASH.slice()
+          } else if (edgeStyle === 'bold') {
+            lineWidth = BOLD_LINE_WIDTH
+          }
+          const pathMark = makeMark('path', {
+            path,
+            stroke: conf.edgeColor,
+            lineDash,
+            lineWidth,
+            ...pathAttrs,
+          })
           edgeGroup.children.push(pathMark)
           if (isDirected) {
             const lastPoint = last(edge.points)

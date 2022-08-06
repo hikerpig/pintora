@@ -38,6 +38,8 @@ Object {
           Object {
             "attrs": Object {
               "fill": "orange",
+              "lineDash": null,
+              "lineWidth": 1,
               "radius": 2,
               "stroke": "#111",
             },
@@ -63,6 +65,8 @@ Object {
         "children": Array [
           Object {
             "attrs": Object {
+              "lineDash": null,
+              "lineWidth": 1,
               "stroke": "#3b4044",
             },
             "type": "path",
@@ -82,6 +86,8 @@ Object {
         "children": Array [
           Object {
             "attrs": Object {
+              "lineDash": null,
+              "lineWidth": 1,
               "stroke": "blue",
             },
             "type": "path",
@@ -100,6 +106,8 @@ Object {
         "children": Array [
           Object {
             "attrs": Object {
+              "lineDash": null,
+              "lineWidth": 1,
               "stroke": "#3b4044",
             },
             "type": "path",
@@ -121,6 +129,8 @@ Object {
             Object {
               "attrs": Object {
                 "fill": "orange",
+                "lineDash": null,
+                "lineWidth": 1,
                 "path": Array [
                   Array [
                     "M",
@@ -184,6 +194,8 @@ Object {
       Object {
         "attrs": Object {
           "fill": "orange",
+          "lineDash": null,
+          "lineWidth": 1,
           "radius": 2,
           "stroke": "#111",
         },
@@ -204,6 +216,8 @@ Object {
       Object {
         "attrs": Object {
           "fill": "orange",
+          "lineDash": null,
+          "lineWidth": 1,
           "radius": 2,
           "stroke": "#111",
         },
@@ -245,6 +259,8 @@ Object {
         "children": Array [
           Object {
             "attrs": Object {
+              "lineDash": null,
+              "lineWidth": 1,
               "stroke": "#3b4044",
             },
             "type": "path",
@@ -263,6 +279,8 @@ Object {
         "children": Array [
           Object {
             "attrs": Object {
+              "lineDash": null,
+              "lineWidth": 1,
               "stroke": "#3b4044",
             },
             "type": "path",
@@ -282,6 +300,8 @@ Object {
         "children": Array [
           Object {
             "attrs": Object {
+              "lineDash": null,
+              "lineWidth": 1,
               "stroke": "#3b4044",
             },
             "type": "path",
@@ -298,6 +318,8 @@ Object {
       },
       Object {
         "attrs": Object {
+          "lineDash": null,
+          "lineWidth": 1,
           "radius": 2,
           "stroke": "#3b4044",
         },
@@ -317,6 +339,8 @@ Object {
       },
       Object {
         "attrs": Object {
+          "lineDash": null,
+          "lineWidth": 1,
           "radius": 2,
           "stroke": "#3b4044",
         },
@@ -336,6 +360,8 @@ Object {
       },
       Object {
         "attrs": Object {
+          "lineDash": null,
+          "lineWidth": 1,
           "radius": 2,
           "stroke": "#3b4044",
         },
@@ -355,6 +381,8 @@ Object {
       },
       Object {
         "attrs": Object {
+          "lineDash": null,
+          "lineWidth": 1,
           "radius": 2,
           "stroke": "#3b4044",
         },
@@ -374,6 +402,8 @@ Object {
       },
       Object {
         "attrs": Object {
+          "lineDash": null,
+          "lineWidth": 1,
           "radius": 2,
           "stroke": "#3b4044",
         },
@@ -423,6 +453,8 @@ Object {
               "attrs": Object {
                 "cx": 31,
                 "cy": 25,
+                "lineDash": null,
+                "lineWidth": 1,
                 "radius": 2,
                 "rx": 33,
                 "ry": 15,
@@ -464,6 +496,8 @@ Object {
           "children": Array [
             Object {
               "attrs": Object {
+                "lineDash": null,
+                "lineWidth": 1,
                 "r": 29,
                 "radius": 2,
                 "stroke": "#3b4044",
@@ -504,6 +538,8 @@ Object {
           "children": Array [
             Object {
               "attrs": Object {
+                "lineDash": null,
+                "lineWidth": 1,
                 "path": Array [
                   Array [
                     "M",
@@ -567,6 +603,8 @@ Object {
       Object {
         "attrs": Object {
           "fill": "transparent",
+          "lineDash": null,
+          "lineWidth": 1,
           "radius": 2,
           "stroke": "transparent",
         },
