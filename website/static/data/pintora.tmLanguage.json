@@ -1357,7 +1357,7 @@
         },
         {
           "comment": "node shorthand",
-          "match": "([\\w\\d]+)(\\[)(\"[^\"]*\")(\\])",
+          "match": "([\\w\\-\\d]+)(\\[)(\"[^\"]*\")(\\])",
           "captures": {
             "1": {
               "name": "variable.pintora"
@@ -1375,7 +1375,7 @@
         },
         {
           "comment": "node stmt",
-          "begin": "([\\w\\d]+)\\s*(\\[)\\s*",
+          "begin": "([\\w\\-\\d]+)\\s*(\\[)\\s*",
           "beginCaptures": {
             "1": {
               "name": "variable.pintora"
@@ -1401,7 +1401,7 @@
         },
         {
           "comment": "node with name only",
-          "match": "(\"[^\"]*\"|[\\w\\d_]+)\\s*(;)",
+          "match": "(\"[^\"]*\"|[\\w\\-\\d_]+)\\s*(;)",
           "captures": {
             "1": {
               "name": "variable.pintora"
