@@ -9,7 +9,7 @@ export type RenderOptions = {
   onRender?(renderer: IRenderer): void
 }
 
-export { BaseRenderer, rendererRegistry, GraphicEvent }
+export { BaseRenderer, rendererRegistry, GraphicEvent, makeRenderer }
 export type { IRenderer }
 
 export function render(ir: GraphicsIR, opts: RenderOptions) {

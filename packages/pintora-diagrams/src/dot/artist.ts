@@ -12,14 +12,7 @@ import {
   Rect,
   safeAssign,
 } from '@pintora/core'
-import {
-  adjustRootMarkBounds,
-  ArrowType,
-  calcDirection,
-  drawArrowTo,
-  makeEmptyGroup,
-  makeTextAtPoint,
-} from '../util/artist-util'
+import { adjustRootMarkBounds, ArrowType, calcDirection, drawArrowTo, makeTextAtPoint } from '../util/artist-util'
 import { floorValues } from '../util/bound'
 import { DagreWrapper } from '../util/dagre-wrapper'
 import { setDevGlobal } from '../util/env'
@@ -77,7 +70,11 @@ const artist = makeArtist<DotIR, DOTConf>({
   draw(ir, config, opts) {
     const conf = getConf(ir, config)
 
-    const rootMark = makeEmptyGroup()
+    const rootMark: Group = {
+      type: 'group',
+      attrs: {},
+      children: [],
+    }
 
     const dotDraw = new DOTDraw(ir, conf, rootMark)
     const drawResult = dotDraw.draw()
@@ -257,7 +254,11 @@ class DOTDraw {
           break
         }
         case 'subgraph': {
-          const childGroup = makeEmptyGroup()
+          const childGroup: Group = {
+            type: 'group',
+            attrs: {},
+            children: [],
+          }
           parentInfo.mark.children.push(childGroup)
           const newParentInfo: ParentInfo = {
             id: child.id,
@@ -344,7 +345,11 @@ class DOTDraw {
   protected drawEdgeStmt(stmt: EdgeStmt, parentInfo: ParentInfo) {
     const { edge_list, attrs = {} } = stmt
     const tuples = zipTuple(edge_list.slice(0, edge_list.length - 1), edge_list.slice(1))
-    const edgeGroup = makeEmptyGroup()
+    const edgeGroup: Group = {
+      type: 'group',
+      attrs: {},
+      children: [],
+    }
     const graphAttrs = graphAttrMapper({}, parentInfo.styleContexts.graph)
     parentInfo.mark.children.push(edgeGroup)
     const isDirected = this.ir.graph.type === 'digraph'

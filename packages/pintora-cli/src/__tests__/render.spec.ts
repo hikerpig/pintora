@@ -52,4 +52,25 @@ describe('render', () => {
 
     delete (globalThis as any).document
   })
+
+  it('should keep er attribute rows in correct absolute position for g v6', async () => {
+    const code = `
+erDiagram
+  PERSON {
+    string phone "phone number"
+  }
+
+  DELIVERER inherit PERSON
+`.trim()
+
+    const svgString = await render({
+      code,
+      mimeType: SVG_MIME_TYPE,
+    })
+
+    expect(svgString).toContain('>string</text>')
+    expect(svgString).toContain('>PERSON</text>')
+    expect(svgString).toContain('>DELIVERER</text>')
+    expect(svgString).toContain('>ISA</text>')
+  })
 })
