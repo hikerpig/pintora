@@ -9,8 +9,8 @@ import {
   createRotateAtPoint,
   TSize,
   makeMark,
-  Group,
   mat3,
+  Group,
   Bounds,
   Circle,
   ITheme,
@@ -202,7 +202,7 @@ export function makeEmptyGroup() {
 }
 
 export function makeCircle(attrs: Partial<Circle['attrs']>) {
-  return makeMark('circle', { x: 0, y: 0, r: 0, ...attrs })
+  return makeMark('circle', { cx: 0, cy: 0, r: 0, ...attrs })
 }
 
 export const getBaseNote = function (theme: ITheme): Rect['attrs'] {
@@ -212,7 +212,7 @@ export const getBaseNote = function (theme: ITheme): Rect['attrs'] {
     fill: theme.noteBackground || theme.groupBackground,
     stroke: theme.primaryBorderColor,
     width: 50,
-    anchor: 'start',
+    // anchor: 'start',
     height: 50,
     rx: 0,
     ry: 0,
@@ -224,8 +224,8 @@ export const getBaseNote = function (theme: ITheme): Rect['attrs'] {
  */
 export function makeCircleInPoint(p: Point, opts: Partial<Circle['attrs']> = {}) {
   return makeMark('circle', {
-    x: p.x,
-    y: p.y,
+    cx: p.x,
+    cy: p.y,
     r: 4,
     fill: 'red',
     ...opts,

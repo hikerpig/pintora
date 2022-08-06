@@ -708,7 +708,6 @@ const drawMessage = function (msgModel: MessageModel): DrawResult<Group> {
     const dx = Math.max(textDims.width / 2, conf.actorWidth / 2)
     model.insert(startx - dx, verticalPos - 10 + totalOffset, stopx + dx, verticalPos + offsetBump + totalOffset)
   } else {
-    // totalOffset += conf.boxMrgin
     lineStarty = verticalPos + totalOffset
     safeAssign(lineAttrs, {
       x1: startx,
@@ -779,14 +778,14 @@ const drawMessage = function (msgModel: MessageModel): DrawResult<Group> {
         textBaseline: 'middle',
         fill: conf.actorBackground,
         fontWeight: 'bold',
+        fontSize: Math.floor(SHOW_NUMBER_CIRCLE_RADIUS * 1.6),
       },
       { class: 'sequence-number' },
     )
     const circleColor = conf.actorBorderColor
-    const circleMark = makeMark('marker', {
-      symbol: 'circle',
-      x: startx,
-      y: lineStarty,
+    const circleMark = makeMark('circle', {
+      cx: startx,
+      cy: lineStarty,
       r: SHOW_NUMBER_CIRCLE_RADIUS,
       fill: circleColor,
       stroke: circleColor,

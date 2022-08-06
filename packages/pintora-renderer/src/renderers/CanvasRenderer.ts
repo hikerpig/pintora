@@ -1,8 +1,8 @@
 import { BaseRenderer } from './base'
-import { Canvas } from '@antv/g-canvas'
+import { Renderer } from '@antv/g-canvas'
 
 export class CanvasRenderer extends BaseRenderer {
-  getCanvasClass() {
-    return Canvas
+  getGRenderer() {
+    return new Renderer()
   }
 }

@@ -1,5 +1,23 @@
 import { GraphicsIR, Mark, MarkAttrs, MarkType, MarkTypeMap } from '@pintora/core'
-import { IGroup, AbstractCanvas, CanvasCfg, IShape, Event as GEvent } from '@antv/g-base'
+import {
+  Group,
+  Canvas,
+  Shape,
+  Element as GElement,
+  IRenderer as IGRenderer,
+  FederatedEvent,
+  Rect,
+  Path,
+  Polygon,
+  Polyline,
+  Circle,
+  Line,
+  Ellipse,
+  DisplayObjectConfig,
+  Text,
+  Image,
+  DisplayObject,
+} from '@antv/g'
 import { EventHandler, IRenderer } from '../type'
 import { noop, Stack } from '../util'
 import { GraphicEvent } from '../event'
@@ -48,14 +66,14 @@ function traverseScene<Actions = unknown>(
 export abstract class BaseRenderer implements IRenderer {
   container: HTMLElement | null = null
   /** The Canvas instance of `@antv/g-base` */
-  protected gcvs?: AbstractCanvas
+  protected gcvs?: Canvas
 
   /** A map from shape to mark, later we will use this to get mark in event handlers */
-  protected shapeToMarkMap = new WeakMap<IShape | IGroup, Mark>()
+  protected shapeToMarkMap = new WeakMap<GElement | Group, Mark>()
 
   constructor(protected ir: GraphicsIR) {}
 
-  abstract getCanvasClass(): { new (cfg: CanvasCfg): AbstractCanvas }
+  abstract getGRenderer(): IGRenderer
 
   setContainer(c: HTMLElement) {
     if (this.gcvs) {
@@ -63,11 +81,12 @@ export abstract class BaseRenderer implements IRenderer {
     }
 
     this.container = c
-    const canvasCls = this.getCanvasClass()
-    const gcvs = new canvasCls({
+    const renderer = this.getGRenderer()
+    const gcvs = new Canvas({
       container: c,
       width: this.ir.width,
       height: this.ir.height,
+      renderer,
     })
     this.gcvs = gcvs
     return this
@@ -75,13 +94,13 @@ export abstract class BaseRenderer implements IRenderer {
 
   getRootElement() {
     if (!this.gcvs) return
-    return this.gcvs.cfg.el
+    return this.gcvs.getConfig().el
   }
 
   protected addBgShape() {
-    if (this.ir.bgColor) {
-      this.gcvs?.addShape('rect', {
-        attrs: {
+    if (this.ir.bgColor && this.gcvs) {
+      this.addShape(this.gcvs, Shape.RECT, {
+        style: {
           width: this.ir.width,
           height: this.ir.height,
           fill: this.ir.bgColor,
@@ -90,34 +109,74 @@ export abstract class BaseRenderer implements IRenderer {
     }
   }
 
+  shapeMap: Partial<Record<Shape, any>> = {
+    [Shape.RECT]: Rect,
+    [Shape.GROUP]: Group,
+    [Shape.PATH]: Path,
+    [Shape.POLYGON]: Polygon,
+    [Shape.POLYLINE]: Polyline,
+    [Shape.CIRCLE]: Circle,
+    [Shape.LINE]: Line,
+    [Shape.ELLIPSE]: Ellipse,
+    [Shape.TEXT]: Text,
+    [Shape.IMAGE]: Image,
+  }
+
+  protected addShape(parent: GElement | Canvas, shapeType: Shape, options: DisplayObjectConfig<any>) {
+    // console.log('shapeType', shapeType)
+    const element = this.gcvs!.document.createElement(shapeType, options)
+    ;(parent as any).appendChild(element)
+    return element
+    // const shapeCtor = this.shapeMap[shapeType] || Rect
+    // const element = new shapeCtor(options)
+    // ;(parent as any).appendChild(element)
+    // return element
+  }
+
   protected renderGCanvas() {
     const gcvs = this.gcvs
     if (!gcvs) return
 
-    gcvs.clear()
+    gcvs.removeChildren()
     // eslint-disable-next-line @typescript-eslint/no-this-alias
     const self = this
 
     this.addBgShape()
 
-    const groupStack = new Stack<IGroup>()
+    const groupStack = new Stack<Group>()
     const actions = {
-      addToCurrentGroup(mark: Mark) {
+      addToCurrentGroup: (mark: Mark) => {
         const group = groupStack.top()
         const container = group || gcvs
         const shapeAttrs = self.preProcessMarkAttrs(mark)
-        const shape = container.addShape(mark.type, {
-          attrs: shapeAttrs as MarkAttrs,
+        const shape = this.addShape(container, mark.type as any, {
+          style: shapeAttrs as MarkAttrs,
         })
         self.onShapeAdd(shape, mark)
         // console.log('new shape', el, shape, mark.attrs)
         return shape
       },
-      applyMarkPostProcess(mark: Mark, shape: IShape | IGroup) {
+      applyMarkPostProcess(mark: Mark, shape: DisplayObject) {
         if (mark.matrix) {
-          shape.setMatrix(mark.matrix as number[])
+          // const m = mark.matrix
+          // const values = Array.from(m.values())
+          // const a = 0
+          // const b = 0
+          // const c = 0
+          // const d = 0
+          // const tx = m[6]
+          // const ty = m[7]
+          // shape.style.transform = `matrix(${a}, ${b}, ${c}, ${d}, ${tx}, ${ty})`
+          // console.log('mark matrix', mark.type, mark.matrix)
+          shape.setLocalMatrix(mark.matrix as any)
+          // shape.setMatrix(mark.matrix as any)
         }
       },
+    }
+
+    const defaultVisitor: VisitorInput<Mark> = mark => {
+      const shape = actions.addToCurrentGroup(mark)
+      actions.applyMarkPostProcess(mark, shape)
     }
 
     traverseScene(
@@ -127,7 +186,10 @@ export abstract class BaseRenderer implements IRenderer {
           enter(mark) {
             const prevGroup = groupStack.top()
             const container = prevGroup || gcvs
-            const group = container.addGroup()
+            const group = new Group({
+              style: mark.attrs || ({} as any),
+            })
+            container.appendChild(group)
             groupStack.push(group)
             self.onShapeAdd(group, mark)
             actions.applyMarkPostProcess(mark, group)
@@ -136,32 +198,38 @@ export abstract class BaseRenderer implements IRenderer {
             groupStack.pop()
           },
         },
+        path(mark) {
+          // undefined x or y on path will cause layout problem in @antv/g
+          // so we need to apply a default value to them
+          mark.attrs.x = mark.attrs.x || 0
+          mark.attrs.y = mark.attrs.y || 0
+          defaultVisitor(mark)
+        },
         symbol: {
           enter() {
             // prevent entering default visitor
           },
         },
-        default(mark) {
-          const shape = actions.addToCurrentGroup(mark)
-          actions.applyMarkPostProcess(mark, shape)
-        },
+        default: defaultVisitor,
       },
       actions,
     )
+
+    this.gcvs?.render()
   }
 
   on(name: string, handler: EventHandler) {
     if (!this.gcvs) return noop
     const gcvs = this.gcvs
-    const fn = (gEvent: GEvent) => {
-      const mark = this.shapeToMarkMap.get(gEvent.shape)
-      const markPath = gEvent.propagationPath.reduce((acc, shape) => {
-        const m = this.shapeToMarkMap.get(shape)
+    const fn = (gEvent: FederatedEvent) => {
+      const mark = this.shapeToMarkMap.get(gEvent.target as GElement)
+      const markPath = gEvent.path.reduce((acc, shape) => {
+        const m = this.shapeToMarkMap.get(shape as GElement)
         if (m) {
           acc.push(m)
         }
         return acc
-      }, [])
+      }, [] as Mark[])
       const event = new GraphicEvent(gEvent)
       event.mark = mark
       event.markPath = markPath
@@ -177,11 +245,14 @@ export abstract class BaseRenderer implements IRenderer {
     return mark.attrs
   }
 
-  protected onShapeAdd(shape: IShape | IGroup, mark: Mark) {
+  protected onShapeAdd(shape: GElement, mark: Mark) {
     this.shapeToMarkMap.set(shape, mark)
   }
 
   render() {
-    this.renderGCanvas()
+    if (!this.gcvs) return
+    this.gcvs.ready.then(() => {
+      this.renderGCanvas()
+    })
   }
 }
