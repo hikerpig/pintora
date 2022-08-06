@@ -202,13 +202,9 @@ Object {
                 Object {
                   "attrs": Object {
                     "fill": "#fdb05e",
-                    "height": 38,
                     "lineWidth": 1.5,
                     "r": 7.6,
                     "stroke": "#3b4044",
-                    "width": 53.199999999999996,
-                    "x": 40,
-                    "y": 7.6,
                   },
                   "type": "circle",
                 },
@@ -216,43 +212,6 @@ Object {
                   "attrs": Object {
                     "fill": null,
                     "lineWidth": 1.5,
-                    "path": Array [
-                      Array [
-                        "M",
-                        28.6,
-                        21.53333333333333,
-                      ],
-                      Array [
-                        "L",
-                        51.4,
-                        21.53333333333333,
-                      ],
-                      Array [
-                        "M",
-                        40,
-                        15.2,
-                      ],
-                      Array [
-                        "L",
-                        40,
-                        26.6,
-                      ],
-                      Array [
-                        "l",
-                        -7.6,
-                        15.2,
-                      ],
-                      Array [
-                        "l",
-                        7.6,
-                        -15.2,
-                      ],
-                      Array [
-                        "l",
-                        7.6,
-                        15.2,
-                      ],
-                    ],
                     "stroke": "#3b4044",
                   },
                   "type": "path",
@@ -296,47 +255,14 @@ Object {
                 Object {
                   "attrs": Object {
                     "fill": "#fdb05e",
-                    "path": Array [
-                      Array [
-                        "M",
-                        103.4,
-                        12,
-                      ],
-                      Array [
-                        "L",
-                        103.4,
-                        26,
-                      ],
-                      Array [
-                        "A",
-                        26.599999999999998,
-                        12,
-                        0,
-                        1,
-                        0,
-                        156.6,
-                        26,
-                      ],
-                      Array [
-                        "L",
-                        156.6,
-                        12,
-                      ],
-                    ],
                     "stroke": "#3b4044",
                   },
                   "type": "path",
                 },
                 Object {
                   "attrs": Object {
-                    "cx": 130,
-                    "cy": 19,
                     "fill": "#fdb05e",
-                    "rx": 26.599999999999998,
-                    "ry": 12,
                     "stroke": "#3b4044",
-                    "x": 130,
-                    "y": 12,
                   },
                   "type": "ellipse",
                 },
@@ -379,36 +305,6 @@ Object {
                 Object {
                   "attrs": Object {
                     "fill": "#fdb05e",
-                    "path": Array [
-                      Array [
-                        "M",
-                        220,
-                        19,
-                      ],
-                      Array [
-                        "m",
-                        -26.599999999999998,
-                        0,
-                      ],
-                      Array [
-                        "l",
-                        26.599999999999998,
-                        19,
-                      ],
-                      Array [
-                        "l",
-                        26.599999999999998,
-                        -19,
-                      ],
-                      Array [
-                        "l",
-                        -26.599999999999998,
-                        -19,
-                      ],
-                      Array [
-                        "Z",
-                      ],
-                    ],
                     "stroke": "#3b4044",
                   },
                   "type": "path",
@@ -451,13 +347,9 @@ Object {
                 Object {
                   "attrs": Object {
                     "fill": "#fdb05e",
-                    "height": 38,
                     "lineWidth": 1.5,
                     "r": 7.6,
                     "stroke": "#3b4044",
-                    "width": 53.199999999999996,
-                    "x": 40,
-                    "y": 77.6,
                   },
                   "type": "circle",
                 },
@@ -465,43 +357,6 @@ Object {
                   "attrs": Object {
                     "fill": null,
                     "lineWidth": 1.5,
-                    "path": Array [
-                      Array [
-                        "M",
-                        28.6,
-                        91.53333333333333,
-                      ],
-                      Array [
-                        "L",
-                        51.4,
-                        91.53333333333333,
-                      ],
-                      Array [
-                        "M",
-                        40,
-                        85.2,
-                      ],
-                      Array [
-                        "L",
-                        40,
-                        96.6,
-                      ],
-                      Array [
-                        "l",
-                        -7.6,
-                        15.2,
-                      ],
-                      Array [
-                        "l",
-                        7.6,
-                        -15.2,
-                      ],
-                      Array [
-                        "l",
-                        7.6,
-                        15.2,
-                      ],
-                    ],
                     "stroke": "#3b4044",
                   },
                   "type": "path",
@@ -538,47 +393,14 @@ Object {
                 Object {
                   "attrs": Object {
                     "fill": "#fdb05e",
-                    "path": Array [
-                      Array [
-                        "M",
-                        103.4,
-                        82,
-                      ],
-                      Array [
-                        "L",
-                        103.4,
-                        96,
-                      ],
-                      Array [
-                        "A",
-                        26.599999999999998,
-                        12,
-                        0,
-                        1,
-                        0,
-                        156.6,
-                        96,
-                      ],
-                      Array [
-                        "L",
-                        156.6,
-                        82,
-                      ],
-                    ],
                     "stroke": "#3b4044",
                   },
                   "type": "path",
                 },
                 Object {
                   "attrs": Object {
-                    "cx": 130,
-                    "cy": 89,
                     "fill": "#fdb05e",
-                    "rx": 26.599999999999998,
-                    "ry": 12,
                     "stroke": "#3b4044",
-                    "x": 130,
-                    "y": 82,
                   },
                   "type": "ellipse",
                 },
@@ -614,36 +436,6 @@ Object {
                 Object {
                   "attrs": Object {
                     "fill": "#fdb05e",
-                    "path": Array [
-                      Array [
-                        "M",
-                        220,
-                        89,
-                      ],
-                      Array [
-                        "m",
-                        -26.599999999999998,
-                        0,
-                      ],
-                      Array [
-                        "l",
-                        26.599999999999998,
-                        19,
-                      ],
-                      Array [
-                        "l",
-                        26.599999999999998,
-                        -19,
-                      ],
-                      Array [
-                        "l",
-                        -26.599999999999998,
-                        -19,
-                      ],
-                      Array [
-                        "Z",
-                      ],
-                    ],
                     "stroke": "#3b4044",
                   },
                   "type": "path",
@@ -768,8 +560,6 @@ Object {
             "attrs": Object {
               "anchor": "start",
               "fill": "#f8f8f2",
-              "rx": 0,
-              "ry": 0,
               "stroke": "#3b4044",
             },
             "class": "activation",
@@ -1019,8 +809,6 @@ Object {
             "attrs": Object {
               "anchor": "start",
               "fill": "#F8EA75",
-              "rx": 0,
-              "ry": 0,
               "stroke": "#3b4044",
             },
             "class": "note__bg",
@@ -1048,8 +836,6 @@ Object {
             "attrs": Object {
               "anchor": "start",
               "fill": "#F8EA75",
-              "rx": 0,
-              "ry": 0,
               "stroke": "#3b4044",
             },
             "class": "note__bg",
@@ -1077,8 +863,6 @@ Object {
             "attrs": Object {
               "anchor": "start",
               "fill": "#F8EA75",
-              "rx": 0,
-              "ry": 0,
               "stroke": "#3b4044",
             },
             "class": "note__bg",

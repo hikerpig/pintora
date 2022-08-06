@@ -28,7 +28,7 @@ function makeContainer({ width, height, x, y }: ContentArea) {
     {
       children: [
         makeMark('path', {
-          path: [['M', x, y], ['m', -rx, 0], ['l', rx, ry], ['l', rx, -ry], ['l', -rx, -ry], ['Z']],
+          path: [['M', x, y], ['M', x - rx, y], ['L', x, y + ry], ['L', x + rx, y], ['L', x, y - ry], ['Z']],
         }),
       ],
     },

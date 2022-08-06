@@ -35,8 +35,24 @@ export function prepareDiagramConfig() {
   })
 }
 
-const GEOMETRY_ATTRS = ['x', 'y', 'width', 'height', 'x1', 'x2', 'y1', 'y2', 'path', 'points', 'margin']
-const MARK_IGNORE_FIELDS = ['matrix']
+const GEOMETRY_ATTRS = [
+  'x',
+  'y',
+  'cx',
+  'cy',
+  'rx',
+  'ry',
+  'width',
+  'height',
+  'x1',
+  'x2',
+  'y1',
+  'y2',
+  'path',
+  'points',
+  'margin',
+]
+const MARK_IGNORE_FIELDS = ['matrix', 'symbolBounds']
 
 /**
  * width/height and other text dimension related attributes may differ from test machine's default font.
@@ -68,10 +84,10 @@ export function stripGraphicIRForSnapshot(ir: GraphicsIR) {
     if ('children' in mark) {
       mark.children.forEach(child => processMark(child))
     }
-    // // symbol
-    // if ('mark' in mark) {
-    //   mark.mark.children?.forEach(child => processMark(child))
-    // }
+    // symbol
+    if ('mark' in mark) {
+      mark.mark.children?.forEach(child => processMark(child))
+    }
   }
 
   processMark(cloned.mark)
