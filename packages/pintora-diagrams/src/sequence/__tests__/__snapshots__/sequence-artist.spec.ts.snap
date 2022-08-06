@@ -567,7 +567,6 @@ exports[`sequence-artist match example snapshot 1`] = `
         "children": [
           {
             "attrs": {
-              "anchor": "start",
               "fill": "#f8f8f2",
               "stroke": "#3b4044",
             },
@@ -616,13 +615,13 @@ exports[`sequence-artist match example snapshot 1`] = `
                 "attrs": {
                   "fill": "#3b4044",
                   "stroke": "#3b4044",
-                  "symbol": "circle",
                 },
-                "type": "marker",
+                "type": "circle",
               },
               {
                 "attrs": {
                   "fill": "#fdb05e",
+                  "fontSize": 12,
                   "fontWeight": "bold",
                   "text": "1",
                   "textAlign": "center",
@@ -681,13 +680,13 @@ exports[`sequence-artist match example snapshot 1`] = `
                 "attrs": {
                   "fill": "#3b4044",
                   "stroke": "#3b4044",
-                  "symbol": "circle",
                 },
-                "type": "marker",
+                "type": "circle",
               },
               {
                 "attrs": {
                   "fill": "#fdb05e",
+                  "fontSize": 12,
                   "fontWeight": "bold",
                   "text": "2",
                   "textAlign": "center",
@@ -786,13 +785,13 @@ exports[`sequence-artist match example snapshot 1`] = `
                 "attrs": {
                   "fill": "#3b4044",
                   "stroke": "#3b4044",
-                  "symbol": "circle",
                 },
-                "type": "marker",
+                "type": "circle",
               },
               {
                 "attrs": {
                   "fill": "#fdb05e",
+                  "fontSize": 12,
                   "fontWeight": "bold",
                   "text": "3",
                   "textAlign": "center",
@@ -813,7 +812,6 @@ exports[`sequence-artist match example snapshot 1`] = `
         "children": [
           {
             "attrs": {
-              "anchor": "start",
               "fill": "#F8EA75",
               "stroke": "#3b4044",
             },
@@ -841,7 +839,6 @@ exports[`sequence-artist match example snapshot 1`] = `
         "children": [
           {
             "attrs": {
-              "anchor": "start",
               "fill": "#F8EA75",
               "stroke": "#3b4044",
             },
@@ -869,7 +866,6 @@ exports[`sequence-artist match example snapshot 1`] = `
         "children": [
           {
             "attrs": {
-              "anchor": "start",
               "fill": "#F8EA75",
               "stroke": "#3b4044",
             },

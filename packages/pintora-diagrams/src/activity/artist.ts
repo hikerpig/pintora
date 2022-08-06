@@ -12,6 +12,7 @@ import {
   compact,
   getPointAt,
   last,
+  mat3,
   safeAssign,
   unique,
 } from '@pintora/core'
@@ -21,7 +22,7 @@ import {
   drawArrowTo,
   getBaseNote,
   makeCircle,
-  makeEmptyGroup,
+  makeGroup,
   makeLabelBg,
   makeMark,
   DiagramTitleMaker,
@@ -33,7 +34,7 @@ import { setDevGlobal } from '../util/env'
 import { getFontConfig } from '../util/font-config'
 import { LayoutEdge, LayoutGraph, LayoutNode, createLayoutGraph, getGraphSplinesOption } from '../util/graph'
 import { getPointsCurvePath, getPointsLinearPath } from '../util/line-util'
-import { makeBounds, positionGroupContents, tryExpandBounds } from '../util/mark-positioner'
+import { makeBounds, tryExpandBounds } from '../util/mark-positioner'
 import { getTextDimensionsInPresicion } from '../util/text'
 import { makeTextMark } from './artist-util'
 import { ActivityConf, getConf } from './config'
@@ -70,6 +71,18 @@ function isEndAlikeKeyword(keyword: Keyword) {
   return ['end', 'stop'].includes(keyword.label)
 }
 
+function setGroupTranslation(group: Group, x: number, y: number) {
+  group.matrix = mat3.fromTranslation(mat3.create(), [x, y])
+}
+
+function positionGroupByNodeTopLeft(group: Group, data: LayoutNode) {
+  setGroupTranslation(group, data.x - data.width / 2, data.y - data.height / 2)
+}
+
+function positionGroupByNodeCenter(group: Group, data: LayoutNode) {
+  setGroupTranslation(group, data.x, data.y)
+}
+
 const erArtist: IDiagramArtist<ActivityDiagramIR, ActivityConf> = {
   draw(ir, config, opts?) {
     const conf = getConf(ir, config)
@@ -77,7 +90,7 @@ const erArtist: IDiagramArtist<ActivityDiagramIR, ActivityConf> = {
     const fontConfig = getFontConfig(conf)
     // console.log('ir', JSON.stringify(ir, null, 2))
 
-    const rootMark: Group = makeEmptyGroup()
+    const rootMark: Group = makeGroup()
 
     const g = createLayoutGraph({
       multigraph: true,
@@ -483,7 +496,7 @@ class ActivityDraw {
 
   drawCondition(parentMark: Group, condition: Condition): DrawStepResult {
     // console.log('[drawCondition] condition', condition)
-    const group = makeEmptyGroup()
+    const group = makeGroup()
     const stepModel = model.stepModelMap.get(condition.id)
 
     const { bgMark: decisionBg, textMark, rectWidth, rectHeight } = this.drawDecisionMarks(condition.message)
@@ -494,7 +507,7 @@ class ActivityDraw {
       width: rectWidth,
       height: rectHeight,
       onLayout(data) {
-        positionGroupContents(group, { ...data, x: data.x - data.width / 2, y: data.y - data.height / 2 })
+        positionGroupByNodeTopLeft(group, data)
       },
     })
 
@@ -670,7 +683,7 @@ class ActivityDraw {
 
   drawWhile(parentMark: Group, wh: While): DrawStepResult {
     const { message, id } = wh
-    const group = makeEmptyGroup()
+    const group = makeGroup()
     const stepModel = model.stepModelMap.get(wh.id)
 
     const { bgMark: decisionBg, textMark, rectWidth, rectHeight } = this.drawDecisionMarks(message)
@@ -681,7 +694,7 @@ class ActivityDraw {
       width: rectWidth,
       height: rectHeight,
       onLayout(data) {
-        positionGroupContents(group, { ...data, x: data.x - data.width / 2, y: data.y - data.height / 2 })
+        positionGroupByNodeTopLeft(group, data)
       },
     })
 
@@ -719,7 +732,7 @@ class ActivityDraw {
   drawGroup(parentMark: Group, aGroup: AGroup): DrawStepResult {
     const conf = model.conf
     const { id } = aGroup
-    const group = makeEmptyGroup()
+    const group = makeGroup()
 
     const stepModel = model.stepModelMap.get(id)
 
@@ -812,7 +825,7 @@ class ActivityDraw {
 
   drawSwitch(parentMark: Group, s: Switch): DrawStepResult {
     const { id, message } = s
-    const group = makeEmptyGroup()
+    const group = makeGroup()
     const stepModel = model.stepModelMap.get(id)
 
     const { bgMark: decisionBg, textMark, rectWidth, rectHeight } = this.drawDecisionMarks(message)
@@ -823,7 +836,7 @@ class ActivityDraw {
       width: rectWidth,
       height: rectHeight,
       onLayout(data) {
-        positionGroupContents(group, { ...data, x: data.x - data.width / 2, y: data.y - data.height / 2 })
+        positionGroupByNodeTopLeft(group, data)
       },
     })
 
@@ -858,7 +871,7 @@ class ActivityDraw {
 
   drawCase(parentMark: Group, c: Case): DrawStepResult {
     const { id } = c
-    const group = makeEmptyGroup()
+    const group = makeGroup()
     const stepModel = model.stepModelMap.get(id)
 
     const endId = stepModel.endId
@@ -898,7 +911,7 @@ class ActivityDraw {
   drawRepeat(parentMark: Group, repeat: Repeat): DrawStepResult {
     const { message, id } = repeat
     const denyLabel = repeat.denyLabel || 'no'
-    const group = makeEmptyGroup()
+    const group = makeGroup()
     const stepModel = model.stepModelMap.get(id)
 
     const { bgMark: decisionBg, textMark, rectWidth, rectHeight } = this.drawDecisionMarks(message)
@@ -915,7 +928,7 @@ class ActivityDraw {
 
     let startMark: Mark
     if (repeat.firstAction) {
-      const firstActionGroup = makeEmptyGroup()
+      const firstActionGroup = makeGroup()
       firstActionGroup.class = 'activity__repeat-start'
       const { rectMark, textMark, actionInfo } = drawActionMarks({
         message: repeat.firstAction.message,
@@ -930,7 +943,7 @@ class ActivityDraw {
         width: actionInfo.rectWidth,
         height: actionInfo.rectHeight,
         onLayout(data) {
-          positionGroupContents(firstActionGroup, { ...data, x: data.x - data.width / 2, y: data.y - data.height / 2 })
+          positionGroupByNodeTopLeft(firstActionGroup, data)
         },
       })
     } else {
@@ -956,7 +969,7 @@ class ActivityDraw {
       width: rectWidth,
       height: rectHeight,
       onLayout(data) {
-        positionGroupContents(group, { ...data, x: data.x - data.width / 2, y: data.y - data.height / 2 })
+        positionGroupByNodeTopLeft(group, data)
       },
     })
 
@@ -985,7 +998,7 @@ class ActivityDraw {
   drawKeyword(parentMark: Group, keyword: Keyword): DrawStepResult {
     const conf = model.conf
     const stepModel = model.stepModelMap.get(keyword.id)
-    const group = makeEmptyGroup()
+    const group = makeGroup()
     group.class = 'activity__keyword'
     const { label, id } = keyword
     const r = 10
@@ -1016,7 +1029,7 @@ class ActivityDraw {
       width: r * 2,
       height: r * 2,
       onLayout(data) {
-        positionGroupContents(group, { ...data, x: data.x, y: data.y })
+        positionGroupByNodeCenter(group, data)
       },
     })
     const hasDetached = isDetachAlikeKeyword(keyword)
@@ -1061,7 +1074,7 @@ class ActivityDraw {
   drawFork(parentMark: Group, fork: Fork): DrawStepResult {
     const conf = model.conf
     const { id } = fork
-    const group = makeEmptyGroup()
+    const group = makeGroup()
     const stepModel = model.stepModelMap.get(id)
 
     const startMark = makeMark('rect', {
@@ -1191,7 +1204,7 @@ class ActivityDraw {
   }
   drawForkBranch(parentMark: Group, branch: ForkBranch): DrawStepResult {
     const { id } = branch
-    const group = makeEmptyGroup()
+    const group = makeGroup()
     const stepModel = model.stepModelMap.get(id)
 
     const result: DrawStepResult = {
@@ -1219,14 +1232,7 @@ class ActivityDraw {
     const { id, text } = note
     const conf = model.conf
 
-    const group = makeMark(
-      'group',
-      {
-        x: 0,
-        y: 0,
-      },
-      { children: [], class: 'activity__note' },
-    )
+    const group = makeMark('group', {}, { children: [], class: 'activity__note' })
     parentMark.children.push(group)
 
     const fontConfig = { fontSize: conf.fontSize, fontFamily: conf.fontFamily }
@@ -1292,7 +1298,7 @@ class ActivityDraw {
 
 function drawAction(parentMark: Group, action: Action, g: LayoutGraph): DrawStepResult {
   const stepModel = model.stepModelMap.get(action.id)
-  const group = makeEmptyGroup()
+  const group = makeGroup()
   const { textMark, rectMark, actionInfo } = drawActionMarks({ message: action.message, conf: model.conf })
   const { rectWidth, rectHeight } = actionInfo
   group.children.push(rectMark, textMark)
@@ -1304,7 +1310,7 @@ function drawAction(parentMark: Group, action: Action, g: LayoutGraph): DrawStep
     height: rectHeight,
     onLayout(data) {
       // console.log('[drawAction] onLayout', data)
-      positionGroupContents(group, { ...data, x: data.x - data.width / 2, y: data.y - data.height / 2 })
+      positionGroupByNodeTopLeft(group, data)
     },
   })
 

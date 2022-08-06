@@ -1,4 +1,4 @@
-import { MarkAttrs, Point, Path, PathCommand, createRotateAtPoint } from '@pintora/core'
+import { MarkAttrs, Point, Path, PathCommand } from '@pintora/core'
 
 export type ArrowType = 'default' | 'triangle' | 'etriangle' | 'box' | 'obox' | 'dot' | 'odot' | 'diamond' | 'ediamond'
 
@@ -30,25 +30,75 @@ type ArrowHeadDrawContext = {
  * Will point to dest
  */
 export function drawArrowTo(dest: Point, baseLength: number, rad: number, opts: DrawArrowOpts): Path {
-  const { x, y } = dest
   const xOffset = (baseLength / 2) * Math.tan(Math.PI / 3)
   const { type = 'default', color = 'transparent', bgColor = 'transparent' } = opts
 
-  const context: ArrowHeadDrawContext = { x, y, baseLength, color, bgColor, type, xOffset, arrowTypeRegistry }
+  // Build the arrow in local coordinates first, then rotate + translate to destination.
+  const context: ArrowHeadDrawContext = { x: 0, y: 0, baseLength, color, bgColor, type, xOffset, arrowTypeRegistry }
 
   const result = arrowTypeRegistry.draw(context)
-  const shapeStartPoint = result.shapeStartPoint || { x: x - xOffset, y }
-  const matrix = createRotateAtPoint(x, y, rad)
   return {
     type: 'path',
-    matrix,
     attrs: {
-      ...shapeStartPoint,
       ...(result.attrs || {}),
       ...(opts.attrs || {}),
-      path: result.path || [],
+      path: transformPathCommands(result.path || [], rad, dest),
     },
   }
+}
+
+function transformPathCommands(path: PathCommand[], rad: number, dest: Point): PathCommand[] {
+  const cos = Math.cos(rad)
+  const sin = Math.sin(rad)
+  const degree = (rad * 180) / Math.PI
+
+  const rotate = (x: number, y: number) => {
+    return {
+      x: x * cos - y * sin,
+      y: x * sin + y * cos,
+    }
+  }
+
+  const rotateAndTranslate = (x: number, y: number) => {
+    const p = rotate(x, y)
+    return {
+      x: p.x + dest.x,
+      y: p.y + dest.y,
+    }
+  }
+
+  return path.map(command => {
+    const type = command[0]
+    if (type === 'M' || type === 'L') {
+      const p = rotateAndTranslate(command[1], command[2])
+      return [type, p.x, p.y]
+    }
+    if (type === 'm' || type === 'l') {
+      const p = rotate(command[1], command[2])
+      return [type, p.x, p.y]
+    }
+    if (type === 'C') {
+      const p1 = rotateAndTranslate(command[1], command[2])
+      const p2 = rotateAndTranslate(command[3], command[4])
+      const p3 = rotateAndTranslate(command[5], command[6])
+      return [type, p1.x, p1.y, p2.x, p2.y, p3.x, p3.y]
+    }
+    if (type === 'c') {
+      const p1 = rotate(command[1], command[2])
+      const p2 = rotate(command[3], command[4])
+      const p3 = rotate(command[5], command[6])
+      return [type, p1.x, p1.y, p2.x, p2.y, p3.x, p3.y]
+    }
+    if (type === 'A') {
+      const p = rotateAndTranslate(command[6], command[7])
+      return [type, command[1], command[2], command[3] + degree, command[4], command[5], p.x, p.y]
+    }
+    if (type === 'a') {
+      const p = rotate(command[6], command[7])
+      return [type, command[1], command[2], command[3] + degree, command[4], command[5], p.x, p.y]
+    }
+    return command
+  }) as PathCommand[]
 }
 
 const defaultHeadDrawer: ArrowHeadDrawer = context => {

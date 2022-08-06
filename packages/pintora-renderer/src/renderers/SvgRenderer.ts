@@ -1,43 +1,44 @@
 import { Mark } from '@pintora/core'
 import { BaseRenderer } from './base'
-import { Canvas, IShape } from '@antv/g-svg'
+import { Element as GElement } from '@antv/g'
+import { Renderer } from '@antv/g-svg'
 
 export class SvgRenderer extends BaseRenderer {
-  getCanvasClass() {
-    return Canvas
+  getGRenderer() {
+    // Disable automatic id generation, we'll manually set id for elements that need it
+    return new Renderer({
+      outputSVGElementId: false,
+    })
   }
 
-  preProcessMarkAttrs(mark: Mark) {
-    if (mark.type === 'text') {
-      return {
-        ...mark.attrs,
-        text: escapeHtml(mark.attrs.text),
-      }
-    }
-    return mark.attrs!
+  override getRootElement() {
+    if (!this.gcvs) return
+    return (this.gcvs.context.contextService as any).$namespace
   }
 
-  onShapeAdd(shape: IShape, mark: Mark) {
+  onShapeAdd(shape: GElement, mark: Mark) {
     super.onShapeAdd(shape, mark)
 
     if (mark.class) {
-      const el = shape.get('el')
-      // TODO: some js dom implementation does not have classList
+      const el = shape
+      // some js dom implementation does not have classList
       if (el && el.classList) {
-        mark.class.split(' ').forEach(cls => {
-          if (cls) el.classList.add(cls)
-        })
+        shape.style.class = mark.class
+      }
+    }
+
+    // Manually set id only for elements that have explicit id in attrs
+    // This avoids the auto-generated g-svg-1, g-svg-2, etc. ids
+    const explicitId = mark.attrs?.id
+    if (explicitId) {
+      // Set id on the SVG element directly via elementSVG
+      const svgEl = (shape as any).elementSVG
+      if (svgEl?.$el) {
+        svgEl.$el.id = explicitId
+      }
+      if (svgEl?.$groupEl && svgEl.$groupEl !== svgEl.$el) {
+        svgEl.$groupEl.id = explicitId
       }
     }
   }
-}
-
-// https://stackoverflow.com/questions/6234773/can-i-escape-html-special-chars-in-javascript
-function escapeHtml(unsafe: string) {
-  return unsafe
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;')
-    .replace(/'/g, '&#039;')
 }

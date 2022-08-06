@@ -2,7 +2,7 @@ import { RenderOptions, IRenderer } from '@pintora/renderer'
 import { pintoraStandalone, PintoraConfig } from '@pintora/standalone'
 import { JSDOM } from 'jsdom'
 import { implForWrapper } from 'jsdom/lib/jsdom/living/generated/utils'
-import { Canvas, CanvasPattern } from 'canvas'
+import { Canvas } from 'canvas'
 import { SVG_MIME_TYPE, DEFAUT_BGS } from './const'
 import type { CLIRenderOptions } from './type'
 
@@ -35,7 +35,6 @@ class GlobalPatcher {
 
 function renderPrepare(opts: CLIRenderOptions) {
   const { code, backgroundColor, pintoraConfig } = opts
-  const devicePixelRatio = opts.devicePixelRatio || 2
 
   const dom = new JSDOM('<!DOCTYPE html><body></body>')
   const document = dom.window.document
@@ -44,15 +43,15 @@ function renderPrepare(opts: CLIRenderOptions) {
 
   // setup the env for renderer
   const patcher = new GlobalPatcher()
-  patcher.set('window', dom.window)
   patcher.set('document', document)
-  patcher.set('CanvasPattern', CanvasPattern)
-  ;(dom.window as any).devicePixelRatio = devicePixelRatio
 
-  global.window = dom.window as any
-  global.document = document
-  ;(dom.window as any).devicePixelRatio = devicePixelRatio
-  ;(global as any).CanvasPattern = CanvasPattern
+  // Mock browser APIs for @antv/g v6
+  patcher.set('navigator', {})
+  // @antv/g v6 also uses addEventListener on globalThis
+  if (typeof globalThis.addEventListener !== 'function') {
+    ;(globalThis as any).addEventListener = () => {}
+    ;(globalThis as any).removeEventListener = () => {}
+  }
 
   return {
     container,

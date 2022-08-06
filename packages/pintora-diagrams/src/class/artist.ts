@@ -4,6 +4,7 @@ import {
   ITheme,
   last,
   makeMark,
+  mat3,
   movePointPosition,
   Rect,
   safeAssign,
@@ -18,7 +19,7 @@ import {
   DiagramTitleMaker,
   drawArrowTo,
   getBaseNote,
-  makeEmptyGroup,
+  makeGroup,
   makeLabelBg,
 } from '../util/artist-util'
 import { calcBound, calcTextBound } from '../util/bound'
@@ -35,14 +36,14 @@ import {
   LayoutNode,
 } from '../util/graph'
 import { getPointsCurvePath, getPointsLinearPath } from '../util/line-util'
-import { makeBounds, positionGroupContents, tryExpandBounds } from '../util/mark-positioner'
+import { makeBounds, tryExpandBounds } from '../util/mark-positioner'
 import { ClassConf, getConf } from './config'
 import { ClassIR, ClassRelation, Note, Relation, TClass } from './db'
 import { BaseArtist } from '../util/base-artist'
 
 class ClassArtist extends BaseArtist<ClassIR, ClassConf> {
-  customDraw(ir, config, opts) {
-    const rootMark = makeEmptyGroup()
+  customDraw(ir, config) {
+    const rootMark = makeGroup()
     const conf = getConf(ir, config)
 
     const draw = new ClassDiagramDraw(ir, conf)
@@ -83,7 +84,7 @@ const DASH_PATTERN: number[] = [2, 2]
 class ClassDiagramDraw {
   dagreWrapper: DagreWrapper
   rootMark: Group
-  relationGroupMark = makeEmptyGroup()
+  relationGroupMark = makeGroup()
   markBuilder: EntityMarkBuilder
   theme: ITheme
   fontConfig: IFont
@@ -378,14 +379,7 @@ class ClassDiagramDraw {
       return
     }
 
-    const group = makeMark(
-      'group',
-      {
-        x: 0,
-        y: 0,
-      },
-      { children: [], class: 'class__note' },
-    )
+    const group = makeMark('group', {}, { children: [], class: 'class__note' })
     const { rootMark, conf, theme } = this
     rootMark.children.push(group)
 
@@ -685,7 +679,7 @@ class EntityLayoutEngine {
  * Handles common logic of drawing an entity/class
  */
 class EntityMarkBuilder {
-  group: Group = Object.assign(makeEmptyGroup(), {
+  group: Group = Object.assign(makeGroup(), {
     class: 'class__entity',
   })
   rowPadding = 8
@@ -851,7 +845,7 @@ class EntityMarkBuilder {
     }
 
     this.group.children = children
-    positionGroupContents(this.group, data)
+    this.group.matrix = mat3.fromTranslation(mat3.create(), [data.x, data.y])
   }
 }
 

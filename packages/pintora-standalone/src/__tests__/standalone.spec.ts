@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-empty-function */
 import { pintoraStandalone } from '../index'
 import { EXAMPLES } from '@pintora/test-shared'
 
@@ -61,11 +60,12 @@ describe('pintora standalone', () => {
     })
 
     function makeFakeGraphicEvent(eventName = 'dblclick') {
-      return {
+      // Use Object.defineProperty to make propagationPath writable for @antv/g v6 compatibility
+      const event = {
         type: eventName,
         shape: {},
-        propagationPath: [],
       }
+      return event
     }
 
     it('calls `renderer.on` and diagramEventManager methods if `eventsHandlers` is passed', () => {
@@ -134,6 +134,28 @@ describe('pintora standalone', () => {
 
       expect(dblclick1).toHaveBeenCalledTimes(1)
       expect(dblclick2).toHaveBeenCalledTimes(1)
+    })
+
+    it('renders er relation paths with valid `d` in svg output', async () => {
+      const code = `
+      erDiagram
+        CUSTOMER ||--o{ ORDER : places
+      `
+      pintoraStandalone.renderTo(code, {
+        container,
+        renderer: 'svg',
+      })
+
+      await new Promise(resolve => setTimeout(resolve, 20))
+
+      const relationGroup = container.querySelector('.er__relations')
+      expect(relationGroup).toBeTruthy()
+
+      const relationPaths = Array.from(relationGroup!.querySelectorAll('path'))
+      expect(relationPaths.length).toBeGreaterThan(0)
+      relationPaths.forEach(pathEl => {
+        expect(pathEl.getAttribute('d')).toBeTruthy()
+      })
     })
   })
 

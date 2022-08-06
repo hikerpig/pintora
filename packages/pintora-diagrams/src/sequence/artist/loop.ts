@@ -1,4 +1,4 @@
-import { calculateTextDimensions, removeValues, safeAssign } from '@pintora/core'
+import { calculateTextDimensions, removeValues, safeAssign, mat3 } from '@pintora/core'
 import { messageFont, boxFont, SequenceArtistContext } from '../artist'
 import { getBaseText, makeLoopLabelBox, makeMark } from '../artist-util'
 import { LoopModel, LoopSection } from './type'
@@ -11,6 +11,10 @@ export function drawLoopTo(context: SequenceArtistContext, loopModel: Readonly<L
   // console.log('draw loop', labelText, loopModel)
   const loopLineColor = conf.loopLineColor
   const group = makeMark('group', {}, { children: [], class: 'loop' })
+  const { startx, starty, stopx, stopy } = loopModel
+  const loopWidth = stopx - startx
+  group.matrix = mat3.fromTranslation(mat3.create(), [startx, starty])
+
   function drawLoopLine(startx: number, starty: number, stopx: number, stopy: number) {
     const line = makeMark(
       'line',
@@ -41,7 +45,6 @@ export function drawLoopTo(context: SequenceArtistContext, loopModel: Readonly<L
     })
     model.groupBgs.push(sectionBgRect)
   }
-  const { startx, starty, stopx, stopy } = loopModel
 
   const bgRect = makeMark(
     'rect',
@@ -60,7 +63,7 @@ export function drawLoopTo(context: SequenceArtistContext, loopModel: Readonly<L
 
   if (loopModel.sections) {
     loopModel.sections.forEach(function (item) {
-      drawLoopLine(startx, item.y, loopModel.stopx, item.y)
+      drawLoopLine(0, item.y - starty, loopWidth, item.y - starty)
       if (item.fill) {
         drawSectionBg(item)
       }
@@ -81,8 +84,8 @@ export function drawLoopTo(context: SequenceArtistContext, loopModel: Readonly<L
   const tAttrs = getBaseText()
   safeAssign(tAttrs, {
     text: labelText,
-    x: startx + boxTextMargin,
-    y: starty + boxTextMargin,
+    x: boxTextMargin,
+    y: boxTextMargin,
     textBaseline: 'top',
     fontFamily,
     fontSize,
@@ -95,20 +98,18 @@ export function drawLoopTo(context: SequenceArtistContext, loopModel: Readonly<L
   const labelWidth = Math.max(labelTextSize.width + 2 * boxTextMargin, labelBoxWidth)
   const labelHeight = Math.max(labelTextSize.height + 2 * boxTextMargin, labelBoxHeight)
 
-  const labelWrap = makeLoopLabelBox({ x: startx, y: starty }, labelWidth, labelHeight, 5)
+  const labelWrap = makeLoopLabelBox({ x: 0, y: 0 }, labelWidth, labelHeight, 5)
   safeAssign(labelWrap.attrs, {
     fill: conf.actorBackground,
     stroke: loopLineColor,
   })
 
-  const loopWidth = stopx - startx
-
   const titleMark = makeMark(
     'text',
     {
       text: loopModel.title,
-      x: startx + loopWidth / 2 + labelBoxWidth / 2,
-      y: starty + boxTextMargin,
+      x: loopWidth / 2 + labelBoxWidth / 2,
+      y: boxTextMargin,
       textBaseline: 'top',
       textAlign: 'center',
       fontFamily,
@@ -129,8 +130,8 @@ export function drawLoopTo(context: SequenceArtistContext, loopModel: Readonly<L
           {
             ...getBaseText(),
             text: sectionTitle,
-            x: startx + loopWidth / 2,
-            y: loopModel.sections[idx].y + boxTextMargin,
+            x: loopWidth / 2,
+            y: loopModel.sections[idx].y - starty + boxTextMargin,
             textAlign: 'center',
             textBaseline: 'top',
             fontFamily,
