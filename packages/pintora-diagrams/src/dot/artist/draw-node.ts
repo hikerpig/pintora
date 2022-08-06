@@ -38,6 +38,7 @@ export function drawNodeShape(context: DrawNodeContext) {
         attrs: markAttrs,
         contentArea,
       })
+      // console.log('draw shape', shape, sym)
       return {
         containerNode: sym,
       }

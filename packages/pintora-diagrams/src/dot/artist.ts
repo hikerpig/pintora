@@ -234,7 +234,7 @@ class DOTDraw {
           if (graphLabel) {
             const labelPoint = { x: data.x, y: data.y - data.height / 2 }
             const labelMark = makeTextAtPoint(graphLabel, labelPoint, {
-              textBaseline: 'top',
+              textBaseline: 'hanging',
               ...fontConfig,
               fill: conf.labelTextColor,
               ...graphLabelAttrMapper(graphAttrs, graphContext),
@@ -445,7 +445,7 @@ class DOTDraw {
       const labelPoint = { x: bounds.left + bounds.width / 2, y: bounds.bottom }
       labelHeight = calculateTextDimensions(label, fontConfig).height
       const labelMark = makeTextAtPoint(label, labelPoint, {
-        textBaseline: 'top',
+        textBaseline: 'hanging',
         ...fontConfig,
         fill: conf.labelTextColor,
         ...graphLabelAttrMapper(graphAttrs, graphContext),
