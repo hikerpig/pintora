@@ -1,0 +1,38 @@
+dotDiagram
+  @param ranksep 30
+  @param edgeType curved
+  digraph G {
+    bgcolor="#faf5f5"
+    node [bgcolor="orange"]
+    label="package dependencies"
+
+    standalone [label="@pintora/standalone"]
+    core [label="@pintora/core"]
+    renderer [label="@pintora/renderer"]
+    diagrams [label="@pintora/diagrams"]
+    cli [label="@pintora/cli"]
+    dev-kit [label="@pintora/development-kit"]
+    test-shared [label="@pintora/test-shared"]
+
+    subgraph external {
+      label="external"
+
+      dagre-layout [label="@pintora/dagre"]
+      graphlib [label="@pintora/graphlib"]
+
+      dagre-layout -> graphlib
+    }
+
+    cli -> standalone
+    standalone -> diagrams
+    standalone -> renderer
+
+    diagrams -> core
+    diagrams -> dagre-layout
+    renderer -> core
+
+    diagrams -> dev-kit [style="dashed"]
+    diagrams -> test-shared [style="dashed"]
+    cli -> test-shared [style="dashed"]
+    standalone -> test-shared [style="dashed"]
+  }

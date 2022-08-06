@@ -92,6 +92,12 @@ Heavily inspired by [Mermaid.js](https://mermaid-js.github.io/mermaid/#/) and [P
         <img src="https://i.imgur.com/hwcK3cT.jpg" title="Gantt Diagram" width="300" />
       </td>
     </tr>
+    <tr>
+      <td>DOT Diagram</td>
+      <td>
+        <img src="https://i.imgur.com/KCkYXlk.png" title="DOT Diagram" width="300" />
+      </td>
+    </tr>
   </tbody>
 </table>
 
