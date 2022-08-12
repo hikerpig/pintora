@@ -1,2 +1,9 @@
 github_checks:
   annotations: false
+
+coverage:
+  status:
+    project:
+      default:
+        target: 95%
+        threshold: 5%
