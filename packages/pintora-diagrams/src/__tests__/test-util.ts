@@ -156,3 +156,7 @@ export function makeGraphicEvent(type: DiagramEventType, mark: Mark) {
   }
   return graphicEvent
 }
+
+export function replaceEofToCrlf(str: string) {
+  return str.replace(/\n/g, '\r\n')
+}
