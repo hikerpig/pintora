@@ -59,3 +59,9 @@ export function getQuotedWord(token) {
   const v = tv(token)
   return v.slice(1, v.length - 1).replace(/\\"/g, '"')
 }
+
+export function makeNth(n: number) {
+  return function (d: unknown[]) {
+    return d[n]
+  }
+}

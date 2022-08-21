@@ -106,7 +106,7 @@ export function positionSymbol(sym: GSymbol, p: TRect, opts?: PositionOpts) {
 /**
  * Position group children
  */
-export function positionGroupContents(group: Group, p: TRect) {
+export function positionGroupContents(group: Group, p: Readonly<TRect>) {
   const oldBounds = {
     x: group.attrs.x || 0,
     y: group.attrs.y || 0,

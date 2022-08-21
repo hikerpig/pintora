@@ -1,5 +1,5 @@
-import { GraphicsIR, Mark, MarkType, MarkTypeMap } from '@pintora/core'
-import { IGroup, AbstractCanvas, CanvasCfg, IShape, Event as GEvent, ShapeAttrs } from '@antv/g-base'
+import { GraphicsIR, Mark, MarkAttrs, MarkType, MarkTypeMap } from '@pintora/core'
+import { IGroup, AbstractCanvas, CanvasCfg, IShape, Event as GEvent } from '@antv/g-base'
 import { EventHandler, IRenderer } from '../type'
 import { noop, Stack } from '../util'
 import { GraphicEvent } from '../event'
@@ -20,7 +20,7 @@ function traverseScene<Actions = unknown>(
   actions: Actions,
 ) {
   const visitor = visitors[mark.type] || visitors.default
-  let visitorEnter
+  let visitorEnter: Visitor<Mark>['enter'] | undefined
   let visitorExit
   if (visitor) {
     if (typeof visitor === 'function') {
@@ -105,8 +105,9 @@ export abstract class BaseRenderer implements IRenderer {
       addToCurrentGroup(mark: Mark) {
         const group = groupStack.top()
         const container = group || gcvs
+        const shapeAttrs = self.preProcessMarkAttrs(mark)
         const shape = container.addShape(mark.type, {
-          attrs: mark.attrs as unknown as ShapeAttrs,
+          attrs: shapeAttrs as MarkAttrs,
         })
         self.onShapeAdd(shape, mark)
         // console.log('new shape', el, shape, mark.attrs)
@@ -170,6 +171,10 @@ export abstract class BaseRenderer implements IRenderer {
     return () => {
       gcvs.off(name, fn)
     }
+  }
+
+  protected preProcessMarkAttrs(mark: Mark): MarkAttrs | undefined {
+    return mark.attrs
   }
 
   protected onShapeAdd(shape: IShape | IGroup, mark: Mark) {

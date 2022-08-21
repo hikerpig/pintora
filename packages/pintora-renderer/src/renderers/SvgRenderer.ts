@@ -7,6 +7,16 @@ export class SvgRenderer extends BaseRenderer {
     return Canvas
   }
 
+  preProcessMarkAttrs(mark: Mark) {
+    if (mark.type === 'text') {
+      return {
+        ...mark.attrs,
+        text: escapeHtml(mark.attrs.text),
+      }
+    }
+    return mark.attrs!
+  }
+
   onShapeAdd(shape: IShape, mark: Mark) {
     super.onShapeAdd(shape, mark)
 
@@ -19,4 +29,14 @@ export class SvgRenderer extends BaseRenderer {
       }
     }
   }
+}
+
+// https://stackoverflow.com/questions/6234773/can-i-escape-html-special-chars-in-javascript
+function escapeHtml(unsafe: string) {
+  return unsafe
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;')
 }

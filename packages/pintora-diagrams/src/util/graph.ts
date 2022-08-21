@@ -1,6 +1,6 @@
 import { Mark, Bounds, Point } from '@pintora/core'
 import { Graph, GraphOptions } from '@pintora/graphlib'
-import type { GraphOpts, NodeOpts, SplinesType } from '@pintora/dagre'
+import type { GraphOpts, NodeOpts, EdgeOpts, SplinesType } from '@pintora/dagre'
 import { EdgeType } from './config'
 
 export type LayoutGraph = Graph<LayoutNodeOption, any, GraphOpts>
@@ -88,6 +88,10 @@ export interface LayoutNode extends LayoutNodeOption {
 }
 
 export type LayoutEdge<T> = BaseEdgeData & T
+
+export interface LayoutEdgeOption extends Partial<EdgeOpts> {
+  onLayout?(data: LayoutEdge<unknown>): void
+}
 
 export function isSubgraph(g: LayoutGraph, id: string) {
   return Boolean(g.children(id).length)
