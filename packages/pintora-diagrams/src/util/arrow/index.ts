@@ -1,6 +1,6 @@
 import { MarkAttrs, Point, Path, PathCommand, createRotateAtPoint } from '@pintora/core'
 
-export type ArrowType = 'default' | 'triangle' | 'box' | 'obox' | 'dot' | 'odot' | 'diamond' | 'ediamond'
+export type ArrowType = 'default' | 'triangle' | 'etriangle' | 'box' | 'obox' | 'dot' | 'odot' | 'diamond' | 'ediamond'
 
 type DrawArrowOpts = {
   type?: ArrowType
@@ -94,6 +94,7 @@ arrowTypeRegistry.register('triangle', context => {
     attrs: { fill: color },
   }
 })
+arrowTypeRegistry.register('etriangle', makeStrokeDrawer('triangle'))
 arrowTypeRegistry.register('box', context => {
   const { x, y, baseLength, color } = context
   const side = baseLength

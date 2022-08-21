@@ -121,6 +121,13 @@ export function getPositionOfRect(rect: TRect, position: number) {
   return { x, y }
 }
 
+export function movePointPosition(p: Point, offsets: Point) {
+  return {
+    x: p.x + offsets.x,
+    y: p.y + offsets.y,
+  }
+}
+
 export function moveRectPosition(rect: TRect, offsets: Point) {
   return {
     width: rect.width,

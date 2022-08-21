@@ -1,0 +1,119 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`class parser can parse class label 1`] = `
+{
+  "class1": {
+    "annotation": "",
+    "fullName": "class1",
+    "label": "class1",
+    "members": [
+      {
+        "access": "public",
+        "isMethod": false,
+        "modifier": null,
+        "name": "RED",
+        "raw": "RED",
+        "typeName": "",
+      },
+    ],
+    "name": "class1",
+    "namespace": "",
+  },
+}
+`;
+
+exports[`class parser can parse methods and fields 1`] = `
+{
+  "classes": {
+    "C1": {
+      "annotation": "",
+      "fullName": "C1",
+      "label": "C1",
+      "members": [
+        {
+          "access": "public",
+          "isMethod": false,
+          "modifier": null,
+          "name": "field1",
+          "raw": "string field1",
+          "typeName": "string",
+        },
+        {
+          "access": "public",
+          "isMethod": true,
+          "modifier": null,
+          "name": "method1()",
+          "raw": "int method1()",
+          "typeName": "int",
+        },
+        {
+          "access": "public",
+          "isMethod": false,
+          "modifier": null,
+          "name": "field2",
+          "raw": "field2: number",
+          "typeName": "number",
+        },
+        {
+          "access": "public",
+          "isMethod": true,
+          "name": "method2()",
+          "raw": "method2()",
+          "typeName": "",
+        },
+      ],
+      "name": "C1",
+      "namespace": "",
+    },
+  },
+  "configParams": [],
+  "overrideConfig": {},
+  "relations": [],
+  "title": "",
+}
+`;
+
+exports[`class parser can parse relationship between classes 1`] = `
+[
+  {
+    "dashed": false,
+    "label": "",
+    "labelLeft": null,
+    "labelRight": null,
+    "left": "A1",
+    "relation": "INHERITANCE",
+    "right": "A2",
+    "type": "addRelation",
+  },
+  {
+    "dashed": false,
+    "label": "",
+    "labelLeft": null,
+    "labelRight": null,
+    "left": "B1",
+    "relation": "COMPOSITION",
+    "right": "B2",
+    "type": "addRelation",
+  },
+  {
+    "dashed": false,
+    "label": "",
+    "labelLeft": null,
+    "labelRight": null,
+    "left": "C1",
+    "relation": "AGGREGATION",
+    "right": "C2",
+    "type": "addRelation",
+  },
+  {
+    "dashed": false,
+    "label": "association",
+    "labelLeft": null,
+    "labelRight": null,
+    "left": "D1",
+    "relation": "ASSOCIATION",
+    "right": "D2",
+    "type": "addRelation",
+  },
+]
+`;

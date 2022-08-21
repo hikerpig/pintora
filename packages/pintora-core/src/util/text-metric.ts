@@ -9,14 +9,19 @@ export function calculateTextDimensions(text: string, font?: IFont) {
   let width = 0
   let height = 0
   const fontSize = font?.fontSize || 14
-  lines.forEach(line => {
+  lines.forEach((line, i) => {
     const lineMetric = getLineMetric(line, font)
     // console.log('line metric', line, lineMetric)
     const w = lineMetric.width
     width = Math.max(w, width)
+    // svg renderer antv/g currently adds tspan dy with '1em', which matches fontSize
+    // so we will calculate height with similar method
+    // TODO: but it has some differences with canvas
     let lineHeight = fontSize
-    if ('actualBoundingBoxDescent' in lineMetric) {
-      lineHeight = lineMetric.actualBoundingBoxAscent + lineMetric.actualBoundingBoxDescent
+    if (i === 0) {
+      if ('actualBoundingBoxDescent' in lineMetric) {
+        lineHeight = lineMetric.actualBoundingBoxAscent + lineMetric.actualBoundingBoxDescent
+      }
     }
     height += lineHeight
   })

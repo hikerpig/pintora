@@ -15,3 +15,9 @@ export function getPointsLinearPath(points: Point[]): PathCommand[] {
     }),
   ]
 }
+
+export function getMedianPoint(points: Point[]) {
+  const len = points.length
+  const index = Math.floor(len / 2)
+  return { index, point: points[index] }
+}

@@ -1,0 +1,98 @@
+---
+title: Class Diagram
+---
+
+<span className="badge badge--info">Experiment</span> syntax may change.
+
+> A class diagram in the Unified Modeling Language (UML) is a type of static structure diagram that describes the structure of a system by showing the system's classes, their attributes, operations (or methods), and the relationships among objects.
+> <cite><a href="https://en.wikipedia.org/wiki/Sequence_diagram">Wikipedia</a></cite>
+
+## A simple demo
+
+```pintora play
+classDiagram
+
+  class Fruit {
+    float sweetness
+    -float age
+
+    float getAge()
+  }
+
+  class Apple {
+  }
+
+  Fruit <|-- Apple
+  Fruit <|-- Kiwi
+
+  Container "1" *-- "many" Fruit : holds
+```
+
+## Define a class
+
+## Class members
+
+To declare fields and methods, you can use the symbol `:` followed by the field's or method's name.
+
+It is also possible to group between brackets `{}` all fields and methods.
+
+You can write type and name in any order you prefer.
+
+```pintora play
+classDiagram
+  class Fruit {
+    float sweetness
+
+    squeeze()
+  }
+
+  Fruit : getAge(): float
+```
+
+### Member visibility
+
+Define member visibility with these symbols. The notaiton is optional but it should be placed before the member.
+
+- `+` public
+- `#` protected
+- `-` private
+- `~` package/internal
+
+## Relations between classes
+
+You can define relations between classes using following symbols :
+
+| Type    | Description |
+| ------- | ----------- |
+| `<\|--` | Inheritance |
+| `*--`   | Composition |
+| `o--`   | Aggregation |
+| `-->`   | Association |
+| `--`    | Link        |
+
+It is possible to replace `--` by `..` to have a dotted line.
+
+```pintora play
+classDiagram
+classA <|-- classB
+classC *-- classD
+classE o-- classF
+classG <-- classH
+classI -- classJ
+classK <.. classL
+classM <|.. classN
+classO .. classP
+```
+
+### Label on relations
+
+It is possible to add a label on the relation, using `:`, followed by the text of the label.
+
+Also, you can use double-quotes `""` on each side of the relation for cardinality.
+
+```pintora play
+classDiagram
+  classA "1" *-- "many" classB : contains
+  classC o-- classD : aggregation
+  classE --> "1" classF
+```

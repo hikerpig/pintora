@@ -45,7 +45,7 @@ erDiagram
   PERSON {
     string phone "phone number"
   }
-  
+
   CUSTOMER inherit PERSON
   DELIVERER inherit PERSON
 
@@ -53,10 +53,10 @@ erDiagram
   ORDER ||--|{ LINE-ITEM : contains
   CUSTOMER }|..|{ DELIVERY-ADDRESS : uses
   ORDER {
-    int order_number PK 
+    int order_number PK
     string adress "delivery address"
   }
-  
+
   DELIVERER ||--o{ DELIVERY : completes
 `),
 }
@@ -322,6 +322,25 @@ dotDiagram
 `),
 }
 
+export const classExample: DiagramExample = {
+  name: 'Class Diagram',
+  description: 'Sample for a classDiagram',
+  code: stripStartEmptyLines(`
+classDiagram
+
+class Fruit {
+  float sweetness
+}
+
+class Apple {
+}
+
+Fruit <|-- Apple
+
+Container "1" *-- "many" Fruit : holds
+`),
+}
+
 export const EXAMPLES = {
   sequence: sequenceExample,
   er: erExample,
@@ -331,4 +350,5 @@ export const EXAMPLES = {
   mindmap: mindmapExample,
   gantt: ganttExample,
   dot: dotExample,
+  class: classExample,
 }
