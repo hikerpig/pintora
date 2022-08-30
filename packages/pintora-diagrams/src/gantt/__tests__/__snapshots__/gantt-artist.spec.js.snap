@@ -1,22 +1,22 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`gantt-artist match example snapshot 1`] = `
-Object {
-  "mark": Object {
-    "attrs": Object {},
-    "children": Array [
-      Object {
-        "attrs": Object {},
-        "children": Array [
-          Object {
-            "attrs": Object {
+{
+  "mark": {
+    "attrs": {},
+    "children": [
+      {
+        "attrs": {},
+        "children": [
+          {
+            "attrs": {
               "fill": "#f9e096",
             },
             "class": "gantt__section",
             "type": "rect",
           },
-          Object {
-            "attrs": Object {
+          {
+            "attrs": {
               "fill": "#3b4044",
               "fontFamily": "Source Code Pro, sans-serif",
               "fontSize": 14,
@@ -26,15 +26,15 @@ Object {
             },
             "type": "text",
           },
-          Object {
-            "attrs": Object {
+          {
+            "attrs": {
               "fill": "transparent",
             },
             "class": "gantt__section",
             "type": "rect",
           },
-          Object {
-            "attrs": Object {
+          {
+            "attrs": {
               "fill": "#3b4044",
               "fontFamily": "Source Code Pro, sans-serif",
               "fontSize": 14,
@@ -44,15 +44,15 @@ Object {
             },
             "type": "text",
           },
-          Object {
-            "attrs": Object {
+          {
+            "attrs": {
               "fill": "#f9e096",
             },
             "class": "gantt__section",
             "type": "rect",
           },
-          Object {
-            "attrs": Object {
+          {
+            "attrs": {
               "fill": "#3b4044",
               "fontFamily": "Source Code Pro, sans-serif",
               "fontSize": 14,
@@ -65,32 +65,32 @@ Object {
         ],
         "type": "group",
       },
-      Object {
-        "attrs": Object {},
-        "children": Array [
-          Object {
-            "attrs": Object {
+      {
+        "attrs": {},
+        "children": [
+          {
+            "attrs": {
               "fill": "#6a737b",
               "fillOpacity": 0.2,
             },
             "type": "rect",
           },
-          Object {
-            "attrs": Object {
+          {
+            "attrs": {
               "fill": "#6a737b",
               "fillOpacity": 0.2,
             },
             "type": "rect",
           },
-          Object {
-            "attrs": Object {
+          {
+            "attrs": {
               "fill": "#6a737b",
               "fillOpacity": 0.2,
             },
             "type": "rect",
           },
-          Object {
-            "attrs": Object {
+          {
+            "attrs": {
               "fill": "#6a737b",
               "fillOpacity": 0.2,
             },
@@ -99,17 +99,17 @@ Object {
         ],
         "type": "group",
       },
-      Object {
-        "attrs": Object {},
-        "children": Array [
-          Object {
-            "attrs": Object {
+      {
+        "attrs": {},
+        "children": [
+          {
+            "attrs": {
               "stroke": "#6a737b",
             },
             "type": "line",
           },
-          Object {
-            "attrs": Object {
+          {
+            "attrs": {
               "fill": "#3b4044",
               "fontSize": 10,
               "text": "22-02-17",
@@ -118,14 +118,14 @@ Object {
             },
             "type": "text",
           },
-          Object {
-            "attrs": Object {
+          {
+            "attrs": {
               "stroke": "#6a737b",
             },
             "type": "line",
           },
-          Object {
-            "attrs": Object {
+          {
+            "attrs": {
               "fill": "#3b4044",
               "fontSize": 10,
               "text": "22-02-18",
@@ -134,14 +134,14 @@ Object {
             },
             "type": "text",
           },
-          Object {
-            "attrs": Object {
+          {
+            "attrs": {
               "stroke": "#6a737b",
             },
             "type": "line",
           },
-          Object {
-            "attrs": Object {
+          {
+            "attrs": {
               "fill": "#3b4044",
               "fontSize": 10,
               "text": "22-02-19",
@@ -150,14 +150,14 @@ Object {
             },
             "type": "text",
           },
-          Object {
-            "attrs": Object {
+          {
+            "attrs": {
               "stroke": "#6a737b",
             },
             "type": "line",
           },
-          Object {
-            "attrs": Object {
+          {
+            "attrs": {
               "fill": "#3b4044",
               "fontSize": 10,
               "text": "22-02-20",
@@ -166,14 +166,14 @@ Object {
             },
             "type": "text",
           },
-          Object {
-            "attrs": Object {
+          {
+            "attrs": {
               "stroke": "#6a737b",
             },
             "type": "line",
           },
-          Object {
-            "attrs": Object {
+          {
+            "attrs": {
               "fill": "#3b4044",
               "fontSize": 10,
               "text": "22-02-21",
@@ -182,14 +182,14 @@ Object {
             },
             "type": "text",
           },
-          Object {
-            "attrs": Object {
+          {
+            "attrs": {
               "stroke": "#6a737b",
             },
             "type": "line",
           },
-          Object {
-            "attrs": Object {
+          {
+            "attrs": {
               "fill": "#3b4044",
               "fontSize": 10,
               "text": "22-02-22",
@@ -198,14 +198,14 @@ Object {
             },
             "type": "text",
           },
-          Object {
-            "attrs": Object {
+          {
+            "attrs": {
               "stroke": "#6a737b",
             },
             "type": "line",
           },
-          Object {
-            "attrs": Object {
+          {
+            "attrs": {
               "fill": "#3b4044",
               "fontSize": 10,
               "text": "22-02-23",
@@ -214,14 +214,14 @@ Object {
             },
             "type": "text",
           },
-          Object {
-            "attrs": Object {
+          {
+            "attrs": {
               "stroke": "#6a737b",
             },
             "type": "line",
           },
-          Object {
-            "attrs": Object {
+          {
+            "attrs": {
               "fill": "#3b4044",
               "fontSize": 10,
               "text": "22-02-24",
@@ -230,14 +230,14 @@ Object {
             },
             "type": "text",
           },
-          Object {
-            "attrs": Object {
+          {
+            "attrs": {
               "stroke": "#6a737b",
             },
             "type": "line",
           },
-          Object {
-            "attrs": Object {
+          {
+            "attrs": {
               "fill": "#3b4044",
               "fontSize": 10,
               "text": "22-02-25",
@@ -246,14 +246,14 @@ Object {
             },
             "type": "text",
           },
-          Object {
-            "attrs": Object {
+          {
+            "attrs": {
               "stroke": "#6a737b",
             },
             "type": "line",
           },
-          Object {
-            "attrs": Object {
+          {
+            "attrs": {
               "fill": "#3b4044",
               "fontSize": 10,
               "text": "22-02-26",
@@ -262,14 +262,14 @@ Object {
             },
             "type": "text",
           },
-          Object {
-            "attrs": Object {
+          {
+            "attrs": {
               "stroke": "#6a737b",
             },
             "type": "line",
           },
-          Object {
-            "attrs": Object {
+          {
+            "attrs": {
               "fill": "#3b4044",
               "fontSize": 10,
               "text": "22-02-27",
@@ -278,14 +278,14 @@ Object {
             },
             "type": "text",
           },
-          Object {
-            "attrs": Object {
+          {
+            "attrs": {
               "stroke": "#6a737b",
             },
             "type": "line",
           },
-          Object {
-            "attrs": Object {
+          {
+            "attrs": {
               "fill": "#3b4044",
               "fontSize": 10,
               "text": "22-02-28",
@@ -294,14 +294,14 @@ Object {
             },
             "type": "text",
           },
-          Object {
-            "attrs": Object {
+          {
+            "attrs": {
               "stroke": "#6a737b",
             },
             "type": "line",
           },
-          Object {
-            "attrs": Object {
+          {
+            "attrs": {
               "fill": "#3b4044",
               "fontSize": 10,
               "text": "22-03-01",
@@ -310,14 +310,14 @@ Object {
             },
             "type": "text",
           },
-          Object {
-            "attrs": Object {
+          {
+            "attrs": {
               "stroke": "#6a737b",
             },
             "type": "line",
           },
-          Object {
-            "attrs": Object {
+          {
+            "attrs": {
               "fill": "#3b4044",
               "fontSize": 10,
               "text": "22-03-02",
@@ -326,14 +326,14 @@ Object {
             },
             "type": "text",
           },
-          Object {
-            "attrs": Object {
+          {
+            "attrs": {
               "stroke": "#6a737b",
             },
             "type": "line",
           },
-          Object {
-            "attrs": Object {
+          {
+            "attrs": {
               "fill": "#3b4044",
               "fontSize": 10,
               "text": "22-03-03",
@@ -342,14 +342,14 @@ Object {
             },
             "type": "text",
           },
-          Object {
-            "attrs": Object {
+          {
+            "attrs": {
               "stroke": "#6a737b",
             },
             "type": "line",
           },
-          Object {
-            "attrs": Object {
+          {
+            "attrs": {
               "fill": "#3b4044",
               "fontSize": 10,
               "text": "22-03-04",
@@ -358,14 +358,14 @@ Object {
             },
             "type": "text",
           },
-          Object {
-            "attrs": Object {
+          {
+            "attrs": {
               "stroke": "#6a737b",
             },
             "type": "line",
           },
-          Object {
-            "attrs": Object {
+          {
+            "attrs": {
               "fill": "#3b4044",
               "fontSize": 10,
               "text": "22-03-05",
@@ -374,14 +374,14 @@ Object {
             },
             "type": "text",
           },
-          Object {
-            "attrs": Object {
+          {
+            "attrs": {
               "stroke": "#6a737b",
             },
             "type": "line",
           },
-          Object {
-            "attrs": Object {
+          {
+            "attrs": {
               "fill": "#3b4044",
               "fontSize": 10,
               "text": "22-03-06",
@@ -390,14 +390,14 @@ Object {
             },
             "type": "text",
           },
-          Object {
-            "attrs": Object {
+          {
+            "attrs": {
               "stroke": "#6a737b",
             },
             "type": "line",
           },
-          Object {
-            "attrs": Object {
+          {
+            "attrs": {
               "fill": "#3b4044",
               "fontSize": 10,
               "text": "22-03-07",
@@ -406,14 +406,14 @@ Object {
             },
             "type": "text",
           },
-          Object {
-            "attrs": Object {
+          {
+            "attrs": {
               "stroke": "#6a737b",
             },
             "type": "line",
           },
-          Object {
-            "attrs": Object {
+          {
+            "attrs": {
               "fill": "#3b4044",
               "fontSize": 10,
               "text": "22-03-08",
@@ -422,14 +422,14 @@ Object {
             },
             "type": "text",
           },
-          Object {
-            "attrs": Object {
+          {
+            "attrs": {
               "stroke": "#6a737b",
             },
             "type": "line",
           },
-          Object {
-            "attrs": Object {
+          {
+            "attrs": {
               "fill": "#3b4044",
               "fontSize": 10,
               "text": "22-03-09",
@@ -438,14 +438,14 @@ Object {
             },
             "type": "text",
           },
-          Object {
-            "attrs": Object {
+          {
+            "attrs": {
               "stroke": "#6a737b",
             },
             "type": "line",
           },
-          Object {
-            "attrs": Object {
+          {
+            "attrs": {
               "fill": "#3b4044",
               "fontSize": 10,
               "text": "22-03-10",
@@ -454,14 +454,14 @@ Object {
             },
             "type": "text",
           },
-          Object {
-            "attrs": Object {
+          {
+            "attrs": {
               "stroke": "#6a737b",
             },
             "type": "line",
           },
-          Object {
-            "attrs": Object {
+          {
+            "attrs": {
               "fill": "#3b4044",
               "fontSize": 10,
               "text": "22-03-11",
@@ -470,14 +470,14 @@ Object {
             },
             "type": "text",
           },
-          Object {
-            "attrs": Object {
+          {
+            "attrs": {
               "stroke": "#6a737b",
             },
             "type": "line",
           },
-          Object {
-            "attrs": Object {
+          {
+            "attrs": {
               "fill": "#3b4044",
               "fontSize": 10,
               "text": "22-03-12",
@@ -486,14 +486,14 @@ Object {
             },
             "type": "text",
           },
-          Object {
-            "attrs": Object {
+          {
+            "attrs": {
               "stroke": "#6a737b",
             },
             "type": "line",
           },
-          Object {
-            "attrs": Object {
+          {
+            "attrs": {
               "fill": "#3b4044",
               "fontSize": 10,
               "text": "22-03-13",
@@ -502,14 +502,14 @@ Object {
             },
             "type": "text",
           },
-          Object {
-            "attrs": Object {
+          {
+            "attrs": {
               "stroke": "#6a737b",
             },
             "type": "line",
           },
-          Object {
-            "attrs": Object {
+          {
+            "attrs": {
               "fill": "#3b4044",
               "fontSize": 10,
               "text": "22-03-14",
@@ -522,19 +522,19 @@ Object {
         "class": "gantt__grid",
         "type": "group",
       },
-      Object {
-        "attrs": Object {},
-        "children": Array [
-          Object {
-            "attrs": Object {
+      {
+        "attrs": {},
+        "children": [
+          {
+            "attrs": {
               "fill": "#fdb05e",
               "radius": 2,
               "stroke": "#3b4044",
             },
             "type": "rect",
           },
-          Object {
-            "attrs": Object {
+          {
+            "attrs": {
               "fill": "#3b4044",
               "fontFamily": "Source Code Pro, sans-serif",
               "fontSize": 14,
@@ -547,19 +547,19 @@ Object {
         ],
         "type": "group",
       },
-      Object {
-        "attrs": Object {},
-        "children": Array [
-          Object {
-            "attrs": Object {
+      {
+        "attrs": {},
+        "children": [
+          {
+            "attrs": {
               "fill": "#fdb05e",
               "radius": 2,
               "stroke": "#3b4044",
             },
             "type": "rect",
           },
-          Object {
-            "attrs": Object {
+          {
+            "attrs": {
               "fill": "#3b4044",
               "fontFamily": "Source Code Pro, sans-serif",
               "fontSize": 14,
@@ -572,19 +572,19 @@ Object {
         ],
         "type": "group",
       },
-      Object {
-        "attrs": Object {},
-        "children": Array [
-          Object {
-            "attrs": Object {
+      {
+        "attrs": {},
+        "children": [
+          {
+            "attrs": {
               "fill": "#fdb05e",
               "radius": 2,
               "stroke": "#3b4044",
             },
             "type": "rect",
           },
-          Object {
-            "attrs": Object {
+          {
+            "attrs": {
               "fill": "#3b4044",
               "fontFamily": "Source Code Pro, sans-serif",
               "fontSize": 14,
@@ -597,19 +597,19 @@ Object {
         ],
         "type": "group",
       },
-      Object {
-        "attrs": Object {},
-        "children": Array [
-          Object {
-            "attrs": Object {
+      {
+        "attrs": {},
+        "children": [
+          {
+            "attrs": {
               "fill": "#fdb05e",
               "radius": 2,
               "stroke": "#3b4044",
             },
             "type": "rect",
           },
-          Object {
-            "attrs": Object {
+          {
+            "attrs": {
               "fill": "#3b4044",
               "fontFamily": "Source Code Pro, sans-serif",
               "fontSize": 14,
@@ -622,13 +622,13 @@ Object {
         ],
         "type": "group",
       },
-      Object {
-        "attrs": Object {},
-        "children": Array [],
+      {
+        "attrs": {},
+        "children": [],
         "type": "group",
       },
-      Object {
-        "attrs": Object {
+      {
+        "attrs": {
           "fill": "#3b4044",
           "fontFamily": "Source Code Pro, sans-serif",
           "fontSize": 14,

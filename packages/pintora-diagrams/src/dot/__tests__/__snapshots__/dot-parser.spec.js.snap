@@ -1,28 +1,28 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`dot parser should parse attr stmt 1`] = `
-Object {
-  "attrs": Object {
-    "edge": Object {
+{
+  "attrs": {
+    "edge": {
       "color": "purple",
       "fontcolor": "green",
     },
-    "graph": Object {
+    "graph": {
       "color": "lightgrey",
     },
-    "node": Object {
+    "node": {
       "color": "red",
       "fontcolor": "blue",
     },
   },
-  "children": Array [
-    Object {
-      "attrs": Object {
-        "graph": Object {
+  "children": [
+    {
+      "attrs": {
+        "graph": {
           "label": "process",
         },
       },
-      "children": Array [],
+      "children": [],
       "id": "sub",
       "type": "subgraph",
     },
@@ -33,15 +33,15 @@ Object {
 `;
 
 exports[`dot parser should parse directed edge 1`] = `
-Object {
-  "children": Array [
-    Object {
-      "edge_list": Array [
-        Object {
+{
+  "children": [
+    {
+      "edge_list": [
+        {
           "id": "a",
           "type": "node_id",
         },
-        Object {
+        {
           "id": "b",
           "type": "node_id",
         },
@@ -55,10 +55,10 @@ Object {
 `;
 
 exports[`dot parser should parse dot comment 1`] = `
-Object {
-  "children": Array [
-    Object {
-      "nodeId": Object {
+{
+  "children": [
+    {
+      "nodeId": {
         "id": "some_node",
         "type": "node_id",
       },
@@ -71,32 +71,32 @@ Object {
 `;
 
 exports[`dot parser should parse edge 1`] = `
-Object {
-  "children": Array [
-    Object {
-      "edge_list": Array [
-        Object {
+{
+  "children": [
+    {
+      "edge_list": [
+        {
           "id": "name0",
           "type": "node_id",
         },
-        Object {
+        {
           "id": "course",
           "type": "node_id",
         },
       ],
       "type": "edge_stmt",
     },
-    Object {
-      "attrs": Object {
+    {
+      "attrs": {
         "label": "n",
         "len": "1.00",
       },
-      "edge_list": Array [
-        Object {
+      "edge_list": [
+        {
           "id": "course",
           "type": "node_id",
         },
-        Object {
+        {
           "id": "C-I",
           "type": "node_id",
         },
@@ -110,27 +110,27 @@ Object {
 `;
 
 exports[`dot parser should parse node 1`] = `
-Object {
-  "children": Array [
-    Object {
-      "attrs": Object {
+{
+  "children": [
+    {
+      "attrs": {
         "shape": "box",
       },
-      "nodeId": Object {
+      "nodeId": {
         "id": "name",
         "type": "node_id",
       },
       "type": "node_stmt",
     },
-    Object {
-      "nodeId": Object {
+    {
+      "nodeId": {
         "id": "course",
         "type": "node_id",
       },
       "type": "node_stmt",
     },
-    Object {
-      "nodeId": Object {
+    {
+      "nodeId": {
         "id": "student",
         "type": "node_id",
       },
@@ -143,13 +143,13 @@ Object {
 `;
 
 exports[`dot parser should parse node in shorthand 1`] = `
-Object {
-  "children": Array [
-    Object {
-      "attrs": Object {
+{
+  "children": [
+    {
+      "attrs": {
         "label": "a long long name",
       },
-      "nodeId": Object {
+      "nodeId": {
         "id": "name",
         "type": "node_id",
       },
@@ -162,12 +162,12 @@ Object {
 `;
 
 exports[`dot parser should parse subgraph 1`] = `
-Object {
-  "children": Array [
-    Object {
-      "children": Array [
-        Object {
-          "nodeId": Object {
+{
+  "children": [
+    {
+      "children": [
+        {
+          "nodeId": {
             "id": "n1",
             "type": "node_id",
           },
@@ -177,20 +177,20 @@ Object {
       "id": "S1",
       "type": "subgraph",
     },
-    Object {
-      "nodeId": Object {
+    {
+      "nodeId": {
         "id": "n2",
         "type": "node_id",
       },
       "type": "node_stmt",
     },
-    Object {
-      "edge_list": Array [
-        Object {
+    {
+      "edge_list": [
+        {
           "id": "n1",
           "type": "node_id",
         },
-        Object {
+        {
           "id": "n2",
           "type": "node_id",
         },

@@ -1,22 +1,22 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`er-artist will draw inheritance 1`] = `
-Object {
-  "mark": Object {
-    "attrs": Object {},
-    "children": Array [
-      Object {
-        "children": Array [],
+{
+  "mark": {
+    "attrs": {},
+    "children": [
+      {
+        "children": [],
         "class": "er__relations",
         "type": "group",
       },
-      Object {
-        "attrs": Object {
+      {
+        "attrs": {
           "id": "person",
         },
-        "children": Array [
-          Object {
-            "attrs": Object {
+        "children": [
+          {
+            "attrs": {
               "fill": "#fdb05e",
               "radius": 2,
               "stroke": "#3b4044",
@@ -26,8 +26,8 @@ Object {
             "itemId": "entity-person",
             "type": "rect",
           },
-          Object {
-            "attrs": Object {
+          {
+            "attrs": {
               "fill": "#3b4044",
               "fontFamily": "Source Code Pro, sans-serif",
               "fontSize": 14,
@@ -41,21 +41,21 @@ Object {
             "itemId": "entity-person",
             "type": "text",
           },
-          Object {
-            "attrs": Object {},
-            "children": Array [
-              Object {
-                "attrs": Object {},
-                "children": Array [
-                  Object {
-                    "attrs": Object {
+          {
+            "attrs": {},
+            "children": [
+              {
+                "attrs": {},
+                "children": [
+                  {
+                    "attrs": {
                       "fill": "#fffbf9",
                       "stroke": "#3b4044",
                     },
                     "type": "rect",
                   },
-                  Object {
-                    "attrs": Object {
+                  {
+                    "attrs": {
                       "fill": "#3b4044",
                       "fontFamily": "Source Code Pro, sans-serif",
                       "fontSize": 11.9,
@@ -67,15 +67,15 @@ Object {
                     "class": "er__entity-label",
                     "type": "text",
                   },
-                  Object {
-                    "attrs": Object {
+                  {
+                    "attrs": {
                       "fill": "#fffbf9",
                       "stroke": "#3b4044",
                     },
                     "type": "rect",
                   },
-                  Object {
-                    "attrs": Object {
+                  {
+                    "attrs": {
                       "fill": "#3b4044",
                       "fontFamily": "Source Code Pro, sans-serif",
                       "fontSize": 11.9,
@@ -90,18 +90,18 @@ Object {
                 ],
                 "type": "group",
               },
-              Object {
-                "attrs": Object {},
-                "children": Array [
-                  Object {
-                    "attrs": Object {
+              {
+                "attrs": {},
+                "children": [
+                  {
+                    "attrs": {
                       "fill": "#fffbf9",
                       "stroke": "#3b4044",
                     },
                     "type": "rect",
                   },
-                  Object {
-                    "attrs": Object {
+                  {
+                    "attrs": {
                       "fill": "#3b4044",
                       "fontFamily": "Source Code Pro, sans-serif",
                       "fontSize": 11.9,
@@ -113,15 +113,15 @@ Object {
                     "class": "er__entity-label",
                     "type": "text",
                   },
-                  Object {
-                    "attrs": Object {
+                  {
+                    "attrs": {
                       "fill": "#fffbf9",
                       "stroke": "#3b4044",
                     },
                     "type": "rect",
                   },
-                  Object {
-                    "attrs": Object {
+                  {
+                    "attrs": {
                       "fill": "#3b4044",
                       "fontFamily": "Source Code Pro, sans-serif",
                       "fontSize": 11.9,
@@ -144,13 +144,13 @@ Object {
         "class": "er__entity",
         "type": "group",
       },
-      Object {
-        "attrs": Object {
+      {
+        "attrs": {
           "id": "customer",
         },
-        "children": Array [
-          Object {
-            "attrs": Object {
+        "children": [
+          {
+            "attrs": {
               "fill": "#fdb05e",
               "radius": 2,
               "stroke": "#3b4044",
@@ -160,8 +160,8 @@ Object {
             "itemId": "entity-customer",
             "type": "rect",
           },
-          Object {
-            "attrs": Object {
+          {
+            "attrs": {
               "fill": "#3b4044",
               "fontFamily": "Source Code Pro, sans-serif",
               "fontSize": 14,
@@ -175,28 +175,28 @@ Object {
             "itemId": "entity-customer",
             "type": "text",
           },
-          Object {
-            "attrs": Object {},
-            "children": Array [
-              Object {
-                "attrs": Object {},
-                "children": Array [
-                  Object {
-                    "attrs": Object {
+          {
+            "attrs": {},
+            "children": [
+              {
+                "attrs": {},
+                "children": [
+                  {
+                    "attrs": {
                       "fill": "#fffbf9",
                       "stroke": "#3b4044",
                     },
                     "type": "rect",
                   },
-                  Object {
-                    "attrs": Object {
+                  {
+                    "attrs": {
                       "fill": "#fffbf9",
                       "stroke": "#3b4044",
                     },
                     "type": "rect",
                   },
-                  Object {
-                    "attrs": Object {
+                  {
+                    "attrs": {
                       "fill": "#3b4044",
                       "fontFamily": "Source Code Pro, sans-serif",
                       "fontSize": 11.9,
@@ -208,15 +208,15 @@ Object {
                     "class": "er__entity-label",
                     "type": "text",
                   },
-                  Object {
-                    "attrs": Object {
+                  {
+                    "attrs": {
                       "fill": "#fffbf9",
                       "stroke": "#3b4044",
                     },
                     "type": "rect",
                   },
-                  Object {
-                    "attrs": Object {
+                  {
+                    "attrs": {
                       "fill": "#3b4044",
                       "fontFamily": "Source Code Pro, sans-serif",
                       "fontSize": 11.9,
@@ -228,15 +228,15 @@ Object {
                     "class": "er__entity-label",
                     "type": "text",
                   },
-                  Object {
-                    "attrs": Object {
+                  {
+                    "attrs": {
                       "fill": "#fffbf9",
                       "stroke": "#3b4044",
                     },
                     "type": "rect",
                   },
-                  Object {
-                    "attrs": Object {
+                  {
+                    "attrs": {
                       "fill": "#3b4044",
                       "fontFamily": "Source Code Pro, sans-serif",
                       "fontSize": 11.9,
@@ -251,18 +251,18 @@ Object {
                 ],
                 "type": "group",
               },
-              Object {
-                "attrs": Object {},
-                "children": Array [
-                  Object {
-                    "attrs": Object {
+              {
+                "attrs": {},
+                "children": [
+                  {
+                    "attrs": {
                       "fill": "#fffbf9",
                       "stroke": "#3b4044",
                     },
                     "type": "rect",
                   },
-                  Object {
-                    "attrs": Object {
+                  {
+                    "attrs": {
                       "fill": "#3b4044",
                       "fontFamily": "Source Code Pro, sans-serif",
                       "fontSize": 11.9,
@@ -274,15 +274,15 @@ Object {
                     "class": "er__entity-label",
                     "type": "text",
                   },
-                  Object {
-                    "attrs": Object {
+                  {
+                    "attrs": {
                       "fill": "#fffbf9",
                       "stroke": "#3b4044",
                     },
                     "type": "rect",
                   },
-                  Object {
-                    "attrs": Object {
+                  {
+                    "attrs": {
                       "fill": "#3b4044",
                       "fontFamily": "Source Code Pro, sans-serif",
                       "fontSize": 11.9,
@@ -294,15 +294,15 @@ Object {
                     "class": "er__entity-label",
                     "type": "text",
                   },
-                  Object {
-                    "attrs": Object {
+                  {
+                    "attrs": {
                       "fill": "#fffbf9",
                       "stroke": "#3b4044",
                     },
                     "type": "rect",
                   },
-                  Object {
-                    "attrs": Object {
+                  {
+                    "attrs": {
                       "fill": "#3b4044",
                       "fontFamily": "Source Code Pro, sans-serif",
                       "fontSize": 11.9,
@@ -314,8 +314,8 @@ Object {
                     "class": "er__entity-label",
                     "type": "text",
                   },
-                  Object {
-                    "attrs": Object {
+                  {
+                    "attrs": {
                       "fill": "#fffbf9",
                       "stroke": "#3b4044",
                     },
@@ -332,13 +332,13 @@ Object {
         "class": "er__entity",
         "type": "group",
       },
-      Object {
-        "attrs": Object {
+      {
+        "attrs": {
           "id": "deliverer",
         },
-        "children": Array [
-          Object {
-            "attrs": Object {
+        "children": [
+          {
+            "attrs": {
               "fill": "#fdb05e",
               "radius": 2,
               "stroke": "#3b4044",
@@ -348,8 +348,8 @@ Object {
             "itemId": "entity-deliverer",
             "type": "rect",
           },
-          Object {
-            "attrs": Object {
+          {
+            "attrs": {
               "fill": "#3b4044",
               "fontFamily": "Source Code Pro, sans-serif",
               "fontSize": 14,
@@ -363,9 +363,9 @@ Object {
             "itemId": "entity-deliverer",
             "type": "text",
           },
-          Object {
-            "attrs": Object {},
-            "children": Array [],
+          {
+            "attrs": {},
+            "children": [],
             "itemId": "entity-deliverer",
             "type": "group",
           },
@@ -373,27 +373,27 @@ Object {
         "class": "er__entity",
         "type": "group",
       },
-      Object {
-        "attrs": Object {},
-        "children": Array [
-          Object {
-            "attrs": Object {
+      {
+        "attrs": {},
+        "children": [
+          {
+            "attrs": {
               "fill": "#fffbf9",
               "lineJoin": "round",
               "stroke": "#3b4044",
             },
             "type": "path",
           },
-          Object {
-            "attrs": Object {
+          {
+            "attrs": {
               "fill": "#fffbf9",
               "lineJoin": "round",
               "stroke": "#3b4044",
             },
             "type": "path",
           },
-          Object {
-            "attrs": Object {
+          {
+            "attrs": {
               "fill": "#3b4044",
               "fontFamily": "Source Code Pro, sans-serif",
               "fontSize": 14,
@@ -404,8 +404,8 @@ Object {
             "class": "er__relationship-label",
             "type": "text",
           },
-          Object {
-            "attrs": Object {
+          {
+            "attrs": {
               "fill": "#3b4044",
               "fontFamily": "Source Code Pro, sans-serif",
               "fontSize": 14,
@@ -416,29 +416,29 @@ Object {
             "class": "er__relationship-label",
             "type": "text",
           },
-          Object {
-            "attrs": Object {
+          {
+            "attrs": {
               "lineJoin": "round",
               "stroke": "#3b4044",
             },
             "type": "path",
           },
-          Object {
-            "attrs": Object {
+          {
+            "attrs": {
               "lineJoin": "round",
               "stroke": "#3b4044",
             },
             "type": "path",
           },
-          Object {
-            "attrs": Object {
+          {
+            "attrs": {
               "lineJoin": "round",
               "stroke": "#3b4044",
             },
             "type": "path",
           },
-          Object {
-            "attrs": Object {
+          {
+            "attrs": {
               "lineJoin": "round",
               "stroke": "#3b4044",
             },
