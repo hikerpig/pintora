@@ -1,29 +1,29 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`sequence-artist draw cross mark to 1`] = `
-Object {
-  "mark": Object {
-    "attrs": Object {},
-    "children": Array [
-      Object {
-        "children": Array [
-          Object {
-            "attrs": Object {
+{
+  "mark": {
+    "attrs": {},
+    "children": [
+      {
+        "children": [
+          {
+            "attrs": {
               "stroke": "#3b4044",
             },
             "class": "actor__line",
             "type": "line",
           },
-          Object {
-            "attrs": Object {
+          {
+            "attrs": {
               "fill": "#fdb05e",
               "radius": 4,
               "stroke": "#3b4044",
             },
             "type": "rect",
           },
-          Object {
-            "attrs": Object {
+          {
+            "attrs": {
               "fill": "#3b4044",
               "fontFamily": "Source Code Pro, sans-serif",
               "fontSize": 16,
@@ -39,25 +39,25 @@ Object {
         "itemId": "actor-A",
         "type": "group",
       },
-      Object {
-        "children": Array [
-          Object {
-            "attrs": Object {
+      {
+        "children": [
+          {
+            "attrs": {
               "stroke": "#3b4044",
             },
             "class": "actor__line",
             "type": "line",
           },
-          Object {
-            "attrs": Object {
+          {
+            "attrs": {
               "fill": "#fdb05e",
               "radius": 4,
               "stroke": "#3b4044",
             },
             "type": "rect",
           },
-          Object {
-            "attrs": Object {
+          {
+            "attrs": {
               "fill": "#3b4044",
               "fontFamily": "Source Code Pro, sans-serif",
               "fontSize": 16,
@@ -73,17 +73,17 @@ Object {
         "itemId": "actor-B",
         "type": "group",
       },
-      Object {
-        "attrs": Object {},
-        "children": Array [],
+      {
+        "attrs": {},
+        "children": [],
         "class": "activations",
         "type": "group",
       },
-      Object {
-        "children": Array [
-          Object {
-            "attrs": Object {
-              "lineDash": Array [
+      {
+        "children": [
+          {
+            "attrs": {
+              "lineDash": [
                 3,
                 3,
               ],
@@ -94,15 +94,15 @@ Object {
             "itemId": "message-0-4",
             "type": "line",
           },
-          Object {
-            "attrs": Object {
+          {
+            "attrs": {
               "lineWidth": 2,
               "stroke": "#3b4044",
             },
             "type": "path",
           },
-          Object {
-            "attrs": Object {
+          {
+            "attrs": {
               "fill": "#3b4044",
               "fontFamily": "Source Code Pro, sans-serif",
               "fontSize": 16,
@@ -120,18 +120,18 @@ Object {
         "itemId": "message-0-4",
         "type": "group",
       },
-      Object {
-        "children": Array [
-          Object {
-            "attrs": Object {
+      {
+        "children": [
+          {
+            "attrs": {
               "fill": "#fdb05e",
               "radius": 4,
               "stroke": "#3b4044",
             },
             "type": "rect",
           },
-          Object {
-            "attrs": Object {
+          {
+            "attrs": {
               "fill": "#3b4044",
               "fontFamily": "Source Code Pro, sans-serif",
               "fontSize": 16,
@@ -147,18 +147,18 @@ Object {
         "itemId": "actor-A",
         "type": "group",
       },
-      Object {
-        "children": Array [
-          Object {
-            "attrs": Object {
+      {
+        "children": [
+          {
+            "attrs": {
               "fill": "#fdb05e",
               "radius": 4,
               "stroke": "#3b4044",
             },
             "type": "rect",
           },
-          Object {
-            "attrs": Object {
+          {
+            "attrs": {
               "fill": "#3b4044",
               "fontFamily": "Source Code Pro, sans-serif",
               "fontSize": 16,
@@ -181,35 +181,34 @@ Object {
 `;
 
 exports[`sequence-artist draw participant classifier 1`] = `
-Object {
-  "mark": Object {
-    "attrs": Object {},
-    "children": Array [
-      Object {
-        "children": Array [
-          Object {
-            "attrs": Object {
+{
+  "mark": {
+    "attrs": {},
+    "children": [
+      {
+        "children": [
+          {
+            "attrs": {
               "stroke": "#3b4044",
             },
             "class": "actor__line",
             "type": "line",
           },
-          Object {
-            "attrs": Object {},
-            "mark": Object {
-              "attrs": Object {},
-              "children": Array [
-                Object {
-                  "attrs": Object {
+          {
+            "attrs": {},
+            "mark": {
+              "attrs": {},
+              "children": [
+                {
+                  "attrs": {
                     "fill": "#fdb05e",
                     "lineWidth": 1.5,
-                    "r": 7.6,
                     "stroke": "#3b4044",
                   },
                   "type": "circle",
                 },
-                Object {
-                  "attrs": Object {
+                {
+                  "attrs": {
                     "fill": null,
                     "lineWidth": 1.5,
                     "stroke": "#3b4044",
@@ -221,8 +220,8 @@ Object {
             },
             "type": "symbol",
           },
-          Object {
-            "attrs": Object {
+          {
+            "attrs": {
               "fill": "#3b4044",
               "fontFamily": "Source Code Pro, sans-serif",
               "fontSize": 16,
@@ -238,29 +237,29 @@ Object {
         "itemId": "actor-A",
         "type": "group",
       },
-      Object {
-        "children": Array [
-          Object {
-            "attrs": Object {
+      {
+        "children": [
+          {
+            "attrs": {
               "stroke": "#3b4044",
             },
             "class": "actor__line",
             "type": "line",
           },
-          Object {
-            "attrs": Object {},
-            "mark": Object {
-              "attrs": Object {},
-              "children": Array [
-                Object {
-                  "attrs": Object {
+          {
+            "attrs": {},
+            "mark": {
+              "attrs": {},
+              "children": [
+                {
+                  "attrs": {
                     "fill": "#fdb05e",
                     "stroke": "#3b4044",
                   },
                   "type": "path",
                 },
-                Object {
-                  "attrs": Object {
+                {
+                  "attrs": {
                     "fill": "#fdb05e",
                     "stroke": "#3b4044",
                   },
@@ -271,8 +270,8 @@ Object {
             },
             "type": "symbol",
           },
-          Object {
-            "attrs": Object {
+          {
+            "attrs": {
               "fill": "#3b4044",
               "fontFamily": "Source Code Pro, sans-serif",
               "fontSize": 16,
@@ -288,22 +287,22 @@ Object {
         "itemId": "actor-B",
         "type": "group",
       },
-      Object {
-        "children": Array [
-          Object {
-            "attrs": Object {
+      {
+        "children": [
+          {
+            "attrs": {
               "stroke": "#3b4044",
             },
             "class": "actor__line",
             "type": "line",
           },
-          Object {
-            "attrs": Object {},
-            "mark": Object {
-              "attrs": Object {},
-              "children": Array [
-                Object {
-                  "attrs": Object {
+          {
+            "attrs": {},
+            "mark": {
+              "attrs": {},
+              "children": [
+                {
+                  "attrs": {
                     "fill": "#fdb05e",
                     "stroke": "#3b4044",
                   },
@@ -314,8 +313,8 @@ Object {
             },
             "type": "symbol",
           },
-          Object {
-            "attrs": Object {
+          {
+            "attrs": {
               "fill": "#3b4044",
               "fontFamily": "Source Code Pro, sans-serif",
               "fontSize": 16,
@@ -331,30 +330,29 @@ Object {
         "itemId": "actor-C",
         "type": "group",
       },
-      Object {
-        "attrs": Object {},
-        "children": Array [],
+      {
+        "attrs": {},
+        "children": [],
         "class": "activations",
         "type": "group",
       },
-      Object {
-        "children": Array [
-          Object {
-            "attrs": Object {},
-            "mark": Object {
-              "attrs": Object {},
-              "children": Array [
-                Object {
-                  "attrs": Object {
+      {
+        "children": [
+          {
+            "attrs": {},
+            "mark": {
+              "attrs": {},
+              "children": [
+                {
+                  "attrs": {
                     "fill": "#fdb05e",
                     "lineWidth": 1.5,
-                    "r": 7.6,
                     "stroke": "#3b4044",
                   },
                   "type": "circle",
                 },
-                Object {
-                  "attrs": Object {
+                {
+                  "attrs": {
                     "fill": null,
                     "lineWidth": 1.5,
                     "stroke": "#3b4044",
@@ -366,8 +364,8 @@ Object {
             },
             "type": "symbol",
           },
-          Object {
-            "attrs": Object {
+          {
+            "attrs": {
               "fill": "#3b4044",
               "fontFamily": "Source Code Pro, sans-serif",
               "fontSize": 16,
@@ -383,22 +381,22 @@ Object {
         "itemId": "actor-A",
         "type": "group",
       },
-      Object {
-        "children": Array [
-          Object {
-            "attrs": Object {},
-            "mark": Object {
-              "attrs": Object {},
-              "children": Array [
-                Object {
-                  "attrs": Object {
+      {
+        "children": [
+          {
+            "attrs": {},
+            "mark": {
+              "attrs": {},
+              "children": [
+                {
+                  "attrs": {
                     "fill": "#fdb05e",
                     "stroke": "#3b4044",
                   },
                   "type": "path",
                 },
-                Object {
-                  "attrs": Object {
+                {
+                  "attrs": {
                     "fill": "#fdb05e",
                     "stroke": "#3b4044",
                   },
@@ -409,8 +407,8 @@ Object {
             },
             "type": "symbol",
           },
-          Object {
-            "attrs": Object {
+          {
+            "attrs": {
               "fill": "#3b4044",
               "fontFamily": "Source Code Pro, sans-serif",
               "fontSize": 16,
@@ -426,15 +424,15 @@ Object {
         "itemId": "actor-B",
         "type": "group",
       },
-      Object {
-        "children": Array [
-          Object {
-            "attrs": Object {},
-            "mark": Object {
-              "attrs": Object {},
-              "children": Array [
-                Object {
-                  "attrs": Object {
+      {
+        "children": [
+          {
+            "attrs": {},
+            "mark": {
+              "attrs": {},
+              "children": [
+                {
+                  "attrs": {
                     "fill": "#fdb05e",
                     "stroke": "#3b4044",
                   },
@@ -445,8 +443,8 @@ Object {
             },
             "type": "symbol",
           },
-          Object {
-            "attrs": Object {
+          {
+            "attrs": {
               "fill": "#3b4044",
               "fontFamily": "Source Code Pro, sans-serif",
               "fontSize": 16,
@@ -469,14 +467,14 @@ Object {
 `;
 
 exports[`sequence-artist match example snapshot 1`] = `
-Object {
-  "mark": Object {
-    "attrs": Object {},
-    "children": Array [
-      Object {
-        "attrs": Object {
+{
+  "mark": {
+    "attrs": {},
+    "children": [
+      {
+        "attrs": {
           "fill": null,
-          "lineDash": Array [
+          "lineDash": [
             2,
             2,
           ],
@@ -485,25 +483,25 @@ Object {
         },
         "type": "rect",
       },
-      Object {
-        "children": Array [
-          Object {
-            "attrs": Object {
+      {
+        "children": [
+          {
+            "attrs": {
               "stroke": "#3b4044",
             },
             "class": "actor__line",
             "type": "line",
           },
-          Object {
-            "attrs": Object {
+          {
+            "attrs": {
               "fill": "#fdb05e",
               "radius": 4,
               "stroke": "#3b4044",
             },
             "type": "rect",
           },
-          Object {
-            "attrs": Object {
+          {
+            "attrs": {
               "fill": "#3b4044",
               "fontFamily": "Source Code Pro, sans-serif",
               "fontSize": 16,
@@ -519,25 +517,25 @@ Object {
         "itemId": "actor-User",
         "type": "group",
       },
-      Object {
-        "children": Array [
-          Object {
-            "attrs": Object {
+      {
+        "children": [
+          {
+            "attrs": {
               "stroke": "#3b4044",
             },
             "class": "actor__line",
             "type": "line",
           },
-          Object {
-            "attrs": Object {
+          {
+            "attrs": {
               "fill": "#fdb05e",
               "radius": 4,
               "stroke": "#3b4044",
             },
             "type": "rect",
           },
-          Object {
-            "attrs": Object {
+          {
+            "attrs": {
               "fill": "#3b4044",
               "fontFamily": "Source Code Pro, sans-serif",
               "fontSize": 16,
@@ -553,11 +551,11 @@ Object {
         "itemId": "actor-Pintora",
         "type": "group",
       },
-      Object {
-        "attrs": Object {},
-        "children": Array [
-          Object {
-            "attrs": Object {
+      {
+        "attrs": {},
+        "children": [
+          {
+            "attrs": {
               "anchor": "start",
               "fill": "#f8f8f2",
               "stroke": "#3b4044",
@@ -569,10 +567,10 @@ Object {
         "class": "activations",
         "type": "group",
       },
-      Object {
-        "children": Array [
-          Object {
-            "attrs": Object {
+      {
+        "children": [
+          {
+            "attrs": {
               "lineWidth": 2,
               "stroke": "#3b4044",
             },
@@ -580,14 +578,14 @@ Object {
             "itemId": "message-0-0",
             "type": "line",
           },
-          Object {
-            "attrs": Object {
+          {
+            "attrs": {
               "fill": "#3b4044",
             },
             "type": "path",
           },
-          Object {
-            "attrs": Object {
+          {
+            "attrs": {
               "fill": "#3b4044",
               "fontFamily": "Source Code Pro, sans-serif",
               "fontSize": 16,
@@ -600,20 +598,19 @@ Object {
             "class": "message__text",
             "type": "text",
           },
-          Object {
-            "attrs": Object {},
-            "children": Array [
-              Object {
-                "attrs": Object {
+          {
+            "attrs": {},
+            "children": [
+              {
+                "attrs": {
                   "fill": "#3b4044",
-                  "r": 8,
                   "stroke": "#3b4044",
                   "symbol": "circle",
                 },
                 "type": "marker",
               },
-              Object {
-                "attrs": Object {
+              {
+                "attrs": {
                   "fill": "#fdb05e",
                   "fontWeight": "bold",
                   "text": "1",
@@ -631,11 +628,11 @@ Object {
         "itemId": "message-0-0",
         "type": "group",
       },
-      Object {
-        "children": Array [
-          Object {
-            "attrs": Object {
-              "lineDash": Array [
+      {
+        "children": [
+          {
+            "attrs": {
+              "lineDash": [
                 3,
                 3,
               ],
@@ -646,14 +643,14 @@ Object {
             "itemId": "message-3-1",
             "type": "path",
           },
-          Object {
-            "attrs": Object {
+          {
+            "attrs": {
               "fill": "#3b4044",
             },
             "type": "path",
           },
-          Object {
-            "attrs": Object {
+          {
+            "attrs": {
               "fill": "#3b4044",
               "fontFamily": "Source Code Pro, sans-serif",
               "fontSize": 16,
@@ -666,20 +663,19 @@ Object {
             "class": "message__text",
             "type": "text",
           },
-          Object {
-            "attrs": Object {},
-            "children": Array [
-              Object {
-                "attrs": Object {
+          {
+            "attrs": {},
+            "children": [
+              {
+                "attrs": {
                   "fill": "#3b4044",
-                  "r": 8,
                   "stroke": "#3b4044",
                   "symbol": "circle",
                 },
                 "type": "marker",
               },
-              Object {
-                "attrs": Object {
+              {
+                "attrs": {
                   "fill": "#fdb05e",
                   "fontWeight": "bold",
                   "text": "2",
@@ -697,19 +693,19 @@ Object {
         "itemId": "message-3-1",
         "type": "group",
       },
-      Object {
-        "attrs": Object {},
-        "children": Array [
-          Object {
-            "attrs": Object {
+      {
+        "attrs": {},
+        "children": [
+          {
+            "attrs": {
               "fill": "#fdb05e",
               "stroke": "#fdb05e",
             },
             "class": "loop__label-box",
             "type": "polygon",
           },
-          Object {
-            "attrs": Object {
+          {
+            "attrs": {
               "fill": "#3b4044",
               "fontFamily": "Source Code Pro, sans-serif",
               "fontSize": 16,
@@ -720,8 +716,8 @@ Object {
             "class": "label-text",
             "type": "text",
           },
-          Object {
-            "attrs": Object {
+          {
+            "attrs": {
               "fill": "#3b4044",
               "fontFamily": "Source Code Pro, sans-serif",
               "fontSize": 16,
@@ -737,11 +733,11 @@ Object {
         "class": "loop",
         "type": "group",
       },
-      Object {
-        "children": Array [
-          Object {
-            "attrs": Object {
-              "lineDash": Array [
+      {
+        "children": [
+          {
+            "attrs": {
+              "lineDash": [
                 3,
                 3,
               ],
@@ -752,14 +748,14 @@ Object {
             "itemId": "message-5-1",
             "type": "line",
           },
-          Object {
-            "attrs": Object {
+          {
+            "attrs": {
               "fill": "#3b4044",
             },
             "type": "path",
           },
-          Object {
-            "attrs": Object {
+          {
+            "attrs": {
               "fill": "#3b4044",
               "fontFamily": "Source Code Pro, sans-serif",
               "fontSize": 16,
@@ -772,20 +768,19 @@ Object {
             "class": "message__text",
             "type": "text",
           },
-          Object {
-            "attrs": Object {},
-            "children": Array [
-              Object {
-                "attrs": Object {
+          {
+            "attrs": {},
+            "children": [
+              {
+                "attrs": {
                   "fill": "#3b4044",
-                  "r": 8,
                   "stroke": "#3b4044",
                   "symbol": "circle",
                 },
                 "type": "marker",
               },
-              Object {
-                "attrs": Object {
+              {
+                "attrs": {
                   "fill": "#fdb05e",
                   "fontWeight": "bold",
                   "text": "3",
@@ -803,10 +798,10 @@ Object {
         "itemId": "message-5-1",
         "type": "group",
       },
-      Object {
-        "children": Array [
-          Object {
-            "attrs": Object {
+      {
+        "children": [
+          {
+            "attrs": {
               "anchor": "start",
               "fill": "#F8EA75",
               "stroke": "#3b4044",
@@ -814,8 +809,8 @@ Object {
             "class": "note__bg",
             "type": "rect",
           },
-          Object {
-            "attrs": Object {
+          {
+            "attrs": {
               "fill": "#3b4044",
               "fontFamily": "Source Code Pro, sans-serif",
               "fontSize": 16,
@@ -830,10 +825,10 @@ Object {
         "class": "note",
         "type": "group",
       },
-      Object {
-        "children": Array [
-          Object {
-            "attrs": Object {
+      {
+        "children": [
+          {
+            "attrs": {
               "anchor": "start",
               "fill": "#F8EA75",
               "stroke": "#3b4044",
@@ -841,8 +836,8 @@ Object {
             "class": "note__bg",
             "type": "rect",
           },
-          Object {
-            "attrs": Object {
+          {
+            "attrs": {
               "fill": "#3b4044",
               "fontFamily": "Source Code Pro, sans-serif",
               "fontSize": 16,
@@ -857,10 +852,10 @@ Object {
         "class": "note",
         "type": "group",
       },
-      Object {
-        "children": Array [
-          Object {
-            "attrs": Object {
+      {
+        "children": [
+          {
+            "attrs": {
               "anchor": "start",
               "fill": "#F8EA75",
               "stroke": "#3b4044",
@@ -868,8 +863,8 @@ Object {
             "class": "note__bg",
             "type": "rect",
           },
-          Object {
-            "attrs": Object {
+          {
+            "attrs": {
               "fill": "#3b4044",
               "fontFamily": "Source Code Pro, sans-serif",
               "fontSize": 16,
@@ -885,31 +880,31 @@ Object {
         "class": "note",
         "type": "group",
       },
-      Object {
-        "attrs": Object {},
-        "children": Array [
-          Object {
-            "attrs": Object {
+      {
+        "attrs": {},
+        "children": [
+          {
+            "attrs": {
               "stroke": "#3b4044",
             },
             "type": "line",
           },
-          Object {
-            "attrs": Object {
+          {
+            "attrs": {
               "stroke": "#3b4044",
             },
             "type": "line",
           },
-          Object {
-            "attrs": Object {
+          {
+            "attrs": {
               "fill": "#f8f8f2",
               "lineWidth": 2,
               "stroke": "#3b4044",
             },
             "type": "rect",
           },
-          Object {
-            "attrs": Object {
+          {
+            "attrs": {
               "fill": "#3b4044",
               "fontFamily": "Source Code Pro, sans-serif",
               "fontSize": 16,
@@ -924,18 +919,18 @@ Object {
         "class": "divider",
         "type": "group",
       },
-      Object {
-        "children": Array [
-          Object {
-            "attrs": Object {
+      {
+        "children": [
+          {
+            "attrs": {
               "fill": "#fdb05e",
               "radius": 4,
               "stroke": "#3b4044",
             },
             "type": "rect",
           },
-          Object {
-            "attrs": Object {
+          {
+            "attrs": {
               "fill": "#3b4044",
               "fontFamily": "Source Code Pro, sans-serif",
               "fontSize": 16,
@@ -951,18 +946,18 @@ Object {
         "itemId": "actor-User",
         "type": "group",
       },
-      Object {
-        "children": Array [
-          Object {
-            "attrs": Object {
+      {
+        "children": [
+          {
+            "attrs": {
               "fill": "#fdb05e",
               "radius": 4,
               "stroke": "#3b4044",
             },
             "type": "rect",
           },
-          Object {
-            "attrs": Object {
+          {
+            "attrs": {
               "fill": "#3b4044",
               "fontFamily": "Source Code Pro, sans-serif",
               "fontSize": 16,
@@ -985,22 +980,22 @@ Object {
 `;
 
 exports[`sequence-artist will render boxes 1`] = `
-Object {
-  "mark": Object {
-    "attrs": Object {},
-    "children": Array [
-      Object {
-        "attrs": Object {},
-        "children": Array [
-          Object {
-            "attrs": Object {
+{
+  "mark": {
+    "attrs": {},
+    "children": [
+      {
+        "attrs": {},
+        "children": [
+          {
+            "attrs": {
               "fill": "#d6d3fa",
               "stroke": "#3b4044",
             },
             "type": "rect",
           },
-          Object {
-            "attrs": Object {
+          {
+            "attrs": {
               "fill": "#3b4044",
               "fontFamily": "Source Code Pro, sans-serif",
               "fontSize": 16,
@@ -1015,25 +1010,25 @@ Object {
         "class": "sequence__participant-boxes",
         "type": "group",
       },
-      Object {
-        "children": Array [
-          Object {
-            "attrs": Object {
+      {
+        "children": [
+          {
+            "attrs": {
               "stroke": "#3b4044",
             },
             "class": "actor__line",
             "type": "line",
           },
-          Object {
-            "attrs": Object {
+          {
+            "attrs": {
               "fill": "#fdb05e",
               "radius": 4,
               "stroke": "#3b4044",
             },
             "type": "rect",
           },
-          Object {
-            "attrs": Object {
+          {
+            "attrs": {
               "fill": "#3b4044",
               "fontFamily": "Source Code Pro, sans-serif",
               "fontSize": 16,
@@ -1049,25 +1044,25 @@ Object {
         "itemId": "actor-A",
         "type": "group",
       },
-      Object {
-        "children": Array [
-          Object {
-            "attrs": Object {
+      {
+        "children": [
+          {
+            "attrs": {
               "stroke": "#3b4044",
             },
             "class": "actor__line",
             "type": "line",
           },
-          Object {
-            "attrs": Object {
+          {
+            "attrs": {
               "fill": "#fdb05e",
               "radius": 4,
               "stroke": "#3b4044",
             },
             "type": "rect",
           },
-          Object {
-            "attrs": Object {
+          {
+            "attrs": {
               "fill": "#3b4044",
               "fontFamily": "Source Code Pro, sans-serif",
               "fontSize": 16,
@@ -1083,24 +1078,24 @@ Object {
         "itemId": "actor-B",
         "type": "group",
       },
-      Object {
-        "attrs": Object {},
-        "children": Array [],
+      {
+        "attrs": {},
+        "children": [],
         "class": "activations",
         "type": "group",
       },
-      Object {
-        "children": Array [
-          Object {
-            "attrs": Object {
+      {
+        "children": [
+          {
+            "attrs": {
               "fill": "#fdb05e",
               "radius": 4,
               "stroke": "#3b4044",
             },
             "type": "rect",
           },
-          Object {
-            "attrs": Object {
+          {
+            "attrs": {
               "fill": "#3b4044",
               "fontFamily": "Source Code Pro, sans-serif",
               "fontSize": 16,
@@ -1116,18 +1111,18 @@ Object {
         "itemId": "actor-A",
         "type": "group",
       },
-      Object {
-        "children": Array [
-          Object {
-            "attrs": Object {
+      {
+        "children": [
+          {
+            "attrs": {
               "fill": "#fdb05e",
               "radius": 4,
               "stroke": "#3b4044",
             },
             "type": "rect",
           },
-          Object {
-            "attrs": Object {
+          {
+            "attrs": {
               "fill": "#3b4044",
               "fontFamily": "Source Code Pro, sans-serif",
               "fontSize": 16,

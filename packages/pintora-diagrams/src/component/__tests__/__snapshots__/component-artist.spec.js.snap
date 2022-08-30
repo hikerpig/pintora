@@ -1,15 +1,15 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`component-artist match example snapshot 1`] = `
-Object {
-  "mark": Object {
-    "attrs": Object {},
-    "children": Array [
-      Object {
-        "attrs": Object {},
-        "children": Array [
-          Object {
-            "attrs": Object {
+{
+  "mark": {
+    "attrs": {},
+    "children": [
+      {
+        "attrs": {},
+        "children": [
+          {
+            "attrs": {
               "fill": "#fff",
               "lineWidth": 2,
               "radius": 2,
@@ -18,8 +18,8 @@ Object {
             "class": "component__group-rect",
             "type": "rect",
           },
-          Object {
-            "attrs": Object {
+          {
+            "attrs": {
               "fill": "#3b4044",
               "fontFamily": "Source Code Pro, sans-serif",
               "fontSize": 14,
@@ -30,8 +30,8 @@ Object {
             "class": "component__group-label",
             "type": "text",
           },
-          Object {
-            "attrs": Object {
+          {
+            "attrs": {
               "fill": "#3b4044",
               "fontFamily": "Source Code Pro, sans-serif",
               "fontSize": 14,
@@ -44,11 +44,11 @@ Object {
         ],
         "type": "group",
       },
-      Object {
-        "attrs": Object {},
-        "children": Array [
-          Object {
-            "attrs": Object {
+      {
+        "attrs": {},
+        "children": [
+          {
+            "attrs": {
               "fill": "#fff",
               "lineWidth": 2,
               "radius": 2,
@@ -57,8 +57,8 @@ Object {
             "class": "component__group-rect",
             "type": "rect",
           },
-          Object {
-            "attrs": Object {
+          {
+            "attrs": {
               "fill": "#3b4044",
               "fontFamily": "Source Code Pro, sans-serif",
               "fontSize": 14,
@@ -69,8 +69,8 @@ Object {
             "class": "component__group-label",
             "type": "text",
           },
-          Object {
-            "attrs": Object {
+          {
+            "attrs": {
               "fill": "#3b4044",
               "fontFamily": "Source Code Pro, sans-serif",
               "fontSize": 14,
@@ -83,11 +83,11 @@ Object {
         ],
         "type": "group",
       },
-      Object {
-        "attrs": Object {},
-        "children": Array [
-          Object {
-            "attrs": Object {
+      {
+        "attrs": {},
+        "children": [
+          {
+            "attrs": {
               "fill": "#fff",
               "lineWidth": 2,
               "radius": 2,
@@ -96,8 +96,8 @@ Object {
             "class": "component__group-rect",
             "type": "rect",
           },
-          Object {
-            "attrs": Object {
+          {
+            "attrs": {
               "fill": "#3b4044",
               "fontFamily": "Source Code Pro, sans-serif",
               "fontSize": 14,
@@ -108,8 +108,8 @@ Object {
             "class": "component__group-label",
             "type": "text",
           },
-          Object {
-            "attrs": Object {
+          {
+            "attrs": {
               "fill": "#3b4044",
               "fontFamily": "Source Code Pro, sans-serif",
               "fontSize": 14,
@@ -122,11 +122,11 @@ Object {
         ],
         "type": "group",
       },
-      Object {
-        "attrs": Object {},
-        "children": Array [
-          Object {
-            "attrs": Object {
+      {
+        "attrs": {},
+        "children": [
+          {
+            "attrs": {
               "fill": "#fff",
               "lineWidth": 2,
               "radius": 2,
@@ -135,8 +135,8 @@ Object {
             "class": "component__group-rect",
             "type": "rect",
           },
-          Object {
-            "attrs": Object {
+          {
+            "attrs": {
               "fill": "#3b4044",
               "fontFamily": "Source Code Pro, sans-serif",
               "fontSize": 14,
@@ -147,8 +147,8 @@ Object {
             "class": "component__group-label",
             "type": "text",
           },
-          Object {
-            "attrs": Object {
+          {
+            "attrs": {
               "fill": "#3b4044",
               "fontFamily": "Source Code Pro, sans-serif",
               "fontSize": 14,
@@ -161,11 +161,11 @@ Object {
         ],
         "type": "group",
       },
-      Object {
-        "attrs": Object {},
-        "children": Array [
-          Object {
-            "attrs": Object {
+      {
+        "attrs": {},
+        "children": [
+          {
+            "attrs": {
               "fill": "#fdb05e",
               "lineWidth": 1,
               "radius": 4,
@@ -174,8 +174,8 @@ Object {
             "class": "component__component-rect",
             "type": "rect",
           },
-          Object {
-            "attrs": Object {
+          {
+            "attrs": {
               "fill": "#3b4044",
               "fontFamily": "Source Code Pro, sans-serif",
               "fontSize": 14,
@@ -189,11 +189,11 @@ Object {
         "class": "component__component",
         "type": "group",
       },
-      Object {
-        "attrs": Object {},
-        "children": Array [
-          Object {
-            "attrs": Object {
+      {
+        "attrs": {},
+        "children": [
+          {
+            "attrs": {
               "fill": "#fdb05e",
               "lineWidth": 1,
               "radius": 4,
@@ -202,8 +202,8 @@ Object {
             "class": "component__component-rect",
             "type": "rect",
           },
-          Object {
-            "attrs": Object {
+          {
+            "attrs": {
               "fill": "#3b4044",
               "fontFamily": "Source Code Pro, sans-serif",
               "fontSize": 14,
@@ -217,11 +217,11 @@ Object {
         "class": "component__component",
         "type": "group",
       },
-      Object {
-        "attrs": Object {},
-        "children": Array [
-          Object {
-            "attrs": Object {
+      {
+        "attrs": {},
+        "children": [
+          {
+            "attrs": {
               "fill": "#fdb05e",
               "lineWidth": 1,
               "radius": 4,
@@ -230,8 +230,8 @@ Object {
             "class": "component__component-rect",
             "type": "rect",
           },
-          Object {
-            "attrs": Object {
+          {
+            "attrs": {
               "fill": "#3b4044",
               "fontFamily": "Source Code Pro, sans-serif",
               "fontSize": 14,
@@ -245,11 +245,11 @@ Object {
         "class": "component__component",
         "type": "group",
       },
-      Object {
-        "attrs": Object {},
-        "children": Array [
-          Object {
-            "attrs": Object {
+      {
+        "attrs": {},
+        "children": [
+          {
+            "attrs": {
               "fill": "#fdb05e",
               "lineWidth": 1,
               "radius": 4,
@@ -258,8 +258,8 @@ Object {
             "class": "component__component-rect",
             "type": "rect",
           },
-          Object {
-            "attrs": Object {
+          {
+            "attrs": {
               "fill": "#3b4044",
               "fontFamily": "Source Code Pro, sans-serif",
               "fontSize": 14,
@@ -273,11 +273,11 @@ Object {
         "class": "component__component",
         "type": "group",
       },
-      Object {
-        "attrs": Object {},
-        "children": Array [
-          Object {
-            "attrs": Object {
+      {
+        "attrs": {},
+        "children": [
+          {
+            "attrs": {
               "fill": "#fdb05e",
               "lineWidth": 1,
               "radius": 4,
@@ -286,8 +286,8 @@ Object {
             "class": "component__component-rect",
             "type": "rect",
           },
-          Object {
-            "attrs": Object {
+          {
+            "attrs": {
               "fill": "#3b4044",
               "fontFamily": "Source Code Pro, sans-serif",
               "fontSize": 14,
@@ -301,21 +301,20 @@ Object {
         "class": "component__component",
         "type": "group",
       },
-      Object {
-        "attrs": Object {},
-        "children": Array [
-          Object {
-            "attrs": Object {
+      {
+        "attrs": {},
+        "children": [
+          {
+            "attrs": {
               "fill": "#fdb05e",
               "lineWidth": 1,
-              "r": 8,
               "stroke": "#3b4044",
             },
             "class": "component__interface",
             "type": "circle",
           },
-          Object {
-            "attrs": Object {
+          {
+            "attrs": {
               "fill": "#3b4044",
               "fontFamily": "Source Code Pro, sans-serif",
               "fontSize": 14,
@@ -329,21 +328,20 @@ Object {
         "class": "component__group",
         "type": "group",
       },
-      Object {
-        "attrs": Object {},
-        "children": Array [
-          Object {
-            "attrs": Object {
+      {
+        "attrs": {},
+        "children": [
+          {
+            "attrs": {
               "fill": "#fdb05e",
               "lineWidth": 1,
-              "r": 8,
               "stroke": "#3b4044",
             },
             "class": "component__interface",
             "type": "circle",
           },
-          Object {
-            "attrs": Object {
+          {
+            "attrs": {
               "fill": "#3b4044",
               "fontFamily": "Source Code Pro, sans-serif",
               "fontSize": 14,
@@ -357,21 +355,20 @@ Object {
         "class": "component__group",
         "type": "group",
       },
-      Object {
-        "attrs": Object {},
-        "children": Array [
-          Object {
-            "attrs": Object {
+      {
+        "attrs": {},
+        "children": [
+          {
+            "attrs": {
               "fill": "#fdb05e",
               "lineWidth": 1,
-              "r": 8,
               "stroke": "#3b4044",
             },
             "class": "component__interface",
             "type": "circle",
           },
-          Object {
-            "attrs": Object {
+          {
+            "attrs": {
               "fill": "#3b4044",
               "fontFamily": "Source Code Pro, sans-serif",
               "fontSize": 14,
@@ -385,21 +382,20 @@ Object {
         "class": "component__group",
         "type": "group",
       },
-      Object {
-        "attrs": Object {},
-        "children": Array [
-          Object {
-            "attrs": Object {
+      {
+        "attrs": {},
+        "children": [
+          {
+            "attrs": {
               "fill": "#fdb05e",
               "lineWidth": 1,
-              "r": 8,
               "stroke": "#3b4044",
             },
             "class": "component__interface",
             "type": "circle",
           },
-          Object {
-            "attrs": Object {
+          {
+            "attrs": {
               "fill": "#3b4044",
               "fontFamily": "Source Code Pro, sans-serif",
               "fontSize": 14,
@@ -413,27 +409,27 @@ Object {
         "class": "component__group",
         "type": "group",
       },
-      Object {
-        "attrs": Object {},
-        "children": Array [
-          Object {
-            "attrs": Object {
+      {
+        "attrs": {},
+        "children": [
+          {
+            "attrs": {
               "lineCap": "round",
               "stroke": "#fdb05e",
             },
             "class": "component__rel-line",
             "type": "path",
           },
-          Object {
-            "attrs": Object {
+          {
+            "attrs": {
               "fill": "#fff",
               "opacity": 0.85,
             },
             "class": "label-bg",
             "type": "rect",
           },
-          Object {
-            "attrs": Object {
+          {
+            "attrs": {
               "fill": "#3b4044",
               "fontFamily": "Source Code Pro, sans-serif",
               "fontSize": 14,
@@ -444,8 +440,8 @@ Object {
             "class": "component__rel-text",
             "type": "text",
           },
-          Object {
-            "attrs": Object {
+          {
+            "attrs": {
               "lineCap": "round",
               "stroke": "#fdb05e",
             },
@@ -454,27 +450,27 @@ Object {
         ],
         "type": "group",
       },
-      Object {
-        "attrs": Object {},
-        "children": Array [
-          Object {
-            "attrs": Object {
+      {
+        "attrs": {},
+        "children": [
+          {
+            "attrs": {
               "lineCap": "round",
               "stroke": "#fdb05e",
             },
             "class": "component__rel-line",
             "type": "path",
           },
-          Object {
-            "attrs": Object {
+          {
+            "attrs": {
               "fill": "#fff",
               "opacity": 0.85,
             },
             "class": "label-bg",
             "type": "rect",
           },
-          Object {
-            "attrs": Object {
+          {
+            "attrs": {
               "fill": "#3b4044",
               "fontFamily": "Source Code Pro, sans-serif",
               "fontSize": 14,
@@ -485,8 +481,8 @@ Object {
             "class": "component__rel-text",
             "type": "text",
           },
-          Object {
-            "attrs": Object {
+          {
+            "attrs": {
               "lineCap": "round",
               "stroke": "#fdb05e",
             },
@@ -495,27 +491,27 @@ Object {
         ],
         "type": "group",
       },
-      Object {
-        "attrs": Object {},
-        "children": Array [
-          Object {
-            "attrs": Object {
+      {
+        "attrs": {},
+        "children": [
+          {
+            "attrs": {
               "lineCap": "round",
               "stroke": "#fdb05e",
             },
             "class": "component__rel-line",
             "type": "path",
           },
-          Object {
-            "attrs": Object {
+          {
+            "attrs": {
               "fill": "#fff",
               "opacity": 0.85,
             },
             "class": "label-bg",
             "type": "rect",
           },
-          Object {
-            "attrs": Object {
+          {
+            "attrs": {
               "fill": "#3b4044",
               "fontFamily": "Source Code Pro, sans-serif",
               "fontSize": 14,
@@ -526,8 +522,8 @@ Object {
             "class": "component__rel-text",
             "type": "text",
           },
-          Object {
-            "attrs": Object {
+          {
+            "attrs": {
               "lineCap": "round",
               "stroke": "#fdb05e",
             },
@@ -536,13 +532,13 @@ Object {
         ],
         "type": "group",
       },
-      Object {
-        "attrs": Object {},
-        "children": Array [
-          Object {
-            "attrs": Object {
+      {
+        "attrs": {},
+        "children": [
+          {
+            "attrs": {
               "lineCap": "round",
-              "lineDash": Array [
+              "lineDash": [
                 4,
                 4,
               ],
@@ -551,16 +547,16 @@ Object {
             "class": "component__rel-line",
             "type": "path",
           },
-          Object {
-            "attrs": Object {
+          {
+            "attrs": {
               "fill": "#fff",
               "opacity": 0.85,
             },
             "class": "label-bg",
             "type": "rect",
           },
-          Object {
-            "attrs": Object {
+          {
+            "attrs": {
               "fill": "#3b4044",
               "fontFamily": "Source Code Pro, sans-serif",
               "fontSize": 14,
@@ -571,8 +567,8 @@ Object {
             "class": "component__rel-text",
             "type": "text",
           },
-          Object {
-            "attrs": Object {
+          {
+            "attrs": {
               "lineCap": "round",
               "stroke": "#fdb05e",
             },
@@ -581,27 +577,27 @@ Object {
         ],
         "type": "group",
       },
-      Object {
-        "attrs": Object {},
-        "children": Array [
-          Object {
-            "attrs": Object {
+      {
+        "attrs": {},
+        "children": [
+          {
+            "attrs": {
               "lineCap": "round",
               "stroke": "#fdb05e",
             },
             "class": "component__rel-line",
             "type": "path",
           },
-          Object {
-            "attrs": Object {
+          {
+            "attrs": {
               "fill": "#fff",
               "opacity": 0.85,
             },
             "class": "label-bg",
             "type": "rect",
           },
-          Object {
-            "attrs": Object {
+          {
+            "attrs": {
               "fill": "#3b4044",
               "fontFamily": "Source Code Pro, sans-serif",
               "fontSize": 14,
@@ -612,8 +608,8 @@ Object {
             "class": "component__rel-text",
             "type": "text",
           },
-          Object {
-            "attrs": Object {
+          {
+            "attrs": {
               "lineCap": "round",
               "stroke": "#fdb05e",
             },
@@ -622,27 +618,27 @@ Object {
         ],
         "type": "group",
       },
-      Object {
-        "attrs": Object {},
-        "children": Array [
-          Object {
-            "attrs": Object {
+      {
+        "attrs": {},
+        "children": [
+          {
+            "attrs": {
               "lineCap": "round",
               "stroke": "#fdb05e",
             },
             "class": "component__rel-line",
             "type": "path",
           },
-          Object {
-            "attrs": Object {
+          {
+            "attrs": {
               "fill": "#fff",
               "opacity": 0.85,
             },
             "class": "label-bg",
             "type": "rect",
           },
-          Object {
-            "attrs": Object {
+          {
+            "attrs": {
               "fill": "#3b4044",
               "fontFamily": "Source Code Pro, sans-serif",
               "fontSize": 14,
@@ -653,8 +649,8 @@ Object {
             "class": "component__rel-text",
             "type": "text",
           },
-          Object {
-            "attrs": Object {
+          {
+            "attrs": {
               "lineCap": "round",
               "stroke": "#fdb05e",
             },
@@ -663,27 +659,27 @@ Object {
         ],
         "type": "group",
       },
-      Object {
-        "attrs": Object {},
-        "children": Array [
-          Object {
-            "attrs": Object {
+      {
+        "attrs": {},
+        "children": [
+          {
+            "attrs": {
               "lineCap": "round",
               "stroke": "#fdb05e",
             },
             "class": "component__rel-line",
             "type": "path",
           },
-          Object {
-            "attrs": Object {
+          {
+            "attrs": {
               "fill": "#fff",
               "opacity": 0.85,
             },
             "class": "label-bg",
             "type": "rect",
           },
-          Object {
-            "attrs": Object {
+          {
+            "attrs": {
               "fill": "#3b4044",
               "fontFamily": "Source Code Pro, sans-serif",
               "fontSize": 14,
@@ -694,8 +690,8 @@ Object {
             "class": "component__rel-text",
             "type": "text",
           },
-          Object {
-            "attrs": Object {
+          {
+            "attrs": {
               "lineCap": "round",
               "stroke": "#fdb05e",
             },
@@ -704,27 +700,27 @@ Object {
         ],
         "type": "group",
       },
-      Object {
-        "attrs": Object {},
-        "children": Array [
-          Object {
-            "attrs": Object {
+      {
+        "attrs": {},
+        "children": [
+          {
+            "attrs": {
               "lineCap": "round",
               "stroke": "#fdb05e",
             },
             "class": "component__rel-line",
             "type": "path",
           },
-          Object {
-            "attrs": Object {
+          {
+            "attrs": {
               "fill": "#fff",
               "opacity": 0.85,
             },
             "class": "label-bg",
             "type": "rect",
           },
-          Object {
-            "attrs": Object {
+          {
+            "attrs": {
               "fill": "#3b4044",
               "fontFamily": "Source Code Pro, sans-serif",
               "fontSize": 14,
@@ -735,8 +731,8 @@ Object {
             "class": "component__rel-text",
             "type": "text",
           },
-          Object {
-            "attrs": Object {
+          {
+            "attrs": {
               "lineCap": "round",
               "stroke": "#fdb05e",
             },

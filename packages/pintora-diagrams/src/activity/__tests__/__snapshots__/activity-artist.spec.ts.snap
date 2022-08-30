@@ -1,21 +1,20 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`activity-artist draw fork 1`] = `
-Object {
-  "mark": Object {
-    "attrs": Object {},
-    "children": Array [
-      Object {
-        "attrs": Object {
+{
+  "mark": {
+    "attrs": {},
+    "children": [
+      {
+        "attrs": {
           "id": "1",
           "mark": [Circular],
           "onLayout": [Function],
         },
-        "children": Array [
-          Object {
-            "attrs": Object {
+        "children": [
+          {
+            "attrs": {
               "fill": "#3b4044",
-              "r": 10,
             },
             "type": "circle",
           },
@@ -23,23 +22,23 @@ Object {
         "class": "activity__keyword",
         "type": "group",
       },
-      Object {
-        "attrs": Object {
+      {
+        "attrs": {
           "id": "2",
           "mark": [Circular],
           "onLayout": [Function],
         },
-        "children": Array [
-          Object {
-            "attrs": Object {
+        "children": [
+          {
+            "attrs": {
               "fill": "#fdb05e",
               "stroke": "#3b4044",
             },
             "class": "activity__decision-bg",
             "type": "path",
           },
-          Object {
-            "attrs": Object {
+          {
+            "attrs": {
               "fill": "#3b4044",
               "fontFamily": "Source Code Pro, sans-serif",
               "fontSize": 14,
@@ -52,43 +51,43 @@ Object {
         ],
         "type": "group",
       },
-      Object {
-        "attrs": Object {
+      {
+        "attrs": {
           "fill": "#fdb05e",
           "stroke": "#3b4044",
         },
         "class": "activity__condition-end",
         "type": "path",
       },
-      Object {
-        "attrs": Object {},
-        "children": Array [
-          Object {
-            "attrs": Object {
+      {
+        "attrs": {},
+        "children": [
+          {
+            "attrs": {
               "fill": "#3b4044",
               "radius": 2,
             },
             "type": "rect",
           },
-          Object {
-            "attrs": Object {},
-            "children": Array [
-              Object {
-                "attrs": Object {
+          {
+            "attrs": {},
+            "children": [
+              {
+                "attrs": {
                   "id": "5",
                   "mark": [Circular],
                   "onLayout": [Function],
                 },
-                "children": Array [
-                  Object {
-                    "attrs": Object {
+                "children": [
+                  {
+                    "attrs": {
                       "fill": "#fdb05e",
                       "stroke": "#3b4044",
                     },
                     "type": "rect",
                   },
-                  Object {
-                    "attrs": Object {
+                  {
+                    "attrs": {
                       "fill": "#3b4044",
                       "fontFamily": "Source Code Pro, sans-serif",
                       "fontSize": 14,
@@ -104,22 +103,22 @@ Object {
             ],
             "type": "group",
           },
-          Object {
-            "attrs": Object {
+          {
+            "attrs": {
               "id": "5",
               "mark": [Circular],
               "onLayout": [Function],
             },
-            "children": Array [
-              Object {
-                "attrs": Object {
+            "children": [
+              {
+                "attrs": {
                   "fill": "#fdb05e",
                   "stroke": "#3b4044",
                 },
                 "type": "rect",
               },
-              Object {
-                "attrs": Object {
+              {
+                "attrs": {
                   "fill": "#3b4044",
                   "fontFamily": "Source Code Pro, sans-serif",
                   "fontSize": 14,
@@ -132,25 +131,25 @@ Object {
             ],
             "type": "group",
           },
-          Object {
-            "attrs": Object {},
-            "children": Array [
-              Object {
-                "attrs": Object {
+          {
+            "attrs": {},
+            "children": [
+              {
+                "attrs": {
                   "id": "7",
                   "mark": [Circular],
                   "onLayout": [Function],
                 },
-                "children": Array [
-                  Object {
-                    "attrs": Object {
+                "children": [
+                  {
+                    "attrs": {
                       "fill": "#fdb05e",
                       "stroke": "#3b4044",
                     },
                     "type": "rect",
                   },
-                  Object {
-                    "attrs": Object {
+                  {
+                    "attrs": {
                       "fill": "#3b4044",
                       "fontFamily": "Source Code Pro, sans-serif",
                       "fontSize": 14,
@@ -166,22 +165,22 @@ Object {
             ],
             "type": "group",
           },
-          Object {
-            "attrs": Object {
+          {
+            "attrs": {
               "id": "7",
               "mark": [Circular],
               "onLayout": [Function],
             },
-            "children": Array [
-              Object {
-                "attrs": Object {
+            "children": [
+              {
+                "attrs": {
                   "fill": "#fdb05e",
                   "stroke": "#3b4044",
                 },
                 "type": "rect",
               },
-              Object {
-                "attrs": Object {
+              {
+                "attrs": {
                   "fill": "#3b4044",
                   "fontFamily": "Source Code Pro, sans-serif",
                   "fontSize": 14,
@@ -197,29 +196,29 @@ Object {
         ],
         "type": "group",
       },
-      Object {
-        "attrs": Object {
+      {
+        "attrs": {
           "fill": "#3b4044",
           "radius": 2,
         },
         "type": "rect",
       },
-      Object {
-        "attrs": Object {
+      {
+        "attrs": {
           "id": "8",
           "mark": [Circular],
           "onLayout": [Function],
         },
-        "children": Array [
-          Object {
-            "attrs": Object {
+        "children": [
+          {
+            "attrs": {
               "fill": "#fdb05e",
               "stroke": "#3b4044",
             },
             "type": "rect",
           },
-          Object {
-            "attrs": Object {
+          {
+            "attrs": {
               "fill": "#3b4044",
               "fontFamily": "Source Code Pro, sans-serif",
               "fontSize": 14,
@@ -232,22 +231,22 @@ Object {
         ],
         "type": "group",
       },
-      Object {
-        "attrs": Object {
+      {
+        "attrs": {
           "id": "9",
           "mark": [Circular],
           "onLayout": [Function],
         },
-        "children": Array [
-          Object {
-            "attrs": Object {
+        "children": [
+          {
+            "attrs": {
               "fill": "#fdb05e",
               "stroke": "#3b4044",
             },
             "type": "rect",
           },
-          Object {
-            "attrs": Object {
+          {
+            "attrs": {
               "fill": "#3b4044",
               "fontFamily": "Source Code Pro, sans-serif",
               "fontSize": 14,
@@ -260,24 +259,22 @@ Object {
         ],
         "type": "group",
       },
-      Object {
-        "attrs": Object {
+      {
+        "attrs": {
           "id": "10",
           "mark": [Circular],
           "onLayout": [Function],
         },
-        "children": Array [
-          Object {
-            "attrs": Object {
-              "r": 10,
+        "children": [
+          {
+            "attrs": {
               "stroke": "#3b4044",
             },
             "type": "circle",
           },
-          Object {
-            "attrs": Object {
+          {
+            "attrs": {
               "fill": "#3b4044",
-              "r": 6,
             },
             "type": "circle",
           },
@@ -285,82 +282,82 @@ Object {
         "class": "activity__keyword",
         "type": "group",
       },
-      Object {
-        "attrs": Object {},
-        "children": Array [
-          Object {
-            "attrs": Object {
+      {
+        "attrs": {},
+        "children": [
+          {
+            "attrs": {
               "lineJoin": "round",
               "stroke": "#fdb05e",
             },
             "type": "path",
           },
-          Object {
-            "attrs": Object {
+          {
+            "attrs": {
               "lineCap": "round",
               "stroke": "#fdb05e",
             },
             "type": "path",
           },
-          Object {
-            "attrs": Object {
+          {
+            "attrs": {
               "lineJoin": "round",
               "stroke": "#fdb05e",
             },
             "type": "path",
           },
-          Object {
-            "attrs": Object {
+          {
+            "attrs": {
               "lineCap": "round",
               "stroke": "#fdb05e",
             },
             "type": "path",
           },
-          Object {
-            "attrs": Object {
+          {
+            "attrs": {
               "lineJoin": "round",
               "stroke": "#fdb05e",
             },
             "type": "path",
           },
-          Object {
-            "attrs": Object {
+          {
+            "attrs": {
               "lineCap": "round",
               "stroke": "#fdb05e",
             },
             "type": "path",
           },
-          Object {
-            "attrs": Object {
+          {
+            "attrs": {
               "lineJoin": "round",
               "stroke": "#fdb05e",
             },
             "type": "path",
           },
-          Object {
-            "attrs": Object {
+          {
+            "attrs": {
               "lineCap": "round",
               "stroke": "#fdb05e",
             },
             "type": "path",
           },
-          Object {
-            "attrs": Object {
+          {
+            "attrs": {
               "lineJoin": "round",
               "stroke": "#fdb05e",
             },
             "type": "path",
           },
-          Object {
-            "attrs": Object {
+          {
+            "attrs": {
               "fill": "#fff",
               "opacity": 0.85,
             },
             "class": "label-bg",
             "type": "rect",
           },
-          Object {
-            "attrs": Object {
+          {
+            "attrs": {
               "fill": "#3b4044",
               "fontFamily": "Source Code Pro, sans-serif",
               "fontSize": 14,
@@ -372,44 +369,44 @@ Object {
             "class": "activity__edge-label",
             "type": "text",
           },
-          Object {
-            "attrs": Object {
+          {
+            "attrs": {
               "lineCap": "round",
               "stroke": "#fdb05e",
             },
             "type": "path",
           },
-          Object {
-            "attrs": Object {
+          {
+            "attrs": {
               "lineJoin": "round",
               "stroke": "#fdb05e",
             },
             "type": "path",
           },
-          Object {
-            "attrs": Object {
+          {
+            "attrs": {
               "lineCap": "round",
               "stroke": "#fdb05e",
             },
             "type": "path",
           },
-          Object {
-            "attrs": Object {
+          {
+            "attrs": {
               "lineJoin": "round",
               "stroke": "#fdb05e",
             },
             "type": "path",
           },
-          Object {
-            "attrs": Object {
+          {
+            "attrs": {
               "fill": "#fff",
               "opacity": 0.85,
             },
             "class": "label-bg",
             "type": "rect",
           },
-          Object {
-            "attrs": Object {
+          {
+            "attrs": {
               "fill": "#3b4044",
               "fontFamily": "Source Code Pro, sans-serif",
               "fontSize": 14,
@@ -421,64 +418,64 @@ Object {
             "class": "activity__edge-label",
             "type": "text",
           },
-          Object {
-            "attrs": Object {
+          {
+            "attrs": {
               "lineCap": "round",
               "stroke": "#fdb05e",
             },
             "type": "path",
           },
-          Object {
-            "attrs": Object {
+          {
+            "attrs": {
               "lineJoin": "round",
               "stroke": "#fdb05e",
             },
             "type": "path",
           },
-          Object {
-            "attrs": Object {
+          {
+            "attrs": {
               "lineCap": "round",
               "stroke": "#fdb05e",
             },
             "type": "path",
           },
-          Object {
-            "attrs": Object {
+          {
+            "attrs": {
               "lineJoin": "round",
               "stroke": "#fdb05e",
             },
             "type": "path",
           },
-          Object {
-            "attrs": Object {
+          {
+            "attrs": {
               "lineCap": "round",
               "stroke": "#fdb05e",
             },
             "type": "path",
           },
-          Object {
-            "attrs": Object {
+          {
+            "attrs": {
               "lineJoin": "round",
               "stroke": "#fdb05e",
             },
             "type": "path",
           },
-          Object {
-            "attrs": Object {
+          {
+            "attrs": {
               "lineCap": "round",
               "stroke": "#fdb05e",
             },
             "type": "path",
           },
-          Object {
-            "attrs": Object {
+          {
+            "attrs": {
               "lineJoin": "round",
               "stroke": "#fdb05e",
             },
             "type": "path",
           },
-          Object {
-            "attrs": Object {
+          {
+            "attrs": {
               "lineCap": "round",
               "stroke": "#fdb05e",
             },
@@ -494,21 +491,20 @@ Object {
 `;
 
 exports[`activity-artist draw repeat 1`] = `
-Object {
-  "mark": Object {
-    "attrs": Object {},
-    "children": Array [
-      Object {
-        "attrs": Object {
+{
+  "mark": {
+    "attrs": {},
+    "children": [
+      {
+        "attrs": {
           "id": "1",
           "mark": [Circular],
           "onLayout": [Function],
         },
-        "children": Array [
-          Object {
-            "attrs": Object {
+        "children": [
+          {
+            "attrs": {
               "fill": "#3b4044",
-              "r": 10,
             },
             "type": "circle",
           },
@@ -516,23 +512,23 @@ Object {
         "class": "activity__keyword",
         "type": "group",
       },
-      Object {
-        "attrs": Object {
+      {
+        "attrs": {
           "id": "2-end",
           "mark": [Circular],
           "onLayout": [Function],
         },
-        "children": Array [
-          Object {
-            "attrs": Object {
+        "children": [
+          {
+            "attrs": {
               "fill": "#fdb05e",
               "stroke": "#3b4044",
             },
             "class": "activity__decision-bg",
             "type": "path",
           },
-          Object {
-            "attrs": Object {
+          {
+            "attrs": {
               "fill": "#3b4044",
               "fontFamily": "Source Code Pro, sans-serif",
               "fontSize": 14,
@@ -545,22 +541,22 @@ Object {
         ],
         "type": "group",
       },
-      Object {
-        "attrs": Object {
+      {
+        "attrs": {
           "id": "2",
           "mark": [Circular],
           "onLayout": [Function],
         },
-        "children": Array [
-          Object {
-            "attrs": Object {
+        "children": [
+          {
+            "attrs": {
               "fill": "#fdb05e",
               "stroke": "#3b4044",
             },
             "type": "rect",
           },
-          Object {
-            "attrs": Object {
+          {
+            "attrs": {
               "fill": "#3b4044",
               "fontFamily": "Source Code Pro, sans-serif",
               "fontSize": 14,
@@ -574,22 +570,22 @@ Object {
         "class": "activity__repeat-start",
         "type": "group",
       },
-      Object {
-        "attrs": Object {
+      {
+        "attrs": {
           "id": "3",
           "mark": [Circular],
           "onLayout": [Function],
         },
-        "children": Array [
-          Object {
-            "attrs": Object {
+        "children": [
+          {
+            "attrs": {
               "fill": "#fdb05e",
               "stroke": "#3b4044",
             },
             "type": "rect",
           },
-          Object {
-            "attrs": Object {
+          {
+            "attrs": {
               "fill": "#3b4044",
               "fontFamily": "Source Code Pro, sans-serif",
               "fontSize": 14,
@@ -602,23 +598,23 @@ Object {
         ],
         "type": "group",
       },
-      Object {
-        "attrs": Object {
+      {
+        "attrs": {
           "id": "4-end",
           "mark": [Circular],
           "onLayout": [Function],
         },
-        "children": Array [
-          Object {
-            "attrs": Object {
+        "children": [
+          {
+            "attrs": {
               "fill": "#fdb05e",
               "stroke": "#3b4044",
             },
             "class": "activity__decision-bg",
             "type": "path",
           },
-          Object {
-            "attrs": Object {
+          {
+            "attrs": {
               "fill": "#3b4044",
               "fontFamily": "Source Code Pro, sans-serif",
               "fontSize": 14,
@@ -631,30 +627,30 @@ Object {
         ],
         "type": "group",
       },
-      Object {
-        "attrs": Object {
+      {
+        "attrs": {
           "fill": "#fdb05e",
           "stroke": "#3b4044",
         },
         "class": "activity__repeat-start",
         "type": "path",
       },
-      Object {
-        "attrs": Object {
+      {
+        "attrs": {
           "id": "5",
           "mark": [Circular],
           "onLayout": [Function],
         },
-        "children": Array [
-          Object {
-            "attrs": Object {
+        "children": [
+          {
+            "attrs": {
               "fill": "#fdb05e",
               "stroke": "#3b4044",
             },
             "type": "rect",
           },
-          Object {
-            "attrs": Object {
+          {
+            "attrs": {
               "fill": "#3b4044",
               "fontFamily": "Source Code Pro, sans-serif",
               "fontSize": 14,
@@ -667,24 +663,22 @@ Object {
         ],
         "type": "group",
       },
-      Object {
-        "attrs": Object {
+      {
+        "attrs": {
           "id": "6",
           "mark": [Circular],
           "onLayout": [Function],
         },
-        "children": Array [
-          Object {
-            "attrs": Object {
-              "r": 10,
+        "children": [
+          {
+            "attrs": {
               "stroke": "#3b4044",
             },
             "type": "circle",
           },
-          Object {
-            "attrs": Object {
+          {
+            "attrs": {
               "fill": "#3b4044",
-              "r": 6,
             },
             "type": "circle",
           },
@@ -692,54 +686,54 @@ Object {
         "class": "activity__keyword",
         "type": "group",
       },
-      Object {
-        "attrs": Object {},
-        "children": Array [
-          Object {
-            "attrs": Object {
+      {
+        "attrs": {},
+        "children": [
+          {
+            "attrs": {
               "lineJoin": "round",
               "stroke": "#fdb05e",
             },
             "type": "path",
           },
-          Object {
-            "attrs": Object {
+          {
+            "attrs": {
               "lineCap": "round",
               "stroke": "#fdb05e",
             },
             "type": "path",
           },
-          Object {
-            "attrs": Object {
+          {
+            "attrs": {
               "lineJoin": "round",
               "stroke": "#fdb05e",
             },
             "type": "path",
           },
-          Object {
-            "attrs": Object {
+          {
+            "attrs": {
               "lineCap": "round",
               "stroke": "#fdb05e",
             },
             "type": "path",
           },
-          Object {
-            "attrs": Object {
+          {
+            "attrs": {
               "lineJoin": "round",
               "stroke": "#fdb05e",
             },
             "type": "path",
           },
-          Object {
-            "attrs": Object {
+          {
+            "attrs": {
               "fill": "#fff",
               "opacity": 0.85,
             },
             "class": "label-bg",
             "type": "rect",
           },
-          Object {
-            "attrs": Object {
+          {
+            "attrs": {
               "fill": "#3b4044",
               "fontFamily": "Source Code Pro, sans-serif",
               "fontSize": 14,
@@ -751,86 +745,86 @@ Object {
             "class": "activity__edge-label",
             "type": "text",
           },
-          Object {
-            "attrs": Object {
+          {
+            "attrs": {
               "lineCap": "round",
               "stroke": "#fdb05e",
             },
             "type": "path",
           },
-          Object {
-            "attrs": Object {
+          {
+            "attrs": {
               "lineJoin": "round",
               "stroke": "#fdb05e",
             },
             "type": "path",
           },
-          Object {
-            "attrs": Object {
+          {
+            "attrs": {
               "lineCap": "round",
               "stroke": "#fdb05e",
             },
             "type": "path",
           },
-          Object {
-            "attrs": Object {
+          {
+            "attrs": {
               "lineJoin": "round",
               "stroke": "#fdb05e",
             },
             "type": "path",
           },
-          Object {
-            "attrs": Object {
+          {
+            "attrs": {
               "lineCap": "round",
               "stroke": "#fdb05e",
             },
             "type": "path",
           },
-          Object {
-            "attrs": Object {
+          {
+            "attrs": {
               "lineJoin": "round",
               "stroke": "#fdb05e",
             },
             "type": "path",
           },
-          Object {
-            "attrs": Object {
+          {
+            "attrs": {
               "lineCap": "round",
               "stroke": "#fdb05e",
             },
             "type": "path",
           },
-          Object {
-            "attrs": Object {
+          {
+            "attrs": {
               "lineJoin": "round",
               "stroke": "#fdb05e",
             },
             "type": "path",
           },
-          Object {
-            "attrs": Object {
+          {
+            "attrs": {
               "lineCap": "round",
               "stroke": "#fdb05e",
             },
             "type": "path",
           },
-          Object {
-            "attrs": Object {
+          {
+            "attrs": {
               "lineJoin": "round",
               "stroke": "#fdb05e",
             },
             "type": "path",
           },
-          Object {
-            "attrs": Object {
+          {
+            "attrs": {
               "fill": "#fff",
               "opacity": 0.85,
             },
             "class": "label-bg",
             "type": "rect",
           },
-          Object {
-            "attrs": Object {
+          {
+            "attrs": {
               "fill": "#3b4044",
               "fontFamily": "Source Code Pro, sans-serif",
               "fontSize": 14,
@@ -842,30 +836,30 @@ Object {
             "class": "activity__edge-label",
             "type": "text",
           },
-          Object {
-            "attrs": Object {
+          {
+            "attrs": {
               "lineCap": "round",
               "stroke": "#fdb05e",
             },
             "type": "path",
           },
-          Object {
-            "attrs": Object {
+          {
+            "attrs": {
               "lineJoin": "round",
               "stroke": "#fdb05e",
             },
             "type": "path",
           },
-          Object {
-            "attrs": Object {
+          {
+            "attrs": {
               "fill": "#fff",
               "opacity": 0.85,
             },
             "class": "label-bg",
             "type": "rect",
           },
-          Object {
-            "attrs": Object {
+          {
+            "attrs": {
               "fill": "#3b4044",
               "fontFamily": "Source Code Pro, sans-serif",
               "fontSize": 14,
@@ -877,8 +871,8 @@ Object {
             "class": "activity__edge-label",
             "type": "text",
           },
-          Object {
-            "attrs": Object {
+          {
+            "attrs": {
               "lineCap": "round",
               "stroke": "#fdb05e",
             },

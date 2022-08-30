@@ -42,6 +42,7 @@ const GEOMETRY_ATTRS = [
   'cy',
   'rx',
   'ry',
+  'r',
   'width',
   'height',
   'x1',
