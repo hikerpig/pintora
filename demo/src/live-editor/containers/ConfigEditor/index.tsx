@@ -19,7 +19,7 @@ function ConfigEditor(props: Props) {
   const dispatch = useDispatch()
 
   const onCodeChange = useDebounceCallback(
-    useCallback(code => {
+    useCallback((code: string) => {
       dispatch(actions.updateConfigCode({ code }))
     }, []),
     500,
