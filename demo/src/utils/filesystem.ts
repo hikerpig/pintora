@@ -85,7 +85,7 @@ export const fileSave = (
     extension: FileExtension
     description: string
     /** existing FileSystemHandle */
-    fileHandle?: FileSystemHandle | null
+    fileHandle?: FileSystemFileHandle | null
   },
 ) => {
   return _fileSave(
