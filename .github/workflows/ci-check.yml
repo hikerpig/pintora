@@ -84,6 +84,6 @@ jobs:
           coverage_path: coverage
 
       - name: Bundle size report
-        uses: nejcm/bundle-size-reporter-action@v1.2.1
+        uses: nejcm/bundle-size-reporter-action@v1.4.1
         with:
           paths: 'packages/pintora-standalone/lib/**/*'

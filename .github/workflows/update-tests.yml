@@ -57,3 +57,7 @@ jobs:
           CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           PERCY_TOKEN: ${{ secrets.PERCY_TOKEN }}
+      - name: Bundle size report
+        uses: nejcm/bundle-size-reporter-action@v1.4.1
+        with:
+          paths: 'packages/pintora-standalone/lib/**/*'

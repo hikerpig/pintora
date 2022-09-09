@@ -20,6 +20,7 @@
       "require": "./lib/pintora-standalone.umd.js"
     }
   },
+  "sideEffects": false,
   "directories": {
     "lib": "lib",
     "test": "__tests__"
@@ -43,6 +44,7 @@
     "watch": "microbundle --no-compress --no-sourcemap -f esm watch",
     "watch-all": "microbundle --no-compress --no-sourcemap --external none --name pintora -f umd,esm watch",
     "dev-demo:esm": "microbundle --no-compress --no-sourcemap -f esm watch",
+    "build:esbuild": "BUILD_ALL=true tsx scripts/esbuild.ts",
     "test": "jest",
     "coverage": "npx jest --collect-coverage",
     "gen-types": "tsc --declaration"
@@ -57,9 +59,11 @@
   },
   "devDependencies": {
     "@pintora/test-shared": "workspace:*",
-    "@types/node": "^16.11.7",
+    "@types/node": "^16.11.39",
     "@types/tinycolor2": "^1.4.3",
+    "esbuild": "^0.19.11",
     "microbundle": "^0.15.1",
+    "tsx": "^3.9.0",
     "typescript": "^5.0.0"
   }
 }
