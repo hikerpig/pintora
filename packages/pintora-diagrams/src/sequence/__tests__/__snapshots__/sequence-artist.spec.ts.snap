@@ -473,7 +473,6 @@ exports[`sequence-artist match example snapshot 1`] = `
     "children": [
       {
         "attrs": {
-          "fill": null,
           "lineDash": [
             2,
             2,
