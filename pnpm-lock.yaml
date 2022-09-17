@@ -156,7 +156,7 @@ importers:
 
   packages/pintora-cli:
     specifiers:
-      '@pintora/core': workspace:^0.6.0
+      '@pintora/core': workspace:^0.6.1
       '@pintora/renderer': ^0.6.0
       '@pintora/standalone': workspace:^0.6.0
       '@pintora/test-shared': workspace:^0.4.0
@@ -214,7 +214,7 @@ importers:
     specifiers:
       '@hikerpig/moo': ^0.5.2-beta.2
       '@hikerpig/nearley': ^2.21.0-beta.1
-      '@pintora/core': workspace:^0.6.0
+      '@pintora/core': workspace:^0.6.1
       '@pintora/dagre': ^0.10.10
       '@pintora/development-kit': workspace:^0.1.1
       '@pintora/graphlib': 2.2.2

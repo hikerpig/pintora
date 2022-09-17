@@ -123,7 +123,8 @@ Check the online [documentation and demo](http://pintorajs.vercel.app/docs/intro
 - [x] Theme config
 - [x] PlantUML style Activity Diagram
 - [x] Mind Map
-- [x] Gantt diagram
+- [x] Gantt Diagram
+- [ ] Class Diagram
 - [ ] Universal style customization solution
 - [ ] Load diagram implementation and canvas renderer only when needed
 
