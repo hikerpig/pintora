@@ -8,6 +8,7 @@
   "references": [
     { "path": "../pintora-core" },
     { "path": "../pintora-renderer" },
-    { "path": "../pintora-standalone" }
+    { "path": "../pintora-standalone" },
+    { "path": "../test-shared" }
   ]
 }

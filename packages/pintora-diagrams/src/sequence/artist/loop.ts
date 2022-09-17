@@ -1,4 +1,4 @@
-import { calculateTextDimensions, safeAssign } from '@pintora/core'
+import { calculateTextDimensions, removeValues, safeAssign } from '@pintora/core'
 import { messageFont, SequenceArtistContext } from '../artist'
 import { getBaseText, makeLoopLabelBox, makeMark } from '../artist-util'
 import { LoopModel, LoopSection } from './type'
@@ -43,16 +43,19 @@ export function drawLoopTo(context: SequenceArtistContext, loopModel: LoopModel,
   }
   const { startx, starty, stopx, stopy } = loopModel
 
-  const bgRect = makeMark('rect', {
-    x: startx,
-    y: starty,
-    width: stopx - startx,
-    height: stopy - starty,
-    fill: loopModel.fill,
-    stroke: loopLineColor,
-    lineWidth: 2,
-    lineDash: [2, 2],
-  })
+  const bgRect = makeMark(
+    'rect',
+    removeValues({
+      x: startx,
+      y: starty,
+      width: stopx - startx,
+      height: stopy - starty,
+      fill: loopModel.fill,
+      stroke: loopLineColor,
+      lineWidth: 2,
+      lineDash: [2, 2],
+    }),
+  )
   model.groupBgs.push(bgRect)
 
   if (loopModel.sections) {

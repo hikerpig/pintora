@@ -2,7 +2,7 @@ import { RenderOptions, IRenderer } from '@pintora/renderer'
 import { pintoraStandalone, PintoraConfig } from '@pintora/standalone'
 import { JSDOM } from 'jsdom'
 import { implForWrapper } from 'jsdom/lib/jsdom/living/generated/utils'
-import { Canvas } from 'canvas'
+import { Canvas, CanvasPattern } from 'canvas'
 import { SVG_MIME_TYPE, DEFAUT_BGS } from './const'
 
 export type CLIRenderOptions = {
@@ -28,6 +28,7 @@ function renderPrepare(opts: CLIRenderOptions) {
   global.window = dom.window as any
   global.document = document
   ;(dom.window as any).devicePixelRatio = devicePixelRatio
+  ;(global as any).CanvasPattern = CanvasPattern
 
   return {
     container,

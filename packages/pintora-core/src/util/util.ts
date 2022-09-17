@@ -58,3 +58,14 @@ export function min<T>(arr: T[], fn: (v: T) => number) {
 export function max<T>(arr: T[], fn: (v: T) => number) {
   return Math.max(...arr.map(fn))
 }
+
+/**
+ * Remove certain value keys from an object, usually empty value
+ * @mutate obj
+ */
+export function removeValues<T extends object>(obj: T, values = [undefined, null]) {
+  for (const [k, v] of Object.entries(obj)) {
+    if (values.includes(v)) delete (obj as any)[k]
+  }
+  return obj
+}
