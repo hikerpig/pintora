@@ -1,5 +1,13 @@
 # Change Log
 
+## 0.6.1
+
+### Patch Changes
+
+- 10a5d8d: fix: ReferenceError: CanvasPattern is not defined
+- Updated dependencies [10a5d8d]
+  - @pintora/core@0.6.1
+
 ## 0.6.0
 
 ### Minor Changes
