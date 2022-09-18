@@ -12,6 +12,7 @@ import {
   GSymbol,
   IFont,
   Bounds,
+  Maybe,
 } from '@pintora/core'
 import { ComponentDiagramIR, LineType, Relationship } from './db'
 import { ComponentConf, getConf } from './config'
@@ -86,6 +87,28 @@ const componentArtist: IDiagramArtist<ComponentDiagramIR, ComponentConf> = {
     const gBounds = tryExpandBounds(dagreWrapper.getGraphBounds(), labelBounds)
     const pad = conf.diagramPadding
 
+    const { title } = ir
+    let titleSize: Maybe<TSize> = undefined
+    if (title) {
+      const titleFont: IFont = { fontSize: conf.fontSize, fontFamily: conf.fontFamily }
+      titleSize = calculateTextDimensions(title, titleFont)
+      const titleHeight = titleSize.height
+      rootMark.children.push({
+        type: 'text',
+        attrs: {
+          text: title,
+          x: gBounds.left + gBounds.width / 2,
+          y: -titleHeight,
+          ...titleFont,
+          fill: conf.textColor,
+          textAlign: 'center',
+          fontWeight: 'bold',
+        },
+        class: 'component__title',
+      })
+      titleSize.height += conf.fontSize
+    }
+
     const { width, height } = adjustRootMarkBounds({
       rootMark,
       gBounds,
@@ -93,6 +116,7 @@ const componentArtist: IDiagramArtist<ComponentDiagramIR, ComponentConf> = {
       padY: pad,
       useMaxWidth: conf.useMaxWidth,
       containerSize: opts?.containerSize,
+      titleSize,
     })
 
     return {

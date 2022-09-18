@@ -84,6 +84,7 @@ statement ->
     %}
   | entityName "{" "}" %NL {% (d) => yy.addEntity(d[0]) %}
   | entityName %WS:* %NL {% (d) => yy.addEntity(d[0]) %}
+  | titleStatement
 
   | paramStatement %WS:* %NL {%
       function(d) {
@@ -150,3 +151,13 @@ role ->
         return getQuotedWord(d[0])
       } %}
     | %VALID_TEXT {% (d) => tv(d[0]) %}
+
+titleStatement ->
+	  "title" %COLON words %NL {% (d) => { yy.addTitle(d[2].trim()) } %}
+
+words ->
+    (%VALID_TEXT | %WS):+ {%
+      function(d) {
+        return d[0].map(o => tv(o[0])).join('')
+      }
+    %}

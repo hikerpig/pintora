@@ -9,7 +9,7 @@ export type { ComponentConf, ComponentDiagramIR }
 export const componentDiagram: IDiagram<ComponentDiagramIR, ComponentConf> = {
   pattern: /^\s*componentDiagram/,
   parser: {
-    parse(text, config) {
+    parse(text) {
       parse(text)
       db.fillMissingElements()
       return db.getDiagramIR()

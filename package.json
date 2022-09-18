@@ -31,6 +31,10 @@
     "*.ts": [
       "prettier --write",
       "eslint --fix"
+    ],
+    "*.js": [
+      "prettier --write",
+      "eslint --fix"
     ]
   },
   "packageManager": "pnpm@7.9.3",

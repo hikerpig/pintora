@@ -6,6 +6,7 @@ export const sequenceExample: DiagramExample = {
   description: 'Sample',
   code: stripStartEmptyLines(`
 sequenceDiagram
+  title: Sequence Diagram Example
   autonumber
   User->>Pintora: render this
   activate Pintora
@@ -39,6 +40,8 @@ export const erExample: DiagramExample = {
   description: 'Sample for erDiagram',
   code: stripStartEmptyLines(`
 erDiagram
+  title: Entity Relationship Example
+
   PERSON {
     string phone "phone number"
   }
@@ -186,6 +189,8 @@ export const componentExample: DiagramExample = {
   description: 'Sample for a componentDiagram',
   code: stripStartEmptyLines(`
 componentDiagram
+  title: Component Diagram Example
+
   package "@pintora/core" {
     () GraphicsIR
     () IRenderer
@@ -220,6 +225,7 @@ const activityExample: DiagramExample = {
   description: 'Sample for a activityDiagram',
   code: stripStartEmptyLines(`
 activityDiagram
+title: Activity Example
 start
 partition Init {
   :read config;
@@ -256,6 +262,7 @@ export const mindmapExample: DiagramExample = {
   description: 'Sample for a mindmap',
   code: stripStartEmptyLines(`
 mindmap
+title: Mind Map Example
 + UML Diagrams
 ++ Behavior Diagrams
 +++ Sequence Diagram
@@ -293,6 +300,7 @@ export const dotExample: DiagramExample = {
 dotDiagram
   digraph G {
     bgcolor="white"
+    label="Dot Diagram Example"
 
     // specify common node attributes
     node [color="#111",bgcolor=orange]

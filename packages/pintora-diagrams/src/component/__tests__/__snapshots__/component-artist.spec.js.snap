@@ -741,6 +741,18 @@ exports[`component-artist match example snapshot 1`] = `
         ],
         "type": "group",
       },
+      {
+        "attrs": {
+          "fill": "#3b4044",
+          "fontFamily": "Source Code Pro, sans-serif",
+          "fontSize": 14,
+          "fontWeight": "bold",
+          "text": "Component Diagram Example",
+          "textAlign": "center",
+        },
+        "class": "component__title",
+        "type": "text",
+      },
     ],
     "type": "group",
   },

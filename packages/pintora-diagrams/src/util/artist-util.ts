@@ -142,6 +142,7 @@ export function adjustRootMarkBounds({
   padY,
   containerSize,
   useMaxWidth,
+  titleSize,
 }: {
   rootMark: Group
   gBounds: Bounds
@@ -149,18 +150,21 @@ export function adjustRootMarkBounds({
   padY: number
   containerSize?: DiagramArtistOptions['containerSize']
   useMaxWidth?: boolean
+  titleSize?: TSize
 }) {
   const containerWidth = containerSize?.width
   const doublePadX = padX * 2
-  const scaleX = useMaxWidth && containerWidth ? containerWidth / (gBounds.width + doublePadX) : 1
+  const titleHeight = titleSize?.height || 0
+  const titleWidth = titleSize?.width || 0
+  const scaleX = useMaxWidth && containerWidth ? containerWidth / Math.max(gBounds.width + doublePadX, titleWidth) : 1
   rootMark.matrix = mat3.translate(mat3.create(), mat3.fromScaling(mat3.create(), [scaleX, scaleX]), [
     -Math.min(0, gBounds.left) + padX / scaleX,
-    -Math.min(0, gBounds.top) + padY / scaleX,
+    -Math.min(0, gBounds.top) + padY / scaleX + titleHeight,
   ])
-  const width = (gBounds.width + doublePadX) * scaleX
+  const width = Math.max(gBounds.width + doublePadX, titleWidth) * scaleX
   return {
     width,
-    height: gBounds.height * scaleX + padY * 2,
+    height: gBounds.height * scaleX + padY * 2 + (titleSize?.height || 0),
   }
 }
 

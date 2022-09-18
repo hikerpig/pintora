@@ -104,6 +104,7 @@ statement ->
   | forkSentence
   | noteStatement
   | arrowLabelStatement
+  | titleStatement
   | paramStatement _ %NL
   | configStatement _ %NL
   | comment _ %NL {% null %}
@@ -316,3 +317,6 @@ arrowLabelStatement ->
         return { type: 'arrowLabel', text: d[2] } as ApplyPart
       }
     %}
+
+titleStatement ->
+	  "title" %COLON words %NL {% (d) => ({ type: 'setTitle', text: d[2].trim() }) %}

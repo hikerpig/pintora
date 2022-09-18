@@ -197,6 +197,18 @@ exports[`dot-artist match example snapshot 1`] = `
         },
         "type": "text",
       },
+      {
+        "attrs": {
+          "fill": "#3b4044",
+          "fontFamily": "Source Code Pro, sans-serif",
+          "fontSize": 14,
+          "fontWeight": "normal",
+          "text": "Dot Diagram Example",
+          "textAlign": "center",
+          "textBaseline": "hanging",
+        },
+        "type": "text",
+      },
     ],
     "type": "group",
   },

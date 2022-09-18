@@ -21,6 +21,9 @@
           },
           "patterns": [
             {
+              "include": "#common__title"
+            },
+            {
               "include": "#activity__element"
             },
             {
@@ -40,7 +43,11 @@
               "name": "keyword.control.pintora"
             }
           },
+          "end": "(^|\\G)(?=\\s*[`~]{3,}\\s*$)",
           "patterns": [
+            {
+              "include": "#common__title"
+            },
             {
               "include": "#component__element"
             },
@@ -50,8 +57,7 @@
             {
               "include": "#comment"
             }
-          ],
-          "end": "(^|\\G)(?=\\s*[`~]{3,}\\s*$)"
+          ]
         },
         {
           "comment": "DOT Diagram",
@@ -106,6 +112,9 @@
             }
           },
           "patterns": [
+            {
+              "include": "#common__title"
+            },
             {
               "comment": "entityName relSpec entityName: role",
               "match": "(\\w+)\\s*([^\\s]+)\\s*(.*)\\s*(:)\\s*(.*)",
@@ -342,6 +351,9 @@
             },
             {
               "include": "#comment"
+            },
+            {
+              "include": "#common__title"
             }
           ]
         },
@@ -355,6 +367,9 @@
           },
           "end": "(^|\\G)(?=\\s*[`~]{3,}\\s*$)",
           "patterns": [
+            {
+              "include": "#common__title"
+            },
             {
               "comment": "multiline text",
               "begin": "(:)",
@@ -1457,6 +1472,25 @@
           "captures": {
             "1": {
               "name": "support.type.property-name.pintora"
+            },
+            "2": {
+              "name": "keyword.control.pintora"
+            },
+            "3": {
+              "name": "string"
+            }
+          }
+        }
+      ]
+    },
+    "common__title": {
+      "patterns": [
+        {
+          "comment": "common title statement",
+          "match": "(title)\\s*(:)\\s*(.*)",
+          "captures": {
+            "1": {
+              "name": "keyword.control.pintora"
             },
             "2": {
               "name": "keyword.control.pintora"

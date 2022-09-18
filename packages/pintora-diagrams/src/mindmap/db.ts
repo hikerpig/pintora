@@ -1,7 +1,7 @@
 import { makeIdCounter } from '@pintora/core'
 import { BaseDb } from '../util/base-db'
 import { BaseDiagramIR } from '../util/ir'
-import { OverrideConfigAction, ParamAction } from '../util/config'
+import { OverrideConfigAction, ParamAction, SetTitleAction } from '../util/config'
 
 export type LevelNotation = {
   depth: number
@@ -21,6 +21,9 @@ export interface IMMDataTree {
   nodes: Record<string, MMItem>
 }
 
+/**
+ * Mindmap tree to store data
+ */
 export class MMTree {
   root: MMItem
   private current: MMItem
@@ -97,6 +100,7 @@ export class MMTree {
 export type ApplyPart =
   | ParamAction
   | OverrideConfigAction
+  | SetTitleAction
   | {
       type: 'addItem'
       depth: number
@@ -155,6 +159,10 @@ class MindmapDb extends BaseDb {
       }
       case 'addParam': {
         this.configParams.push(part)
+        break
+      }
+      case 'setTitle': {
+        this.title = part.text
         break
       }
       case 'overrideConfig': {

@@ -1,6 +1,6 @@
 import { BaseDb } from '../util/base-db'
 import { BaseDiagramIR } from '../util/ir'
-import { OverrideConfigAction, ParamAction } from '../util/config'
+import { OverrideConfigAction, ParamAction, SetTitleAction } from '../util/config'
 
 type Component = {
   name: string
@@ -66,6 +66,7 @@ type ApplyPart =
       label?: string
       children: UMLElement[]
     }
+  | SetTitleAction
 
 export type ComponentDiagramIR = BaseDiagramIR & {
   components: Record<string, Component>
@@ -128,6 +129,10 @@ class ComponentDb extends BaseDb {
       }
       case 'overrideConfig': {
         this.addOverrideConfig(part)
+        break
+      }
+      case 'setTitle': {
+        this.title = part.text
         break
       }
       default: {

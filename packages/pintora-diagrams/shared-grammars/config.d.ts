@@ -15,3 +15,9 @@ export type OverrideConfigAction<T = unknown> =
       type: 'overrideConfig'
       error: Error
     }
+
+/** action type for `title` statement */
+export type SetTitleAction = {
+  type: 'setTitle'
+  text: string
+}

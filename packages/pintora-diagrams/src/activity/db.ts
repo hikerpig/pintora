@@ -1,7 +1,7 @@
 import { makeIdCounter } from '@pintora/core'
 import { BaseDb } from '../util/base-db'
 import { BaseDiagramIR } from '../util/ir'
-import { OverrideConfigAction, ParamAction } from '../util/config'
+import { OverrideConfigAction, ParamAction, SetTitleAction } from '../util/config'
 import { dedent } from '../util/text'
 
 export type Action = {
@@ -179,6 +179,7 @@ export type ApplyPart =
       type: 'forkBranch'
       children: ApplyPart[]
     }
+  | SetTitleAction
 
 type DbApplyState = {
   prevStepId?: string | undefined
@@ -338,6 +339,10 @@ class ActivityDb extends BaseDb {
           value.target = prevStepId
         }
         this.arrowLabels.push(value)
+        break
+      }
+      case 'setTitle': {
+        this.title = part.text
         break
       }
       case 'addParam': {
