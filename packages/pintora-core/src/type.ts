@@ -3,7 +3,7 @@ import { GraphicsIR } from './types/graphics'
 
 export * from './types/graphics'
 
-export { Maybe, OrNull, DeepPartial } from './types/helper'
+export type { Maybe, OrNull, DeepPartial } from './types/helper'
 
 export type { DiagramEventType, PintoraDiagramItemDatas }
 

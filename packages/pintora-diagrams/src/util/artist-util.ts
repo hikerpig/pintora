@@ -18,7 +18,8 @@ import {
 } from '@pintora/core'
 import { toFixed } from './number'
 import { PALETTE } from './theme'
-export { arrowTypeRegistry, ArrowType, drawArrowTo } from './arrow'
+export type { ArrowType } from './arrow'
+export { arrowTypeRegistry, drawArrowTo } from './arrow'
 
 export { makeMark }
 

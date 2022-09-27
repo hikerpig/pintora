@@ -11,7 +11,7 @@ import * as PARSER_SHARED from './util/parser-shared'
 import './type' // type augmentation
 import './util/symbols'
 
-export { PintoraConfig }
+export type { PintoraConfig }
 
 export const DIAGRAMS = {
   erDiagram,
@@ -23,20 +23,14 @@ export const DIAGRAMS = {
   dotDiagram,
 }
 
-export {
+export type {
   BaseDiagramIR,
   SequenceDiagramIR,
-  sequenceDiagram,
-  erDiagram,
   ErDiagramIR,
-  componentDiagram,
   ComponentDiagramIR,
   ActivityDiagramIR,
-  dotDiagram,
   DotIR,
   MindmapIR,
-  mindmap,
   GanttIR,
-  gantt,
-  PARSER_SHARED,
 }
+export { sequenceDiagram, erDiagram, componentDiagram, dotDiagram, mindmap, gantt, PARSER_SHARED }

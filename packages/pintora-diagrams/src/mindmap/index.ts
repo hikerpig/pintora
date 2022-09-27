@@ -4,7 +4,7 @@ import artist from './artist'
 import { parse } from './parser'
 import { configKey, MindmapConf } from './config'
 
-export { MindmapIR, MindmapConf }
+export type { MindmapIR, MindmapConf }
 
 export const mindmap: IDiagram<MindmapIR, MindmapConf> = {
   pattern: /^\s*mindmap/,

@@ -236,7 +236,8 @@ const pintoraStandalone = {
   util,
 }
 
-export { BaseRenderer, rendererRegistry, PintoraConfig, tinycolor }
+export type { PintoraConfig }
+export { BaseRenderer, rendererRegistry, tinycolor }
 
 export { pintoraStandalone } // for @pintora/cli
 

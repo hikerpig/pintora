@@ -1,8 +1,9 @@
 import { ConfigParam, ConfigMeta, interpreteConfigs, PintoraConfig, safeAssign, configApi, ITheme } from '@pintora/core'
 
-export { ConfigParam, ConfigMeta, interpreteConfigs }
+export type { ConfigParam, ConfigMeta }
+export { interpreteConfigs }
 
-export { ParamAction, OverrideConfigAction } from '../../shared-grammars/config'
+export type { ParamAction, OverrideConfigAction } from '../../shared-grammars/config'
 
 /**
  * How edges are routed

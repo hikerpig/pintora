@@ -4,7 +4,7 @@ import artist from './artist'
 import { parse } from './parser'
 import { ComponentConf, configKey } from './config'
 
-export { ComponentConf, ComponentDiagramIR }
+export type { ComponentConf, ComponentDiagramIR }
 
 export const componentDiagram: IDiagram<ComponentDiagramIR, ComponentConf> = {
   pattern: /^\s*componentDiagram/,
