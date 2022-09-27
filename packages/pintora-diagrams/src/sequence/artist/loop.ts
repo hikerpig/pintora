@@ -6,7 +6,7 @@ import { LoopModel, LoopSection } from './type'
 /**
  * Draw loop and alt and other alike regions
  */
-export function drawLoopTo(context: SequenceArtistContext, loopModel: LoopModel, labelText: string) {
+export function drawLoopTo(context: SequenceArtistContext, loopModel: Readonly<LoopModel>, labelText: string) {
   const { conf, rootMark: mark, model } = context
   // console.log('draw loop', labelText, loopModel)
   const loopLineColor = conf.loopLineColor

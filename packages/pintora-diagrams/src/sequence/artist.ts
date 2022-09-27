@@ -24,6 +24,7 @@ import {
   Bounds,
   TSize,
   GSymbol,
+  Maybe,
 } from '@pintora/core'
 import { db, SequenceDiagramIR, LINETYPE, Message, PLACEMENT, WrappedText, ParticipantBox } from './db'
 import { ActivationData, LoopModel, SequenceDiagramBounds, MessageModel } from './artist/type'
@@ -308,7 +309,7 @@ class Model {
   msgModelMap = new Map<string, MessageModel>()
   actorLineMarkMap = new Map<string, Line>()
   maxMessageWidthPerActor: { [key: string]: number } = {}
-  noteModelMap = new Map<string, MessageModel>()
+  noteModelMap = new Map<string, NoteModel>()
   loops: LoopModel[]
   loopMinWidths: Record<string, number>
   dividerMap = new Map<string, MessageModel>()
@@ -375,8 +376,9 @@ class Model {
         _self.updateVal(item, 'starty', starty - n * conf.boxMargin, Math.min)
         _self.updateVal(item, 'stopy', stopy + n * conf.boxMargin, Math.max)
 
-        const sequenceItem = _self.sequenceItems[_self.sequenceItems.length - 1]
-        const groupItemStopx = Math.max(stopx, startx + sequenceItem?.width || 0) + n * conf.boxMargin
+        // const sequenceItem = _self.sequenceItems[_self.sequenceItems.length - 1]
+        // const groupItemStopx = Math.max(stopx, startx + sequenceItem?.width || 0) + n * conf.boxMargin
+        const groupItemStopx = stopx + n * conf.boxMargin
 
         _self.updateVal(_self.data, 'startx', startx - n * conf.boxMargin, Math.min)
         // _self.updateVal(_self.data, 'stopx', stopx + n * conf.boxMargin, Math.max)
@@ -396,7 +398,7 @@ class Model {
     this.sequenceItems.forEach(updateFn())
     this.activations.forEach(updateFn('activation'))
   }
-  insert(startx: number, starty: number, stopx: number, stopy) {
+  insert(startx: number, starty: number, stopx: number, stopy: number) {
     // console.log('insert', startx, starty, stopx, stopy)
     const _startx = Math.min(startx, stopx)
     const _stopx = Math.max(startx, stopx)
@@ -457,10 +459,9 @@ class Model {
     return this.sequenceItems.pop()
   }
   addSectionToLoop(message: Message, width: number, fill?: string) {
-    const loop = this.sequenceItems.pop()
+    const loop = this.sequenceItems[this.sequenceItems.length - 1]
     loop.sections = loop.sections || []
     loop.sections.push({ y: this.verticalPos, width, height: 0, fill, message })
-    this.sequenceItems.push(loop)
   }
   bumpVerticalPos(bump: number, tempInfo?: PosTempInfo) {
     this.verticalPos = this.verticalPos + bump
@@ -1403,7 +1404,7 @@ const calculateLoopBounds = function (messages: Message[]) {
   const loops: Record<string, GroupBoundInfo> = {}
   const stack: GroupBoundInfo[] = [] // loop stack
   let current: GroupBoundInfo
-  let noteModel
+  let noteModel: Maybe<NoteModel | MessageModel>
   let msgModel: MessageModel
 
   messages.forEach(function (msg) {
