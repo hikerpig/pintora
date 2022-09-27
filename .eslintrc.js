@@ -1,4 +1,5 @@
 module.exports = {
+  root: true,
   env: {
     browser: true,
     es2021: true,
@@ -10,6 +11,7 @@ module.exports = {
     ecmaVersion: 13,
     sourceType: 'module',
   },
+  ignorePatterns: ['packages/pintora-diagrams/src/*/parser/*.[jt]s'],
   plugins: ['@typescript-eslint', 'prettier', 'unused-imports'],
   rules: {
     '@typescript-eslint/no-explicit-any': 'off',

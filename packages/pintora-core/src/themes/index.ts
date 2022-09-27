@@ -6,7 +6,7 @@ import { ITheme } from './base'
 
 import { AYU_LIGHT, DRACULA } from './palette'
 
-export { ITheme }
+export type { ITheme }
 
 export class ThemeRegistry {
   themes: Record<string, ITheme> = {

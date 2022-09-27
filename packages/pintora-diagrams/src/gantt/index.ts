@@ -4,7 +4,7 @@ import artist from './artist'
 import { parse } from './parser'
 import { configKey, GanttConf } from './config'
 
-export { GanttIR, GanttConf }
+export type { GanttIR, GanttConf }
 
 export const gantt: IDiagram<GanttIR, GanttConf> = {
   pattern: /^\s*gantt/,

@@ -4,7 +4,7 @@ import artist from './artist'
 import { parse } from './parser'
 import { ActivityConf } from './config'
 
-export { ActivityConf, ActivityDiagramIR }
+export type { ActivityConf, ActivityDiagramIR }
 
 export const activityDiagram: IDiagram<ActivityDiagramIR, ActivityConf> = {
   pattern: /^\s*activityDiagram/,

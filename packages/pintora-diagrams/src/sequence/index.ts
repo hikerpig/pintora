@@ -5,7 +5,7 @@ import { parse } from './parser'
 import { SequenceConf } from './config'
 import { eventRecognizer, SequenceDiagramItemDatas } from './event-recognizer'
 
-export { SequenceDiagramIR, SequenceConf, SequenceDiagramItemDatas }
+export type { SequenceDiagramIR, SequenceConf, SequenceDiagramItemDatas }
 
 export const sequenceDiagram: IDiagram<SequenceDiagramIR, SequenceConf> = {
   pattern: /^\s*sequenceDiagram/,

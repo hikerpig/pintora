@@ -5,7 +5,7 @@ import { parse } from './parser'
 import { configKey, ErConf } from './config'
 import { eventRecognizer, ErDiagramItemDatas } from './event-recognizer'
 
-export { ErDiagramIR, ErConf, ErDiagramItemDatas }
+export type { ErDiagramIR, ErConf, ErDiagramItemDatas }
 
 export const erDiagram: IDiagram<ErDiagramIR, ErConf> = {
   pattern: /^\s*erDiagram/,

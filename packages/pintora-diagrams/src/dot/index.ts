@@ -4,7 +4,7 @@ import artist from './artist'
 import { parse } from './parser'
 import { DOTConf } from './config'
 
-export { DOTConf, DotIR }
+export type { DOTConf, DotIR }
 
 export const dotDiagram: IDiagram<DotIR, DOTConf> = {
   pattern: /^\s*dotDiagram/,
