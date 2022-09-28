@@ -16,6 +16,9 @@ import {
   unique,
   compact,
   Bounds,
+  IFont,
+  TSize,
+  Maybe,
 } from '@pintora/core'
 import {
   Action,
@@ -117,6 +120,27 @@ const erArtist: IDiagramArtist<ActivityDiagramIR, ActivityConf> = {
     const { bounds: edgeBounds } = drawEdges(rootMark, g)
 
     const bounds = tryExpandBounds(dagreWrapper.getGraphBounds(), edgeBounds)
+    const { title } = ir
+    let titleSize: Maybe<TSize> = undefined
+    if (title) {
+      const titleFont: IFont = { fontSize: conf.fontSize, fontFamily: conf.fontFamily }
+      titleSize = calculateTextDimensions(title, titleFont)
+      const titleHeight = titleSize.height
+      rootMark.children.push({
+        type: 'text',
+        attrs: {
+          text: title,
+          x: bounds.left + bounds.width / 2,
+          y: -titleHeight,
+          ...titleFont,
+          fill: conf.textColor,
+          textAlign: 'center',
+          fontWeight: 'bold',
+        },
+        class: 'activity__title',
+      })
+      titleSize.height += conf.fontSize
+    }
 
     // console.log('bounds', bounds)
     const { width, height } = adjustRootMarkBounds({
@@ -126,6 +150,7 @@ const erArtist: IDiagramArtist<ActivityDiagramIR, ActivityConf> = {
       padY: conf.diagramPadding,
       useMaxWidth: conf.useMaxWidth,
       containerSize: opts?.containerSize,
+      titleSize,
     })
 
     return {

@@ -81,6 +81,7 @@ statement ->
       }
     %}
   | paramStatement %NL
+  | "title" %COLON words %NL {% (d) => ({ type:'setTitle', text: d[2].trim() }) %}
   | configOpenCloseStatement %NL
   | comment %NL
 
@@ -199,19 +200,26 @@ interface ->
 interfaceStart -> ("interface" | "()")
 
 relationship ->
-    elementReference _ relationLine _ elementReference (__ %COLON __ (%VALID_TEXT | %WS):+):? %NL {%
+    elementReference _ relationLine _ elementReference (__ %COLON __ words):? %NL {%
       function(d) {
         // console.log('[relationship] with message', d)
         const from = d[0]
         const to = d[4]
         let message
         if (d[5]) {
-          message = d[5][3].map(a => a[0]).map(o => tv(o)).join('')
+          message = d[5][3]
         }
         const line = d[2]
         const obj = { from, to, line, message }
         yy.addRelationship(obj)
         return obj
+      }
+    %}
+
+words ->
+    (%VALID_TEXT | %WS):+ {%
+      function(d) {
+        return d[0].map(o => tv(o[0])).join('').trim()
       }
     %}
 

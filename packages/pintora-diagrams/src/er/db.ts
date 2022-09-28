@@ -83,12 +83,14 @@ export class ErDb extends BaseDb {
   }
   getDiagramIR(): ErDiagramIR {
     return {
+      ...super.getBaseDiagramIR(),
       entities: this.entities,
       relationships: this.relationships,
-      configParams: this.configParams,
-      overrideConfig: this.overrideConfig,
       inheritances: this.inheritances,
     }
+  }
+  addTitle(title: string) {
+    this.title = title
   }
   addAttributes(name: string, attributes: Attribute[]) {
     const entity = this.addEntity(name)
@@ -104,6 +106,7 @@ export class ErDb extends BaseDb {
     this.relationships = []
     this.inheritances = []
     this.configParams = []
+    this.title = ''
   }
 }
 

@@ -701,4 +701,15 @@ repeatwhile (data available) is (yes) not (no)
       },
     })
   })
+
+  it('can parse title', () => {
+    const example = stripStartEmptyLines(`
+  activityDiagram
+  title: Hello
+  :do something;
+  `)
+    parse(example)
+    const ir = db.getDiagramIR()
+    expect(ir.title).toEqual('Hello')
+  })
 })

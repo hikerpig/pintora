@@ -157,4 +157,15 @@ describe('mindmap parser', () => {
     // console.log('ir', JSON.stringify(ir, null, 2))
     expect(Object.keys(ir.trees[0].nodes).length).toBe(2)
   })
+
+  it('can parse title', () => {
+    const example = stripStartEmptyLines(`
+    mindmap
+      title: Hello
+      %% comment here
+      `)
+    parse(example)
+    const ir = db.getDiagramIR()
+    expect(ir.title).toEqual('Hello')
+  })
 })

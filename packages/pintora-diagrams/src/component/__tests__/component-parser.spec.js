@@ -307,4 +307,15 @@ componentDiagram
     const ir = db.getDiagramIR()
     expect(ir.interfaces).toEqual({})
   })
+
+  it('can parse title', () => {
+    const example = stripStartEmptyLines(`
+componentDiagram
+  title: Hello
+  %% comment here
+  `)
+    parse(example)
+    const ir = db.getDiagramIR()
+    expect(ir.title).toEqual('Hello')
+  })
 })

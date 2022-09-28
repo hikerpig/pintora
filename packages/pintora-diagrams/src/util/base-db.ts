@@ -5,6 +5,7 @@ import { ConfigParam, OverrideConfigAction } from './config'
 export class BaseDb {
   configParams: ConfigParam[] = []
   overrideConfig: Partial<PintoraConfig> = {}
+  title = ''
 
   addOverrideConfig(action: OverrideConfigAction) {
     if ('error' in action) {
@@ -18,12 +19,14 @@ export class BaseDb {
     return {
       configParams: this.configParams,
       overrideConfig: this.overrideConfig,
+      title: this.title,
     }
   }
 
   clear() {
     this.configParams = []
     this.overrideConfig = {}
+    this.title = ''
   }
 }
 

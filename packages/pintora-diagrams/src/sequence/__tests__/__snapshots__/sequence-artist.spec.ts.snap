@@ -972,6 +972,18 @@ exports[`sequence-artist match example snapshot 1`] = `
         "itemId": "actor-Pintora",
         "type": "group",
       },
+      {
+        "attrs": {
+          "fill": "#3b4044",
+          "fontFamily": "Source Code Pro, sans-serif",
+          "fontSize": 16,
+          "fontWeight": "bold",
+          "text": "Sequence Diagram Example",
+          "textAlign": "center",
+        },
+        "class": "sequence__title",
+        "type": "text",
+      },
     ],
     "type": "group",
   },

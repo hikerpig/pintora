@@ -9,6 +9,9 @@ import {
   Rect,
   PathCommand,
   Point,
+  Maybe,
+  TSize,
+  IFont,
 } from '@pintora/core'
 import { ErDiagramIR, Identification, Entity, Relationship } from './db'
 import { ErConf, getConf } from './config'
@@ -99,18 +102,41 @@ const erArtist: IDiagramArtist<ErDiagramIR, ErConf> = {
     })
     rootMark.children.unshift(relationsGroup)
 
-    const gBounds = dagreWrapper.getGraphBounds()
-    tryExpandBounds(gBounds, relationshipsBounds)
+    const bounds = dagreWrapper.getGraphBounds()
+    tryExpandBounds(bounds, relationshipsBounds)
 
     const pad = conf.diagramPadding
 
+    const { title } = ir
+    let titleSize: Maybe<TSize> = undefined
+    if (title) {
+      const titleFont: IFont = { fontSize: conf.fontSize, fontFamily: conf.fontFamily }
+      titleSize = getTextDimensionsInPresicion(title, titleFont)
+      const titleHeight = titleSize.height
+      rootMark.children.push({
+        type: 'text',
+        attrs: {
+          text: title,
+          x: bounds.left + bounds.width / 2,
+          y: -titleHeight,
+          ...titleFont,
+          fill: conf.textColor,
+          textAlign: 'center',
+          fontWeight: 'bold',
+        },
+        class: 'er__title',
+      })
+      titleSize.height += conf.fontSize
+    }
+
     const { width, height } = adjustRootMarkBounds({
       rootMark,
-      gBounds,
+      gBounds: bounds,
       padX: pad,
       padY: pad,
       useMaxWidth: conf.useMaxWidth,
       containerSize: opts?.containerSize,
+      titleSize,
     })
 
     return {

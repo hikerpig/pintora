@@ -3,7 +3,7 @@ import { ConfigParam, ConfigMeta, interpreteConfigs, PintoraConfig, safeAssign, 
 export type { ConfigParam, ConfigMeta }
 export { interpreteConfigs }
 
-export type { ParamAction, OverrideConfigAction } from '../../shared-grammars/config'
+export type { ParamAction, OverrideConfigAction, SetTitleAction } from '../../shared-grammars/config'
 
 /**
  * How edges are routed

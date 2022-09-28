@@ -86,6 +86,7 @@ statement ->
     %}
   | paramStatement _ %NL
   | configOpenCloseStatement _ %NL
+  | "title" %COLON words %NL {% (d) => ({ type:'setTitle', text: d[2].trim() }) %}
   | comment _ %NL
 
 levelNotation ->

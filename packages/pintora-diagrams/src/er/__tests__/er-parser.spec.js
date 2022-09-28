@@ -132,4 +132,15 @@ erDiagram
     const ir = db.getDiagramIR()
     expect(Object.keys(ir.entities).length).toBe(0)
   })
+
+  it('can parse title', () => {
+    const example = stripStartEmptyLines(`
+erDiagram
+  title: Hello
+  %% comment here
+  `)
+    parse(example)
+    const ir = db.getDiagramIR()
+    expect(ir.title).toEqual('Hello')
+  })
 })

@@ -8,6 +8,8 @@ import {
   Bounds,
   Point,
   IFont,
+  Maybe,
+  TSize,
 } from '@pintora/core'
 import { MindmapIR, MMItem, MMTree } from './db'
 import { MindmapConf, getConf } from './config'
@@ -40,6 +42,29 @@ const mmArtist: IDiagramArtist<MindmapIR, MindmapConf> = {
     mmDraw.drawTo(rootMark)
 
     const bounds = mmDraw.dagreWrapper.getGraphBounds()
+    const { title } = ir
+    let titleSize: Maybe<TSize> = undefined
+    if (title) {
+      const fontSize = conf.maxFontSize
+      const titleFont: IFont = { fontSize, fontFamily: conf.fontFamily }
+      titleSize = calculateTextDimensions(title, titleFont)
+      const titleHeight = titleSize.height
+      rootMark.children.push({
+        type: 'text',
+        attrs: {
+          text: title,
+          x: bounds.left + bounds.width / 2,
+          y: -titleHeight,
+          ...titleFont,
+          fill: conf.textColor,
+          textAlign: 'center',
+          fontWeight: 'bold',
+        },
+        class: 'component__title',
+      })
+      titleSize.height += fontSize
+    }
+
     const { width, height } = adjustRootMarkBounds({
       rootMark,
       gBounds: bounds,
@@ -47,6 +72,7 @@ const mmArtist: IDiagramArtist<MindmapIR, MindmapConf> = {
       padY: conf.diagramPadding,
       useMaxWidth: conf.useMaxWidth,
       containerSize: opts?.containerSize,
+      titleSize,
     })
     return {
       width,
