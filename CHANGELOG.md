@@ -1,5 +1,20 @@
 # Change Log
 
+## 0.6.2
+
+### Patch Changes
+
+- 8fc0bce: feat: support `title: text` for diagram title
+- 72b6b69: fix: ts `--isolatedModules` related issues
+- 021988a: fix: [sequenceDiagram] excessive box width bug
+
+## 0.6.1
+
+### Patch Changes
+
+- f1b6941: fix: [dotDiagram] diamond shape rendering in canvas
+- 10a5d8d: fix: ReferenceError: CanvasPattern is not defined
+
 ## 0.6.0
 
 ### Minor Changes
