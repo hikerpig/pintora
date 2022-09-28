@@ -1,5 +1,11 @@
 # Change Log
 
+## 0.4.1
+
+### Patch Changes
+
+- 8fc0bce: feat: [activityDiagram] support `title: text` for diagram title
+
 ## 0.4.0
 
 ### Minor Changes

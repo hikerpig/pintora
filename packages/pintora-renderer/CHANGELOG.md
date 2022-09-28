@@ -1,5 +1,13 @@
 # Change Log
 
+## 0.6.1
+
+### Patch Changes
+
+- 72b6b69: fix: ts `--isolatedModules` related issues
+- Updated dependencies [72b6b69]
+  - @pintora/core@0.6.2
+
 ## 0.6.0
 
 ### Minor Changes

@@ -1,5 +1,11 @@
 # Change Log
 
+## 0.6.2
+
+### Patch Changes
+
+- 72b6b69: fix: ts `--isolatedModules` related issues
+
 ## 0.6.1
 
 ### Patch Changes

@@ -1,5 +1,15 @@
 # Change Log
 
+## 0.6.2
+
+### Patch Changes
+
+- 8fc0bce: feat: [activityDiagram] support `title: text` for diagram title
+- 72b6b69: fix: ts `--isolatedModules` related issues
+- 021988a: fix: [sequenceDiagram] excessive box width bug
+- Updated dependencies [72b6b69]
+  - @pintora/core@0.6.2
+
 ## 0.6.1
 
 ### Patch Changes

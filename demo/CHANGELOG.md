@@ -1,5 +1,19 @@
 # Change Log
 
+## 0.3.11
+
+### Patch Changes
+
+- 72b6b69: fix: ts `--isolatedModules` related issues
+- Updated dependencies [8fc0bce]
+- Updated dependencies [72b6b69]
+- Updated dependencies [021988a]
+  - @pintora/diagrams@0.6.2
+  - @pintora/test-shared@0.4.1
+  - @pintora/core@0.6.2
+  - @pintora/renderer@0.6.1
+  - @pintora/standalone@0.6.2
+
 ## 0.3.10
 
 ### Patch Changes

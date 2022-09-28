@@ -1,5 +1,18 @@
 # Change Log
 
+## 0.6.2
+
+### Patch Changes
+
+- 72b6b69: fix: ts `--isolatedModules` related issues
+- 021988a: fix: [sequenceDiagram] excessive box width bug
+- Updated dependencies [8fc0bce]
+- Updated dependencies [72b6b69]
+- Updated dependencies [021988a]
+  - @pintora/diagrams@0.6.2
+  - @pintora/core@0.6.2
+  - @pintora/renderer@0.6.1
+
 ## 0.6.0
 
 ### Minor Changes

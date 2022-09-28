@@ -1,6 +1,6 @@
 {
   "name": "@pintora/standalone",
-  "version": "0.6.0",
+  "version": "0.6.2",
   "description": "A standalone version of pintora that has all the default diagrams",
   "keywords": [
     "pintora",
@@ -51,9 +51,9 @@
     "url": "https://github.com/hikerpig/pintora/issues"
   },
   "dependencies": {
-    "@pintora/core": "workspace:^0.6.0",
-    "@pintora/diagrams": "workspace:^0.6.0",
-    "@pintora/renderer": "^0.6.0"
+    "@pintora/core": "workspace:^0.6.2",
+    "@pintora/diagrams": "workspace:^0.6.2",
+    "@pintora/renderer": "^0.6.1"
   },
   "devDependencies": {
     "@pintora/test-shared": "workspace:*",

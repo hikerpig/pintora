@@ -134,10 +134,10 @@ importers:
       less: 4.1.3
       postcss: 8.4.16
       start-server-and-test: 1.14.0
-      tailwindcss: 3.1.8
+      tailwindcss: 3.1.8_postcss@8.4.16
       typescript: 4.8.3
       vite: 3.1.3_less@4.1.3
-      vite-plugin-pwa: 0.13.1_vite@3.1.3
+      vite-plugin-pwa: 0.13.1_og7355xybv4osre75dkncaw6uq
       vite-tsconfig-paths: 3.5.1_vite@3.1.3
       workbox-core: 6.5.4
       workbox-precaching: 6.5.4
@@ -156,10 +156,10 @@ importers:
 
   packages/pintora-cli:
     specifiers:
-      '@pintora/core': workspace:^0.6.1
-      '@pintora/renderer': ^0.6.0
-      '@pintora/standalone': workspace:^0.6.0
-      '@pintora/test-shared': workspace:^0.4.0
+      '@pintora/core': workspace:^0.6.2
+      '@pintora/renderer': ^0.6.1
+      '@pintora/standalone': workspace:^0.6.2
+      '@pintora/test-shared': workspace:^0.4.1
       '@types/jsdom': ^16.2.10
       '@types/mime-types': ^2.1.0
       '@types/node': ^16.11.7
@@ -214,11 +214,11 @@ importers:
     specifiers:
       '@hikerpig/moo': ^0.5.2-beta.2
       '@hikerpig/nearley': ^2.21.0-beta.1
-      '@pintora/core': workspace:^0.6.1
+      '@pintora/core': workspace:^0.6.2
       '@pintora/dagre': ^0.10.10
       '@pintora/development-kit': workspace:^0.1.1
       '@pintora/graphlib': 2.2.2
-      '@pintora/test-shared': workspace:^0.4.0
+      '@pintora/test-shared': workspace:^0.4.1
       '@types/d3-interpolate': ^3.0.1
       '@types/d3-scale': ^4.0.2
       '@types/d3-shape': ^3.0.2
@@ -270,7 +270,7 @@ importers:
       '@antv/g-base': ^0.5.11
       '@antv/g-canvas': ^0.5.12
       '@antv/g-svg': ^0.5.6
-      '@pintora/core': workspace:^0.6.0
+      '@pintora/core': workspace:^0.6.2
       '@types/node': ^16.11.7
       typescript: ^4.8.3
     dependencies:
@@ -284,9 +284,9 @@ importers:
 
   packages/pintora-standalone:
     specifiers:
-      '@pintora/core': workspace:^0.6.0
-      '@pintora/diagrams': workspace:^0.6.0
-      '@pintora/renderer': ^0.6.0
+      '@pintora/core': workspace:^0.6.2
+      '@pintora/diagrams': workspace:^0.6.2
+      '@pintora/renderer': ^0.6.1
       '@pintora/test-shared': workspace:*
       '@types/node': ^16.11.7
       '@types/tinycolor2': ^1.4.3
@@ -8227,7 +8227,7 @@ packages:
   /axios/0.21.4_debug@4.3.2:
     resolution: {integrity: sha512-ut5vewkiu8jjGBdqpM44XxjuCjq9LAKeHVmoVfHVzy8eHgxxq8SbAVQNovDA8mVi05kP0Ea/n/UzcSHcTJQfNg==}
     dependencies:
-      follow-redirects: 1.14.8_debug@4.3.2
+      follow-redirects: 1.14.8
     transitivePeerDependencies:
       - debug
     dev: true
@@ -11639,19 +11639,6 @@ packages:
     peerDependenciesMeta:
       debug:
         optional: true
-    dev: false
-
-  /follow-redirects/1.14.8_debug@4.3.2:
-    resolution: {integrity: sha512-1x0S9UVJHsQprFcEC/qnNzBLcIxsjAV905f/UkQxbclCsoTWlacCNOpQa/anodLl2uaEKFhfWOvM2Qg77+15zA==}
-    engines: {node: '>=4.0'}
-    peerDependencies:
-      debug: '*'
-    peerDependenciesMeta:
-      debug:
-        optional: true
-    dependencies:
-      debug: 4.3.2
-    dev: true
 
   /for-in/1.0.2:
     resolution: {integrity: sha1-gQaNKVqBQuwKxybG4iAMMPttXoA=}
@@ -16279,6 +16266,12 @@ packages:
   /react-dev-utils/12.0.1_aqql6fqjnucmdfn6etiifn2koq:
     resolution: {integrity: sha512-84Ivxmr17KjUupyqzFode6xKhjwuEJDROWKJy/BthkL7Wn6NJ8h4WE6k/exAv6ImS+0oZLRRW5j/aINMHyeGeQ==}
     engines: {node: '>=14'}
+    peerDependencies:
+      typescript: '>=2.7'
+      webpack: '>=4'
+    peerDependenciesMeta:
+      typescript:
+        optional: true
     dependencies:
       '@babel/code-frame': 7.18.6
       address: 1.2.0
@@ -16304,12 +16297,12 @@ packages:
       shell-quote: 1.7.3
       strip-ansi: 6.0.1
       text-table: 0.2.0
+      typescript: 4.5.5
+      webpack: 5.73.0
     transitivePeerDependencies:
       - eslint
       - supports-color
-      - typescript
       - vue-template-compiler
-      - webpack
     dev: false
 
   /react-dom/18.1.0_react@18.1.0:
@@ -18027,10 +18020,12 @@ packages:
   /symbol-tree/3.2.4:
     resolution: {integrity: sha512-9QNk5KwDF+Bvz+PyObkmSYjI5ksVUYtjW7AU22r2NKcfLJcXp96hkDWU3+XndOsUb+AQ9QhfzfCT2O+CNWT5Tw==}
 
-  /tailwindcss/3.1.8:
+  /tailwindcss/3.1.8_postcss@8.4.16:
     resolution: {integrity: sha512-YSneUCZSFDYMwk+TGq8qYFdCA3yfBRdBlS7txSq0LUmzyeqRe3a8fBQzbz9M3WS/iFT4BNf/nmw9mEzrnSaC0g==}
     engines: {node: '>=12.13.0'}
     hasBin: true
+    peerDependencies:
+      postcss: ^8.0.9
     dependencies:
       arg: 5.0.2
       chokidar: 3.5.3
@@ -18635,6 +18630,7 @@ packages:
   /unified/9.2.0:
     resolution: {integrity: sha512-vx2Z0vY+a3YoTj8+pttM3tiJHCwY5UFbYdiWrwBEbHmK8pvsPj2rtAX2BFfgXen8T39CJWblWRDT4L5WGXtDdg==}
     dependencies:
+      '@types/unist': 2.0.6
       bail: 1.0.5
       extend: 3.0.2
       is-buffer: 2.0.5
@@ -18646,6 +18642,7 @@ packages:
   /unified/9.2.2:
     resolution: {integrity: sha512-Sg7j110mtefBD+qunSLO1lqOEKdrwBFBrR6Qd8f4uwkhWNlbkaqwHse6e7QvD3AP/MNoJdEDLaf8OxYyoWgorQ==}
     dependencies:
+      '@types/unist': 2.0.6
       bail: 1.0.5
       extend: 3.0.2
       is-buffer: 2.0.5
@@ -18987,10 +18984,11 @@ packages:
       vfile-message: 2.0.4
     dev: false
 
-  /vite-plugin-pwa/0.13.1_vite@3.1.3:
+  /vite-plugin-pwa/0.13.1_og7355xybv4osre75dkncaw6uq:
     resolution: {integrity: sha512-NR3dIa+o2hzlzo4lF4Gu0cYvoMjSw2DdRc6Epw1yjmCqWaGuN86WK9JqZie4arNlE1ZuWT3CLiMdiX5wcmmUmg==}
     peerDependencies:
       vite: ^3.1.0
+      workbox-window: ^6.5.4
     dependencies:
       debug: 4.3.4
       fast-glob: 3.2.11

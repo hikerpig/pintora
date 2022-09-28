@@ -1,5 +1,16 @@
 # Change Log
 
+## 0.6.2
+
+### Patch Changes
+
+- 021988a: fix: [sequenceDiagram] excessive box width bug
+- Updated dependencies [72b6b69]
+- Updated dependencies [021988a]
+  - @pintora/core@0.6.2
+  - @pintora/renderer@0.6.1
+  - @pintora/standalone@0.6.2
+
 ## 0.6.1
 
 ### Patch Changes
