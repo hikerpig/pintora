@@ -221,8 +221,8 @@ importers:
         version: 1.0.2
     devDependencies:
       '@types/node':
-        specifier: ^16.11.7
-        version: 16.11.39
+        specifier: ^18.0.0
+        version: 18.0.5
       typescript:
         specifier: ^4.8.3
         version: 4.8.3
@@ -264,8 +264,8 @@ importers:
         specifier: ^2.1.0
         version: 2.1.1
       '@types/node':
-        specifier: ^16.11.7
-        version: 16.11.39
+        specifier: ^18.0.0
+        version: 18.0.5
       '@types/yargs':
         specifier: ^16.0.0
         version: 16.0.4
@@ -282,8 +282,8 @@ importers:
         specifier: ^3.0.4
         version: 3.0.4
       '@types/node':
-        specifier: ^16.11.7
-        version: 16.11.39
+        specifier: ^18.0.0
+        version: 18.0.5
       clone-deep:
         specifier: ^4.0.1
         version: 4.0.1
@@ -362,8 +362,8 @@ importers:
         specifier: ^2.11.1
         version: 2.11.2
       '@types/node':
-        specifier: ^16.11.7
-        version: 16.11.39
+        specifier: ^18.0.0
+        version: 18.0.5
       '@types/tinycolor2':
         specifier: ^1.4.3
         version: 1.4.3
@@ -395,8 +395,8 @@ importers:
         specifier: workspace:^0.6.2
         version: link:../pintora-core
       '@types/node':
-        specifier: ^16.11.7
-        version: 16.11.39
+        specifier: ^18.0.0
+        version: 18.0.5
     devDependencies:
       '@antv/g-base':
         specifier: ^0.5.11
@@ -421,8 +421,8 @@ importers:
         specifier: workspace:*
         version: link:../test-shared
       '@types/node':
-        specifier: ^16.11.7
-        version: 16.11.39
+        specifier: ^18.0.0
+        version: 18.0.5
       '@types/tinycolor2':
         specifier: ^1.4.3
         version: 1.4.3
@@ -7271,11 +7271,9 @@ packages:
     resolution: {integrity: sha512-6iihJ/Pp5fsFJ/aEDGyvT4pHGmCpq7ToQ/yf4bl5SbVAvwpspYJ+v3jO7n8UyjhQVHTy+KNszOozDdv+O6sovQ==}
     dev: true
 
-  /@types/node@16.11.39:
-    resolution: {integrity: sha512-K0MsdV42vPwm9L6UwhIxMAOmcvH/1OoVkZyCgEtVu4Wx7sElGloy/W7kMBNe/oJ7V/jW9BVt1F6RahH6e7tPXw==}
-
   /@types/node@17.0.31:
     resolution: {integrity: sha512-AR0x5HbXGqkEx9CadRH3EBYx/VkiUgZIhP4wvPn/+5KIsgpNoyFaRlVe0Zlx9gRtg8fA06a9tskE2MSN7TcG4Q==}
+    dev: false
 
   /@types/node@18.0.5:
     resolution: {integrity: sha512-En7tneq+j0qAiVwysBD79y86MT3ModuoIJbe7JXp+sb5UAjInSShmK3nXXMioBzfF7rXC12hv12d4IyCVwN4dA==}
@@ -7471,7 +7469,7 @@ packages:
     resolution: {integrity: sha512-Cn6WYCm0tXv8p6k+A8PvbDG763EDpBoTzHdA+Q/MF6H3sapGjCm9NzoaJncJS9tUKSuCoDs9XHxYYsQDgxR6kw==}
     requiresBuild: true
     dependencies:
-      '@types/node': 17.0.31
+      '@types/node': 18.0.5
     dev: true
     optional: true
 
