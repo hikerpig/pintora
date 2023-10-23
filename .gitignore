@@ -4,6 +4,9 @@ demo/dist/
 demo/cypress/videos/
 .idea/
 
+# platform
+.DS_Store
+
 # Created by https://www.gitignore.io/api/node
 
 ### Node ###

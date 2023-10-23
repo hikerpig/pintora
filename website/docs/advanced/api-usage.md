@@ -3,7 +3,7 @@ title: API Usage
 sidebar_position: 1
 ---
 
-## pintora API
+## pintora API in the browser
 
 Here is the API of `@pintora/standalone`.
 
@@ -119,7 +119,7 @@ const diagramEventManager: DiagramEventManager
 Only the renders that happen after the event binding will trigger the event handler.
 
 In the example below, only the `click` handler will be triggered because it is bound before the render.
- 
+
 ```ts
 const disposeClickListener = pintora.diagramEventManager.on('click', (item) => {
   console.log('diagramEvent click', item)
@@ -130,4 +130,70 @@ pintora.renderTo(code, {...configs})
 const disposeMouseenterListener = pintora.diagramEventManager.on('mouseenter', (item) => {
   console.log('diagramEvent mouseenter', item)
 })
+```
+
+## pintora API in Node.js (@pintora/cli)
+
+It's a little bit more complicated in Node.js than in the browser, we need to borrow some power from `jsdom` or `node-canvas`. Some wrapper functions are exported from the `@pintora/cli` package - the same one described in the [Cli Usage Doc](../getting-started/usage.mdx#cli), but this time we use it as a Node.js library.
+
+### render(options)
+
+```ts
+export type CLIRenderOptions = {
+  code: string
+  devicePixelRatio?: number | null
+  mimeType?: string
+  backgroundColor?: string
+  pintoraConfig?: Partial<PintoraConfig>
+  width?: number
+}
+
+export function render(options: CLIRenderOptions): Promise<string | buffer>
+```
+
+Current supported `mimeType`
+
+- image/svg+xml
+- image/jpeg
+- image/png
+
+Some example code:
+
+```ts title=nodejs-render-example.ts
+import { render, PintoraConfig } from '@pintora/cli'
+import * as fs from 'fs'
+
+const buildPNG = async (code: string, config?: Partial<PintoraConfig>) => {
+  const buf = await render({
+    code: code,
+    pintoraConfig: config,
+    mimeType: 'image/png',
+    width: 800,
+    backgroundColor: '#fdfdfd', // use some other background color
+  })
+  fs.writeFileSync('example.png', buf)
+}
+
+const code = `
+activityDiagram
+start
+:render functionl called;
+if (is mimeType image/svg+xml ?) then
+  :renderer svg;
+  :render with jsdom;
+  :generate string;
+else (no)
+  :renderer canvas;
+  :render with node-canvas;
+  :generate image buffer by mimeType;
+endif
+
+:return result;
+
+end
+`
+
+buildSVG(code)
+
+buildPNG(code)
 ```

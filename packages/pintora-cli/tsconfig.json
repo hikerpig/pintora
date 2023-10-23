@@ -5,6 +5,7 @@
     "outDir": "lib",
     "module": "commonjs"
   },
+  "exclude": ["examples", "lib"],
   "references": [
     { "path": "../pintora-core" },
     { "path": "../pintora-renderer" },
