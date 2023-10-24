@@ -6,13 +6,21 @@ import { Canvas, CanvasPattern } from 'canvas'
 import { SVG_MIME_TYPE, DEFAUT_BGS } from './const'
 
 export type CLIRenderOptions = {
+  /**
+   * pintora DSL to render
+   */
   code: string
   devicePixelRatio?: number | null
   mimeType?: string
+  /**
+   * Assign extra background color
+   */
   backgroundColor?: string
   pintoraConfig?: Partial<PintoraConfig>
+  /**
+   * width of the output, height will be calculated according to the diagram content ratio
+   */
   width?: number
-  // height?: number
 }
 
 function renderPrepare(opts: CLIRenderOptions) {
