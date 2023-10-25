@@ -140,20 +140,11 @@ It's a little bit more complicated in Node.js than in the browser, we need to bo
 
 ```ts
 export type CLIRenderOptions = {
-  /**
-   * pintora DSL to render
-   */
   code: string
   devicePixelRatio?: number | null
   mimeType?: string
-  /**
-   * Assign extra background color
-   */
   backgroundColor?: string
   pintoraConfig?: Partial<PintoraConfig>
-  /**
-   * width of the output, height will be calculated according to the diagram content ratio
-   */
   width?: number
 }
 
@@ -171,17 +162,6 @@ Some example code:
 ```ts title=nodejs-render-example.ts
 import { render, PintoraConfig } from '@pintora/cli'
 import * as fs from 'fs'
-
-const buildSVG = async (code: string, config?: Partial<PintoraConfig>) => {
-  const str = await render({
-    code: code,
-    pintoraConfig: config,
-    mimeType: 'image/svg+xml',
-    width: 1000,
-    backgroundColor: '#fff',
-  })
-  fs.writeFileSync('example.svg', str)
-}
 
 const buildPNG = async (code: string, config?: Partial<PintoraConfig>) => {
   const buf = await render({
