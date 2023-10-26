@@ -499,8 +499,8 @@ importers:
         specifier: 2.4.3
         version: 2.4.3(esbuild@0.15.7)(react-dom@18.1.0)(react@18.1.0)
       '@tsconfig/docusaurus':
-        specifier: ^1.0.6
-        version: 1.0.6
+        specifier: ^2.0.0
+        version: 2.0.2
       '@types/react':
         specifier: ^18.0.0
         version: 18.0.8
@@ -6801,8 +6801,8 @@ packages:
     resolution: {integrity: sha512-L7z9BgrNEcYyUYtF+HaEfiS5ebkh9jXqbszz7pC0hRBPaatV0XjSD3+eHrpqFemQfgwiFF0QPIarnIihIDn7OA==}
     engines: {node: '>=10.13.0'}
 
-  /@tsconfig/docusaurus@1.0.6:
-    resolution: {integrity: sha512-1QxDaP54hpzM6bq9E+yFEo4F9WbWHhsDe4vktZXF/iDlc9FqGr9qlg+3X/nuKQXx8QxHV7ue8NXFazzajsxFBA==}
+  /@tsconfig/docusaurus@2.0.2:
+    resolution: {integrity: sha512-12HWfYmgUl4M2o76/TFufGtI68wl2k/b8qPrIrG7ci9YJLrpAtadpy897Bz5v29Mlkr7a1Hq4KHdQTKtU+2rhQ==}
     dev: true
 
   /@types/babel__core@7.1.18:
