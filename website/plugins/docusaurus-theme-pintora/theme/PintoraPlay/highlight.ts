@@ -1,6 +1,6 @@
 import * as shiki from 'shiki'
 
-export const shikiLightTheme = 'material-default'
+export const shikiLightTheme = 'material-theme'
 export const shikiDarkTheme = 'dracula'
 
 let fetchWasmPromise: Promise<ArrayBuffer> | null = null
@@ -10,7 +10,7 @@ async function fetchWasm() {
   if (wasmData) return wasmData
 
   if (!fetchWasmPromise) {
-    fetchWasmPromise = fetch('https://unpkg.com/vscode-oniguruma@1.6.1/release/onig.wasm')
+    fetchWasmPromise = fetch('https://unpkg.com/vscode-oniguruma@1.7.0/release/onig.wasm')
       .then(res => res.arrayBuffer())
       .then(data => {
         wasmData = data
@@ -32,6 +32,7 @@ export async function startShiki(opts: { isDarkMode?: boolean } = {}) {
       id: 'pintora',
       scopeName: 'source.pintora',
       grammar: syntaxJson,
+      path: '',
     }
 
     shiki.setCDN('https://unpkg.com/shiki/')

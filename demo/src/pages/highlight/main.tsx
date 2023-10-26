@@ -75,6 +75,7 @@ async function startShiki() {
     id: 'pintora',
     scopeName: 'source.pintora',
     grammar: syntaxJson,
+    path: '',
   }
 
   shiki.setCDN('https://unpkg.com/shiki/')
