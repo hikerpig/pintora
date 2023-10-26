@@ -57,7 +57,7 @@
   },
   "devDependencies": {
     "@pintora/test-shared": "workspace:*",
-    "@types/node": "^16.11.7",
+    "@types/node": "^20.0.0",
     "@types/tinycolor2": "^1.4.3",
     "microbundle": "^0.15.1",
     "typescript": "^4.8.3"
