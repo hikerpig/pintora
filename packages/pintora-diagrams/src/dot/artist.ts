@@ -127,7 +127,11 @@ class DOTDraw {
 
   private subgraphs = new Map<string, Subgraph>()
 
-  constructor(public ir: DotIR, public conf: DOTConf, public rootMark: Group) {
+  constructor(
+    public ir: DotIR,
+    public conf: DOTConf,
+    public rootMark: Group,
+  ) {
     if (isDev) {
       ;(window as any).dotDraw = this
     }

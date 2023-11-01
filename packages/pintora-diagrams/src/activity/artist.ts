@@ -396,7 +396,10 @@ class ActivityDraw {
   private keywordStepResults: { [key: string]: DrawStepResult } = {}
   private results: { [key: string]: DrawStepResult } = {}
 
-  constructor(public model: ArtistModel, public g: LayoutGraph) {}
+  constructor(
+    public model: ArtistModel,
+    public g: LayoutGraph,
+  ) {}
 
   drawStep(rootMark: Group, step: Step): DrawStepResult | null {
     const g = this.g

@@ -417,10 +417,13 @@ const durationToDate = function (durationStatement: string[], relativeTime: dayj
 }
 
 function createDictByKeys<K extends string>(keys: K[], defaultValue = true) {
-  return keys.reduce((acc, current) => {
-    acc[current] = defaultValue
-    return acc
-  }, {} as Record<K, boolean>)
+  return keys.reduce(
+    (acc, current) => {
+      acc[current] = defaultValue
+      return acc
+    },
+    {} as Record<K, boolean>,
+  )
 }
 
 export function getAxisTimeInterval(opts: { axisFormat: string; axisInterval: string }) {

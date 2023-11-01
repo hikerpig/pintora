@@ -116,7 +116,11 @@ export class DiagramEventManager {
 export const diagramEventManager = new DiagramEventManager()
 
 export class DiagramEvent implements IDiagramEvent {
-  constructor(public graphicEvent: IGraphicEvent, public mark: Mark, public item: DiagramEventItem) {}
+  constructor(
+    public graphicEvent: IGraphicEvent,
+    public mark: Mark,
+    public item: DiagramEventItem,
+  ) {}
 
   get type() {
     return this.graphicEvent.type

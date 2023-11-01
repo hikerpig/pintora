@@ -560,12 +560,18 @@ const activationBounds = function (actor: string) {
   const actorAttrs = model.actorAttrsMap.get(actor)
   const activations = actorActivations(actor)
 
-  const left = activations.reduce(function (acc, activation) {
-    return Math.min(acc, activation.startx)
-  }, actorAttrs.x + actorAttrs.width / 2)
-  const right = activations.reduce(function (acc, activation) {
-    return Math.max(acc, activation.stopx)
-  }, actorAttrs.x + actorAttrs.width / 2)
+  const left = activations.reduce(
+    function (acc, activation) {
+      return Math.min(acc, activation.startx)
+    },
+    actorAttrs.x + actorAttrs.width / 2,
+  )
+  const right = activations.reduce(
+    function (acc, activation) {
+      return Math.max(acc, activation.stopx)
+    },
+    actorAttrs.x + actorAttrs.width / 2,
+  )
   return [left, right]
 }
 

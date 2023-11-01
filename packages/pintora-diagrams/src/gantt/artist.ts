@@ -71,7 +71,12 @@ class GanttDraw {
   protected titleTextDims: TSize
   protected categories: string[]
   protected layerManager = new LayerManager<GanttLayerName>()
-  constructor(public ir: GanttIR, public conf: GanttConf, public rootMark: Group, w: number) {
+  constructor(
+    public ir: GanttIR,
+    public conf: GanttConf,
+    public rootMark: Group,
+    w: number,
+  ) {
     if (isDev) {
       ;(window as any).ganttDraw = this
     }
