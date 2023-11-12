@@ -65,5 +65,22 @@ end`),
   endfork`),
       existSelectors: ['.activity__keyword'],
     },
+    {
+      // issue #169
+      description: 'Should render fork inside group correctly',
+      code: stripStartEmptyLines(`
+  activityDiagram
+  title: Fork inside group test
+  start
+  group Group {
+    fork
+      :a;
+    forkagain
+      :b;
+    endfork
+  }
+  end`),
+      existSelectors: ['.activity__keyword'],
+    },
   ])
 })
