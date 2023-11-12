@@ -47,6 +47,7 @@ import {
   adjustRootMarkBounds,
   getBaseNote,
   makeCircle,
+  makeTitleMark,
 } from '../util/artist-util'
 import { makeBounds, positionGroupContents, tryExpandBounds } from '../util/mark-positioner'
 import { isDev } from '../util/env'
@@ -122,23 +123,14 @@ const erArtist: IDiagramArtist<ActivityDiagramIR, ActivityConf> = {
     const bounds = floorValues(tryExpandBounds(dagreWrapper.getGraphBounds(), edgeBounds))
     const { title } = ir
     let titleSize: Maybe<TSize> = undefined
+    let titleMark: Text | undefined = undefined
     if (title) {
       const titleFont: IFont = { fontSize: conf.fontSize, fontFamily: conf.fontFamily }
-      titleSize = calculateTextDimensions(title, titleFont)
-      const titleHeight = titleSize.height
-      rootMark.children.push({
-        type: 'text',
-        attrs: {
-          text: title,
-          x: bounds.left + bounds.width / 2,
-          y: -titleHeight,
-          ...titleFont,
-          fill: conf.textColor,
-          textAlign: 'center',
-          fontWeight: 'bold',
-        },
-        class: 'activity__title',
-      })
+      const titleResult = makeTitleMark(title, titleFont, { fill: conf.textColor })
+      titleSize = titleResult.titleSize
+      titleMark = titleResult.mark
+      titleMark.class = 'activity__title'
+      rootMark.children.push(titleMark)
       titleSize.height += conf.fontSize
     }
 
@@ -151,6 +143,7 @@ const erArtist: IDiagramArtist<ActivityDiagramIR, ActivityConf> = {
       useMaxWidth: conf.useMaxWidth,
       containerSize: opts?.containerSize,
       titleSize,
+      titleMark,
     })
 
     return {

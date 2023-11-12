@@ -10,12 +10,13 @@ import {
   IFont,
   Maybe,
   TSize,
+  Text,
 } from '@pintora/core'
 import { MindmapIR, MMItem, MMTree } from './db'
 import { MindmapConf, getConf } from './config'
 import { createLayoutGraph, isGraphVertical, LayoutEdge, LayoutGraph, LayoutNode } from '../util/graph'
 // eslint-disable-next-line unused-imports/no-unused-imports
-import { makeMark, makeEmptyGroup, adjustRootMarkBounds, makeCircleInPoint } from '../util/artist-util'
+import { makeMark, makeEmptyGroup, adjustRootMarkBounds, makeCircleInPoint, makeTitleMark } from '../util/artist-util'
 import { getPointsLinearPath } from '../util/line-util'
 import db from './db'
 import { makeBounds, positionGroupContents, TRANSFORM_GRAPH } from '../util/mark-positioner'
@@ -44,25 +45,15 @@ const mmArtist: IDiagramArtist<MindmapIR, MindmapConf> = {
     const bounds = mmDraw.dagreWrapper.getGraphBounds()
     const { title } = ir
     let titleSize: Maybe<TSize> = undefined
+    let titleMark: Text | undefined = undefined
     if (title) {
-      const fontSize = conf.maxFontSize
-      const titleFont: IFont = { fontSize, fontFamily: conf.fontFamily }
-      titleSize = calculateTextDimensions(title, titleFont)
-      const titleHeight = titleSize.height
-      rootMark.children.push({
-        type: 'text',
-        attrs: {
-          text: title,
-          x: bounds.left + bounds.width / 2,
-          y: -titleHeight,
-          ...titleFont,
-          fill: conf.textColor,
-          textAlign: 'center',
-          fontWeight: 'bold',
-        },
-        class: 'component__title',
-      })
-      titleSize.height += fontSize
+      const titleFont: IFont = { fontSize: conf.maxFontSize, fontFamily: conf.fontFamily }
+      const titleResult = makeTitleMark(title, titleFont, { fill: conf.textColor })
+      titleSize = titleResult.titleSize
+      titleMark = titleResult.mark
+      titleMark.class = 'mindmap__title'
+      rootMark.children.push(titleMark)
+      titleSize.height += conf.maxFontSize
     }
 
     const { width, height } = adjustRootMarkBounds({
@@ -73,6 +64,7 @@ const mmArtist: IDiagramArtist<MindmapIR, MindmapConf> = {
       useMaxWidth: conf.useMaxWidth,
       containerSize: opts?.containerSize,
       titleSize,
+      titleMark,
     })
     return {
       width,

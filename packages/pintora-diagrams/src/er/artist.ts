@@ -24,6 +24,7 @@ import {
   adjustRootMarkBounds,
   makeEmptyGroup,
   makeTriangle,
+  makeTitleMark,
 } from '../util/artist-util'
 import { drawMarkerTo, CELL_ORDER, CellName, TableBuilder, TableCell, TableRow } from './artist-util'
 import { getPointsCurvePath, getPointsLinearPath } from '../util/line-util'
@@ -109,23 +110,14 @@ const erArtist: IDiagramArtist<ErDiagramIR, ErConf> = {
 
     const { title } = ir
     let titleSize: Maybe<TSize> = undefined
+    let titleMark: Text | undefined = undefined
     if (title) {
       const titleFont: IFont = { fontSize: conf.fontSize, fontFamily: conf.fontFamily }
-      titleSize = getTextDimensionsInPresicion(title, titleFont)
-      const titleHeight = titleSize.height
-      rootMark.children.push({
-        type: 'text',
-        attrs: {
-          text: title,
-          x: bounds.left + bounds.width / 2,
-          y: -titleHeight,
-          ...titleFont,
-          fill: conf.textColor,
-          textAlign: 'center',
-          fontWeight: 'bold',
-        },
-        class: 'er__title',
-      })
+      const titleResult = makeTitleMark(title, titleFont, { fill: conf.textColor })
+      titleSize = titleResult.titleSize
+      titleMark = titleResult.mark
+      titleMark.class = 'er__title'
+      rootMark.children.push(titleMark)
       titleSize.height += conf.fontSize
     }
 
@@ -137,6 +129,7 @@ const erArtist: IDiagramArtist<ErDiagramIR, ErConf> = {
       useMaxWidth: conf.useMaxWidth,
       containerSize: opts?.containerSize,
       titleSize,
+      titleMark,
     })
 
     return {

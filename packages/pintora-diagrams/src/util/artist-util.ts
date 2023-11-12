@@ -15,6 +15,8 @@ import {
   Circle,
   ITheme,
   DiagramArtistOptions,
+  calculateTextDimensions,
+  IFont,
 } from '@pintora/core'
 import { toFixed } from './number'
 import { PALETTE } from './theme'
@@ -143,6 +145,7 @@ export function adjustRootMarkBounds({
   containerSize,
   useMaxWidth,
   titleSize,
+  titleMark,
 }: {
   rootMark: Group
   gBounds: Bounds
@@ -151,6 +154,7 @@ export function adjustRootMarkBounds({
   containerSize?: DiagramArtistOptions['containerSize']
   useMaxWidth?: boolean
   titleSize?: TSize
+  titleMark?: Text
 }) {
   const containerWidth = containerSize?.width
   const doublePadX = padX * 2
@@ -162,9 +166,34 @@ export function adjustRootMarkBounds({
     -Math.min(0, gBounds.top) + padY / scaleX + titleHeight,
   ])
   const width = Math.max(gBounds.width + doublePadX, titleWidth) * scaleX
+
+  if (titleMark) {
+    // by default center the title mark
+    titleMark.attrs.x = gBounds.left + width / 2 - padX
+  }
   return {
     width,
     height: gBounds.height * scaleX + padY * 2 + (titleSize?.height || 0),
+  }
+}
+
+export function makeTitleMark(title: string, titleFont: IFont, attrs: Partial<MarkAttrs>) {
+  const titleSize = calculateTextDimensions(title, titleFont)
+  const titleHeight = titleSize.height
+  return {
+    mark: {
+      type: 'text',
+      attrs: {
+        text: title,
+        x: 0,
+        y: -titleHeight,
+        ...titleFont,
+        ...attrs,
+        textAlign: 'center',
+        fontWeight: 'bold',
+      },
+    } as Text,
+    titleSize,
   }
 }
 

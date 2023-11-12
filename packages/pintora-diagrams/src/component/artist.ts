@@ -24,7 +24,14 @@ import {
   LayoutNode,
   LayoutNodeOption,
 } from '../util/graph'
-import { makeMark, drawArrowTo, calcDirection, makeLabelBg, adjustRootMarkBounds } from '../util/artist-util'
+import {
+  makeMark,
+  drawArrowTo,
+  calcDirection,
+  makeLabelBg,
+  adjustRootMarkBounds,
+  makeTitleMark,
+} from '../util/artist-util'
 import { makeBounds, tryExpandBounds } from '../util/mark-positioner'
 import { getPointsCurvePath, getPointsLinearPath } from '../util/line-util'
 import { DagreWrapper } from '../util/dagre-wrapper'
@@ -89,23 +96,14 @@ const componentArtist: IDiagramArtist<ComponentDiagramIR, ComponentConf> = {
 
     const { title } = ir
     let titleSize: Maybe<TSize> = undefined
+    let titleMark: Text | undefined = undefined
     if (title) {
       const titleFont: IFont = { fontSize: conf.fontSize, fontFamily: conf.fontFamily }
-      titleSize = calculateTextDimensions(title, titleFont)
-      const titleHeight = titleSize.height
-      rootMark.children.push({
-        type: 'text',
-        attrs: {
-          text: title,
-          x: gBounds.left + gBounds.width / 2,
-          y: -titleHeight,
-          ...titleFont,
-          fill: conf.textColor,
-          textAlign: 'center',
-          fontWeight: 'bold',
-        },
-        class: 'component__title',
-      })
+      const titleResult = makeTitleMark(title, titleFont, { fill: conf.textColor })
+      titleSize = titleResult.titleSize
+      titleMark = titleResult.mark
+      titleMark.class = 'component__title'
+      rootMark.children.push(titleMark)
       titleSize.height += conf.fontSize
     }
 
@@ -117,6 +115,7 @@ const componentArtist: IDiagramArtist<ComponentDiagramIR, ComponentConf> = {
       useMaxWidth: conf.useMaxWidth,
       containerSize: opts?.containerSize,
       titleSize,
+      titleMark,
     })
 
     return {
