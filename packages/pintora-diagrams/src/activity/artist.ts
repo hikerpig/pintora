@@ -52,7 +52,7 @@ import { makeBounds, positionGroupContents, tryExpandBounds } from '../util/mark
 import { isDev } from '../util/env'
 import { getPointsCurvePath, getPointsLinearPath } from '../util/line-util'
 import { makeTextMark } from './artist-util'
-import { calcBound, updateBoundsByPoints } from '../util/bound'
+import { calcBound, floorValues, updateBoundsByPoints } from '../util/bound'
 import { getTextDimensionsInPresicion } from '../util/text'
 import { DagreWrapper } from '../util/dagre-wrapper'
 
@@ -119,7 +119,7 @@ const erArtist: IDiagramArtist<ActivityDiagramIR, ActivityConf> = {
 
     const { bounds: edgeBounds } = drawEdges(rootMark, g)
 
-    const bounds = tryExpandBounds(dagreWrapper.getGraphBounds(), edgeBounds)
+    const bounds = floorValues(tryExpandBounds(dagreWrapper.getGraphBounds(), edgeBounds))
     const { title } = ir
     let titleSize: Maybe<TSize> = undefined
     if (title) {
@@ -165,6 +165,7 @@ type StepModel = {
   id: string
   startId?: string
   endId?: string
+  innerFrameId?: string
   type: Step['type']
   value: Step['value']
   prevId?: string // id or previous stepModel
@@ -312,6 +313,7 @@ class ArtistModel {
           const endId = `${fork.id}-end`
           safeAssign(stepModel, {
             endId,
+            innerFrameId: `${fork.id}-frame`,
           })
           break
         }
@@ -751,10 +753,14 @@ class ActivityDraw {
         // console.log('will set parent', modelId, id, m.type)
         if (modelId) this.g.setParent(modelId, id)
       })
-      this.traverseStep(m, child => {
-        const childStepModel = this.model.stepModelMap.get(child.value.id)
-        if (childStepModel) setParentRecursive(childStepModel)
-      })
+      if (m.innerFrameId) {
+        this.g.setParent(m.innerFrameId, id)
+      } else {
+        this.traverseStep(m, child => {
+          const childStepModel = this.model.stepModelMap.get(child.value.id)
+          if (childStepModel) setParentRecursive(childStepModel)
+        })
+      }
     }
 
     aGroup.children.map(s => {
@@ -1025,12 +1031,13 @@ class ActivityDraw {
       radius: 2,
     })
 
-    const getFrameBounds = () => {
+    const getFrameBounds = (): LayoutNode => {
       const bounds = this.g.node(frameId) as LayoutNode
       return bounds
     }
 
     const getBorderShrinkedWidth = (bounds: LayoutNode) => {
+      // console.log('[getBorderShrinkedWidth] bounds', bounds, 'frameId', frameId)
       const shrinkedWidth = bounds.width - 2 * conf.edgesep
       const x = bounds.x + conf.actionPaddingX // TODO: why this hack
       return { ...bounds, width: shrinkedWidth, x }
@@ -1042,7 +1049,6 @@ class ActivityDraw {
       width: startMark.attrs.width,
       height: startMark.attrs.height,
       onLayout: data => {
-        // console.log('[drawFork] start onLayout', data, id)
         const fb = getBorderShrinkedWidth(getFrameBounds())
         if (fb) {
           safeAssign(startMark.attrs, { x: fb.x - fb.width / 2, y: data.y - data.height / 2, width: fb.width })
@@ -1059,7 +1065,8 @@ class ActivityDraw {
       endId,
     }
 
-    const frameId = `${id}-frame`
+    // a frame to hold inner branches
+    const frameId = stepModel.innerFrameId
     this.g.setNode(frameId, {
       mark: group,
       width: 0,
