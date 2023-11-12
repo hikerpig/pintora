@@ -36,7 +36,7 @@ export type ActivityConf = {
 export const defaultConfig: ActivityConf = {
   diagramPadding: 15,
 
-  edgesep: 60,
+  edgesep: 30,
   edgeType: 'polyline',
   useMaxWidth: false,
 

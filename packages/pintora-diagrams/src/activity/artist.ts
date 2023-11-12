@@ -733,16 +733,26 @@ class ActivityDraw {
     )
     const labelTextDims = calcTextDims(groupLabel, fontConfig)
 
+    const labelId = `${id}-label`
+    this.g.setNode(labelId, {
+      id: labelId,
+      mark: labelMark,
+      width: labelTextDims.width,
+      height: labelTextDims.height,
+    })
+
     this.g.setNode(id, {
       id,
+      mark: group,
       onLayout(data: LayoutNode) {
         const { x, y, width, height } = data
         const containerWidth = Math.max(width, labelTextDims.width + 10)
         safeAssign(bgMark.attrs, { x: x - containerWidth / 2, y: y - height / 2, width: containerWidth, height })
-
         safeAssign(labelMark.attrs, { x: x - containerWidth / 2 + 5, y: y - height / 2 + labelTextDims.height + 8 })
       },
     })
+
+    this.g.setParent(labelId, id)
 
     group.children.push(bgMark, labelMark)
     parentMark.children.push(group)
@@ -1038,17 +1048,18 @@ class ActivityDraw {
 
     const getBorderShrinkedWidth = (bounds: LayoutNode) => {
       // console.log('[getBorderShrinkedWidth] bounds', bounds, 'frameId', frameId)
-      const shrinkedWidth = bounds.width - 2 * conf.edgesep
-      const x = bounds.x + conf.actionPaddingX // TODO: why this hack
+      const shrinkedWidth = bounds.width
+      const x = bounds.x
       return { ...bounds, width: shrinkedWidth, x }
     }
 
     this.g.setNode(id, {
       id: id,
-      mark: group,
+      mark: startMark,
       width: startMark.attrs.width,
       height: startMark.attrs.height,
       onLayout: data => {
+        // console.log('[drawFork] start onLayout', data, id)
         const fb = getBorderShrinkedWidth(getFrameBounds())
         if (fb) {
           safeAssign(startMark.attrs, { x: fb.x - fb.width / 2, y: data.y - data.height / 2, width: fb.width })
