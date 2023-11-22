@@ -141,17 +141,17 @@ activityDiagram
           value: {
             actionType: 'normal',
             message: 'print error',
-            id: '3',
+            id: 'id-3',
           },
-          parentId: '1',
+          parentId: 'id-1',
         },
         {
           type: 'keyword',
           value: {
-            id: '4',
+            id: 'id-4',
             label: 'end',
           },
-          parentId: '1',
+          parentId: 'id-1',
         },
       ],
     })
@@ -171,7 +171,7 @@ partition Init {
     expect(ir.steps[0]).toMatchObject({
       type: 'group',
       value: {
-        id: '1',
+        id: 'id-1',
         type: 'group',
         name: 'Init',
         groupType: 'partition',
@@ -182,7 +182,7 @@ partition Init {
             value: {
               actionType: 'normal',
               message: 'read config',
-              id: '2',
+              id: 'id-2',
             },
           },
           {
@@ -190,7 +190,7 @@ partition Init {
             value: {
               actionType: 'normal',
               message: 'init internal services',
-              id: '3',
+              id: 'id-3',
             },
           },
         ],
@@ -209,7 +209,7 @@ partition "Init pintora" {
     const ir = db.getDiagramIR()
     // console.log('ir', JSON.stringify(ir, null, 2))
     expect(ir.steps[0].value).toMatchObject({
-      id: '1',
+      id: 'id-1',
       type: 'group',
       name: 'Init pintora',
       groupType: 'partition',
@@ -221,9 +221,9 @@ partition "Init pintora" {
           value: {
             actionType: 'normal',
             message: 'init internal services',
-            id: '2',
+            id: 'id-2',
           },
-          parentId: '1',
+          parentId: 'id-1',
         },
       ],
     })
@@ -247,7 +247,7 @@ note left: message 2
         value: {
           actionType: 'normal',
           message: 'do something',
-          id: '1',
+          id: 'id-1',
         },
       },
       {
@@ -255,24 +255,24 @@ note left: message 2
         value: {
           actionType: 'normal',
           message: 'step 2',
-          id: '3',
+          id: 'id-3',
         },
       },
     ])
     expect(ir.notes).toMatchObject([
       {
-        id: '2',
+        id: 'id-2',
         type: 'note',
         placement: 'right',
         text: 'message here',
-        target: '1',
+        target: 'id-1',
       },
       {
-        id: '4',
+        id: 'id-4',
         type: 'note',
         placement: 'left',
         text: 'message 2',
-        target: '3',
+        target: 'id-3',
       },
     ])
   })
@@ -292,7 +292,7 @@ end
     expect(ir.steps[0]).toMatchObject({
       type: 'group',
       value: {
-        id: '1',
+        id: 'id-1',
         type: 'group',
         name: 'Inner',
         groupType: 'partition',
@@ -302,7 +302,7 @@ end
           {
             type: 'while',
             value: {
-              id: '2',
+              id: 'id-2',
               message: 'data available?',
               children: [
                 {
@@ -310,15 +310,15 @@ end
                   value: {
                     actionType: 'normal',
                     message: 'read data',
-                    id: '3',
+                    id: 'id-3',
                   },
-                  parentId: '2',
+                  parentId: 'id-2',
                 },
               ],
               confirmLabel: 'available',
               denyLabel: 'no',
             },
-            parentId: '1',
+            parentId: 'id-1',
           },
         ],
       },
@@ -343,7 +343,7 @@ group Init {
       {
         type: 'condition',
         value: {
-          id: '2',
+          id: 'id-2',
           message: 'diagram registered ?',
           then: {
             children: [
@@ -352,9 +352,9 @@ group Init {
                 value: {
                   actionType: 'normal',
                   message: 'get implementation',
-                  id: '3',
+                  id: 'id-3',
                 },
-                parentId: '2',
+                parentId: 'id-2',
               },
             ],
           },
@@ -365,14 +365,14 @@ group Init {
                 value: {
                   actionType: 'normal',
                   message: 'print error',
-                  id: '4',
+                  id: 'id-4',
                 },
-                parentId: '2',
+                parentId: 'id-2',
               },
             ],
           },
         },
-        parentId: '1',
+        parentId: 'id-1',
       },
     ])
   })
@@ -392,7 +392,7 @@ group #eeeeee "Init phase" {
     expect(ir.steps[0]).toMatchObject({
       type: 'group',
       value: {
-        id: '1',
+        id: 'id-1',
         type: 'group',
         name: 'Init phase',
         groupType: 'group',
@@ -402,7 +402,7 @@ group #eeeeee "Init phase" {
           {
             type: 'group',
             value: {
-              id: '2',
+              id: 'id-2',
               type: 'group',
               name: 'Inner',
               groupType: 'partition',
@@ -414,14 +414,14 @@ group #eeeeee "Init phase" {
                   value: {
                     actionType: 'normal',
                     message: 'Text',
-                    id: '3',
+                    id: 'id-3',
                   },
-                  parentId: '2',
+                  parentId: 'id-2',
                 },
               ],
               parent: 'Init phase',
             },
-            parentId: '1',
+            parentId: 'id-1',
           },
         ],
       },
@@ -445,13 +445,13 @@ activityDiagram
     expect(ir.steps[0]).toMatchObject({
       type: 'switch',
       value: {
-        id: '1',
+        id: 'id-1',
         message: 'test?',
         children: [
           {
             type: 'case',
             value: {
-              id: '2',
+              id: 'id-2',
               confirmLabel: 'condition A',
               children: [
                 {
@@ -459,18 +459,18 @@ activityDiagram
                   value: {
                     actionType: 'normal',
                     message: 'Text 1',
-                    id: '3',
+                    id: 'id-3',
                   },
-                  parentId: '2',
+                  parentId: 'id-2',
                 },
               ],
             },
-            parentId: '1',
+            parentId: 'id-1',
           },
           {
             type: 'case',
             value: {
-              id: '4',
+              id: 'id-4',
               confirmLabel: 'condition B',
               children: [
                 {
@@ -478,22 +478,22 @@ activityDiagram
                   value: {
                     actionType: 'normal',
                     message: 'Text 2',
-                    id: '5',
+                    id: 'id-5',
                   },
-                  parentId: '4',
+                  parentId: 'id-4',
                 },
                 {
                   type: 'action',
                   value: {
                     actionType: 'normal',
                     message: 'Text 3',
-                    id: '6',
+                    id: 'id-6',
                   },
-                  parentId: '4',
+                  parentId: 'id-4',
                 },
               ],
             },
-            parentId: '1',
+            parentId: 'id-1',
           },
         ],
       },
@@ -516,16 +516,16 @@ activityDiagram
           value: {
             actionType: 'normal',
             message: 'Text 1',
-            id: '1',
+            id: 'id-1',
           },
         },
       ],
       arrowLabels: [
         {
-          id: '2',
+          id: 'id-2',
           type: 'arrowLabel',
           text: 'Arrow label',
-          target: '1',
+          target: 'id-1',
         },
       ],
     })
@@ -547,43 +547,43 @@ activityDiagram
       {
         type: 'fork',
         value: {
-          id: '1',
+          id: 'id-1',
           branches: [
             {
               type: 'forkBranch',
               value: {
-                id: '2',
+                id: 'id-2',
                 children: [
                   {
                     type: 'action',
                     value: {
                       actionType: 'normal',
                       message: 'action 1',
-                      id: '3',
+                      id: 'id-3',
                     },
-                    parentId: '2',
+                    parentId: 'id-2',
                   },
                 ],
               },
-              parentId: '1',
+              parentId: 'id-1',
             },
             {
               type: 'forkBranch',
               value: {
-                id: '4',
+                id: 'id-4',
                 children: [
                   {
                     type: 'action',
                     value: {
                       actionType: 'normal',
                       message: 'action 2',
-                      id: '5',
+                      id: 'id-5',
                     },
-                    parentId: '4',
+                    parentId: 'id-4',
                   },
                 ],
               },
-              parentId: '1',
+              parentId: 'id-1',
             },
           ],
         },
@@ -648,7 +648,7 @@ repeatwhile (data available) is (yes) not (no)
     expect(ir.steps[0]).toMatchObject({
       type: 'repeat',
       value: {
-        id: '1',
+        id: 'id-1',
         message: 'data available',
         children: [
           {
@@ -656,9 +656,9 @@ repeatwhile (data available) is (yes) not (no)
             value: {
               actionType: 'normal',
               message: 'a',
-              id: '2',
+              id: 'id-2',
             },
-            parentId: '1',
+            parentId: 'id-1',
           },
         ],
         confirmLabel: 'yes',
@@ -680,7 +680,7 @@ repeatwhile (data available) is (yes) not (no)
     expect(ir.steps[0]).toMatchObject({
       type: 'repeat',
       value: {
-        id: '1',
+        id: 'id-1',
         message: 'data available',
         children: [
           {
@@ -688,9 +688,9 @@ repeatwhile (data available) is (yes) not (no)
             value: {
               actionType: 'normal',
               message: 'a',
-              id: '2',
+              id: 'id-2',
             },
-            parentId: '1',
+            parentId: 'id-1',
           },
         ],
         confirmLabel: 'yes',

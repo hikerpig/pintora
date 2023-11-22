@@ -193,7 +193,10 @@ class ActivityDb extends BaseDb {
   protected idCounter = makeIdCounter()
 
   protected makeId() {
-    return this.idCounter.next()
+    // we will have to set a prefix to the number, otherwise g._children[k] object will have order issue
+    // trye print `some = { '1-label': true, '1': true }` in the console,
+    //   and you will find '1' key always preceeds '1-label'.
+    return `id-${this.idCounter.next()}`
   }
 
   apply(part: ApplyPart, ignoreAdd?: boolean, state?: DbApplyState): Step

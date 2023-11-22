@@ -221,8 +221,7 @@ class ArtistModel {
     }
 
     const processStep = (step: Step) => {
-      let stepModel: StepModel
-      stepModel = this.makeStepModel(step)
+      let stepModel: StepModel = this.makeStepModel(step)
       switch (step.type) {
         case 'action': {
           const action = step.value as Action
@@ -721,6 +720,7 @@ class ActivityDraw {
         fill: conf.textColor,
         ...fontConfig,
         fontWeight: 'bold',
+        textBaseline: 'top',
       },
       { class: 'activity__group-rect' },
     )
@@ -737,11 +737,13 @@ class ActivityDraw {
     this.g.setNode(id, {
       id,
       mark: group,
-      onLayout(data: LayoutNode) {
+      onLayout: (data: LayoutNode) => {
         const { x, y, width, height } = data
+        // console.log('group onLayout', id, data)
         const containerWidth = Math.max(width, labelTextDims.width + 10)
         safeAssign(bgMark.attrs, { x: x - containerWidth / 2, y: y - height / 2, width: containerWidth, height })
-        safeAssign(labelMark.attrs, { x: x - containerWidth / 2 + 5, y: y - height / 2 + labelTextDims.height + 8 })
+        // label should be a the top-left of the group
+        safeAssign(labelMark.attrs, { x: x - containerWidth / 2 + fontConfig.fontSize / 2, y: y - height / 2 })
       },
     })
 
@@ -768,11 +770,11 @@ class ActivityDraw {
 
     aGroup.children.map(s => {
       const childResult = this.drawStep(parentMark, s)
+      // console.log('will set parent', childResult.id, id)
       this.g.setParent(childResult.id, id)
       setParentRecursive(childResult.stepModel)
       return childResult
     })
-
     return result
   }
 
@@ -1039,7 +1041,8 @@ class ActivityDraw {
       return bounds
     }
 
-    const getBorderShrinkedWidth = (bounds: LayoutNode) => {
+    const getBorderShrinkedWidth = (bounds: LayoutNode | undefined) => {
+      if (!bounds) return
       // console.log('[getBorderShrinkedWidth] bounds', bounds, 'frameId', frameId)
       const shrinkedWidth = bounds.width
       const x = bounds.x
@@ -1399,10 +1402,6 @@ function drawEdges(parent: Group, g: LayoutGraph) {
     }
 
     edgeGroup.children.push(...compact([linePath, labelBgMark, labelMark, arrowMark]))
-
-    // debug
-    // const debugMark = makeCircleWithCoordInPoint(labelPoint)
-    // edgeGroup.children.push(debugMark)
   })
   parent.children.push(edgeGroup)
   return { bounds }

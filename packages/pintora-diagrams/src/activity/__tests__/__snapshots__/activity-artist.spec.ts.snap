@@ -7,7 +7,7 @@ exports[`activity-artist draw fork 1`] = `
     "children": [
       {
         "attrs": {
-          "id": "1",
+          "id": "id-1",
           "mark": [Circular],
           "onLayout": [Function],
         },
@@ -24,7 +24,7 @@ exports[`activity-artist draw fork 1`] = `
       },
       {
         "attrs": {
-          "id": "2",
+          "id": "id-2",
           "mark": [Circular],
           "onLayout": [Function],
         },
@@ -74,7 +74,7 @@ exports[`activity-artist draw fork 1`] = `
             "children": [
               {
                 "attrs": {
-                  "id": "5",
+                  "id": "id-5",
                   "mark": [Circular],
                   "onLayout": [Function],
                 },
@@ -105,7 +105,7 @@ exports[`activity-artist draw fork 1`] = `
           },
           {
             "attrs": {
-              "id": "5",
+              "id": "id-5",
               "mark": [Circular],
               "onLayout": [Function],
             },
@@ -136,7 +136,7 @@ exports[`activity-artist draw fork 1`] = `
             "children": [
               {
                 "attrs": {
-                  "id": "7",
+                  "id": "id-7",
                   "mark": [Circular],
                   "onLayout": [Function],
                 },
@@ -167,7 +167,7 @@ exports[`activity-artist draw fork 1`] = `
           },
           {
             "attrs": {
-              "id": "7",
+              "id": "id-7",
               "mark": [Circular],
               "onLayout": [Function],
             },
@@ -205,7 +205,7 @@ exports[`activity-artist draw fork 1`] = `
       },
       {
         "attrs": {
-          "id": "8",
+          "id": "id-8",
           "mark": [Circular],
           "onLayout": [Function],
         },
@@ -233,7 +233,7 @@ exports[`activity-artist draw fork 1`] = `
       },
       {
         "attrs": {
-          "id": "9",
+          "id": "id-9",
           "mark": [Circular],
           "onLayout": [Function],
         },
@@ -261,7 +261,7 @@ exports[`activity-artist draw fork 1`] = `
       },
       {
         "attrs": {
-          "id": "10",
+          "id": "id-10",
           "mark": [Circular],
           "onLayout": [Function],
         },
@@ -361,7 +361,7 @@ exports[`activity-artist draw fork 1`] = `
               "fill": "#3b4044",
               "fontFamily": "Source Code Pro, sans-serif",
               "fontSize": 14,
-              "id": "2-3",
+              "id": "id-2-id-3",
               "text": "yes",
               "textAlign": "center",
               "textBaseline": "middle",
@@ -410,7 +410,7 @@ exports[`activity-artist draw fork 1`] = `
               "fill": "#3b4044",
               "fontFamily": "Source Code Pro, sans-serif",
               "fontSize": 14,
-              "id": "2-8",
+              "id": "id-2-id-8",
               "text": "no",
               "textAlign": "center",
               "textBaseline": "middle",
@@ -497,7 +497,7 @@ exports[`activity-artist draw repeat 1`] = `
     "children": [
       {
         "attrs": {
-          "id": "1",
+          "id": "id-1",
           "mark": [Circular],
           "onLayout": [Function],
         },
@@ -514,7 +514,7 @@ exports[`activity-artist draw repeat 1`] = `
       },
       {
         "attrs": {
-          "id": "2-end",
+          "id": "id-2-end",
           "mark": [Circular],
           "onLayout": [Function],
         },
@@ -543,7 +543,7 @@ exports[`activity-artist draw repeat 1`] = `
       },
       {
         "attrs": {
-          "id": "2",
+          "id": "id-2",
           "mark": [Circular],
           "onLayout": [Function],
         },
@@ -572,7 +572,7 @@ exports[`activity-artist draw repeat 1`] = `
       },
       {
         "attrs": {
-          "id": "3",
+          "id": "id-3",
           "mark": [Circular],
           "onLayout": [Function],
         },
@@ -600,7 +600,7 @@ exports[`activity-artist draw repeat 1`] = `
       },
       {
         "attrs": {
-          "id": "4-end",
+          "id": "id-4-end",
           "mark": [Circular],
           "onLayout": [Function],
         },
@@ -637,7 +637,7 @@ exports[`activity-artist draw repeat 1`] = `
       },
       {
         "attrs": {
-          "id": "5",
+          "id": "id-5",
           "mark": [Circular],
           "onLayout": [Function],
         },
@@ -665,7 +665,7 @@ exports[`activity-artist draw repeat 1`] = `
       },
       {
         "attrs": {
-          "id": "6",
+          "id": "id-6",
           "mark": [Circular],
           "onLayout": [Function],
         },
@@ -737,7 +737,7 @@ exports[`activity-artist draw repeat 1`] = `
               "fill": "#3b4044",
               "fontFamily": "Source Code Pro, sans-serif",
               "fontSize": 14,
-              "id": "2-end-2",
+              "id": "id-2-end-id-2",
               "text": "alright then",
               "textAlign": "center",
               "textBaseline": "middle",
@@ -828,7 +828,7 @@ exports[`activity-artist draw repeat 1`] = `
               "fill": "#3b4044",
               "fontFamily": "Source Code Pro, sans-serif",
               "fontSize": 14,
-              "id": "2-end-4",
+              "id": "id-2-end-id-4",
               "text": "nope",
               "textAlign": "center",
               "textBaseline": "middle",
@@ -863,7 +863,7 @@ exports[`activity-artist draw repeat 1`] = `
               "fill": "#3b4044",
               "fontFamily": "Source Code Pro, sans-serif",
               "fontSize": 14,
-              "id": "4-end-6",
+              "id": "id-4-end-id-6",
               "text": "no",
               "textAlign": "center",
               "textBaseline": "middle",
