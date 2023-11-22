@@ -1,5 +1,15 @@
 # Change Log
 
+## 0.5.1
+
+### Patch Changes
+
+- b8cdbed: fix broken highlight
+- Updated dependencies [1be0419]
+- Updated dependencies [09923c5]
+- Updated dependencies [bb18a39]
+  - @pintora/standalone@0.6.3
+
 ## 0.5.0
 
 ### Minor Changes
