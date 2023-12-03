@@ -236,7 +236,7 @@ importers:
         specifier: ^0.6.1
         version: link:../pintora-renderer
       '@pintora/standalone':
-        specifier: workspace:^0.6.2
+        specifier: workspace:^0.6.3
         version: link:../pintora-standalone
       canvas:
         specifier: '*'
@@ -411,7 +411,7 @@ importers:
         specifier: workspace:^0.6.2
         version: link:../pintora-core
       '@pintora/diagrams':
-        specifier: workspace:^0.6.2
+        specifier: workspace:^0.6.3
         version: link:../pintora-diagrams
       '@pintora/renderer':
         specifier: ^0.6.1
@@ -450,7 +450,7 @@ importers:
         specifier: ^1.6.22
         version: 1.6.22(react@18.1.0)
       '@pintora/standalone':
-        specifier: workspace:^0.6.0
+        specifier: workspace:^0.6.3
         version: link:../packages/pintora-standalone
       '@pintora/test-shared':
         specifier: workspace:^0.4.0
