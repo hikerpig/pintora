@@ -39,7 +39,7 @@
   },
   "packageManager": "pnpm@8.10.4",
   "devDependencies": {
-    "@changesets/changelog-git": "^0.1.12",
+    "@changesets/changelog-git": "^0.2.0",
     "@changesets/cli": "^2.24.1",
     "@types/jest": "^29.0.0",
     "@typescript-eslint/eslint-plugin": "^6.0.0",

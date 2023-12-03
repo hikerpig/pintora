@@ -9,8 +9,8 @@ importers:
   .:
     devDependencies:
       '@changesets/changelog-git':
-        specifier: ^0.1.12
-        version: 0.1.12
+        specifier: ^0.2.0
+        version: 0.2.0
       '@changesets/cli':
         specifier: ^2.24.1
         version: 2.24.1
@@ -236,7 +236,7 @@ importers:
         specifier: ^0.6.1
         version: link:../pintora-renderer
       '@pintora/standalone':
-        specifier: workspace:^0.6.2
+        specifier: workspace:^0.6.3
         version: link:../pintora-standalone
       canvas:
         specifier: '*'
@@ -411,7 +411,7 @@ importers:
         specifier: workspace:^0.6.2
         version: link:../pintora-core
       '@pintora/diagrams':
-        specifier: workspace:^0.6.2
+        specifier: workspace:^0.6.3
         version: link:../pintora-diagrams
       '@pintora/renderer':
         specifier: ^0.6.1
@@ -450,7 +450,7 @@ importers:
         specifier: ^1.6.22
         version: 1.6.22(react@18.1.0)
       '@pintora/standalone':
-        specifier: workspace:^0.6.0
+        specifier: workspace:^0.6.3
         version: link:../packages/pintora-standalone
       '@pintora/test-shared':
         specifier: workspace:^0.4.0
@@ -4737,6 +4737,12 @@ packages:
       '@changesets/types': 5.1.0
     dev: true
 
+  /@changesets/changelog-git@0.2.0:
+    resolution: {integrity: sha512-bHOx97iFI4OClIT35Lok3sJAwM31VbUM++gnMBV16fdbtBhgYu4dxsphBF/0AZZsyAHMrnM0yFcj5gZM1py6uQ==}
+    dependencies:
+      '@changesets/types': 6.0.0
+    dev: true
+
   /@changesets/cli@2.24.1:
     resolution: {integrity: sha512-7Lz1inqGQjBrXgnXlENtzQ7EmO/9c+09d9oi8XoK4ARqlJe8GpafjqKRobcjcA/TTI7Fn2+cke4CrXFZfVF8Rw==}
     hasBin: true
@@ -4873,6 +4879,10 @@ packages:
 
   /@changesets/types@5.1.0:
     resolution: {integrity: sha512-uUByGATZCdaPkaO9JkBsgGDjEvHyY2Sb0e/J23+cwxBi5h0fxpLF/HObggO/Fw8T2nxK6zDfJbPsdQt5RwYFJA==}
+    dev: true
+
+  /@changesets/types@6.0.0:
+    resolution: {integrity: sha512-b1UkfNulgKoWfqyHtzKS5fOZYSJO+77adgL7DLRDr+/7jhChN+QcHnbjiQVOz/U+Ts3PGNySq7diAItzDgugfQ==}
     dev: true
 
   /@changesets/write@0.1.9:
