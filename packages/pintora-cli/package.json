@@ -41,7 +41,7 @@
     "@pintora/renderer": "^0.6.1",
     "@pintora/standalone": "workspace:^0.6.3",
     "canvas": "*",
-    "consola": "^2.15.3",
+    "consola": "^3.0.0",
     "jsdom": "^20.0.0",
     "mime-types": "^2.1.31",
     "yargs": "^16.2.0"
