@@ -202,6 +202,11 @@ export type ComponentConf = {
   interfaceSize: number
 
   useMaxWidth: boolean
+
+  /**
+   * By default there is a label in bottom-left of group to show its type, set this to true make the label disappear
+   */
+  hideGroupType: boolean
 }
 ```
 

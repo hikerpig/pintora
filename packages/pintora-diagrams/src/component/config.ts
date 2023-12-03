@@ -28,6 +28,10 @@ export type ComponentConf = {
   interfaceSize: number
 
   useMaxWidth: boolean
+  /**
+   * By default there is a label in bottom-left of group to show its type, set this to true make the label disappear
+   */
+  hideGroupType: boolean
 }
 
 export const defaultConfig: ComponentConf = {
@@ -56,6 +60,8 @@ export const defaultConfig: ComponentConf = {
   interfaceSize: 16,
 
   useMaxWidth: false,
+
+  hideGroupType: false,
 }
 
 export const COMPONENT_PARAM_DIRECTIVE_RULES = {
@@ -67,6 +73,7 @@ export const COMPONENT_PARAM_DIRECTIVE_RULES = {
   relationLineColor: { valueType: 'color' },
   textColor: { valueType: 'color' },
   labelBackground: { valueType: 'color' },
+  hideGroupType: { valueType: 'boolean' },
 } as const
 
 export const configKey = 'component'

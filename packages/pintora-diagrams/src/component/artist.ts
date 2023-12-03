@@ -13,6 +13,7 @@ import {
   IFont,
   Bounds,
   Maybe,
+  compact,
 } from '@pintora/core'
 import { ComponentDiagramIR, LineType, Relationship } from './db'
 import { ComponentConf, getConf } from './config'
@@ -279,25 +280,24 @@ function drawGroupsTo(parentMark: Group, ir: ComponentDiagramIR, g: LayoutGraph)
       },
       { class: 'component__group-label' },
     )
+    let typeMark: Text | undefined
     const typeText = `[${cGroup.groupType}]`
-    const typeMark = makeMark(
-      'text',
-      {
-        text: typeText,
-        fill: conf.textColor,
-        ...fontConfig,
-        textBaseline: 'hanging', // have to hack a little, otherwise label will collide with rect border in downloaded svg
-      },
-      { class: 'component__type' },
-    )
+    if (!conf.hideGroupType) {
+      typeMark = makeMark(
+        'text',
+        {
+          text: typeText,
+          fill: conf.textColor,
+          ...fontConfig,
+          textBaseline: 'hanging', // have to hack a little, otherwise label will collide with rect border in downloaded svg
+        },
+        { class: 'component__type' },
+      )
+    }
 
     const labelTextDims = calculateTextDimensions(groupLabel, { ...fontConfig, fontWeight: labelMark.attrs.fontWeight })
-    const typeTextDims = calculateTextDimensions(typeText, fontConfig)
 
-    const nodeMarginConfig: Partial<LayoutNodeOption> = {
-      // paddingt: labelTextDims.height,
-      // paddingb: typeTextDims.height,
-    }
+    const nodeMarginConfig: Partial<LayoutNodeOption> = {}
 
     if (symbolDef && symbolDef.symbolMargin) {
       Object.assign(nodeMarginConfig, {
@@ -346,7 +346,11 @@ function drawGroupsTo(parentMark: Group, ir: ComponentDiagramIR, g: LayoutGraph)
         }
 
         safeAssign(labelMark.attrs, { x, y: y - height / 2 + labelTextDims.height + 5 })
-        safeAssign(typeMark.attrs, { x: x - containerWidth / 2 + 2, y: y + height / 2 - 2 - typeTextDims.height })
+
+        if (typeMark) {
+          const typeTextDims = calculateTextDimensions(typeText, fontConfig)
+          safeAssign(typeMark.attrs, { x: x - containerWidth / 2 + 2, y: y + height / 2 - 2 - typeTextDims.height })
+        }
 
         // debug
         // const centerMark = makeCircleWithCoordInPoint(data)
@@ -377,7 +381,7 @@ function drawGroupsTo(parentMark: Group, ir: ComponentDiagramIR, g: LayoutGraph)
       'group',
       {},
       {
-        children: [labelMark, typeMark],
+        children: compact([labelMark, typeMark]),
       },
     )
     parentMark.children.unshift(group)
