@@ -68,6 +68,29 @@ describe('mindmap parser', () => {
     })
   })
 
+  it('can parse hyphen inside multiline', () => {
+    const example = stripStartEmptyLines(`
+    mindmap
+    + Animals
+    ++ :Jack-rabbit,
+    Jack-russell;
+    `)
+    parse(example)
+    const ir = db.getDiagramIR()
+    expect(ir.trees[0]).toMatchObject({
+      root: '1',
+      nodes: {
+        2: {
+          label: 'Jack-rabbit,\n    Jack-russell',
+          depth: 2,
+          id: '2',
+          children: [],
+          parent: '1',
+        },
+      },
+    })
+  })
+
   it('can parse arithmetic notations', () => {
     const example = stripStartEmptyLines(`
     mindmap
@@ -149,8 +172,8 @@ describe('mindmap parser', () => {
   it('can parse CRLF as eol', () => {
     const example = stripStartEmptyLines(`
       mindmap
-      + Root 
-      ++ Second 
+      + Root
+      ++ Second
       `)
     parse(example)
     const ir = db.getDiagramIR()

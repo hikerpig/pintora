@@ -110,20 +110,27 @@ levelNotation ->
       }
     %}
 
-words ->
-    (%VALID_TEXT | %ASTERISKS | %PLUS | %MINUS | %WS):+ {%
+textSegment -> %VALID_TEXT | %ASTERISKS | %PLUS | %MINUS | %WS {%
       function(d) {
-        const v = d[0].map(o => tv(o[0])).join('')
+        const c = d[0]
+        return typeof c === 'string' ? c : tv(c)
+      }
+    %}
+
+words ->
+    textSegment:+ {%
+      function(d) {
+        const v = d[0].map(o => o[0]).join('')
         return v
       }
     %}
 
 multilineText ->
-    (%VALID_TEXT|%WS|%NL):* {%
+    (textSegment|%NL):* {%
       function(d) {
         // console.log('[multiline text]', d)
         const v = d[0].map(l => {
-          return l.map(o => tv(o))
+          return l.map(o => typeof o === 'string' ? o: tv(o))
         }).join('')
         return v
       }
