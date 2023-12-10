@@ -1,5 +1,14 @@
 # Change Log
 
+## 0.6.4
+
+### Patch Changes
+
+- 5225305: [componentDiagram] Add a param 'hideGroupType'
+- 68e0066: fix: [mindmap] hyphen inside multiline text
+- Updated dependencies [68e0066]
+  - @pintora/diagrams@0.6.4
+
 ## 0.6.3
 
 ### Patch Changes
