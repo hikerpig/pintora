@@ -15,6 +15,7 @@ import {
   COMMENT_LINE_REGEXP,
   QUOTED_WORD_REGEXP,
   MOO_NEWLINE,
+  getQuotedWord,
 } from '../../util/parser-shared'
 import type { ErDb, Attribute } from '../db'
 
@@ -37,10 +38,6 @@ let lexer = moo.compile({
   CONFIG_DIRECTIVE,
   VALID_TEXT: { match: VALID_TEXT_REGEXP, fallback: true },
 })
-
-function getQuotedWord(token) {
-  return tv(token).replace(/"/g, '')
-}
 
 let yy: ErDb
 
@@ -112,16 +109,17 @@ attributes ->
       %}
 
 attribute ->
-      attributeType %WS attributeName %WS:* %QUOTED_WORD:? %WS:* %NL {% (d): Attribute => {
-        const comment = d[4] ? getQuotedWord(d[4]): ''
-        return { attributeType: d[0], attributeName: d[2], comment } }
-      %}
-    | attributeType %WS attributeName %WS %VALID_TEXT %WS:* %QUOTED_WORD:? %NL {%
+      attributeType %WS attributeName %WS %VALID_TEXT %WS:* %QUOTED_WORD:? %NL {%
         function(d): Attribute {
           const comment = d[6] ? getQuotedWord(d[6]): ''
           return { attributeType: d[0], attributeName: d[2], attributeKey: tv(d[4]), comment }
         }
       %}
+    | attributeType %WS attributeName %WS:* %QUOTED_WORD:? %WS:* %NL {% (d): Attribute => {
+        const comment = d[4] ? getQuotedWord(d[4]): ''
+        return { attributeType: d[0], attributeName: d[2], comment } }
+      %}
+
 
 attributeType -> %VALID_TEXT {% (d) => tv(d[0]) %}
 

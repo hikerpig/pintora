@@ -209,9 +209,9 @@ nodeStmt ->
 
 # as 'edge_stmt' rule in DOT spec
 edgeStmt ->
-    (nodeId) edgeRHS attrList:? {%
+    nodeId edgeRHS attrList:? {%
       function(d) {
-        const startNode = d[0][0]
+        const startNode = d[0]
         const edge_list = [startNode, ...d[1]]
         const edgeStmt: ParserEntityStmt = {
           type: 'edge_stmt',
@@ -225,10 +225,10 @@ edgeStmt ->
     %}
 
 edgeRHS ->
-    edgeop %WS:? (nodeId) edgeRHS:? {%
+    edgeop %WS:? nodeId edgeRHS:? {%
       function(d) {
         const edgeList = d[3] || []
-        const edge = d[2][0]
+        const edge = d[2]
         return [edge, ...edgeList]
       }
     %}
@@ -264,19 +264,19 @@ attrItems ->
     %}
 
 nodeId ->
-    %VALID_TEXT {%
-      function(d) {
-        return {
-          type: 'node_id',
-          id: tv(d[0]).trim()
-        } as NodeId
-      }
-    %}
-  | %QUOTED_WORD {%
+    %QUOTED_WORD {%
       function(d) {
         return {
           type: 'node_id',
           id: getQuotedWord(d[0]).trim()
+        } as NodeId
+      }
+    %}
+  | %VALID_TEXT {%
+      function(d) {
+        return {
+          type: 'node_id',
+          id: tv(d[0]).trim()
         } as NodeId
       }
     %}

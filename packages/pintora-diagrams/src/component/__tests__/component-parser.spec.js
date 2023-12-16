@@ -318,4 +318,14 @@ componentDiagram
     const ir = db.getDiagramIR()
     expect(ir.title).toEqual('Hello')
   })
+
+  it('can parse escape chars', () => {
+    const example = stripStartEmptyLines(`
+componentDiagram
+  component "we can escape \\"this\\"" as comp
+  `)
+    parse(example)
+    const ir = db.getDiagramIR()
+    expect(ir.components['comp'].label).toEqual(`we can escape "this"`)
+  })
 })
