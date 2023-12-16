@@ -19,6 +19,7 @@ import {
   L_PAREN_REGEXP,
   R_PAREN_REGEXP,
   MOO_NEWLINE,
+  getQuotedWord,
 } from '../../util/parser-shared'
 import db, { ApplyParam } from '../db'
 
@@ -72,10 +73,6 @@ export function setYY(v) {
   yy = v
 }
 
-function getQuotedWord(token) {
-  const v = tv(token);
-  return v.slice(1, v.length - 1)
-}
 %}
 
 start -> __ start {% (d) => d[1] %}

@@ -11,9 +11,11 @@ import {
   tv,
   VALID_TEXT_REGEXP,
   COMMENT_LINE_REGEXP,
+  QUOTED_WORD_REGEXP,
   configLexerMainState,
   configLexerconfigStatementState,
   MOO_NEWLINE,
+  getQuotedWord,
 } from '../../util/parser-shared'
 
 const commonTopRules = {
@@ -25,7 +27,7 @@ const commonTopRules = {
 }
 
 const commonTextRules = {
-  TEXT_INSIDE_QUOTES: /\"[^"]*\"/,
+  QUOTED_WORD: QUOTED_WORD_REGEXP,
   VALID_TEXT: { match: VALID_TEXT_REGEXP, fallback: true },
 }
 
@@ -173,10 +175,10 @@ shortComponent ->
 
 elementLabel -> (%VALID_TEXT | %NL | %WS) {% (d) => tv(d[0][0]) %}
 
-textInsideQuote -> %TEXT_INSIDE_QUOTES {%
+textInsideQuote -> %QUOTED_WORD {%
     function(d) {
-      const v = tv(d[0]).trim()
-      return v.slice(1, v.length - 1)
+      const v = getQuotedWord(d[0])
+      return v
     }
   %}
 

@@ -33,7 +33,10 @@ export const COMMENT_LINE_REGEXP = /%%.*/
 export const L_PAREN_REGEXP = /\(/
 export const R_PAREN_REGEXP = /\)/
 
-export const QUOTED_WORD_REGEXP = /\"[^"]*\"/
+/**
+ * quoted string that has escaped chars inside
+ */
+export const QUOTED_WORD_REGEXP = /"(?:\\["nr]|[^"])+"/
 
 // export const PARAM_DIRECTIVE = /@param/
 
@@ -54,5 +57,5 @@ export const configLexerconfigStatementState = {
 
 export function getQuotedWord(token) {
   const v = tv(token)
-  return v.slice(1, v.length - 1)
+  return v.slice(1, v.length - 1).replace(/\\"/g, '"')
 }

@@ -19,6 +19,7 @@ import {
   R_PAREN_REGEXP,
   COLOR_REGEXP,
   MOO_NEWLINE,
+  getQuotedWord,
 } from '../../util/parser-shared'
 import type { ApplyPart } from '../db'
 
@@ -268,7 +269,7 @@ group ->
         const groupType = tv(d[0][0])
         const background = d[2] ? (d[2][0]): null
         const titleToken = d[3][0]
-        const title = titleToken.type === 'QUOTED_WORD' ? tv(titleToken).replace(/"(.*)"/, '$1') : tv(titleToken)
+        const title = titleToken.type === 'QUOTED_WORD' ? getQuotedWord(titleToken).replace(/"(.*)"/, '$1') : tv(titleToken)
         const label = (title || groupType).trim()
         const name = (title || `${groupType}_${Date.now()}`).trim()
         const children = d[6].map(l => l[1][0]).filter(o => o)
