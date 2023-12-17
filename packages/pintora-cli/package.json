@@ -42,7 +42,7 @@
     "@pintora/standalone": "workspace:^0.6.5",
     "canvas": "^2.11.2",
     "consola": "^3.0.0",
-    "jsdom": "^20.0.0",
+    "jsdom": "^23.0.0",
     "mime-types": "^2.1.31",
     "yargs": "^16.2.0"
   },
