@@ -37,7 +37,7 @@
     "react-dom": "^18.2.0",
     "react-error-boundary": "^4.0.0",
     "react-hot-toast": "^2.4.0",
-    "react-redux": "^8.0.2",
+    "react-redux": "^9.0.0",
     "react-router-dom": "^6.3.0",
     "shiki": "^0.14.0",
     "throttle-debounce": "^5.0.0",
