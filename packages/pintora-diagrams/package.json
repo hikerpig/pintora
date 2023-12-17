@@ -45,7 +45,7 @@
     "d3-shape": "^3.0.1",
     "d3-time": "^3.0.0",
     "dayjs": "^1.10.7",
-    "dedent": "^0.7.0"
+    "dedent": "^1.0.0"
   },
   "devDependencies": {
     "@pintora/development-kit": "workspace:^0.1.1",
