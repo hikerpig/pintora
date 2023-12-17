@@ -14,16 +14,15 @@
     "write-heading-ids": "docusaurus write-heading-ids"
   },
   "dependencies": {
-    "@docusaurus/core": "2.4.3",
-    "@docusaurus/preset-classic": "2.4.3",
-    "@docusaurus/theme-common": "2.4.3",
-    "@mdx-js/react": "^1.6.22",
+    "@docusaurus/core": "^3.0.1",
+    "@docusaurus/preset-classic": "^3.0.1",
+    "@docusaurus/theme-common": "^3.0.1",
+    "@mdx-js/react": "^3.0.0",
     "@pintora/standalone": "workspace:^0.6.3",
     "@pintora/test-shared": "workspace:^0.4.0",
     "@svgr/webpack": "^8.0.0",
     "clsx": "^1.1.1",
     "docusaurus-plugin-less": "^2.0.2",
-    "docusaurus-plugin-module-alias": "^0.0.2",
     "file-loader": "^6.2.0",
     "less-loader": "^10.2.0",
     "mdx-embed": "^1.0.0",
@@ -47,8 +46,8 @@
     ]
   },
   "devDependencies": {
-    "@docusaurus/module-type-aliases": "2.4.3",
-    "@tsconfig/docusaurus": "^1.0.6",
+    "@docusaurus/module-type-aliases": "^3.0.0",
+    "@tsconfig/docusaurus": "^2.0.2",
     "@types/react": "^18.0.0",
     "@types/react-helmet": "^6.1.5",
     "@types/react-router-dom": "^5.3.2",

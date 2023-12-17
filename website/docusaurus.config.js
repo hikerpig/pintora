@@ -138,14 +138,6 @@ module.exports = {
   ],
   themes: [require.resolve('./plugins/docusaurus-theme-pintora/index.js')],
   plugins: [
-    [
-      'docusaurus-plugin-module-alias',
-      {
-        alias: {
-          '@components': path.resolve(__dirname, 'src/components'),
-        },
-      },
-    ],
     'docusaurus-plugin-less',
     require.resolve('./plugins/webpack5-plugin'),
     require.resolve('./plugins/site-ad-plugin'),
