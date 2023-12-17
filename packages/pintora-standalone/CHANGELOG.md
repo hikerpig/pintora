@@ -1,5 +1,13 @@
 # Change Log
 
+## 0.6.5
+
+### Patch Changes
+
+- 4661a7a: Be able to escape `"` inside quoted string
+- Updated dependencies [4661a7a]
+  - @pintora/diagrams@0.6.5
+
 ## 0.6.4
 
 ### Patch Changes

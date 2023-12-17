@@ -1,5 +1,26 @@
 # Change Log
 
+## 0.6.5
+
+### Patch Changes
+
+- 4661a7a: Be able to escape `"` inside quoted string
+
+## 0.6.4
+
+### Patch Changes
+
+- 5225305: [componentDiagram] Add a param 'hideGroupType'
+- 68e0066: fix: [mindmap] hyphen inside multiline text
+
+## 0.6.3
+
+### Patch Changes
+
+- 1be0419: fix: [activity] Incorrect display of forks inside groups
+- 09923c5: [activity] fix incorrect display for nested group
+- bb18a39: fix: [diagram] make sure diagram title won't be cropped when it's wider than other contents
+
 ## 0.6.2
 
 ### Patch Changes

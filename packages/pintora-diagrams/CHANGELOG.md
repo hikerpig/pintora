@@ -1,5 +1,11 @@
 # Change Log
 
+## 0.6.5
+
+### Patch Changes
+
+- 4661a7a: Be able to escape `"` inside quoted string
+
 ## 0.6.4
 
 ### Patch Changes
