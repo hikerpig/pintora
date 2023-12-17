@@ -115,7 +115,7 @@ importers:
         version: 4.0.0(react@18.2.0)
       '@reduxjs/toolkit':
         specifier: ^1.8.3
-        version: 1.8.3(react-redux@8.0.2)(react@18.2.0)
+        version: 1.8.3(react-redux@9.0.4)(react@18.2.0)
       browser-fs-access:
         specifier: ^0.31.0
         version: 0.31.0
@@ -138,8 +138,8 @@ importers:
         specifier: ^2.4.0
         version: 2.4.0(csstype@3.1.0)(react-dom@18.2.0)(react@18.2.0)
       react-redux:
-        specifier: ^8.0.2
-        version: 8.0.2(@types/react-dom@18.0.3)(@types/react@18.0.8)(react-dom@18.2.0)(react@18.2.0)(redux@4.1.2)
+        specifier: ^9.0.0
+        version: 9.0.4(@types/react@18.0.8)(react@18.2.0)(redux@4.1.2)
       react-router-dom:
         specifier: ^6.3.0
         version: 6.3.0(react-dom@18.2.0)(react@18.2.0)
@@ -6247,7 +6247,7 @@ packages:
       react: 18.2.0
     dev: false
 
-  /@reduxjs/toolkit@1.8.3(react-redux@8.0.2)(react@18.2.0):
+  /@reduxjs/toolkit@1.8.3(react-redux@9.0.4)(react@18.2.0):
     resolution: {integrity: sha512-lU/LDIfORmjBbyDLaqFN2JB9YmAT1BElET9y0ZszwhSBa5Ef3t6o5CrHupw5J1iOXwd+o92QfQZ8OJpwXvsssg==}
     peerDependencies:
       react: ^16.9.0 || ^17.0.0 || ^18
@@ -6260,7 +6260,7 @@ packages:
     dependencies:
       immer: 9.0.12
       react: 18.2.0
-      react-redux: 8.0.2(@types/react-dom@18.0.3)(@types/react@18.0.8)(react-dom@18.2.0)(react@18.2.0)(redux@4.1.2)
+      react-redux: 9.0.4(@types/react@18.0.8)(react@18.2.0)(redux@4.1.2)
       redux: 4.1.2
       redux-thunk: 2.4.1(redux@4.1.2)
       reselect: 4.1.5
@@ -6994,13 +6994,6 @@ packages:
   /@types/history@4.7.11:
     resolution: {integrity: sha512-qjDJRrmvBMiTx+jyLxvLfJU7UznFuokDv4f3WRuriHKERccVpFU+8XMQUAbDzoiJCsmexxRExQeMwwCdamSKDA==}
 
-  /@types/hoist-non-react-statics@3.3.1:
-    resolution: {integrity: sha512-iMIqiko6ooLrTh1joXodJK5X9xeEALT1kM5G3ZLhD3hszxBdIEd5C75U834D9mLcINgD4OyZf5uQXjkuYydWvA==}
-    dependencies:
-      '@types/react': 18.0.8
-      hoist-non-react-statics: 3.3.2
-    dev: false
-
   /@types/html-minifier-terser@6.1.0:
     resolution: {integrity: sha512-oh/6byDPnL1zeNXFrDXFLyZjkr1MsBG667IM792caf1L2UPOOMf65NFzjUH/ltyfwjAGfs1rsX1eftK0jC/KIg==}
     dev: false
@@ -7151,6 +7144,7 @@ packages:
     resolution: {integrity: sha512-1RRW9kst+67gveJRYPxGmVy8eVJ05O43hg77G2j5m76/RFJtMbcfAs2viQ2UNsvvDg8F7OfQZx8qQcl6ymygaQ==}
     dependencies:
       '@types/react': 18.0.8
+    dev: true
 
   /@types/react-helmet@6.1.5:
     resolution: {integrity: sha512-/ICuy7OHZxR0YCAZLNg9r7I9aijWUWvxaPR6uTuyxe8tAj5RL4Sw1+R6NhXUtOsarkGYPmaHdBDvuXh2DIN/uA==}
@@ -16914,7 +16908,6 @@ packages:
   /punycode@2.3.1:
     resolution: {integrity: sha512-vYt7UD1U9Wg6138shLtLOvdAu+8DsC/ilFtEVHcH+wydcSpNE20AfSOduf6MkRFahL5FY7X1oU7nKVZFtfq8Fg==}
     engines: {node: '>=6'}
-    dev: false
 
   /pupa@3.1.0:
     resolution: {integrity: sha512-FLpr4flz5xZTSJxSeaheeMKN/EDzMdK7b8PTOC6a5PYFKTucWbdqjgqaEyH0shFiSJrVB1+Qqi4Tk19ccU6Aug==}
@@ -17113,10 +17106,6 @@ packages:
   /react-is@16.13.1:
     resolution: {integrity: sha512-24e6ynE2H+OKt4kqsOvNd8kBpV65zoxbA4BVsEOB3ARVWQki/DHzaUoC5KuON/BiccDaCCTZBuOcfZs70kR8bQ==}
 
-  /react-is@18.1.0:
-    resolution: {integrity: sha512-Fl7FuabXsJnV5Q1qIOQwx/sagGF18kogb4gpfcG4gjLBWO0WDiiz1ko/ExayuxE7InyQkBLkxRFG5oxY6Uu3Kg==}
-    dev: false
-
   /react-is@18.2.0:
     resolution: {integrity: sha512-xWGDIW6x921xtzPkhiULtthJHoJvBbF3q26fzloPCK0hsvxtPVelvftw3zjbHWSkR2km9Z+4uxbDDK/6Zw9B8w==}
     dev: true
@@ -17142,36 +17131,24 @@ packages:
       webpack: 5.89.0(esbuild@0.19.5)
     dev: false
 
-  /react-redux@8.0.2(@types/react-dom@18.0.3)(@types/react@18.0.8)(react-dom@18.2.0)(react@18.2.0)(redux@4.1.2):
-    resolution: {integrity: sha512-nBwiscMw3NoP59NFCXFf02f8xdo+vSHT/uZ1ldDwF7XaTpzm+Phk97VT4urYBl5TYAPNVaFm12UHAEyzkpNzRA==}
+  /react-redux@9.0.4(@types/react@18.0.8)(react@18.2.0)(redux@4.1.2):
+    resolution: {integrity: sha512-9J1xh8sWO0vYq2sCxK2My/QO7MzUMRi3rpiILP/+tDr8krBHixC6JMM17fMK88+Oh3e4Ae6/sHIhNBgkUivwFA==}
     peerDependencies:
-      '@types/react': ^16.8 || ^17.0 || ^18.0
-      '@types/react-dom': ^16.8 || ^17.0 || ^18.0
-      react: ^16.8 || ^17.0 || ^18.0
-      react-dom: ^16.8 || ^17.0 || ^18.0
-      react-native: '>=0.59'
-      redux: ^4
+      '@types/react': ^18.2.25
+      react: ^18.0
+      react-native: '>=0.69'
+      redux: ^5.0.0
     peerDependenciesMeta:
       '@types/react':
-        optional: true
-      '@types/react-dom':
-        optional: true
-      react-dom:
         optional: true
       react-native:
         optional: true
       redux:
         optional: true
     dependencies:
-      '@babel/runtime': 7.17.9
-      '@types/hoist-non-react-statics': 3.3.1
       '@types/react': 18.0.8
-      '@types/react-dom': 18.0.3
       '@types/use-sync-external-store': 0.0.3
-      hoist-non-react-statics: 3.3.2
       react: 18.2.0
-      react-dom: 18.2.0(react@18.2.0)
-      react-is: 18.1.0
       redux: 4.1.2
       use-sync-external-store: 1.1.0(react@18.2.0)
     dev: false
@@ -19211,7 +19188,7 @@ packages:
   /tr46@1.0.1:
     resolution: {integrity: sha512-dTpowEjclQ7Kgx5SdBkqRzVhERQXov8/l9Ft9dVM9fmg0W0KQSVaXX9T4i6twCPNtYiZM53lpSSUAwJbFPOHxA==}
     dependencies:
-      punycode: 2.1.1
+      punycode: 2.3.1
     dev: true
 
   /tr46@3.0.0:
