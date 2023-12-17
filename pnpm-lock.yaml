@@ -197,19 +197,19 @@ importers:
         version: 3.1.3(less@4.1.3)
       vite-plugin-pwa:
         specifier: ^0.17.0
-        version: 0.17.4(vite@3.1.3)(workbox-build@7.0.0)(workbox-window@6.5.4)
+        version: 0.17.4(vite@3.1.3)(workbox-build@7.0.0)(workbox-window@7.0.0)
       vite-tsconfig-paths:
         specifier: ^3.5.1
         version: 3.5.1(vite@3.1.3)
       workbox-core:
-        specifier: ^6.5.4
-        version: 6.5.4
+        specifier: ^7.0.0
+        version: 7.0.0
       workbox-precaching:
-        specifier: ^6.5.4
-        version: 6.5.4
+        specifier: ^7.0.0
+        version: 7.0.0
       workbox-window:
-        specifier: ^6.5.4
-        version: 6.5.4
+        specifier: ^7.0.0
+        version: 7.0.0
 
   packages/development-kit:
     dependencies:
@@ -19727,7 +19727,7 @@ packages:
       vfile-message: 4.0.2
     dev: false
 
-  /vite-plugin-pwa@0.17.4(vite@3.1.3)(workbox-build@7.0.0)(workbox-window@6.5.4):
+  /vite-plugin-pwa@0.17.4(vite@3.1.3)(workbox-build@7.0.0)(workbox-window@7.0.0):
     resolution: {integrity: sha512-j9iiyinFOYyof4Zk3Q+DtmYyDVBDAi6PuMGNGq6uGI0pw7E+LNm9e+nQ2ep9obMP/kjdWwzilqUrlfVRj9OobA==}
     engines: {node: '>=16.0.0'}
     peerDependencies:
@@ -19740,7 +19740,7 @@ packages:
       pretty-bytes: 6.1.1
       vite: 3.1.3(less@4.1.3)
       workbox-build: 7.0.0
-      workbox-window: 6.5.4
+      workbox-window: 7.0.0
     transitivePeerDependencies:
       - supports-color
     dev: true
@@ -20184,10 +20184,6 @@ packages:
       workbox-core: 7.0.0
     dev: true
 
-  /workbox-core@6.5.4:
-    resolution: {integrity: sha512-OXYb+m9wZm8GrORlV2vBbE5EC1FKu71GGp0H4rjmxmF4/HLbMCoTFws87M3dFwgpmg0v00K++PImpNQ6J5NQ6Q==}
-    dev: true
-
   /workbox-core@7.0.0:
     resolution: {integrity: sha512-81JkAAZtfVP8darBpfRTovHg8DGAVrKFgHpOArZbdFd78VqHr5Iw65f2guwjE2NlCFbPFDoez3D3/6ZvhI/rwQ==}
     dev: true
@@ -20212,14 +20208,6 @@ packages:
     resolution: {integrity: sha512-juWCSrxo/fiMz3RsvDspeSLGmbgC0U9tKqcUPZBCf35s64wlaLXyn2KdHHXVQrb2cqF7I0Hc9siQalainmnXJA==}
     dependencies:
       workbox-core: 7.0.0
-    dev: true
-
-  /workbox-precaching@6.5.4:
-    resolution: {integrity: sha512-hSMezMsW6btKnxHB4bFy2Qfwey/8SYdGWvVIKFaUm8vJ4E53JAY+U2JwLTRD8wbLWoP6OVUdFlXsTdKu9yoLTg==}
-    dependencies:
-      workbox-core: 6.5.4
-      workbox-routing: 6.5.4
-      workbox-strategies: 6.5.4
     dev: true
 
   /workbox-precaching@7.0.0:
@@ -20247,22 +20235,10 @@ packages:
       workbox-strategies: 7.0.0
     dev: true
 
-  /workbox-routing@6.5.4:
-    resolution: {integrity: sha512-apQswLsbrrOsBUWtr9Lf80F+P1sHnQdYodRo32SjiByYi36IDyL2r7BH1lJtFX8fwNHDa1QOVY74WKLLS6o5Pg==}
-    dependencies:
-      workbox-core: 6.5.4
-    dev: true
-
   /workbox-routing@7.0.0:
     resolution: {integrity: sha512-8YxLr3xvqidnbVeGyRGkaV4YdlKkn5qZ1LfEePW3dq+ydE73hUUJJuLmGEykW3fMX8x8mNdL0XrWgotcuZjIvA==}
     dependencies:
       workbox-core: 7.0.0
-    dev: true
-
-  /workbox-strategies@6.5.4:
-    resolution: {integrity: sha512-DEtsxhx0LIYWkJBTQolRxG4EI0setTJkqR4m7r4YpBdxtWJH1Mbg01Cj8ZjNOO8etqfA3IZaOPHUxCs8cBsKLw==}
-    dependencies:
-      workbox-core: 6.5.4
     dev: true
 
   /workbox-strategies@7.0.0:
@@ -20280,13 +20256,6 @@ packages:
 
   /workbox-sw@7.0.0:
     resolution: {integrity: sha512-SWfEouQfjRiZ7GNABzHUKUyj8pCoe+RwjfOIajcx6J5mtgKkN+t8UToHnpaJL5UVVOf5YhJh+OHhbVNIHe+LVA==}
-    dev: true
-
-  /workbox-window@6.5.4:
-    resolution: {integrity: sha512-HnLZJDwYBE+hpG25AQBO8RUWBJRaCsI9ksQJEp3aCOFCaG5kqaToAYXFRAHxzRluM2cQbGzdQF5rjKPWPA1fug==}
-    dependencies:
-      '@types/trusted-types': 2.0.2
-      workbox-core: 6.5.4
     dev: true
 
   /workbox-window@7.0.0:
