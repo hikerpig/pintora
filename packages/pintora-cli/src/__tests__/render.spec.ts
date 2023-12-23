@@ -1,6 +1,7 @@
+import { pintoraStandalone } from '@pintora/standalone'
+import { EXAMPLES } from '@pintora/test-shared'
 import { SVG_MIME_TYPE } from '../const'
 import { render } from '../render'
-import { EXAMPLES } from '@pintora/test-shared'
 
 describe('render', () => {
   it('can output svg', async () => {
@@ -18,5 +19,23 @@ describe('render', () => {
     })
     expect(buf.constructor).toBe(Buffer)
     expect(buf.length).toBeGreaterThan(0)
+  })
+
+  it('pintoraConfig should not alter global config', async () => {
+    const oldTheme = pintoraStandalone.configApi.getConfig().themeConfig.theme
+    const oldUseMaxWidth = pintoraStandalone.configApi.getConfig().core?.useMaxWidth
+    await render({
+      code: EXAMPLES.er.code,
+      width: 1000,
+      pintoraConfig: {
+        themeConfig: {
+          theme: 'light',
+        },
+      },
+    })
+
+    const config = pintoraStandalone.configApi.getConfig()
+    expect(config.themeConfig.theme).toBe(oldTheme)
+    expect(config.core.useMaxWidth).toBe(oldUseMaxWidth)
   })
 })

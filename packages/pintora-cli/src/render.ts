@@ -1,5 +1,5 @@
 import { RenderOptions, IRenderer } from '@pintora/renderer'
-import { pintoraStandalone, PintoraConfig } from '@pintora/standalone'
+import { pintoraStandalone, PintoraConfig, DeepPartial } from '@pintora/standalone'
 import { JSDOM } from 'jsdom'
 import { implForWrapper } from 'jsdom/lib/jsdom/living/generated/utils'
 import { Canvas, CanvasPattern } from 'canvas'
@@ -16,7 +16,7 @@ export type CLIRenderOptions = {
    * Assign extra background color
    */
   backgroundColor?: string
-  pintoraConfig?: Partial<PintoraConfig>
+  pintoraConfig?: DeepPartial<PintoraConfig>
   /**
    * width of the output, height will be calculated according to the diagram content ratio
    */
@@ -41,15 +41,14 @@ function renderPrepare(opts: CLIRenderOptions) {
   return {
     container,
     pintorRender(renderOpts: Pick<RenderOptions, 'renderer'>) {
+      let config = pintoraStandalone.getConfig<PintoraConfig>()
       if (pintoraConfig) {
-        pintoraStandalone.setConfig(pintoraConfig)
+        config = pintoraStandalone.configApi.gnernateNewConfig(pintoraConfig)
       }
 
       const containerSize = opts.width ? { width: opts.width } : undefined
       if (opts.width) {
-        pintoraStandalone.setConfig({
-          core: { useMaxWidth: true },
-        })
+        config = pintoraStandalone.configApi.gnernateNewConfig({ core: { useMaxWidth: true } })
       }
 
       return new Promise<IRenderer>((resolve, reject) => {
@@ -59,7 +58,8 @@ function renderPrepare(opts: CLIRenderOptions) {
           containerSize,
           enhanceGraphicIR(ir) {
             if (!ir.bgColor) {
-              const themeVariables = pintoraStandalone.getConfig<PintoraConfig>().themeConfig.themeVariables
+              const themeVariables: Partial<PintoraConfig['themeConfig']['themeVariables']> =
+                config.themeConfig.themeVariables || {}
               const newBgColor =
                 backgroundColor ||
                 themeVariables.canvasBackground ||
@@ -81,6 +81,11 @@ function renderPrepare(opts: CLIRenderOptions) {
   }
 }
 
+/**
+ * Renders the Pintora CLI options to the specified output format.
+ * @param opts - The CLIRenderOptions.
+ * @returns A promise that resolves to the rendered output.
+ */
 export function render(opts: CLIRenderOptions) {
   const mimeType = opts.mimeType || 'image/png'
 

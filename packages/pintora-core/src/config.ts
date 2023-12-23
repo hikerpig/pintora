@@ -38,6 +38,9 @@ const configApi = {
   getConfig<T = PintoraConfig>() {
     return config as any as T
   },
+  /**
+   * Sets the configuration for Pintora.
+   */
   setConfig<T extends PintoraConfig = PintoraConfig>(c: DeepPartial<T>) {
     const newConfig = configApi.gnernateNewConfig(c)
     config = newConfig
@@ -65,7 +68,7 @@ const configApi = {
         newConfig.themeConfig = newConfig.themeConfig || ({} as any)
         newConfig.themeConfig.themeVariables = { ...themeVars }
       }
-      if (configThemeVars) {
+      if (configThemeVars && newConfig.themeConfig.themeVariables) {
         Object.assign(newConfig.themeConfig.themeVariables, configThemeVars)
       }
     }
