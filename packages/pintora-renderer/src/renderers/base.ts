@@ -92,10 +92,7 @@ export abstract class BaseRenderer implements IRenderer {
     return this
   }
 
-  getRootElement() {
-    if (!this.gcvs) return
-    return this.gcvs.getConfig().el
-  }
+  abstract getRootElement(): Element
 
   protected addBgShape() {
     if (this.ir.bgColor && this.gcvs) {

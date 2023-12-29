@@ -8,6 +8,11 @@ export class SvgRenderer extends BaseRenderer {
     return new Renderer()
   }
 
+  override getRootElement() {
+    if (!this.gcvs) return
+    return (this.gcvs.context.contextService as any).$namespace
+  }
+
   onShapeAdd(shape: GElement, mark: Mark) {
     super.onShapeAdd(shape, mark)
 
