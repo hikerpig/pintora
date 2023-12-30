@@ -1,5 +1,11 @@
 # Change Log
 
+## 0.6.0
+
+### Minor Changes
+
+- d9fdcdf: feat(website): upgrade to docusaurus 3
+
 ## 0.5.1
 
 ### Patch Changes

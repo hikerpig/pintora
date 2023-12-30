@@ -1,5 +1,14 @@
 # Change Log
 
+## 0.6.6
+
+### Patch Changes
+
+- d9fdcdf: Upgrad to node-canvas 2.11.2
+- 718e47d: eliminate config side effects of `render` function
+- Updated dependencies [718e47d]
+  - @pintora/core@0.6.3
+
 ## 0.6.5
 
 ### Patch Changes

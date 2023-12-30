@@ -1,5 +1,12 @@
 # Change Log
 
+## 0.3.15
+
+### Patch Changes
+
+- Updated dependencies [718e47d]
+  - @pintora/core@0.6.3
+
 ## 0.3.14
 
 ### Patch Changes

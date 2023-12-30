@@ -1,6 +1,6 @@
 {
   "name": "@pintora/core",
-  "version": "0.6.2",
+  "version": "0.6.3",
   "description": "Awesome functions",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",

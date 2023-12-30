@@ -1,5 +1,11 @@
 # Change Log
 
+## 0.6.3
+
+### Patch Changes
+
+- 718e47d: eliminate config side effects of `render` function
+
 ## 0.6.2
 
 ### Patch Changes
