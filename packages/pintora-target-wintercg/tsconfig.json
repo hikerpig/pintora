@@ -1,0 +1,24 @@
+{
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "rootDir": "src",
+    "outDir": "lib",
+    "strict": false,
+    "checkJs": true,
+    "allowJs": true,
+    "resolveJsonModule": true,
+    "allowSyntheticDefaultImports": false,
+    "module": "CommonJS",
+    "target": "esnext",
+    "esModuleInterop": false,
+    "types": ["@edge-runtime/types", "node", "svgdom"]
+  },
+  "references": [
+    { "path": "../pintora-standalone" },
+    { "path": "../pintora-core" }
+  ],
+  "include": [
+    "./src/**/*",
+    "./types/*"
+  ]
+}
