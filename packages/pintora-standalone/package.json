@@ -16,9 +16,13 @@
   "main": "./lib/pintora-standalone.umd.js",
   "exports": {
     ".": {
-      "import": "./lib/pintora-standalone.esm.js",
+      "import": {
+        "types": "./types/index.d.ts",
+        "default": "./lib/pintora-standalone.esm.js"
+      },
       "require": "./lib/pintora-standalone.umd.js"
-    }
+    },
+    "./package.json": "./package.json"
   },
   "sideEffects": false,
   "directories": {

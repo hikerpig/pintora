@@ -22,7 +22,8 @@ export class SvgRenderer extends BaseRenderer {
 
     if (mark.class) {
       const el = shape.get('el')
-      if (el) {
+      // TODO: some js dom implementation does not have classList
+      if (el && el.classList) {
         mark.class.split(' ').forEach(cls => {
           if (cls) el.classList.add(cls)
         })
