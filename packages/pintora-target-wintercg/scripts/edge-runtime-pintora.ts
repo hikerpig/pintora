@@ -9,7 +9,7 @@ const runtime = new EdgeRuntime()
 
 const dir = __dirname
 async function main() {
-  const runtimeCode = fs.readFileSync(path.join(dir, '../dist/platforms/edge-handler.js'), 'utf-8').toString()
+  const runtimeCode = fs.readFileSync(path.join(dir, '../dist/runtime.js'), 'utf-8').toString()
 
   const codeToRun = `
 ${runtimeCode}

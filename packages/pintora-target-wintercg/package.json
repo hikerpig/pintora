@@ -1,17 +1,16 @@
 {
   "name": "@pintora/target-wintercg",
   "version": "0.0.0",
-  "private": true,
   "description": "Test pintora in WinterCG env such as vercel edge-runtime",
   "main": "./dist/runtime.js",
+  "types": "types/index.d.ts",
   "scripts": {
-    "build": "tsc",
-    "compile:esbuild": "ts-node build/esbuild.ts",
+    "compile": "ts-node build/esbuild.ts",
+    "build-scripts": "tsc",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "hikerpig <hikerpigwinnie@gmail.com>",
   "homepage": "https://github.com/hikerpig/pintora#readme",
-  "types": "types/index.d.ts",
   "license": "MIT",
   "publishConfig": {
     "access": "public"

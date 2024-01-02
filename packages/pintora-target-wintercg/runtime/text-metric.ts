@@ -1,4 +1,4 @@
-import { textMetrics, IFont, ITextMetricCalculator } from '@pintora/core'
+import { textMetrics, IFont, ITextMetricCalculator } from '@pintora/standalone'
 import { Font, create } from 'fontkit'
 import fontData from '../fonts/SourceCodePro-Medium.ttf'
 import { Buffer } from 'buffer'

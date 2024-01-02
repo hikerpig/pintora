@@ -81,3 +81,5 @@ lib/
 # Local Netlify folder
 .netlify
 .turbo
+.vercel/
+api/

@@ -14,7 +14,7 @@ const options: BuildOptions = {
   outfile: runtimeOutFilePath,
   format: 'iife',
   globalName: 'pintoraTarget',
-  // sourcemap: 'external',
+  sourcemap: false,
   treeShaking: true,
   alias: {
     canvas: path.join(aliasDir, 'canvas.js'),
@@ -32,22 +32,16 @@ build(options).then(afterLibEsbuild)
 
 async function afterLibEsbuild() {
   console.log('afterLibEsbuild, generate platform code')
-  const plugBuild = await build({
-    entryPoints: ['src/platforms/edge-handler.ts'],
-    bundle: true,
-    format: 'iife',
-    sourcemap: false,
-    write: false,
-  })
   const runtimeLibCode = fs.readFileSync(runtimeOutFilePath, 'utf-8').toString()
   const outdir = path.join(packageDir, 'dist/platforms')
   if (!fs.existsSync(outdir)) {
     fs.mkdirSync(outdir)
   }
-  const handlerCode = `
+  const handlerCode = fs.readFileSync(path.join(packageDir, 'runtime/platforms/edge-handler.js'))
+  const finalCode = `
 ${runtimeLibCode}
 // separation
-${plugBuild.outputFiles[0].text}
+${handlerCode}
   `
-  fs.writeFileSync(path.join(packageDir, 'dist/platforms/edge-handler.js'), handlerCode)
+  fs.writeFileSync(path.join(packageDir, 'dist/platforms/edge-handler.js'), finalCode)
 }

@@ -1,7 +1,7 @@
 {
   "extends": "../../tsconfig.json",
   "compilerOptions": {
-    "rootDir": "src",
+    "rootDir": "scripts",
     "outDir": "lib",
     "strict": false,
     "checkJs": true,
@@ -18,7 +18,7 @@
     { "path": "../pintora-core" }
   ],
   "include": [
-    "./src/**/*",
+    "./scripts/**/*",
     "./types/*"
   ]
 }
