@@ -21,7 +21,7 @@
     "@pintora/standalone": "workspace:^0.6.3",
     "@pintora/test-shared": "workspace:^0.4.0",
     "@svgr/webpack": "^8.0.0",
-    "clsx": "^1.1.1",
+    "clsx": "^2.0.0",
     "docusaurus-plugin-less": "^2.0.2",
     "file-loader": "^6.2.0",
     "less-loader": "^10.2.0",
