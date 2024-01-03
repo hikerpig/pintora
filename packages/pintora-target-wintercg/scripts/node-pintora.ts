@@ -20,7 +20,7 @@ async function main() {
     pintoraDsl = fs.readFileSync(inputFilePath, 'utf-8').toString()
   }
   // console.log('code is', pintoraDsl)
-  const output = await target.pintoraMain({
+  const output = await target.render({
     code: pintoraDsl,
   })
   fs.writeFileSync('test.svg', output.data)

@@ -26,7 +26,7 @@ export default async function handler(request) {
     autonumber
     User->>Pintora: render this
     `
-    const result = await target.pintoraMain({
+    const result = await target.render({
       code,
     })
     const response = new Response(result.data, {

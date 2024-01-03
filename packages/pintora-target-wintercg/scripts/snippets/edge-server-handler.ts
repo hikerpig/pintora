@@ -1,5 +1,5 @@
 // this module runs inside edge runtime, and pintoraTarget will be prepended by bundler
-/* eslintdisable @typescripteslint/tripleslashreference */
+/* eslint-disable @typescript-eslint/triple-slash-reference */
 /// <reference path="../../types/index.d.ts" />
 
 const target = pintoraTarget
@@ -15,7 +15,7 @@ addEventListener('fetch', async event => {
     autonumber
     User>>Pintora: render this
     `
-  const result = await target.pintoraMain({
+  const result = await target.render({
     code,
   })
   const response = new Response(result.data, {

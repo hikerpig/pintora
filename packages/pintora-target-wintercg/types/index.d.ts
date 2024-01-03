@@ -17,7 +17,7 @@ export type RuntimeRenderOptions = {
 }
 
 export type PintoraTarget = {
-  pintoraMain(opts: RuntimeRenderOptions): Promise<{
+  render(opts: RuntimeRenderOptions): Promise<{
     type: string
     data: any
   }>

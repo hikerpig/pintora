@@ -23,7 +23,7 @@ ${runtimeCode}
   if (inputFilePath) {
     pintoraDsl = fs.readFileSync(inputFilePath, 'utf-8').toString()
   }
-  const output = await target.pintoraMain({
+  const output = await target.render({
     code: pintoraDsl,
   })
   fs.writeFileSync('test.svg', output.data)

@@ -24,7 +24,7 @@ componentDiagram
     [standalone]
   }
   package "@pintora/target-wintercg" {
-    () "pintoraMain()"
+    () "render()"
   }
   [IDiagram] --> GraphicsIR : generate
   [standalone] --> registry : register all of @pintora/diagrams
