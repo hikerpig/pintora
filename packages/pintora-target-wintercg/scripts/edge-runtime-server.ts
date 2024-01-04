@@ -6,7 +6,7 @@ import * as path from 'path'
 const dir = __dirname
 
 async function main() {
-  const runtimeCode = fs.readFileSync(path.join(dir, '../dist/runtime.js'), 'utf-8').toString()
+  const runtimeCode = fs.readFileSync(path.join(dir, '../dist/runtime.iife.js'), 'utf-8').toString()
   const handlerCode = fs.readFileSync(path.join(dir, './snippets/edge-server-handler.js'), 'utf-8').toString()
   const initialCode = `
   ${runtimeCode}

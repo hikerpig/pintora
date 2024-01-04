@@ -1,44 +1,42 @@
 {
   "name": "@pintora/target-wintercg",
   "version": "0.0.0",
-  "description": "Test pintora in WinterCG env such as vercel edge-runtime",
-  "main": "./dist/runtime.js",
-  "types": "types/index.d.ts",
-  "scripts": {
-    "compile": "ts-node build/esbuild.ts",
-    "build-scripts": "tsc",
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "author": "hikerpig <hikerpigwinnie@gmail.com>",
+  "description": "Pintora standalone target thast can run in WinterCG runtime",
   "homepage": "https://github.com/hikerpig/pintora#readme",
-  "license": "MIT",
-  "publishConfig": {
-    "access": "public"
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hikerpig/pintora.git",
+    "directory": "packages/pintora-target-wintercg"
   },
+  "license": "MIT",
+  "author": "hikerpig <hikerpigwinnie@gmail.com>",
+  "module": "./dist/runtime.esm.js",
+  "types": "types/index.d.ts",
   "files": [
     "dist",
     "CHANGELOG.md",
     "README.md"
   ],
+  "scripts": {
+    "build-scripts": "tsc",
+    "compile": "ts-node build/esbuild.ts"
+  },
   "dependencies": {
-    "@pintora/core": "workspace:*",
-    "@pintora/renderer": "workspace:*",
-    "@pintora/standalone": "workspace:*",
-    "edge-runtime": "^2.5.7",
-    "fontkit": "^2.0.2",
-    "happy-dom": "^12.10.3",
-    "jsdom": "^23.0.0",
-    "svgdom": "^0.1.19"
+    "@pintora/standalone": "workspace:*"
   },
   "devDependencies": {
     "@edge-runtime/types": "^2.2.7",
+    "@pintora/renderer": "workspace:*",
     "@types/fontkit": "^2.0.6",
     "@types/node": "^16.11.7",
     "@types/svgdom": "^0.1.2",
     "base64-js": "^1.5.1",
     "buffer": "^6.0.3",
+    "edge-runtime": "^2.5.7",
     "esbuild": "^0.19.0",
+    "esbuild-visualizer": "^0.6.0",
     "events": "^3.3.0",
+    "fontkit": "^2.0.2",
     "ieee754": "^1.2.1",
     "inherits": "^2.0.4",
     "path": "^0.12.7",
@@ -48,9 +46,13 @@
     "signal-exit": "^4.1.0",
     "stream": "^0.0.2",
     "stream-browserify": "^3.0.0",
+    "svgdom": "^0.1.19",
     "ts-node": "^10.9.2",
     "typescript": "^5.0.0",
     "url": "^0.11.3",
     "util": "^0.12.5"
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }

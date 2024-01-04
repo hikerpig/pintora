@@ -1,3 +1,5 @@
+import pintoraStandalone from '@pintora/standalone'
+
 export type RuntimeRenderOptions = {
   /**
    * pintora DSL to render
@@ -23,8 +25,4 @@ export type PintoraTarget = {
   }>
 }
 
-export const pintoraTarget: PintoraTarget
-
-declare global {
-  export const pintoraTarget: PintoraTarget
-}
+export default pintoraStandalone

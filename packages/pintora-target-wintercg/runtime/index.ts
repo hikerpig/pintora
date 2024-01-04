@@ -1,9 +1,11 @@
 /**
  * pintora target for wintercg, this module will be bundled into one file. It will be combined with other handler code runs inside edge runtime
  */
+import { pintoraStandalone } from '@pintora/standalone'
 import { doRender, RuntimeRenderOptions } from './render'
+import './text-metric'
 
-async function render(opts: RuntimeRenderOptions) {
+export async function render(opts: RuntimeRenderOptions) {
   const svg = await doRender({
     ...opts,
     code: opts.code,
@@ -16,4 +18,4 @@ async function render(opts: RuntimeRenderOptions) {
   return pintoraOutput
 }
 
-export { render }
+export default pintoraStandalone

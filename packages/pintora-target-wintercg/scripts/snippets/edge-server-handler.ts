@@ -2,7 +2,7 @@
 /* eslint-disable @typescript-eslint/triple-slash-reference */
 /// <reference path="../../types/index.d.ts" />
 
-const target = pintoraTarget
+const target = (globalThis as any).pintoraTarget
 
 addEventListener('fetch', async event => {
   const requestText = await event.request.text()

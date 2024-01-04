@@ -1,6 +1,5 @@
-import { RenderOptions, IRenderer } from '@pintora/renderer'
+import type { RenderOptions, IRenderer } from '@pintora/renderer'
 import { pintoraStandalone, PintoraConfig, DeepPartial } from '@pintora/standalone'
-import './text-metric'
 // import { Window } from 'happy-dom'
 // import JSDOM from 'jsdom'
 import { createHTMLWindow } from 'svgdom'

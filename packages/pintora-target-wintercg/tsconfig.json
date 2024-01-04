@@ -2,7 +2,7 @@
   "extends": "../../tsconfig.json",
   "compilerOptions": {
     "rootDir": "scripts",
-    "outDir": "lib",
+    "outDir": "out-scripts",
     "strict": false,
     "checkJs": true,
     "allowJs": true,

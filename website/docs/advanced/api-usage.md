@@ -237,21 +237,23 @@ There is a package [@pintora/target-wintercg](https://www.npmjs.com/package/@pin
 - font loading is not yet supported, all the text-metric is calculated with `SourceCode Pro-Medium.ttf` font data pre-bundled into the JS file.
 - only `svg` renderer is supported in this runtime.
 
-### render(options)
-
-Import or bundle `@pintora/target-wintercg/dist/runtime.js` into your project.
+**types**:
 
 ```ts
-type RuntimeRenderOptions = {
+import pintoraStandalone from '@pintora/standalone'
+
+export type RuntimeRenderOptions = {
   /**
    * pintora DSL to render
    */
   code: string
+  devicePixelRatio?: number | null
+  mimeType?: string
   /**
    * Assign extra background color
    */
   backgroundColor?: string
-  pintoraConfig?: DeepPartial<PintoraConfig>
+  // pintoraConfig?: DeepPartial<PintoraConfig>
   /**
    * width of the output, height will be calculated according to the diagram content ratio
    */
@@ -259,15 +261,19 @@ type RuntimeRenderOptions = {
 }
 
 export async function render(opts: RuntimeRenderOptions): Promise<{
-  type: 'svg'
-  data: string
+  type: string
+  data: any
 }>
+
+export default pintoraStandalone
 ```
 
-```js
-// include @pintora/target-wintercg/dist/runtime.js
+### render(options)
 
-pintoraTarget.render({
+```js
+import { render } from '@pintora/target-wintercg'
+
+render({
   code: `
 mindmap
 title: Mind Map levels
