@@ -1,5 +1,18 @@
 # Change Log
 
+## 0.3.16-alpha.0
+
+### Patch Changes
+
+- Updated dependencies [0a27a38]
+- Updated dependencies [4d419a7]
+- Updated dependencies [2d1f668]
+  - @pintora/core@0.7.0-alpha.0
+  - @pintora/renderer@0.7.0-alpha.0
+  - @pintora/standalone@0.7.0-alpha.0
+  - @pintora/diagrams@0.7.0-alpha.0
+  - @pintora/test-shared@0.5.0-alpha.0
+
 ## 0.3.15
 
 ### Patch Changes

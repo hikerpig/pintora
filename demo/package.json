@@ -1,6 +1,6 @@
 {
   "name": "pintora-demo",
-  "version": "0.3.15",
+  "version": "0.3.16-alpha.0",
   "private": true,
   "scripts": {
     "dev": "vite --port 3001",

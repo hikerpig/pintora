@@ -1,5 +1,19 @@
 # Change Log
 
+## 0.7.0-alpha.0
+
+### Minor Changes
+
+- 2d1f668: Add classDiagram
+
+### Patch Changes
+
+- Updated dependencies [0a27a38]
+- Updated dependencies [4d419a7]
+- Updated dependencies [2d1f668]
+  - @pintora/standalone@0.7.0-alpha.0
+  - @pintora/test-shared@0.5.0-alpha.0
+
 ## 0.6.0
 
 ### Minor Changes

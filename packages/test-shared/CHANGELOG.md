@@ -1,5 +1,11 @@
 # Change Log
 
+## 0.5.0-alpha.0
+
+### Minor Changes
+
+- 2d1f668: Add classDiagram
+
 ## 0.4.1
 
 ### Patch Changes

@@ -1,5 +1,15 @@
 # Change Log
 
+## 0.7.0-alpha.0
+
+### Minor Changes
+
+- 2d1f668: Add classDiagram
+
+### Patch Changes
+
+- 0a27a38: Be able to inject text-metric calculator in case there is no Canvas impl in the environment.
+
 ## 0.6.3
 
 ### Patch Changes

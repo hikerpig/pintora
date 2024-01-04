@@ -13,5 +13,10 @@
     "@pintora/test-shared": "0.4.1",
     "pintora-website": "0.6.0"
   },
-  "changesets": []
+  "changesets": [
+    "fair-zoos-mix",
+    "fresh-hornets-count",
+    "happy-eels-hear",
+    "unlucky-geckos-tap"
+  ]
 }
