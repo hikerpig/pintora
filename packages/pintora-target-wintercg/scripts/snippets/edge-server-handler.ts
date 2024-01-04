@@ -2,7 +2,7 @@
 /* eslint-disable @typescript-eslint/triple-slash-reference */
 /// <reference path="../../types/index.d.ts" />
 
-const target = pintoraTarget
+const target = (globalThis as any).pintoraTarget
 
 addEventListener('fetch', async event => {
   const requestText = await event.request.text()
@@ -13,14 +13,14 @@ addEventListener('fetch', async event => {
     sequenceDiagram
     title: Sequence Diagram Example
     autonumber
-    User->>Pintora: render this
+    User>>Pintora: render this
     `
-  const result = await target.pintoraMain({
+  const result = await target.render({
     code,
   })
   const response = new Response(result.data, {
     headers: {
-      'Content-Type': 'image/svg+xml',
+      ContentType: 'image/svg+xml',
     },
   })
   return event.respondWith(response)

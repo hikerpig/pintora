@@ -217,3 +217,70 @@ buildSVG(code)
 
 buildPNG(code)
 ```
+
+## pitora in WinterCG runtime
+
+<span className="badge badge--info">Experiment</span> This is still at a very early stage and need more examples.
+
+> The Web-interoperable Runtimes Community Group (WinterCG) is a community of people who are interested in using Web Platform APIs outside of browsers, namely on the server (Deno / Node.js) or edge runtimes (Cloudflare Workers / Deno).
+
+There are some [WinterCG](https://wintercg.org/) compatible runtimes nowadays, pintora tries its best to be able to run in a [Minimum Common Web Platform API](https://common-min-api.proposal.wintercg.org/) runtime.
+
+A package [@pintora/target-wintercg](https://www.npmjs.com/package/@pintora/target-wintercg) is providing a bundled JS file containing pintora and its dependencies.
+
+**Some notes**:
+- almost all Node.js module dependencies are replaced with JS polyfills, so bundle size is not very pleasant - about 2.4MB without minify for now.
+- text-metric is implemented with the help of `fontkit`, this eliminates our dependency on `node-canvas` - or more precisely, CanvasRenderingContext2D's [`measureText()`](https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/measureText).
+
+**Limitations**:
+
+- font loading is not yet supported, all the text-metric is calculated with `SourceCode Pro-Medium.ttf` font data pre-bundled into the JS file.
+- only `svg` renderer is supported in this runtime.
+
+**types**:
+
+```ts
+import pintoraStandalone from '@pintora/standalone'
+
+export type RuntimeRenderOptions = {
+  /**
+   * pintora DSL to render
+   */
+  code: string
+  devicePixelRatio?: number | null
+  mimeType?: string
+  /**
+   * Assign extra background color
+   */
+  backgroundColor?: string
+  // pintoraConfig?: DeepPartial<PintoraConfig>
+  /**
+   * width of the output, height will be calculated according to the diagram content ratio
+   */
+  width?: number
+}
+
+export async function render(opts: RuntimeRenderOptions): Promise<{
+  type: string
+  data: any
+}>
+
+export default pintoraStandalone
+```
+
+### render(options)
+
+```js
+import { render } from '@pintora/target-wintercg'
+
+render({
+  code: `
+mindmap
+title: Mind Map levels
+* UML Diagrams
+** Behavior Diagrams
+*** Sequence Diagram
+*** State Diagram
+  `
+})
+```

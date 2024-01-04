@@ -6,7 +6,13 @@ import * as path from 'path'
 const dir = __dirname
 
 async function main() {
-  const initialCode = fs.readFileSync(path.join(dir, '../dist/platforms/edge-handler.js'), 'utf-8').toString()
+  const runtimeCode = fs.readFileSync(path.join(dir, '../dist/runtime.iife.js'), 'utf-8').toString()
+  const handlerCode = fs.readFileSync(path.join(dir, './snippets/edge-server-handler.js'), 'utf-8').toString()
+  const initialCode = `
+  ${runtimeCode}
+  // separation
+  ${handlerCode}
+  `
 
   const edgeRuntime = new EdgeRuntime({ initialCode })
 

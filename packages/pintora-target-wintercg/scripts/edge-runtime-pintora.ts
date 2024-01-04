@@ -1,5 +1,5 @@
 // test edge runtime
-// node lib/edge-runtime-server.js
+// node out-scripts/edge-runtime-server.js
 import { EdgeRuntime } from 'edge-runtime'
 import * as fs from 'fs'
 import * as path from 'path'
@@ -9,7 +9,7 @@ const runtime = new EdgeRuntime()
 
 const dir = __dirname
 async function main() {
-  const runtimeCode = fs.readFileSync(path.join(dir, '../dist/platforms/edge-handler.js'), 'utf-8').toString()
+  const runtimeCode = fs.readFileSync(path.join(dir, '../dist/runtime.iife.js'), 'utf-8').toString()
 
   const codeToRun = `
 ${runtimeCode}
@@ -23,7 +23,7 @@ ${runtimeCode}
   if (inputFilePath) {
     pintoraDsl = fs.readFileSync(inputFilePath, 'utf-8').toString()
   }
-  const output = await target.pintoraMain({
+  const output = await target.render({
     code: pintoraDsl,
   })
   fs.writeFileSync('test.svg', output.data)

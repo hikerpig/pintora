@@ -1,3 +1,5 @@
+import pintoraStandalone from '@pintora/standalone'
+
 export type RuntimeRenderOptions = {
   /**
    * pintora DSL to render
@@ -17,14 +19,10 @@ export type RuntimeRenderOptions = {
 }
 
 export type PintoraTarget = {
-  pintoraMain(opts: RuntimeRenderOptions): Promise<{
+  render(opts: RuntimeRenderOptions): Promise<{
     type: string
     data: any
   }>
 }
 
-export const pintoraTarget: PintoraTarget
-
-declare global {
-  export const pintoraTarget: PintoraTarget
-}
+export default pintoraStandalone

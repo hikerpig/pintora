@@ -1,0 +1,32 @@
+componentDiagram
+  title: Component Diagram Example
+
+  package "@pintora/core" {
+    () GraphicsIR
+    () IRenderer
+    () IDiagram
+    [Diagram Registry] as registry
+  }
+  package "@pintora/diagrams" {
+    [...Multiple Diagrams...] as diagrams
+    [diagrams]
+    [diagrams] --> IDiagram : implements
+  }
+  package "@pintora/renderer" {
+    () "render()" as renderFn
+    [SVGRender]
+    [CanvasRender]
+    [SVGRender] --> IRenderer : implements
+    [CanvasRender] --> IRenderer : implements
+    IRenderer ..> GraphicsIR : accepts
+  }
+  package "@pintora/standalone" {
+    [standalone]
+  }
+  package "@pintora/target-wintercg" {
+    () "render()"
+  }
+  [IDiagram] --> GraphicsIR : generate
+  [standalone] --> registry : register all of @pintora/diagrams
+  [@pintora/standalone] --> [@pintora/diagrams] : import
+  [standalone] --> renderFn : call with GraphicsIR

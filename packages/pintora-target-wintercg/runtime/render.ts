@@ -1,6 +1,5 @@
-import { RenderOptions, IRenderer } from '@pintora/renderer'
+import type { RenderOptions, IRenderer } from '@pintora/renderer'
 import { pintoraStandalone, PintoraConfig, DeepPartial } from '@pintora/standalone'
-import './text-metric'
 // import { Window } from 'happy-dom'
 // import JSDOM from 'jsdom'
 import { createHTMLWindow } from 'svgdom'
@@ -15,8 +14,6 @@ export type RuntimeRenderOptions = {
    * pintora DSL to render
    */
   code: string
-  devicePixelRatio?: number | null
-  mimeType?: string
   /**
    * Assign extra background color
    */
@@ -28,15 +25,8 @@ export type RuntimeRenderOptions = {
   width?: number
 }
 
-// pintoraStandalone.setConfig({
-//   core: {
-//     defaultFontFamily: 'sans-serif',
-//   },
-// })
-
 function renderPrepare(opts: RuntimeRenderOptions) {
   const { code, backgroundColor, pintoraConfig } = opts
-  const devicePixelRatio = opts.devicePixelRatio || 2
   // const dom = new JSDOM('<!DOCTYPE html><body></body>')
   // const dom = new Window()
 
@@ -50,7 +40,6 @@ function renderPrepare(opts: RuntimeRenderOptions) {
 
   // setup the env for renderer
   ;(global as any).document = document
-  ;(window as any).devicePixelRatio = devicePixelRatio
 
   return {
     container,
@@ -96,11 +85,10 @@ function renderPrepare(opts: RuntimeRenderOptions) {
 }
 
 /**
- * Renders the Pintora CLI options to the specified output format.
- * @param opts - The CLIRenderOptions.
+ * @param opts - The RuntimeRenderOptions.
  * @returns A promise that resolves to the rendered output.
  */
-export function render(opts: RuntimeRenderOptions) {
+export function doRender(opts: RuntimeRenderOptions) {
   const { pintorRender } = renderPrepare(opts)
 
   function renderToSvg() {
