@@ -226,11 +226,11 @@ buildPNG(code)
 
 There are some [WinterCG](https://wintercg.org/) compatible runtimes nowadays, pintora tries its best to be able to run in a [Minimum Common Web Platform API](https://common-min-api.proposal.wintercg.org/) runtime.
 
-There is a package [@pintora/target-wintercg](https://www.npmjs.com/package/@pintora/target-wintercg) providing bundled JS file containing pintora and its dependencies.
+A package [@pintora/target-wintercg](https://www.npmjs.com/package/@pintora/target-wintercg) is providing a bundled JS file containing pintora and its dependencies.
 
 **Some notes**:
-- almost all Node.js module dependencies is replaced with JS polyfills, so bundle size is not very pleasent - about 2.24MB without minify for now.
-- text-metric is implemented with the help of `fontkit`, this eliminates our dependency of `node-canvas` - or more precisely, CanvasRenderingContext2D's [`measureText()`](https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/measureText).
+- almost all Node.js module dependencies are replaced with JS polyfills, so bundle size is not very pleasant - about 2.4MB without minify for now.
+- text-metric is implemented with the help of `fontkit`, this eliminates our dependency on `node-canvas` - or more precisely, CanvasRenderingContext2D's [`measureText()`](https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/measureText).
 
 **Limitations**:
 
