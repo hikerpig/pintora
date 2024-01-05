@@ -1,5 +1,5 @@
 import { calculateTextDimensions, removeValues, safeAssign } from '@pintora/core'
-import { messageFont, SequenceArtistContext } from '../artist'
+import { messageFont, boxFont, SequenceArtistContext } from '../artist'
 import { getBaseText, makeLoopLabelBox, makeMark } from '../artist-util'
 import { LoopModel, LoopSection } from './type'
 
@@ -140,7 +140,7 @@ export function drawLoopTo(context: SequenceArtistContext, loopModel: Readonly<L
           },
           { class: 'loop__title' },
         )
-        const { height: sectionHeight } = calculateTextDimensions(sectionTitle, messageFont(conf))
+        const { height: sectionHeight } = calculateTextDimensions(sectionTitle, boxFont(conf))
         loopModel.sections[idx].height += sectionHeight - (boxMargin + boxTextMargin)
         group.children.push(sectionTitleMark)
       }

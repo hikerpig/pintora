@@ -101,6 +101,10 @@ export type SequenceConf = {
   messageFontSize: number
   messageFontWeight: MarkAttrs['fontWeight']
   messageTextColor: string
+  /**
+   * font weight of box - such as loop and box
+   */
+  boxFontWeight: MarkAttrs['fontWeight']
   wrapPadding: number
   labelBoxWidth: number
   labelBoxHeight: number
