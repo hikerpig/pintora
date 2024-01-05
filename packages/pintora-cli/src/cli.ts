@@ -102,18 +102,23 @@ async function handleRenderCommand(args: CliRenderArgs) {
     } as Partial<PintoraConfig>)
   }
 
-  const buf = await render({
-    code,
-    devicePixelRatio,
-    mimeType,
-    backgroundColor: args.backgroundColor || config.backgroundColor,
-    pintoraConfig,
-    width: args.width,
-  })
-  if (!buf) {
-    consola.error(`Error during generating image`)
-    return
+  try {
+    const buf = await render({
+      code,
+      devicePixelRatio,
+      mimeType,
+      backgroundColor: args.backgroundColor || config.backgroundColor,
+      pintoraConfig,
+      width: args.width,
+      renderInSubprocess: false,
+    })
+    if (!buf) {
+      consola.error(`Error during generating image`)
+      return
+    }
+    fs.writeFileSync(args.output, buf)
+    consola.success(`Render success, saved to ${args.output}`)
+  } catch (error) {
+    console.error(error)
   }
-  fs.writeFileSync(args.output, buf)
-  consola.success(`Render success, saved to ${args.output}`)
 }
