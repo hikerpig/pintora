@@ -512,7 +512,7 @@ class Model {
       let boxInfo = this.boxInfos.get(id)
       if (id) {
         if (!boxInfo) {
-          const fontConfig = messageFont(conf)
+          const fontConfig = boxFont(conf)
           boxInfo = {
             width: 0,
             actorMarks: [],
@@ -589,7 +589,7 @@ function adjustLoopSizeForWrap(
   if (msg.id && msg.text && loopWidths[msg.id]) {
     const loopMinWidth = model.loopMinWidths[msg.id] || 0
     loopWidth = Math.max(loopWidths[msg.id].width, loopMinWidth)
-    const textConf = messageFont(conf)
+    const textConf = boxFont(conf)
     msg.text = `[${msg.text}]`
     msg.wrap = true
 
@@ -614,6 +614,15 @@ export const messageFont = (cnf: SequenceConf) => {
 const actorFont = messageFont
 const noteFont = messageFont
 
+/** get box - such as loop and box - font config from conf */
+export const boxFont = (cnf: SequenceConf) => {
+  return {
+    fontFamily: cnf.messageFontFamily,
+    fontSize: cnf.messageFontSize,
+    fontWeight: cnf.boxFontWeight || cnf.messageFontWeight,
+  }
+}
+
 function splitBreaks(text: string) {
   return text.split('\n')
 }
@@ -634,7 +643,6 @@ const drawMessage = function (msgModel: MessageModel): DrawResult<Group> {
     textAlign: 'center',
     textBaseline: 'top',
     fill: conf.messageTextColor,
-    stroke: conf.messageTextColor,
   }
 
   // console.log('drawMessage', msgModel.text, msgModel.width, msgModel)
@@ -1059,7 +1067,7 @@ function drawParticipantBoxes(context: SequenceArtistContext) {
     })
     boxesGroup.children.push(rect)
     if (participantBox.text) {
-      const fontConfig = messageFont(conf)
+      const fontConfig = boxFont(conf)
       const textMark = makeMark('text', {
         text: participantBox.text,
         x: startx + width / 2,
