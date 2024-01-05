@@ -1,4 +1,4 @@
-import { createSlice, DeepPartial, Draft, PayloadAction } from '@reduxjs/toolkit'
+import { createSlice } from '@reduxjs/toolkit'
 import { EXAMPLES } from '@pintora/test-shared'
 
 export type State = {

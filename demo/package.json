@@ -29,7 +29,7 @@
     "@pintora/standalone": "workspace:*",
     "@pintora/test-shared": "workspace:*",
     "@react-hook/debounce": "^4.0.0",
-    "@reduxjs/toolkit": "^1.8.3",
+    "@reduxjs/toolkit": "^2.0.0",
     "browser-fs-access": "^0.35.0",
     "classnames": "^2.3.2",
     "daisyui": "^1.22.2",
