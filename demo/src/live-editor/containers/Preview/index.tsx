@@ -1,7 +1,6 @@
 import React, { useCallback } from 'react'
-import { PintoraConfig } from '@pintora/core'
+import type { PintoraConfig, DeepPartial } from '@pintora/core'
 import classnames from 'classnames'
-import { DeepPartial } from '@reduxjs/toolkit'
 import { useDispatch, connect } from 'react-redux'
 import { StoreState } from 'src/live-editor/redux/store'
 import { actions } from 'src/live-editor/redux/slice'

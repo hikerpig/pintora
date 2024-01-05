@@ -1,2 +1,2 @@
-dist/
-out-scripts/
+build-meta.json
+dist
