@@ -11,14 +11,14 @@
   "homepage": "https://github.com/hikerpig/pintora#readme",
   "license": "MIT",
   "source": "src/index.ts",
-  "module": "./lib/pintora-standalone.esm.js",
+  "module": "./lib/pintora-standalone.esm.mjs",
   "umd": "./lib/pintora-standalone.umd.js",
   "main": "./lib/pintora-standalone.umd.js",
   "exports": {
     ".": {
       "import": {
         "types": "./types/index.d.ts",
-        "default": "./lib/pintora-standalone.esm.js"
+        "default": "./lib/pintora-standalone.esm.mjs"
       },
       "require": "./lib/pintora-standalone.umd.js"
     },
