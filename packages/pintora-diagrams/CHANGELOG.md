@@ -1,5 +1,12 @@
 # Change Log
 
+## 0.7.0-alpha.1
+
+### Patch Changes
+
+- a5d289b: fix: classDiagram relation direction, and add docs
+- 2df9693: [sequenceDiagram] remove unnecessary stroke in message text
+
 ## 0.7.0-alpha.0
 
 ### Minor Changes

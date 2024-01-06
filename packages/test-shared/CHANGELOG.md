@@ -1,5 +1,11 @@
 # Change Log
 
+## 0.5.0-alpha.1
+
+### Patch Changes
+
+- a5d289b: fix: classDiagram relation direction, and add docs
+
 ## 0.5.0-alpha.0
 
 ### Minor Changes

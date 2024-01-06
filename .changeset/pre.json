@@ -14,9 +14,12 @@
     "pintora-website": "0.6.0"
   },
   "changesets": [
+    "fair-poems-drum",
     "fair-zoos-mix",
     "fresh-hornets-count",
     "happy-eels-hear",
+    "neat-steaks-grab",
+    "short-tables-roll",
     "unlucky-geckos-tap"
   ]
 }

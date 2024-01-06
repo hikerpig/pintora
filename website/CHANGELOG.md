@@ -1,5 +1,14 @@
 # Change Log
 
+## 0.7.0-alpha.1
+
+### Patch Changes
+
+- a5d289b: fix: classDiagram relation direction, and add docs
+- Updated dependencies [a5d289b]
+  - @pintora/test-shared@0.5.0-alpha.1
+  - @pintora/standalone@0.7.0-alpha.0
+
 ## 0.7.0-alpha.0
 
 ### Minor Changes

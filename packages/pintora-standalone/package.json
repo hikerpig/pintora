@@ -58,7 +58,7 @@
   },
   "dependencies": {
     "@pintora/core": "workspace:^0.7.0-alpha.0",
-    "@pintora/diagrams": "workspace:^0.7.0-alpha.0",
+    "@pintora/diagrams": "workspace:^0.7.0-alpha.1",
     "@pintora/renderer": "^0.7.0-alpha.0"
   },
   "devDependencies": {
