@@ -144,11 +144,14 @@ class ClassDiagramDraw {
       fontFamily: conf.fontFamily,
     }
 
+    const startNodeId = r.reversed ? r.right : r.left
+    const ednNodeId = r.reversed ? r.left : r.right
+
     let minlen = 1
     if (r.label) {
       labelDims = calculateTextDimensions(r.label, fontConfig)
       minlen = Math.ceil(labelDims.height / conf.ranksep) + 1
-      const startNode = g.node(r.left)
+      const startNode = g.node(startNodeId)
       const extraPad = (labelDims.width - startNode.width) / 2
       if (extraPad > 0) {
         // so label won't overlap
@@ -180,8 +183,10 @@ class ClassDiagramDraw {
       })
       relationGroupMark.children.push(rightLabelMark)
     }
+    const startLabelMark = r.reversed ? rightLabelMark : leftLabelMark
+    const endLabelMark = r.reversed ? leftLabelMark : rightLabelMark
 
-    g.setEdge(r.left, r.right, {
+    g.setEdge(startNodeId, ednNodeId, {
       label: r.relation,
       minlen,
       onLayout: (data: BaseEdgeData) => {
@@ -235,13 +240,13 @@ class ClassDiagramDraw {
 
         // draw label beside intersection of node and line
         const LABEL_X_OFFSET = 5
-        if (leftLabelMark) {
+        if (startLabelMark) {
           const startIntersectionPoint = data.points[2]
-          safeAssign(leftLabelMark.attrs, movePointPosition(startIntersectionPoint, { x: LABEL_X_OFFSET, y: 0 }))
+          safeAssign(startLabelMark.attrs, movePointPosition(startIntersectionPoint, { x: LABEL_X_OFFSET, y: 0 }))
         }
 
-        if (rightLabelMark) {
-          safeAssign(rightLabelMark.attrs, movePointPosition(lastPoint, { x: LABEL_X_OFFSET, y: 0 }))
+        if (endLabelMark) {
+          safeAssign(endLabelMark.attrs, movePointPosition(lastPoint, { x: LABEL_X_OFFSET, y: 0 }))
         }
       },
     })
@@ -273,7 +278,7 @@ type EntitySection = {
  */
 class EntityMarkBuilder {
   group: Group = makeEmptyGroup()
-  rowPadding = 5
+  rowPadding = 8
   /** y offset inside entity */
   curY = 0
   curHeight = 0

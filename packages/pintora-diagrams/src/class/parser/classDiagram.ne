@@ -188,7 +188,7 @@ memberLabelStatement ->
 relationStatement ->
     classInRelation textInQuote:? relation textInQuote:? classInRelation (%WS:* %COLON %WS:* words):? {%
         function(d) {
-          let relationRaw = { type: d[2], dashed: false }
+          let relationRaw = { type: d[2], dashed: false, reversed: false }
           let labelLeft = d[1]
           let labelRight = d[3]
           if (d[2].type) {
@@ -207,6 +207,7 @@ relationStatement ->
             labelRight,
             label,
             dashed: Boolean(relationRaw.dashed),
+            reversed: Boolean(relationRaw.reversed)
           } as Action
         }
       %}
@@ -215,16 +216,22 @@ classInRelation ->
     %VALID_TEXT {% (d) => ({ name: tv(d[0])}) %}
 
 relation ->
-    "<|--" {% (d) => { return { type: Relation.INHERITANCE } } %}
-  | "<|.." {% (d) => { return { type: Relation.INHERITANCE, dashed: true } } %}
-  | "*--"  {% (d) => { return { type: Relation.COMPOSITION } } %}
-  | "*.."  {% (d) => { return { type: Relation.COMPOSITION, dashed: true } } %}
-  | "o--"  {% (d) => { return { type: Relation.AGGREGATION } } %}
-  | "o.."  {% (d) => { return { type: Relation.AGGREGATION, dashed: true } } %}
+    "<|--" {% (d) => { return { type: Relation.INHERITANCE, reversed: true } } %}
+  | "<|.." {% (d) => { return { type: Relation.INHERITANCE, reversed: true, dashed: true } } %}
+  | "--|>" {% (d) => { return { type: Relation.INHERITANCE } } %}
+  | "..|>" {% (d) => { return { type: Relation.INHERITANCE, dashed: true } } %}
+  | "*--"  {% (d) => { return { type: Relation.COMPOSITION, reversed: true } } %}
+  | "*.."  {% (d) => { return { type: Relation.COMPOSITION, reversed: true, dashed: true } } %}
+  | "--*"  {% (d) => { return { type: Relation.COMPOSITION } } %}
+  | "..*"  {% (d) => { return { type: Relation.COMPOSITION, dashed: true } } %}
+  | "o--"  {% (d) => { return { type: Relation.AGGREGATION, reversed: true } } %}
+  | "o.."  {% (d) => { return { type: Relation.AGGREGATION, reversed: true, dashed: true } } %}
+  | "--o"  {% (d) => { return { type: Relation.AGGREGATION } } %}
+  | "..o"  {% (d) => { return { type: Relation.AGGREGATION, dashed: true } } %}
   | "-->"  {% (d) => { return { type: Relation.ASSOCIATION } } %}
   | "..>"  {% (d) => { return { type: Relation.ASSOCIATION, dashed: true } } %}
-  | "<--"  {% (d) => { return { type: Relation.ASSOCIATION } } %}
-  | "<.."  {% (d) => { return { type: Relation.ASSOCIATION } } %}
+  | "<--"  {% (d) => { return { type: Relation.ASSOCIATION, reversed: true } } %}
+  | "<.."  {% (d) => { return { type: Relation.ASSOCIATION, reversed: true, dashed: true } } %}
   | "--"   {% (d) => { return { type: Relation.LINK } } %}
   | ".."   {% (d) => { return { type: Relation.LINK, dashed: true } } %}
 

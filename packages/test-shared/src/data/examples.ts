@@ -327,17 +327,24 @@ export const classExample: DiagramExample = {
   description: 'Sample for a classDiagram',
   code: stripStartEmptyLines(`
 classDiagram
+  class Fruit {
+    <<interface>>
+    float sweetness
+    -float age
 
-class Fruit {
-  float sweetness
-}
+    float getAge()
+  }
 
-class Apple {
-}
+  class Apple {
+    float softness
+    {static} Apple fromString(str)
+  }
 
-Fruit <|-- Apple
+  %% There are so many kind of fruits
+  Fruit <|-- Apple
+  Fruit <|-- Banana
 
-Container "1" *-- "many" Fruit : holds
+  Fruit "many" --* "1" Bag: packed into
 `),
 }
 

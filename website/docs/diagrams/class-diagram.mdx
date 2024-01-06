@@ -11,8 +11,8 @@ title: Class Diagram
 
 ```pintora play
 classDiagram
-
   class Fruit {
+    <<interface>>
     float sweetness
     -float age
 
@@ -20,12 +20,16 @@ classDiagram
   }
 
   class Apple {
+    float softness
+    {static} Apple fromString(str)
   }
 
+  %% There are so many kind of fruits
   Fruit <|-- Apple
   Fruit <|-- Kiwi
+  Fruit <|-- Banana
 
-  Container "1" *-- "many" Fruit : holds
+  Fruit "many" --* "1" Bag: packed into
 ```
 
 ## Define a class
@@ -58,6 +62,30 @@ Define member visibility with these symbols. The notaiton is optional but it sho
 - `-` private
 - `~` package/internal
 
+## Class annotations
+
+You can annotate classes with markers to provide additional metadata about the class. This can give a clearer indication about its nature. Some common annotations include:
+
+- `<<interface>>` To represent an interface class
+- `<<enumeration>>` To represent an enum
+
+Annotations are defined within the opening `<<` and closing `>>`. There are two ways to add an annotation to a class:
+
+```pintora play
+classDiagram
+  class Shape
+  <<interface>> Shape
+  Shape : vertices
+  Shape : draw()
+
+  class Color {
+    <<enumeration>>
+    Red
+    Green
+    Blue
+  }
+```
+
 ## Relations between classes
 
 You can define relations between classes using following symbols :
@@ -86,7 +114,7 @@ classO .. classP
 
 ### Label on relations
 
-It is possible to add a label on the relation, using `:`, followed by the text of the label.
+You can add a label on the relation, using `:`, followed by the text of the label.
 
 Also, you can use double-quotes `""` on each side of the relation for cardinality.
 
@@ -95,4 +123,24 @@ classDiagram
   classA "1" *-- "many" classB : contains
   classC o-- classD : aggregation
   classE --> "1" classF
+```
+
+## Override config
+
+You can override diagarm config through `@param` directive.
+
+All available configs can be seen in the [Config page](../configuration/config.md#class).
+
+```pintora play
+classDiagram
+  @param entityBackground #61afef
+
+  class Animal {
+  }
+
+  class Dog {
+    void bark()
+  }
+
+  Animal <|-- Dog
 ```

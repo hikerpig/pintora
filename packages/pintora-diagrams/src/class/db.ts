@@ -22,6 +22,10 @@ export type ClassRelation = {
   labelLeft?: string
   labelRight?: string
   dashed?: boolean
+  /**
+   * normally we draw the relation from left to right, if reversed is true, we draw the relation from right to left
+   */
+  reversed?: boolean
 }
 
 type Access = 'public' | 'private' | 'protected'
