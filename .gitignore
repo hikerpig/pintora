@@ -67,6 +67,7 @@ jspm_packages/
 
 # dotenv environment variables file
 .env
+.envrc
 
 
 # End of https://www.gitignore.io/api/node

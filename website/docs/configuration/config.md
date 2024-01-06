@@ -347,6 +347,37 @@ export type DOTConf = {
 }
 ```
 
+### class
+
+Config for class diagram. For more detail, check the [latest code](https://github.com/hikerpig/pintora/blob/master/packages/pintora-diagrams/src/class/config.ts).
+
+```ts
+export type ClassConf = {
+  diagramPadding: number
+
+  layoutDirection: string
+  ranksep: number
+  nodesep: number
+  edgesep: number
+  edgeType: EdgeType
+
+  entityBackground: string
+  entityBorderColor: string
+  entityBodyBackground: string
+  entityTextColor: string
+  labelBackground: string
+  relationLineColor: string
+  relationTextColor: string
+
+  entityRadius: number
+
+  fontSize: number
+  fontWeight: MarkAttrs['fontWeight']
+  fontFamily: string
+}
+```
+
+
 ## Override config by directive
 
 If you don't have the access to add JS script into the page or in the Node.js module, it's also possible to override some configs of the builtin diagrams through the `@param` or `@config` directive.
