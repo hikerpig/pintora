@@ -33,8 +33,8 @@ function makeIcon({ width, height, x, y }: ContentArea) {
       children: [
         makeMark('circle', {
           r: radius,
-          x,
-          y: topY + radius,
+          cx: x,
+          cy: topY + radius,
           width,
           height,
         }),

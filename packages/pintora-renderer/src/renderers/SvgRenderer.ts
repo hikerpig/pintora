@@ -1,32 +1,26 @@
 import { Mark } from '@pintora/core'
 import { BaseRenderer } from './base'
-import { Canvas, IShape } from '@antv/g-svg'
+import { Element as GElement } from '@antv/g'
+import { Renderer } from '@antv/g-svg'
 
 export class SvgRenderer extends BaseRenderer {
-  getCanvasClass() {
-    return Canvas
+  getGRenderer() {
+    return new Renderer()
   }
 
-  preProcessMarkAttrs(mark: Mark) {
-    if (mark.type === 'text') {
-      return {
-        ...mark.attrs,
-        text: escapeHtml(mark.attrs.text),
-      }
-    }
-    return mark.attrs!
+  override getRootElement() {
+    if (!this.gcvs) return
+    return (this.gcvs.context.contextService as any).$namespace
   }
 
-  onShapeAdd(shape: IShape, mark: Mark) {
+  onShapeAdd(shape: GElement, mark: Mark) {
     super.onShapeAdd(shape, mark)
 
     if (mark.class) {
-      const el = shape.get('el')
+      const el = shape
       // TODO: some js dom implementation does not have classList
       if (el && el.classList) {
-        mark.class.split(' ').forEach(cls => {
-          if (cls) el.classList.add(cls)
-        })
+        shape.style.class = mark.class
       }
     }
   }

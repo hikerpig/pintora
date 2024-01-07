@@ -17,7 +17,7 @@
     "test": "pnpm exec jest",
     "coverage": "pnpm exec jest --coverage",
     "upload-coverage": "codecov -f coverage/coverage-final.json",
-    "ci:coverage": "pnpm exec jest --coverage --ci",
+    "ci:coverage": "pnpm exec jest --coverage --ci --forceExit",
     "prepare": "turbo run prepare-setup",
     "build-site": "sh ./scripts/build-site.sh",
     "vercel-build": "npm run compile:browser && npm run build-site"

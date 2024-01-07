@@ -1,4 +1,4 @@
-import { MarkAttrs, Point, Path, PathCommand, createRotateAtPoint } from '@pintora/core'
+import { MarkAttrs, Point, Path, PathCommand, transform } from '@pintora/core'
 
 export type ArrowType = 'default' | 'triangle' | 'etriangle' | 'box' | 'obox' | 'dot' | 'odot' | 'diamond' | 'ediamond'
 
@@ -38,7 +38,11 @@ export function drawArrowTo(dest: Point, baseLength: number, rad: number, opts: 
 
   const result = arrowTypeRegistry.draw(context)
   const shapeStartPoint = result.shapeStartPoint || { x: x - xOffset, y }
-  const matrix = createRotateAtPoint(x, y, rad)
+  const matrix = transform(undefined as any, [
+    ['r', rad],
+    ['t', x, y],
+    ['t', -baseLength * Math.cos(rad), -baseLength * Math.sin(rad)],
+  ])
   return {
     type: 'path',
     matrix,

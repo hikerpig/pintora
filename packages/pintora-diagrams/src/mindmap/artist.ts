@@ -165,7 +165,6 @@ class MMDraw {
       width: rectWidth,
       height: rectHeight,
       onLayout(data) {
-        // console.log('[drawNode] onLayout', data)
         positionGroupContents(group, data)
       },
     })

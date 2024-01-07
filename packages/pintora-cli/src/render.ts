@@ -35,8 +35,18 @@ function renderPrepare(opts: CLIRenderOptions) {
   // setup the env for renderer
   global.window = dom.window as any
   global.document = document
+
+  const noop = () => {}
+  Object.assign(global as any, {
+    navigator: {},
+    addEventListener: noop,
+    removeEventListener: noop,
+    CanvasPattern,
+    requestAnimationFrame(cb: () => void) {
+      cb()
+    }
+  })
   ;(dom.window as any).devicePixelRatio = devicePixelRatio
-  ;(global as any).CanvasPattern = CanvasPattern
 
   return {
     container,

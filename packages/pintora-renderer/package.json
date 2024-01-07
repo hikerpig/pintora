@@ -22,13 +22,13 @@
     "watch": "tsc -w"
   },
   "dependencies": {
-    "@antv/g-canvas": "^0.5.12",
-    "@antv/g-svg": "^0.5.6",
+    "@antv/g": "^5.18.23",
+    "@antv/g-canvas": "^1.11.25",
+    "@antv/g-svg": "^1.10.24",
     "@pintora/core": "workspace:^0.7.0-alpha.0",
     "@types/node": "^16.11.7"
   },
   "devDependencies": {
-    "@antv/g-base": "^0.5.11",
     "typescript": "^5.0.0"
   }
 }
