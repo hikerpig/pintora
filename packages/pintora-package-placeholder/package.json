@@ -1,0 +1,29 @@
+{
+  "name": "pintora",
+  "version": "0.0.0",
+  "description": "A placeholder package for @pintora/cli",
+  "keywords": [
+    "pintora"
+  ],
+  "homepage": "https://github.com/hikerpig/pintora#readme",
+  "bugs": {
+    "url": "https://github.com/hikerpig/pintora/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hikerpig/pintora.git",
+    "directory": "packages/pintora-package-placeholder"
+  },
+  "license": "MIT",
+  "author": "hikerpig <hikerpigwinnie@gmail.com>",
+  "bin": {
+    "pintora": "./bin/pintora"
+  },
+  "files": [
+    "bin"
+  ],
+  "dependencies": {},
+  "publishConfig": {
+    "access": "public"
+  }
+}

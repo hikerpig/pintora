@@ -1,0 +1,11 @@
+#!/usr/bin/env node
+
+const str = `
+This is a placeholder package, in case the name 'pintora' is taken by other projects.
+
+Pintora is an extensible text-to-diagrams library that works in both browser and node.js.
+
+Please check out https://pintorajs.vercel.app/docs/getting-started/usage/ for more instructions of using @pintora/cli in Node.js.
+`
+
+console.log(str)
