@@ -65,7 +65,7 @@ function traverseScene<Actions = unknown>(
 
 export abstract class BaseRenderer implements IRenderer {
   container: HTMLElement | null = null
-  /** The Canvas instance of `@antv/g-base` */
+  /** The Canvas instance of `@antv/g` */
   protected gcvs?: Canvas
 
   /** A map from shape to mark, later we will use this to get mark in event handlers */
