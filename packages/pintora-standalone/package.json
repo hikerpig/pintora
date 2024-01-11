@@ -67,7 +67,7 @@
     "@types/tinycolor2": "^1.4.3",
     "esbuild": "^0.19.11",
     "microbundle": "^0.15.1",
-    "tsx": "^3.9.0",
+    "tsx": "^4.0.0",
     "typescript": "^5.0.0"
   }
 }
