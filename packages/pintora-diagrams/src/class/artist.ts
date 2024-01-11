@@ -2,6 +2,7 @@ import {
   calculateTextDimensions,
   Group,
   last,
+  Line,
   makeArtist,
   makeMark,
   movePointPosition,
@@ -113,10 +114,16 @@ class ClassDiagramDraw {
       const nextSectionIndex = index + 1
       if (memberList.length) {
         for (const member of memberList) {
-          markBuilder.addRow(nextSectionIndex, member.raw)
+          markBuilder.addRow(nextSectionIndex, [
+            {
+              label: member.raw,
+              italic: member.modifier === 'abstract',
+              underline: member.modifier === 'static',
+            },
+          ])
         }
       } else {
-        markBuilder.addRow(nextSectionIndex, '')
+        markBuilder.addRow(nextSectionIndex, [''])
       }
     }
 
@@ -260,9 +267,14 @@ const RELATION_TO_ARROW_TYPE: Partial<Record<Relation, ArrowType>> = {
   [Relation.AGGREGATION]: 'ediamond',
 }
 
+type EntityMarkPair = {
+  labelMark: Text
+  decorationLine?: Line
+}
+
 type EntityMarkRow = {
-  labels: string[]
-  labelMarks: Text[]
+  labels: Array<string | RowConfig>
+  marks: Array<EntityMarkPair>
   labelDims: TSize
   yOffsetStart: number
   yOffsetEnd: number
@@ -271,6 +283,12 @@ type EntityMarkRow = {
 
 type EntitySection = {
   rows: EntityMarkRow[]
+}
+
+type RowConfig = {
+  label: string
+  italic?: boolean
+  underline?: boolean
 }
 
 /**
@@ -295,43 +313,64 @@ class EntityMarkBuilder {
     if (annotation) {
       row = this.addRow(0, [`<<${annotation}>>`, label])
     } else {
-      row = this.addRow(0, label)
+      row = this.addRow(0, [label])
     }
     row.isHeader = true
-    last(row.labelMarks).attrs.fontWeight = 'bold'
+    last(row.marks).labelMark.attrs.fontWeight = 'bold'
     return row
   }
 
-  addRow(sectionIndex: number, labels: string | string[]) {
+  addRow(sectionIndex: number, labels: Array<string | RowConfig>) {
     if (!this.sections[sectionIndex]) {
       this.sections[sectionIndex] = {
         rows: [],
       }
     }
     const section = this.sections[sectionIndex]
-    if (typeof labels === 'string') {
-      labels = [labels]
-    }
     const { rowPadding } = this
-    const labelMarks = []
+    const marks: EntityMarkPair[] = []
     const labelDims = { width: 0, height: 0 }
     let labelYOffset = 0
-    for (const label of labels) {
+    for (const _l of labels) {
+      const labelConfig = typeof _l === 'string' ? { label: _l } : _l
+      const label = labelConfig.label
       const fontConfig = this.getFontConfig()
       const dims = calculateTextDimensions(label, fontConfig)
-      const labelMark = makeMark('text', {
+      const textY = this.curY + labelYOffset + rowPadding
+      const textAttrs: Text['attrs'] = {
         text: label,
         fill: this.conf.entityTextColor,
         x: 0,
-        y: this.curY + labelYOffset + rowPadding,
+        y: textY,
         textAlign: 'center',
         textBaseline: 'hanging',
         ...dims,
         ...this.getFontConfig(),
-      })
+      }
+      if (labelConfig.italic) {
+        Object.assign(textAttrs, {
+          fontStyle: 'italic',
+        })
+      }
+
+      const labelMark = makeMark('text', textAttrs)
+      const mark: EntityMarkPair = {
+        labelMark,
+      }
+      if (labelConfig.underline) {
+        const lineMark = makeMark('line', {
+          x1: 0,
+          x2: dims.width,
+          y1: textY,
+          y2: textY,
+          stroke: this.conf.entityTextColor,
+          class: 'class-entity__underline',
+        })
+        mark.decorationLine = lineMark
+      }
       const labelYDiff = dims.height + Math.floor(fontConfig.fontSize / 4)
       labelYOffset += labelYDiff
-      labelMarks.push(labelMark)
+      marks.push(mark)
       labelDims.width = Math.max(labelDims.width, dims.width)
       labelDims.height += labelYDiff
     }
@@ -340,9 +379,15 @@ class EntityMarkBuilder {
     const yDiff = labelDims.height + rowPadding * 2
     this.curY += yDiff
     this.curHeight += yDiff
-    const row: EntityMarkRow = { labels, labelMarks, labelDims, yOffsetStart, yOffsetEnd: this.curY }
+    const row: EntityMarkRow = { labels, marks, labelDims, yOffsetStart, yOffsetEnd: this.curY }
     section.rows.push(row)
-    this.group.children.push(...labelMarks)
+
+    for (const pair of marks) {
+      this.group.children.push(pair.labelMark)
+      if (pair.decorationLine) {
+        this.group.children.push(pair.decorationLine)
+      }
+    }
 
     return row
   }
@@ -393,11 +438,19 @@ class EntityMarkBuilder {
       }
       for (const row of section.rows) {
         // console.log('row', row.labels, row.labelDims)
-        for (const labelMark of row.labelMarks) {
+        for (const { labelMark, decorationLine } of row.marks) {
           if (!row.isHeader) {
             labelMark.attrs.x += (labelMark.attrs.width - rectSize.width) / 2 + rowPadding
           }
           labelMark.attrs.y += -halfClassHeight + rowPadding
+          if (decorationLine) {
+            const offsetY = labelMark.attrs.height
+            decorationLine.attrs.y1 = labelMark.attrs.y + offsetY
+            decorationLine.attrs.y2 = labelMark.attrs.y + offsetY
+            const offsetX = -rectSize.width / 2 + rowPadding / 2
+            decorationLine.attrs.x1 += offsetX
+            decorationLine.attrs.x2 += offsetX
+          }
         }
       }
       const firstRow = section.rows[0]
