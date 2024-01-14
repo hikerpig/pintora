@@ -65,7 +65,7 @@ const SHOW_NUMBER_CIRCLE_RADIUS = 8
 
 const sequenceArtist: IDiagramArtist<SequenceDiagramIR, SequenceConf> = {
   draw(ir, config?, opts?) {
-    // console.log('[draw]', ir, config)
+    console.log('[draw]', ir, config)
     conf = getConf(ir, config)
     theme = (configApi.getConfig() as PintoraConfig).themeConfig.themeVariables
     model.init()

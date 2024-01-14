@@ -865,7 +865,7 @@ exports[`sequence-artist match example snapshot 1`] = `
               "fontSize": 16,
               "fontWeight": 400,
               "text": "multiline note
-  is possible",
+is possible",
               "textAlign": "center",
               "textBaseline": "middle",
             },

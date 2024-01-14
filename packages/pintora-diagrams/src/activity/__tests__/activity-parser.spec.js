@@ -232,8 +232,8 @@ partition "Init pintora" {
     const example = stripStartEmptyLines(`
 activityDiagram
 :do something;
-@note right
-message here
+@start_note right
+message: here -
 @end_note
 :step 2;
 note left: message 2
@@ -264,7 +264,7 @@ note left: message 2
         id: 'id-2',
         type: 'note',
         placement: 'right',
-        text: 'message here',
+        text: 'message: here -',
         target: 'id-1',
       },
       {

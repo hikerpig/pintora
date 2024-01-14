@@ -2,6 +2,7 @@ import { logger, makeIdCounter, OrNull, parseColor } from '@pintora/core'
 import { ConfigParam, OverrideConfigAction, ParamAction } from '../util/config'
 import { BaseDb } from '../util/base-db'
 import { BaseDiagramIR } from '../util/ir'
+import { dedent } from '../util/text'
 
 export interface WrappedText {
   text: string
@@ -219,10 +220,11 @@ class SequenceDB extends BaseDb {
   }
 
   addNote(actor: string | string[], placement: any, message: ParsedDescription) {
+    const noteText = dedent(message.text)
     const note: Note = {
       actor: actor,
       placement,
-      text: message.text,
+      text: noteText,
       wrap: (message.wrap === undefined && this.wrapEnabled) || !!message.wrap,
     }
 
@@ -235,7 +237,7 @@ class SequenceDB extends BaseDb {
     this.messages.push({
       from: fromActor,
       to: toActor,
-      text: message.text,
+      text: noteText,
       wrap: (message.wrap === undefined && this.wrapEnabled) || !!message.wrap,
       type: LINETYPE.NOTE,
       placement: placement,
