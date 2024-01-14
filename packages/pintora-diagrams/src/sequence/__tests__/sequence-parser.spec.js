@@ -43,6 +43,7 @@ sequenceDiagram
     // console.log('notes', result.notes)
     expect(result.notes.length).toEqual(1)
     expect(result.notes[0]).toMatchObject({
+      actor: 'User',
       text: 'singleline note',
     })
   })
@@ -50,8 +51,8 @@ sequenceDiagram
   it('can parse multiline note', () => {
     const multilineNoteExample = stripStartEmptyLines(`
 sequenceDiagram
-  @note right of Pintora
-  aaa note
+  @start_note right of Pintora
+  aaa note -
   bbb
   @end_note
     `)
@@ -60,9 +61,23 @@ sequenceDiagram
     // console.log('notes', result.notes)
     expect(result.notes.length).toEqual(1)
     // parseMessage will trim text, so this may be somehow strange
-    expect(result.notes[0]).toMatchObject({
-      text: 'aaa note\n  bbb',
-    })
+    const messageText = result.notes[0].text
+    expect(messageText).toEqual('aaa note -\nbbb')
+    expect(result.notes[0].actor).toEqual('Pintora')
+  })
+
+  it('can parse multiline note with over', () => {
+    const multilineNoteExample = stripStartEmptyLines(`
+sequenceDiagram
+  @start_note over A,B
+  second
+  @end_note
+    `)
+    parse(multilineNoteExample)
+    const result = db.getDiagramIR()
+    const messageText = result.notes[0].text
+    expect(messageText).toEqual('second')
+    expect(result.notes[0].actor).toEqual(['A', 'B'])
   })
 
   it('can parse divider', () => {

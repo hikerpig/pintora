@@ -40,8 +40,11 @@ let lexer = moo.states({
     R_PAREN: R_PAREN_REGEXP,
     L_BRACKET: { match: /\{/ },
     R_BRACKET: { match: /\}/ },
-    START_NOTE: textToCaseInsensitiveRegex('@note'),
-    END_NOTE: textToCaseInsensitiveRegex('@end_note'),
+    NOTE: textToCaseInsensitiveRegex('@note'),
+    START_NOTE: {
+      match: /@start_note\s/,
+      push: 'noteState',
+    },
     COMMENT_LINE: COMMENT_LINE_REGEXP,
     ...configLexerMainState,
     VALID_TEXT: { match: VALID_TEXT_REGEXP, fallback: true },
@@ -50,6 +53,15 @@ let lexer = moo.states({
     ...configLexerconfigStatementState,
     ...COMMON_TOKEN_RULES,
   },
+  noteState: {
+    END_NOTE: {
+      match: textToCaseInsensitiveRegex('@end_note'),
+      pop: 1,
+    },
+    NL: MOO_NEWLINE,
+    COMMA: /,/,
+    WORD: { match: VALID_TEXT_REGEXP, fallback: true },
+  }
 })
 
 let yy
@@ -283,7 +295,7 @@ placement ->
 	| "right" {% (d) => "right" %}
 
 multilineNoteText ->
-    (%VALID_TEXT|%WS|%NL):* %END_NOTE {%
+    (%WORD|%NL):* %END_NOTE {%
       function(d) {
         const v = d[0].map(l => {
           return l.map(o => tv(o))
@@ -297,14 +309,14 @@ multilineNoteText ->
     %}
 
 noteStatement ->
-	  ("note"|%START_NOTE) %WS:* placement %COLON words %NL {%
+	  ("note" | %NOTE) %WS:* placement %WS:* %COLON words %NL {%
       function(d) {
-        const text = d[4].trim()
+        const text = d[5].trim()
         // console.log('[note one]\n', text)
         return { type: 'note', placement: d[2], text } as ApplyPart
       }
     %}
-	| ("note"|%START_NOTE) %WS:* placement %WS:* %NL multilineNoteText %NL {%
+	| ("note" | %START_NOTE) %WS:* placement %WS:* %NL multilineNoteText %NL {%
       function(d) {
         // console.log('[note multi]\n', d[5])
         const text = d[5]

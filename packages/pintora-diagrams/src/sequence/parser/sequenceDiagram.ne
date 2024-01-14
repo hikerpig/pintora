@@ -23,14 +23,23 @@ import {
 } from '../../util/parser-shared'
 import db, { ApplyParam } from '../db'
 
+const _PLACEMENT = [
+  { match: /left\sof/, type: () => 'LEFT_OF' },
+  { match: /right\sof/, type: () => 'RIGHT_OF' },
+  { match: /over/, type: () => 'OVER' },
+]
+
 let lexer = moo.states({
   main: {
     NL: MOO_NEWLINE,
     WS: {match: / +/, lineBreaks: false },
     ...configLexerMainState,
     QUOTED_WORD: QUOTED_WORD_REGEXP,
-    START_NOTE: textToCaseInsensitiveRegex('@note'),
-    END_NOTE: textToCaseInsensitiveRegex('@end_note'),
+    NOTE: textToCaseInsensitiveRegex('@note'),
+    START_NOTE: {
+      match: /@start_note\s/,
+      push: 'noteState',
+    },
     BACKQUOTED_TEXT: /`[^`]*`/,
     SOLID_ARROW: /->>/,
     DOTTED_ARROW: /-->>/,
@@ -50,10 +59,7 @@ let lexer = moo.states({
     R_AN_BRACKET: { match: /\>/ },
     L_PAREN: L_PAREN_REGEXP,
     R_PAREN: R_PAREN_REGEXP,
-    _PLACEMENT: [
-      { match: /left\sof/, type: () => 'LEFT_OF' },
-      { match: /right\sof/, type: () => 'RIGHT_OF' },
-    ],
+    _PLACEMENT,
     COLOR: /#[a-zA-Z0-9]+/,
     COMMENT_LINE: COMMENT_LINE_REGEXP,
     WORD: { match: VALID_TEXT_REGEXP, fallback: true },
@@ -65,6 +71,16 @@ let lexer = moo.states({
     ...configLexerconfigStatementState,
     WORD: { match: VALID_TEXT_REGEXP, fallback: true },
   },
+  noteState: {
+    _PLACEMENT,
+    END_NOTE: {
+      match: textToCaseInsensitiveRegex('@end_note'),
+      pop: 1,
+    },
+    NL: MOO_NEWLINE,
+    COMMA: /,/,
+    WORD: { match: VALID_TEXT_REGEXP, fallback: true },
+  }
 })
 
 let yy: typeof db
@@ -128,7 +144,7 @@ statement ->
         }
       }
     %}
-	| note_statement {% (d) => {
+	| noteStatement {% (d) => {
     // console.log('[note_a]', d)
     return d[0]
   } %}
@@ -273,7 +289,7 @@ textWithColon -> %COLON _ %REST_OF_LINE {%
 %}
 
 multilineNoteText ->
-    (%WORD|%WS|%NL):* %END_NOTE {%
+    (%WORD|%NL):* %END_NOTE {%
       function(d) {
         // console.log('[multiline text]', d)
         const v = d[0].map(l => {
@@ -287,28 +303,37 @@ placement ->
 	  %LEFT_OF  {% (d) => yy.PLACEMENT.LEFTOF %}
 	| %RIGHT_OF {% (d) => yy.PLACEMENT.RIGHTOF %}
 
-note_statement ->
-	  ("note" | %START_NOTE) placement actor textWithColon %NL {%
+noteStatement->
+	  ("note" | %NOTE) placement actor textWithColon %NL {%
       function(d) {
         // console.log('[note one]\n', d)
-        return [d[2], { type:'addNote', placement: d[1], actor: d[2].actor, text: d[3] }]
+        const actor = d[2].actor.trim()
+        return [actor, { type:'addNote', placement: d[1], actor, text: d[3] }]
       }
     %}
-	| ("note" | %START_NOTE) placement actor multilineNoteText %NL {%
+	| ("note" | %START_NOTE) placement actor %NL multilineNoteText %NL {%
       function(d) {
         // console.log('[note multi]\n', d[5])
-        const text = d[3]
-        const message = yy.parseMessage(text)
-        return [d[2], { type:'addNote', placement: d[1], actor: d[2].actor, text: message }]
+        const message = yy.parseMessage(d[4])
+        const actor = d[2].actor.trim()
+        return [actor, { type:'addNote', placement: d[1], actor, text: message }]
       }
     %}
-	| ("note" | %START_NOTE) "over" actor_pair textWithColon %NL {%
+	| ("note" | %NOTE) %OVER actor_pair textWithColon %NL {%
       function(d) {
-        // console.log('[note over]\n', d[5])
-        const actors = [d[2][0].actor, d[2][1].actor]
+        // console.log('[note over]\n', d[2])
+        const actors = [d[2][0].actor.trim(), d[2][1].actor]
         return [
           d[2], {type:'addNote', placement: yy.PLACEMENT.OVER, actor: actors, text: d[3]}
         ]
+      }
+    %}
+	| ("note" | %START_NOTE) %OVER actor_pair %NL multilineNoteText %NL {%
+      function(d) {
+        // console.log('[note multi]\n', d)
+        const actors = [d[2][0].actor.trim(), d[2][1].actor]
+        const message = yy.parseMessage(d[4])
+        return [d[2], { type:'addNote', placement: yy.PLACEMENT.OVER, actor: actors, text: message }]
       }
     %}
 

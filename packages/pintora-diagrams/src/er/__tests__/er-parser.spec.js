@@ -59,7 +59,7 @@ erDiagram
     `
     parse(example)
     const ir = db.getDiagramIR()
-    console.log(JSON.stringify(ir, null, 2))
+    // console.log(JSON.stringify(ir, null, 2))
     expect(ir.entities).toMatchObject({
       ORDER: {
         attributes: [

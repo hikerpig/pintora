@@ -46,8 +46,6 @@ let lexer = moo.states({
     R_SQ_BRACKET: { match: /\]/ },
     EQ: { match: /=/ },
     SUBGRAPH: { match: /subgraph/ },
-    START_NOTE: textToCaseInsensitiveRegex('@note'),
-    END_NOTE: textToCaseInsensitiveRegex('@end_note'),
     COMMENT_LINE: COMMENT_LINE_REGEXP,
     DOT_SLASH_COMMENT: /\/\/.*/,
     DOT_BLOCK_COMMENT_START: { match: /\/\*/, push: 'blockComment' },
