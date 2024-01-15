@@ -24,7 +24,7 @@
     "clsx": "^2.0.0",
     "docusaurus-plugin-less": "^2.0.2",
     "file-loader": "^6.2.0",
-    "less-loader": "^10.2.0",
+    "less-loader": "^12.0.0",
     "mdx-embed": "^1.0.0",
     "path-browserify": "^1.0.1",
     "prism-react-renderer": "^1.2.1",
