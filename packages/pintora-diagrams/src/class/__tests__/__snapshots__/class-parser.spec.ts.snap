@@ -67,6 +67,7 @@ exports[`class parser can parse methods and fields 1`] = `
     },
   },
   "configParams": [],
+  "notes": [],
   "overrideConfig": {},
   "relations": [],
   "title": "",

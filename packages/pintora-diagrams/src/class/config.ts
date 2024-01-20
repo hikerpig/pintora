@@ -22,6 +22,9 @@ export type ClassConf = {
 
   entityRadius: number
 
+  noteMargin: number
+  noteTextColor: string
+
   fontSize: number
   fontWeight: MarkAttrs['fontWeight']
   fontFamily: string
@@ -45,6 +48,9 @@ export const defaultConfig: ClassConf = {
   relationTextColor: PALETTE.normalDark,
 
   entityRadius: 2,
+
+  noteMargin: 10,
+  noteTextColor: PALETTE.normalDark,
 
   fontSize: 14,
   fontWeight: 'normal',

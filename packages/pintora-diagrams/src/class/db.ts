@@ -3,6 +3,7 @@ import { BaseDiagramIR } from '../util/ir'
 import { ActionHandler, BaseDb, MakeAction } from '../util/base-db'
 import { ConfigParam } from '@pintora/core'
 import { OverrideConfigAction } from '../util/config'
+import dedent from 'dedent'
 
 /** type to represent one class  */
 export type TClass = {
@@ -49,6 +50,13 @@ export enum Relation {
   LINK = 'LINK',
 }
 
+export type Note = {
+  id: string
+  text: string
+  placement: string
+  target?: string
+}
+
 type ClassActionPayloads = {
   addClass: Pick<TClass, 'name'> & {
     members: Array<RawMember | RawAnnotation>
@@ -59,6 +67,11 @@ type ClassActionPayloads = {
   addAnnotation: { className: string; annotation: string }
   overrideConfig: OverrideConfigAction
   addParam: ConfigParam
+  note: {
+    text: string
+    placement: string
+    target?: string
+  }
 }
 
 type RawMember = {
@@ -75,6 +88,7 @@ export type Action = MakeAction<ClassActionPayloads>
 export type ClassIR = BaseDiagramIR & {
   classes: Record<string, TClass>
   relations: ClassRelation[]
+  notes: Note[]
 }
 
 const NAMESPACE_SEP = '.'
@@ -83,6 +97,7 @@ const FIELD_SEP = ':'
 export class ClassDb extends BaseDb {
   protected classes: Record<string, TClass> = {}
   protected relations: ClassRelation[] = []
+  protected notes: Note[] = []
 
   ACTION_HANDLERS: { [K in keyof ClassActionPayloads]: ActionHandler<ClassActionPayloads, ClassDb, K> } = {
     addClass(action) {
@@ -132,6 +147,11 @@ export class ClassDb extends BaseDb {
         this.classes[action.className] = classObj
       }
       classObj.annotation = action.annotation
+    },
+    note(action) {
+      const id = `note-${action.target}-${action.placement}`
+      const value: Note = { ...action, id, text: dedent(action.text) }
+      this.notes.push(value)
     },
     overrideConfig(action) {
       this.addOverrideConfig(action)
@@ -221,6 +241,7 @@ export class ClassDb extends BaseDb {
       ...super.getBaseDiagramIR(),
       classes: this.classes,
       relations: this.relations,
+      notes: this.notes,
     }
   }
 
@@ -240,6 +261,7 @@ export class ClassDb extends BaseDb {
     super.clear()
     this.classes = {}
     this.relations = []
+    this.notes = []
   }
 }
 

@@ -64,6 +64,22 @@ describe('class parser', () => {
     expect(ir.relations).toMatchSnapshot()
   })
 
+  it('can parse multiple relationships', () => {
+    const example = stripStartEmptyLines(`
+    classDiagram
+    classA <|-- classB
+    classC *-- classD
+    classE o-- classF
+    classG <-- classH
+    classI -- classJ
+    classK <.. classL
+    classM <|.. classN
+    classO .. classP
+    class1 --|> class2
+    `)
+    parse(example)
+  })
+
   it('can parse quoted labels on relations', () => {
     const example = stripStartEmptyLines(`
     classDiagram
@@ -115,5 +131,37 @@ describe('class parser', () => {
     parse(example)
     const ir = db.getDiagramIR()
     expect(ir.classes).toMatchSnapshot()
+  })
+
+  it('can parse singleline note', () => {
+    const backquoteExample = `classDiagram
+    @note right of User: singleline note
+    `
+    parse(backquoteExample)
+    const result = db.getDiagramIR()
+    // console.log('notes', result.notes)
+    expect(result.notes.length).toEqual(1)
+    expect(result.notes[0]).toMatchObject({
+      text: 'singleline note',
+    })
+  })
+
+  it('can parse multiline note', () => {
+    const multilineNoteExample = stripStartEmptyLines(`
+classDiagram
+  class Object {
+  }
+  @start_note right of Object
+  aaa note -
+  bbb
+  @end_note
+    `)
+    parse(multilineNoteExample)
+    const result = db.getDiagramIR()
+    // console.log('notes', result.notes)
+    expect(result.notes.length).toEqual(1)
+    // parseMessage will trim text, so this may be somehow strange
+    const messageText = result.notes[0].text
+    expect(messageText).toEqual('aaa note -\nbbb')
   })
 })
