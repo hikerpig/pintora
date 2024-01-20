@@ -345,6 +345,8 @@ classDiagram
   Fruit <|-- Banana
 
   Fruit "many" --* "1" Bag: packed into
+
+  @note right of Fruit: The base class
 `),
 }
 

@@ -1,11 +1,15 @@
 import {
   calculateTextDimensions,
+  configApi,
   Group,
+  ITheme,
   last,
   Line,
   makeArtist,
   makeMark,
   movePointPosition,
+  PintoraConfig,
+  Rect,
   safeAssign,
   Text,
   TSize,
@@ -15,6 +19,7 @@ import {
   ArrowType,
   calcDirection,
   drawArrowTo,
+  getBaseNote,
   makeEmptyGroup,
   makeLabelBg,
 } from '../util/artist-util'
@@ -24,7 +29,7 @@ import { BaseEdgeData, createLayoutGraph, getGraphSplinesOption, LayoutGraph, La
 import { getMedianPoint, getPointsCurvePath, getPointsLinearPath } from '../util/line-util'
 import { makeBounds, positionGroupContents, tryExpandBounds } from '../util/mark-positioner'
 import { ClassConf, getConf } from './config'
-import { ClassIR, TClass, ClassRelation, Relation } from './db'
+import { ClassIR, TClass, ClassRelation, Relation, Note } from './db'
 import { isDev } from '../util/env'
 
 const artist = makeArtist<ClassIR, ClassConf>({
@@ -58,6 +63,7 @@ class ClassDiagramDraw {
   rootMark: Group
   relationGroupMark = makeEmptyGroup()
   markBuilder: EntityMarkBuilder
+  theme: ITheme
   protected elementBounds = makeBounds()
   constructor(
     public ir: ClassIR,
@@ -75,6 +81,7 @@ class ClassDiagramDraw {
       avoid_label_on_border: true,
     })
     this.dagreWrapper = new DagreWrapper(g)
+    this.theme = (configApi.getConfig() as PintoraConfig).themeConfig.themeVariables
   }
 
   drawTo(rootMark: Group) {
@@ -86,6 +93,10 @@ class ClassDiagramDraw {
     rootMark.children.push(this.relationGroupMark)
     for (const relation of this.ir.relations) {
       this.drawRelation(relation)
+    }
+
+    for (const note of this.ir.notes) {
+      this.drawNote(note)
     }
 
     this.dagreWrapper.doLayout()
@@ -133,6 +144,7 @@ class ClassDiagramDraw {
 
     const entitySize = markBuilder.getSize()
     g.setNode(classObj.fullName, {
+      id: classObj.fullName,
       ...entitySize,
       onLayout(data) {
         // console.log('onLayout', data)
@@ -257,6 +269,115 @@ class ClassDiagramDraw {
         }
       },
     })
+  }
+
+  protected drawNote(note: Note) {
+    const { id, text } = note
+    const g = this.dagreWrapper.g
+
+    const targetNodeOption = g.node(note.target)
+    if (!targetNodeOption) {
+      return
+    }
+
+    const group = makeMark(
+      'group',
+      {
+        x: 0,
+        y: 0,
+      },
+      { children: [], class: 'activity__note' },
+    )
+    const { rootMark, conf, theme } = this
+    rootMark.children.push(group)
+
+    const fontConfig = { fontSize: conf.fontSize, fontFamily: conf.fontFamily }
+    const textDims = calculateTextDimensions(text, fontConfig)
+    const rectAttrs = getBaseNote(theme)
+    const noteModel = {
+      width: textDims.width + 2 * conf.noteMargin,
+      height: textDims.height + 2 * conf.noteMargin,
+    }
+    const noteRect: Rect = {
+      type: 'rect',
+      class: 'note__bg',
+      attrs: rectAttrs,
+    }
+
+    const textMark: Text = {
+      type: 'text',
+      attrs: { fill: conf.noteTextColor, text, textBaseline: 'middle', ...fontConfig },
+    }
+
+    let isHorizontal = false
+    if (note.placement === 'LEFT_OF') {
+      isHorizontal = true
+      targetNodeOption.marginl = noteModel.width
+    } else if (note.placement === 'RIGHT_OF') {
+      isHorizontal = true
+      targetNodeOption.marginr = noteModel.width
+    }
+    if (note.placement === 'TOP_OF') {
+      targetNodeOption.margint = noteModel.height
+    } else if (note.placement === 'BOTTOM_OF') {
+      targetNodeOption.marginb = noteModel.height
+    }
+    if (isHorizontal) {
+      if (targetNodeOption.height! < noteModel.height) {
+        targetNodeOption.height = noteModel.height
+      }
+    } else {
+      if (targetNodeOption.width! < noteModel.width) {
+        targetNodeOption.width = noteModel.width
+      }
+    }
+
+    g.setNode(id, {
+      mark: group,
+      width: noteModel.width,
+      height: noteModel.height,
+
+      onLayout: () => {
+        const targetNodeData = targetNodeOption as LayoutNode
+        const targetNodeStartX = targetNodeData.x - targetNodeData.width / 2
+        const targetNodeStartY = targetNodeData.y - targetNodeData.height / 2
+        let x = targetNodeStartX
+        let y = targetNodeStartY
+        if (note.placement === 'LEFT_OF') {
+          x = targetNodeStartX - noteModel.width - conf.noteMargin
+        } else if (note.placement === 'RIGHT_OF') {
+          x = targetNodeData.x + targetNodeData.width / 2 + conf.noteMargin
+        }
+        if (note.placement === 'TOP_OF') {
+          y = targetNodeStartY - noteModel.height - conf.noteMargin
+        } else if (note.placement === 'BOTTOM_OF') {
+          y = targetNodeStartY + targetNodeData.height + noteModel.height + conf.noteMargin
+        }
+
+        safeAssign(textMark.attrs, {
+          x: x + conf.noteMargin,
+          y: y + textDims.height / 2 + conf.noteMargin,
+          width: noteModel.width,
+        })
+
+        safeAssign(rectAttrs, {
+          x,
+          y,
+          width: noteModel.width,
+          height: noteModel.height,
+        })
+
+        const node = g.node(id)
+        if (isHorizontal) {
+          // node.outerLeft = x
+          // node.outerRight = x + noteModel.width
+        } else {
+          node.outerTop = y
+          node.outerBottom = y + noteModel.height
+        }
+      },
+    })
+    group.children.push(noteRect, textMark)
   }
 }
 

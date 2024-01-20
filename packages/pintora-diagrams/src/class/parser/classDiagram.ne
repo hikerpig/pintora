@@ -29,6 +29,13 @@ const COMMON_TOKEN_RULES = {
   VALID_TEXT: { match: VALID_TEXT_REGEXP, fallback: true },
 }
 
+const _PLACEMENT = [
+  { match: /left\sof/, type: () => 'LEFT_OF' },
+  { match: /right\sof/, type: () => 'RIGHT_OF' },
+  { match: /top\sof/, type: () => 'TOP_OF' },
+  { match: /bottom\sof/, type: () => 'BOTTOM_OF' },
+]
+
 let lexer = moo.states({
   main: {
     NL: MOO_NEWLINE,
@@ -49,8 +56,12 @@ let lexer = moo.states({
     EQ: { match: /=/ },
     // RELATION_INHERITANCE: { match: /\<\|\-\-/ },
     SUBGRAPH: { match: /subgraph/ },
-    START_NOTE: textToCaseInsensitiveRegex('@note'),
-    END_NOTE: textToCaseInsensitiveRegex('@end_note'),
+    NOTE: textToCaseInsensitiveRegex('@note'),
+    START_NOTE: {
+      match: /@start_note\s/,
+      push: 'noteState',
+    },
+    _PLACEMENT,
     COMMENT_LINE: COMMENT_LINE_REGEXP,
     ...configLexerMainState,
     VALID_TEXT: { match: VALID_TEXT_REGEXP, fallback: true },
@@ -59,6 +70,16 @@ let lexer = moo.states({
     ...configLexerconfigStatementState,
     ...COMMON_TOKEN_RULES,
   },
+  noteState: {
+    END_NOTE: {
+      match: textToCaseInsensitiveRegex('@end_note'),
+      pop: 1,
+    },
+    _PLACEMENT,
+    NL: MOO_NEWLINE,
+    COMMA: /,/,
+    VALID_TEXT: { match: VALID_TEXT_REGEXP, fallback: true },
+  }
 })
 
 function rNull() {
@@ -98,6 +119,7 @@ statement ->
   | memberLabelStatement
   | relationStatement
   | classAnnotationStatement
+  | noteStatement
   | paramStatement %NL
   | configOpenCloseStatement %NL
   | comment %NL
@@ -263,3 +285,36 @@ textInQuote ->
           return getQuotedWord(d[0])
         }
       %}
+
+placement ->
+	  %LEFT_OF  {% (d) => 'LEFT_OF' %}
+	| %RIGHT_OF {% (d) => 'RIGHT_OF' %}
+	| %TOP_OF {% (d) => 'TOP_OF' %}
+	| %BOTTOM_OF {% (d) => 'BOTTOM_OF' %}
+
+multilineNoteText ->
+    (%VALID_TEXT|%QUOTED_WORD|%NL):* %END_NOTE {%
+      function(d) {
+        // console.log('[multiline text]', d)
+        const v = d[0].map(l => {
+          return l.map(o => tv(o))
+        }).join('')
+        return v
+      }
+    %}
+
+noteStatement ->
+	  ("note" | %NOTE) %WS:* placement %WS %VALID_TEXT %WS:* %COLON words %NL {%
+      function(d) {
+        const text = d[7].trim()
+        // console.log('[note one]\n', text)
+        return { type: 'note', placement: d[2], target: tv(d[4]).trim(), text } as Action
+      }
+    %}
+	| ("note" | %START_NOTE) %WS:* placement %WS:* %VALID_TEXT %WS:* %NL multilineNoteText %NL {%
+      function(d) {
+        // console.log('[note multi]\n', d[5])
+        const text = d[7]
+        return { type: 'note', placement: d[2], target: tv(d[4]).trim(), text } as Action
+      }
+    %}
