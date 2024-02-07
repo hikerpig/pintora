@@ -39,7 +39,7 @@
     "react-hot-toast": "^2.4.0",
     "react-redux": "^9.0.0",
     "react-router-dom": "^6.3.0",
-    "shiki": "^0.14.0",
+    "shiki": "^1.0.0",
     "throttle-debounce": "^5.0.0",
     "usehooks-ts": "^2.6.0"
   },
