@@ -299,7 +299,7 @@ class EntityMarkBuilder {
   rowPadding = 8
   /** y offset inside entity */
   curY = 0
-  curHeight = 0
+  curContentHeight = 0
 
   sections: EntitySection[] = []
 
@@ -368,7 +368,7 @@ class EntityMarkBuilder {
         })
         mark.decorationLine = lineMark
       }
-      const labelYDiff = dims.height + Math.floor(fontConfig.fontSize / 4)
+      const labelYDiff = dims.height + Math.floor(rowPadding / 2)
       labelYOffset += labelYDiff
       marks.push(mark)
       labelDims.width = Math.max(labelDims.width, dims.width)
@@ -376,9 +376,9 @@ class EntityMarkBuilder {
     }
 
     const yOffsetStart = this.curY
-    const yDiff = labelDims.height + rowPadding * 2
+    const yDiff = labelDims.height + rowPadding
     this.curY += yDiff
-    this.curHeight += yDiff
+    this.curContentHeight += yDiff
     const row: EntityMarkRow = { labels, marks, labelDims, yOffsetStart, yOffsetEnd: this.curY }
     section.rows.push(row)
 
@@ -410,7 +410,7 @@ class EntityMarkBuilder {
     }
     return {
       width: maxWidth + this.rowPadding * 2,
-      height: this.curHeight,
+      height: this.curContentHeight + this.rowPadding,
     }
   }
 
@@ -442,7 +442,7 @@ class EntityMarkBuilder {
           if (!row.isHeader) {
             labelMark.attrs.x += (labelMark.attrs.width - rectSize.width) / 2 + rowPadding
           }
-          labelMark.attrs.y += -halfClassHeight + rowPadding
+          labelMark.attrs.y += -halfClassHeight + rowPadding / 2
           if (decorationLine) {
             const offsetY = labelMark.attrs.height
             decorationLine.attrs.y1 = labelMark.attrs.y + offsetY
@@ -477,7 +477,7 @@ class EntityMarkBuilder {
         this.group.children.push(sepLine)
       }
       if (section === lastSection) {
-        bodySectionYEnd = lastRow.yOffsetEnd - halfClassHeight
+        bodySectionYEnd = lastRow.yOffsetEnd + rowPadding - halfClassHeight
       }
     })
     if (typeof bodySectionYStart !== 'undefined' && typeof bodySectionYEnd !== 'undefined') {
