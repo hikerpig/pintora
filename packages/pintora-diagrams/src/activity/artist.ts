@@ -521,24 +521,37 @@ class ActivityDraw {
 
     const drawChildren = (children: Step[], label: string) => {
       let hasEnded = false
-      const lastChildResult = last(
-        children.map((child, i) => {
-          if (hasEnded) return
-          const childResult = this.drawStep(parentMark, child)
-          if (child.type === 'keyword') {
-            hasEnded = true
-          }
-          if (i === 0) {
-            this.linkResult(id, childResult, label)
-          }
-          return childResult
-        }),
-      )
-      if (lastChildResult) {
-        this.g.setEdge(lastChildResult.endId || lastChildResult.id, endId, {
-          label: '',
-          isDummyEdge: hasEnded,
-        } as EdgeData)
+      if (children.length) {
+        const lastChildResult = last(
+          children.map((child, i) => {
+            if (hasEnded) return
+            const childResult = this.drawStep(parentMark, child)
+            if (child.type === 'keyword') {
+              hasEnded = true
+            }
+            if (i === 0) {
+              this.linkResult(id, childResult, label)
+            }
+            return childResult
+          }),
+        )
+        if (lastChildResult) {
+          this.g.setEdge(lastChildResult.endId || lastChildResult.id, endId, {
+            label: '',
+            isDummyEdge: hasEnded,
+          } as EdgeData)
+        }
+      } else {
+        // add a dummy node and edges in layout to draw the no-action-line
+        const dummyNode = {
+          id: `${id}-condition-dummy`,
+        }
+        this.g.setNode(dummyNode.id, {
+          width: 1,
+          height: 1,
+        })
+        this.g.setEdge(id, dummyNode.id, { label })
+        this.g.setEdge(dummyNode.id, endId)
       }
     }
 
