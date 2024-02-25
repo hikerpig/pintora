@@ -36,6 +36,27 @@
           "end": "(^|\\G)(?=\\s*[`~]{3,}\\s*$)"
         },
         {
+          "comment": "Class Diagram",
+          "begin": "\\b(classDiagram)",
+          "beginCaptures": {
+            "1": {
+              "name": "keyword.control.pintora"
+            }
+          },
+          "patterns": [
+            {
+              "include": "#class__element"
+            },
+            {
+              "include": "#config__clause"
+            },
+            {
+              "include": "#comment"
+            }
+          ],
+          "end": "(^|\\G)(?=\\s*[`~]{3,}\\s*$)"
+        },
+        {
           "comment": "Component Diagram",
           "begin": "\\b(componentDiagram)",
           "beginCaptures": {
@@ -1497,6 +1518,174 @@
             },
             "3": {
               "name": "string"
+            }
+          }
+        }
+      ]
+    },
+    "class__element": {
+      "patterns": [
+        {
+          "comment": "class with bracket",
+          "begin": "(class)\\s+([^\\s]+)\\s*({)",
+          "beginCaptures": {
+            "1": {
+              "name": "keyword.control.pintora"
+            },
+            "2": {
+              "name": "entity.name.type"
+            },
+            "3": {
+              "name": "punctuation.bracket.open.pintora"
+            }
+          },
+          "end": "^\\s*(})",
+          "endCaptures": {
+            "1": {
+              "name": "punctuation.bracket.close.pintora"
+            }
+          },
+          "patterns": [
+            {
+              "comment": "class modified member inside bracket",
+              "match": "({)(.*)(})\\s*(.*)\\s*(.*)",
+              "captures": {
+                "1": {
+                  "name": "keyword.control.pintora"
+                },
+                "2": {
+                  "name": "string"
+                },
+                "3": {
+                  "name": "keyword.control.pintora"
+                },
+                "4": {
+                  "name": "variable.pintora"
+                },
+                "5": {
+                  "name": "variable.pintora"
+                }
+              }
+            },
+            {
+              "comment": "class member inside bracket",
+              "match": "([+#~-])?\\s*([\\w\\d\\(\\)]+)\\s*([\\w\\d\\(\\)]+)",
+              "captures": {
+                "1": {
+                  "name": "keyword.control.pintora"
+                },
+                "2": {
+                  "name": "entity.name.type"
+                },
+                "3": {
+                  "name": "variable.pintora"
+                }
+              }
+            },
+            {
+              "comment": "class annotation inside bracket",
+              "match": "(<<)(.*)(>>)",
+              "captures": {
+                "1": {
+                  "name": "keyword.control.pintora"
+                },
+                "2": {
+                  "name": "string"
+                },
+                "3": {
+                  "name": "keyword.control.pintora"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "comment": "class declaration quote alias",
+          "match": "(class)\\s*\"([^\"]+)\"\\s*(as)\\s+(\\w+)",
+          "captures": {
+            "1": {
+              "name": "keyword.control.pintora"
+            },
+            "2": {
+              "name": "string"
+            },
+            "3": {
+              "name": "keyword.control.pintora"
+            },
+            "4": {
+              "name": "entity.name.type"
+            }
+          }
+        },
+        {
+          "comment": "class declareation name",
+          "match": "(class)\\s+(\\w+)",
+          "captures": {
+            "1": {
+              "name": "keyword.control.pintora"
+            },
+            "2": {
+              "name": "entity.name.type"
+            }
+          }
+        },
+        {
+          "comment": "class annotation",
+          "match": "(<<)(.*)(>>)\\s*(.*)",
+          "captures": {
+            "1": {
+              "name": "keyword.control.pintora"
+            },
+            "2": {
+              "name": "string"
+            },
+            "3": {
+              "name": "keyword.control.pintora"
+            },
+            "4": {
+              "name": "entity.name.type"
+            }
+          }
+        },
+        {
+          "comment": "relation statement",
+          "match": "(\\w+)\\s*(\"[^\"]*\")?\\s*(<\\|--|--\\|>|<\\|\\.\\.|\\.\\.\\|>|\\*--|\\*\\.\\.|--\\*|\\.\\.\\*|o--|o\\.\\.|--o|\\.\\.o|-->|\\.\\.>|<--|<\\.\\.|--|\\.\\.)\\s*(\"[^\"]*\")?\\s*(\\w+)\\s*(:)?(.*)?",
+          "captures": {
+            "1": {
+              "name": "entity.name.type"
+            },
+            "2": {
+              "name": "string"
+            },
+            "3": {
+              "name": "keyword.control.pintora"
+            },
+            "4": {
+              "name": "string"
+            },
+            "5": {
+              "name": "entity.name.type"
+            },
+            "6": {
+              "name": "keyword.control.pintora"
+            },
+            "7": {
+              "name": "string"
+            }
+          }
+        },
+        {
+          "comment": "class member",
+          "match": "([\\w\\d+-]+)\\s*(:)\\s*(.*)",
+          "captures": {
+            "1": {
+              "name": "variable.pintora"
+            },
+            "2": {
+              "name": "keyword.control.pintora"
+            },
+            "3": {
+              "name": "entity.name.type"
             }
           }
         }
