@@ -82,5 +82,20 @@ end`),
   end`),
       existSelectors: ['.activity__keyword'],
     },
+    {
+      // issue #249
+      description: 'Should draw a no-action-line when there is no else block',
+      code: stripStartEmptyLines(`
+  activityDiagram
+  :Diagram requested;
+  if (diagram registered ?) then
+    :get implementation;
+  else (no)
+  endif
+        `),
+      onRender(c) {
+        c.get('.activity__edge-label').should('have.lengthOf', 2)
+      },
+    },
   ])
 })
