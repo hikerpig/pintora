@@ -230,13 +230,13 @@ importers:
   packages/pintora-cli:
     dependencies:
       '@pintora/core':
-        specifier: workspace:^0.7.0-alpha.0
+        specifier: workspace:^0.7.0
         version: link:../pintora-core
       '@pintora/renderer':
-        specifier: ^0.7.0-alpha.0
+        specifier: ^0.7.0
         version: link:../pintora-renderer
       '@pintora/standalone':
-        specifier: workspace:^0.7.0-alpha.0
+        specifier: workspace:^0.7.0
         version: link:../pintora-standalone
       canvas:
         specifier: ^2.11.2
@@ -255,7 +255,7 @@ importers:
         version: 16.2.0
     devDependencies:
       '@pintora/test-shared':
-        specifier: workspace:^0.5.0-alpha.0
+        specifier: workspace:^0.5.0
         version: link:../test-shared
       '@types/jsdom':
         specifier: ^21.0.0
@@ -313,7 +313,7 @@ importers:
         specifier: ^2.21.0-beta.1
         version: 2.21.0-beta.2
       '@pintora/core':
-        specifier: workspace:^0.7.0-alpha.0
+        specifier: workspace:^0.7.0
         version: link:../pintora-core
       '@pintora/dagre':
         specifier: ^0.10.10
@@ -344,7 +344,7 @@ importers:
         specifier: workspace:^0.1.1
         version: link:../development-kit
       '@pintora/test-shared':
-        specifier: workspace:^0.5.0-alpha.1
+        specifier: workspace:^0.5.0
         version: link:../test-shared
       '@types/d3-interpolate':
         specifier: ^3.0.1
@@ -392,7 +392,7 @@ importers:
         specifier: ^0.5.6
         version: 0.5.6
       '@pintora/core':
-        specifier: workspace:^0.7.0-alpha.0
+        specifier: workspace:^0.7.0
         version: link:../pintora-core
       '@types/node':
         specifier: ^16.11.7
@@ -408,13 +408,13 @@ importers:
   packages/pintora-standalone:
     dependencies:
       '@pintora/core':
-        specifier: workspace:^0.7.0-alpha.0
+        specifier: workspace:^0.7.0
         version: link:../pintora-core
       '@pintora/diagrams':
-        specifier: workspace:^0.7.0-alpha.1
+        specifier: workspace:^0.7.0
         version: link:../pintora-diagrams
       '@pintora/renderer':
-        specifier: ^0.7.0-alpha.0
+        specifier: ^0.7.0
         version: link:../pintora-renderer
     devDependencies:
       '@pintora/test-shared':
@@ -541,10 +541,10 @@ importers:
         specifier: ^3.0.0
         version: 3.0.0(@types/react@18.0.12)(react@18.2.0)
       '@pintora/standalone':
-        specifier: workspace:^0.7.0-alpha.0
+        specifier: workspace:^0.7.0
         version: link:../packages/pintora-standalone
       '@pintora/test-shared':
-        specifier: workspace:^0.5.0-alpha.1
+        specifier: workspace:^0.5.0
         version: link:../packages/test-shared
       '@svgr/webpack':
         specifier: ^8.0.0
@@ -18078,6 +18078,7 @@ packages:
 
   /workbox-google-analytics@7.0.0:
     resolution: {integrity: sha512-MEYM1JTn/qiC3DbpvP2BVhyIH+dV/5BjHk756u9VbwuAhu0QHyKscTnisQuz21lfRpOwiS9z4XdqeVAKol0bzg==}
+    deprecated: It is not compatible with newer versions of GA starting with v4, as long as you are using GAv3 it should be ok, but the package is not longer being maintained
     dependencies:
       workbox-background-sync: 7.0.0
       workbox-core: 7.0.0

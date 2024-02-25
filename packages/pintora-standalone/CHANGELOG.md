@@ -1,5 +1,29 @@
 # Change Log
 
+## 0.7.0
+
+### Minor Changes
+
+- 2d1f668: Add classDiagram
+
+### Patch Changes
+
+- 0a27a38: Be able to inject text-metric calculator in case there is no Canvas impl in the environment.
+- 4d419a7: feat: build standalone with esbuild
+- 02f7873: feat: pintora standalone providing `.mjs` file for esm import
+- Updated dependencies [3457b22]
+- Updated dependencies [b180922]
+- Updated dependencies [a5d289b]
+- Updated dependencies [0a27a38]
+- Updated dependencies [bc811d0]
+- Updated dependencies [2df9693]
+- Updated dependencies [23a0053]
+- Updated dependencies [3a539be]
+- Updated dependencies [2d1f668]
+  - @pintora/diagrams@0.7.0
+  - @pintora/core@0.7.0
+  - @pintora/renderer@0.7.0
+
 ## 0.7.0-alpha.0
 
 ### Minor Changes

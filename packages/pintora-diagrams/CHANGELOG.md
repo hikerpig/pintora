@@ -1,5 +1,27 @@
 # Change Log
 
+## 0.7.0
+
+### Breaking Changes
+
+- b180922: feat!: support more characters inside multiline notes
+
+### Minor Changes
+
+- 2d1f668: Add classDiagram
+
+### Patch Changes
+
+- 3457b22: feat(diagrams): [activity] Should draw a no-action-line when there is no else block
+- a5d289b: fix: classDiagram relation direction, and add docs
+- bc811d0: feat(diagrams): [classDiagram] more comfort entity table sizing
+- 2df9693: [sequenceDiagram] remove unnecessary stroke in message text
+- 23a0053: [classDiagram] render `{static}` and `{abstract}`
+- 3a539be: feat: [classDiagram] add a prude implementation of note
+- Updated dependencies [0a27a38]
+- Updated dependencies [2d1f668]
+  - @pintora/core@0.7.0
+
 ## 0.7.0-alpha.1
 
 ### Patch Changes

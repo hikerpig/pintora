@@ -1,5 +1,28 @@
 # Change Log
 
+## 0.3.16
+
+### Patch Changes
+
+- a5d289b: fix: classDiagram relation direction, and add docs
+- a7640a4: Upgrade to reduxjs toolkit v2
+- Updated dependencies [3457b22]
+- Updated dependencies [b180922]
+- Updated dependencies [a5d289b]
+- Updated dependencies [0a27a38]
+- Updated dependencies [4d419a7]
+- Updated dependencies [bc811d0]
+- Updated dependencies [2df9693]
+- Updated dependencies [23a0053]
+- Updated dependencies [02f7873]
+- Updated dependencies [3a539be]
+- Updated dependencies [2d1f668]
+  - @pintora/diagrams@0.7.0
+  - @pintora/test-shared@0.5.0
+  - @pintora/core@0.7.0
+  - @pintora/renderer@0.7.0
+  - @pintora/standalone@0.7.0
+
 ## 0.3.16-alpha.1
 
 ### Patch Changes
