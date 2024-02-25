@@ -26,6 +26,7 @@ Heavily inspired by [Mermaid.js](https://mermaid-js.github.io/mermaid/#/) and [P
 - [Mind Map](./diagrams/mindmap.mdx) <span className="badge badge--info">Experiment</span>
 - [Gantt Diagram](./diagrams/gantt-diagram.mdx) <span className="badge badge--info">Experiment</span>
 - [DOT Diagram](./diagrams/dot-diagram.mdx) <span className="badge badge--info">Experiment</span>
+- [Class Diagram](./diagrams/class-diagram.mdx)
 
 ```pintora play
 mindmap
