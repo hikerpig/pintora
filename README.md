@@ -41,13 +41,6 @@ Heavily inspired by [Mermaid.js](https://mermaid-js.github.io/mermaid/#/) and [P
 
 ### Diagram types
 
-- Sequence Diagram
-- Entity Relationship Diagram
-- Component Diagram
-- Activity Diagram
-- Mind Map
-- Gantt Diagram
-
 <table>
   <thead>
     <tr>
@@ -96,6 +89,12 @@ Heavily inspired by [Mermaid.js](https://mermaid-js.github.io/mermaid/#/) and [P
       <td>DOT Diagram</td>
       <td>
         <img src="https://i.imgur.com/KCkYXlk.png" title="DOT Diagram" width="300" />
+      </td>
+    </tr>
+    <tr>
+      <td>Class Diagram</td>
+      <td>
+        <img src="https://i.imgur.com/mqLIwcD.png" title="Class Diagram" width="300" />
       </td>
     </tr>
   </tbody>
