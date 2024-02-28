@@ -1,5 +1,11 @@
 # Change Log
 
+## 0.7.1
+
+### Patch Changes
+
+- f1c4c96: fix: [sequenceDiagram] nested loop container bg rect drawing order
+
 ## 0.7.0
 
 ### Breaking Changes

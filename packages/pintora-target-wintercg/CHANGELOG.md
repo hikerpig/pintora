@@ -1,5 +1,12 @@
 ## 0.1.0
 
+## 0.1.1
+
+### Patch Changes
+
+- Updated dependencies [f1c4c96]
+  - @pintora/standalone@0.7.1
+
 ### Minor Changes
 
 - a4ab37d: Generate WinterCG compatible output

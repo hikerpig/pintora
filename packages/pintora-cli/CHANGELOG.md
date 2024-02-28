@@ -1,5 +1,14 @@
 # Change Log
 
+## 0.7.1
+
+### Patch Changes
+
+- f1c4c96: fix: [sequenceDiagram] nested loop container bg rect drawing order
+- 3984345: should cleanup global pollution after render
+- Updated dependencies [f1c4c96]
+  - @pintora/standalone@0.7.1
+
 ## 0.7.0
 
 ### Minor Changes

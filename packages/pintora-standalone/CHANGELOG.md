@@ -1,5 +1,13 @@
 # Change Log
 
+## 0.7.1
+
+### Patch Changes
+
+- f1c4c96: fix: [sequenceDiagram] nested loop container bg rect drawing order
+- Updated dependencies [f1c4c96]
+  - @pintora/diagrams@0.7.1
+
 ## 0.7.0
 
 ### Minor Changes
