@@ -226,7 +226,8 @@ const sequenceArtist: IDiagramArtist<SequenceDiagramIR, SequenceConf> = {
       model.bumpVerticalPos(conf.participantBoxPadding)
     }
 
-    rootMark.children = [...model.groupBgs, ...rootMark.children]
+    const reversedGroupBgs = model.groupBgs.slice().reverse()
+    rootMark.children = [...reversedGroupBgs, ...rootMark.children]
 
     drawParticipantBoxes(context)
 
