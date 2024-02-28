@@ -38,4 +38,18 @@ describe('render', () => {
     expect(config.themeConfig.theme).toBe(oldTheme)
     expect(config.core.useMaxWidth).toBe(oldUseMaxWidth)
   })
+
+  it('should cleanup global pollution after render', async () => {
+    const fakeDom = {}
+    ;(globalThis as any).document = fakeDom
+
+    await render({
+      code: EXAMPLES.er.code,
+      mimeType: SVG_MIME_TYPE,
+    })
+    expect(global.window).toBeUndefined()
+    expect((globalThis as any).document).toBe(fakeDom) // should not mess with existing globals
+
+    delete (globalThis as any).document
+  })
 })

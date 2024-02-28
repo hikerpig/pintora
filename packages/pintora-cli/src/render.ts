@@ -23,6 +23,31 @@ export type CLIRenderOptions = {
   width?: number
 }
 
+/**
+ * records how many globals we have patched,
+ *  need to restore them later to prevent polluting the global environment
+ */
+class GlobalPatcher {
+  private records: any = {}
+  set<K extends keyof typeof globalThis>(k: K, v: any) {
+    const prevValue = globalThis[k]
+    this.records[k] = {
+      prevValue,
+      value: v,
+    }
+
+    globalThis[k] = v
+  }
+
+  restore() {
+    for (const k in this.records) {
+      if ((globalThis as any)[k] === this.records[k].value) {
+        ;(globalThis as any)[k] = this.records[k].prevValue
+      }
+    }
+  }
+}
+
 function renderPrepare(opts: CLIRenderOptions) {
   const { code, backgroundColor, pintoraConfig } = opts
   const devicePixelRatio = opts.devicePixelRatio || 2
@@ -33,10 +58,11 @@ function renderPrepare(opts: CLIRenderOptions) {
   container.id = 'pintora-container'
 
   // setup the env for renderer
-  global.window = dom.window as any
-  global.document = document
+  const patcher = new GlobalPatcher()
+  patcher.set('window', dom.window)
+  patcher.set('document', document)
+  patcher.set('CanvasPattern', CanvasPattern)
   ;(dom.window as any).devicePixelRatio = devicePixelRatio
-  ;(global as any).CanvasPattern = CanvasPattern
 
   return {
     container,
@@ -51,7 +77,7 @@ function renderPrepare(opts: CLIRenderOptions) {
         config = pintoraStandalone.configApi.gnernateNewConfig({ core: { useMaxWidth: true } })
       }
 
-      return new Promise<IRenderer>((resolve, reject) => {
+      return new Promise<{ renderer: IRenderer; cleanup(): void }>((resolve, reject) => {
         pintoraStandalone.renderTo(code, {
           container,
           renderer: renderOpts.renderer || 'canvas',
@@ -69,10 +95,16 @@ function renderPrepare(opts: CLIRenderOptions) {
             return ir
           },
           onRender(renderer) {
-            resolve(renderer)
+            resolve({
+              renderer,
+              cleanup() {
+                patcher.restore()
+              },
+            })
           },
           onError(e) {
             console.error('onError', e)
+            patcher.restore()
             reject(e)
           },
         })
@@ -96,10 +128,12 @@ export function render(opts: CLIRenderOptions) {
     function renderToSvg() {
       return new Promise<string>((resolve, reject) => {
         pintorRender({ renderer: 'svg' })
-          .then(renderer => {
+          .then(({ renderer, cleanup }) => {
             const rootElement = renderer.getRootElement() as SVGSVGElement
             rootElement.setAttribute('xmlns', 'http://www.w3.org/2000/svg')
-            resolve(rootElement.outerHTML)
+            const html = rootElement.outerHTML
+            cleanup()
+            resolve(html)
           })
           .catch(reject)
       })
@@ -109,9 +143,10 @@ export function render(opts: CLIRenderOptions) {
     function renderToImageBuffer() {
       return new Promise<Buffer>((resolve, reject) => {
         pintorRender({ renderer: 'canvas' })
-          .then(renderer => {
+          .then(({ renderer, cleanup }) => {
             setTimeout(() => {
               const buf = getBuf(renderer.getRootElement() as HTMLCanvasElement)
+              cleanup()
               resolve(buf)
             }, 20)
           })
