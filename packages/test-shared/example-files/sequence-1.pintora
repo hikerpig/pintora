@@ -9,7 +9,7 @@ sequenceDiagram
   deactivate Pintora
   @note over User,Pintora: note over
   @note right of User: note aside actor
-  @note right of User
+  @start_note right of User
   multiline note
   is possible
   @end_note

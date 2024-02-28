@@ -295,7 +295,7 @@ placement ->
 	| "right" {% (d) => "right" %}
 
 multilineNoteText ->
-    (%WORD|%NL):* %END_NOTE {%
+    (%COMMA|%WORD|%NL):* %END_NOTE {%
       function(d) {
         const v = d[0].map(l => {
           return l.map(o => tv(o))

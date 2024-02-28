@@ -527,7 +527,7 @@
             },
             {
               "comment": "(note)(direction)(Actor)(,)?(Actor)?(:)(Message)",
-              "match": "\\s*(note|@note)\\s+((?:left|right)\\sof|over)\\s+(\\b[\"\\(\\)$&%\\^/#.?!*=<>\\'\\\\\\w\\s]+\\b\\s*)(,)?(\\b[\"\\(\\)$&%\\^/#.?!*=<>\\'\\\\\\w\\s]+\\b\\s*)?(:)(?:\\s+([^;#]*))?",
+              "match": "\\s*(note|@note|@start_note)\\s+((?:left|right)\\sof|over)\\s+(\\b[\"\\(\\)$&%\\^/#.?!*=<>\\'\\\\\\w\\s]+\\b\\s*)(,)?(\\b[\"\\(\\)$&%\\^/#.?!*=<>\\'\\\\\\w\\s]+\\b\\s*)?(:)(?:\\s+([^;#]*))?",
               "captures": {
                 "1": {
                   "name": "keyword.control.pintora"
@@ -554,7 +554,7 @@
             },
             {
               "comment": "Multiline note",
-              "begin": "(@note)\\s+((?:left|right)\\sof|over)\\s+(\\b[\"\\(\\)$&%\\^/#.?!*=<>\\'\\\\\\w\\s]+\\b\\s*)(,)?(\\b[\"\\(\\)$&%\\^/#.?!*=<>\\'\\\\\\w\\s]+\\b\\s*)?\\n",
+              "begin": "(@start_note)\\s+((?:left|right)\\sof|over)\\s+(\\b[\"\\(\\)$&%\\^/#.?!*=<>\\'\\\\\\w\\s]+\\b\\s*)(,)?(\\b[\"\\(\\)$&%\\^/#.?!*=<>\\'\\\\\\w\\s]+\\b\\s*)?\\n",
               "end": "(@end_note)",
               "beginCaptures": {
                 "1": {

@@ -52,7 +52,7 @@ sequenceDiagram
     const multilineNoteExample = stripStartEmptyLines(`
 sequenceDiagram
   @start_note right of Pintora
-  aaa note -
+  aaa, note -
   bbb
   @end_note
     `)
@@ -62,7 +62,7 @@ sequenceDiagram
     expect(result.notes.length).toEqual(1)
     // parseMessage will trim text, so this may be somehow strange
     const messageText = result.notes[0].text
-    expect(messageText).toEqual('aaa note -\nbbb')
+    expect(messageText).toEqual('aaa, note -\nbbb')
     expect(result.notes[0].actor).toEqual('Pintora')
   })
 

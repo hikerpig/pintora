@@ -31,7 +31,7 @@ sequenceDiagram
     Pintora->>User: Return error message
   end
   deactivate Pintora
-  @note left of Pintora
+  @start_note left of Pintora
   Different output formats according to render targets
   1. In browser side. output SVG or Canvas
   2. In Node.js side. output PNG file
@@ -47,7 +47,7 @@ sequenceDiagram
   Frida-->>Georgia: Flowers are beautiful
   @note over Frida,Georgia: Painters
   @note right of Georgia: Right
-  @note left of Georgia
+  @start_note left of Georgia
   multiline
   note
   @end_note
