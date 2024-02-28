@@ -31,7 +31,7 @@ sequenceDiagram
     Pintora->>用户: 返回报错信息
   end
   deactivate Pintora
-  @note left of Pintora
+  @start_note left of Pintora
   渲染目标不同，结果媒介会有所不同
   1. 浏览器，可直接渲染到页面上 svg / canvas
   2. Node.js，默认 canvas，输出 PNG 位图
@@ -81,7 +81,7 @@ sequenceDiagram
   Frida-->>Georgia: Flowers are beautiful
   @note over Frida,Georgia: Painters
   @note right of Georgia: Right
-  @note left of Georgia
+  @start_note left of Georgia
   multiline
   note
   @end_note

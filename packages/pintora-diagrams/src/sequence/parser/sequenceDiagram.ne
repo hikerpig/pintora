@@ -289,7 +289,7 @@ textWithColon -> %COLON _ %REST_OF_LINE {%
 %}
 
 multilineNoteText ->
-    (%WORD|%NL):* %END_NOTE {%
+    (%WORD|%COMMA|%NL):* %END_NOTE {%
       function(d) {
         // console.log('[multiline text]', d)
         const v = d[0].map(l => {
