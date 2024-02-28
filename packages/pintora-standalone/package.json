@@ -1,6 +1,6 @@
 {
   "name": "@pintora/standalone",
-  "version": "0.7.1",
+  "version": "0.7.2",
   "description": "A standalone version of pintora that has all the default diagrams",
   "keywords": [
     "pintora",

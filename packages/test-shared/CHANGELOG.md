@@ -1,5 +1,11 @@
 # Change Log
 
+## 0.5.1
+
+### Patch Changes
+
+- e1feba4: fix: multiline note with comma text makes crash some diagrams
+
 ## 0.5.0
 
 ### Minor Changes

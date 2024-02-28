@@ -1,5 +1,14 @@
 # Change Log
 
+## 0.3.18
+
+### Patch Changes
+
+- e1feba4: fix: multiline note with comma text makes crash some diagrams
+- Updated dependencies [e1feba4]
+  - @pintora/test-shared@0.5.1
+  - @pintora/standalone@0.7.2
+
 ## 0.3.17
 
 ### Patch Changes

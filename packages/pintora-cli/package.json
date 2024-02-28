@@ -1,6 +1,6 @@
 {
   "name": "@pintora/cli",
-  "version": "0.7.1",
+  "version": "0.7.2",
   "description": "A node.js version of pintora",
   "keywords": [
     "pintora"
@@ -39,7 +39,7 @@
   "dependencies": {
     "@pintora/core": "workspace:^0.7.0",
     "@pintora/renderer": "^0.7.0",
-    "@pintora/standalone": "workspace:^0.7.1",
+    "@pintora/standalone": "workspace:^0.7.2",
     "canvas": "^2.11.2",
     "consola": "^3.0.0",
     "jsdom": "^24.0.0",
@@ -47,7 +47,7 @@
     "yargs": "^16.2.0"
   },
   "devDependencies": {
-    "@pintora/test-shared": "workspace:^0.5.0",
+    "@pintora/test-shared": "workspace:^0.5.1",
     "@types/jsdom": "^21.0.0",
     "@types/mime-types": "^2.1.0",
     "@types/node": "^16.11.7",
