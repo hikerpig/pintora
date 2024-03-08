@@ -41,7 +41,7 @@
     "react-router-dom": "^6.3.0",
     "shiki": "^1.0.0",
     "throttle-debounce": "^5.0.0",
-    "usehooks-ts": "^2.6.0"
+    "usehooks-ts": "^3.0.0"
   },
   "devDependencies": {
     "@percy/cli": "^1.27.0",

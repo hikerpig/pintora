@@ -150,8 +150,8 @@ importers:
         specifier: ^5.0.0
         version: 5.0.0
       usehooks-ts:
-        specifier: ^2.6.0
-        version: 2.6.0(react@18.2.0)
+        specifier: ^3.0.0
+        version: 3.0.1(react@18.2.0)
     devDependencies:
       '@percy/cli':
         specifier: ^1.27.0
@@ -236,7 +236,7 @@ importers:
         specifier: ^0.7.0
         version: link:../pintora-renderer
       '@pintora/standalone':
-        specifier: workspace:^0.7.1
+        specifier: workspace:^0.7.2
         version: link:../pintora-standalone
       canvas:
         specifier: ^2.11.2
@@ -255,7 +255,7 @@ importers:
         version: 16.2.0
     devDependencies:
       '@pintora/test-shared':
-        specifier: workspace:^0.5.0
+        specifier: workspace:^0.5.1
         version: link:../test-shared
       '@types/jsdom':
         specifier: ^21.0.0
@@ -541,10 +541,10 @@ importers:
         specifier: ^3.0.0
         version: 3.0.0(@types/react@18.0.12)(react@18.2.0)
       '@pintora/standalone':
-        specifier: workspace:^0.7.0
+        specifier: workspace:^0.7.2
         version: link:../packages/pintora-standalone
       '@pintora/test-shared':
-        specifier: workspace:^0.5.0
+        specifier: workspace:^0.5.1
         version: link:../packages/test-shared
       '@svgr/webpack':
         specifier: ^8.0.0
@@ -17483,11 +17483,13 @@ packages:
     engines: {node: '>=0.10.0'}
     dev: true
 
-  /usehooks-ts@2.6.0(react@18.2.0):
-    resolution: {integrity: sha512-Kj/4oc2nOxRDGTDb2v1ZulF7+tpeXFuqI6cUesM0Vic7TPPDlFORxKh4ivsYg+NTvX/YbM+lhqqkfFTiIt23eg==}
+  /usehooks-ts@3.0.1(react@18.2.0):
+    resolution: {integrity: sha512-bgJ8S9w/SnQyACd3RvWp3CGncROxEENGqQLCsdaoyTb0zTENIna7MIV3OW6ywCfPaYYD2OPokw7oLPmSLLWP4w==}
+    engines: {node: '>=16.15.0'}
     peerDependencies:
-      react: '>=16.9.0'
+      react: ^16.8.0  || ^17 || ^18
     dependencies:
+      lodash.debounce: 4.0.8
       react: 18.2.0
     dev: false
 
