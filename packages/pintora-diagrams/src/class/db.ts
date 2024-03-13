@@ -34,8 +34,6 @@ type Access = 'public' | 'private' | 'protected'
 type Modifier = 'abstract' | 'static' | null
 
 export type TClassMember = {
-  name: string
-  typeName: string
   raw: string
   access?: Access
   isMethod?: boolean
@@ -92,7 +90,6 @@ export type ClassIR = BaseDiagramIR & {
 }
 
 const NAMESPACE_SEP = '.'
-const FIELD_SEP = ':'
 
 export class ClassDb extends BaseDb {
   protected classes: Record<string, TClass> = {}
@@ -196,8 +193,6 @@ export class ClassDb extends BaseDb {
   }
 
   protected parseMemberLabel(raw: string) {
-    let name: string
-    let typeName = ''
     let temp = raw
     const firstChar = temp[0]
     let access: Access = 'public'
@@ -210,25 +205,9 @@ export class ClassDb extends BaseDb {
 
     if (isPrivate || isProtected || isPublic) temp = temp.slice(1)
 
-    if (temp.includes(FIELD_SEP)) {
-      const pos = temp.indexOf(FIELD_SEP)
-      name = temp.slice(0, pos)
-      typeName = temp.slice(pos + 1, temp.length).trim()
-    } else {
-      const spacePos = temp.indexOf(' ')
-      if (spacePos === -1) {
-        name = temp.trim()
-      } else {
-        typeName = temp.slice(0, spacePos)
-        name = temp.slice(spacePos + 1, temp.length).trim()
-      }
-    }
-
-    const isMethod = /\(.*\)/.test(name)
+    const isMethod = /\(.*\)/.test(temp)
 
     const member: TClassMember = {
-      name,
-      typeName,
       access,
       raw,
       isMethod,

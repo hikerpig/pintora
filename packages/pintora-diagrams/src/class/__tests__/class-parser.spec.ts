@@ -126,6 +126,8 @@ describe('class parser', () => {
     class "This is class label" as class1
     class class1 {
       RED
+      Optional[Foo] foo
+      void foo(a: int, b: int)
     }
     `)
     parse(example)
