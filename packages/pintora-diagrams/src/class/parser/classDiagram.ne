@@ -44,17 +44,13 @@ let lexer = moo.states({
     COLOR: COLOR_REGEXP,
     SEMICOLON: /;/,
     COLON: /:/,
-    COMMA: /,/,
     CLASS_DIAGRAM: /classDiagram/,
     L_PAREN: L_PAREN_REGEXP,
     R_PAREN: R_PAREN_REGEXP,
     L_BRACKET: { match: /\{/ },
     R_BRACKET: { match: /\}/ },
-    L_SQ_BRACKET: { match: /\[/ },
-    R_SQ_BRACKET: { match: /\]/ },
     TEXT_WITH_ANGLE_BRACKETS: { match: /\<\<(?:.*)\>\>/ },
     EQ: { match: /=/ },
-    // RELATION_INHERITANCE: { match: /\<\|\-\-/ },
     SUBGRAPH: { match: /subgraph/ },
     NOTE: textToCaseInsensitiveRegex('@note'),
     START_NOTE: {
@@ -77,7 +73,6 @@ let lexer = moo.states({
     },
     _PLACEMENT,
     NL: MOO_NEWLINE,
-    COMMA: /,/,
     VALID_TEXT: { match: VALID_TEXT_REGEXP, fallback: true },
   }
 })
