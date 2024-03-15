@@ -1,5 +1,13 @@
 ## 0.1.0
 
+## 0.1.3
+
+### Patch Changes
+
+- Updated dependencies [651b22c]
+- Updated dependencies [d635362]
+  - @pintora/standalone@0.7.3
+
 ## 0.1.2
 
 ### Patch Changes

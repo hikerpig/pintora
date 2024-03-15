@@ -1,5 +1,15 @@
 # Change Log
 
+## 0.7.3
+
+### Patch Changes
+
+- 651b22c: fix: [activityDiagram] missing no-action-line parentId caused layout problem
+- d635362: feat: [classDiagram] allow to parse more characters in class member label
+- Updated dependencies [651b22c]
+- Updated dependencies [d635362]
+  - @pintora/standalone@0.7.3
+
 ## 0.7.2
 
 ### Patch Changes
