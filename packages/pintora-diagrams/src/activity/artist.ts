@@ -552,6 +552,9 @@ class ActivityDraw {
         })
         this.g.setEdge(id, dummyNode.id, { label })
         this.g.setEdge(dummyNode.id, endId)
+        if (stepModel.parentId) {
+          this.g.setParent(dummyNode.id, stepModel.parentId)
+        }
       }
     }
 
