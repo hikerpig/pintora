@@ -236,7 +236,7 @@ importers:
         specifier: ^0.7.0
         version: link:../pintora-renderer
       '@pintora/standalone':
-        specifier: workspace:^0.7.2
+        specifier: workspace:^0.7.3
         version: link:../pintora-standalone
       canvas:
         specifier: ^2.11.2
@@ -411,7 +411,7 @@ importers:
         specifier: workspace:^0.7.0
         version: link:../pintora-core
       '@pintora/diagrams':
-        specifier: workspace:^0.7.1
+        specifier: workspace:^0.7.2
         version: link:../pintora-diagrams
       '@pintora/renderer':
         specifier: ^0.7.0
