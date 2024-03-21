@@ -236,7 +236,7 @@ importers:
         specifier: ^0.7.0
         version: link:../pintora-renderer
       '@pintora/standalone':
-        specifier: workspace:^0.7.2
+        specifier: workspace:^0.7.3
         version: link:../pintora-standalone
       canvas:
         specifier: ^2.11.2
@@ -386,8 +386,8 @@ importers:
   packages/pintora-renderer:
     dependencies:
       '@antv/g-canvas':
-        specifier: ^0.5.12
-        version: 0.5.12
+        specifier: ^2.0.0
+        version: 2.0.0
       '@antv/g-svg':
         specifier: ^0.5.6
         version: 0.5.6
@@ -411,7 +411,7 @@ importers:
         specifier: workspace:^0.7.0
         version: link:../pintora-core
       '@pintora/diagrams':
-        specifier: workspace:^0.7.1
+        specifier: workspace:^0.7.2
         version: link:../pintora-diagrams
       '@pintora/renderer':
         specifier: ^0.7.0
@@ -802,15 +802,29 @@ packages:
       detect-browser: 5.3.0
       tslib: 2.6.2
 
-  /@antv/g-canvas@0.5.12:
-    resolution: {integrity: sha512-iJ/muwwqCCNONVlPIzv/7OL5iLguaKRj2BxNMytUO3TWwamM+kHkiyYEOkS0dPn9h/hBsHYlLUluSVz2Fp6/bw==}
+  /@antv/g-canvas@2.0.0:
+    resolution: {integrity: sha512-OU8708tQWeas4M+qLnJ0lqv1TmURUPiZQhRXsqqQHu+ohl8y6rEDSFGNLaznSBZt8YEHaDVjUS3e1QDuJV2bhA==}
     dependencies:
-      '@antv/g-base': 0.5.11
-      '@antv/g-math': 0.1.7
-      '@antv/matrix-util': 3.1.0-beta.3
-      '@antv/path-util': 2.0.15
-      '@antv/util': 2.0.17
+      '@antv/g-lite': 2.0.0
+      '@antv/g-plugin-canvas-path-generator': 2.0.0
+      '@antv/g-plugin-canvas-picker': 2.0.0
+      '@antv/g-plugin-canvas-renderer': 2.0.0
+      '@antv/g-plugin-dom-interaction': 2.0.0
+      '@antv/g-plugin-html-renderer': 2.0.0
+      '@antv/g-plugin-image-loader': 2.0.0
+      '@antv/util': 3.3.7
+      tslib: 2.6.2
+    dev: false
+
+  /@antv/g-lite@2.0.0:
+    resolution: {integrity: sha512-mlBC3aWPxGpOrWwdFF424MLeoWzuwAMjCym7RqHmkOuLCQun8Ehb3p1FEWjKude/udBd660AzhNRb1Uym65sHQ==}
+    dependencies:
+      '@antv/g-math': 3.0.0
+      '@antv/util': 3.3.7
+      d3-color: 1.4.1
+      eventemitter3: 5.0.1
       gl-matrix: 3.4.3
+      rbush: 3.0.1
       tslib: 2.6.2
     dev: false
 
@@ -819,6 +833,72 @@ packages:
     dependencies:
       '@antv/util': 2.0.17
       gl-matrix: 3.4.3
+
+  /@antv/g-math@3.0.0:
+    resolution: {integrity: sha512-AkmiNIEL1vgqTPeGY2wtsMdBBqKFwF7SKSgs+D1iOS/rqYMsXdhp/HvtuQ5tx/HdawE/ZzTiicIYopc520ADZw==}
+    dependencies:
+      '@antv/util': 3.3.7
+      gl-matrix: 3.4.3
+      tslib: 2.6.2
+    dev: false
+
+  /@antv/g-plugin-canvas-path-generator@2.0.0:
+    resolution: {integrity: sha512-/ph2blpmHQU4KXH55P1pSh/0/ggsJTc8kQOG+UwnQ/3LweVxx3Olq7MfoDBvYwXP67+sjRr9zhMvU2SAR40TFw==}
+    dependencies:
+      '@antv/g-lite': 2.0.0
+      '@antv/g-math': 3.0.0
+      '@antv/util': 3.3.7
+      tslib: 2.6.2
+    dev: false
+
+  /@antv/g-plugin-canvas-picker@2.0.0:
+    resolution: {integrity: sha512-5OFldyp+RmkIYJm/9S37GOtC3qz0iMn0OiRi2ejfEfNyoQaDAcpo1OuA67/W8dKB62qf/UykqB3OHJyf/UJSmw==}
+    dependencies:
+      '@antv/g-lite': 2.0.0
+      '@antv/g-math': 3.0.0
+      '@antv/g-plugin-canvas-path-generator': 2.0.0
+      '@antv/g-plugin-canvas-renderer': 2.0.0
+      '@antv/util': 3.3.7
+      gl-matrix: 3.4.3
+      tslib: 2.6.2
+    dev: false
+
+  /@antv/g-plugin-canvas-renderer@2.0.0:
+    resolution: {integrity: sha512-Qtvii5NJd9miqsLBqPTUOlEJMyCYRnSkIEV9yRxYRcXch7NpQVdIV4Qqa5Zuik+hJnqxK5q180Q3sDwTp89LYA==}
+    dependencies:
+      '@antv/g-lite': 2.0.0
+      '@antv/g-math': 3.0.0
+      '@antv/g-plugin-canvas-path-generator': 2.0.0
+      '@antv/g-plugin-image-loader': 2.0.0
+      '@antv/util': 3.3.7
+      gl-matrix: 3.4.3
+      tslib: 2.6.2
+    dev: false
+
+  /@antv/g-plugin-dom-interaction@2.0.0:
+    resolution: {integrity: sha512-9QeBvlEyTKXxOOzuyLcQK4C5ntbDtP3ALzU3A5j7na1nmUVcSWTDIOcshVwAzqgPzOvq4Du/SeTOP0mM+U7/oA==}
+    dependencies:
+      '@antv/g-lite': 2.0.0
+      tslib: 2.6.2
+    dev: false
+
+  /@antv/g-plugin-html-renderer@2.0.0:
+    resolution: {integrity: sha512-HvUl8hINmnOdkVPCziEQlPRWeAwY6dExdYGIZ9/qZHPcQ9BB8ANoAKbs5Pf5c1SEoBgdqPjrsZznrorEi7AlZA==}
+    dependencies:
+      '@antv/g-lite': 2.0.0
+      '@antv/util': 3.3.7
+      gl-matrix: 3.4.3
+      tslib: 2.6.2
+    dev: false
+
+  /@antv/g-plugin-image-loader@2.0.0:
+    resolution: {integrity: sha512-fGOFnS6BnMSMrcbUE4tfQoyQfwi5Tj9FDnR2NCn3MTSOQf5jFxcATXuRAj99gi6AE2Trmk/qDhftitzHh1T34g==}
+    dependencies:
+      '@antv/g-lite': 2.0.0
+      '@antv/util': 3.3.7
+      gl-matrix: 3.4.3
+      tslib: 2.6.2
+    dev: false
 
   /@antv/g-svg@0.5.6:
     resolution: {integrity: sha512-Xve1EUGk4HMbl2nq4ozR4QLh6GyoZ8Xw/+9kHYI4B5P2lIUQU95MuRsaLFfW5NNpZDx85ZeH97tqEmC9L96E7A==}
@@ -856,6 +936,14 @@ packages:
     dependencies:
       csstype: 3.1.3
       tslib: 2.6.2
+
+  /@antv/util@3.3.7:
+    resolution: {integrity: sha512-qqPg7rIPCsJyl7N56jAC25v/99mJ3ApVkgBsGijhiWrEeKvzXBPk1r5P77Pm9nCljpnn+hH8Z3t5AivbEoTJMg==}
+    dependencies:
+      fast-deep-equal: 3.1.3
+      gl-matrix: 3.4.3
+      tslib: 2.6.2
+    dev: false
 
   /@apideck/better-ajv-errors@0.3.6(ajv@8.12.0):
     resolution: {integrity: sha512-P+ZygBLZtkp0qqOAJJVX4oX/sFo5JR3eBWwwuqHHhK0GIgQOKWrAfiAaWX0aArHkRWHMuggFEgAZNxVPwPZYaA==}
@@ -9125,7 +9213,6 @@ packages:
 
   /eventemitter3@5.0.1:
     resolution: {integrity: sha512-GWkBvjiSZK87ELrYOSESUYeVIc9mvLLf/nXalMOS5dYrgZq9o5OVkbZAVM06CVxYsCwH9BDZFPlQTlPA1j4ahA==}
-    dev: true
 
   /events@3.3.0:
     resolution: {integrity: sha512-mQw+2fkQbALzQ7V0MY0IqdnXNOeTtP4r0lN9z7AAawCXgqea7bDii20AYrIBrFd/Hx0M2Ocz6S111CaFkUcb0Q==}
@@ -14729,6 +14816,10 @@ packages:
     resolution: {integrity: sha512-WuyALRjWPDGtt/wzJiadO5AXY+8hZ80hVpe6MyivgraREW751X3SbhRvG3eLKOYN+8VEvqLcf3wdnt44Z4S4SA==}
     engines: {node: '>=10'}
 
+  /quickselect@2.0.0:
+    resolution: {integrity: sha512-RKJ22hX8mHe3Y6wH/N3wCM6BWtjaxIyyUIkpHOvfFnxdI4yD4tBXEBKSbriGujF6jnSVkJrffuo6vxACiSSxIw==}
+    dev: false
+
   /railroad-diagrams@1.0.0:
     resolution: {integrity: sha512-cz93DjNeLY0idrCNOH6PviZGRN9GJhsdm9hpn1YCS879fj4W+x5IFJhhkRZcwVgMmFF7R82UA/7Oh+R8lLZg6A==}
     dev: false
@@ -14764,6 +14855,12 @@ packages:
       http-errors: 2.0.0
       iconv-lite: 0.4.24
       unpipe: 1.0.0
+    dev: false
+
+  /rbush@3.0.1:
+    resolution: {integrity: sha512-XRaVO0YecOpEuIvbhbpTrZgoiI6xBlz6hnlr6EHhd+0x9ase6EmeN+hdwwUaJvLcsFFQ8iWVF1GAK1yB0BWi0w==}
+    dependencies:
+      quickselect: 2.0.0
     dev: false
 
   /rc@1.2.8:
