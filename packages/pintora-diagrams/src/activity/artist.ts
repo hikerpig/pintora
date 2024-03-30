@@ -1,69 +1,65 @@
 import {
+  Bounds,
   GraphicsIR,
-  IDiagramArtist,
   Group,
-  safeAssign,
+  IDiagramArtist,
+  IFont,
+  Mark,
+  Maybe,
+  PathCommand,
   Rect,
+  TSize,
   Text,
   calculateTextDimensions,
-  getPointAt,
-  PathCommand,
-  Mark,
-  configApi,
-  last,
-  PintoraConfig,
-  ITheme,
-  unique,
   compact,
-  Bounds,
-  IFont,
-  TSize,
-  Maybe,
+  getPointAt,
+  last,
+  safeAssign,
+  unique,
 } from '@pintora/core'
 import {
-  Action,
-  ActivityDiagramIR,
-  AGroup,
-  Condition,
-  Keyword,
-  Note,
-  Step,
-  Switch,
-  Case,
-  While,
-  ArrowLabel,
-  Fork,
-  ForkBranch,
-  Repeat,
-} from './db'
-import { ActivityConf, getConf } from './config'
-import { createLayoutGraph, getGraphSplinesOption, LayoutEdge, LayoutGraph, LayoutNode } from '../util/graph'
-import {
-  makeMark,
-  calcDirection,
-  makeLabelBg,
-  drawArrowTo,
-  makeEmptyGroup,
   adjustRootMarkBounds,
+  calcDirection,
+  drawArrowTo,
   getBaseNote,
   makeCircle,
+  makeEmptyGroup,
+  makeLabelBg,
+  makeMark,
   makeTitleMark,
 } from '../util/artist-util'
-import { makeBounds, positionGroupContents, tryExpandBounds } from '../util/mark-positioner'
-import { isDev } from '../util/env'
-import { getPointsCurvePath, getPointsLinearPath } from '../util/line-util'
-import { makeTextMark } from './artist-util'
 import { calcBound, floorValues, updateBoundsByPoints } from '../util/bound'
-import { getTextDimensionsInPresicion } from '../util/text'
+import type { EnhancedConf } from '../util/config'
 import { DagreWrapper } from '../util/dagre-wrapper'
+import { isDev } from '../util/env'
+import { LayoutEdge, LayoutGraph, LayoutNode, createLayoutGraph, getGraphSplinesOption } from '../util/graph'
+import { getPointsCurvePath, getPointsLinearPath } from '../util/line-util'
+import { makeBounds, positionGroupContents, tryExpandBounds } from '../util/mark-positioner'
+import { getTextDimensionsInPresicion } from '../util/text'
+import { makeTextMark } from './artist-util'
+import { ActivityConf, getConf } from './config'
+import {
+  AGroup,
+  Action,
+  ActivityDiagramIR,
+  ArrowLabel,
+  Case,
+  Condition,
+  Fork,
+  ForkBranch,
+  Keyword,
+  Note,
+  Repeat,
+  Step,
+  Switch,
+  While,
+} from './db'
 
-let conf: ActivityConf
 let model: ArtistModel
 let activityDraw: ActivityDraw
-let theme: ITheme
 
 function calcTextDims(text: string, attrs: Partial<Text['attrs']> = {}) {
-  const _attrs = Object.assign(getFontConfig(conf), attrs)
+  const _attrs = Object.assign(getFontConfig(model.conf), attrs)
   return calculateTextDimensions(text, _attrs)
 }
 
@@ -77,9 +73,8 @@ function isEndAlikeKeyword(keyword: Keyword) {
 
 const erArtist: IDiagramArtist<ActivityDiagramIR, ActivityConf> = {
   draw(ir, config, opts?) {
-    conf = getConf(ir, config)
-    model = new ArtistModel(ir)
-    theme = (configApi.getConfig() as PintoraConfig).themeConfig.themeVariables
+    const conf = getConf(ir, config)
+    model = new ArtistModel(ir, conf)
     // console.log('ir', JSON.stringify(ir, null, 2))
 
     const rootMark: Group = makeEmptyGroup()
@@ -169,13 +164,16 @@ type StepModel = {
 
 function getActionRectSize(text: string) {
   const textDims = calcTextDims(text)
-  const rectWidth = textDims.width + conf.actionPaddingX * 2
-  const rectHeight = textDims.height + conf.actionPaddingY * 2
+  const rectWidth = textDims.width + model.conf.actionPaddingX * 2
+  const rectHeight = textDims.height + model.conf.actionPaddingY * 2
   return { rectWidth, rectHeight }
 }
 
 class ArtistModel {
-  constructor(public ir: ActivityDiagramIR) {}
+  constructor(
+    public ir: ActivityDiagramIR,
+    public conf: EnhancedConf<ActivityConf>,
+  ) {}
 
   stepModelMap = new Map<string, StepModel>()
   stepNotesMap = new Map<string, Note[]>()
@@ -568,6 +566,7 @@ class ActivityDraw {
   }
 
   private drawDecisionMarks(message: string) {
+    const conf = model.conf
     const { rectWidth, rectHeight } = getActionRectSize(message)
     const side = Math.ceil(conf.fontSize * 0.8)
     const decisionBg = makeMark(
@@ -607,6 +606,7 @@ class ActivityDraw {
   }
 
   private drawDiamondMark(id: string, attrs: Partial<Mark['attrs']> = {}, opts: { class?: string } = {}) {
+    const conf = model.conf
     const diamondSide = 10
     const diamondMark = makeMark(
       'path',
@@ -702,6 +702,7 @@ class ActivityDraw {
   }
 
   drawGroup(parentMark: Group, aGroup: AGroup): DrawStepResult {
+    const conf = model.conf
     const { id } = aGroup
     const group = makeEmptyGroup()
 
@@ -901,7 +902,10 @@ class ActivityDraw {
     if (repeat.firstAction) {
       const firstActionGroup = makeEmptyGroup()
       firstActionGroup.class = 'activity__repeat-start'
-      const { rectMark, textMark, actionInfo } = drawActionMarks({ message: repeat.firstAction.message, conf })
+      const { rectMark, textMark, actionInfo } = drawActionMarks({
+        message: repeat.firstAction.message,
+        conf: model.conf,
+      })
       firstActionGroup.children.push(rectMark, textMark)
       startMark = firstActionGroup
 
@@ -944,7 +948,7 @@ class ActivityDraw {
     parentMark.children.push(group, startMark)
     group.children.push(decisionBg, textMark)
 
-    const childrenResults = repeat.children.map((s, i) => {
+    const childrenResults = repeat.children.map(s => {
       const childResult = this.drawStep(parentMark, s)
       return childResult
     })
@@ -964,6 +968,7 @@ class ActivityDraw {
   }
 
   drawKeyword(parentMark: Group, keyword: Keyword): DrawStepResult {
+    const conf = model.conf
     const stepModel = model.stepModelMap.get(keyword.id)
     const group = makeEmptyGroup()
     group.class = 'activity__keyword'
@@ -1039,6 +1044,7 @@ class ActivityDraw {
   }
 
   drawFork(parentMark: Group, fork: Fork): DrawStepResult {
+    const conf = model.conf
     const { id } = fork
     const group = makeEmptyGroup()
     const stepModel = model.stepModelMap.get(id)
@@ -1196,6 +1202,7 @@ class ActivityDraw {
 
   drawNote(parentMark: Group, note: Note) {
     const { id, text } = note
+    const conf = model.conf
 
     const group = makeMark(
       'group',
@@ -1209,7 +1216,7 @@ class ActivityDraw {
 
     const fontConfig = { fontSize: conf.fontSize, fontFamily: conf.fontFamily }
     const textDims = calcTextDims(text, fontConfig)
-    const rectAttrs = getBaseNote(theme)
+    const rectAttrs = getBaseNote(conf.themeConfig.themeVariables)
     const noteModel = {
       width: textDims.width + 2 * conf.noteMargin,
       height: textDims.height + 2 * conf.noteMargin,
@@ -1271,7 +1278,7 @@ class ActivityDraw {
 function drawAction(parentMark: Group, action: Action, g: LayoutGraph): DrawStepResult {
   const stepModel = model.stepModelMap.get(action.id)
   const group = makeEmptyGroup()
-  const { textMark, rectMark, actionInfo } = drawActionMarks({ message: action.message, conf })
+  const { textMark, rectMark, actionInfo } = drawActionMarks({ message: action.message, conf: model.conf })
   const { rectWidth, rectHeight } = actionInfo
   group.children.push(rectMark, textMark)
 
@@ -1339,6 +1346,7 @@ type EdgeData = LayoutEdge<{
 function drawEdges(parent: Group, g: LayoutGraph) {
   const edgeGroup = makeMark('group', {}, { children: [] })
   const bounds = makeBounds()
+  const conf = model.conf
 
   g.edges().forEach(e => {
     const edge: EdgeData = g.edge(e)
@@ -1398,7 +1406,12 @@ function drawEdges(parent: Group, g: LayoutGraph) {
     if (edge.label) {
       const fontConfig = getFontConfig(conf)
       const labelDims = calcTextDims(edge.label, fontConfig)
-      labelBgMark = makeLabelBg(labelDims, { x: labelX, y: labelY }, { fill: conf.labelBackground }, theme)
+      labelBgMark = makeLabelBg(
+        labelDims,
+        { x: labelX, y: labelY },
+        { fill: conf.labelBackground },
+        model.conf.themeConfig.themeVariables,
+      )
       labelMark = makeMark(
         'text',
         {
