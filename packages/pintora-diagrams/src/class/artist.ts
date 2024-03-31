@@ -1,6 +1,5 @@
 import {
   calculateTextDimensions,
-  configApi,
   Group,
   ITheme,
   last,
@@ -8,7 +7,6 @@ import {
   makeArtist,
   makeMark,
   movePointPosition,
-  PintoraConfig,
   Rect,
   safeAssign,
   Text,
@@ -24,13 +22,14 @@ import {
   makeLabelBg,
 } from '../util/artist-util'
 import { calcBound } from '../util/bound'
+import type { EnhancedConf } from '../util/config'
 import { DagreWrapper } from '../util/dagre-wrapper'
+import { isDev } from '../util/env'
 import { BaseEdgeData, createLayoutGraph, getGraphSplinesOption, LayoutGraph, LayoutNode } from '../util/graph'
 import { getMedianPoint, getPointsCurvePath, getPointsLinearPath } from '../util/line-util'
 import { makeBounds, positionGroupContents, tryExpandBounds } from '../util/mark-positioner'
 import { ClassConf, getConf } from './config'
-import { ClassIR, TClass, ClassRelation, Relation, Note } from './db'
-import { isDev } from '../util/env'
+import { ClassIR, ClassRelation, Note, Relation, TClass } from './db'
 
 const artist = makeArtist<ClassIR, ClassConf>({
   draw(ir, config, opts) {
@@ -67,7 +66,7 @@ class ClassDiagramDraw {
   protected elementBounds = makeBounds()
   constructor(
     public ir: ClassIR,
-    public conf: ClassConf,
+    public conf: EnhancedConf<ClassConf>,
   ) {
     const g = createLayoutGraph({
       multigraph: true,
@@ -81,7 +80,7 @@ class ClassDiagramDraw {
       avoid_label_on_border: true,
     })
     this.dagreWrapper = new DagreWrapper(g)
-    this.theme = (configApi.getConfig() as PintoraConfig).themeConfig.themeVariables
+    this.theme = this.conf.themeConfig.themeVariables
   }
 
   drawTo(rootMark: Group) {

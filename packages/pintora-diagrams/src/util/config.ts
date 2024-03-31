@@ -28,6 +28,14 @@ export function baseGetConfigFromGlobalConfig(
   )
 }
 
+/**
+ * Configurator `getConfig` will add some extra fields
+ * - `themeConfig`
+ */
+export type EnhancedConf<T> = T & {
+  themeConfig: PintoraConfig['themeConfig']
+}
+
 export function makeConfigurator<C>(opts: {
   defaultConfig: C
   configKey: string
@@ -41,12 +49,11 @@ export function makeConfigurator<C>(opts: {
 }) {
   const { configKey, defaultConfig } = opts
 
-  function getConfig(configContext: DiagramConfigContext, extraConfig?: Partial<C>): C {
+  function getConfig(configContext: DiagramConfigContext, extraConfig?: Partial<C>): EnhancedConf<C> {
     const globalConfig: PintoraConfig = configApi.gnernateNewConfig(configContext.overrideConfig || {})
-    const t = globalConfig.themeConfig?.themeVariables
-    const conf = { ...defaultConfig }
+    const conf: EnhancedConf<C> = { ...defaultConfig, themeConfig: globalConfig.themeConfig }
 
-    safeAssign(conf, opts.getConfigFromTheme(t, conf))
+    safeAssign(conf, opts.getConfigFromTheme(conf.themeConfig.themeVariables, conf))
 
     const getConfigFromGlobalConfig = opts.getConfigFromGlobalConfig || baseGetConfigFromGlobalConfig
     safeAssign(conf, getConfigFromGlobalConfig(globalConfig, configContext, configKey))
@@ -54,10 +61,12 @@ export function makeConfigurator<C>(opts: {
     if (extraConfig) safeAssign(conf, extraConfig)
 
     safeAssign(conf, configContext.overrideConfig?.[configKey])
+
     if (opts.getConfigFromParamDirectives) {
       safeAssign(conf, opts.getConfigFromParamDirectives(configContext.configParams))
     }
-    return conf
+
+    return conf as EnhancedConf<C>
   }
 
   return {

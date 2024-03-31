@@ -1,42 +1,41 @@
 import {
+  Bounds,
+  ContentArea,
+  GSymbol,
   GraphicsIR,
+  Group,
   IDiagramArtist,
-  logger,
+  ITheme,
+  Line,
   Mark,
   MarkAttrs,
-  Rect,
-  Group,
-  Text,
-  Point,
-  Line,
-  Path,
-  safeAssign,
-  mat3,
-  calculateTextDimensions,
-  makeid,
-  configApi,
-  symbolRegistry,
-  ContentArea,
-  clamp,
-  PintoraConfig,
-  ITheme,
-  compact,
-  Bounds,
-  TSize,
-  GSymbol,
   Maybe,
+  Path,
+  Point,
+  Rect,
+  TSize,
+  Text,
+  calculateTextDimensions,
+  clamp,
+  compact,
+  logger,
+  makeid,
+  mat3,
+  safeAssign,
+  symbolRegistry,
 } from '@pintora/core'
-import { db, SequenceDiagramIR, LINETYPE, Message, PLACEMENT, WrappedText, ParticipantBox } from './db'
-import { ActivationData, LoopModel, SequenceDiagramBounds, MessageModel } from './artist/type'
-import { SequenceConf, getConf } from './config'
-import { getBaseNote, drawArrowTo, drawCrossTo, getBaseText, makeMark } from './artist-util'
+import { makeEmptyGroup } from '../util/artist-util'
+import type { EnhancedConf } from '../util/config'
 import { makeBounds, tryExpandBounds } from '../util/mark-positioner'
+import { getTextDimensionsInPresicion } from '../util/text'
+import { drawArrowTo, drawCrossTo, getBaseNote, getBaseText, makeMark } from './artist-util'
 import { drawDivider } from './artist/divider'
 import { drawLoopTo } from './artist/loop'
-import { makeEmptyGroup } from '../util/artist-util'
-import { getTextDimensionsInPresicion } from '../util/text'
+import { ActivationData, LoopModel, MessageModel, SequenceDiagramBounds } from './artist/type'
+import { SequenceConf, getConf } from './config'
+import { LINETYPE, Message, PLACEMENT, ParticipantBox, SequenceDiagramIR, WrappedText, db } from './db'
 
-let conf: SequenceConf
+let conf: EnhancedConf<SequenceConf>
 let theme: ITheme
 
 type DrawResult<T extends Mark = Mark> = {
@@ -67,7 +66,7 @@ const sequenceArtist: IDiagramArtist<SequenceDiagramIR, SequenceConf> = {
   draw(ir, config?, opts?) {
     // console.log('[draw]', ir, config)
     conf = getConf(ir, config)
-    theme = (configApi.getConfig() as PintoraConfig).themeConfig.themeVariables
+    theme = conf.themeConfig.themeVariables
     model.init()
     // logger.debug(`C:${JSON.stringify(conf, null, 2)}`)
 
