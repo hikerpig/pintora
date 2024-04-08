@@ -411,7 +411,7 @@ exports[`activity-artist draw fork 1`] = `
               "fontFamily": "Source Code Pro, sans-serif",
               "fontSize": 14,
               "id": "id-2-id-8",
-              "text": "no",
+              "text": "monoproc",
               "textAlign": "center",
               "textBaseline": "middle",
             },

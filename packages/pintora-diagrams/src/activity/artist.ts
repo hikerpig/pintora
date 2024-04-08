@@ -559,7 +559,7 @@ class ActivityDraw {
     drawChildren(condition.then.children, condition.then.label || 'yes')
 
     if (condition.else) {
-      drawChildren(condition.else.children, 'no')
+      drawChildren(condition.else.children, condition.else.label || 'no')
     }
 
     return result
