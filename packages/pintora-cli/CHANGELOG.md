@@ -1,5 +1,11 @@
 # Change Log
 
+## 0.7.4
+
+### Patch Changes
+
+- 4c8346b: feat(cli): add option `renderInSubprocess` to avoid polluting global scope
+
 ## 0.7.3
 
 ### Patch Changes

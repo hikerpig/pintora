@@ -1,5 +1,12 @@
 # Change Log
 
+## 0.7.3
+
+### Patch Changes
+
+- d3cf8e5: fix: [activityDiagram] wrong condition else label
+- eab28e6: feat: [diagrams] modify local `themeConfig` through `@config` directive to change noteBackground
+
 ## 0.7.2
 
 ### Patch Changes

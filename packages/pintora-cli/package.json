@@ -1,6 +1,6 @@
 {
   "name": "@pintora/cli",
-  "version": "0.7.3",
+  "version": "0.7.4",
   "description": "A node.js version of pintora",
   "keywords": [
     "pintora"

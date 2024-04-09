@@ -1,5 +1,13 @@
 # Change Log
 
+## 0.7.4
+
+### Patch Changes
+
+- 4c8346b: feat(cli): add option `renderInSubprocess` to avoid polluting global scope
+- d3cf8e5: fix: [activityDiagram] wrong condition else label
+- eab28e6: feat: [diagrams] modify local `themeConfig` through `@config` directive to change noteBackground
+
 ## 0.7.3
 
 ### Patch Changes
