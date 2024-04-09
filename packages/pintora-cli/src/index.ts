@@ -1,5 +1,7 @@
 import { pintoraStandalone } from '@pintora/standalone'
 
+export { renderInCurrentProcess } from './sameprocess-render'
+export { renderInSubprocess } from './subprocess-render'
 export { render } from './render'
 
 export { pintoraStandalone }

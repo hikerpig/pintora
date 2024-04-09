@@ -155,6 +155,11 @@ export type CLIRenderOptions = {
    * width of the output, height will be calculated according to the diagram content ratio
    */
   width?: number
+  /**
+   * Whether we should run render in a subprocess rather in current process.
+   * If you call the `render` function, by default this is true, to avoid polluting the global environment.
+   */
+  renderInSubprocess?: boolean
 }
 
 export function render(options: CLIRenderOptions): Promise<string | buffer>
