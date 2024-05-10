@@ -3,6 +3,7 @@ import { defineConfig } from 'vite'
 import reactRefresh from '@vitejs/plugin-react-refresh'
 import tsconfigPaths from 'vite-tsconfig-paths'
 import { VitePWA } from 'vite-plugin-pwa'
+import ViteMkcert from 'vite-plugin-mkcert'
 
 const BASE = '/demo/'
 
@@ -36,6 +37,9 @@ export default defineConfig({
       strategies: 'injectManifest',
       workbox: {},
     }),
+    ViteMkcert({
+      savePath: './certs', // save the generated certificate into certs directory
+    }),
   ],
   base: BASE,
   mode,
@@ -44,6 +48,10 @@ export default defineConfig({
       // Allow serving files from one level up to the project root
       allow: [serverAllow],
     },
+    https: {
+      cert: './certs/cert.pem',
+      key: './certs/dev.pem'
+    }
   },
   build: {
     rollupOptions: {
@@ -53,11 +61,11 @@ export default defineConfig({
         preview: resolve(__dirname, 'preview/index.html'),
         'live-editor': resolve(__dirname, 'live-editor/index.html'),
       },
-      output: {
-        entryFileNames: `assets/[name].js`,
-        chunkFileNames: `assets/[name].js`,
-        assetFileNames: `assets/[name].[ext]`,
-      },
+      // output: {
+      //   entryFileNames: `assets/[name].js`,
+      //   chunkFileNames: `assets/[name].js`,
+      //   assetFileNames: `assets/[name].[ext]`,
+      // },
     },
   },
 })
