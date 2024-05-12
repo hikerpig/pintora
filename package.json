@@ -46,7 +46,7 @@
     "@typescript-eslint/parser": "^7.0.0",
     "codecov": "^3.8.3",
     "esbuild-jest": "^0.5.0",
-    "eslint": "^8.24.0",
+    "eslint": "^9.0.0",
     "eslint-plugin-prettier": "^5.0.0",
     "eslint-plugin-unused-imports": "^3.0.0",
     "husky": "^9.0.0",
