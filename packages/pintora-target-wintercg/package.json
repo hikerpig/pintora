@@ -33,7 +33,7 @@
     "base64-js": "^1.5.1",
     "buffer": "^6.0.3",
     "edge-runtime": "^2.5.7",
-    "esbuild": "^0.20.0",
+    "esbuild": "^0.21.0",
     "esbuild-visualizer": "^0.6.0",
     "events": "^3.3.0",
     "fontkit": "^2.0.2",
