@@ -1,32 +1,32 @@
 {
   "name": "pintora",
-  "description": "Monorepo for pintora project",
   "private": true,
-  "scripts": {
-    "clean": "rimraf \"packages/**/lib\"",
-    "compile": "pnpm exec turbo run compile --concurrency=10",
-    "compile:browser": "pnpm exec turbo run compile --concurrency=10 --ignore='@pintora/cli'",
-    "watch": "pnpm exec turbo run watch --concurrency=10 --no-cache",
-    "watch:browser": "pnpm exec turbo run watch --concurrency=10 --no-cache --no-deps --scope='@pintora/diagrams'",
-    "demo:dev": "cd demo && npm run dev",
-    "website:dev": "cd website && npm run start",
-    "prettier": "prettier \"packages/*/src/**/*.{ts,js}\" \"demo/src\"",
-    "format": "npm run prettier -- --write",
-    "format:check": "npm run prettier -- --check",
-    "lint": "eslint packages/*/src/**/*.{ts,js}",
-    "test": "pnpm exec jest",
-    "coverage": "pnpm exec jest --coverage",
-    "upload-coverage": "codecov -f coverage/coverage-final.json",
-    "ci:coverage": "pnpm exec jest --coverage --ci",
-    "prepare": "turbo run prepare-setup",
-    "build-site": "sh ./scripts/build-site.sh",
-    "vercel-build": "npm run compile:browser && npm run build-site"
-  },
+  "description": "Monorepo for pintora project",
   "workspaces": [
     "./packages/*",
     "./website",
     "./demo"
   ],
+  "scripts": {
+    "build-site": "sh ./scripts/build-site.sh",
+    "ci:coverage": "pnpm exec jest --coverage --ci",
+    "clean": "rimraf \"packages/**/lib\"",
+    "compile": "pnpm exec turbo run compile --concurrency=10",
+    "compile:browser": "pnpm exec turbo run compile --concurrency=10 --ignore='@pintora/cli'",
+    "coverage": "pnpm exec jest --coverage",
+    "demo:dev": "cd demo && npm run dev",
+    "format": "npm run prettier -- --write",
+    "format:check": "npm run prettier -- --check",
+    "lint": "eslint packages/*/src/**/*.{ts,js}",
+    "prepare": "turbo run prepare-setup",
+    "prettier": "prettier \"packages/*/src/**/*.{ts,js}\" \"demo/src\"",
+    "test": "pnpm exec jest",
+    "upload-coverage": "codecov -f coverage/coverage-final.json",
+    "vercel-build": "npm run compile:browser && npm run build-site",
+    "watch": "pnpm exec turbo run watch --concurrency=10 --no-cache",
+    "watch:browser": "pnpm exec turbo run watch --concurrency=10 --no-cache --no-deps --scope='@pintora/diagrams'",
+    "website:dev": "cd website && npm run start"
+  },
   "lint-staged": {
     "*.ts": [
       "prettier --write",
@@ -37,18 +37,16 @@
       "eslint --fix"
     ]
   },
-  "packageManager": "pnpm@8.15.6",
   "devDependencies": {
     "@changesets/changelog-git": "^0.2.0",
     "@changesets/cli": "^2.24.1",
+    "@types/eslint__js": "^8.42.0",
     "@types/jest": "^29.0.0",
-    "@typescript-eslint/eslint-plugin": "^7.0.0",
-    "@typescript-eslint/parser": "^7.0.0",
     "codecov": "^3.8.3",
     "esbuild-jest": "^0.5.0",
-    "eslint": "^8.24.0",
+    "eslint": "^9.0.0",
     "eslint-plugin-prettier": "^5.0.0",
-    "eslint-plugin-unused-imports": "^3.0.0",
+    "eslint-plugin-unused-imports": "^4.0.0",
     "husky": "^9.0.0",
     "jest": "^29.0.0",
     "jest-junit": "^16.0.0",
@@ -56,6 +54,8 @@
     "prettier": "^3.0.3",
     "rimraf": "5.0.5",
     "turbo": "^1.11.3",
-    "typescript": "^5.0.0"
-  }
+    "typescript": "^5.0.0",
+    "typescript-eslint": "^7.0.0"
+  },
+  "packageManager": "pnpm@8.15.6"
 }
