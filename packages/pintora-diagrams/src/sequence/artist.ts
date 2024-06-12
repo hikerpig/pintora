@@ -1063,7 +1063,7 @@ function drawParticipantBoxes(context: SequenceArtistContext) {
       width,
       height: modelBounds.stopy - modelBounds.starty,
       fill: participantBox.background || conf.participantBackground,
-      stroke: conf.actorTextColor,
+      stroke: conf.participantBorderColor,
     })
     boxesGroup.children.push(rect)
     if (participantBox.text) {

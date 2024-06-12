@@ -39,8 +39,10 @@ export type SequenceConf = {
   actorTextColor: string
   actorLineColor: string
 
+  // for participant boxes
   participantBoxPadding: number
   participantBackground: string
+  participantBorderColor: string
 
   noteTextColor: string
 
@@ -86,6 +88,7 @@ export const defaultConfig: SequenceConf = {
 
   participantBoxPadding: 10,
   participantBackground: 'transparent',
+  participantBorderColor: PALETTE.normalDark,
 
   noteTextColor: PALETTE.normalDark,
 
@@ -120,6 +123,7 @@ export const SEQUENCE_PARAM_DIRECTIVE_RULES = {
   actorBorderColor: { valueType: 'color' },
   actorTextColor: { valueType: 'color' },
   actorLineColor: { valueType: 'color' },
+  participantBorderColor: { valueType: 'color' },
   noteTextColor: { valueType: 'color' },
   activationBackground: { valueType: 'color' },
   dividerTextColor: { valueType: 'color' },
@@ -151,6 +155,7 @@ const configurator = makeConfigurator<SequenceConf>({
       noteTextColor: t.noteTextColor || t.textColor,
       activationBackground: t.background1,
       dividerTextColor: t.secondaryTextColor,
+      participantBorderColor: t.textColor,
     }
   },
 })
