@@ -123,8 +123,10 @@ export type SequenceConf = {
   actorTextColor: string
   actorLineColor: string
 
+  // for participant boxes
   participantBoxPadding: number
   participantBackground: string
+  participantBorderColor: string
 
   noteTextColor: string
 
