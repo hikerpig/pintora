@@ -65,7 +65,7 @@
     "@pintora/test-shared": "workspace:*",
     "@types/node": "^16.11.39",
     "@types/tinycolor2": "^1.4.3",
-    "esbuild": "^0.20.0",
+    "esbuild": "^0.21.0",
     "microbundle": "^0.15.1",
     "tsx": "^4.0.0",
     "typescript": "^5.0.0"
