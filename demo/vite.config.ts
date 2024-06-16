@@ -11,6 +11,8 @@ const mode = process.env.NODE_ENV === 'production' ? 'production' : 'development
 
 const serverAllow = process.env.SERVER_ALLOW || '..'
 
+const enableHttps = process.env.ENABLE_HTTPS === 'true'
+
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [
@@ -37,9 +39,11 @@ export default defineConfig({
       strategies: 'injectManifest',
       workbox: {},
     }),
-    ViteMkcert({
-      savePath: './certs', // save the generated certificate into certs directory
-    }),
+    enableHttps
+      ? ViteMkcert({
+          savePath: './certs', // save the generated certificate into certs directory
+        })
+      : null,
   ],
   base: BASE,
   mode,
@@ -48,10 +52,14 @@ export default defineConfig({
       // Allow serving files from one level up to the project root
       allow: [serverAllow],
     },
-    https: {
-      cert: './certs/cert.pem',
-      key: './certs/dev.pem'
-    }
+    ...(enableHttps
+      ? {
+          https: {
+            cert: './certs/cert.pem',
+            key: './certs/dev.pem',
+          },
+        }
+      : null),
   },
   build: {
     rollupOptions: {

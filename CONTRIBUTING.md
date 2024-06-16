@@ -54,7 +54,7 @@ Currently we need two shells to develop the live-editor demo.
 ./scripts/watch-for-browser.sh
 ```
 
-2. Start the demo. When the CLI stops rolling, open `http://localhost:3001/demo/live-editor/` in
+2. Start the demo. When the CLI stops rolling, open `https://localhost:3001/demo/live-editor/` in
    your browser and you will see the editor page. It will reload once `demo/src` or its dependency packages change.
 
 ```sh
@@ -72,5 +72,5 @@ pnpm run compile
 Build demo and docs site.
 
 ```sh
-pnpm run build-site 
+pnpm run build-site
 ```
