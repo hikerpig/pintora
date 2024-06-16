@@ -1,5 +1,12 @@
 # Change Log
 
+## 0.7.4
+
+### Patch Changes
+
+- f06dfd0: fix: [activity] strange corner whene condition is inside while
+- 3082c5c: feat: [sequence] add `participantBorderColor` param
+
 ## 0.7.3
 
 ### Patch Changes

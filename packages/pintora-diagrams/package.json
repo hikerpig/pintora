@@ -1,6 +1,6 @@
 {
   "name": "@pintora/diagrams",
-  "version": "0.7.3",
+  "version": "0.7.4",
   "description": "Core diagrams of pintora",
   "main": "lib/index.js",
   "module": "lib/index.js",
