@@ -548,10 +548,27 @@ class ActivityDraw {
           width: 1,
           height: 1,
         })
+
         this.g.setEdge(id, dummyNode.id, { label })
-        this.g.setEdge(dummyNode.id, endId)
+        this.g.setEdge(dummyNode.id, endId, { label: '' })
         if (stepModel.parentId) {
-          this.g.setParent(dummyNode.id, stepModel.parentId)
+          // set parent to the cloest group
+          const parentStepModel = this.model.stepModelMap.get(stepModel.parentId)
+          let closestGroup = null
+          let p = parentStepModel
+          while (p) {
+            if (p.type === 'group') {
+              closestGroup = p
+              break
+            }
+            if (p.parentId) {
+              p = this.model.stepModelMap.get(p.parentId)
+              if (!p) break
+            }
+          }
+          if (closestGroup) {
+            this.g.setParent(dummyNode.id, closestGroup.id)
+          }
         }
       }
     }
