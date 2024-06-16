@@ -97,5 +97,20 @@ end`),
         c.get('.activity__edge-label').should('have.lengthOf', 2)
       },
     },
+    {
+      // issue #284
+      description: 'Should draw lines correctly when there is an empty else block inside a while loop',
+      code: stripStartEmptyLines(`
+  activityDiagram
+  partition G {
+    while (test while) is (next)
+      if (test if) then
+        :print error;
+      else (no)
+      endif
+    endwhile (done)
+  }
+        `),
+    },
   ])
 })
