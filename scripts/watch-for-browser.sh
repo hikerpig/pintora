@@ -1,7 +1,7 @@
 pnpm exec turbo run watch --concurrency=10 \
   --no-cache --no-deps --continue --parallel \
-  --scope="@pintora/renderer" \
-  --scope="@pintora/diagrams" \
-  --scope="@pintora/core" \
-  --scope="@pintora/test-shared" \
-  --scope="@pintora/standalone"
+  --filter="@pintora/renderer" \
+  --filter="@pintora/diagrams" \
+  --filter="@pintora/core" \
+  --filter="@pintora/test-shared" \
+  --filter="@pintora/standalone"
