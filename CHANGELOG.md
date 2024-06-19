@@ -1,5 +1,11 @@
 # Change Log
 
+## 0.7.6
+
+### Patch Changes
+
+- 089ca96: update to workspace dependencies
+
 ## 0.7.5
 
 ### Patch Changes

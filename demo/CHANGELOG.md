@@ -1,5 +1,12 @@
 # Change Log
 
+## 0.3.22
+
+### Patch Changes
+
+- Updated dependencies [089ca96]
+  - @pintora/standalone@0.7.5
+
 ## 0.3.21
 
 ### Patch Changes

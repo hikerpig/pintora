@@ -1,5 +1,13 @@
 # Change Log
 
+## 0.7.6
+
+### Patch Changes
+
+- 089ca96: update to workspace dependencies
+- Updated dependencies [089ca96]
+  - @pintora/standalone@0.7.5
+
 ## 0.7.4
 
 ### Patch Changes
