@@ -1,8 +1,6 @@
 {
   "$schema": "https://turborepo.org/schema.json",
-  "baseBranch": "origin/master",
-  "npmClient": "pnpm",
-  "pipeline": {
+  "tasks": {
     "compile": {
       "dependsOn": [
         "^compile"
