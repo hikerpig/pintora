@@ -473,8 +473,8 @@ importers:
         specifier: ^6.0.3
         version: 6.0.3
       edge-runtime:
-        specifier: ^2.5.7
-        version: 2.5.7
+        specifier: ^3.0.0
+        version: 3.0.0
       esbuild:
         specifier: ^0.21.0
         version: 0.21.5
@@ -2168,24 +2168,28 @@ packages:
       '@docusaurus/types':
         optional: true
 
-  '@edge-runtime/format@2.2.0':
-    resolution: {integrity: sha512-gPrS6AVw/qJJL0vcxMXv4kFXCU3ZTCD1uuJpwX15YxHV8BgU9OG5v9LrkkXcr96PBT/9epypfNJMhlWADuEziw==}
+  '@edge-runtime/format@3.0.0':
+    resolution: {integrity: sha512-Mpg9LP4D9fxjXa6p3Wm4WnuK7XU5YKfFGvOje56ipdOvNXLj+DmLQSuX9uDbHmQ2KoJh/EYBAsmHqa+z8/wQgQ==}
     engines: {node: '>=16'}
 
-  '@edge-runtime/ponyfill@2.4.1':
-    resolution: {integrity: sha512-ZbR/EViY3gg2rmEAQTKPa6mXl4aR1/+cFcQe4r1segCjEbTAxT6PWu40odbu/KlZKSysEb2O/BWIC2lJgSJOMQ==}
+  '@edge-runtime/ponyfill@3.0.0':
+    resolution: {integrity: sha512-JQm5QjLYv/0P6/TwOjFDBfQVNPKNCRsgP8G9sWPwKzcB5bc5mt6AMtQvMloiOm+7PosvBhGB3V448eSNGd3CTQ==}
     engines: {node: '>=16'}
 
   '@edge-runtime/primitives@4.0.5':
     resolution: {integrity: sha512-t7QiN5d/KpXgCvIfSt6Nm9Hj3WVdNgc5CpOD73jasY+9EvTI7Ngdj5cXvjcHrPcmYWJZMySPgeEeoL/1N/Llag==}
     engines: {node: '>=16'}
 
+  '@edge-runtime/primitives@5.0.0':
+    resolution: {integrity: sha512-6EHOEnYFVvlLALXNacH0TsNR7lyCfy/58PJs8LMX3YtoR40ezGhh7kws1vuQCUf/QdJFNWN31SqESTzKmDkYLA==}
+    engines: {node: '>=16'}
+
   '@edge-runtime/types@2.2.7':
     resolution: {integrity: sha512-9MTwGooICP7+ZsX9BTy6YCRzOr4tP6RFRymsc8CaKORfvuAHgLZUQaLwILfQ94tddufVXcBwq637VfEd3ZXbWA==}
     engines: {node: '>=16'}
 
-  '@edge-runtime/vm@3.1.7':
-    resolution: {integrity: sha512-hUMFbDQ/nZN+1TLMi6iMO1QFz9RSV8yGG8S42WFPFma1d7VSNE0eMdJUmwjmtav22/iQkzHMmu6oTSfAvRGS8g==}
+  '@edge-runtime/vm@4.0.0':
+    resolution: {integrity: sha512-XHaLSnCVa5Z1pyQcbSVNYSUFWi+y4DTyN8QANdfeDl7aVg6PK4UtCb6WRAjVoFSBsYU/0oqbm4rjb27lhkW6bQ==}
     engines: {node: '>=16'}
 
   '@esbuild/aix-ppc64@0.19.12':
@@ -5076,8 +5080,8 @@ packages:
   ecc-jsbn@0.1.2:
     resolution: {integrity: sha512-eh9O+hwRHNbG4BLTjEl3nw044CkGm5X6LoaCf7LPp7UU8Qrt47JYNi6nPX8xjW97TKGKm1ouctg0QSpZe9qrnw==}
 
-  edge-runtime@2.5.7:
-    resolution: {integrity: sha512-gA4qSVP0sNwJlkdQ2nahDPASlSl8twUd17o+JolPa1EtXpLTGzIpOETvodgJwXIxa+zaD8bnAXCdsWrx2PhlVQ==}
+  edge-runtime@3.0.0:
+    resolution: {integrity: sha512-hUE3VOcAYQHBovAkamow3217Rtlf/XUNo+1VpslcP52oqe6UKBohbj8DIdH7WtSVEbxaypaV46mEkC9+gusyNA==}
     engines: {node: '>=16'}
     hasBin: true
 
@@ -7741,6 +7745,9 @@ packages:
 
   picocolors@1.0.0:
     resolution: {integrity: sha512-1fygroTLlHu66zi26VoTDv8yRgm0Fccecssto+MhsZ0D/DGW2sm8E8AjW7NU5VVTRt5GxbeZ5qBuJr+HyLYkjQ==}
+
+  picocolors@1.0.1:
+    resolution: {integrity: sha512-anP1Z8qwhkbmu7MFP5iTt+wQKXgwzf7zTyGlcdzabySa9vd0Xt392U0rVmz9poOaBj0uHJKyyo9/upk0HrEQew==}
 
   picomatch@2.3.1:
     resolution: {integrity: sha512-JU3teHTNjmE2VCGFzuY8EXzCDVwEqB2a8fsIvwaStHhAWJEeVd1o1QD80CU6+ZdEXXSLbSsuLwJjkCBWqRQUVA==}
@@ -12834,19 +12841,21 @@ snapshots:
       - uglify-js
       - webpack-cli
 
-  '@edge-runtime/format@2.2.0': {}
+  '@edge-runtime/format@3.0.0': {}
 
-  '@edge-runtime/ponyfill@2.4.1': {}
+  '@edge-runtime/ponyfill@3.0.0': {}
 
   '@edge-runtime/primitives@4.0.5': {}
+
+  '@edge-runtime/primitives@5.0.0': {}
 
   '@edge-runtime/types@2.2.7':
     dependencies:
       '@edge-runtime/primitives': 4.0.5
 
-  '@edge-runtime/vm@3.1.7':
+  '@edge-runtime/vm@4.0.0':
     dependencies:
-      '@edge-runtime/primitives': 4.0.5
+      '@edge-runtime/primitives': 5.0.0
 
   '@esbuild/aix-ppc64@0.19.12':
     optional: true
@@ -16095,14 +16104,14 @@ snapshots:
       jsbn: 0.1.1
       safer-buffer: 2.1.2
 
-  edge-runtime@2.5.7:
+  edge-runtime@3.0.0:
     dependencies:
-      '@edge-runtime/format': 2.2.0
-      '@edge-runtime/ponyfill': 2.4.1
-      '@edge-runtime/vm': 3.1.7
+      '@edge-runtime/format': 3.0.0
+      '@edge-runtime/ponyfill': 3.0.0
+      '@edge-runtime/vm': 4.0.0
       async-listen: 3.0.1
       mri: 1.2.0
-      picocolors: 1.0.0
+      picocolors: 1.0.1
       pretty-ms: 7.0.1
       signal-exit: 4.0.2
       time-span: 4.0.0
@@ -19589,6 +19598,8 @@ snapshots:
       is-reference: 3.0.2
 
   picocolors@1.0.0: {}
+
+  picocolors@1.0.1: {}
 
   picomatch@2.3.1: {}
 
