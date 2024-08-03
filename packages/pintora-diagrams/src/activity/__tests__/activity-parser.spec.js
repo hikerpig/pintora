@@ -712,4 +712,14 @@ repeatwhile (data available) is (yes) not (no)
     const ir = db.getDiagramIR()
     expect(ir.title).toEqual('Hello')
   })
+
+  it('can parse quoted word in action', () => {
+    const example = stripStartEmptyLines(`
+  activityDiagram
+    :"for (var i = 0; i <= n; i++)";
+      `)
+    parse(example)
+    const ir = db.getDiagramIR()
+    expect(ir.steps[0].value.message).toEqual('for (var i = 0; i <= n; i++)')
+  })
 })
