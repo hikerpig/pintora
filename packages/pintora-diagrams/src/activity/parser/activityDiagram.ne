@@ -261,9 +261,16 @@ oneLineAction ->
     %}
 
 multilineText ->
-    (%VALID_TEXT|%WS|%NL):* {%
+    %QUOTED_WORD {%
       function(d) {
-        // console.log('[multiline text]', d)
+        const ele = d[0]
+        return getQuotedWord(ele)
+      }
+    %}
+  | (%VALID_TEXT|%WS|%NL):* {%
+      function(d) {
+        const ele = d[0]
+        // console.log('[multiline text]', ele)
         const v = d[0].map(l => {
           return l.map(o => tv(o))
         }).join('')
