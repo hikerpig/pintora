@@ -1,5 +1,5 @@
 pnpm exec turbo run watch --concurrency=10 \
-  --no-cache --no-deps --continue --parallel \
+  --no-cache --continue --parallel \
   --filter="@pintora/renderer" \
   --filter="@pintora/diagrams" \
   --filter="@pintora/core" \
