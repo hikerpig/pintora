@@ -46,3 +46,10 @@ mindmap
 ## 💻 Editor Support
 
 - VSCode extension [pintora-vscode](https://marketplace.visualstudio.com/items?itemName=hikerpig.pintora-vscode), providing syntax highlight and preview support for `.pintora` file and markdown code fence.
+
+## Related Projects
+
+- [gatsby-remark-pintora](https://github.com/hikerpig/gatsby-remark-pintora) A gatsby remark plugin for converting pintora codeblock to diagrams in markdown files.
+- [Pintora.js - Diagram as text / hikerpig / Observable](https://observablehq.com/@hikerpig/pintora-js-diagram-as-text), use pintora in Observable interactive notebook.
+- [pintora-stencil - Pintora Web Components](https://github.com/hikerpig/pintora-stencil), web component for showing pintora diagram preview, add it into your website simply by import some script tags.
+- [obsidian-pintora](https://github.com/amiaslee/obsidian-pintora), created by [@amiaslee](https://github.com/amiaslee). An Obsidian plugin based on Pintora, which allows users to create diagrams using Pintora syntax directly in the Obsidian editor. It's local, secure, fast, and easy to use.
