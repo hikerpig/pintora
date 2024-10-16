@@ -289,3 +289,30 @@ title: Mind Map levels
   `
 })
 ```
+
+## pintora in Deno
+
+It's basically the same as how you do it in WinterCG runtime.
+
+Try this example with [Deno 2](https://docs.deno.com/), `deno run --allow-write examples/deno-example.ts`
+
+```ts
+import { render } from 'jsr:@pintora/target-wintercg'
+import { writeFileSync } from 'node:fs'
+
+async function main() {
+  const result = await render({
+    code: `
+mindmap
+title: Mind Map levels
+* UML Diagrams
+** Behavior Diagrams
+*** Sequence Diagram
+*** State Diagram
+  `,
+  })
+
+  writeFileSync('./result.svg', result.data)
+}
+main()
+```

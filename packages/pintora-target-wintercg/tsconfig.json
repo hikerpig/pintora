@@ -3,7 +3,7 @@
   "compilerOptions": {
     "rootDir": "scripts",
     "outDir": "out-scripts",
-    "strict": false,
+    "strict": true,
     "checkJs": true,
     "allowJs": true,
     "resolveJsonModule": true,

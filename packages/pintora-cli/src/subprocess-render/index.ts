@@ -1,8 +1,8 @@
-import { fork } from 'child_process'
-import { Buffer } from 'buffer'
+import { fork } from 'node:child_process'
+import { Buffer } from 'node:buffer'
 
 import type { CLIRenderOptions } from '../render-impl'
-import path from 'path'
+import path from 'node:path'
 import type { SubprocessSentMessage } from './render-in-subprocess'
 
 export async function renderInSubprocess(opts: CLIRenderOptions) {
