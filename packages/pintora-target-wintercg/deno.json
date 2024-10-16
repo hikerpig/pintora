@@ -1,0 +1,17 @@
+{
+  "name": "@pintora/target-wintercg",
+  "version": "0.1.4",
+  "exports": "./dist/runtime.esm.js",
+  "publish": {
+    "include": ["dist/"],
+    "exclude": ["!dist/"]
+  },
+  "compilerOptions": {
+    "checkJs": true,
+    "allowJs": true,
+    "types": [
+      "node",
+      "svgdom"
+    ]
+  }
+}
