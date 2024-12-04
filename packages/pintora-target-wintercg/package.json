@@ -25,7 +25,7 @@
     "@pintora/standalone": "workspace:*"
   },
   "devDependencies": {
-    "@edge-runtime/types": "^2.2.7",
+    "@edge-runtime/types": "^4.0.0",
     "@pintora/renderer": "workspace:*",
     "@types/fontkit": "^2.0.6",
     "@types/node": "^16.11.7",

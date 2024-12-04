@@ -452,8 +452,8 @@ importers:
         version: link:../pintora-standalone
     devDependencies:
       '@edge-runtime/types':
-        specifier: ^2.2.7
-        version: 2.2.7
+        specifier: ^4.0.0
+        version: 4.0.0
       '@pintora/renderer':
         specifier: workspace:*
         version: link:../pintora-renderer
@@ -2236,9 +2236,13 @@ packages:
     resolution: {integrity: sha512-t7QiN5d/KpXgCvIfSt6Nm9Hj3WVdNgc5CpOD73jasY+9EvTI7Ngdj5cXvjcHrPcmYWJZMySPgeEeoL/1N/Llag==}
     engines: {node: '>=16'}
 
-  '@edge-runtime/types@2.2.7':
-    resolution: {integrity: sha512-9MTwGooICP7+ZsX9BTy6YCRzOr4tP6RFRymsc8CaKORfvuAHgLZUQaLwILfQ94tddufVXcBwq637VfEd3ZXbWA==}
-    engines: {node: '>=16'}
+  '@edge-runtime/primitives@6.0.0':
+    resolution: {integrity: sha512-FqoxaBT+prPBHBwE1WXS1ocnu/VLTQyZ6NMUBAdbP7N2hsFTTxMC/jMu2D/8GAlMQfxeuppcPuCUk/HO3fpIvA==}
+    engines: {node: '>=18'}
+
+  '@edge-runtime/types@4.0.0':
+    resolution: {integrity: sha512-6HiX1oSir5R+X74IzM08fCQkR5mTcOxgfFVdn335jz/CckIHVFphh7hNkIcI+XsMYhAfWOJ5b8TfBU/Hbx1EIQ==}
+    engines: {node: '>=18'}
 
   '@edge-runtime/vm@3.1.7':
     resolution: {integrity: sha512-hUMFbDQ/nZN+1TLMi6iMO1QFz9RSV8yGG8S42WFPFma1d7VSNE0eMdJUmwjmtav22/iQkzHMmu6oTSfAvRGS8g==}
@@ -12994,9 +12998,11 @@ snapshots:
 
   '@edge-runtime/primitives@4.0.5': {}
 
-  '@edge-runtime/types@2.2.7':
+  '@edge-runtime/primitives@6.0.0': {}
+
+  '@edge-runtime/types@4.0.0':
     dependencies:
-      '@edge-runtime/primitives': 4.0.5
+      '@edge-runtime/primitives': 6.0.0
 
   '@edge-runtime/vm@3.1.7':
     dependencies:
