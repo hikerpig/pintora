@@ -60,7 +60,7 @@
     "vite": "^6.0.0",
     "vite-plugin-mkcert": "^1.17.5",
     "vite-plugin-pwa": "^0.21.0",
-    "vite-tsconfig-paths": "^4.0.0",
+    "vite-tsconfig-paths": "^5.0.0",
     "workbox-core": "^7.0.0",
     "workbox-precaching": "^7.0.0",
     "workbox-window": "^7.0.0",
