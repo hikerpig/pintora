@@ -50,7 +50,7 @@
     "@pintora/test-shared": "workspace:^0.5.1",
     "@types/jsdom": "^21.0.0",
     "@types/mime-types": "^2.1.0",
-    "@types/node": "^16.11.7",
+    "@types/node": "^22.0.0",
     "@types/yargs": "^16.0.0",
     "typescript": "^5.0.0"
   }
