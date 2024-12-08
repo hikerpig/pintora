@@ -1,9 +1,11 @@
 import { DEFAULT_FONT_FAMILY, MarkAttrs } from '@pintora/core'
+import { getParamRulesFromConfig, interpreteConfigs, makeConfigurator } from '../util/config'
 import { PALETTE } from '../util/theme'
+import { BaseFontConfig, defaultFontConfig, getFontConfigRules } from '../util/font-config'
 import { safeAssign } from '@pintora/core'
-import { baseGetConfigFromGlobalConfig, interpreteConfigs, makeConfigurator } from '../util/config'
+import { baseGetConfigFromGlobalConfig } from '../util/config'
 
-export type SequenceConf = {
+export type SequenceConf = BaseFontConfig & {
   noteWidth: number
   noteHeight: number
   noteMargin: number
@@ -13,33 +15,26 @@ export type SequenceConf = {
   diagramMarginY: number
   boxTextMargin: number
 
-  messageFontFamily: string
-  messageFontSize: number
-  messageFontWeight: MarkAttrs['fontWeight']
+  messageFontSize?: number
+  messageFontFamily?: string
+  messageFontWeight?: number
   messageTextColor: string
-  /**
-   * font weight of box - such as loop and box
-   */
-  boxFontWeight: MarkAttrs['fontWeight']
+  boxFontWeight: number
   wrapPadding: number
   labelBoxWidth: number
   labelBoxHeight: number
 
-  /** color of loop box's border */
   loopLineColor: string
 
-  /** if the actor should also appear in the bottom of the diagram, default is true */
   mirrorActors: boolean
   actorWidth: number
   actorHeight: number
   actorMargin: number
-
   actorBackground: string
   actorBorderColor: string
   actorTextColor: string
   actorLineColor: string
 
-  // for participant boxes
   participantBoxPadding: number
   participantBackground: string
   participantBorderColor: string
@@ -48,7 +43,7 @@ export type SequenceConf = {
 
   activationBackground: string
 
-  dividerFontWeight: MarkAttrs['fontWeight']
+  dividerFontWeight: number
   dividerTextColor: string
   dividerMargin: number
 
@@ -57,6 +52,7 @@ export type SequenceConf = {
 }
 
 export const defaultConfig: SequenceConf = {
+  ...defaultFontConfig,
   noteWidth: 80,
   noteHeight: 50,
   noteMargin: 10,
@@ -103,31 +99,8 @@ export const defaultConfig: SequenceConf = {
 }
 
 export const SEQUENCE_PARAM_DIRECTIVE_RULES = {
-  noteMargin: { valueType: 'size' },
-  boxMargin: { valueType: 'size' },
-  activationWidth: { valueType: 'size' },
-  diagramMarginX: { valueType: 'size' },
-  diagramMarginY: { valueType: 'size' },
-  boxTextMargin: { valueType: 'size' },
-  messageFontSize: { valueType: 'fontSize' },
-  messageFontFamily: { valueType: 'string' },
-  messageTextColor: { valueType: 'color' },
-  wrapPadding: { valueType: 'size' },
-  labelBoxWidth: { valueType: 'size' },
-  labelBoxHeight: { valueType: 'size' },
-  loopLineColor: { valueType: 'color' },
-  actorWidth: { valueType: 'size' },
-  actorHeight: { valueType: 'size' },
-  actorMargin: { valueType: 'size' },
-  actorBackground: { valueType: 'color' },
-  actorBorderColor: { valueType: 'color' },
-  actorTextColor: { valueType: 'color' },
-  actorLineColor: { valueType: 'color' },
-  participantBorderColor: { valueType: 'color' },
-  noteTextColor: { valueType: 'color' },
-  activationBackground: { valueType: 'color' },
-  dividerTextColor: { valueType: 'color' },
-  useMaxWidth: { valueType: 'boolean' },
+  ...getParamRulesFromConfig(defaultConfig),
+  ...getFontConfigRules(),
 } as const
 
 export const configKey = 'sequence'
