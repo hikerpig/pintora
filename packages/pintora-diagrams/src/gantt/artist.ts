@@ -21,6 +21,7 @@ import { drawDiamondTo, LayerManager, makeEmptyGroup } from '../util/artist-util
 import { isDev } from '../util/env'
 import { GanttConf, getConf } from './config'
 import { GanttIR, getAxisTimeInterval, isInvalidDate, Task } from './db'
+import { getFontConfig } from '../util/font-config'
 
 const artist = makeArtist<GanttIR, GanttConf>({
   draw(ir, config, opts) {
@@ -95,11 +96,7 @@ class GanttDraw {
       }),
     )
 
-    this.fontConfig = {
-      fontSize: conf.fontSize,
-      fontFamily: conf.fontFamily,
-    }
-
+    this.fontConfig = getFontConfig(conf)
     const categories = taskArray.map(task => task.section)
     this.categories = categories
     const sectionLabelWidths = categories.reduce((acc, section) => {

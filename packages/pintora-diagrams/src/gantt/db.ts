@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-empty-function */
 import { BaseDiagramIR } from '../util/ir'
 import { dayjs } from '../util/time'
 import { OverrideConfigAction } from '../util/config'
@@ -137,8 +136,7 @@ export class GanttDb extends BaseDb {
       return
     }
     if (action.type in this.ACTION_HANDLERS) {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      this.ACTION_HANDLERS[action.type].call(this, action as any)
+      this.ACTION_HANDLERS[action.type].call(this, action)
     }
     // else {
     //   console.warn(`no handler for action ${action.type}`)

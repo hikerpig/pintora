@@ -1,9 +1,9 @@
+import { tinycolor } from '@pintora/core'
+import { getParamRulesFromConfig, interpreteConfigs, makeConfigurator } from '../util/config'
 import { PALETTE } from '../util/theme'
-import { DEFAULT_FONT_FAMILY, tinycolor } from '@pintora/core'
-import { interpreteConfigs, makeConfigurator, getParamRulesFromConfig } from '../util/config'
-import { DateFormat } from './type'
+import { BaseFontConfig, defaultFontConfig, getFontConfigRules } from '../util/font-config'
 
-export type GanttConf = {
+export type GanttConf = BaseFontConfig & {
   barHeight: number
   barGap: number
   topPadding: number
@@ -12,11 +12,11 @@ export type GanttConf = {
 
   numberSectionStyles: number
 
-  axisFormat: DateFormat
+  axisFormat: string
   axisLabelFontSize: number
-  axisLabelColor: string
   gridLineWidth: number
   gridLineColor: string
+  axisLabelColor: string
 
   markLineColor: string
 
@@ -24,15 +24,14 @@ export type GanttConf = {
   barBorderColor: string
   barBorderRadius: number
 
-  sectionBackgrounds: Array<string | undefined>
+  sectionBackgrounds: string[]
   sectionLabelColor: string
 
   fontColor: string
-  fontSize: number
-  fontFamily: string
 }
 
 export const defaultConfig: GanttConf = {
+  ...defaultFontConfig,
   barHeight: 20,
   barGap: 2,
   topPadding: 30,
@@ -57,12 +56,11 @@ export const defaultConfig: GanttConf = {
   sectionLabelColor: PALETTE.normalDark,
 
   fontColor: PALETTE.normalDark,
-  fontSize: 14,
-  fontFamily: DEFAULT_FONT_FAMILY,
 }
 
 export const GANTT_PARAM_DIRECTIVE_RULES = {
   ...getParamRulesFromConfig(defaultConfig),
+  ...getFontConfigRules(),
   axisFormat: { valueType: 'string' },
 } as const
 

@@ -3,7 +3,15 @@
  */
 import { parseColor } from './util/color'
 
-export type ConfigValueType = 'color' | 'size' | 'fontSize' | 'string' | 'boolean' | 'layoutDirection'
+export type ConfigValueType =
+  | 'color'
+  | 'size'
+  | 'fontSize'
+  | 'fontWeight'
+  | 'fontStyle'
+  | 'string'
+  | 'boolean'
+  | 'layoutDirection'
 
 export type ConfigMeta = {
   valueType: ConfigValueType
@@ -22,6 +30,8 @@ interface ConfigValueTypeMap {
   color: string
   size: number
   fontSize: number
+  fontWeight: 'normal' | 'bold' | 'bolder' | 'lighter' | number
+  fontStyle: 'normal' | 'italic' | 'oblique'
   string: string
   boolean: boolean
   layoutDirection: TLayoutDirection
@@ -42,6 +52,17 @@ const configValueEvaluators: {
   },
   size: sizeEvaluator,
   fontSize: sizeEvaluator,
+  fontWeight({ value }) {
+    const num = parseInt(value)
+    if (isNaN(num)) {
+      return { valid: true, value: value as any }
+    } else {
+      return { valid: true, value: num }
+    }
+  },
+  fontStyle({ value }) {
+    return { value, valid: true } as any
+  },
   string({ value }) {
     return { value, valid: true }
   },

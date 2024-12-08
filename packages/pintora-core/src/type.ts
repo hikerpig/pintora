@@ -1,11 +1,14 @@
 import { IDiagramEvent, IGraphicEvent, DiagramEventType, PintoraDiagramItemDatas } from './types/event'
 import { GraphicsIR } from './types/graphics'
+import { TLayoutDirection } from './config-engine'
 
 export * from './types/graphics'
 
 export type { Maybe, OrNull, DeepPartial } from './types/helper'
 
 export type { DiagramEventType, PintoraDiagramItemDatas }
+
+export type { TLayoutDirection }
 
 export interface IDiagram<D = unknown, Config = unknown> {
   /**

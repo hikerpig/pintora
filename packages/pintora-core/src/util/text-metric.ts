@@ -3,6 +3,7 @@ export interface IFont {
   fontFamily?: string
   fontSize: number
   fontWeight?: any
+  fontStyle?: 'normal' | 'italic' | 'oblique'
 }
 
 export interface ITextMetricCalculator {

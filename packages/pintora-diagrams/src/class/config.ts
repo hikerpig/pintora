@@ -1,9 +1,9 @@
-import { MarkAttrs, tinycolor } from '@pintora/core'
+import { tinycolor } from '@pintora/core'
 import { EdgeType, getParamRulesFromConfig, interpreteConfigs, makeConfigurator } from '../util/config'
-import { DEFAULT_FONT_FAMILY } from '../util/text'
 import { PALETTE } from '../util/theme'
+import { BaseFontConfig, defaultFontConfig, getFontConfigRules } from '../util/font-config'
 
-export type ClassConf = {
+export type ClassConf = BaseFontConfig & {
   diagramPadding: number
 
   layoutDirection: string
@@ -24,13 +24,10 @@ export type ClassConf = {
 
   noteMargin: number
   noteTextColor: string
-
-  fontSize: number
-  fontWeight: MarkAttrs['fontWeight']
-  fontFamily: string
 }
 
 export const defaultConfig: ClassConf = {
+  ...defaultFontConfig,
   diagramPadding: 15,
 
   layoutDirection: 'TB',
@@ -51,14 +48,11 @@ export const defaultConfig: ClassConf = {
 
   noteMargin: 10,
   noteTextColor: PALETTE.normalDark,
-
-  fontSize: 14,
-  fontWeight: 'normal',
-  fontFamily: DEFAULT_FONT_FAMILY,
 } as const
 
 export const CLASS_PARAM_DIRECTIVE_RULES = {
   ...getParamRulesFromConfig(defaultConfig),
+  ...getFontConfigRules(),
 } as const
 
 export const configKey = 'class'

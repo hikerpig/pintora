@@ -32,6 +32,7 @@ import { calcBound, floorValues, updateBoundsByPoints } from '../util/bound'
 import type { EnhancedConf } from '../util/config'
 import { DagreWrapper } from '../util/dagre-wrapper'
 import { isDev } from '../util/env'
+import { getFontConfig } from '../util/font-config'
 import { LayoutEdge, LayoutGraph, LayoutNode, createLayoutGraph, getGraphSplinesOption } from '../util/graph'
 import { getPointsCurvePath, getPointsLinearPath } from '../util/line-util'
 import { makeBounds, positionGroupContents, tryExpandBounds } from '../util/mark-positioner'
@@ -75,6 +76,7 @@ const erArtist: IDiagramArtist<ActivityDiagramIR, ActivityConf> = {
   draw(ir, config, opts?) {
     const conf = getConf(ir, config)
     model = new ArtistModel(ir, conf)
+    const fontConfig = getFontConfig(conf)
     // console.log('ir', JSON.stringify(ir, null, 2))
 
     const rootMark: Group = makeEmptyGroup()
@@ -98,6 +100,7 @@ const erArtist: IDiagramArtist<ActivityDiagramIR, ActivityConf> = {
     model.preProcess()
     const dagreWrapper = new DagreWrapper(g)
     activityDraw = new ActivityDraw(model, g)
+    activityDraw.fontConfig = fontConfig
     if (isDev) {
       ;(window as any).activityDraw = activityDraw
     }
@@ -120,7 +123,7 @@ const erArtist: IDiagramArtist<ActivityDiagramIR, ActivityConf> = {
     let titleSize: Maybe<TSize> = undefined
     let titleMark: Text | undefined = undefined
     if (title) {
-      const titleFont: IFont = { fontSize: conf.fontSize, fontFamily: conf.fontFamily }
+      const titleFont: IFont = fontConfig
       const titleResult = makeTitleMark(title, titleFont, { fill: conf.textColor })
       titleSize = titleResult.titleSize
       titleMark = titleResult.mark
@@ -387,6 +390,7 @@ type DrawStepResult = {
 class ActivityDraw {
   private keywordStepResults: { [key: string]: DrawStepResult } = {}
   private results: { [key: string]: DrawStepResult } = {}
+  fontConfig: IFont
 
   constructor(
     public model: ArtistModel,
@@ -606,10 +610,11 @@ class ActivityDraw {
 
     const textDims = calcTextDims(message)
 
+    const fontConfig = this.fontConfig
     const textMark = makeTextMark(conf, message, textDims, {
       y: rectHeight / 2,
       x: rectWidth / 2,
-      fontSize: conf.fontSize,
+      ...fontConfig,
       textBaseline: 'middle',
       textAlign: 'center',
     })
@@ -1451,13 +1456,6 @@ function drawEdges(parent: Group, g: LayoutGraph) {
   })
   parent.children.push(edgeGroup)
   return { bounds }
-}
-
-function getFontConfig(conf: ActivityConf) {
-  return {
-    fontSize: conf.fontSize,
-    fontFamily: conf.fontFamily,
-  }
 }
 
 export default erArtist

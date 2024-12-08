@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-empty-function */
 import { BaseDiagramIR } from '../util/ir'
 import { ActionHandler, BaseDb, MakeAction } from '../util/base-db'
 import { ConfigParam } from '@pintora/core'
@@ -231,7 +230,6 @@ export class ClassDb extends BaseDb {
       return
     }
     if (action.type in this.ACTION_HANDLERS) {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       this.ACTION_HANDLERS[action.type].call(this, action as any)
     }
   }

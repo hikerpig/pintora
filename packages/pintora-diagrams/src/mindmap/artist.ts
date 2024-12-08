@@ -22,6 +22,7 @@ import db from './db'
 import { makeBounds, positionGroupContents, TRANSFORM_GRAPH } from '../util/mark-positioner'
 import { isDev } from '../util/env'
 import { DagreWrapper } from '../util/dagre-wrapper'
+import { getFontConfig } from '../util/font-config'
 
 let conf: MindmapConf
 let mmDraw: MMDraw
@@ -30,6 +31,8 @@ const mmArtist: IDiagramArtist<MindmapIR, MindmapConf> = {
   draw(ir, config, opts?) {
     conf = Object.assign(getConf(ir), config || {})
     mmDraw = new MMDraw(ir)
+    const fontConfig = getFontConfig(conf)
+    mmDraw.fontConfig = fontConfig
     if (isDev) {
       ;(window as any).mmDraw = mmDraw
     }
@@ -47,13 +50,13 @@ const mmArtist: IDiagramArtist<MindmapIR, MindmapConf> = {
     let titleSize: Maybe<TSize> = undefined
     let titleMark: Text | undefined = undefined
     if (title) {
-      const titleFont: IFont = { fontSize: conf.maxFontSize, fontFamily: conf.fontFamily }
+      const titleFont: IFont = { fontSize: fontConfig.fontSize, fontFamily: fontConfig.fontFamily }
       const titleResult = makeTitleMark(title, titleFont, { fill: conf.textColor })
       titleSize = titleResult.titleSize
       titleMark = titleResult.mark
       titleMark.class = 'mindmap__title'
       rootMark.children.push(titleMark)
-      titleSize.height += conf.maxFontSize
+      titleSize.height += fontConfig.fontSize
     }
 
     const { width, height } = adjustRootMarkBounds({
@@ -83,6 +86,7 @@ class MMDraw {
   protected trees: MMTree[]
   g: LayoutGraph
   dagreWrapper: DagreWrapper
+  fontConfig: IFont
 
   constructor(public ir: MindmapIR) {
     this.trees = ir.trees.map(data => {
@@ -272,13 +276,6 @@ class MMDraw {
     })
     rootMark.children.push(edgeGroup)
   }
-}
-
-function getFontConfig(conf: MindmapConf, f: Partial<IFont>) {
-  return {
-    fontFamily: conf.fontFamily,
-    ...f,
-  } as IFont
 }
 
 export default mmArtist

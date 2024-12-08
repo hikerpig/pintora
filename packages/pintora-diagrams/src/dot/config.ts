@@ -1,9 +1,8 @@
-import { MarkAttrs } from '@pintora/core'
 import { EdgeType, getParamRulesFromConfig, interpreteConfigs, makeConfigurator } from '../util/config'
-import { DEFAULT_FONT_FAMILY } from '../util/text'
 import { PALETTE } from '../util/theme'
+import { BaseFontConfig, defaultFontConfig, getFontConfigRules } from '../util/font-config'
 
-export type DOTConf = {
+export type DOTConf = BaseFontConfig & {
   diagramPadding: number
 
   layoutDirection: string
@@ -20,13 +19,10 @@ export type DOTConf = {
   labelTextColor: string
   nodeBorderColor: string
   edgeColor: string
-
-  fontSize: number
-  fontWeight: MarkAttrs['fontWeight']
-  fontFamily: string
 }
 
 export const defaultConfig: DOTConf = {
+  ...defaultFontConfig,
   diagramPadding: 15,
 
   layoutDirection: 'TB',
@@ -43,14 +39,11 @@ export const defaultConfig: DOTConf = {
   labelTextColor: PALETTE.normalDark,
   nodeBorderColor: PALETTE.normalDark,
   edgeColor: PALETTE.normalDark,
-
-  fontSize: 14,
-  fontWeight: 'normal',
-  fontFamily: DEFAULT_FONT_FAMILY,
 } as const
 
 export const DOT_PARAM_DIRECTIVE_RULES = {
   ...getParamRulesFromConfig(defaultConfig),
+  ...getFontConfigRules(),
 } as const
 
 export const configKey = 'dot'

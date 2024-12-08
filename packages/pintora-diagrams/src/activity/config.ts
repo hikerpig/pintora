@@ -1,8 +1,8 @@
 import { PALETTE } from '../util/theme'
 import { EdgeType, getParamRulesFromConfig, interpreteConfigs, makeConfigurator } from '../util/config'
-import { DEFAULT_FONT_FAMILY } from '../util/text'
+import { defaultFontConfig, getFontConfigRules, type BaseFontConfig } from '../util/font-config'
 
-export type ActivityConf = {
+export type ActivityConf = BaseFontConfig & {
   diagramPadding: number
 
   edgesep: number
@@ -28,12 +28,10 @@ export type ActivityConf = {
 
   labelTextColor: string
   labelBackground: string
-
-  fontSize: number
-  fontFamily: string
 }
 
 export const defaultConfig: ActivityConf = {
+  ...defaultFontConfig,
   diagramPadding: 15,
 
   edgesep: 30,
@@ -58,13 +56,11 @@ export const defaultConfig: ActivityConf = {
 
   labelTextColor: PALETTE.normalDark,
   labelBackground: PALETTE.white,
-
-  fontSize: 14,
-  fontFamily: DEFAULT_FONT_FAMILY,
 } as const
 
 export const ACTIVITY_PARAM_DIRECTIVE_RULES = {
   ...getParamRulesFromConfig(defaultConfig),
+  ...getFontConfigRules(),
 
   actionPaddingX: { valueType: 'size' },
   actionPaddingY: { valueType: 'size' },
@@ -84,9 +80,6 @@ export const ACTIVITY_PARAM_DIRECTIVE_RULES = {
 
   labelBackground: { valueType: 'color' },
   labelTextColor: { valueType: 'color' },
-
-  fontSize: { valueType: 'size' },
-  fontFamily: { valueType: 'string' },
 } as const
 
 export const configKey = 'activity'
