@@ -1,8 +1,8 @@
 import { PALETTE } from '../util/theme'
-import { DEFAULT_FONT_FAMILY } from '@pintora/core'
 import { EdgeType, getParamRulesFromConfig, interpreteConfigs, makeConfigurator } from '../util/config'
+import { BaseFontConfig, defaultFontConfig, getFontConfigRules } from '../util/font-config'
 
-export type ErConf = {
+export type ErConf = BaseFontConfig & {
   diagramPadding: number
 
   layoutDirection: string
@@ -17,6 +17,7 @@ export type ErConf = {
 
   entityPaddingX: number
   entityPaddingY: number
+
   borderRadius: number
 
   stroke: string
@@ -27,12 +28,10 @@ export type ErConf = {
   textColor: string
 
   labelBackground: string
-
-  fontSize: number
-  fontFamily: string
 }
 
 export const defaultConfig: ErConf = {
+  ...defaultFontConfig,
   diagramPadding: 15,
 
   layoutDirection: 'TB',
@@ -58,13 +57,11 @@ export const defaultConfig: ErConf = {
   textColor: PALETTE.normalDark,
 
   labelBackground: PALETTE.white,
-
-  fontSize: 14,
-  fontFamily: DEFAULT_FONT_FAMILY,
-}
+} as const
 
 export const ER_PARAM_DIRECTIVE_RULES = {
   ...getParamRulesFromConfig(defaultConfig),
+  ...getFontConfigRules(),
   useMaxWidth: { valueType: 'boolean' },
   layoutDirection: { valueType: 'string' },
   borderRadius: { valueType: 'size' },
@@ -74,8 +71,6 @@ export const ER_PARAM_DIRECTIVE_RULES = {
   attributeFill: { valueType: 'color' },
   textColor: { valueType: 'color' },
   labelBackground: { valueType: 'color' },
-  fontSize: { valueType: 'size' },
-  fontFamily: { valueType: 'string' },
 } as const
 
 export const configKey = 'er'

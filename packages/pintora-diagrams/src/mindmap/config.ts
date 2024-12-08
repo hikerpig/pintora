@@ -1,19 +1,32 @@
-import { DEFAULT_FONT_FAMILY, MarkAttrs, tinycolor } from '@pintora/core'
+import { MarkAttrs, tinycolor } from '@pintora/core'
 import { getParamRulesFromConfig, interpreteConfigs, makeConfigurator } from '../util/config'
 import { PALETTE } from '../util/theme'
+import { BaseFontConfig, defaultFontConfig, getFontConfigRules } from '../util/font-config'
 
-export type MindmapConf = {
+function getColorsByPrimary(primary: string) {
+  const t = tinycolor(primary)
+  const l1NodeBgColor = t.clone().lighten(10).toString()
+  const l2NodeBgColor = t.clone().lighten(20).toString()
+  const nodeBgColor = t.clone().lighten(30).toString()
+  return {
+    nodeBgColor,
+    l1NodeBgColor,
+    l2NodeBgColor,
+  }
+}
+
+const DEFAULT_COLORS = getColorsByPrimary(PALETTE.orange)
+
+export type MindmapConf = BaseFontConfig & {
   diagramPadding: number
-  layoutDirection: 'LR' | 'TB'
+  layoutDirection: string
 
   useMaxWidth: boolean
 
   borderRadius: number
 
-  /** default node color */
   nodeBgColor: string
   nodePadding: number
-  /** font weight of node label */
   nodeFontWeight: MarkAttrs['fontWeight']
 
   textColor: string
@@ -21,37 +34,17 @@ export type MindmapConf = {
 
   maxFontSize: number
   minFontSize: number
-  fontFamily: string
 
   levelDistance: number
 
-  // node config for different levels
   l1NodeBgColor: string
   l1NodeTextColor: string
   l2NodeBgColor: string
   l2NodeTextColor: string
 }
 
-function getColorsByPrimary(c: string, isDark = false) {
-  const primaryColor = tinycolor(c)
-  const hslColor = primaryColor.toHsl()
-  let primaryLight1: tinycolor.Instance
-  if (isDark) {
-    primaryLight1 = primaryColor.clone().brighten(15)
-  } else {
-    primaryLight1 = primaryColor.clone().brighten(15)
-  }
-  const primaryLight2 = tinycolor({ h: hslColor.h, s: 20, l: 90 })
-  return {
-    nodeBgColor: primaryLight2.toHexString(),
-    l1NodeBgColor: c,
-    l2NodeBgColor: primaryLight1.toHexString(),
-  }
-}
-
-const DEFAULT_COLORS = getColorsByPrimary(PALETTE.orange)
-
 export const defaultConfig: MindmapConf = {
+  ...defaultFontConfig,
   diagramPadding: 15,
   layoutDirection: 'LR',
 
@@ -65,7 +58,6 @@ export const defaultConfig: MindmapConf = {
 
   textColor: PALETTE.normalDark,
   edgeColor: PALETTE.normalDark,
-  fontFamily: DEFAULT_FONT_FAMILY,
 
   maxFontSize: 18,
   minFontSize: 12,
@@ -76,10 +68,11 @@ export const defaultConfig: MindmapConf = {
   l1NodeTextColor: PALETTE.normalDark,
   l2NodeBgColor: DEFAULT_COLORS.l2NodeBgColor,
   l2NodeTextColor: PALETTE.normalDark,
-}
+} as const
 
 export const MINDMAP_PARAM_DIRECTIVE_RULES = {
   ...getParamRulesFromConfig(defaultConfig),
+  ...getFontConfigRules(),
   useMaxWidth: { valueType: 'boolean' },
   diagramPadding: { valueType: 'size' },
   layoutDirection: { valueType: 'layoutDirection' },
@@ -90,7 +83,6 @@ export const MINDMAP_PARAM_DIRECTIVE_RULES = {
   edgeColor: { valueType: 'color' },
   maxFontSize: { valueType: 'size' },
   minFontSize: { valueType: 'size' },
-  fontFamily: { valueType: 'string' },
   levelDistance: { valueType: 'size' },
   l1NodeBgColor: { valueType: 'color' },
   l1NodeTextColor: { valueType: 'color' },
@@ -107,7 +99,7 @@ const configurator = makeConfigurator<MindmapConf>({
     return interpreteConfigs(MINDMAP_PARAM_DIRECTIVE_RULES, configParams)
   },
   getConfigFromTheme(t) {
-    const { nodeBgColor, l1NodeBgColor, l2NodeBgColor } = getColorsByPrimary(t.primaryColor, t.isDark)
+    const { nodeBgColor, l1NodeBgColor, l2NodeBgColor } = getColorsByPrimary(t.primaryColor)
     const nodeBgColorInstance = tinycolor(nodeBgColor)
     const bgIsLight = nodeBgColorInstance.isLight()
     const textColorIsLight = tinycolor(t.textColor).isLight()
