@@ -63,7 +63,7 @@
   },
   "devDependencies": {
     "@pintora/test-shared": "workspace:*",
-    "@types/node": "^16.11.39",
+    "@types/node": "^22.0.0",
     "@types/tinycolor2": "^1.4.3",
     "esbuild": "^0.24.0",
     "microbundle": "^0.15.1",
