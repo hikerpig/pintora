@@ -194,10 +194,18 @@ memberLabelStatement ->
     %VALID_TEXT %COLON classMember %NL {%
         function(d) {
           const className = tv(d[0])
+          const member = d[2]
+          if (className === 'title') {
+            // a special case for title statement. `title: Some text`
+            return {
+              type: 'setTitle',
+              text: member.raw,
+            }
+          }
           return {
             type: 'addClassMember',
             className,
-            member: d[2]
+            member,
           } as Action
         }
       %}

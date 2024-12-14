@@ -17,6 +17,7 @@ import {
   adjustRootMarkBounds,
   ArrowType,
   calcDirection,
+  DiagramTitleMaker,
   drawArrowTo,
   getBaseNote,
   makeEmptyGroup,
@@ -44,11 +45,20 @@ const artist = makeArtist<ClassIR, ClassConf>({
     }
 
     const { gBounds } = draw.drawTo(rootMark)
+    const titleMaker = new DiagramTitleMaker({
+      title: ir.title,
+      titleFont: draw.fontConfig,
+      fill: conf.noteTextColor,
+      className: 'class__title',
+    })
+    const titleResult = titleMaker.appendTitleMark(rootMark)
     const { width, height } = adjustRootMarkBounds({
       rootMark,
       gBounds,
       padX: conf.diagramPadding,
       padY: conf.diagramPadding,
+      titleMark: titleResult.titleMark,
+      titleSize: titleResult.titleSize,
     })
 
     return {

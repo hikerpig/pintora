@@ -17,6 +17,7 @@ import {
   DiagramArtistOptions,
   calculateTextDimensions,
   IFont,
+  type Maybe,
 } from '@pintora/core'
 import { toFixed } from './number'
 import { PALETTE } from './theme'
@@ -194,6 +195,27 @@ export function makeTitleMark(title: string, titleFont: IFont, attrs: Partial<Ma
       },
     } as Text,
     titleSize,
+  }
+}
+
+export class DiagramTitleMaker {
+  constructor(public opts: { title: string; titleFont: IFont; fill: string; className: string }) {}
+  appendTitleMark(rootMark: Group) {
+    const { title, titleFont, fill, className } = this.opts
+    let titleSize: Maybe<TSize> = undefined
+    let titleMark: Text | undefined = undefined
+    if (title) {
+      const titleResult = makeTitleMark(title, titleFont, { fill })
+      titleSize = titleResult.titleSize
+      titleMark = titleResult.mark
+      titleMark.class = className
+      rootMark.children.push(titleMark)
+      titleSize.height += titleFont.fontSize
+    }
+    return {
+      titleSize,
+      titleMark,
+    }
   }
 }
 

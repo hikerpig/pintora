@@ -5,10 +5,8 @@ import {
   IDiagramArtist,
   IFont,
   Mark,
-  Maybe,
   PathCommand,
   Rect,
-  TSize,
   Text,
   calculateTextDimensions,
   compact,
@@ -26,7 +24,7 @@ import {
   makeEmptyGroup,
   makeLabelBg,
   makeMark,
-  makeTitleMark,
+  DiagramTitleMaker,
 } from '../util/artist-util'
 import { calcBound, floorValues, updateBoundsByPoints } from '../util/bound'
 import type { EnhancedConf } from '../util/config'
@@ -119,18 +117,14 @@ const erArtist: IDiagramArtist<ActivityDiagramIR, ActivityConf> = {
     const { bounds: edgeBounds } = drawEdges(rootMark, g)
 
     const bounds = floorValues(tryExpandBounds(dagreWrapper.getGraphBounds(), edgeBounds))
-    const { title } = ir
-    let titleSize: Maybe<TSize> = undefined
-    let titleMark: Text | undefined = undefined
-    if (title) {
-      const titleFont: IFont = fontConfig
-      const titleResult = makeTitleMark(title, titleFont, { fill: conf.textColor })
-      titleSize = titleResult.titleSize
-      titleMark = titleResult.mark
-      titleMark.class = 'activity__title'
-      rootMark.children.push(titleMark)
-      titleSize.height += conf.fontSize
-    }
+    const titleFont: IFont = fontConfig
+    const titleMaker = new DiagramTitleMaker({
+      title: ir.title,
+      titleFont,
+      fill: conf.textColor,
+      className: 'activity__title',
+    })
+    const titleResult = titleMaker.appendTitleMark(rootMark)
 
     // console.log('bounds', bounds)
     const { width, height } = adjustRootMarkBounds({
@@ -140,8 +134,7 @@ const erArtist: IDiagramArtist<ActivityDiagramIR, ActivityConf> = {
       padY: conf.diagramPadding,
       useMaxWidth: conf.useMaxWidth,
       containerSize: opts?.containerSize,
-      titleSize,
-      titleMark,
+      ...titleResult,
     })
 
     return {

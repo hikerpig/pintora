@@ -792,6 +792,7 @@ exports[`component-artist match example snapshot 1`] = `
           "fill": "#3b4044",
           "fontFamily": "Source Code Pro, sans-serif",
           "fontSize": 14,
+          "fontStyle": "normal",
           "fontWeight": "bold",
           "text": "Component Diagram Example",
           "textAlign": "center",
