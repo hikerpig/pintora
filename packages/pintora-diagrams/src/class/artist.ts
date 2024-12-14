@@ -11,6 +11,7 @@ import {
   safeAssign,
   Text,
   TSize,
+  type IFont,
 } from '@pintora/core'
 import {
   adjustRootMarkBounds,
@@ -25,6 +26,7 @@ import { calcBound } from '../util/bound'
 import type { EnhancedConf } from '../util/config'
 import { DagreWrapper } from '../util/dagre-wrapper'
 import { isDev } from '../util/env'
+import { getFontConfig } from '../util/font-config'
 import { BaseEdgeData, createLayoutGraph, getGraphSplinesOption, LayoutGraph, LayoutNode } from '../util/graph'
 import { getMedianPoint, getPointsCurvePath, getPointsLinearPath } from '../util/line-util'
 import { makeBounds, positionGroupContents, tryExpandBounds } from '../util/mark-positioner'
@@ -63,6 +65,7 @@ class ClassDiagramDraw {
   relationGroupMark = makeEmptyGroup()
   markBuilder: EntityMarkBuilder
   theme: ITheme
+  fontConfig: IFont
   protected elementBounds = makeBounds()
   constructor(
     public ir: ClassIR,
@@ -81,6 +84,7 @@ class ClassDiagramDraw {
     })
     this.dagreWrapper = new DagreWrapper(g)
     this.theme = this.conf.themeConfig.themeVariables
+    this.fontConfig = getFontConfig(this.conf)
   }
 
   drawTo(rootMark: Group) {
@@ -154,13 +158,9 @@ class ClassDiagramDraw {
 
   protected drawRelation(r: ClassRelation) {
     const g = this.dagreWrapper.g
-    const { conf, relationGroupMark } = this
+    const { conf, relationGroupMark, fontConfig } = this
 
     let labelDims: TSize
-    const fontConfig = {
-      fontSize: conf.fontSize,
-      fontFamily: conf.fontFamily,
-    }
 
     const startNodeId = r.reversed ? r.right : r.left
     const ednNodeId = r.reversed ? r.left : r.right
@@ -624,10 +624,7 @@ class EntityMarkBuilder {
   }
 
   getFontConfig() {
-    return {
-      fontFamily: this.conf.fontFamily,
-      fontSize: this.conf.fontSize,
-    }
+    return getFontConfig(this.conf)
   }
 }
 

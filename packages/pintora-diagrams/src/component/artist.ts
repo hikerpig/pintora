@@ -36,8 +36,10 @@ import {
 import { makeBounds, tryExpandBounds } from '../util/mark-positioner'
 import { getPointsCurvePath, getPointsLinearPath } from '../util/line-util'
 import { DagreWrapper } from '../util/dagre-wrapper'
+import { getFontConfig } from '../util/font-config'
 
 let conf: ComponentConf
+let fontConfig: IFont
 
 function getEdgeName(relationship: Relationship) {
   return `${relationship.from.name}_${relationship.to.name}_${relationship.message}`
@@ -60,6 +62,7 @@ const componentArtist: IDiagramArtist<ComponentDiagramIR, ComponentConf> = {
   draw(ir, config, opts?) {
     // console.info('[artist] component', ir)
     conf = getConf(ir, config)
+    fontConfig = getFontConfig(conf)
 
     const rootMark: Group = {
       type: 'group',
@@ -129,7 +132,6 @@ const componentArtist: IDiagramArtist<ComponentDiagramIR, ComponentConf> = {
 
 function drawComponentsTo(parentMark: Group, ir: ComponentDiagramIR, g: LayoutGraph) {
   const groups: Group[] = []
-  const fontConfig = getFontConfig(conf)
   for (const component of Object.values(ir.components)) {
     const id = component.name
     const label = component.label || component.name
@@ -182,7 +184,6 @@ function drawComponentsTo(parentMark: Group, ir: ComponentDiagramIR, g: LayoutGr
 
 function drawInterfacesTo(parentMark: Group, ir: ComponentDiagramIR, g: LayoutGraph) {
   const groups: Group[] = []
-  const fontConfig = getFontConfig(conf)
   for (const interf of Object.values(ir.interfaces)) {
     const id = interf.name
     const label = interf.label || interf.name
@@ -265,8 +266,6 @@ function drawGroupsTo(parentMark: Group, ir: ComponentDiagramIR, g: LayoutGraph)
         { class: 'component__group-rect' },
       )
     }
-
-    const fontConfig = getFontConfig(conf)
 
     const groupLabel = cGroup.label || cGroup.name
     const labelMark = makeMark(
@@ -407,7 +406,6 @@ function drawRelationshipsTo(parentMark: Group, ir: ComponentDiagramIR, g: Layou
     let relTextBg: Rect
     let labelDims: TSize
     if (r.message) {
-      const fontConfig = getFontConfig(conf)
       labelDims = calculateTextDimensions(r.message, fontConfig)
       relText = makeMark(
         'text',
@@ -520,13 +518,6 @@ const adjustMarkInGraph = function (dagreWrapper: DagreWrapper) {
     }
   })
   return { labelBounds }
-}
-
-function getFontConfig(conf: ComponentConf) {
-  return {
-    fontSize: conf.fontSize,
-    fontFamily: conf.fontFamily,
-  } as IFont
 }
 
 export default componentArtist

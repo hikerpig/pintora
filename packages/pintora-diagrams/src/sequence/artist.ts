@@ -34,6 +34,7 @@ import { drawLoopTo } from './artist/loop'
 import { ActivationData, LoopModel, MessageModel, SequenceDiagramBounds } from './artist/type'
 import { SequenceConf, getConf } from './config'
 import { LINETYPE, Message, PLACEMENT, ParticipantBox, SequenceDiagramIR, WrappedText, db } from './db'
+import { getFontConfig } from '../util/font-config'
 
 let conf: EnhancedConf<SequenceConf>
 let theme: ITheme
@@ -605,6 +606,7 @@ function adjustLoopSizeForWrap(
 /** get message font config from conf */
 export const messageFont = (cnf: SequenceConf) => {
   return {
+    ...getFontConfig(conf),
     fontFamily: cnf.messageFontFamily,
     fontSize: cnf.messageFontSize,
     fontWeight: cnf.messageFontWeight,
@@ -617,8 +619,7 @@ const noteFont = messageFont
 /** get box - such as loop and box - font config from conf */
 export const boxFont = (cnf: SequenceConf) => {
   return {
-    fontFamily: cnf.messageFontFamily,
-    fontSize: cnf.messageFontSize,
+    ...messageFont(conf),
     fontWeight: cnf.boxFontWeight || cnf.messageFontWeight,
   }
 }
@@ -634,7 +635,8 @@ const drawMessage = function (msgModel: MessageModel): DrawResult<Group> {
   model.bumpVerticalPos(conf.boxMargin)
   const { startx, stopx, starty, text, fromBound, type, sequenceIndex, itemId } = msgModel
   const linesCount = splitBreaks(text).length
-  const textDims = calculateTextDimensions(text, messageFont(conf))
+  const messageFontConfig = messageFont(conf)
+  const textDims = calculateTextDimensions(text, messageFontConfig)
   const lineHeight = textDims.height / linesCount
 
   model.bumpVerticalPos(lineHeight)
@@ -643,6 +645,7 @@ const drawMessage = function (msgModel: MessageModel): DrawResult<Group> {
     textAlign: 'center',
     textBaseline: 'top',
     fill: conf.messageTextColor,
+    ...messageFontConfig,
   }
 
   // console.log('drawMessage', msgModel.text, msgModel.width, msgModel)
@@ -652,9 +655,7 @@ const drawMessage = function (msgModel: MessageModel): DrawResult<Group> {
   tAttrs.y = starty + conf.boxMargin
   tAttrs.width = msgModel.width
   tAttrs.text = text
-  tAttrs.fontFamily = conf.messageFontFamily
-  tAttrs.fontSize = conf.messageFontSize
-  tAttrs.fontWeight = conf.messageFontWeight
+  safeAssign(tAttrs, messageFontConfig)
   // tAttrs.textMargin = conf.wrapPadding
 
   let totalOffset = textDims.height
@@ -831,7 +832,8 @@ const drawMessage = function (msgModel: MessageModel): DrawResult<Group> {
 const drawNoteTo = function (noteModel: NoteModel, container: Group) {
   model.bumpVerticalPos(conf.boxMargin)
 
-  const textDims = calculateTextDimensions(noteModel.text, noteFont(conf))
+  const noteFontConfig = noteFont(conf)
+  const textDims = calculateTextDimensions(noteModel.text, noteFontConfig)
   const textHeight = textDims.height
   noteModel.height = textHeight + 2 * conf.noteMargin
   noteModel.starty = model.verticalPos
@@ -848,7 +850,7 @@ const drawNoteTo = function (noteModel: NoteModel, container: Group) {
     attrs: rectAttrs,
   }
 
-  const textAttrs: Text['attrs'] = { fill: conf.noteTextColor, text: noteModel.text, ...(noteFont(conf) as any) }
+  const textAttrs: Text['attrs'] = { fill: conf.noteTextColor, text: noteModel.text, ...noteFont(conf) }
   safeAssign(textAttrs, {
     x: noteModel.startx + noteModel.width / 2,
     y: noteModel.starty + noteModel.height / 2,
@@ -1392,8 +1394,8 @@ function calcLoopMinWidths(messages: Message[]) {
   messages.forEach(msg => {
     switch (msg.type) {
       case LINETYPE.LOOP_START:
-      case LINETYPE.ALT_START:
       case LINETYPE.OPT_START:
+      case LINETYPE.ALT_START:
       case LINETYPE.PAR_START:
         if (!msg.id) msg.id = makeid(10)
         const label = GROUP_LABEL_MAP[msg.type]
@@ -1425,8 +1427,8 @@ const calculateLoopBounds = function (messages: Message[]) {
     if (!msg.id) msg.id = makeid(10)
     switch (msg.type) {
       case LINETYPE.LOOP_START:
-      case LINETYPE.ALT_START:
       case LINETYPE.OPT_START:
+      case LINETYPE.ALT_START:
       case LINETYPE.PAR_START:
         const minWidth = model.loopMinWidths[msg.id] || 0
         stack.push({

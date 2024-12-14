@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-empty-function */
 import { BaseDiagramIR } from '../util/ir'
 import { OverrideConfigAction } from '../util/config'
 import { ActionHandler, BaseDb, MakeAction } from '../util/base-db'
@@ -107,8 +106,7 @@ export class DOTDb extends BaseDb {
       return
     }
     if (action.type in this.ACTION_HANDLERS) {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      this.ACTION_HANDLERS[action.type].call(this, action as any)
+      this.ACTION_HANDLERS[action.type].call(this, action)
     }
   }
 

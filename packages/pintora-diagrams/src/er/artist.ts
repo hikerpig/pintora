@@ -33,6 +33,7 @@ import { calcBound, updateBoundsByPoints } from '../util/bound'
 import { getTextDimensionsInPresicion } from '../util/text'
 import { toFixed } from '../util/number'
 import { DagreWrapper } from '../util/dagre-wrapper'
+import { getFontConfig } from '../util/font-config'
 
 let conf: ErConf
 
@@ -112,7 +113,7 @@ const erArtist: IDiagramArtist<ErDiagramIR, ErConf> = {
     let titleSize: Maybe<TSize> = undefined
     let titleMark: Text | undefined = undefined
     if (title) {
-      const titleFont: IFont = { fontSize: conf.fontSize, fontFamily: conf.fontFamily }
+      const titleFont: IFont = { fontSize: conf.fontSize, fontFamily: conf.fontFamily, fontWeight: conf.fontWeight }
       const titleResult = makeTitleMark(title, titleFont, { fill: conf.textColor })
       titleSize = titleResult.titleSize
       titleMark = titleResult.mark
@@ -138,13 +139,6 @@ const erArtist: IDiagramArtist<ErDiagramIR, ErConf> = {
       height,
     } as GraphicsIR
   },
-}
-
-function getFontConfig(conf: ErConf) {
-  return {
-    fontSize: conf.fontSize,
-    fontFamily: conf.fontFamily,
-  }
 }
 
 /**
@@ -183,7 +177,9 @@ const drawAttributes = (group: Group, entityText: Text, attributes: Entity['attr
       )
     }
 
-    const fontConfig = { ...getFontConfig(conf), fontSize: attrFontSize }
+    const fontConfig = getFontConfig(conf, {
+      fontSize: attrFontSize,
+    })
     let keyCell: TableCell
     if (item.attributeKey) {
       keyCell = TableCell.fromMark(makeLabelTextMark('key', item.attributeKey), 'key')
@@ -350,7 +346,9 @@ const drawEntities = function (rootMark: Group, ir: ErDiagramIR, graph: LayoutGr
 
     // Label the entity - this is done first so that we can get the bounding box
     // which then determines the size of the rectangle
-    const fontConfig = { ...getFontConfig(conf), fontWeight: 'bold' as const }
+    const fontConfig = getFontConfig(conf, {
+      fontWeight: 'bold',
+    })
 
     const textMark = makeMark(
       'text',
@@ -514,7 +512,9 @@ const drawRelationshipFromLayout = function (group: Group, rel: Relationship, g:
 
   // Append a text node containing the label
   const labelId = 'rel' + relCnt
-  const fontConfig = { ...getFontConfig(conf), fontWeight: 400 }
+  const fontConfig = getFontConfig(conf, {
+    fontWeight: 400,
+  })
 
   const labelMark = makeMark(
     'text',

@@ -1,8 +1,8 @@
 import { PALETTE } from '../util/theme'
-import { DEFAULT_FONT_FAMILY } from '@pintora/core'
 import { EdgeType, getParamRulesFromConfig, interpreteConfigs, makeConfigurator } from '../util/config'
+import { BaseFontConfig, defaultFontConfig, getFontConfigRules } from '../util/font-config'
 
-export type ComponentConf = {
+export type ComponentConf = BaseFontConfig & {
   diagramPadding: number
 
   edgeType: EdgeType
@@ -19,8 +19,6 @@ export type ComponentConf = {
 
   relationLineColor: string
   textColor: string
-  fontSize: number
-  fontFamily: string
   lineWidth: number
 
   labelBackground: string
@@ -35,11 +33,12 @@ export type ComponentConf = {
 }
 
 export const defaultConfig: ComponentConf = {
+  ...defaultFontConfig,
   diagramPadding: 15,
 
   edgeType: 'polyline',
   edgesep: 20,
-  ranksep: 40, // at leat twice of bold fontsize + linewidth
+  ranksep: 40, // at least twice of bold fontsize + linewidth
 
   componentPadding: 15,
   componentBackground: PALETTE.yellow,
@@ -51,8 +50,6 @@ export const defaultConfig: ComponentConf = {
 
   relationLineColor: PALETTE.orange,
   textColor: PALETTE.normalDark,
-  fontSize: 14,
-  fontFamily: DEFAULT_FONT_FAMILY,
   lineWidth: 1,
 
   labelBackground: PALETTE.white,
@@ -66,6 +63,7 @@ export const defaultConfig: ComponentConf = {
 
 export const COMPONENT_PARAM_DIRECTIVE_RULES = {
   ...getParamRulesFromConfig(defaultConfig),
+  ...getFontConfigRules(),
   componentBackground: { valueType: 'color' },
   componentBorderColor: { valueType: 'color' },
   groupBackground: { valueType: 'color' },
