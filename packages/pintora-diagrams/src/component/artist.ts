@@ -31,7 +31,7 @@ import {
   calcDirection,
   makeLabelBg,
   adjustRootMarkBounds,
-  makeTitleMark,
+  DiagramTitleMaker,
 } from '../util/artist-util'
 import { makeBounds, tryExpandBounds } from '../util/mark-positioner'
 import { getPointsCurvePath, getPointsLinearPath } from '../util/line-util'
@@ -98,18 +98,14 @@ const componentArtist: IDiagramArtist<ComponentDiagramIR, ComponentConf> = {
     const gBounds = tryExpandBounds(dagreWrapper.getGraphBounds(), labelBounds)
     const pad = conf.diagramPadding
 
-    const { title } = ir
-    let titleSize: Maybe<TSize> = undefined
-    let titleMark: Text | undefined = undefined
-    if (title) {
-      const titleFont: IFont = { fontSize: conf.fontSize, fontFamily: conf.fontFamily }
-      const titleResult = makeTitleMark(title, titleFont, { fill: conf.textColor })
-      titleSize = titleResult.titleSize
-      titleMark = titleResult.mark
-      titleMark.class = 'component__title'
-      rootMark.children.push(titleMark)
-      titleSize.height += conf.fontSize
-    }
+    const titleFont: IFont = fontConfig
+    const titleMaker = new DiagramTitleMaker({
+      title: ir.title,
+      titleFont,
+      fill: conf.textColor,
+      className: 'component__title',
+    })
+    const titleResult = titleMaker.appendTitleMark(rootMark)
 
     const { width, height } = adjustRootMarkBounds({
       rootMark,
@@ -118,8 +114,7 @@ const componentArtist: IDiagramArtist<ComponentDiagramIR, ComponentConf> = {
       padY: pad,
       useMaxWidth: conf.useMaxWidth,
       containerSize: opts?.containerSize,
-      titleSize,
-      titleMark,
+      ...titleResult,
     })
 
     return {

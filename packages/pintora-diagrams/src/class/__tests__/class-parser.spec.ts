@@ -166,4 +166,14 @@ classDiagram
     const messageText = result.notes[0].text
     expect(messageText).toEqual('aaa note -\nbbb')
   })
+
+  it('can parse title', () => {
+    const multilineNoteExample = stripStartEmptyLines(`
+classDiagram
+  title: Hello
+    `)
+    parse(multilineNoteExample)
+    const result = db.getDiagramIR()
+    expect(result.title).toBe('Hello')
+  })
 })

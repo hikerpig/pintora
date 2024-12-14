@@ -69,6 +69,7 @@ type ClassActionPayloads = {
     placement: string
     target?: string
   }
+  setTitle: { text: string }
 }
 
 type RawMember = {
@@ -154,6 +155,9 @@ export class ClassDb extends BaseDb {
     },
     addParam(action) {
       this.configParams.push(action)
+    },
+    setTitle(action) {
+      this.title = action.text
     },
   }
 

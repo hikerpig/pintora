@@ -9,8 +9,6 @@ import {
   Rect,
   PathCommand,
   Point,
-  Maybe,
-  TSize,
   IFont,
 } from '@pintora/core'
 import { ErDiagramIR, Identification, Entity, Relationship } from './db'
@@ -24,7 +22,7 @@ import {
   adjustRootMarkBounds,
   makeEmptyGroup,
   makeTriangle,
-  makeTitleMark,
+  DiagramTitleMaker,
 } from '../util/artist-util'
 import { drawMarkerTo, CELL_ORDER, CellName, TableBuilder, TableCell, TableRow } from './artist-util'
 import { getPointsCurvePath, getPointsLinearPath } from '../util/line-util'
@@ -109,18 +107,14 @@ const erArtist: IDiagramArtist<ErDiagramIR, ErConf> = {
 
     const pad = conf.diagramPadding
 
-    const { title } = ir
-    let titleSize: Maybe<TSize> = undefined
-    let titleMark: Text | undefined = undefined
-    if (title) {
-      const titleFont: IFont = { fontSize: conf.fontSize, fontFamily: conf.fontFamily, fontWeight: conf.fontWeight }
-      const titleResult = makeTitleMark(title, titleFont, { fill: conf.textColor })
-      titleSize = titleResult.titleSize
-      titleMark = titleResult.mark
-      titleMark.class = 'er__title'
-      rootMark.children.push(titleMark)
-      titleSize.height += conf.fontSize
-    }
+    const titleFont: IFont = getFontConfig(conf)
+    const titleMaker = new DiagramTitleMaker({
+      title: ir.title,
+      titleFont,
+      fill: conf.textColor,
+      className: 'er__title',
+    })
+    const titleResult = titleMaker.appendTitleMark(rootMark)
 
     const { width, height } = adjustRootMarkBounds({
       rootMark,
@@ -129,8 +123,7 @@ const erArtist: IDiagramArtist<ErDiagramIR, ErConf> = {
       padY: pad,
       useMaxWidth: conf.useMaxWidth,
       containerSize: opts?.containerSize,
-      titleSize,
-      titleMark,
+      ...titleResult,
     })
 
     return {

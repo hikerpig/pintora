@@ -327,6 +327,7 @@ export const classExample: DiagramExample = {
   description: 'Sample for a classDiagram',
   code: stripStartEmptyLines(`
 classDiagram
+  title: Class Diagram Example
   class Fruit {
     <<interface>>
     float sweetness

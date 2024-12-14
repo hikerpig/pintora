@@ -8,15 +8,12 @@ import {
   Bounds,
   Point,
   IFont,
-  Maybe,
-  TSize,
-  Text,
 } from '@pintora/core'
 import { MindmapIR, MMItem, MMTree } from './db'
 import { MindmapConf, getConf } from './config'
 import { createLayoutGraph, isGraphVertical, LayoutEdge, LayoutGraph, LayoutNode } from '../util/graph'
-// eslint-disable-next-line unused-imports/no-unused-imports
-import { makeMark, makeEmptyGroup, adjustRootMarkBounds, makeCircleInPoint, makeTitleMark } from '../util/artist-util'
+
+import { makeMark, makeEmptyGroup, adjustRootMarkBounds, DiagramTitleMaker } from '../util/artist-util'
 import { getPointsLinearPath } from '../util/line-util'
 import db from './db'
 import { makeBounds, positionGroupContents, TRANSFORM_GRAPH } from '../util/mark-positioner'
@@ -46,21 +43,17 @@ const mmArtist: IDiagramArtist<MindmapIR, MindmapConf> = {
     mmDraw.drawTo(rootMark)
 
     const bounds = mmDraw.dagreWrapper.getGraphBounds()
-    const { title } = ir
-    let titleSize: Maybe<TSize> = undefined
-    let titleMark: Text | undefined = undefined
-    if (title) {
-      const titleFont: IFont = {
-        ...fontConfig,
-        fontSize: conf.maxFontSize,
-      }
-      const titleResult = makeTitleMark(title, titleFont, { fill: conf.textColor })
-      titleSize = titleResult.titleSize
-      titleMark = titleResult.mark
-      titleMark.class = 'mindmap__title'
-      rootMark.children.push(titleMark)
-      titleSize.height += conf.maxFontSize
+    const titleFont: IFont = {
+      ...fontConfig,
+      fontSize: conf.maxFontSize,
     }
+    const titleMaker = new DiagramTitleMaker({
+      title: ir.title,
+      titleFont,
+      fill: conf.textColor,
+      className: 'mindmap__title',
+    })
+    const titleResult = titleMaker.appendTitleMark(rootMark)
 
     const { width, height } = adjustRootMarkBounds({
       rootMark,
@@ -69,8 +62,7 @@ const mmArtist: IDiagramArtist<MindmapIR, MindmapConf> = {
       padY: conf.diagramPadding,
       useMaxWidth: conf.useMaxWidth,
       containerSize: opts?.containerSize,
-      titleSize,
-      titleMark,
+      ...titleResult,
     })
     return {
       width,
