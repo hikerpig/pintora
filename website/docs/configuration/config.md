@@ -54,10 +54,14 @@ export type PintoraConfig = {
     darkTheme?: string
     themeVariables: ITheme
   }
-  activity: ActivityConf
   component: ComponentConf
   er: ErConf
   sequence: SequenceConf
+  activity: ActivityConf
+  mindmap: MindmapConf
+  gantt: GanttConf
+  dot: DOTConf
+  class: ClassConf
 }
 ```
 
@@ -82,12 +86,31 @@ There are some common diagram config keys those - if they appears in the `*Conf`
 
 ![edge type demo](https://i.imgur.com/9v3toF1.png)
 
+
+### Common Font Configs
+
+```ts
+/**
+ * Base font configuration that should be used by all diagrams
+ */
+export interface BaseFontConfig {
+  /** Font family, defaults to DEFAULT_FONT_FAMILY */
+  fontFamily: string
+  /** Font size in pixels, defaults to 14 */
+  fontSize: number
+  /** Font weight, defaults to 'normal' */
+  fontWeight: MarkAttrs['fontWeight']
+  /** Font style (normal, italic, oblique), defaults to 'normal' */
+  fontStyle: any
+}
+```
+
 ### sequence
 
 Config for sequence diagram. For more detail, check the [latest code](https://github.com/hikerpig/pintora/blob/master/packages/pintora-diagrams/src/sequence/config.ts).
 
 ```ts
-export type SequenceConf = {
+export type SequenceConf = BaseFontConfig & {
   noteWidth: number
   noteHeight: number
   noteMargin: number
@@ -146,7 +169,7 @@ export type SequenceConf = {
 Config for entity relationship diagram. For more detail, check the [latest code](https://github.com/hikerpig/pintora/blob/master/packages/pintora-diagrams/src/er/config.ts).
 
 ```ts
-export type ErConf = {
+export type ErConf = BaseFontConfig & {
   diagramPadding: number
 
   layoutDirection: string
@@ -171,9 +194,6 @@ export type ErConf = {
   textColor: string
 
   labelBackground: string
-
-  fontSize: number
-  fontFamily: string
 }
 ```
 
@@ -182,7 +202,7 @@ export type ErConf = {
 Config for component diagram. For more detail, check the [latest code](https://github.com/hikerpig/pintora/blob/master/packages/pintora-diagrams/src/component/config.ts).
 
 ```ts
-export type ComponentConf = {
+export type ComponentConf = BaseFontConfig & {
   diagramPadding: number
 
   edgeType: EdgeType
@@ -199,8 +219,6 @@ export type ComponentConf = {
 
   relationLineColor: string
   textColor: string
-  fontSize: number
-  fontFamily: string
   lineWidth: number
 
   labelBackground: string
@@ -219,7 +237,7 @@ export type ComponentConf = {
 ### activity
 
 ```ts
-export type ActivityConf = {
+export type ActivityConf = BaseFontConfig & {
   diagramPadding: number
 
   edgesep: number
@@ -245,16 +263,13 @@ export type ActivityConf = {
 
   labelTextColor: string
   labelBackground: string
-
-  fontSize: number
-  fontFamily: string
 }
 ```
 
 ### mindmap
 
 ```ts
-export type MindmapConf = {
+export type MindmapConf = BaseFontConfig & {
   diagramPadding: number
   layoutDirection: 'LR' | 'TB'
 
@@ -290,7 +305,7 @@ export type MindmapConf = {
 Config for gantt diagram. For more detail, check the [latest code](https://github.com/hikerpig/pintora/blob/master/packages/pintora-diagrams/src/gantt/config.ts).
 
 ```ts
-export type GanttConf = {
+export type GanttConf = BaseFontConfig & {
   barHeight: number
   barGap: number
   topPadding: number
@@ -315,8 +330,6 @@ export type GanttConf = {
   sectionLabelColor: string
 
   fontColor: string
-  fontSize: number
-  fontFamily: string
 }
 ```
 
@@ -325,7 +338,7 @@ export type GanttConf = {
 Config for DOT diagram. For more detail, check the [latest code](https://github.com/hikerpig/pintora/blob/master/packages/pintora-diagrams/src/dot/config.ts).
 
 ```ts
-export type DOTConf = {
+export type DOTConf = BaseFontConfig & {
   diagramPadding: number
 
   layoutDirection: string
@@ -342,10 +355,6 @@ export type DOTConf = {
   labelTextColor: string
   nodeBorderColor: string
   edgeColor: string
-
-  fontSize: number
-  fontWeight: MarkAttrs['fontWeight']
-  fontFamily: string
 }
 ```
 
@@ -354,7 +363,7 @@ export type DOTConf = {
 Config for class diagram. For more detail, check the [latest code](https://github.com/hikerpig/pintora/blob/master/packages/pintora-diagrams/src/class/config.ts).
 
 ```ts
-export type ClassConf = {
+export type ClassConf = BaseFontConfig & {
   diagramPadding: number
 
   layoutDirection: string
@@ -372,10 +381,6 @@ export type ClassConf = {
   relationTextColor: string
 
   entityRadius: number
-
-  fontSize: number
-  fontWeight: MarkAttrs['fontWeight']
-  fontFamily: string
 }
 ```
 

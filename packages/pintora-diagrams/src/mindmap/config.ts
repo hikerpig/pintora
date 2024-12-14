@@ -3,20 +3,6 @@ import { getParamRulesFromConfig, interpreteConfigs, makeConfigurator } from '..
 import { PALETTE } from '../util/theme'
 import { BaseFontConfig, defaultFontConfig, getFontConfigRules } from '../util/font-config'
 
-function getColorsByPrimary(primary: string) {
-  const t = tinycolor(primary)
-  const l1NodeBgColor = t.clone().lighten(10).toString()
-  const l2NodeBgColor = t.clone().lighten(20).toString()
-  const nodeBgColor = t.clone().lighten(30).toString()
-  return {
-    nodeBgColor,
-    l1NodeBgColor,
-    l2NodeBgColor,
-  }
-}
-
-const DEFAULT_COLORS = getColorsByPrimary(PALETTE.orange)
-
 /**
  * Configuration for mindmap diagram
  */
@@ -92,6 +78,20 @@ export type MindmapConf = BaseFontConfig & {
   l2NodeTextColor: string
 }
 
+function getColorsByPrimary(c: string) {
+  const primaryColor = tinycolor(c)
+  const hslColor = primaryColor.toHsl()
+  const primaryLight1 = primaryColor.clone().brighten(15)
+  const primaryLight2 = tinycolor({ h: hslColor.h, s: 20, l: 90 })
+  return {
+    nodeBgColor: primaryLight2.toHexString(),
+    l1NodeBgColor: c,
+    l2NodeBgColor: primaryLight1.toHexString(),
+  }
+}
+
+const DEFAULT_COLORS = getColorsByPrimary(PALETTE.orange)
+
 export const defaultConfig: MindmapConf = {
   ...defaultFontConfig,
   diagramPadding: 15,
@@ -138,7 +138,6 @@ export const MINDMAP_PARAM_DIRECTIVE_RULES = {
   l2NodeBgColor: { valueType: 'color' },
   l2NodeTextColor: { valueType: 'color' },
 } as const
-
 export const configKey = 'mindmap'
 
 const configurator = makeConfigurator<MindmapConf>({
