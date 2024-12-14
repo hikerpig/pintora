@@ -50,13 +50,16 @@ const mmArtist: IDiagramArtist<MindmapIR, MindmapConf> = {
     let titleSize: Maybe<TSize> = undefined
     let titleMark: Text | undefined = undefined
     if (title) {
-      const titleFont: IFont = { fontSize: fontConfig.fontSize, fontFamily: fontConfig.fontFamily }
+      const titleFont: IFont = {
+        ...fontConfig,
+        fontSize: conf.maxFontSize,
+      }
       const titleResult = makeTitleMark(title, titleFont, { fill: conf.textColor })
       titleSize = titleResult.titleSize
       titleMark = titleResult.mark
       titleMark.class = 'mindmap__title'
       rootMark.children.push(titleMark)
-      titleSize.height += fontConfig.fontSize
+      titleSize.height += conf.maxFontSize
     }
 
     const { width, height } = adjustRootMarkBounds({
