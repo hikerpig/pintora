@@ -4,17 +4,16 @@ import artist from './artist'
 import { parse } from './parser'
 import { configKey, ErConf } from './config'
 import { eventRecognizer, ErDiagramItemDatas } from './event-recognizer'
+import { ParserWithPreprocessor } from '../util/preproccesor'
 
 export type { ErDiagramIR, ErConf, ErDiagramItemDatas }
 
 export const erDiagram: IDiagram<ErDiagramIR, ErConf> = {
   pattern: /^\s*erDiagram/,
-  parser: {
-    parse(text) {
-      parse(text)
-      return db.getDiagramIR()
-    },
-  },
+  parser: new ParserWithPreprocessor({
+    db,
+    parse,
+  }),
   artist,
   configKey,
   eventRecognizer,

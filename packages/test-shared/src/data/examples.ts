@@ -351,6 +351,27 @@ classDiagram
 `),
 }
 
+export const preBlockExample: DiagramExample = {
+  name: 'Pre Block',
+  description: 'Sample for pre block',
+  code: stripStartEmptyLines(`
+@pre
+@param entityBackground #61afef
+@title @pre block example
+@endpre
+
+classDiagram
+  class Animal {
+  }
+
+  class Dog {
+    void bark()
+  }
+
+  Animal <|-- Dog
+`),
+}
+
 export const EXAMPLES = {
   sequence: sequenceExample,
   er: erExample,
@@ -361,4 +382,5 @@ export const EXAMPLES = {
   gantt: ganttExample,
   dot: dotExample,
   class: classExample,
+  preBlock: preBlockExample,
 }

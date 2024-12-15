@@ -16,7 +16,7 @@ export interface IDiagram<D = unknown, Config = unknown> {
    * @example /^\s*sequenceDiagram/
    */
   pattern: RegExp
-  parser: IDiagramParser<D, Config>
+  parser: IDiagramParser<D>
   artist: IDiagramArtist<D, Config>
   eventRecognizer?: IDiagramEventRecognizer<D>
   configKey?: string
@@ -26,8 +26,12 @@ export interface IDiagram<D = unknown, Config = unknown> {
 /**
  * Parse input text to DiagramIR
  */
-export interface IDiagramParser<D, Config = unknown> {
-  parse(text: string, config?: Config): D
+export interface IDiagramParser<D> {
+  parse(text: string, context?: ParseContext): D
+}
+
+export type ParseContext = {
+  preContent?: string
 }
 
 export type DiagramArtistOptions = {
