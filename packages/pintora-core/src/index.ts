@@ -1,18 +1,19 @@
 export * from './type'
+import configApi, { PintoraConfig } from './config'
+import * as configEngine from './config-engine'
+import { ConfigMeta, ConfigParam, interpreteConfigs } from './config-engine'
+import { DEFAULT_FONT_FAMILY } from './consts'
+import { DiagramEvent, diagramEventMakerFactory, diagramEventManager } from './diagram-event'
 import { diagramRegistry } from './diagram-registry'
-import { diagramEventManager, DiagramEvent, diagramEventMakerFactory } from './diagram-event'
+import { logger, setLogLevel } from './logger'
+import { preprocessExtractor } from './pre'
+import { SymbolDef, symbolRegistry, SymbolStyleAttrs } from './symbol-registry'
+import { ITheme, themeRegistry } from './themes'
 import { DiagramArtistOptions } from './type'
 import { IDiagramEvent, IGraphicEvent } from './types/event'
-import { logger, setLogLevel } from './logger'
-import configApi, { PintoraConfig } from './config'
+import { calculateTextDimensions, decodeCodeInUrl, encodeForUrl, makeMark, parseColor, tinycolor } from './util'
 
 export * from './util'
-import { encodeForUrl, decodeCodeInUrl, makeMark, calculateTextDimensions, parseColor, tinycolor } from './util'
-import { symbolRegistry, SymbolDef, SymbolStyleAttrs } from './symbol-registry'
-import { ConfigParam, ConfigMeta, interpreteConfigs } from './config-engine'
-import { themeRegistry, ITheme } from './themes'
-import { DEFAULT_FONT_FAMILY } from './consts'
-import * as configEngine from './config-engine'
 
 export type DrawOptions = {
   onError?(error: Error): void
@@ -25,16 +26,24 @@ export type DrawOptions = {
  */
 export function parseAndDraw(text: string, opts: DrawOptions) {
   const { onError, config } = opts
-  const diagram = diagramRegistry.detectDiagram(text)
+
+  const preResult = preprocessExtractor.parse(text)
+  const textToParse = preResult.content
+
+  const diagram = diagramRegistry.detectDiagram(textToParse)
   if (!diagram) {
-    const errMessage = `[pintora] no diagram detected with input: ${text.slice(0, 30)}`
+    const errMessage = `[pintora] no diagram detected with input: ${textToParse.slice(0, 30)}`
     logger.warn(errMessage)
-    onError && onError(new Error(errMessage))
+    if (onError) {
+      onError(new Error(errMessage))
+    }
     return
   }
 
   diagram.clear()
-  const diagramIR = diagram.parser.parse(text)
+  const diagramIR = diagram.parser.parse(textToParse, {
+    preContent: preResult.hasPreBlock && preResult.preContent ? preResult.preContent : undefined,
+  })
 
   let configForArtist = undefined
 
@@ -59,29 +68,29 @@ export const util = {
 }
 
 export {
-  logger,
-  setLogLevel,
   configApi,
-  diagramRegistry,
-  symbolRegistry,
-  interpreteConfigs,
-  tinycolor,
-  themeRegistry,
+  configEngine,
   DEFAULT_FONT_FAMILY,
-  diagramEventManager,
   DiagramEvent,
   diagramEventMakerFactory,
-  configEngine,
+  diagramEventManager,
+  diagramRegistry,
+  interpreteConfigs,
+  logger,
+  setLogLevel,
+  symbolRegistry,
+  themeRegistry,
+  tinycolor,
 }
 
 export type {
+  ConfigMeta,
+  ConfigParam,
+  DiagramArtistOptions,
+  IDiagramEvent,
+  IGraphicEvent,
+  ITheme,
+  PintoraConfig,
   SymbolDef,
   SymbolStyleAttrs,
-  ConfigParam,
-  ConfigMeta,
-  PintoraConfig,
-  ITheme,
-  DiagramArtistOptions,
-  IGraphicEvent,
-  IDiagramEvent,
 }

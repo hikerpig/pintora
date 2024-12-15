@@ -20,7 +20,8 @@
   "scripts": {
     "compile": "tsc",
     "watch": "tsc -w",
-    "test": "jest"
+    "test": "jest",
+    "coverage": "npx jest --collect-coverage"
   },
   "dependencies": {
     "@antv/event-emitter": "^0.1.2",

@@ -3,17 +3,16 @@ import db, { GanttIR } from './db'
 import artist from './artist'
 import { parse } from './parser'
 import { configKey, GanttConf } from './config'
+import { ParserWithPreprocessor } from '../util/preproccesor'
 
 export type { GanttIR, GanttConf }
 
 export const gantt: IDiagram<GanttIR, GanttConf> = {
   pattern: /^\s*gantt/,
-  parser: {
-    parse(text) {
-      parse(text)
-      return db.getDiagramIR()
-    },
-  },
+  parser: new ParserWithPreprocessor({
+    db,
+    parse,
+  }),
   artist,
   configKey,
   clear() {

@@ -12,7 +12,6 @@ import {
   GSymbol,
   IFont,
   Bounds,
-  Maybe,
   compact,
 } from '@pintora/core'
 import { ComponentDiagramIR, LineType, Relationship } from './db'

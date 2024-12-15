@@ -44,12 +44,6 @@ let lexer = moo.states({
     ...COMMON_TOKEN_RULES,
   },
 })
-
-let yy
-
-export function setYY(v) {
-  yy = v
-}
 %}
 
 start -> __ start

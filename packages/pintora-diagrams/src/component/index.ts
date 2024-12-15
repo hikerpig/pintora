@@ -1,20 +1,21 @@
 import { IDiagram } from '@pintora/core'
-import db, { ComponentDiagramIR } from './db'
+import { ParserWithPreprocessor } from '../util/preproccesor'
 import artist from './artist'
-import { parse } from './parser'
 import { ComponentConf, configKey } from './config'
+import db, { ComponentDiagramIR } from './db'
+import { parse } from './parser'
 
 export type { ComponentConf, ComponentDiagramIR }
 
 export const componentDiagram: IDiagram<ComponentDiagramIR, ComponentConf> = {
   pattern: /^\s*componentDiagram/,
-  parser: {
+  parser: new ParserWithPreprocessor({
+    db,
     parse(text) {
       parse(text)
       db.fillMissingElements()
-      return db.getDiagramIR()
     },
-  },
+  }),
   artist,
   configKey,
   clear() {

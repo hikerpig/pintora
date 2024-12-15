@@ -7,6 +7,18 @@ export class BaseDb {
   overrideConfig: Partial<PintoraConfig> = {}
   title = ''
 
+  init(ir: Partial<BaseDiagramIR>) {
+    if ('title' in ir) {
+      this.title = ir.title
+    }
+    if ('configParams' in ir) {
+      this.configParams = [...ir.configParams]
+    }
+    if ('overrideConfig' in ir) {
+      Object.assign(this.overrideConfig, ir.overrideConfig)
+    }
+  }
+
   addOverrideConfig(action: OverrideConfigAction) {
     if ('error' in action) {
       console.error(action.error)
