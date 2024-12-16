@@ -73,6 +73,12 @@ const artist = makeArtist<ClassIR, ClassConf>({
       {
         selector: { type: 'class', target: 'class__entity' },
         attrs: {
+          textColor: 'red',
+        },
+      },
+      {
+        selector: { type: 'id', target: 'Dog' },
+        attrs: {
           fontWeight: 'bold',
         },
       },

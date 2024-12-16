@@ -1,21 +1,52 @@
 import { MarkAttrs, type GraphicsIR, type Mark, type MarkType, type MarkTypeMap } from '@pintora/core'
 
-export type StylableAttrs = Pick<MarkAttrs, 'fill' | 'stroke' | 'opacity' | 'fontWeight' | 'fontFamily'>
+export type StylableAttrs = {
+  backgroundColor: string
+  borderColor: string
+  fontFamily: MarkAttrs['fontFamily']
+  fontStyle: MarkAttrs['fontStyle']
+  fontWeight: MarkAttrs['fontWeight']
+  opacity: MarkAttrs['opacity']
+  textColor: string
+}
+export type StylableAttrKey = keyof StylableAttrs
 
-type StyleSelector = {
-  type: string
+export type StyleSelector = {
+  type: 'class' | 'id' | 'cluster'
   target: string
 }
 
-class StyleRule {
+export class StyleRule {
   selector: StyleSelector
   attrs: Partial<StylableAttrs>
+}
+
+/**
+ * text mark applicable style -> attr mapping
+ */
+const TEXT_MARK_STYLE_MAP: Partial<Record<StylableAttrKey, keyof MarkAttrs>> = {
+  fontFamily: 'fontFamily',
+  fontWeight: 'fontWeight',
+  fontStyle: 'fontStyle',
+  textColor: 'fill',
+  opacity: 'opacity',
+}
+
+/**
+ * rect mark applicable style -> attr mapping
+ */
+const RECT_MARK_STYLE_MAP: Partial<Record<StylableAttrKey, keyof MarkAttrs>> = {
+  backgroundColor: 'fill',
+  borderColor: 'stroke',
+  opacity: 'opacity',
 }
 
 export class StyleEngine {
   apply(gir: GraphicsIR, rules: StyleRule[]) {
     const actions = {}
     const classRules = rules.filter(rule => rule.selector.type === 'class')
+    const idRules = rules.filter(rule => rule.selector.type === 'id')
+    const clusterRules = rules.filter(rule => rule.selector.type === 'cluster')
     traverseMark(
       gir.mark,
       {
@@ -29,14 +60,51 @@ export class StyleEngine {
               }
             })
           }
+
+          if (idRules.length && mark.itemId) {
+            const rule = idRules.find(rule => rule.selector.target === mark.itemId)
+            if (rule) {
+              this.applyRuleToMark(mark, rule)
+            }
+          }
+
+          if (clusterRules.length && mark.cluster) {
+            const cluster = mark.cluster && mark.cluster.split(' ')
+            cluster.forEach(clusterName => {
+              const rule = clusterRules.find(rule => rule.selector.target === clusterName)
+              if (rule) {
+                this.applyRuleToMark(mark, rule)
+              }
+            })
+          }
         },
       },
       actions,
     )
   }
   protected applyRuleToMark(mark: Mark, rule: StyleRule) {
-    console.log('applyRuleToMark', mark, rule)
-    mark.attrs = { ...mark.attrs, ...rule.attrs }
+    // console.log('applyRuleToMark', mark, rule)
+
+    traverseMark(
+      mark,
+      {
+        text(mark) {
+          for (const [styleKey, value] of Object.entries(rule.attrs)) {
+            if (styleKey in TEXT_MARK_STYLE_MAP) {
+              mark.attrs[TEXT_MARK_STYLE_MAP[styleKey]] = value
+            }
+          }
+        },
+        rect(mark) {
+          for (const [styleKey, value] of Object.entries(rule.attrs)) {
+            if (styleKey in RECT_MARK_STYLE_MAP) {
+              mark.attrs[RECT_MARK_STYLE_MAP[styleKey]] = value
+            }
+          }
+        },
+      },
+      {},
+    )
   }
 }
 

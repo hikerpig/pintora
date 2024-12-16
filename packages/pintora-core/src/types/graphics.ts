@@ -17,6 +17,8 @@ export type TransformPolicy = 'stretch' | 'fixed' | 'scale'
 export interface IMark {
   attrs?: MarkAttrs
   class?: string
+  /** for style cluster */
+  cluster?: string
   /** for transform */
   matrix?: Matrix | number[]
   /** come in handy when a symbol needs to be adjusted to fit new position and size */
@@ -25,6 +27,7 @@ export interface IMark {
     v: TransformPolicy
     all: TransformPolicy
   }>
+  /** node id for style selctor and event */
   itemId?: string
 }
 

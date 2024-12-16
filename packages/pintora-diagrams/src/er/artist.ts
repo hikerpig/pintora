@@ -32,6 +32,7 @@ import { getTextDimensionsInPresicion } from '../util/text'
 import { toFixed } from '../util/number'
 import { DagreWrapper } from '../util/dagre-wrapper'
 import { getFontConfig } from '../util/font-config'
+import { StyleEngine } from '../util/style-engine'
 
 let conf: ErConf
 
@@ -126,11 +127,43 @@ const erArtist: IDiagramArtist<ErDiagramIR, ErConf> = {
       ...titleResult,
     })
 
-    return {
+    // FIXME: test
+    const gir = {
       mark: rootMark,
       width,
       height,
-    } as GraphicsIR
+    }
+    const styleEngine = new StyleEngine()
+    styleEngine.apply(gir, [
+      {
+        selector: { type: 'id', target: 'entity-CUSTOMER' },
+        attrs: {
+          textColor: 'green',
+          fill: 'red',
+          stroke: 'purple',
+        },
+      },
+      {
+        selector: { type: 'id', target: 'relation-CUSTOMER-PERSON' },
+        attrs: {
+          textColor: 'green',
+        },
+      },
+      {
+        selector: { type: 'class', target: 'er__entity' },
+        attrs: {
+          fontStyle: 'italic',
+        },
+      },
+    ])
+
+    return gir
+
+    // return {
+    //   mark: rootMark,
+    //   width,
+    //   height,
+    // } as GraphicsIR
   },
 }
 
@@ -333,7 +366,7 @@ const drawEntities = function (rootMark: Group, ir: ErDiagramIR, graph: LayoutGr
       {
         id,
       },
-      { children: [], class: 'er__entity' },
+      { children: [], class: 'er__entity', itemId },
     )
     groups.push(group)
 
