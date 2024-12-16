@@ -1,11 +1,14 @@
 import { PintoraConfig } from '@pintora/core'
 import { BaseDiagramIR } from './ir'
 import { ConfigParam, OverrideConfigAction } from './config'
+import type { IStyleDb } from './style-engine/parser'
+import type { StyleRule } from './style-engine/shared'
 
-export class BaseDb {
+export class BaseDb implements IStyleDb {
   configParams: ConfigParam[] = []
   overrideConfig: Partial<PintoraConfig> = {}
   title = ''
+  styleRules: StyleRule[] = []
 
   init(ir: Partial<BaseDiagramIR>) {
     if ('title' in ir) {
@@ -16,6 +19,10 @@ export class BaseDb {
     }
     if ('overrideConfig' in ir) {
       Object.assign(this.overrideConfig, ir.overrideConfig)
+    }
+
+    if ('styleRules' in ir) {
+      this.styleRules = ir.styleRules
     }
   }
 
@@ -32,6 +39,7 @@ export class BaseDb {
       configParams: this.configParams,
       overrideConfig: this.overrideConfig,
       title: this.title,
+      styleRules: this.styleRules,
     }
   }
 
@@ -39,6 +47,7 @@ export class BaseDb {
     this.configParams = []
     this.overrideConfig = {}
     this.title = ''
+    this.styleRules = []
   }
 }
 

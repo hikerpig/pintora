@@ -1,5 +1,6 @@
 # project
 packages/**/*/parser/*.[tj]s
+packages/**/*/grammar/*.[tj]s
 demo/dist/
 demo/cypress/videos/
 .idea/

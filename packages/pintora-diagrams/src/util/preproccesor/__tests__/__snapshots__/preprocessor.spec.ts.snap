@@ -1,0 +1,25 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Preproccessor can parse @style block 1`] = `
+[
+  {
+    "attrs": {
+      "borderColor": "yellow",
+      "textColor": "green",
+    },
+    "selector": {
+      "target": "entity-CUSTOMER",
+      "type": "id",
+    },
+  },
+  {
+    "attrs": {
+      "fontStyle": "italic",
+    },
+    "selector": {
+      "target": "er__entity",
+      "type": "class",
+    },
+  },
+]
+`;

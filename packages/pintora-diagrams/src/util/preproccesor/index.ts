@@ -4,6 +4,8 @@ import { ConfigParam, type OverrideConfigAction } from '../config'
 import type { BaseDiagramIR } from '../ir'
 import { genParserWithRules } from '../parser-util'
 import grammar from './parser/preproccesor'
+import { StyleEngine } from '../style-engine'
+import { STYLE_ACTION_HANDLERS, type StylePayloads } from '../style-engine/parser'
 
 const parseFn = genParserWithRules(grammar, {
   dedupeAmbigousResults: true,
@@ -13,7 +15,7 @@ type PreproccessorPayloads = {
   overrideConfig: OverrideConfigAction
   addParam: ConfigParam
   setTitle: { text: string }
-}
+} & StylePayloads
 
 export type Action = MakeAction<PreproccessorPayloads>
 
@@ -30,6 +32,7 @@ export class Preproccessor extends BaseDb {
     overrideConfig(action) {
       this.addOverrideConfig(action)
     },
+    ...STYLE_ACTION_HANDLERS,
   }
 
   public parse(text: string) {

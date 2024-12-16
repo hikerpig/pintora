@@ -1,5 +1,4 @@
 import {
-  GraphicsIR,
   IDiagramArtist,
   Group,
   Text,
@@ -32,6 +31,7 @@ import { getTextDimensionsInPresicion } from '../util/text'
 import { toFixed } from '../util/number'
 import { DagreWrapper } from '../util/dagre-wrapper'
 import { getFontConfig } from '../util/font-config'
+import { StyleEngine } from '../util/style-engine'
 
 let conf: ErConf
 
@@ -125,12 +125,12 @@ const erArtist: IDiagramArtist<ErDiagramIR, ErConf> = {
       containerSize: opts?.containerSize,
       ...titleResult,
     })
-
+    const styleEngine = new StyleEngine()
     return {
-      mark: rootMark,
+      mark: styleEngine.apply(rootMark, ir.styleRules),
       width,
       height,
-    } as GraphicsIR
+    }
   },
 }
 
@@ -333,7 +333,7 @@ const drawEntities = function (rootMark: Group, ir: ErDiagramIR, graph: LayoutGr
       {
         id,
       },
-      { children: [], class: 'er__entity' },
+      { children: [], class: 'er__entity', itemId },
     )
     groups.push(group)
 

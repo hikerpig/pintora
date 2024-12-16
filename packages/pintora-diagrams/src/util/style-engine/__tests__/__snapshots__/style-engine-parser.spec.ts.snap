@@ -1,0 +1,26 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`style engine parser can parse @style block 1`] = `
+{
+  "styleRules": [
+    {
+      "attrs": {
+        "fontFamily": "serif",
+      },
+      "selector": {
+        "type": "id",
+        "value": "Alice",
+      },
+    },
+    {
+      "attrs": {
+        "textColor": "#ff0000",
+      },
+      "selector": {
+        "type": "class",
+        "value": "message__text",
+      },
+    },
+  ],
+}
+`;
