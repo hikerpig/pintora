@@ -33,6 +33,7 @@ import { getMedianPoint, getPointsCurvePath, getPointsLinearPath } from '../util
 import { makeBounds, positionGroupContents, tryExpandBounds } from '../util/mark-positioner'
 import { ClassConf, getConf } from './config'
 import { ClassIR, ClassRelation, Note, Relation, TClass } from './db'
+import { StyleEngine } from '../util/style-engine'
 
 const artist = makeArtist<ClassIR, ClassConf>({
   draw(ir, config, opts) {
@@ -61,11 +62,23 @@ const artist = makeArtist<ClassIR, ClassConf>({
       titleSize: titleResult.titleSize,
     })
 
-    return {
+    // FIXME: test
+    const gir = {
       mark: rootMark,
       width,
       height,
     }
+    const styleEngine = new StyleEngine()
+    styleEngine.apply(gir, [
+      {
+        selector: { type: 'class', target: 'class__entity' },
+        attrs: {
+          fontWeight: 'bold',
+        },
+      },
+    ])
+
+    return gir
   },
 })
 
@@ -425,7 +438,9 @@ type RowConfig = {
  * Handles common logic of drawing an entity/class
  */
 class EntityMarkBuilder {
-  group: Group = makeEmptyGroup()
+  group: Group = Object.assign(makeEmptyGroup(), {
+    class: 'class__entity',
+  })
   rowPadding = 8
   /** y offset inside entity */
   curY = 0
