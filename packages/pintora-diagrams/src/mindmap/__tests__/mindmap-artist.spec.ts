@@ -13,11 +13,11 @@ describe('mindmap-artist', () => {
     expect((testDraw(EXAMPLES.mindmap.code).graphicIR.mark as any).children.length).toBeGreaterThan(0)
   })
 
-  describe('mindmap @pre', () => {
+  describe('mindmap @pre block', () => {
     it('can parse param in @pre', () => {
       const example = stripStartEmptyLines(`
     @pre
-    @title: Hello Pre
+    @title Hello Pre
     @endpre
     mindmap
       %% comment here
