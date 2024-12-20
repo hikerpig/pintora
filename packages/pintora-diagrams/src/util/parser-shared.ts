@@ -16,6 +16,7 @@ export function textToCaseInsensitiveRegex(text) {
 
 /** token value */
 export function tv(token) {
+  // if (typeof token === 'string') return token
   if (token && 'value' in token) return token.value
   return token
 }
@@ -64,4 +65,19 @@ export function makeNth(n: number) {
   return function (d: unknown[]) {
     return d[n]
   }
+}
+
+export function flatten(list) {
+  const output = []
+
+  function walk(item) {
+    if (Array.isArray(item)) {
+      item.forEach(walk)
+    } else {
+      output.push(item)
+    }
+    return output
+  }
+
+  return walk(list)
 }

@@ -65,7 +65,7 @@ let lexer = moo.states({
     WORD: { match: VALID_TEXT_REGEXP, fallback: true },
   },
   line: {
-    REST_OF_LINE: { match: /[^#\n;]+/, pop: 1 },
+    REST_OF_LINE: { match: /[^\n;]+/, pop: 1 },
   },
   configStatement: {
     ...configLexerconfigStatementState,
