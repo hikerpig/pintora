@@ -176,4 +176,18 @@ classDiagram
     const result = db.getDiagramIR()
     expect(result.title).toBe('Hello')
   })
+
+  // issue #330
+  it('can parse member with #', () => {
+    const multilineNoteExample = stripStartEmptyLines(`
+classDiagram
+  class #Shape {
+    #area: double
+}
+    `)
+    parse(multilineNoteExample)
+    const result = db.getDiagramIR()
+    const { members } = result.classes['#Shape']
+    expect(members[0].raw).toEqual('#area: double')
+  })
 })

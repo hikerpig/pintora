@@ -1,7 +1,7 @@
 @{%
-export const COLOR = /#[a-zA-Z0-9]+/
-export const PARAM_DIRECTIVE = /@param/
-export const CONFIG_DIRECTIVE = /@config/
+let _COLOR = /#[a-zA-Z0-9]+/
+let PARAM_DIRECTIVE = /@param/
+let CONFIG_DIRECTIVE = /@config/
 
 //@ts-ignore
 let L_PAREN = /\(/
@@ -30,8 +30,8 @@ function handleConfigOpenCloseStatement(d) {
 %}
 
 # non-terminal, needs
-# - `COLOR` token
-color -> %COLOR {% (d) => tv(d[0]) %}
+# - `_COLOR` token
+color -> %_COLOR {% (d) => tv(d[0]) %}
 
 # `@param` statement, with some prerequisites:
 # - `PARAM_DIRECTIVE` token

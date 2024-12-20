@@ -240,7 +240,7 @@ wordsInParens ->
     %L_PAREN words %R_PAREN {% (d) => d[1] %}
 
 words ->
-    (%VALID_TEXT | %WS):+ {%
+    (%VALID_TEXT | %COLOR | %WS):+ {%
       function(d) {
         return d[0].map(o => tv(o[0])).join('')
       }

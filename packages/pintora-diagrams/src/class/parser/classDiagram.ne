@@ -21,6 +21,7 @@ import {
   MOO_NEWLINE,
   getQuotedWord,
   makeNth,
+  flatten,
 } from '../../util/parser-shared'
 import type { Action } from '../db'
 import { Relation } from '../db'
@@ -120,12 +121,12 @@ statement ->
   | comment %NL
 
 classStatement ->
-    "class" %VALID_TEXT %L_BRACKET %NL:? classMembers:? %NL:? %R_BRACKET %NL {%
+    "class" memberOrClassName %L_BRACKET %NL:? classMembers:? %NL:? %R_BRACKET %NL {%
       function(d) {
         const members = d[4]
         return {
           type: 'addClass',
-          name: tv(d[1]),
+          name: d[1],
           members,
         } as Action
       }
@@ -171,18 +172,28 @@ classMember ->
     %}
 
 words ->
-    %VALID_TEXT (%VALID_TEXT | %WS):* {%
+    (%VALID_TEXT | %COLOR) (%VALID_TEXT | %COLOR | %WS):* {%
       function(d) {
-        return tv(d[0]) + d[1].map(o => tv(o[0])).join('')
+        return tv(d[0][0]) + d[1].map(o => tv(o[0])).join('')
       }
     %}
 
 memberLabel ->
-    %VALID_TEXT (%VALID_TEXT | %L_PAREN | %R_PAREN | %COLON | %WS):* {%
+    memberOrClassName (%VALID_TEXT | %COLOR | %L_PAREN | %R_PAREN | %COLON | %WS):* {%
       function(d) {
-        return tv(d[0]) + d[1].map(o => tv(o[0])).join('')
+        return d[0] + d[1].map(o => tv(o[0])).join('')
       }
     %}
+
+memberOrClassName ->
+    (%VALID_TEXT | %COLOR):+ {%
+      function(d) {
+        const tokens = flatten(d)
+        const result = tokens.map(inner => tv(inner)).join('')
+        return result
+      }
+    %}
+
 
 modifier -> %L_BRACKET ("static" | "abstract") %R_BRACKET {%
       function(d) {
@@ -238,7 +249,7 @@ relationStatement ->
       %}
 
 classInRelation ->
-    %VALID_TEXT {% (d) => ({ name: tv(d[0])}) %}
+    memberOrClassName {% (d) => ({ name: d[0] }) %}
 
 relation ->
     "<|--" {% (d) => { return { type: Relation.INHERITANCE, reversed: true } } %}
@@ -307,17 +318,17 @@ multilineNoteText ->
     %}
 
 noteStatement ->
-	  ("note" | %NOTE) %WS:* placement %WS %VALID_TEXT %WS:* %COLON words %NL {%
+	  ("note" | %NOTE) %WS:* placement %WS memberOrClassName %WS:* %COLON words %NL {%
       function(d) {
         const text = d[7].trim()
         // console.log('[note one]\n', text)
-        return { type: 'note', placement: d[2], target: tv(d[4]).trim(), text } as Action
+        return { type: 'note', placement: d[2], target: d[4].trim(), text } as Action
       }
     %}
-	| ("note" | %START_NOTE) %WS:* placement %WS:* %VALID_TEXT %WS:* %NL multilineNoteText %NL {%
+	| ("note" | %START_NOTE) %WS:* placement %WS:* memberOrClassName %WS:* %NL multilineNoteText %NL {%
       function(d) {
         // console.log('[note multi]\n', d[5])
         const text = d[7]
-        return { type: 'note', placement: d[2], target: tv(d[4]).trim(), text } as Action
+        return { type: 'note', placement: d[2], target: d[4].trim(), text } as Action
       }
     %}
