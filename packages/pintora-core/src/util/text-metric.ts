@@ -60,7 +60,7 @@ class CanvasTextMetricCalculator implements ITextMetricCalculator {
   getCanvasContext = () => {
     if (!this.ctx) {
       const canvas = document.createElement('canvas')
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+
       this.ctx = canvas.getContext('2d')!
     }
     return this.ctx

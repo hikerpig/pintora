@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import deepmerge from 'deepmerge'
 import cloneDeep from 'clone-deep'
 import { ITheme, themeRegistry } from './themes'

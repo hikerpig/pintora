@@ -91,7 +91,6 @@ export function clamp(num: number, min: number, max: number) {
 //   return rad / Math.PI * 180
 // }
 
-/* eslint-disable prettier/prettier */
 export enum PositionH {
   LEFT = 0b100000,
   CENTER = 0b010000,
@@ -103,7 +102,6 @@ export enum PositionV {
   CENTER = 0b000010,
   BOTTOM = 0b000001,
 }
-/* eslint-enable prettier/prettier */
 
 export function getPositionOfRect(rect: TRect, position: number) {
   let x = rect.x

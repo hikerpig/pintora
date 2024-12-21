@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-empty-function */
 export const LEVELS = {
   debug: 1,
   info: 2,
