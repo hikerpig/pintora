@@ -1,5 +1,20 @@
 # Change Log
 
+## 0.8.0-alpha.0
+
+### Minor Changes
+
+- f9014a5: Add ability to parse `@pre` block and merge configs
+
+### Patch Changes
+
+- 0b31164: feat: [activity] support quoted word as action message
+- 0abf2d5: fix mindmap color
+- 9653ccb: feat: [classDiagram] be able to add `title`
+- 417afeb: fix: parse texts prefix with `#`
+- Updated dependencies [f9014a5]
+  - @pintora/core@0.8.0-alpha.0
+
 ## 0.7.4
 
 ### Patch Changes

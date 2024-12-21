@@ -1,5 +1,14 @@
 ## 0.1.0
 
+## 0.1.5-alpha.0
+
+### Patch Changes
+
+- Updated dependencies [0b31164]
+- Updated dependencies [f9014a5]
+- Updated dependencies [9653ccb]
+  - @pintora/standalone@0.8.0-alpha.0
+
 ## 0.1.4
 
 ### Patch Changes

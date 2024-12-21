@@ -1,5 +1,22 @@
 # Change Log
 
+## 0.8.0-alpha.0
+
+### Minor Changes
+
+- f9014a5: Add ability to parse `@pre` block and merge configs
+
+### Patch Changes
+
+- 0b31164: feat: [activity] support quoted word as action message
+- 9653ccb: feat: [classDiagram] be able to add `title`
+- Updated dependencies [0b31164]
+- Updated dependencies [f9014a5]
+- Updated dependencies [9653ccb]
+  - @pintora/standalone@0.8.0-alpha.0
+  - @pintora/core@0.8.0-alpha.0
+  - @pintora/renderer@0.8.0-alpha.0
+
 ## 0.7.6
 
 ### Patch Changes

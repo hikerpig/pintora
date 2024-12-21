@@ -1,5 +1,16 @@
 # Change Log
 
+## 0.7.2-alpha.0
+
+### Patch Changes
+
+- 9653ccb: feat: [classDiagram] be able to add `title`
+- Updated dependencies [0b31164]
+- Updated dependencies [f9014a5]
+- Updated dependencies [9653ccb]
+  - @pintora/standalone@0.8.0-alpha.0
+  - @pintora/test-shared@0.5.2-alpha.0
+
 ## 0.7.1
 
 ### Patch Changes

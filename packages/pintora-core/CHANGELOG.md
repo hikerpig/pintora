@@ -1,5 +1,11 @@
 # Change Log
 
+## 0.8.0-alpha.0
+
+### Minor Changes
+
+- f9014a5: Add ability to parse `@pre` block and merge configs
+
 ## 0.7.0
 
 ### Minor Changes
