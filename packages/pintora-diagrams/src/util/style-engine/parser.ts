@@ -1,5 +1,5 @@
 import { type ActionHandler, type MakeAction } from '../base-db'
-import { StyleRule, type StyleSelector } from './shared'
+import { StyleRule, type StyleSelector, BindRule } from './shared'
 
 export type ParserStyleRule = {
   selector: StyleSelector
@@ -13,19 +13,23 @@ export type StylePayloads = {
   style: {
     rules: ParserStyleRule[]
   }
+  bindClass: {
+    nodes: string[]
+    className: string
+  }
 }
 
 export type Action = MakeAction<StylePayloads>
 
 export interface IStyleDb {
   styleRules: StyleRule[]
+  bindRules: BindRule[]
 }
 
 export const STYLE_ACTION_HANDLERS: {
   [K in keyof StylePayloads]: ActionHandler<StylePayloads, IStyleDb, K>
 } = {
   style(action) {
-    // 处理添加样式的逻辑
     const rules: StyleRule[] = []
     action.rules.forEach(rule => {
       rules.push({
@@ -37,5 +41,11 @@ export const STYLE_ACTION_HANDLERS: {
       })
     })
     this.styleRules.push(...rules)
+  },
+  bindClass(action) {
+    this.bindRules.push({
+      nodes: action.nodes,
+      className: action.className,
+    })
   },
 }

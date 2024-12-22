@@ -3,6 +3,7 @@ import { ConfigParam, OverrideConfigAction, ParamAction } from '../util/config'
 import { BaseDb } from '../util/base-db'
 import { BaseDiagramIR } from '../util/ir'
 import { dedent } from '../util/text'
+import { STYLE_ACTION_HANDLERS, type StylePayloads } from '../util/style-engine/parser'
 
 export interface WrappedText {
   text: string
@@ -319,6 +320,7 @@ class SequenceDB extends BaseDb {
   getDiagramIR(): SequenceDiagramIR {
     this.prepareBeforeGetIR()
     return {
+      ...this.getBaseDiagramIR(),
       messages: this.messages,
       notes: this.notes,
       actors: this.actors,
@@ -379,6 +381,9 @@ class SequenceDB extends BaseDb {
           break
         case 'overrideConfig':
           this.addOverrideConfig(param)
+          break
+        case 'bindClass':
+          STYLE_ACTION_HANDLERS.bindClass.call(this, param)
           break
       }
     }
@@ -474,6 +479,7 @@ export type ApplyParam =
       text: string
     }
   | ({ type: 'addBox' } & ActionPayloadMap['addBox'])
+  | ({ type: 'bindClass' } & StylePayloads['bindClass'])
 
 export { db }
 

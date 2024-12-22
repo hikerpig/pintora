@@ -3,6 +3,7 @@ import { BaseDb } from '../util/base-db'
 import { BaseDiagramIR } from '../util/ir'
 import { OverrideConfigAction, ParamAction, SetTitleAction } from '../util/config'
 import { dedent } from '../util/text'
+import { STYLE_ACTION_HANDLERS, type StylePayloads } from '../util/style-engine/parser'
 
 export type Action = {
   id: string
@@ -180,6 +181,7 @@ export type ApplyPart =
       children: ApplyPart[]
     }
   | SetTitleAction
+  | ({ type: 'bindClass' } & StylePayloads['bindClass'])
 
 type DbApplyState = {
   prevStepId?: string | undefined
@@ -354,6 +356,10 @@ class ActivityDb extends BaseDb {
       }
       case 'overrideConfig': {
         this.addOverrideConfig(part)
+        break
+      }
+      case 'bindClass': {
+        STYLE_ACTION_HANDLERS.bindClass.call(this, part)
         break
       }
       default: {

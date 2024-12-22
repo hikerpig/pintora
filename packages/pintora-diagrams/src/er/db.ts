@@ -1,6 +1,7 @@
 import { BaseDiagramIR } from '../util/ir'
 import { ConfigParam } from '../util/config'
 import { BaseDb } from '../util/base-db'
+import { STYLE_ACTION_HANDLERS } from '../util/style-engine/parser'
 
 export enum Cardinality {
   ZERO_OR_ONE = 'ZERO_OR_ONE',
@@ -98,6 +99,9 @@ export class ErDb extends BaseDb {
   }
   addParam(styleParam: ConfigParam) {
     this.configParams.push(styleParam)
+  }
+  bindClass(action: any) {
+    STYLE_ACTION_HANDLERS.bindClass.call(this, action)
   }
 
   override clear() {

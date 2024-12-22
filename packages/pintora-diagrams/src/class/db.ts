@@ -1,8 +1,9 @@
-import { BaseDiagramIR } from '../util/ir'
-import { ActionHandler, BaseDb, MakeAction } from '../util/base-db'
 import { ConfigParam } from '@pintora/core'
-import { OverrideConfigAction } from '../util/config'
 import dedent from 'dedent'
+import { ActionHandler, BaseDb, MakeAction } from '../util/base-db'
+import { OverrideConfigAction } from '../util/config'
+import { BaseDiagramIR } from '../util/ir'
+import { STYLE_ACTION_HANDLERS, type StylePayloads } from '../util/style-engine/parser'
 
 /** type to represent one class  */
 export type TClass = {
@@ -12,6 +13,7 @@ export type TClass = {
   namespace?: string
   members: TClassMember[]
   annotation?: string
+  itemId?: string
 }
 
 export type ClassRelation = {
@@ -70,7 +72,7 @@ type ClassActionPayloads = {
     target?: string
   }
   setTitle: { text: string }
-}
+} & StylePayloads
 
 type RawMember = {
   raw: string
@@ -159,6 +161,7 @@ export class ClassDb extends BaseDb {
     setTitle(action) {
       this.title = action.text
     },
+    ...STYLE_ACTION_HANDLERS,
   }
 
   protected parseClassAction(payload: ClassActionPayloads['addClass']): TClass {
@@ -184,6 +187,8 @@ export class ClassDb extends BaseDb {
       }
     }
     const label = payload.label || name
+
+    const itemId = `class-${fullName}`
     return {
       ...payload,
       name,
@@ -192,6 +197,7 @@ export class ClassDb extends BaseDb {
       members,
       annotation,
       label,
+      itemId,
     }
   }
 

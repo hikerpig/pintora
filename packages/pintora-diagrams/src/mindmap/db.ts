@@ -2,6 +2,7 @@ import { makeIdCounter } from '@pintora/core'
 import { BaseDb } from '../util/base-db'
 import { BaseDiagramIR } from '../util/ir'
 import { OverrideConfigAction, ParamAction, SetTitleAction } from '../util/config'
+import { STYLE_ACTION_HANDLERS, type StylePayloads } from '../util/style-engine/parser'
 
 export type LevelNotation = {
   depth: number
@@ -14,6 +15,7 @@ export type MMItem = {
   parent?: string
   isReverse: boolean
   children: string[]
+  itemId?: string
 }
 
 export interface IMMDataTree {
@@ -101,12 +103,14 @@ export type ApplyPart =
   | ParamAction
   | OverrideConfigAction
   | SetTitleAction
+  | ({ type: 'bindClass' } & StylePayloads['bindClass'])
   | {
       type: 'addItem'
       depth: number
       label: string
       isReverse?: boolean
     }
+  | ({ type: 'bindClass' } & StylePayloads['bindClass'])
 
 export type MindmapIR = BaseDiagramIR & {
   trees: IMMDataTree[]
@@ -137,6 +141,7 @@ class MindmapDb extends BaseDb {
   }
 
   private addItem(item: Omit<MMItem, 'parent'>) {
+    item.itemId = `node-${item.label}`
     if (!this.currentTree || item.depth === 1) {
       this.currentTree = MMTree.fromRootItem(item)
       this.trees.push(this.currentTree)
@@ -167,6 +172,10 @@ class MindmapDb extends BaseDb {
       }
       case 'overrideConfig': {
         this.addOverrideConfig(part)
+        break
+      }
+      case 'bindClass': {
+        STYLE_ACTION_HANDLERS.bindClass.call(this, part)
         break
       }
     }

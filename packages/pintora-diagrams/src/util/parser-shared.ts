@@ -81,3 +81,7 @@ export function flatten(list) {
 
   return walk(list)
 }
+
+export const BIND_REGEXPS = {
+  BIND_CLASS: /@bindClass/,
+}

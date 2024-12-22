@@ -20,3 +20,8 @@ export class StyleRule {
   selector: StyleSelector
   attrs: Partial<StylableAttrs>
 }
+
+export class BindRule {
+  nodes: string[]
+  className: string
+}

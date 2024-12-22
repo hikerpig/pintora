@@ -5,6 +5,7 @@
 @include "whitespace.ne"
 @include "config.ne"
 @include "comment.ne"
+@include "bind.ne"
 
 @{%
 import * as moo from '@hikerpig/moo'
@@ -16,6 +17,7 @@ import {
   QUOTED_WORD_REGEXP,
   MOO_NEWLINE,
   getQuotedWord,
+  BIND_REGEXPS,
 } from '../../util/parser-shared'
 import type { ErDb, Attribute } from '../db'
 
@@ -36,6 +38,7 @@ let lexer = moo.compile({
   PARAM_DIRECTIVE: /@param/, // for config.ne
   COMMENT_LINE: COMMENT_LINE_REGEXP,
   CONFIG_DIRECTIVE,
+  ...BIND_REGEXPS,
   VALID_TEXT: { match: VALID_TEXT_REGEXP, fallback: true },
 })
 
@@ -82,7 +85,6 @@ statement ->
   | entityName "{" "}" %NL {% (d) => yy.addEntity(d[0]) %}
   | entityName %WS:* %NL {% (d) => yy.addEntity(d[0]) %}
   | titleStatement
-
   | paramStatement %WS:* %NL {%
       function(d) {
         const { type, ...styleParam } = d[0]
@@ -92,6 +94,11 @@ statement ->
   | configStatement %WS:* %NL {%
       function(d) {
         yy.addOverrideConfig(d[0])
+      }
+    %}
+  | bindClassStatement %NL {%
+      function(d) {
+        yy.bindClass(d[0])
       }
     %}
   | comment %NL
@@ -119,7 +126,6 @@ attribute ->
         const comment = d[4] ? getQuotedWord(d[4]): ''
         return { attributeType: d[0], attributeName: d[2], comment } }
       %}
-
 
 attributeType -> %VALID_TEXT {% (d) => tv(d[0]) %}
 

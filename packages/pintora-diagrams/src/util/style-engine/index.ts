@@ -1,6 +1,6 @@
-import { MarkAttrs, type GraphicsIR, type Mark, type MarkType, type MarkTypeMap } from '@pintora/core'
+import { MarkAttrs, type Mark, type MarkType, type MarkTypeMap } from '@pintora/core'
 
-import { StylableAttrKey, StyleRule } from './shared'
+import { StylableAttrKey, StyleRule, type BindRule } from './shared'
 
 /**
  * text mark applicable style -> attr mapping
@@ -22,16 +22,39 @@ const RECT_MARK_STYLE_MAP: Partial<Record<StylableAttrKey, keyof MarkAttrs>> = {
   opacity: 'opacity',
 }
 
+type ApplyOptions = {
+  styleRules?: StyleRule[]
+  bindRules?: BindRule[]
+}
+
 export class StyleEngine {
-  apply(rootMark: Mark, rules: StyleRule[] | undefined) {
+  apply(rootMark: Mark, opts: ApplyOptions) {
+    const rules = opts.styleRules
+    const bindRules = opts.bindRules
     if (!rules) return rootMark
     const actions = {}
     const classRules = rules.filter(rule => rule.selector.type === 'class')
     const idRules = rules.filter(rule => rule.selector.type === 'id')
+    const bindRulesGroupById = (bindRules || []).reduce(
+      (acc, bindRule) => {
+        for (const nodeId of bindRule.nodes) {
+          if (!acc[nodeId]) {
+            acc[nodeId] = []
+          }
+          acc[nodeId].push(bindRule.className)
+        }
+        return acc
+      },
+      {} as Record<string, string[]>,
+    )
     traverseMark(
       rootMark,
       {
         default: (mark, actions) => {
+          if (mark.itemId && bindRulesGroupById[mark.itemId]) {
+            mark.class = (mark.class ? mark.class + ' ' : '') + bindRulesGroupById[mark.itemId].join(' ')
+          }
+
           if (classRules.length && mark.class) {
             const classes = mark.class ? mark.class.split(' ') : []
             classes.forEach(className => {
@@ -79,6 +102,8 @@ export class StyleEngine {
     )
   }
 }
+
+export const styleEngine = new StyleEngine()
 
 type Visitor<T extends Mark, Actions = unknown> = {
   enter(mark: T, actions?: Actions): boolean | void

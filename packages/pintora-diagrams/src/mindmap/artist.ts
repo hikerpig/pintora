@@ -1,31 +1,31 @@
 import {
-  IDiagramArtist,
-  Group,
+  Bounds,
   calculateTextDimensions,
   getPositionOfRect,
-  PositionV,
-  PositionH,
-  Bounds,
-  Point,
+  Group,
   IFont,
+  Point,
+  PositionH,
+  PositionV,
 } from '@pintora/core'
-import { MindmapIR, MMItem, MMTree } from './db'
-import { MindmapConf, getConf } from './config'
 import { createLayoutGraph, isGraphVertical, LayoutEdge, LayoutGraph, LayoutNode } from '../util/graph'
+import { getConf, MindmapConf } from './config'
+import { MindmapIR, MMItem, MMTree } from './db'
 
-import { makeMark, makeEmptyGroup, adjustRootMarkBounds, DiagramTitleMaker } from '../util/artist-util'
-import { getPointsLinearPath } from '../util/line-util'
-import db from './db'
-import { makeBounds, positionGroupContents, TRANSFORM_GRAPH } from '../util/mark-positioner'
-import { isDev } from '../util/env'
+import { adjustRootMarkBounds, DiagramTitleMaker, makeEmptyGroup, makeMark } from '../util/artist-util'
+import { BaseArtist } from '../util/base-artist'
 import { DagreWrapper } from '../util/dagre-wrapper'
+import { isDev } from '../util/env'
 import { getFontConfig } from '../util/font-config'
+import { getPointsLinearPath } from '../util/line-util'
+import { makeBounds, positionGroupContents, TRANSFORM_GRAPH } from '../util/mark-positioner'
+import db from './db'
 
 let conf: MindmapConf
 let mmDraw: MMDraw
 
-const mmArtist: IDiagramArtist<MindmapIR, MindmapConf> = {
-  draw(ir, config, opts?) {
+class MindmapArtist extends BaseArtist<MindmapIR, MindmapConf> {
+  customDraw(ir, config, opts?) {
     conf = Object.assign(getConf(ir), config || {})
     mmDraw = new MMDraw(ir)
     const fontConfig = getFontConfig(conf)
@@ -69,8 +69,10 @@ const mmArtist: IDiagramArtist<MindmapIR, MindmapConf> = {
       height,
       mark: rootMark,
     }
-  },
+  }
 }
+
+const mmArtist = new MindmapArtist()
 
 type EdgeData = LayoutEdge<{
   label?: string
@@ -135,6 +137,7 @@ class MMDraw {
 
     const group = makeEmptyGroup()
     group.class = 'mindmap__node'
+    group.itemId = node.itemId
 
     const padding = Math.ceil(fontSize * 0.75)
     const rectWidth = labelDim.width + padding * 2

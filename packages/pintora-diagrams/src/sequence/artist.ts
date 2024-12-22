@@ -4,7 +4,6 @@ import {
   GSymbol,
   GraphicsIR,
   Group,
-  IDiagramArtist,
   ITheme,
   Line,
   Mark,
@@ -35,6 +34,7 @@ import { ActivationData, LoopModel, MessageModel, SequenceDiagramBounds } from '
 import { SequenceConf, getConf } from './config'
 import { LINETYPE, Message, PLACEMENT, ParticipantBox, SequenceDiagramIR, WrappedText, db } from './db'
 import { getFontConfig } from '../util/font-config'
+import { BaseArtist } from '../util/base-artist'
 
 let conf: EnhancedConf<SequenceConf>
 let theme: ITheme
@@ -63,8 +63,8 @@ export type SequenceArtistContext = {
 
 const SHOW_NUMBER_CIRCLE_RADIUS = 8
 
-const sequenceArtist: IDiagramArtist<SequenceDiagramIR, SequenceConf> = {
-  draw(ir, config?, opts?) {
+class SequenceArtist extends BaseArtist<SequenceDiagramIR, SequenceConf> {
+  customDraw(ir: SequenceDiagramIR, config?: SequenceConf, opts?: any) {
     // console.log('[draw]', ir, config)
     conf = getConf(ir, config)
     theme = conf.themeConfig.themeVariables
@@ -110,7 +110,7 @@ const sequenceArtist: IDiagramArtist<SequenceDiagramIR, SequenceConf> = {
       {},
       {
         children: [],
-        class: 'activations',
+        class: 'sequence__activations',
       },
     )
     // push this group early so it won't lay on top of other messages
@@ -279,8 +279,9 @@ const sequenceArtist: IDiagramArtist<SequenceDiagramIR, SequenceConf> = {
     }
 
     return graphicsIR
-  },
+  }
 }
+const sequenceArtist = new SequenceArtist()
 
 type OnBoundsFinishCallback = (opts: { bounds: SequenceDiagramBounds }) => void
 
@@ -698,7 +699,7 @@ const drawMessage = function (msgModel: MessageModel): DrawResult<Group> {
       x2: stopx,
       y2: lineEndy,
     })
-    lineMark = makeMark('path', lineAttrs as any, { class: 'message__line', itemId })
+    lineMark = makeMark('path', lineAttrs as any, { class: 'sequence__message__line', itemId })
 
     safeAssign(tAttrs, {
       x: startx,
@@ -720,7 +721,7 @@ const drawMessage = function (msgModel: MessageModel): DrawResult<Group> {
     lineMark = {
       type: 'line',
       attrs: lineAttrs,
-      class: 'message__line',
+      class: 'sequence__message__line',
       itemId,
     }
     model.insert(startx, lineStarty - 10, stopx, lineStarty)
@@ -781,7 +782,7 @@ const drawMessage = function (msgModel: MessageModel): DrawResult<Group> {
         fill: conf.actorBackground,
         fontWeight: 'bold',
       },
-      { class: 'sequence-number' },
+      { class: 'sequence__number' },
     )
     const circleColor = conf.actorBorderColor
     const circleMark = makeMark('marker', {
@@ -809,7 +810,7 @@ const drawMessage = function (msgModel: MessageModel): DrawResult<Group> {
   return {
     mark: {
       type: 'group',
-      class: 'message',
+      class: 'sequence__message',
       itemId,
       children: compact([
         lineMark,
@@ -817,7 +818,7 @@ const drawMessage = function (msgModel: MessageModel): DrawResult<Group> {
         {
           type: 'text',
           attrs: tAttrs,
-          class: 'message__text',
+          class: 'sequence__message__text',
         },
         numberMark,
       ]),
@@ -870,7 +871,7 @@ const drawNoteTo = function (noteModel: NoteModel, container: Group) {
   model.insert(noteModel.startx, noteModel.starty, noteModel.stopx, noteModel.stopy)
   const mark: Group = {
     type: 'group',
-    class: 'note',
+    class: 'note sequence__note',
     children: [noteRect, textMark],
   }
   container.children.push(mark)
@@ -915,7 +916,7 @@ export const drawActors = function (rootMark: Group, ir: SequenceDiagramIR, opts
     const participantBox = boxInfo?.participantBox
     const actorMark: Group = {
       type: 'group',
-      class: 'actor',
+      class: 'sequence__actor',
       children: [],
       itemId: actor.itemId,
     }
@@ -998,7 +999,7 @@ export const drawActors = function (rootMark: Group, ir: SequenceDiagramIR, opts
     if (!isMirror) {
       lineMark = {
         type: 'line',
-        class: 'actor__line',
+        class: 'sequence__actor__line',
         attrs: {
           x1: actorCenter.x,
           x2: actorCenter.x,
@@ -1097,7 +1098,7 @@ function drawActivationTo(mark: Group, data: ActivationData) {
   })
   const rect: Rect = {
     type: 'rect',
-    class: 'activation',
+    class: 'sequence__activation',
     attrs: rectAttrs,
   }
   mark.children.push(rect)

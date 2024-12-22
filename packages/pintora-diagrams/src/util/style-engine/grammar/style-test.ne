@@ -5,6 +5,7 @@
 @include "config.ne"
 @include "comment.ne"
 @include "style.ne"
+@include "bind.ne"
 
 @{%
 // shared-grammars/style.ne is used as a sub-grammar that need to be imported into actual grammars,
@@ -18,6 +19,7 @@ import {
   L_PAREN_REGEXP,
   R_PAREN_REGEXP,
   MOO_NEWLINE,
+  BIND_REGEXPS,
 } from '../../parser-shared'
 
 const COMMON_TOKEN_RULES = {
@@ -32,6 +34,7 @@ let lexer = moo.states({
     SEMICOLON: /;/,
     COLON: /:/,
     COMMA: /,/,
+    ...BIND_REGEXPS,
     L_PAREN: L_PAREN_REGEXP,
     R_PAREN: R_PAREN_REGEXP,
     L_BRACKET: { match: /\{/ },
@@ -68,4 +71,5 @@ line ->
 
 statement ->
     styleStatement
+  | bindClassStatement
   | comment _ %NL {% null %}

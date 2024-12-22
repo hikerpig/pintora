@@ -1,6 +1,7 @@
 import { BaseDb } from '../util/base-db'
 import { BaseDiagramIR } from '../util/ir'
 import { OverrideConfigAction, ParamAction, SetTitleAction } from '../util/config'
+import { STYLE_ACTION_HANDLERS, type StylePayloads } from '../util/style-engine/parser'
 
 type Component = {
   name: string
@@ -8,12 +9,14 @@ type Component = {
   isGroup?: boolean
   children?: UMLElement[]
   parent?: string
+  itemId: string
 }
 
 type Interface = {
   name: string
   label?: string
   parent?: string
+  itemId: string
 }
 
 /** element group */
@@ -23,6 +26,7 @@ type CGroup = {
   label?: string
   children: UMLElement[]
   parent?: string
+  itemId: string
 }
 
 type ElementType = 'component' | 'interface' | 'group'
@@ -67,6 +71,9 @@ type ApplyPart =
       children: UMLElement[]
     }
   | SetTitleAction
+  | ({
+      type: 'bindClass'
+    } & StylePayloads['bindClass'])
 
 export type ComponentDiagramIR = BaseDiagramIR & {
   components: Record<string, Component>
@@ -95,25 +102,30 @@ class ComponentDb extends BaseDb {
     if (this.components[name]) return
     // console.log(`[db] Add component: ${name}`, comp);
     this.components[name] = comp
-    this.aliases[name] = comp
+    this.onNodeAdd(comp)
   }
 
   addInterface(name: string, interf: Interface) {
     if (this.interfaces[name]) return
     // console.log(`[db] Add interface: ${name}`, interf);
     this.interfaces[name] = interf
-    this.aliases[name] = interf
+    this.onNodeAdd(interf)
   }
 
   addGroup(name: string, group: CGroup) {
     if (this.groups[name]) return
     this.groups[name] = group
-    this.aliases[name] = group
+    this.onNodeAdd(group)
   }
 
   addRelationship(r: Relationship) {
     // console.log(`[db] Add relationship: `, r);
     this.relationships.push(r)
+  }
+
+  protected onNodeAdd(node: Component | Interface | CGroup) {
+    node.itemId = `node-${node.name}`
+    this.aliases[node.name] = node
   }
 
   apply(part: ApplyPart | ApplyPart[]) {
@@ -133,6 +145,10 @@ class ComponentDb extends BaseDb {
       }
       case 'setTitle': {
         this.title = part.text
+        break
+      }
+      case 'bindClass': {
+        STYLE_ACTION_HANDLERS.bindClass.call(this, part)
         break
       }
       default: {

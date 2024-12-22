@@ -16,4 +16,15 @@ describe('style engine parser', () => {
     const result = StyleParse.parse(example)
     expect(result).toMatchSnapshot()
   })
+
+  it('can parse bindClass', () => {
+    const example = stripStartEmptyLines(`
+    @bindClass e1,e2 test-class
+    `)
+    const result = StyleParse.parse(example)
+    expect(result.bindRules[0]).toMatchObject({
+      nodes: ['e1', 'e2'],
+      className: 'test-class',
+    })
+  })
 })

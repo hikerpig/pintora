@@ -3,6 +3,7 @@
 @include "whitespace.ne"
 @include "config.ne"
 @include "comment.ne"
+@include "bind.ne"
 
 @{%
 import * as moo from '@hikerpig/moo'
@@ -15,6 +16,7 @@ import {
   R_PAREN_REGEXP,
   configLexerMainState,
   configLexerconfigStatementState,
+  BIND_REGEXPS,
 } from '../../util/parser-shared'
 
 import type { ApplyPart } from '../db'
@@ -27,9 +29,6 @@ let lexer = moo.states({
   main: {
     NL: MOO_NEWLINE,
     WS: { match: / +/, lineBreaks: false },
-    ASTERISKS: /\*+/,
-    PLUS: /\++/,
-    MINUS: /\-+/,
     SEMICOLON: /;/,
     COLON: /:/,
     PARAM_DIRECTIVE,
@@ -37,6 +36,7 @@ let lexer = moo.states({
     L_PAREN: L_PAREN_REGEXP,
     R_PAREN: R_PAREN_REGEXP,
     COMMENT_LINE: COMMENT_LINE_REGEXP,
+    ...BIND_REGEXPS,
     ...COMMON_TOKEN_RULES,
   },
   configStatement: {
@@ -44,6 +44,23 @@ let lexer = moo.states({
     ...COMMON_TOKEN_RULES,
   },
 })
+
+const parseNotation = (text) => {
+  let char = text[0]
+  const isReverse = char === '-'
+  if (char === '+' || char === '*' || char === '-') {
+    let i = 1
+    let depth = 1
+    while (i < text.length && text[i] === char) {
+      i += 1
+      depth += 1
+    }
+    if (i < text.length && text[i] !== ' ') {
+      throw new Error(`Unrecognized notation: ${text}`)
+    }
+    return { depth, text: text.slice(0, depth), isReverse }
+  }
+}
 %}
 
 start -> __ start
@@ -63,48 +80,28 @@ line ->
 	| %WS:* %NL
 
 statement ->
-    levelNotation %WS words %NL {%
+    %VALID_TEXT %WS words %NL {%
       function(d) {
         const label = d[2]
-        // console.log('singleline', label)
-        const notation = d[0]
-        return { type: 'addItem', label, depth: d[0].depth, isReverse: notation.isReverse } as ApplyPart
+        const notation = parseNotation(tv(d[0]))
+
+        return { type: 'addItem', label, depth: notation.depth, isReverse: notation.isReverse } as ApplyPart
       }
     %}
-  | levelNotation %WS %COLON multilineText %SEMICOLON %WS:? %NL {%
+  | %VALID_TEXT %WS %COLON multilineText %SEMICOLON %WS:? %NL {%
       function(d) {
         const label = d[3]
-        const notation = d[0]
+        const notation = parseNotation(tv(d[0]))
         return { type: 'addItem', label, depth: notation.depth, isReverse: notation.isReverse } as ApplyPart
       }
     %}
   | paramStatement _ %NL
   | configOpenCloseStatement _ %NL
   | "title" %COLON words %NL {% (d) => ({ type:'setTitle', text: d[2].trim() }) %}
+  | bindClassStatement
   | comment _ %NL
 
-levelNotation ->
-    (%ASTERISKS | %PLUS) {%
-      function(d) {
-        const text = tv(d[0][0])
-        return {
-          depth: text.length,
-          text,
-        }
-      }
-    %}
-  | %MINUS {%
-      function(d) {
-        const text = tv(d[0])
-        return {
-          depth: text.length,
-          text,
-          isReverse: true
-        }
-      }
-    %}
-
-textSegment -> %VALID_TEXT | %ASTERISKS | %PLUS | %MINUS | %WS {%
+textSegment -> %VALID_TEXT | %WS {%
       function(d) {
         const c = d[0]
         return typeof c === 'string' ? c : tv(c)

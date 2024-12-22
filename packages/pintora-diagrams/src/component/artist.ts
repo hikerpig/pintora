@@ -36,6 +36,7 @@ import { makeBounds, tryExpandBounds } from '../util/mark-positioner'
 import { getPointsCurvePath, getPointsLinearPath } from '../util/line-util'
 import { DagreWrapper } from '../util/dagre-wrapper'
 import { getFontConfig } from '../util/font-config'
+import { BaseArtist } from '../util/base-artist'
 
 let conf: ComponentConf
 let fontConfig: IFont
@@ -57,8 +58,8 @@ type EdgeData = {
   labelSize?: TSize
 }
 
-const componentArtist: IDiagramArtist<ComponentDiagramIR, ComponentConf> = {
-  draw(ir, config, opts?) {
+class ComponentArtist extends BaseArtist<ComponentDiagramIR, ComponentConf> {
+  customDraw(ir, config, opts?) {
     // console.info('[artist] component', ir)
     conf = getConf(ir, config)
     fontConfig = getFontConfig(conf)
@@ -121,13 +122,15 @@ const componentArtist: IDiagramArtist<ComponentDiagramIR, ComponentConf> = {
       width,
       height,
     } as GraphicsIR
-  },
+  }
 }
+const componentArtist = new ComponentArtist()
 
 function drawComponentsTo(parentMark: Group, ir: ComponentDiagramIR, g: LayoutGraph) {
   const groups: Group[] = []
   for (const component of Object.values(ir.components)) {
     const id = component.name
+    const itemId = component.itemId
     const label = component.label || component.name
     const componentLabelDims = calculateTextDimensions(label || '', fontConfig)
     const compWidth = Math.round(componentLabelDims.width + conf.componentPadding * 2)
@@ -158,6 +161,7 @@ function drawComponentsTo(parentMark: Group, ir: ComponentDiagramIR, g: LayoutGr
       {
         children: [rectMark, textMark],
         class: 'component__component',
+        itemId,
       },
     )
     groups.push(group)
@@ -180,6 +184,7 @@ function drawInterfacesTo(parentMark: Group, ir: ComponentDiagramIR, g: LayoutGr
   const groups: Group[] = []
   for (const interf of Object.values(ir.interfaces)) {
     const id = interf.name
+    const itemId = interf.itemId
     const label = interf.label || interf.name
     const labelDims = calculateTextDimensions(label, fontConfig)
     const interfaceSize = conf.interfaceSize
@@ -209,6 +214,7 @@ function drawInterfacesTo(parentMark: Group, ir: ComponentDiagramIR, g: LayoutGr
       {
         children: [circleMark, textMark],
         class: 'component__group',
+        itemId,
       },
     )
     groups.push(group)
@@ -241,6 +247,7 @@ function drawInterfacesTo(parentMark: Group, ir: ComponentDiagramIR, g: LayoutGr
 function drawGroupsTo(parentMark: Group, ir: ComponentDiagramIR, g: LayoutGraph) {
   for (const cGroup of Object.values(ir.groups)) {
     const groupId = cGroup.name
+    const itemId = cGroup.itemId
     const groupType = cGroup.groupType
     // console.log('[draw] group', cGroup)
 
@@ -375,6 +382,7 @@ function drawGroupsTo(parentMark: Group, ir: ComponentDiagramIR, g: LayoutGraph)
       {},
       {
         children: compact([labelMark, typeMark]),
+        itemId,
       },
     )
     parentMark.children.unshift(group)

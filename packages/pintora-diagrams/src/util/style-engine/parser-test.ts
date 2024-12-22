@@ -1,8 +1,8 @@
-import { type ActionHandler, type MakeAction } from '../base-db'
+import { BaseDb, type MakeAction } from '../base-db'
 import { genParserWithRules } from '../parser-util'
-import { StyleRule, type StyleSelector } from './shared'
+import { BindRule, StyleRule, type StyleSelector } from './shared'
 import grammar from './grammar/style-test'
-import { StylePayloads, IStyleDb } from './parser'
+import { StylePayloads, STYLE_ACTION_HANDLERS } from './parser'
 
 const parseFn = genParserWithRules(grammar, {
   dedupeAmbigousResults: true,
@@ -20,29 +20,12 @@ export type Action = MakeAction<StylePayloads>
 
 export type StyleData = {
   styleRules: StyleRule[]
+  bindRules: BindRule[]
 }
 
-export const STYLE_ACTION_HANDLERS: {
-  [K in keyof StylePayloads]: ActionHandler<StylePayloads, IStyleDb, K>
-} = {
-  style(action) {
-    // 处理添加样式的逻辑
-    const rules: StyleRule[] = []
-    action.rules.forEach(rule => {
-      rules.push({
-        selector: rule.selector,
-        attrs: rule.attrs.reduce((previous, current) => {
-          previous[current.key] = current.value
-          return previous
-        }, {}),
-      })
-    })
-    this.styleRules.push(...rules)
-  },
-}
-
-export class StyleDb {
+export class StyleDb extends BaseDb {
   styleRules: StyleRule[] = []
+  bindRules: BindRule[] = []
 
   private ACTION_HANDLERS = STYLE_ACTION_HANDLERS
 
@@ -57,10 +40,8 @@ export class StyleDb {
     }
   }
 
-  getData(): StyleData {
-    return {
-      styleRules: this.styleRules,
-    }
+  getData() {
+    return this.getBaseDiagramIR()
   }
 }
 

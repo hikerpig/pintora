@@ -74,7 +74,7 @@ componentDiagram
       },
     })
     expect(ir.interfaces).toEqual({
-      renderer: { type: 'interface', name: 'renderer', parent: '@pintora/renderer' },
+      renderer: { type: 'interface', name: 'renderer', parent: '@pintora/renderer', itemId: 'node-renderer' },
     })
     expect(ir.groups).toMatchObject({
       GroupExample: {

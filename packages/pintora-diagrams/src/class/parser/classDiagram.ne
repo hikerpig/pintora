@@ -4,6 +4,7 @@
 @include "whitespace.ne"
 @include "config.ne"
 @include "comment.ne"
+@include "bind.ne"
 
 @{%
 import * as moo from '@hikerpig/moo'
@@ -22,6 +23,7 @@ import {
   getQuotedWord,
   makeNth,
   flatten,
+  BIND_REGEXPS,
 } from '../../util/parser-shared'
 import type { Action } from '../db'
 import { Relation } from '../db'
@@ -61,6 +63,7 @@ let lexer = moo.states({
     _PLACEMENT,
     COMMENT_LINE: COMMENT_LINE_REGEXP,
     ...configLexerMainState,
+    ...BIND_REGEXPS,
     VALID_TEXT: { match: VALID_TEXT_REGEXP, fallback: true },
   },
   configStatement: {
@@ -119,6 +122,7 @@ statement ->
   | paramStatement %NL
   | configOpenCloseStatement %NL
   | comment %NL
+  | bindClassStatement
 
 classStatement ->
     "class" memberOrClassName %L_BRACKET %NL:? classMembers:? %NL:? %R_BRACKET %NL {%

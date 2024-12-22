@@ -1,5 +1,208 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`er-artist can parse and handle bindClass 1`] = `
+{
+  "mark": {
+    "attrs": {},
+    "children": [
+      {
+        "children": [],
+        "class": "er__relations",
+        "type": "group",
+      },
+      {
+        "attrs": {
+          "id": "e1",
+        },
+        "children": [
+          {
+            "attrs": {
+              "fill": "#fdb05e",
+              "radius": 2,
+              "stroke": "#3b4044",
+              "text": "",
+            },
+            "class": "er__entity-box",
+            "type": "rect",
+          },
+          {
+            "attrs": {
+              "fill": "#3b4044",
+              "fontFamily": "Source Code Pro, sans-serif",
+              "fontSize": 14,
+              "fontStyle": "normal",
+              "fontWeight": "bold",
+              "id": "entity-e1",
+              "text": "e1",
+              "textAlign": "center",
+              "textBaseline": "middle",
+            },
+            "class": "er__entity-label",
+            "type": "text",
+          },
+          {
+            "attrs": {},
+            "children": [
+              {
+                "attrs": {},
+                "children": [
+                  {
+                    "attrs": {
+                      "fill": "#fffbf9",
+                      "stroke": "#3b4044",
+                    },
+                    "type": "rect",
+                  },
+                  {
+                    "attrs": {
+                      "fill": "#3b4044",
+                      "fontFamily": "Source Code Pro, sans-serif",
+                      "fontSize": 11.9,
+                      "fontStyle": "normal",
+                      "fontWeight": "normal",
+                      "id": "entity-e1-attr-1-type",
+                      "text": "int",
+                      "textAlign": "left",
+                      "textBaseline": "middle",
+                    },
+                    "class": "er__entity-label",
+                    "type": "text",
+                  },
+                  {
+                    "attrs": {
+                      "fill": "#fffbf9",
+                      "stroke": "#3b4044",
+                    },
+                    "type": "rect",
+                  },
+                  {
+                    "attrs": {
+                      "fill": "#3b4044",
+                      "fontFamily": "Source Code Pro, sans-serif",
+                      "fontSize": 11.9,
+                      "fontStyle": "normal",
+                      "fontWeight": "normal",
+                      "id": "entity-e1-attr-1-name",
+                      "text": "age",
+                      "textAlign": "left",
+                      "textBaseline": "middle",
+                    },
+                    "class": "er__entity-label",
+                    "type": "text",
+                  },
+                ],
+                "type": "group",
+              },
+            ],
+            "type": "group",
+          },
+        ],
+        "class": "er__entity test-class",
+        "itemId": "entity-e1",
+        "type": "group",
+      },
+      {
+        "attrs": {
+          "id": "e2",
+        },
+        "children": [
+          {
+            "attrs": {
+              "fill": "#fdb05e",
+              "radius": 2,
+              "stroke": "#3b4044",
+              "text": "",
+            },
+            "class": "er__entity-box",
+            "type": "rect",
+          },
+          {
+            "attrs": {
+              "fill": "#3b4044",
+              "fontFamily": "Source Code Pro, sans-serif",
+              "fontSize": 14,
+              "fontStyle": "normal",
+              "fontWeight": "bold",
+              "id": "entity-e2",
+              "text": "e2",
+              "textAlign": "center",
+              "textBaseline": "middle",
+            },
+            "class": "er__entity-label",
+            "type": "text",
+          },
+          {
+            "attrs": {},
+            "children": [
+              {
+                "attrs": {},
+                "children": [
+                  {
+                    "attrs": {
+                      "fill": "#fffbf9",
+                      "stroke": "#3b4044",
+                    },
+                    "type": "rect",
+                  },
+                  {
+                    "attrs": {
+                      "fill": "#3b4044",
+                      "fontFamily": "Source Code Pro, sans-serif",
+                      "fontSize": 11.9,
+                      "fontStyle": "normal",
+                      "fontWeight": "normal",
+                      "id": "entity-e2-attr-1-type",
+                      "text": "string",
+                      "textAlign": "left",
+                      "textBaseline": "middle",
+                    },
+                    "class": "er__entity-label",
+                    "type": "text",
+                  },
+                  {
+                    "attrs": {
+                      "fill": "#fffbf9",
+                      "stroke": "#3b4044",
+                    },
+                    "type": "rect",
+                  },
+                  {
+                    "attrs": {
+                      "fill": "#3b4044",
+                      "fontFamily": "Source Code Pro, sans-serif",
+                      "fontSize": 11.9,
+                      "fontStyle": "normal",
+                      "fontWeight": "normal",
+                      "id": "entity-e2-attr-1-name",
+                      "text": "name",
+                      "textAlign": "left",
+                      "textBaseline": "middle",
+                    },
+                    "class": "er__entity-label",
+                    "type": "text",
+                  },
+                ],
+                "type": "group",
+              },
+            ],
+            "type": "group",
+          },
+        ],
+        "class": "er__entity",
+        "itemId": "entity-e2",
+        "type": "group",
+      },
+      {
+        "attrs": {},
+        "children": [],
+        "type": "group",
+      },
+    ],
+    "type": "group",
+  },
+}
+`;
+
 exports[`er-artist will draw inheritance 1`] = `
 {
   "mark": {
@@ -23,7 +226,6 @@ exports[`er-artist will draw inheritance 1`] = `
               "text": "",
             },
             "class": "er__entity-box",
-            "itemId": "entity-person",
             "type": "rect",
           },
           {
@@ -39,7 +241,6 @@ exports[`er-artist will draw inheritance 1`] = `
               "textBaseline": "middle",
             },
             "class": "er__entity-label",
-            "itemId": "entity-person",
             "type": "text",
           },
           {
@@ -146,11 +347,11 @@ exports[`er-artist will draw inheritance 1`] = `
                 "type": "group",
               },
             ],
-            "itemId": "entity-person",
             "type": "group",
           },
         ],
         "class": "er__entity",
+        "itemId": "entity-person",
         "type": "group",
       },
       {
@@ -166,7 +367,6 @@ exports[`er-artist will draw inheritance 1`] = `
               "text": "",
             },
             "class": "er__entity-box",
-            "itemId": "entity-customer",
             "type": "rect",
           },
           {
@@ -182,7 +382,6 @@ exports[`er-artist will draw inheritance 1`] = `
               "textBaseline": "middle",
             },
             "class": "er__entity-label",
-            "itemId": "entity-customer",
             "type": "text",
           },
           {
@@ -347,11 +546,11 @@ exports[`er-artist will draw inheritance 1`] = `
                 "type": "group",
               },
             ],
-            "itemId": "entity-customer",
             "type": "group",
           },
         ],
         "class": "er__entity",
+        "itemId": "entity-customer",
         "type": "group",
       },
       {
@@ -367,7 +566,6 @@ exports[`er-artist will draw inheritance 1`] = `
               "text": "",
             },
             "class": "er__entity-box",
-            "itemId": "entity-deliverer",
             "type": "rect",
           },
           {
@@ -383,17 +581,16 @@ exports[`er-artist will draw inheritance 1`] = `
               "textBaseline": "middle",
             },
             "class": "er__entity-label",
-            "itemId": "entity-deliverer",
             "type": "text",
           },
           {
             "attrs": {},
             "children": [],
-            "itemId": "entity-deliverer",
             "type": "group",
           },
         ],
         "class": "er__entity",
+        "itemId": "entity-deliverer",
         "type": "group",
       },
       {
