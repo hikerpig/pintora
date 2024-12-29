@@ -1,7 +1,6 @@
 import {
   getPointAt,
   Group,
-  IDiagramArtist,
   IFont,
   mat3,
   PathCommand,
