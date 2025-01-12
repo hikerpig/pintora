@@ -40,18 +40,18 @@
     "@pintora/core": "workspace:^0.8.0-alpha.0",
     "@pintora/renderer": "workspace:^0.8.0-alpha.0",
     "@pintora/standalone": "workspace:^0.8.0-alpha.0",
-    "canvas": "^2.11.2",
+    "canvas": "^3.0.1",
     "consola": "^3.0.0",
     "jsdom": "^25.0.0",
     "mime-types": "^2.1.31",
-    "yargs": "^16.2.0"
+    "yargs": "^17.7.2"
   },
   "devDependencies": {
     "@pintora/test-shared": "workspace:^0.5.2-alpha.0",
     "@types/jsdom": "^21.0.0",
     "@types/mime-types": "^2.1.0",
-    "@types/node": "^16.11.7",
-    "@types/yargs": "^16.0.0",
+    "@types/node": "^18.0.0",
+    "@types/yargs": "^17.0.33",
     "typescript": "^5.0.0"
   }
 }

@@ -29,8 +29,9 @@ type CliRenderArgs = {
   width?: number
 }
 
+// eslint-disable-next-line @typescript-eslint/no-unused-expressions
 yargs
-  .command({
+  .command<CliRenderArgs>({
     command: 'render',
     describe: 'Render DSL to diagram image',
     builder: {

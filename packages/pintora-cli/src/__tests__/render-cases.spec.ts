@@ -17,6 +17,6 @@ describe('render cases', () => {
       mimeType: PNG_MIME_TYPE,
     })
 
-    // console.log(svgString)
+    console.log(svgString)
   })
 })
