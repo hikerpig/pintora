@@ -34,7 +34,7 @@
     "buffer": "^6.0.3",
     "edge-runtime": "^4.0.0",
     "esbuild": "^0.24.0",
-    "esbuild-visualizer": "^0.6.0",
+    "esbuild-visualizer": "^0.7.0",
     "events": "^3.3.0",
     "fontkit": "^2.0.2",
     "ieee754": "^1.2.1",
