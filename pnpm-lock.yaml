@@ -479,8 +479,8 @@ importers:
         specifier: ^0.24.0
         version: 0.24.0
       esbuild-visualizer:
-        specifier: ^0.6.0
-        version: 0.6.0
+        specifier: ^0.7.0
+        version: 0.7.0
       events:
         specifier: ^3.3.0
         version: 3.3.0
@@ -4692,8 +4692,8 @@ packages:
     peerDependencies:
       esbuild: '>=0.8.50'
 
-  esbuild-visualizer@0.6.0:
-    resolution: {integrity: sha512-oNK3JAhC7+re93VTtUdWJKTDVnA2qXPAjCAoaw9OxEFUXztszw3kcaK46u1U790T8FdUBAWv6F9Xt59P8nJCVA==}
+  esbuild-visualizer@0.7.0:
+    resolution: {integrity: sha512-Vz22k+G2WT7GuCo7rbhaQwGbZ26lEhwzsctkEdQlu2SVrshoM4hzQeRpu/3DP596a9+9K2JyYsinuC6AC896Og==}
     engines: {node: '>=18'}
     hasBin: true
 
@@ -15027,10 +15027,10 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  esbuild-visualizer@0.6.0:
+  esbuild-visualizer@0.7.0:
     dependencies:
       open: 8.4.0
-      picomatch: 2.3.1
+      picomatch: 4.0.2
       yargs: 17.7.2
 
   esbuild@0.19.12:
