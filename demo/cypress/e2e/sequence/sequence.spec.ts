@@ -5,7 +5,7 @@ import { makeSnapshotCases, startRender } from '../test-utils/render'
 describe('Sequence Diagram', () => {
   it('renders', () => {
     const c = startRender({ code: EXAMPLES.sequence.code })
-    c.get('svg .actor').should('exist') // svg
+    c.get('svg .sequence__actor').should('exist') // svg
 
     cy.percySnapshot()
   })

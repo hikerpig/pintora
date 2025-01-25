@@ -93,7 +93,7 @@ export class ErDb extends BaseDb {
   protected addEntity(e: Entity) {
     if (this.entities[e.name]) {
       this.entities[e.name].attributes.push(...e.attributes)
-      return;
+      return
     }
     const itemId = `entity-${e.name}`
     const entity: Entity = {

@@ -1,6 +1,5 @@
 import {
   GraphicsIR,
-  IDiagramArtist,
   Text,
   Group,
   safeAssign,

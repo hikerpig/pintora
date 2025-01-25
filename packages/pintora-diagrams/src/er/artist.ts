@@ -28,7 +28,6 @@ import { BaseEdgeData, createLayoutGraph, getGraphSplinesOption, LayoutGraph } f
 import { getPointsCurvePath, getPointsLinearPath } from '../util/line-util'
 import { makeBounds, positionGroupContents, tryExpandBounds } from '../util/mark-positioner'
 import { toFixed } from '../util/number'
-import { styleEngine } from '../util/style-engine'
 import { getTextDimensionsInPresicion } from '../util/text'
 import { CELL_ORDER, CellName, drawMarkerTo, TableBuilder, TableCell, TableRow } from './artist-util'
 import { ErConf, getConf } from './config'

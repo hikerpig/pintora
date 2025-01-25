@@ -4,7 +4,6 @@ import { ConfigParam, type OverrideConfigAction } from '../config'
 import type { BaseDiagramIR } from '../ir'
 import { genParserWithRules } from '../parser-util'
 import grammar from './parser/preproccesor'
-import { StyleEngine } from '../style-engine'
 import { STYLE_ACTION_HANDLERS, type StylePayloads } from '../style-engine/parser'
 
 const parseFn = genParserWithRules(grammar, {

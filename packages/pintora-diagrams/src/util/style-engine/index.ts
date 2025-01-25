@@ -50,13 +50,13 @@ export class StyleEngine {
     traverseMark(
       rootMark,
       {
-        default: (mark, actions) => {
+        default: mark => {
           if (mark.itemId && bindRulesGroupById[mark.itemId]) {
             mark.class = (mark.class ? mark.class + ' ' : '') + bindRulesGroupById[mark.itemId].join(' ')
           }
 
           if (classRules.length && mark.class) {
-            const classes = mark.class ? mark.class.split(' ') : []
+            const classes = mark.class.split(' ')
             classes.forEach(className => {
               const rule = classRules.find(rule => rule.selector.target === className)
               if (rule) {
