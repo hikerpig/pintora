@@ -13,3 +13,7 @@
   flex-grow: 1;
   margin-left: 20px;
 }
+
+.App.dark-mode {
+  --bc: 100% 0 0;
+}
