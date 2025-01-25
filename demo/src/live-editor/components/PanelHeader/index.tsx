@@ -24,9 +24,9 @@ const PanelHeader = ({ title, tabs, currentTab, setCurrentTab, appendix }: Panel
     [tabs],
   )
   return (
-    <div className="PanelHeader flex bg-yellow-500">
+    <div className="PanelHeader flex">
       <div className="PanelHeader__title text-lg text-white">{title}</div>
-      <div className="tabs flex-grow px-4">
+      <div className="tabs tabs-bordered flex-grow flex px-4">
         {tabs &&
           tabs.map(tabItem => {
             return (

@@ -49,7 +49,7 @@ function EditorSpace(props: Props) {
   const previewHeaderSuffix = (
     <div>
       <button className="btn btn-primary btn-xs" onClick={onOpenPreviewPage}>
-        Open preview page
+        Open Preview Page
       </button>
     </div>
   )
