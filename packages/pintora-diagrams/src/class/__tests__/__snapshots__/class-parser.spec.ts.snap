@@ -5,6 +5,7 @@ exports[`class parser can parse class label 1`] = `
   "class1": {
     "annotation": "",
     "fullName": "class1",
+    "itemId": "class-class1",
     "label": "class1",
     "members": [
       {
@@ -34,10 +35,12 @@ exports[`class parser can parse class label 1`] = `
 
 exports[`class parser can parse methods and fields 1`] = `
 {
+  "bindRules": [],
   "classes": {
     "C1": {
       "annotation": "",
       "fullName": "C1",
+      "itemId": "class-C1",
       "label": "C1",
       "members": [
         {
@@ -72,6 +75,7 @@ exports[`class parser can parse methods and fields 1`] = `
   "notes": [],
   "overrideConfig": {},
   "relations": [],
+  "styleRules": [],
   "title": "",
 }
 `;

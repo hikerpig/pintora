@@ -40,4 +40,22 @@ describe('Preproccessor', () => {
       edgesep: 4,
     })
   })
+
+  it('can parse @style block', () => {
+    const example = stripStartEmptyLines(`
+@style {
+  #entity-CUSTOMER {
+    textColor: green;
+    borderColor: yellow;
+  }
+  .er__entity {
+    fontStyle: italic;
+  }
+}
+    `)
+    const preproccessor = new Preproccessor()
+    preproccessor.parse(example)
+    const result = preproccessor.getBaseDiagramIR()
+    expect(result.styleRules).toMatchSnapshot()
+  })
 })

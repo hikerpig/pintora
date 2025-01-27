@@ -15,6 +15,7 @@ export default [
       '@typescript-eslint/no-this-alias': 'warn',
       '@typescript-eslint/no-extra-semi': 'off',
       '@typescript-eslint/no-unused-vars': ['warn', { varsIgnorePattern: '^_' }],
+      '@typescript-eslint/ban-ts-comment': 'off',
       'unused-imports/no-unused-imports': 'error',
       'prefer-spread': 0,
       'prettier/prettier': 'warn',

@@ -4,6 +4,7 @@ const { compileGrammar } = require('@pintora/development-kit')
 
 const grammarFiles = [
   { input: 'src/util/preproccesor/parser/preproccesor.ne', output: 'src/util/preproccesor/parser/preproccesor.ts' },
+  { input: 'src/util/style-engine/grammar/style-test.ne', output: 'src/util/style-engine/grammar/style-test.ts' },
   { input: 'src/er/parser/erDiagram.ne', output: 'src/er/parser/erDiagram.ts' },
   { input: 'src/sequence/parser/sequenceDiagram.ne', output: 'src/sequence/parser/sequenceDiagram.ts' },
   { input: 'src/component/parser/componentDiagram.ne', output: 'src/component/parser/componentDiagram.ts' },

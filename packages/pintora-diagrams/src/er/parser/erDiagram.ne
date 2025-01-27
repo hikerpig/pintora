@@ -5,6 +5,7 @@
 @include "whitespace.ne"
 @include "config.ne"
 @include "comment.ne"
+@include "bind.ne"
 
 @{%
 import * as moo from '@hikerpig/moo'
@@ -16,6 +17,7 @@ import {
   QUOTED_WORD_REGEXP,
   MOO_NEWLINE,
   getQuotedWord,
+  BIND_REGEXPS,
 } from '../../util/parser-shared'
 import type { ErDb, Attribute } from '../db'
 
@@ -36,14 +38,10 @@ let lexer = moo.compile({
   PARAM_DIRECTIVE: /@param/, // for config.ne
   COMMENT_LINE: COMMENT_LINE_REGEXP,
   CONFIG_DIRECTIVE,
+  ...BIND_REGEXPS,
   VALID_TEXT: { match: VALID_TEXT_REGEXP, fallback: true },
 })
 
-let yy: ErDb
-
-export function setYY(v) {
-  yy = v
-}
 %}
 
 start -> __ start
@@ -59,41 +57,37 @@ line ->
 statement ->
     entityName %WS:* relSpec %WS:* entityName %COLON role %NL {%
       function(d) {
-        yy.addEntity(d[0]);
-        yy.addEntity(d[4]);
-        yy.addRelationship(d[0], d[6], d[4], d[2])
-      }
-    %}
-  | entityName %WS %INHERIT %WS entityName %WS:* %NL {% (d) => {
-      yy.addEntity(d[4])
-      yy.addEntity(d[0])
-      const sup = d[4]
-      const sub = d[0]
-      yy.addInheritance(sup, sub)
-    } %}
-  | entityName __ "{" __ attributes:? _ "}" %NL {%
-      function(d) {
-        yy.addEntity(d[0]);
-        if (d[4]) {
-          yy.addAttributes(d[0], d[4]);
+        return {
+          type: 'addRelationship',
+          entityA: d[0],
+          entityB: d[4],
+          relSpec: d[2],
+          roleA: d[6]
         }
       }
     %}
-  | entityName "{" "}" %NL {% (d) => yy.addEntity(d[0]) %}
-  | entityName %WS:* %NL {% (d) => yy.addEntity(d[0]) %}
+  | entityName %WS %INHERIT %WS entityName %WS:* %NL {% (d) => {
+      return {
+        type: 'addInheritance',
+        sup: d[4],
+        sub: d[0]
+      }
+    } %}
+  | entityName __ "{" __ attributes:? _ "}" %NL {%
+      function(d) {
+        return {
+          type: 'addEntity',
+          name: d[0],
+          attributes: d[4] || []
+        }
+      }
+    %}
+  | entityName "{" "}" %NL {% (d) => ({ type: 'addEntity', name: d[0] }) %}
+  | entityName %WS:* %NL {% (d) => ({ type: 'addEntity', name: d[0] }) %}
   | titleStatement
-
-  | paramStatement %WS:* %NL {%
-      function(d) {
-        const { type, ...styleParam } = d[0]
-        yy.addParam(styleParam)
-      }
-    %}
-  | configStatement %WS:* %NL {%
-      function(d) {
-        yy.addOverrideConfig(d[0])
-      }
-    %}
+  | paramStatement %WS:* %NL
+  | configStatement %WS:* %NL
+  | bindClassStatement
   | comment %NL
   | %NL
 
@@ -120,7 +114,6 @@ attribute ->
         return { attributeType: d[0], attributeName: d[2], comment } }
       %}
 
-
 attributeType -> %VALID_TEXT {% (d) => tv(d[0]) %}
 
 attributeName -> %VALID_TEXT {% (d) => tv(d[0]) %}
@@ -135,14 +128,14 @@ relSpec ->
       %}
 
 cardinality ->
-      %ZERO_OR_ONE                  {% (d) => yy.Cardinality.ZERO_OR_ONE %}
-    | %ZERO_OR_MORE                 {% (d) => yy.Cardinality.ZERO_OR_MORE %}
-    | %ONE_OR_MORE                  {% (d) => yy.Cardinality.ONE_OR_MORE %}
-    | %ONLY_ONE                     {% (d) => yy.Cardinality.ONLY_ONE %}
+      %ZERO_OR_ONE                  {% (d) => 'ZERO_OR_ONE' %}
+    | %ZERO_OR_MORE                 {% (d) => 'ZERO_OR_MORE' %}
+    | %ONE_OR_MORE                  {% (d) => 'ONE_OR_MORE' %}
+    | %ONLY_ONE                     {% (d) => 'ONLY_ONE' %}
 
 relType ->
-      %NON_IDENTIFYING              {% (d) => yy.Identification.NON_IDENTIFYING %}
-    | %IDENTIFYING                  {% (d) => yy.Identification.IDENTIFYING %}
+      %NON_IDENTIFYING              {% (d) => 'NON_IDENTIFYING' %}
+    | %IDENTIFYING                  {% (d) => 'IDENTIFYING' %}
 
 role ->
       %QUOTED_WORD {% (d) => {
@@ -151,7 +144,7 @@ role ->
     | %VALID_TEXT {% (d) => tv(d[0]) %}
 
 titleStatement ->
-	  "title" %COLON words %NL {% (d) => { yy.addTitle(d[2].trim()) } %}
+	  "title" %COLON words %NL {% (d) => ({ type: 'setTitle', text: d[2].trim() }) %}
 
 words ->
     (%VALID_TEXT | %WS):+ {%

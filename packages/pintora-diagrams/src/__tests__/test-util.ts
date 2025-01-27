@@ -22,7 +22,7 @@ export function testDraw(code: string, extraOptions: Partial<DiagramArtistOption
   if (!success) {
     throw Error('testDraw fail')
   }
-  return result
+  return result!
 }
 
 export function prepareDiagramConfig() {

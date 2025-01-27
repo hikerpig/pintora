@@ -45,4 +45,19 @@ describe('er-artist', () => {
     `
     expect(stripDrawResultForSnapshot(testDraw(code))).toMatchSnapshot()
   })
+
+  it('can parse and handle bindClass', () => {
+    const code = `
+    erDiagram
+    e1 {
+      int age
+    }
+    e2 {
+      string name
+    }
+
+    @bindClass entity-e1 test-class
+    `
+    expect(stripDrawResultForSnapshot(testDraw(code))).toMatchSnapshot()
+  })
 })

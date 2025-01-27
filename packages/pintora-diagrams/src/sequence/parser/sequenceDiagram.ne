@@ -5,6 +5,7 @@
 @include "whitespace.ne"
 @include "config.ne"
 @include "comment.ne"
+@include "bind.ne"
 
 @{%
 import * as moo from '@hikerpig/moo'
@@ -20,6 +21,7 @@ import {
   R_PAREN_REGEXP,
   MOO_NEWLINE,
   getQuotedWord,
+  BIND_REGEXPS,
 } from '../../util/parser-shared'
 import db, { ApplyParam } from '../db'
 
@@ -49,8 +51,6 @@ let lexer = moo.states({
     DOTTED_CROSS: /\-\-x/,
     SOLID_POINT: /\-[\)]/,
     DOTTED_POINT: /\-\-[\)]/,
-    PLUS: /\+/,
-    MINUS: /-/,
     COMMA: /,/,
     COLON: { match: /:/, push: 'line' },
     L_SQ_BRACKET: { match: /\[/ },
@@ -62,14 +62,15 @@ let lexer = moo.states({
     _PLACEMENT,
     COLOR: /#[a-zA-Z0-9]+/,
     COMMENT_LINE: COMMENT_LINE_REGEXP,
-    WORD: { match: VALID_TEXT_REGEXP, fallback: true },
+    ...BIND_REGEXPS,
+    VALID_TEXT: { match: VALID_TEXT_REGEXP, fallback: true },
   },
   line: {
     REST_OF_LINE: { match: /[^\n;]+/, pop: 1 },
   },
   configStatement: {
     ...configLexerconfigStatementState,
-    WORD: { match: VALID_TEXT_REGEXP, fallback: true },
+    VALID_TEXT: { match: VALID_TEXT_REGEXP, fallback: true },
   },
   noteState: {
     _PLACEMENT,
@@ -79,7 +80,7 @@ let lexer = moo.states({
     },
     NL: MOO_NEWLINE,
     COMMA: /,/,
-    WORD: { match: VALID_TEXT_REGEXP, fallback: true },
+    VALID_TEXT: { match: VALID_TEXT_REGEXP, fallback: true },
   }
 })
 
@@ -189,7 +190,7 @@ statement ->
         return result
       }
     %}
-  | "==" %WS (%WORD | %WS):+ %WS "==" _ %NL {%
+  | "==" %WS (%VALID_TEXT | %WS):+ %WS "==" _ %NL {%
       function(d) {
         const text = d[2].map(o => tv(o[0])).join('').trim()
         return { type: 'addDivider', text, signalType: yy.LINETYPE.DIVIDER }
@@ -198,12 +199,13 @@ statement ->
   | paramStatement %NL
   | configOpenCloseStatement %NL
   | comment %NL
+  | bindClassStatement
 
 participantWord ->
     "participant"
 
 classifiableActor ->
-    %L_SQ_BRACKET %L_AN_BRACKET %WORD %R_AN_BRACKET __ actor "]" {%
+    %L_SQ_BRACKET %L_AN_BRACKET %VALID_TEXT %R_AN_BRACKET __ actor "]" {%
       function(d) {
         const actor = d[5]
         actor.classifier = tv(d[2])
@@ -232,7 +234,7 @@ participantStatement ->
       }
     %}
 
-words -> (%WORD | %WS):+ {%
+words -> (%VALID_TEXT | %WS):+ {%
       function(d) {
         return d[0].map(a => a[0]).map(o => tv(o)).join('')
       }
@@ -249,36 +251,27 @@ signaltype ->
 	| %DOTTED_POINT      {% (d) => yy.LINETYPE.DOTTED_POINT %}
 
 signal ->
-	  actor signaltype (%PLUS | %MINUS) actor textWithColon {%
+	  actor signaltype actor textWithColon {%
       function(d) {
-        const toActor = d[3]
         const fromActor = d[0]
-        const activeMark = d[2][0]
+        const toActor = d[2]
         let activeAction
-        if (activeMark.type === 'MINUS') {
-          activeAction = {type: 'activeEnd', signalType: yy.LINETYPE.ACTIVE_END, actor: fromActor }
-        } else {
+        if (toActor.actor[0] === "+") {
           activeAction = { type: 'activeStart', signalType: yy.LINETYPE.ACTIVE_START, actor: toActor }
+          toActor.actor = toActor.actor.slice(1)
+        } else if (toActor.actor[0] === "-") {
+          activeAction = {type: 'activeEnd', signalType: yy.LINETYPE.ACTIVE_END, actor: fromActor }
+          toActor.actor = toActor.actor.slice(1)
         }
         return [
-          fromActor, toActor,
-          { type: 'addSignal', from: fromActor.actor, to: toActor.actor, signalType: d[1], msg: d[4] },
+          d[0], toActor,
+          {type: 'addSignal', from: fromActor.actor, to: toActor.actor, signalType: d[1], msg: d[3]},
           activeAction,
         ]
       }
     %}
-	| actor signaltype actor textWithColon {%
-      function(d) {
-        // console.log('got message', d)
-        const toActor = d[2]
-        return [
-          d[0], toActor,
-          {type: 'addSignal', from: d[0].actor, to: toActor.actor, signalType: d[1], msg: d[3]},
-        ]
-      }
-    %}
 
-actor -> %WORD {% (d) => {
+actor -> %VALID_TEXT {% (d) => {
   return ({ type: 'addActor', actor: tv(d[0]) })
 } %}
 
@@ -289,7 +282,7 @@ textWithColon -> %COLON _ %REST_OF_LINE {%
 %}
 
 multilineNoteText ->
-    (%WORD|%COMMA|%NL):* %END_NOTE {%
+    (%VALID_TEXT|%COMMA|%NL):* %END_NOTE {%
       function(d) {
         // console.log('[multiline text]', d)
         const v = d[0].map(l => {

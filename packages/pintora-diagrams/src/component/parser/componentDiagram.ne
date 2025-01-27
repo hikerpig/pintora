@@ -4,6 +4,7 @@
 @include "whitespace.ne"
 @include "config.ne"
 @include "comment.ne"
+@include "bind.ne"
 
 @{%
 import * as moo from '@hikerpig/moo'
@@ -16,6 +17,7 @@ import {
   configLexerconfigStatementState,
   MOO_NEWLINE,
   getQuotedWord,
+  BIND_REGEXPS,
 } from '../../util/parser-shared'
 
 const commonTopRules = {
@@ -24,6 +26,7 @@ const commonTopRules = {
   L_SQ_BRACKET: { match: /\[/ },
   R_SQ_BRACKET: { match: /\]/ },
   COMMENT_LINE: COMMENT_LINE_REGEXP,
+  ...BIND_REGEXPS,
 }
 
 const commonTextRules = {
@@ -83,6 +86,7 @@ statement ->
       }
     %}
   | paramStatement %NL
+  | bindClassStatement
   | "title" %COLON words %NL {% (d) => ({ type:'setTitle', text: d[2].trim() }) %}
   | configOpenCloseStatement %NL
   | comment %NL

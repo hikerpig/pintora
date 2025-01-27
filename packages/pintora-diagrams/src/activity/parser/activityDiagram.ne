@@ -4,6 +4,7 @@
 @include "whitespace.ne"
 @include "config.ne"
 @include "comment.ne"
+@include "bind.ne"
 
 @{%
 import * as moo from '@hikerpig/moo'
@@ -20,6 +21,7 @@ import {
   COLOR_REGEXP,
   MOO_NEWLINE,
   getQuotedWord,
+  BIND_REGEXPS,
 } from '../../util/parser-shared'
 import type { ApplyPart } from '../db'
 
@@ -47,6 +49,7 @@ let lexer = moo.states({
     },
     COMMENT_LINE: COMMENT_LINE_REGEXP,
     ...configLexerMainState,
+    ...BIND_REGEXPS,
     VALID_TEXT: { match: VALID_TEXT_REGEXP, fallback: true },
   },
   configStatement: {
@@ -63,12 +66,6 @@ let lexer = moo.states({
     WORD: { match: VALID_TEXT_REGEXP, fallback: true },
   }
 })
-
-let yy
-
-export function setYY(v) {
-  yy = v
-}
 
 function extractChildren(o) {
   return Array.isArray(o) ? o[0]: o
@@ -120,6 +117,7 @@ statement ->
   | titleStatement
   | paramStatement _ %NL
   | configStatement _ %NL
+  | bindClassStatement
   | comment _ %NL {% null %}
 
 conditionSentence ->

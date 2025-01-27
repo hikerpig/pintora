@@ -1,42 +1,43 @@
 import {
-  GraphicsIR,
-  IDiagramArtist,
-  Group,
-  Text,
-  mat3,
-  safeAssign,
   getPointAt,
-  Rect,
+  Group,
+  IFont,
+  mat3,
   PathCommand,
   Point,
-  IFont,
+  Rect,
+  safeAssign,
+  Text,
+  type DiagramArtistOptions,
+  type GraphicsIR,
 } from '@pintora/core'
-import { ErDiagramIR, Identification, Entity, Relationship } from './db'
-import { ErConf, getConf } from './config'
-import { BaseEdgeData, createLayoutGraph, LayoutGraph, getGraphSplinesOption } from '../util/graph'
 import {
-  makeMark,
-  getBaseText,
-  calcDirection,
-  makeLabelBg,
   adjustRootMarkBounds,
-  makeEmptyGroup,
-  makeTriangle,
+  calcDirection,
   DiagramTitleMaker,
+  getBaseText,
+  makeEmptyGroup,
+  makeLabelBg,
+  makeMark,
+  makeTriangle,
 } from '../util/artist-util'
-import { drawMarkerTo, CELL_ORDER, CellName, TableBuilder, TableCell, TableRow } from './artist-util'
-import { getPointsCurvePath, getPointsLinearPath } from '../util/line-util'
-import { makeBounds, positionGroupContents, tryExpandBounds } from '../util/mark-positioner'
 import { calcBound, updateBoundsByPoints } from '../util/bound'
-import { getTextDimensionsInPresicion } from '../util/text'
-import { toFixed } from '../util/number'
 import { DagreWrapper } from '../util/dagre-wrapper'
 import { getFontConfig } from '../util/font-config'
+import { BaseEdgeData, createLayoutGraph, getGraphSplinesOption, LayoutGraph } from '../util/graph'
+import { getPointsCurvePath, getPointsLinearPath } from '../util/line-util'
+import { makeBounds, positionGroupContents, tryExpandBounds } from '../util/mark-positioner'
+import { toFixed } from '../util/number'
+import { getTextDimensionsInPresicion } from '../util/text'
+import { CELL_ORDER, CellName, drawMarkerTo, TableBuilder, TableCell, TableRow } from './artist-util'
+import { ErConf, getConf } from './config'
+import { Entity, ErDiagramIR, Identification, Relationship } from './db'
+import { BaseArtist } from '../util/base-artist'
 
 let conf: ErConf
 
-const erArtist: IDiagramArtist<ErDiagramIR, ErConf> = {
-  draw(ir, config, opts) {
+class ErArtist extends BaseArtist<ErDiagramIR, ErConf> {
+  customDraw(ir: ErDiagramIR, config?: ErConf, opts?: DiagramArtistOptions): GraphicsIR {
     conf = getConf(ir)
     // Now we have to construct the diagram in a specific way:
     // ---
@@ -125,14 +126,14 @@ const erArtist: IDiagramArtist<ErDiagramIR, ErConf> = {
       containerSize: opts?.containerSize,
       ...titleResult,
     })
-
     return {
       mark: rootMark,
       width,
       height,
-    } as GraphicsIR
-  },
+    }
+  }
 }
+const erArtist = new ErArtist()
 
 /**
  * Draw attributes for an entity
@@ -333,7 +334,7 @@ const drawEntities = function (rootMark: Group, ir: ErDiagramIR, graph: LayoutGr
       {
         id,
       },
-      { children: [], class: 'er__entity' },
+      { children: [], class: 'er__entity', itemId },
     )
     groups.push(group)
 
@@ -355,7 +356,7 @@ const drawEntities = function (rootMark: Group, ir: ErDiagramIR, graph: LayoutGr
         fill: conf.textColor,
         ...fontConfig,
       },
-      { itemId, class: 'er__entity-label' },
+      { class: 'er__entity-label' },
     )
 
     // Draw the rectangle - insert it before the text so that the text is not obscured
@@ -369,7 +370,7 @@ const drawEntities = function (rootMark: Group, ir: ErDiagramIR, graph: LayoutGr
         y: 0,
         radius: conf.borderRadius,
       },
-      { itemId, class: 'er__entity-box' },
+      { class: 'er__entity-box' },
     )
     group.children.push(rectMark, textMark)
 
@@ -382,7 +383,6 @@ const drawEntities = function (rootMark: Group, ir: ErDiagramIR, graph: LayoutGr
       width: entityWidth,
       height: entityHeight,
     })
-    attributeGroup.itemId = itemId
 
     // Add the entity to the graph
     graph.setNode(id, {

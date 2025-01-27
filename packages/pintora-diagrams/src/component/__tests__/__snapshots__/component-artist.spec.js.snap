@@ -1,5 +1,47 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`component-artist can parse and handle bindClass 1`] = `
+{
+  "mark": {
+    "attrs": {},
+    "children": [
+      {
+        "attrs": {},
+        "children": [
+          {
+            "attrs": {
+              "fill": "#fdb05e",
+              "lineWidth": 1,
+              "radius": 4,
+              "stroke": "#3b4044",
+            },
+            "class": "component__component-rect",
+            "type": "rect",
+          },
+          {
+            "attrs": {
+              "fill": "#3b4044",
+              "fontFamily": "Source Code Pro, sans-serif",
+              "fontSize": 14,
+              "fontStyle": "normal",
+              "fontWeight": "normal",
+              "text": "comp1",
+              "textAlign": "center",
+              "textBaseline": "middle",
+            },
+            "type": "text",
+          },
+        ],
+        "class": "component__component test-class",
+        "itemId": "node-comp1",
+        "type": "group",
+      },
+    ],
+    "type": "group",
+  },
+}
+`;
+
 exports[`component-artist match example snapshot 1`] = `
 {
   "mark": {
@@ -45,6 +87,7 @@ exports[`component-artist match example snapshot 1`] = `
             "type": "text",
           },
         ],
+        "itemId": "node-@pintora/standalone",
         "type": "group",
       },
       {
@@ -87,6 +130,7 @@ exports[`component-artist match example snapshot 1`] = `
             "type": "text",
           },
         ],
+        "itemId": "node-@pintora/renderer",
         "type": "group",
       },
       {
@@ -129,6 +173,7 @@ exports[`component-artist match example snapshot 1`] = `
             "type": "text",
           },
         ],
+        "itemId": "node-@pintora/diagrams",
         "type": "group",
       },
       {
@@ -171,6 +216,7 @@ exports[`component-artist match example snapshot 1`] = `
             "type": "text",
           },
         ],
+        "itemId": "node-@pintora/core",
         "type": "group",
       },
       {
@@ -201,6 +247,7 @@ exports[`component-artist match example snapshot 1`] = `
           },
         ],
         "class": "component__component",
+        "itemId": "node-registry",
         "type": "group",
       },
       {
@@ -231,6 +278,7 @@ exports[`component-artist match example snapshot 1`] = `
           },
         ],
         "class": "component__component",
+        "itemId": "node-diagrams",
         "type": "group",
       },
       {
@@ -261,6 +309,7 @@ exports[`component-artist match example snapshot 1`] = `
           },
         ],
         "class": "component__component",
+        "itemId": "node-SVGRender",
         "type": "group",
       },
       {
@@ -291,6 +340,7 @@ exports[`component-artist match example snapshot 1`] = `
           },
         ],
         "class": "component__component",
+        "itemId": "node-CanvasRender",
         "type": "group",
       },
       {
@@ -321,6 +371,7 @@ exports[`component-artist match example snapshot 1`] = `
           },
         ],
         "class": "component__component",
+        "itemId": "node-standalone",
         "type": "group",
       },
       {
@@ -350,6 +401,7 @@ exports[`component-artist match example snapshot 1`] = `
           },
         ],
         "class": "component__group",
+        "itemId": "node-GraphicsIR",
         "type": "group",
       },
       {
@@ -379,6 +431,7 @@ exports[`component-artist match example snapshot 1`] = `
           },
         ],
         "class": "component__group",
+        "itemId": "node-IRenderer",
         "type": "group",
       },
       {
@@ -408,6 +461,7 @@ exports[`component-artist match example snapshot 1`] = `
           },
         ],
         "class": "component__group",
+        "itemId": "node-IDiagram",
         "type": "group",
       },
       {
@@ -437,6 +491,7 @@ exports[`component-artist match example snapshot 1`] = `
           },
         ],
         "class": "component__group",
+        "itemId": "node-renderFn",
         "type": "group",
       },
       {

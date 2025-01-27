@@ -4,7 +4,6 @@ import {
   ITheme,
   last,
   Line,
-  makeArtist,
   makeMark,
   movePointPosition,
   Rect,
@@ -33,9 +32,10 @@ import { getMedianPoint, getPointsCurvePath, getPointsLinearPath } from '../util
 import { makeBounds, positionGroupContents, tryExpandBounds } from '../util/mark-positioner'
 import { ClassConf, getConf } from './config'
 import { ClassIR, ClassRelation, Note, Relation, TClass } from './db'
+import { BaseArtist } from '../util/base-artist'
 
-const artist = makeArtist<ClassIR, ClassConf>({
-  draw(ir, config, opts) {
+class ClassArtist extends BaseArtist<ClassIR, ClassConf> {
+  customDraw(ir, config, opts) {
     const rootMark = makeEmptyGroup()
     const conf = getConf(ir, config)
 
@@ -66,9 +66,9 @@ const artist = makeArtist<ClassIR, ClassConf>({
       width,
       height,
     }
-  },
-})
-
+  }
+}
+const artist = new ClassArtist()
 class ClassDiagramDraw {
   dagreWrapper: DagreWrapper
   rootMark: Group
@@ -129,6 +129,7 @@ class ClassDiagramDraw {
     const markBuilder = new EntityMarkBuilder(this.dagreWrapper.g, this.conf)
     markBuilder.addHeader(classObj.fullName, classObj.annotation)
     this.markBuilder = markBuilder
+    markBuilder.group.itemId = classObj.itemId
 
     const fields = classObj.members.filter(m => !m.isMethod)
     const methods = classObj.members.filter(m => m.isMethod)
@@ -425,7 +426,9 @@ type RowConfig = {
  * Handles common logic of drawing an entity/class
  */
 class EntityMarkBuilder {
-  group: Group = makeEmptyGroup()
+  group: Group = Object.assign(makeEmptyGroup(), {
+    class: 'class__entity',
+  })
   rowPadding = 8
   /** y offset inside entity */
   curY = 0

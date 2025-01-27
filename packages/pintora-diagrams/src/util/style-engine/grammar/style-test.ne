@@ -5,20 +5,21 @@
 @include "config.ne"
 @include "comment.ne"
 @include "style.ne"
+@include "bind.ne"
 
 @{%
+// shared-grammars/style.ne is used as a sub-grammar that need to be imported into actual grammars,
+// this style-test.ne is used only for testing
 import * as moo from '@hikerpig/moo'
 import {
   tv,
-  textToCaseInsensitiveRegex,
   VALID_TEXT_REGEXP,
   COMMENT_LINE_REGEXP,
   QUOTED_WORD_REGEXP,
-  configLexerMainState,
-  configLexerconfigStatementState,
   L_PAREN_REGEXP,
   R_PAREN_REGEXP,
   MOO_NEWLINE,
+  BIND_REGEXPS,
 } from '../../parser-shared'
 
 const COMMON_TOKEN_RULES = {
@@ -32,24 +33,17 @@ let lexer = moo.states({
     QUOTED_WORD: QUOTED_WORD_REGEXP,
     SEMICOLON: /;/,
     COLON: /:/,
-    ACTIVITY_DIAGRAM: /activityDiagram/,
+    COMMA: /,/,
+    ...BIND_REGEXPS,
     L_PAREN: L_PAREN_REGEXP,
     R_PAREN: R_PAREN_REGEXP,
     L_BRACKET: { match: /\{/ },
     R_BRACKET: { match: /\}/ },
     COMMENT_LINE: COMMENT_LINE_REGEXP,
-    ...configLexerMainState,
     VALID_TEXT: { match: VALID_TEXT_REGEXP, fallback: true },
-  },
-  configStatement: {
-    ...configLexerconfigStatementState,
-    ...COMMON_TOKEN_RULES,
   },
 })
 
-function extractChildren(o) {
-  return Array.isArray(o) ? o[0]: o
-}
 %}
 
 start -> __ start {% (d) => d[1] %}
@@ -76,18 +70,6 @@ line ->
 	| %WS:* %NL {% null %}
 
 statement ->
-    titleStatement
-  | paramStatement _ %NL
-  | configStatement _ %NL
-  | styleStatement _
+    styleStatement
+  | bindClassStatement
   | comment _ %NL {% null %}
-
-words ->
-    (%VALID_TEXT | %WS):+ {%
-      function(d) {
-        return d[0].map(o => tv(o[0])).join('')
-      }
-    %}
-
-titleStatement ->
-	  "@title" words %NL {% (d) => ({ type: 'setTitle', text: d[1].trim() }) %}

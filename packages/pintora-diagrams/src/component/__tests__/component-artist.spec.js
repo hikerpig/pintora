@@ -12,4 +12,14 @@ describe('component-artist', () => {
   it('match example snapshot', () => {
     expect(stripDrawResultForSnapshot(testDraw(EXAMPLES.component.code))).toMatchSnapshot()
   })
+
+  it('can parse and handle bindClass', () => {
+    const code = `
+    componentDiagram
+    component comp1
+    
+    @bindClass node-comp1 test-class
+    `
+    expect(stripDrawResultForSnapshot(testDraw(code))).toMatchSnapshot()
+  })
 })
