@@ -4,6 +4,7 @@ import reactRefresh from '@vitejs/plugin-react-refresh'
 import tsconfigPaths from 'vite-tsconfig-paths'
 import { VitePWA } from 'vite-plugin-pwa'
 import ViteMkcert from 'vite-plugin-mkcert'
+import tailwindcss from '@tailwindcss/vite'
 
 const BASE = '/demo/'
 
@@ -44,6 +45,7 @@ export default defineConfig({
           savePath: './certs', // save the generated certificate into certs directory
         })
       : null,
+    tailwindcss(),
   ],
   base: BASE,
   mode,
