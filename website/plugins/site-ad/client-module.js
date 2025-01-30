@@ -5,8 +5,8 @@ export default (function adModule() {
         const ele = document.getElementById('carbonads')
         if (ele) {
           ele.parentElement.removeChild(ele)
+          _carbonads.refresh()
         }
-        _carbonads.refresh()
       }
     },
   }

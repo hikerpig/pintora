@@ -142,4 +142,14 @@ module.exports = {
     require.resolve('./plugins/webpack5-plugin'),
     require.resolve('./plugins/site-ad-plugin'),
   ],
+  future: {
+    experimental_faster: {
+      swcJsLoader: true,
+      swcJsMinimizer: true,
+      swcHtmlMinimizer: true,
+      lightningCssMinimizer: true,
+      rspackBundler: true,
+      mdxCrossCompilerCache: true,
+    },
+  },
 }

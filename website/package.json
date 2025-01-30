@@ -46,6 +46,7 @@
     ]
   },
   "devDependencies": {
+    "@docusaurus/faster": "^3.7.0",
     "@docusaurus/module-type-aliases": "^3.7.0",
     "@docusaurus/tsconfig": "^3.7.0",
     "@types/react": "^18.0.0",
