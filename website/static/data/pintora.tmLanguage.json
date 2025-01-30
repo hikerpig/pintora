@@ -6,6 +6,9 @@
   "patterns": [
     {
       "include": "#pintora"
+    },
+    {
+      "include": "#common__pre"
     }
   ],
   "repository": {
@@ -22,6 +25,9 @@
           "patterns": [
             {
               "include": "#common__title"
+            },
+            {
+              "include": "#common__bindClass"
             },
             {
               "include": "#activity__element"
@@ -44,6 +50,12 @@
             }
           },
           "patterns": [
+            {
+              "include": "#common__title"
+            },
+            {
+              "include": "#common__bindClass"
+            },
             {
               "include": "#class__element"
             },
@@ -68,6 +80,9 @@
           "patterns": [
             {
               "include": "#common__title"
+            },
+            {
+              "include": "#common__bindClass"
             },
             {
               "include": "#component__element"
@@ -95,6 +110,9 @@
             },
             {
               "include": "#comment"
+            },
+            {
+              "include": "#common__bindClass"
             },
             {
               "comment": "graph declaration",
@@ -135,6 +153,9 @@
           "patterns": [
             {
               "include": "#common__title"
+            },
+            {
+              "include": "#common__bindClass"
             },
             {
               "comment": "entityName relSpec entityName: role",
@@ -375,6 +396,9 @@
             },
             {
               "include": "#common__title"
+            },
+            {
+              "include": "#common__bindClass"
             }
           ]
         },
@@ -390,6 +414,9 @@
           "patterns": [
             {
               "include": "#common__title"
+            },
+            {
+              "include": "#common__bindClass"
             },
             {
               "comment": "multiline text",
@@ -452,6 +479,9 @@
             },
             {
               "include": "#comment"
+            },
+            {
+              "include": "#common__bindClass"
             },
             {
               "comment": "(title)",
@@ -1686,6 +1716,127 @@
             },
             "3": {
               "name": "entity.name.type"
+            }
+          }
+        }
+      ]
+    },
+    "common__pre": {
+      "patterns": [
+        {
+          "comment": "pre block",
+          "begin": "(@pre)",
+          "beginCaptures": {
+            "1": {
+              "name": "keyword.control.pintora"
+            }
+          },
+          "end": "(@endpre)",
+          "endCaptures": {
+            "1": {
+              "name": "keyword.control.pintora"
+            }
+          },
+          "patterns": [
+            {
+              "comment": "style",
+              "begin": "(@style)\\s*({)",
+              "beginCaptures": {
+                "1": {
+                  "name": "keyword.control.pintora"
+                },
+                "2": {
+                  "name": "punctuation.section.property-list.begin.bracket.curly.pintora"
+                }
+              },
+              "end": "(})",
+              "endCaptures": {
+                "1": {
+                  "name": "punctuation.section.property-list.end.bracket.curly.pintora"
+                }
+              },
+              "patterns": [
+                {
+                  "comment": "selector",
+                  "begin": "(?=[\\.#][^\\s{}]+)",
+                  "end": "\\s*(?={)",
+                  "name": "meta.selector.pintora",
+                  "patterns": [
+                    {
+                      "comment": "class",
+                      "match": "(\\.[^\\s]+)",
+                      "captures": {
+                        "1": {
+                          "name": "entity.other.attribute-name.class.pintora"
+                        }
+                      }
+                    },
+                    {
+                      "comment": "id",
+                      "match": "(#[^\\s]+)",
+                      "captures": {
+                        "1": {
+                          "name": "entity.other.attribute-name.id.pintora"
+                        }
+                      }
+                    }
+                  ]
+                },
+                {
+                  "comment": "rule list",
+                  "begin": "{",
+                  "beginCaptures": {
+                    "1": {
+                      "name": "punctuation.section.property-list.begin.bracket.curly.pintora"
+                    }
+                  },
+                  "end": "}",
+                  "endCaptures": {
+                    "1": {
+                      "name": "punctuation.section.property-list.end.bracket.curly.pintora"
+                    }
+                  },
+                  "patterns": [
+                    {
+                      "comment": "property: value",
+                      "match": "([^\\s{}]+)\\s*(:)\\s*(.*)(;)",
+                      "captures": {
+                        "1": {
+                          "name": "support.type.property-name.pintora"
+                        },
+                        "2": {
+                          "name": "keyword.control.pintora"
+                        },
+                        "3": {
+                          "name": "string.value"
+                        },
+                        "4": {
+                          "name": "keyword.control.pintora"
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "common__bindClass": {
+      "patterns": [
+        {
+          "comment": "@bindClass",
+          "match": "(@bindClass)\\s+([^\\s]+)\\s+([^\\s]+)",
+          "captures": {
+            "1": {
+              "name": "keyword.control.pintora"
+            },
+            "2": {
+              "name": "string"
+            },
+            "3": {
+              "name": "string"
             }
           }
         }
