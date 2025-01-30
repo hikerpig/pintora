@@ -13,7 +13,6 @@ export async function startShiki(opts: { isDarkMode?: boolean } = {}) {
     const pintoraLanguage: shiki.LanguageRegistration = {
       name: 'pintora',
       scopeName: 'source.pintora',
-      // path: '',
       embeddedLangsLazy: ['json'],
       ...syntaxJson,
     }
@@ -21,7 +20,7 @@ export async function startShiki(opts: { isDarkMode?: boolean } = {}) {
     const theme = opts.isDarkMode ? shikiDarkTheme : shikiLightTheme
 
     if (!globalHighlighterPromise) {
-      globalHighlighterPromise = shiki.getHighlighter({
+      globalHighlighterPromise = shiki.getSingletonHighlighter({
         langs: [pintoraLanguage, 'json'],
         themes: [theme],
       })
