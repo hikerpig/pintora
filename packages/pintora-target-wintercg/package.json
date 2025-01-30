@@ -1,6 +1,6 @@
 {
   "name": "@pintora/target-wintercg",
-  "version": "0.1.5-alpha.0",
+  "version": "0.2.0-alpha.1",
   "description": "Pintora standalone target thast can run in WinterCG runtime",
   "homepage": "https://github.com/hikerpig/pintora#readme",
   "repository": {

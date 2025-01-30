@@ -1,5 +1,16 @@
 ## 0.1.0
 
+## 0.2.0-alpha.1
+
+### Minor Changes
+
+- f4163c7: Add simple StyleEngine in `@pre` block, and `@bindClass` statement to diagrams
+
+### Patch Changes
+
+- Updated dependencies [f4163c7]
+  - @pintora/standalone@0.8.0-alpha.1
+
 ## 0.1.5-alpha.0
 
 ### Patch Changes

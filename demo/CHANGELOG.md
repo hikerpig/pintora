@@ -1,5 +1,15 @@
 # Change Log
 
+## 0.3.23-alpha.1
+
+### Patch Changes
+
+- Updated dependencies [f4163c7]
+  - @pintora/core@0.8.0-alpha.1
+  - @pintora/diagrams@0.8.0-alpha.1
+  - @pintora/renderer@0.8.0-alpha.1
+  - @pintora/standalone@0.8.0-alpha.1
+
 ## 0.3.23-alpha.0
 
 ### Patch Changes

@@ -1,5 +1,19 @@
 # Change Log
 
+## 0.8.0-alpha.1
+
+### Minor Changes
+
+- d90c1be: Drop support node.js v16
+- f4163c7: Add simple StyleEngine in `@pre` block, and `@bindClass` statement to diagrams
+
+### Patch Changes
+
+- Updated dependencies [f4163c7]
+  - @pintora/core@0.8.0-alpha.1
+  - @pintora/renderer@0.8.0-alpha.1
+  - @pintora/standalone@0.8.0-alpha.1
+
 ## 0.8.0-alpha.0
 
 ### Minor Changes

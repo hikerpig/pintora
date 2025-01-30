@@ -14,6 +14,8 @@
     "pintora-website": "0.7.1"
   },
   "changesets": [
+    "bright-cooks-relate",
+    "curly-elephants-clap",
     "flat-plants-joke",
     "lazy-bugs-remain",
     "loud-maps-kiss",
