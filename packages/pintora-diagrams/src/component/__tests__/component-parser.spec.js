@@ -328,4 +328,13 @@ componentDiagram
     const ir = db.getDiagramIR()
     expect(ir.components['comp'].label).toEqual(`we can escape "this"`)
   })
+
+  it('can parse short component without trailing space', () => {
+    const example = stripStartEmptyLines(`
+componentDiagram
+  [Test]`)
+    parse(example)
+    const ir = db.getDiagramIR()
+    expect(ir.components['Test']).not.toBeUndefined()
+  })
 })
