@@ -117,7 +117,7 @@ UMLElement ->
 
 # group can include UMLElement recursively
 group ->
-    groupType %WS:? textInsideQuote _ %L_BRACKET (_ UMLElement):* _ %R_BRACKET %NL {%
+    groupType %WS:? textInsideQuote _ %L_BRACKET (_ UMLElement):* _ %R_BRACKET __ {%
         function(d) {
           const groupType = tv(d[0][0])
           const label = d[2] || groupType
@@ -145,7 +145,7 @@ component ->
         return { type: 'component', name,  }
       }
     %}
-  | "component" %WS:? %VALID_TEXT %WS:? %L_SQ_BRACKET elementLabel:+ %R_SQ_BRACKET %NL {%
+  | "component" %WS:? %VALID_TEXT %WS:? %L_SQ_BRACKET elementLabel:+ %R_SQ_BRACKET __ {%
       function(d) {
         const name = tv(d[2])
         const label = d[5].join('').trim()
@@ -160,8 +160,8 @@ component ->
         return { type: 'component', name, label }
       }
     %}
-  | shortComponent %NL {% id %}
-  | shortComponent %WS:? "as" %WS:? %VALID_TEXT %NL {%
+  | shortComponent %WS:* %NL {% id %}
+  | shortComponent %WS:+ "as" %WS:+ %VALID_TEXT %NL {%
       function(d) {
         const comp = d[0]
         const name = tv(d[4])
