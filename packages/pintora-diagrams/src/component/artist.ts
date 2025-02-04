@@ -197,7 +197,7 @@ function drawInterfacesTo(parentMark: Group, ir: ComponentDiagramIR, g: LayoutGr
         stroke: conf.componentBorderColor,
         lineWidth: conf.lineWidth,
       },
-      { class: 'component__interface' },
+      { class: 'component__interface-circle', itemId },
     )
 
     const textMark = makeMark('text', {
@@ -212,7 +212,7 @@ function drawInterfacesTo(parentMark: Group, ir: ComponentDiagramIR, g: LayoutGr
       {},
       {
         children: [circleMark, textMark],
-        class: 'component__group',
+        class: 'component__interface',
         itemId,
       },
     )

@@ -615,16 +615,21 @@ class EntityMarkBuilder {
     })
     if (typeof bodySectionYStart !== 'undefined' && typeof bodySectionYEnd !== 'undefined') {
       const lineY = bodySectionYStart
-      const sectionBg = makeMark('rect', {
-        width: rectSize.width,
-        height: bodySectionYEnd - bodySectionYStart,
-        x: -rectSize.width / 2,
-        y: lineY,
-        fill: this.conf.entityBodyBackground,
-        stroke: this.conf.entityBorderColor,
-        class: 'class__section-bg',
-        // opacity: 0.4, // for layout debug
-      })
+      const sectionBg = makeMark(
+        'rect',
+        {
+          width: rectSize.width,
+          height: bodySectionYEnd - bodySectionYStart,
+          x: -rectSize.width / 2,
+          y: lineY,
+          fill: this.conf.entityBodyBackground,
+          stroke: this.conf.entityBorderColor,
+          // opacity: 0.4, // for layout debug
+        },
+        {
+          class: 'class__section-bg',
+        },
+      )
       this.group.children.unshift(sectionBg)
     }
     this.group.children.unshift(bgRect, ...sectionBgMarks)

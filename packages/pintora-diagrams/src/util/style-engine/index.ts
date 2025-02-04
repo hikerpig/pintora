@@ -22,6 +22,12 @@ const RECT_MARK_STYLE_MAP: Partial<Record<StylableAttrKey, keyof MarkAttrs>> = {
   opacity: 'opacity',
 }
 
+const CIRCLE_MARK_STYLE_MAP: Partial<Record<StylableAttrKey, keyof MarkAttrs>> = {
+  backgroundColor: 'fill',
+  borderColor: 'stroke',
+  opacity: 'opacity',
+}
+
 type ApplyOptions = {
   styleRules?: StyleRule[]
   bindRules?: BindRule[]
@@ -94,6 +100,13 @@ export class StyleEngine {
           for (const [styleKey, value] of Object.entries(rule.attrs)) {
             if (styleKey in RECT_MARK_STYLE_MAP) {
               mark.attrs[RECT_MARK_STYLE_MAP[styleKey]] = value
+            }
+          }
+        },
+        circle(mark) {
+          for (const [styleKey, value] of Object.entries(rule.attrs)) {
+            if (styleKey in CIRCLE_MARK_STYLE_MAP) {
+              mark.attrs[CIRCLE_MARK_STYLE_MAP[styleKey]] = value
             }
           }
         },
