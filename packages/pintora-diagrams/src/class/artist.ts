@@ -296,7 +296,7 @@ class ClassDiagramDraw {
         x: 0,
         y: 0,
       },
-      { children: [], class: 'activity__note' },
+      { children: [], class: 'class__note' },
     )
     const { rootMark, conf, theme } = this
     rootMark.children.push(group)
