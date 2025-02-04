@@ -1,5 +1,27 @@
 # Change Log
 
+## 0.8.0-alpha.1
+
+### Minor Changes
+
+- d90c1be: Drop support node.js v16
+- f4163c7: Add simple StyleEngine in `@pre` block, and `@bindClass` statement to diagrams
+
+### Patch Changes
+
+## 0.8.0-alpha.0
+
+### Minor Changes
+
+- f9014a5: Add ability to parse `@pre` block and merge configs
+
+### Patch Changes
+
+- 0b31164: feat: [activity] support quoted word as action message
+- 0abf2d5: fix mindmap color
+- 9653ccb: feat: [classDiagram] be able to add `title`
+- 417afeb: fix: parse texts prefix with `#`
+
 ## 0.7.6
 
 ### Patch Changes
