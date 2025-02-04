@@ -118,3 +118,46 @@ erDiagram
   artists ||--o{ albums : "publishes"
   artists }|--|{ labels : "a member of"
 ```
+
+## Selectors For Custom Style
+
+1. id `entity-{name}` for one specific entity
+2. class `er__entity` for all entities
+2. class `er__relationship-label` for all relation labels
+
+```pintora play
+@pre
+@style {
+  .er__entity {
+    textColor: #61afef;
+  }
+  .people {
+    textColor: red;
+  }
+  .er__entity-box {
+    backgroundColor: #555555;
+  }
+  .er__relationship-label {
+    textColor: pink;
+    fontFamily: cursive;
+  }
+}
+@endpre
+
+erDiagram
+  title: Entity Relationship Example
+  PERSON {
+    string phone "phone number"
+  }
+  CUSTOMER inherit PERSON
+  DELIVERER inherit PERSON
+  CUSTOMER ||--o{ ORDER : places
+  ORDER {
+    int order_number PK
+    string adress "delivery address"
+  }
+  DELIVERER ||--o{ DELIVERY : completes
+
+  @bindClass entity-CUSTOMER people
+  @bindClass entity-DELIVERER people
+```
