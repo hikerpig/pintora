@@ -178,13 +178,13 @@ const LEGEND_FONT: IFont = {
 }
 
 type PieConf = {
-  diagarmPadding: number
+  diagramPadding: number
   diagramBackgroundColor: string
   circleRadius: number
 }
 
 const conf: PieConf = {
-  diagarmPadding: 10,
+  diagramPadding: 10,
   diagramBackgroundColor: '#F9F9F9',
   circleRadius: 150,
 }
@@ -198,8 +198,8 @@ const conf: PieConf = {
 ```ts
     const radius = conf.circleRadius
 
-    let circleStartY = conf.diagarmPadding
-    let circleStartX = conf.diagarmPadding
+    let circleStartY = conf.diagramPadding
+    let circleStartX = conf.diagramPadding
 
     if (diagramIR.title) {
       const titleMark = pintora.util.makeMark('text', {
@@ -319,12 +319,12 @@ const conf: PieConf = {
 到这里，最终的 `graphicsIR` 所需数据便全部完成了。
 
 ```ts
-    const diagramWidth = maxLabelRight + conf.diagarmPadding
+    const diagramWidth = maxLabelRight + conf.diagramPadding
 
     const graphicsIR: GraphicsIR = {
       mark: rootMark,
       width: diagramWidth,
-      height: circleStartY + 2 * radius + conf.diagarmPadding,
+      height: circleStartY + 2 * radius + conf.diagramPadding,
       bgColor: conf.diagramBackgroundColor,
     }
 ```
@@ -339,7 +339,7 @@ const conf: PieConf = {
 declare module '@pintora/core' {
   interface PintoraConfig {
     pie: {
-      diagarmPadding: number
+      diagramPadding: number
       diagramBackgroundColor: string
       circleRadius: number
       pieColors: string[]
@@ -366,7 +366,7 @@ import pintora, { IFont, PintoraConfig } from '@pintora/standalone'
  }
  
 -type PieConf = {
--  diagarmPadding: number
+-  diagramPadding: number
 -  diagramBackgroundColor: string
 -  circleRadius: number
 -}
@@ -375,7 +375,7 @@ import pintora, { IFont, PintoraConfig } from '@pintora/standalone'
 -const conf: PieConf = {
 +// default config
 +const defaultConfig: PieConf = {
-   diagarmPadding: 10,
+   diagramPadding: 10,
    diagramBackgroundColor: '#F9F9F9',
    circleRadius: 150,
 +  pieColors: DEFAULT_PIE_COLORS
