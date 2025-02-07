@@ -154,3 +154,28 @@ sequenceDiagram
   end
   == Divider ==
 ```
+
+## Selectors For Custom Style
+
+1. id `actor-{name}` for one specific participant
+1. class `sequence__actor` for all participants
+1. class `sequence__message` for all messages
+
+```pintora play
+@pre
+@style {
+  .tools {
+    fontStyle: italic;
+    backgroundColor: #61afef;
+  }
+  .sequence__message {
+    textColor: #61afef;
+  }
+}
+@endpre
+
+sequenceDiagram
+  User->>Pintora: Draw me a sequence diagram
+
+  @bindClass actor-Pintora tools
+```

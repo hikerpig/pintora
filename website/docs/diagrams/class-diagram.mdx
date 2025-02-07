@@ -143,3 +143,31 @@ classDiagram
 
   Animal <|-- Dog
 ```
+
+## Selectors For Custom Style
+
+1. id `class-{name}` for one specific class
+2. class `class__entity` for all class objects
+
+```pintora play
+@pre
+@style {
+  .class__entity {
+    textColor: white;
+  }
+  .class__section-bg {
+    backgroundColor: #555555;
+  }
+}
+@endpre
+
+classDiagram
+  class Animal {
+  }
+
+  class Dog {
+    void bark()
+  }
+
+  Animal <|-- Dog
+```

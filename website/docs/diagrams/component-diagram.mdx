@@ -99,3 +99,30 @@ componentDiagram
   DataQuery -- [Component]
   [Component] ..> HTTP : use
 ```
+
+## Selectors For Custom Style
+
+1. id `node-{name}` for component/interface
+1. class `component__interface` for all interfaces
+1. class `component__component` for all components
+
+```pintora play
+@pre
+@style {
+  .component__interface {
+    backgroundColor: #61afef;
+  }
+
+  #node-IDeletable {
+    backgroundColor: red;
+  }
+}
+@endpre
+
+componentDiagram
+  [folder]
+  () IAccessible
+  () IDeletable
+  [folder] --> IAccessible
+  [folder] --> IDeletable
+```

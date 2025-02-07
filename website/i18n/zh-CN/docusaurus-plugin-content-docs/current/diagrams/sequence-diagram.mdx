@@ -179,3 +179,23 @@ sequenceDiagram
   end
   == Divider ==
 ```
+
+## 自定义样式的选择符
+
+1. id `actor-{name}` 用于指定参与者的样式。
+
+```pintora play
+@pre
+@style {
+  .tools {
+    fontStyle: italic;
+    backgroundColor: #61afef;
+  }
+}
+@endpre
+
+sequenceDiagram
+  User->>Pintora: Draw me a sequence diagram
+
+  @bindClass actor-Pintora tools
+```
