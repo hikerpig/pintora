@@ -28,7 +28,7 @@
     "@edge-runtime/types": "^4.0.0",
     "@pintora/renderer": "workspace:*",
     "@types/fontkit": "^2.0.6",
-    "@types/node": "^16.11.7",
+    "@types/node": "^22.0.0",
     "@types/svgdom": "^0.1.2",
     "base64-js": "^1.5.1",
     "buffer": "^6.0.3",
