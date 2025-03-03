@@ -55,7 +55,7 @@
     "@types/d3-shape": "^3.0.2",
     "@types/dedent": "^0.7.0",
     "@types/nearley": "^2.11.1",
-    "@types/node": "^16.11.7",
+    "@types/node": "^22.0.0",
     "@types/tinycolor2": "^1.4.3",
     "esbuild": "^0.25.0",
     "esbuild-jest": "^0.5.0",
