@@ -43,7 +43,7 @@
     "canvas": "^3.0.1",
     "consola": "^3.0.0",
     "jsdom": "^26.0.0",
-    "mime-types": "^2.1.31",
+    "mime-types": "^3.0.0",
     "yargs": "^17.7.2"
   },
   "devDependencies": {
