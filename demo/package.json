@@ -59,7 +59,7 @@
     "typescript": "^5.0.0",
     "vite": "^6.0.3",
     "vite-plugin-mkcert": "^1.17.6",
-    "vite-plugin-pwa": "^0.21.0",
+    "vite-plugin-pwa": "^1.0.0",
     "vite-tsconfig-paths": "^5.0.0",
     "workbox-core": "^7.0.0",
     "workbox-precaching": "^7.0.0",
