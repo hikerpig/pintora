@@ -22,7 +22,7 @@ import {
 } from '../util/artist-util'
 import { floorValues } from '../util/bound'
 import { DagreWrapper } from '../util/dagre-wrapper'
-import { isDev } from '../util/env'
+import { setDevGlobal } from '../util/env'
 import { createLayoutGraph, getGraphSplinesOption, LayoutEdge, LayoutGraph } from '../util/graph'
 import { getPointsCurvePath, getPointsLinearPath } from '../util/line-util'
 import { TRANSFORM_GRAPH } from '../util/mark-positioner'
@@ -132,9 +132,7 @@ class DOTDraw {
     public conf: DOTConf,
     public rootMark: Group,
   ) {
-    if (isDev) {
-      ;(window as any).dotDraw = this
-    }
+    setDevGlobal('dotDraw', this)
 
     this.g = createLayoutGraph({
       multigraph: true,

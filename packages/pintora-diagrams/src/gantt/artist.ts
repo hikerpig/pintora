@@ -18,7 +18,7 @@ import {
 import { scaleTime, ScaleTime } from 'd3-scale'
 import dayjs from 'dayjs'
 import { drawDiamondTo, LayerManager, makeEmptyGroup } from '../util/artist-util'
-import { isDev } from '../util/env'
+import { setDevGlobal } from '../util/env'
 import { GanttConf, getConf } from './config'
 import { GanttIR, getAxisTimeInterval, isInvalidDate, Task } from './db'
 import { getFontConfig } from '../util/font-config'
@@ -78,9 +78,7 @@ class GanttDraw {
     public rootMark: Group,
     w: number,
   ) {
-    if (isDev) {
-      ;(window as any).ganttDraw = this
-    }
+    setDevGlobal('ganttDraw', this)
 
     const taskArray = Object.values(ir.tasks)
     this.taskArray = taskArray
