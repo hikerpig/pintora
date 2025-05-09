@@ -29,7 +29,7 @@ import {
 import { calcBound, floorValues, updateBoundsByPoints } from '../util/bound'
 import type { EnhancedConf } from '../util/config'
 import { DagreWrapper } from '../util/dagre-wrapper'
-import { isDev } from '../util/env'
+import { setDevGlobal } from '../util/env'
 import { getFontConfig } from '../util/font-config'
 import { LayoutEdge, LayoutGraph, LayoutNode, createLayoutGraph, getGraphSplinesOption } from '../util/graph'
 import { getPointsCurvePath, getPointsLinearPath } from '../util/line-util'
@@ -99,9 +99,7 @@ const erArtist: IDiagramArtist<ActivityDiagramIR, ActivityConf> = {
     const dagreWrapper = new DagreWrapper(g)
     activityDraw = new ActivityDraw(model, g)
     activityDraw.fontConfig = fontConfig
-    if (isDev) {
-      ;(window as any).activityDraw = activityDraw
-    }
+    setDevGlobal('activityDraw', activityDraw)
 
     ir.steps.forEach(step => {
       activityDraw.drawStep(rootMark, step)

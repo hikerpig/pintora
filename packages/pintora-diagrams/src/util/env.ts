@@ -1,1 +1,10 @@
-export const isDev = typeof location !== 'undefined' && location.hostname === 'localhost' && typeof window !== 'undefined'
+export const isDev = globalThis.isPintoraDev ?? false
+
+export const pintoraDevGlobals = {}
+
+export function setDevGlobal(key: string, value: unknown) {
+  pintoraDevGlobals[key] = value
+  if (isDev) {
+    globalThis.pintoraDevGlobals = pintoraDevGlobals
+  }
+}

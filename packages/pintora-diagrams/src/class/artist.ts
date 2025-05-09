@@ -25,7 +25,7 @@ import {
 import { calcBound } from '../util/bound'
 import type { EnhancedConf } from '../util/config'
 import { DagreWrapper } from '../util/dagre-wrapper'
-import { isDev } from '../util/env'
+import { setDevGlobal } from '../util/env'
 import { getFontConfig } from '../util/font-config'
 import { BaseEdgeData, createLayoutGraph, getGraphSplinesOption, LayoutGraph, LayoutNode } from '../util/graph'
 import { getMedianPoint, getPointsCurvePath, getPointsLinearPath } from '../util/line-util'
@@ -40,9 +40,7 @@ class ClassArtist extends BaseArtist<ClassIR, ClassConf> {
     const conf = getConf(ir, config)
 
     const draw = new ClassDiagramDraw(ir, conf)
-    if (isDev) {
-      ;(window as any).classDraw = draw
-    }
+    setDevGlobal('classDraw', draw)
 
     const { gBounds } = draw.drawTo(rootMark)
     const titleMaker = new DiagramTitleMaker({

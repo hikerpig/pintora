@@ -15,7 +15,7 @@ import { MindmapIR, MMItem, MMTree } from './db'
 import { adjustRootMarkBounds, DiagramTitleMaker, makeEmptyGroup, makeMark } from '../util/artist-util'
 import { BaseArtist } from '../util/base-artist'
 import { DagreWrapper } from '../util/dagre-wrapper'
-import { isDev } from '../util/env'
+import { setDevGlobal } from '../util/env'
 import { getFontConfig } from '../util/font-config'
 import { getPointsLinearPath } from '../util/line-util'
 import { makeBounds, positionGroupContents, TRANSFORM_GRAPH } from '../util/mark-positioner'
@@ -30,9 +30,7 @@ class MindmapArtist extends BaseArtist<MindmapIR, MindmapConf> {
     mmDraw = new MMDraw(ir)
     const fontConfig = getFontConfig(conf)
     mmDraw.fontConfig = fontConfig
-    if (isDev) {
-      ;(window as any).mmDraw = mmDraw
-    }
+    setDevGlobal('mmDraw', mmDraw)
 
     const rootMark: Group = {
       type: 'group',
