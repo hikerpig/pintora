@@ -191,4 +191,18 @@ describe('mindmap parser', () => {
     const ir = db.getDiagramIR()
     expect(ir.title).toEqual('Hello')
   })
+
+  it('can parse param value of quoted word', () => {
+    const example = stripStartEmptyLines(`
+mindmap
+@param fontFamily "Monaspace Krypton"
++ UML Diagrams
+      `)
+    parse(example)
+    const ir = db.getDiagramIR()
+    expect(ir.configParams[0]).toMatchObject({
+      key: 'fontFamily',
+      value: 'Monaspace Krypton',
+    })
+  })
 })

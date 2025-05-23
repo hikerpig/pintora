@@ -17,6 +17,7 @@ import {
   configLexerMainState,
   configLexerconfigStatementState,
   BIND_REGEXPS,
+  QUOTED_WORD_REGEXP,
 } from '../../util/parser-shared'
 
 import type { ApplyPart } from '../db'
@@ -33,6 +34,7 @@ let lexer = moo.states({
     COLON: /:/,
     PARAM_DIRECTIVE,
     ...configLexerMainState,
+    QUOTED_WORD: QUOTED_WORD_REGEXP,
     L_PAREN: L_PAREN_REGEXP,
     R_PAREN: R_PAREN_REGEXP,
     COMMENT_LINE: COMMENT_LINE_REGEXP,

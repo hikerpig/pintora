@@ -27,6 +27,11 @@ function handleConfigOpenCloseStatement(d) {
     return { type: 'overrideConfig', error: error }
   }
 }
+
+function config_getQuotedWord(token) {
+  const v = tv(token)
+  return v.slice(1, v.length - 1).replace(/\\"/g, '"')
+}
 %}
 
 # non-terminal, needs
@@ -52,13 +57,22 @@ paramStatement ->
       }
     %}
 
-paramPart -> [a-zA-Z0-9]:+ __ [^ \n]:+ {%
-    function(d) {
-      const key = d[0].map(v => tv(v)).join('')
-      let value = d[2]
-      if (typeof value !== 'string') value = value.map(v => tv(v)).join('')
-      return { type: 'addParam', key, value }
-    }%}
+
+paramPart ->
+    [a-zA-Z0-9]:+ __ [^ \n]:+ {%
+      function(d) {
+        const key = d[0].map(v => tv(v)).join('')
+        let value = d[2]
+        if (typeof value !== 'string') {
+          value = value.map(v => {
+            const tokenValue = v.type === 'QUOTED_WORD' ? config_getQuotedWord(v) : tv(v)
+            return tokenValue
+          }).join('')
+        }
+        return { type: 'addParam', key, value }
+      }
+    %}
+
 
 # `@config` statement
 # - `CONFIG_DIRECTIVE` token
