@@ -315,7 +315,9 @@ noteStatement->
 	| ("note" | %NOTE) %OVER actor_pair textWithColon %NL {%
       function(d) {
         // console.log('[note over]\n', d[2])
-        const actors = [d[2][0].actor.trim(), d[2][1].actor]
+        const a1 = d[2][0].actor.trim()
+        const a2 = d[2][1] ? d[2][1].actor.trim() : a1
+        const actors = [a1, a2]
         return [
           d[2], {type:'addNote', placement: yy.PLACEMENT.OVER, actor: actors, text: d[3]}
         ]
@@ -331,7 +333,7 @@ noteStatement->
     %}
 
 actor_pair -> actor %COMMA actor {% (d) => ([d[0], d[2]]) %}
-	| actor {% id %}
+	| actor {% (d) => d %}
 
 else_sections -> document
 	| document _ "else" %WS color:? words %NL else_sections {%
