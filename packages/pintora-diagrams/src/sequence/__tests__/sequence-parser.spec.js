@@ -80,6 +80,17 @@ sequenceDiagram
     expect(result.notes[0].actor).toEqual(['A', 'B'])
   })
 
+  it('can parse note over with one participant', () => {
+    const example = stripStartEmptyLines(`
+    sequenceDiagram
+    participant John
+    @note over John: Text in note
+    `)
+    parse(example)
+    const result = db.getDiagramIR()
+    expect(result.notes[0].actor).toEqual(['John', 'John'])
+  })
+
   it('can parse divider', () => {
     const example = stripStartEmptyLines(`
 sequenceDiagram
