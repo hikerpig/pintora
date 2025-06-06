@@ -1,5 +1,15 @@
 # Change Log
 
+## 0.8.0-alpha.2
+
+### Patch Changes
+
+- 698c923: [componentDiagram] interface itemId and custom style; [classDiagram] some selectors for custom style
+- a6111ff: feat: treat window assignment carefully
+- 6c5ba5c: fix(diagrams): [mindmap] parsing error when `@param` comes with value with space
+- c6bffdb: [componentDiagram] fix parsing trailing spaces
+- 6f14df9: fix(diagrams): [sequenceDiagram] parse note over with one actor
+
 ## 0.8.0-alpha.1
 
 ### Minor Changes

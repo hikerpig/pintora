@@ -1,5 +1,11 @@
 # Change Log
 
+## 0.7.2-alpha.1
+
+### Patch Changes
+
+- 698c923: [componentDiagram] interface itemId and custom style; [classDiagram] some selectors for custom style
+
 ## 0.7.2-alpha.0
 
 ### Patch Changes
