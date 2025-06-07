@@ -1,5 +1,12 @@
 # Change Log
 
+## 0.8.0
+
+### Minor Changes
+
+- f4163c7: Add simple StyleEngine in `@pre` block, and `@bindClass` statement to diagrams
+- f9014a5: Add ability to parse `@pre` block and merge configs
+
 ## 0.8.0-alpha.1
 
 ### Minor Changes

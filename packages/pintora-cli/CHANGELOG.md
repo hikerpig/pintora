@@ -1,5 +1,25 @@
 # Change Log
 
+## 0.8.0
+
+### Minor Changes
+
+- d90c1be: Drop support node.js v16
+- f4163c7: Add simple StyleEngine in `@pre` block, and `@bindClass` statement to diagrams
+- f9014a5: Add ability to parse `@pre` block and merge configs
+
+### Patch Changes
+
+- 0b31164: feat: [activity] support quoted word as action message
+- 9653ccb: feat: [classDiagram] be able to add `title`
+- Updated dependencies [f4163c7]
+- Updated dependencies [0b31164]
+- Updated dependencies [f9014a5]
+- Updated dependencies [9653ccb]
+  - @pintora/core@0.8.0
+  - @pintora/renderer@0.8.0
+  - @pintora/standalone@0.8.0
+
 ## 0.8.0-alpha.1
 
 ### Minor Changes

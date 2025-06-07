@@ -1,5 +1,27 @@
 # Change Log
 
+## 0.8.0
+
+### Minor Changes
+
+- f4163c7: Add simple StyleEngine in `@pre` block, and `@bindClass` statement to diagrams
+- f9014a5: Add ability to parse `@pre` block and merge configs
+
+### Patch Changes
+
+- 0b31164: feat: [activity] support quoted word as action message
+- 0abf2d5: fix mindmap color
+- 698c923: [componentDiagram] interface itemId and custom style; [classDiagram] some selectors for custom style
+- 9653ccb: feat: [classDiagram] be able to add `title`
+- 417afeb: fix: parse texts prefix with `#`
+- a6111ff: feat: treat window assignment carefully
+- 6c5ba5c: fix(diagrams): [mindmap] parsing error when `@param` comes with value with space
+- c6bffdb: [componentDiagram] fix parsing trailing spaces
+- 6f14df9: fix(diagrams): [sequenceDiagram] parse note over with one actor
+- Updated dependencies [f4163c7]
+- Updated dependencies [f9014a5]
+  - @pintora/core@0.8.0
+
 ## 0.8.0-alpha.2
 
 ### Patch Changes
