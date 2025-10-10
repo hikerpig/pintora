@@ -24,6 +24,12 @@ export type Task = {
   prevTaskId?: string
 }
 
+// Define deferred task dependency type
+interface DeferredTaskDependency {
+  taskId: string
+  dependentTaskIds: string[]
+}
+
 type GanttAttrs = {
   title: string
   dateFormat: DateFormat
@@ -90,6 +96,9 @@ export class GanttDb extends BaseDb {
   currentSection?: string
   markDates: Date[] = []
 
+  // to store deferred task dependencies for later resolution
+  private deferredDependencies: DeferredTaskDependency[] = []
+
   // The serial order of the task in the script
   protected lastTaskId: string
   protected lastOrder = 0
@@ -121,6 +130,9 @@ export class GanttDb extends BaseDb {
   }
 
   getDiagramIR(): GanttIR {
+    // In generate final IR, process all deferred dependencies
+    this.resolveDeferredDependencies()
+
     return {
       ...super.getBaseDiagramIR(),
       tasks: this.tasks,
@@ -159,6 +171,74 @@ export class GanttDb extends BaseDb {
 
     this.lastTaskId = task.id
     this.tasks[task.id] = task
+
+    // Check if there are tasks depending on the current new task, if so update them
+    this.updateDependentTasks(task.id)
+  }
+
+  // Update the time of all tasks that depend on a specific task
+  private updateDependentTasks(taskId: string) {
+    const dependencies = this.deferredDependencies.filter(dep => dep.taskId === taskId)
+    if (dependencies.length > 0) {
+      dependencies.forEach(dep => {
+        dep.dependentTaskIds.forEach(dependentId => {
+          const dependentTask = this.tasks[dependentId]
+          if (dependentTask) {
+            // Recalculate start and end times for dependent tasks
+            // Simplified handling here; more complex logic may be needed in practice
+            const { date } = this.getStartOfTask(`after ${taskId}`)
+            dependentTask.startTime = date
+
+            // If the task has duration or endTime, recalculate the end time
+            if (dependentTask.duration) {
+              dependentTask.endTime = this.getEndDate(dependentTask.startTime, dependentTask.duration, false)
+              dependentTask.isManualEndTime = false
+              checkTaskDates(dependentTask, this.attrs.dateFormat, this.attrs.excludes, this.attrs.includes)
+            }
+          }
+        })
+
+        // Remove resolved dependencies from the deferred list
+        this.deferredDependencies = this.deferredDependencies.filter(dep => dep !== dependencies[0])
+      })
+    }
+  }
+
+  // Process all deferred dependencies
+  private resolveDeferredDependencies() {
+    const unresolvedDependencies = []
+
+    this.deferredDependencies.forEach(dep => {
+      const targetTask = this.findTaskById(dep.taskId)
+      if (targetTask) {
+        // Target task exists, update tasks that depend on it
+        dep.dependentTaskIds.forEach(dependentId => {
+          const dependentTask = this.tasks[dependentId]
+          if (dependentTask) {
+            const { date } = this.getStartOfTask(`after ${dep.taskId}`)
+            dependentTask.startTime = date
+
+            if (dependentTask.duration) {
+              dependentTask.endTime = this.getEndDate(dependentTask.startTime, dependentTask.duration, false)
+              dependentTask.isManualEndTime = false
+              checkTaskDates(dependentTask, this.attrs.dateFormat, this.attrs.excludes, this.attrs.includes)
+            }
+          }
+        })
+      } else {
+        // Target task still doesn't exist, keep in unresolved list
+        unresolvedDependencies.push(dep)
+      }
+    })
+
+    // Update deferred dependency list, keep only unresolved dependencies
+    this.deferredDependencies = unresolvedDependencies
+
+    if (this.deferredDependencies.length > 0) {
+      logger.warn(
+        `Some dependencies could not be resolved: ${this.deferredDependencies.map(dep => dep.taskId).join(', ')}`,
+      )
+    }
   }
 
   // parse extra value to task attributes
@@ -202,20 +282,21 @@ export class GanttDb extends BaseDb {
       endTimeData = end
     } else if (segsLen === 2) {
       const [start, end] = segs
-      const { date, prevTaskId } = this.getStartOfTask(start)
+      const { date, prevTaskId } = this.getStartOfTask(start, task.id)
       task.startTime = date
       task.prevTaskId = prevTaskId
       endTimeData = end
     } else if (segsLen === 3) {
       const [id, start, end] = segs
       task.id = this.makeTaskId(id)
-      const { date, prevTaskId } = this.getStartOfTask(start)
+      const { date, prevTaskId } = this.getStartOfTask(start, task.id)
       task.startTime = date
       task.prevTaskId = prevTaskId
       endTimeData = end
     }
 
     if (endTimeData) {
+      task.duration = endTimeData
       task.endTime = this.getEndDate(task.startTime, endTimeData, false)
       task.isManualEndTime = isDateStrValid(endTimeData, this.attrs.dateFormat).isValid
       checkTaskDates(task, this.attrs.dateFormat, this.attrs.excludes, this.attrs.includes)
@@ -227,13 +308,14 @@ export class GanttDb extends BaseDb {
     return this.tasks[id]
   }
 
-  protected getStartOfTask(str: string) {
+  // Modified: Added parameter to track dependencies
+  protected getStartOfTask(str: string, dependentTaskId?: string) {
     str = str.trim()
     let prevTaskId = ''
 
     const afterStatement = AFTER_TASK_REGEXP.exec(str.trim())
     if (afterStatement !== null) {
-      // check all after ids and take the latest
+      // Check all 'after' IDs and take the latest
       let latestEndingTask: Task | null = null
       afterStatement[1].split(' ').forEach(id => {
         const task = this.findTaskById(id)
@@ -245,6 +327,11 @@ export class GanttDb extends BaseDb {
             if (task.endTime > latestEndingTask.endTime) {
               latestEndingTask = task
             }
+          }
+        } else {
+          // Implement deferred resolution mechanism
+          if (dependentTaskId) {
+            this.trackDeferredDependency(id, dependentTaskId)
           }
         }
       })
@@ -268,6 +355,23 @@ export class GanttDb extends BaseDb {
     }
 
     return { date: new Date(), prevTaskId }
+  }
+
+  // Track deferred dependencies
+  private trackDeferredDependency(targetTaskId: string, dependentTaskId: string) {
+    let dependency = this.deferredDependencies.find(dep => dep.taskId === targetTaskId)
+
+    if (!dependency) {
+      dependency = {
+        taskId: targetTaskId,
+        dependentTaskIds: [],
+      }
+      this.deferredDependencies.push(dependency)
+    }
+
+    if (!dependency.dependentTaskIds.includes(dependentTaskId)) {
+      dependency.dependentTaskIds.push(dependentTaskId)
+    }
   }
 
   protected getEndDate(prevTime: Date | undefined, str: string, inclusive: boolean) {
@@ -296,6 +400,7 @@ export class GanttDb extends BaseDb {
         date = dayObject.toDate()
       }
     }
+
     if (date) {
       this.markDates.push(date)
     }
@@ -324,6 +429,8 @@ export class GanttDb extends BaseDb {
     this.lastOrder = 0
     this.currentSection = undefined
     this.markDates = []
+    // Clear deferred dependency list
+    this.deferredDependencies = []
   }
 }
 
