@@ -1,5 +1,11 @@
 # Change Log
 
+## 0.5.2
+
+### Patch Changes
+
+- 9653ccb: feat: [classDiagram] be able to add `title`
+
 ## 0.5.2-alpha.0
 
 ### Patch Changes

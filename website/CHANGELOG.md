@@ -1,5 +1,18 @@
 # Change Log
 
+## 0.7.2
+
+### Patch Changes
+
+- 698c923: [componentDiagram] interface itemId and custom style; [classDiagram] some selectors for custom style
+- 9653ccb: feat: [classDiagram] be able to add `title`
+- Updated dependencies [f4163c7]
+- Updated dependencies [0b31164]
+- Updated dependencies [f9014a5]
+- Updated dependencies [9653ccb]
+  - @pintora/standalone@0.8.0
+  - @pintora/test-shared@0.5.2
+
 ## 0.7.2-alpha.1
 
 ### Patch Changes

@@ -150,4 +150,22 @@ describe('gantt parser', () => {
       },
     ])
   })
+
+  it('should be able to parse deferred id', () => {
+    // issue #386
+    const example = stripStartEmptyLines(`
+gantt
+  "C" : after t-a, 5d
+  "A" : t-a, 2022-3-15, 5d
+    `)
+    parse(example)
+    const ir = db.getDiagramIR()
+    // console.log(JSON.stringify(ir, null, 2))
+    const tasks = Object.values(ir.tasks)
+    const task1 = tasks.find(t => t.label === 'C')
+    const task1Start = new Date(task1.startTime)
+    const task1End = new Date(task1.endTime)
+    expect(task1Start.getFullYear()).toBe(2022) // after A
+    expect(task1End.getFullYear()).toBe(2022)
+  })
 })

@@ -1,5 +1,18 @@
 # Change Log
 
+## 0.8.0
+
+### Minor Changes
+
+- f4163c7: Add simple StyleEngine in `@pre` block, and `@bindClass` statement to diagrams
+- f9014a5: Add ability to parse `@pre` block and merge configs
+
+### Patch Changes
+
+- Updated dependencies [f4163c7]
+- Updated dependencies [f9014a5]
+  - @pintora/core@0.8.0
+
 ## 0.8.0-alpha.1
 
 ### Minor Changes
