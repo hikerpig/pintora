@@ -12,10 +12,6 @@ jobs:
 
     steps:
       # Make sure you put workflow kit action on top of all the steps
-      - name: Collect Workflow Telemetry
-        uses: runforesight/foresight-workflow-kit-action@v1
-        with:
-          api_key: ${{ secrets.THUNDRA_APIKEY }}
       - uses: actions/checkout@v2
       - name: Install Node.js
         uses: actions/setup-node@v3
@@ -71,17 +67,6 @@ jobs:
           CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           PERCY_TOKEN: ${{ secrets.PERCY_TOKEN }}
-      - name: Analyze Test and/or Coverage Results
-        if: always()
-        uses: thundra-io/foresight-test-kit-action@v1
-        with:
-          api_key: ${{ secrets.THUNDRA_APIKEY }}
-          test_format: JUNIT
-          test_framework: JEST
-          test_path: reports/junit.xml
-          coverage_format: GOLANG
-          coverage_path: coverage
-
       - name: Bundle size report
         uses: nejcm/bundle-size-reporter-action@v1.4.1
         with:
