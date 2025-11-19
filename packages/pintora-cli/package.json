@@ -44,7 +44,7 @@
     "consola": "^3.0.0",
     "jsdom": "^26.0.0",
     "mime-types": "^3.0.0",
-    "yargs": "^17.7.2"
+    "yargs": "^18.0.0"
   },
   "devDependencies": {
     "@pintora/test-shared": "workspace:^0.5.2",
