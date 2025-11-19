@@ -40,7 +40,7 @@
   "devDependencies": {
     "@changesets/changelog-git": "^0.2.0",
     "@changesets/cli": "^2.24.1",
-    "@types/eslint__js": "^8.42.0",
+    "@types/eslint__js": "^9.0.0",
     "@types/jest": "^29.0.0",
     "codecov": "^3.8.3",
     "esbuild-jest": "^0.5.0",
