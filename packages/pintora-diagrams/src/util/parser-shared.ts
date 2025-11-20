@@ -22,7 +22,7 @@ export function tv(token) {
 }
 
 /** CJK friendly text pattern */
-export const VALID_TEXT_REGEXP = /(?:[a-zA-Z0-9_]\p{Unified_Ideograph})+/
+export const VALID_TEXT_REGEXP = /(?:[a-zA-Z0-9_]\p{Unified_Ideograph})+/u
 
 /** hex color */
 export const COLOR_REGEXP = /#[a-zA-Z0-9]+/

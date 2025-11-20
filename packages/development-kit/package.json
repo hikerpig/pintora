@@ -28,7 +28,7 @@
   },
   "devDependencies": {
     "@types/node": "^16.11.7",
-    "typescript": "^5.0.0"
+    "typescript": "^5.9.0"
   },
   "peerDependencies": {
     "@hikerpig/nearley": "^2.21.0-beta.2"

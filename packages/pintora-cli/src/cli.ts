@@ -117,7 +117,7 @@ async function handleRenderCommand(args: CliRenderArgs) {
       consola.error(`Error during generating image`)
       return
     }
-    fs.writeFileSync(args.output, buf)
+    fs.writeFileSync(args.output, buf as string | NodeJS.ArrayBufferView)
     consola.success(`Render success, saved to ${args.output}`)
   } catch (error) {
     console.error(error)

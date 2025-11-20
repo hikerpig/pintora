@@ -34,6 +34,6 @@
   "devDependencies": {
     "@types/clone-deep": "^4.0.1",
     "@types/tinycolor2": "^1.4.3",
-    "typescript": "^5.0.0"
+    "typescript": "^5.9.0"
   }
 }
