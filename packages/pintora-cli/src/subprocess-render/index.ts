@@ -1,5 +1,4 @@
 import { fork } from 'node:child_process'
-import { Buffer } from 'node:buffer'
 
 import type { CLIRenderOptions } from '../render-impl'
 import path from 'node:path'
@@ -16,7 +15,7 @@ export async function renderInSubprocess(opts: CLIRenderOptions) {
           if (typeof message.data === 'string') {
             resolve(message.data)
           } else {
-            resolve(Buffer.from(message.data.data))
+            resolve(message.data.data)
           }
           subprocess.kill()
           break

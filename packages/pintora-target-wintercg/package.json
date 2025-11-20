@@ -48,7 +48,7 @@
     "stream-browserify": "^3.0.0",
     "svgdom": "^0.1.19",
     "ts-node": "^10.9.2",
-    "typescript": "^5.0.0",
+    "typescript": "^5.9.0",
     "url": "^0.11.3",
     "util": "^0.12.5"
   },
