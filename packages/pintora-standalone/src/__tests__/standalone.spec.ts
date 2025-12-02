@@ -92,7 +92,7 @@ describe('pintora standalone', () => {
         },
       })
 
-      expect(dblclick).toBeCalledWith(expect.any(Object))
+      expect(dblclick).toHaveBeenCalledWith(expect.any(Object))
     })
 
     it('eventsHandlers will only be triggered by coresponding render', () => {
@@ -132,8 +132,8 @@ describe('pintora standalone', () => {
         },
       })
 
-      expect(dblclick1).toBeCalledTimes(1)
-      expect(dblclick2).toBeCalledTimes(1)
+      expect(dblclick1).toHaveBeenCalledTimes(1)
+      expect(dblclick2).toHaveBeenCalledTimes(1)
     })
   })
 
