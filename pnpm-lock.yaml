@@ -193,17 +193,17 @@ importers:
         specifier: ^5.9.0
         version: 5.9.3
       vite:
-        specifier: ^6.0.3
-        version: 6.4.1(@types/node@22.10.5)(jiti@1.21.0)(less@4.2.0)(lightningcss@1.29.1)(terser@5.44.1)(yaml@2.6.1)
+        specifier: ^7.0.0
+        version: 7.2.6(@types/node@22.10.5)(jiti@1.21.0)(less@4.2.0)(lightningcss@1.29.1)(terser@5.44.1)(yaml@2.6.1)
       vite-plugin-mkcert:
         specifier: ^1.17.6
-        version: 1.17.6(vite@6.4.1(@types/node@22.10.5)(jiti@1.21.0)(less@4.2.0)(lightningcss@1.29.1)(terser@5.44.1)(yaml@2.6.1))
+        version: 1.17.6(vite@7.2.6(@types/node@22.10.5)(jiti@1.21.0)(less@4.2.0)(lightningcss@1.29.1)(terser@5.44.1)(yaml@2.6.1))
       vite-plugin-pwa:
         specifier: ^1.0.0
-        version: 1.0.0(vite@6.4.1(@types/node@22.10.5)(jiti@1.21.0)(less@4.2.0)(lightningcss@1.29.1)(terser@5.44.1)(yaml@2.6.1))(workbox-build@7.1.0(@types/babel__core@7.20.5))(workbox-window@7.1.0)
+        version: 1.0.0(vite@7.2.6(@types/node@22.10.5)(jiti@1.21.0)(less@4.2.0)(lightningcss@1.29.1)(terser@5.44.1)(yaml@2.6.1))(workbox-build@7.1.0(@types/babel__core@7.20.5))(workbox-window@7.1.0)
       vite-tsconfig-paths:
         specifier: ^5.0.0
-        version: 5.1.4(typescript@5.9.3)(vite@6.4.1(@types/node@22.10.5)(jiti@1.21.0)(less@4.2.0)(lightningcss@1.29.1)(terser@5.44.1)(yaml@2.6.1))
+        version: 5.1.4(typescript@5.9.3)(vite@7.2.6(@types/node@22.10.5)(jiti@1.21.0)(less@4.2.0)(lightningcss@1.29.1)(terser@5.44.1)(yaml@2.6.1))
       workbox-core:
         specifier: ^7.0.0
         version: 7.3.0
@@ -11467,19 +11467,19 @@ packages:
       vite:
         optional: true
 
-  vite@6.4.1:
-    resolution: {integrity: sha512-+Oxm7q9hDoLMyJOYfUYBuHQo+dkAloi33apOPP56pzj+vsdJDzr+j1NISE5pyaAuKL4A3UD34qd0lx5+kfKp2g==}
-    engines: {node: ^18.0.0 || ^20.0.0 || >=22.0.0}
+  vite@7.2.6:
+    resolution: {integrity: sha512-tI2l/nFHC5rLh7+5+o7QjKjSR04ivXDF4jcgV0f/bTQ+OJiITy5S6gaynVsEM+7RqzufMnVbIon6Sr5x1SDYaQ==}
+    engines: {node: ^20.19.0 || >=22.12.0}
     hasBin: true
     peerDependencies:
-      '@types/node': ^18.0.0 || ^20.0.0 || >=22.0.0
+      '@types/node': ^20.19.0 || >=22.12.0
       jiti: '>=1.21.0'
-      less: '*'
+      less: ^4.0.0
       lightningcss: ^1.21.0
-      sass: '*'
-      sass-embedded: '*'
-      stylus: '*'
-      sugarss: '*'
+      sass: ^1.70.0
+      sass-embedded: ^1.70.0
+      stylus: '>=0.54.8'
+      sugarss: ^5.0.0
       terser: ^5.16.0
       tsx: ^4.8.1
       yaml: ^2.4.2
@@ -25481,39 +25481,39 @@ snapshots:
       unist-util-stringify-position: 4.0.0
       vfile-message: 4.0.2
 
-  vite-plugin-mkcert@1.17.6(vite@6.4.1(@types/node@22.10.5)(jiti@1.21.0)(less@4.2.0)(lightningcss@1.29.1)(terser@5.44.1)(yaml@2.6.1)):
+  vite-plugin-mkcert@1.17.6(vite@7.2.6(@types/node@22.10.5)(jiti@1.21.0)(less@4.2.0)(lightningcss@1.29.1)(terser@5.44.1)(yaml@2.6.1)):
     dependencies:
       '@octokit/rest': 20.1.1
       axios: 1.7.9(debug@4.4.0)
       debug: 4.4.0(supports-color@8.1.1)
       picocolors: 1.1.1
-      vite: 6.4.1(@types/node@22.10.5)(jiti@1.21.0)(less@4.2.0)(lightningcss@1.29.1)(terser@5.44.1)(yaml@2.6.1)
+      vite: 7.2.6(@types/node@22.10.5)(jiti@1.21.0)(less@4.2.0)(lightningcss@1.29.1)(terser@5.44.1)(yaml@2.6.1)
     transitivePeerDependencies:
       - supports-color
 
-  vite-plugin-pwa@1.0.0(vite@6.4.1(@types/node@22.10.5)(jiti@1.21.0)(less@4.2.0)(lightningcss@1.29.1)(terser@5.44.1)(yaml@2.6.1))(workbox-build@7.1.0(@types/babel__core@7.20.5))(workbox-window@7.1.0):
+  vite-plugin-pwa@1.0.0(vite@7.2.6(@types/node@22.10.5)(jiti@1.21.0)(less@4.2.0)(lightningcss@1.29.1)(terser@5.44.1)(yaml@2.6.1))(workbox-build@7.1.0(@types/babel__core@7.20.5))(workbox-window@7.1.0):
     dependencies:
       debug: 4.4.0(supports-color@8.1.1)
       pretty-bytes: 6.1.1
       tinyglobby: 0.2.10
-      vite: 6.4.1(@types/node@22.10.5)(jiti@1.21.0)(less@4.2.0)(lightningcss@1.29.1)(terser@5.44.1)(yaml@2.6.1)
+      vite: 7.2.6(@types/node@22.10.5)(jiti@1.21.0)(less@4.2.0)(lightningcss@1.29.1)(terser@5.44.1)(yaml@2.6.1)
       workbox-build: 7.1.0(@types/babel__core@7.20.5)
       workbox-window: 7.1.0
     transitivePeerDependencies:
       - supports-color
 
-  vite-tsconfig-paths@5.1.4(typescript@5.9.3)(vite@6.4.1(@types/node@22.10.5)(jiti@1.21.0)(less@4.2.0)(lightningcss@1.29.1)(terser@5.44.1)(yaml@2.6.1)):
+  vite-tsconfig-paths@5.1.4(typescript@5.9.3)(vite@7.2.6(@types/node@22.10.5)(jiti@1.21.0)(less@4.2.0)(lightningcss@1.29.1)(terser@5.44.1)(yaml@2.6.1)):
     dependencies:
       debug: 4.4.0(supports-color@8.1.1)
       globrex: 0.1.2
       tsconfck: 3.1.4(typescript@5.9.3)
     optionalDependencies:
-      vite: 6.4.1(@types/node@22.10.5)(jiti@1.21.0)(less@4.2.0)(lightningcss@1.29.1)(terser@5.44.1)(yaml@2.6.1)
+      vite: 7.2.6(@types/node@22.10.5)(jiti@1.21.0)(less@4.2.0)(lightningcss@1.29.1)(terser@5.44.1)(yaml@2.6.1)
     transitivePeerDependencies:
       - supports-color
       - typescript
 
-  vite@6.4.1(@types/node@22.10.5)(jiti@1.21.0)(less@4.2.0)(lightningcss@1.29.1)(terser@5.44.1)(yaml@2.6.1):
+  vite@7.2.6(@types/node@22.10.5)(jiti@1.21.0)(less@4.2.0)(lightningcss@1.29.1)(terser@5.44.1)(yaml@2.6.1):
     dependencies:
       esbuild: 0.25.12
       fdir: 6.5.0(picomatch@4.0.3)
