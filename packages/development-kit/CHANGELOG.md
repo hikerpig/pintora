@@ -1,5 +1,11 @@
 # @pintora/development-kit
 
+## 0.1.2
+
+### Patch Changes
+
+- 4d75fe8: upgrade typescript to 5.9
+
 ## 0.1.1
 
 ### Patch Changes

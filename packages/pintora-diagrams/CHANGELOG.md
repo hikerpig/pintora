@@ -1,5 +1,15 @@
 # Change Log
 
+## 0.8.1
+
+### Patch Changes
+
+- b79ac8d: Gantt should be able to defer time calculation for dependency
+- 9f02131: fix(diagrams): [activityDiagram] infinite loop crash with nested conditional (nested if-statement)#
+- 4d75fe8: upgrade typescript to 5.9
+- Updated dependencies [4d75fe8]
+  - @pintora/core@0.8.1
+
 ## 0.8.0
 
 ### Minor Changes

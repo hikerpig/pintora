@@ -1,5 +1,15 @@
 # Change Log
 
+## 0.8.1
+
+### Patch Changes
+
+- 4d75fe8: upgrade typescript to 5.9
+- Updated dependencies [4d75fe8]
+  - @pintora/core@0.8.1
+  - @pintora/renderer@0.8.1
+  - @pintora/standalone@0.8.1
+
 ## 0.8.0
 
 ### Minor Changes

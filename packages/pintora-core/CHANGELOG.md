@@ -1,5 +1,11 @@
 # Change Log
 
+## 0.8.1
+
+### Patch Changes
+
+- 4d75fe8: upgrade typescript to 5.9
+
 ## 0.8.0
 
 ### Minor Changes

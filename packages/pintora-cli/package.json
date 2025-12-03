@@ -1,6 +1,6 @@
 {
   "name": "@pintora/cli",
-  "version": "0.8.0",
+  "version": "0.8.1",
   "description": "A node.js version of pintora",
   "keywords": [
     "pintora"
@@ -37,9 +37,9 @@
     "url": "https://github.com/hikerpig/pintora/issues"
   },
   "dependencies": {
-    "@pintora/core": "workspace:^0.8.0",
-    "@pintora/renderer": "workspace:^0.8.0",
-    "@pintora/standalone": "workspace:^0.8.0",
+    "@pintora/core": "workspace:^0.8.1",
+    "@pintora/renderer": "workspace:^0.8.1",
+    "@pintora/standalone": "workspace:^0.8.1",
     "canvas": "^3.0.1",
     "consola": "^3.0.0",
     "jsdom": "^26.0.0",

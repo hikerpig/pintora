@@ -1,5 +1,13 @@
 ## 0.1.0
 
+## 0.2.1
+
+### Patch Changes
+
+- 4d75fe8: upgrade typescript to 5.9
+- Updated dependencies [4d75fe8]
+  - @pintora/standalone@0.8.1
+
 ## 0.2.0
 
 ### Minor Changes
