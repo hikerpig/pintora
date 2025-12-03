@@ -71,4 +71,29 @@ describe('activity-artist', () => {
     })
     expect(count).toEqual(2)
   })
+
+  it('should not hang with nested if statements', () => {
+    // issue 392
+    const code = stripStartEmptyLines(`
+    activityDiagram
+    title: Process functionality
+    start
+    :Update context info;
+    :Call state function;
+    if(next state is other state?) then
+    :Call exit function;
+    else(no)
+    if(next state is other state?) then
+    :Call exit function;
+    else(no)
+    endif
+    endif
+    :Action 2;
+    `)
+    // Set a timeout to fail if it hangs (default is usually 5s, but we can be explicit if needed)
+    // Jest timeout is usually handled by the runner, but we can try to wrap in a promise with timeout if needed.
+    // For now, let's rely on Jest's timeout.
+    const result = testDraw(code)
+    expect(result.graphicIR.mark).toBeTruthy()
+  }, 1000) // 1s timeout
 })

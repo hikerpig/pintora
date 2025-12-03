@@ -559,6 +559,8 @@ class ActivityDraw {
             if (p.parentId) {
               p = this.model.stepModelMap.get(p.parentId)
               if (!p) break
+            } else {
+              break
             }
           }
           if (closestGroup) {
