@@ -22,4 +22,45 @@ describe('component-artist', () => {
     `
     expect(stripDrawResultForSnapshot(testDraw(code))).toMatchSnapshot()
   })
+
+  it('should not freeze when connecting child component to parent package', () => {
+    // issue #387
+    const code = `
+      componentDiagram
+      package "Foo" {
+        [Bar]
+      }
+      [Bar] --> [Foo]
+    `
+    const result = testDraw(code)
+    expect(result).toBeTruthy()
+    // Verify that the skipped edge is actually drawn with a non-empty path
+    const lineMarks = result.graphicIR.mark.children
+      .filter(child => child.type === 'group')
+      .flatMap(group => group.children || [])
+      .filter(child => child.class === 'component__rel-line')
+    expect(lineMarks.length).toBeGreaterThan(0)
+    expect(lineMarks[0].attrs.path).toBeTruthy()
+    expect(lineMarks[0].attrs.path.length).toBeGreaterThan(0)
+  })
+
+  it('should not freeze when connecting parent package to child component', () => {
+    const code = `
+      componentDiagram
+      package "Foo" {
+        [Bar]
+      }
+      [Foo] --> [Bar]
+    `
+    const result = testDraw(code)
+    expect(result).toBeTruthy()
+    // Verify that the skipped edge is actually drawn with a non-empty path
+    const lineMarks = result.graphicIR.mark.children
+      .filter(child => child.type === 'group')
+      .flatMap(group => group.children || [])
+      .filter(child => child.class === 'component__rel-line')
+    expect(lineMarks.length).toBeGreaterThan(0)
+    expect(lineMarks[0].attrs.path).toBeTruthy()
+    expect(lineMarks[0].attrs.path.length).toBeGreaterThan(0)
+  })
 })

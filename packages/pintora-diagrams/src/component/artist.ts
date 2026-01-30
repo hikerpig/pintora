@@ -57,6 +57,84 @@ type EdgeData = {
   labelSize?: TSize
 }
 
+/** Data for edges that were skipped in dagre layout but need manual drawing */
+type SkippedEdgeData = {
+  relationship: Relationship
+  lineMark: ReturnType<typeof makeMark>
+  relationGroupMark: Group
+  shouldDrawArrow: boolean
+  relText?: Text
+  relTextBg?: Rect
+  labelDims?: TSize
+}
+
+type NodeExtra = {
+  titleAnchorYOffset?: number
+}
+function setNodeExtra(node: LayoutNode<NodeExtra>, key: keyof NodeExtra, value: NodeExtra[keyof NodeExtra]) {
+  if (!node.extra) {
+    node.extra = {}
+  }
+  node.extra[key] = value
+}
+
+function getNodeExtra(node: LayoutNode<NodeExtra>, key: keyof NodeExtra): NodeExtra[keyof NodeExtra] {
+  return node.extra?.[key]
+}
+
+/**
+ * Apply edge layout to a relationship line, label, and arrow.
+ * Extracted to avoid duplication between dagre onLayout and manual skipped edge drawing.
+ */
+function applyEdgeLayout(params: {
+  points: { x: number; y: number }[]
+  lineMark: ReturnType<typeof makeMark>
+  relText?: Text
+  relTextBg?: Rect
+  labelDims?: TSize
+  shouldDrawArrow: boolean
+  relationGroupMark: Group
+  updateBounds?: (b: Bounds) => void
+}) {
+  const { points, lineMark, relText, relTextBg, labelDims, shouldDrawArrow, relationGroupMark, updateBounds } = params
+
+  // Create the path
+  const newPath = conf.edgeType === 'curved' ? getPointsCurvePath(points) : getPointsLinearPath(points)
+  lineMark.attrs.path = newPath
+
+  // Position label if present
+  if (relText && relTextBg && labelDims) {
+    const anchorPoint = getPointAt(points, 0.4, true)
+    safeAssign(relText.attrs, { x: anchorPoint.x, y: anchorPoint.y })
+    safeAssign(relTextBg.attrs, {
+      x: anchorPoint.x - labelDims.width / 2,
+      y: anchorPoint.y - labelDims.height / 2,
+    })
+    if (updateBounds) {
+      const bgAttrs = relTextBg.attrs
+      updateBounds({
+        left: bgAttrs.x,
+        right: bgAttrs.x + bgAttrs.width,
+        top: bgAttrs.y,
+        bottom: bgAttrs.y + bgAttrs.height,
+        width: bgAttrs.width,
+        height: bgAttrs.height,
+      })
+    }
+  }
+
+  // Draw arrow if needed
+  if (shouldDrawArrow) {
+    const lastPoint = points[points.length - 1]
+    const pointsForDirection = points.slice(-2)
+    const arrowRad = calcDirection.apply(null, pointsForDirection)
+    const arrowMark = drawArrowTo(lastPoint, 8, arrowRad, {
+      color: conf.relationLineColor,
+    })
+    relationGroupMark.children.push(arrowMark)
+  }
+}
+
 class ComponentArtist extends BaseArtist<ComponentDiagramIR, ComponentConf> {
   customDraw(ir, config, opts?) {
     // console.info('[artist] component', ir)
@@ -89,12 +167,17 @@ class ComponentArtist extends BaseArtist<ComponentDiagramIR, ComponentConf> {
     drawGroupsTo(rootMark, ir, g)
 
     // add relationships
-    drawRelationshipsTo(rootMark, ir, g)
+    const { skippedEdges } = drawRelationshipsTo(rootMark, ir, g)
 
     dagreWrapper.doLayout()
 
     const { labelBounds } = adjustMarkInGraph(dagreWrapper)
-    const gBounds = tryExpandBounds(dagreWrapper.getGraphBounds(), labelBounds)
+
+    // Draw manually the edges that were skipped (child-parent relationships)
+    const skippedEdgeBounds = drawSkippedEdges(skippedEdges, g)
+
+    // Merge all bounds: graph bounds, regular edge label bounds, and skipped edge bounds
+    const gBounds = tryExpandBounds(tryExpandBounds(dagreWrapper.getGraphBounds(), labelBounds), skippedEdgeBounds)
     const pad = conf.diagramPadding
 
     const titleFont: IFont = fontConfig
@@ -344,7 +427,10 @@ function drawGroupsTo(parentMark: Group, ir: ComponentDiagramIR, g: LayoutGraph)
           }
         }
 
-        safeAssign(labelMark.attrs, { x, y: y - height / 2 + labelTextDims.height + 5 })
+        const titleAnchorYOffset = labelTextDims.height + 5
+        safeAssign(labelMark.attrs, { x, y: y - height / 2 + titleAnchorYOffset })
+        // Store the title anchor offset for use by skipped edges (child->parent connections)
+        setNodeExtra(node, 'titleAnchorYOffset', titleAnchorYOffset)
 
         if (typeMark) {
           const typeTextDims = calculateTextDimensions(typeText, fontConfig)
@@ -389,6 +475,27 @@ function drawGroupsTo(parentMark: Group, ir: ComponentDiagramIR, g: LayoutGraph)
 }
 
 function drawRelationshipsTo(parentMark: Group, ir: ComponentDiagramIR, g: LayoutGraph) {
+  // Helper function to check if a node is a child (direct or nested) of a group
+  const isChildOfGroup = (nodeName: string, groupName: string): boolean => {
+    const group = ir.groups[groupName]
+    if (!group) return false
+
+    // Check direct children first
+    const isDirectChild = group.children.some(child => 'name' in child && child.name === nodeName)
+    if (isDirectChild) return true
+
+    // Recursively check nested groups - handles grandchild -> ancestor relationships
+    for (const child of group.children) {
+      if ('name' in child && child.name in ir.groups) {
+        if (isChildOfGroup(nodeName, child.name)) return true
+      }
+    }
+
+    return false
+  }
+
+  const skippedEdges: SkippedEdgeData[] = []
+
   ir.relationships.forEach(function (r) {
     // console.log('draw relationship', r)
     const lineMark = makeMark(
@@ -403,9 +510,9 @@ function drawRelationshipsTo(parentMark: Group, ir: ComponentDiagramIR, g: Layou
     if ([LineType.DOTTED_ARROW, LineType.DOTTED].includes(r.line.lineType)) {
       lineMark.attrs.lineDash = [4, 4]
     }
-    let relText: Text
-    let relTextBg: Rect
-    let labelDims: TSize
+    let relText: Text | undefined
+    let relTextBg: Rect | undefined
+    let labelDims: TSize | undefined
     if (r.message) {
       labelDims = calculateTextDimensions(r.message, fontConfig)
       relText = makeMark(
@@ -422,72 +529,33 @@ function drawRelationshipsTo(parentMark: Group, ir: ComponentDiagramIR, g: Layou
       relTextBg = makeLabelBg(labelDims, { x: 0, y: 0 }, { fill: conf.labelBackground })
     }
 
-    const shouldDrawArrow = r.line.lineType !== LineType.STRAIGHT
-    g.setEdge(r.from.name, r.to.name, {
-      name: getEdgeName(r),
-      relationship: r,
-      labelpos: 'r',
-      // labeloffset: 100,
-      labelSize: labelDims,
-      onLayout(data, context) {
-        // console.log(
-        //   'edge onLayout',
-        //   edge,
-        //   data,
-        //   'points',
-        //   data.points.map(t => `${t.x},${t.y}`),
-        // )
-        const newPath = conf.edgeType === 'curved' ? getPointsCurvePath(data.points) : getPointsLinearPath(data.points)
-        lineMark.attrs.path = newPath
-        if (relText) {
-          // do not choose 0.5, otherwise label would probably cover other nodes
-          const anchorPoint = data.labelPoint || getPointAt(data.points, 0.4, true)
-          safeAssign(relText.attrs, { x: anchorPoint.x, y: anchorPoint.y })
-          safeAssign(relTextBg.attrs, {
-            x: anchorPoint.x - labelDims.width / 2,
-            y: anchorPoint.y - labelDims.height / 2,
-          })
-          const bgAttrs = relTextBg.attrs
-          context.updateBounds({
-            left: bgAttrs.x,
-            right: bgAttrs.x + bgAttrs.width,
-            top: bgAttrs.y,
-            bottom: bgAttrs.y + bgAttrs.height,
-            width: bgAttrs.width,
-            height: bgAttrs.height,
-          })
-          // // debug
-          // const labelPointMark = makeCircleWithCoordInPoint(anchorPoint)
-          // relationGroupMark.children.push(labelPointMark)
-        }
-
-        if (shouldDrawArrow) {
-          const lastPoint = data.points[data.points.length - 1]
-          const pointsForDirection = data.points.slice(-2)
-          const arrowRad = calcDirection.apply(null, pointsForDirection)
-          const arrowMark = drawArrowTo(lastPoint, 8, arrowRad, {
-            color: conf.relationLineColor,
-          })
-          relationGroupMark.children.push(arrowMark)
-        }
-      },
-    } as EdgeData)
-
     const isFromGroup = r.from.type === 'group'
     const isToGroup = r.to.type === 'group'
-    if (isFromGroup || isToGroup) {
-      if (isToGroup) {
-        const toGroup = ir.groups[r.to.name]
-        const firstChild = toGroup?.children[0]
-        if (firstChild && 'name' in firstChild) {
-          g.setEdge(r.from.name, firstChild.name, { isDummyEdge: true } as EdgeData)
+
+    // Check for problematic parent-child relationships that would cause dagre to hang
+    // When a child component connects to its parent group (or vice versa), dagre cannot
+    // handle this in compound graph layout - it causes an infinite loop
+    const isSourceChildOfTarget = isToGroup && isChildOfGroup(r.from.name, r.to.name)
+    const isTargetChildOfSource = isFromGroup && isChildOfGroup(r.to.name, r.from.name)
+    const shouldSkipEdge = isSourceChildOfTarget || isTargetChildOfSource
+
+    if (shouldSkipEdge) {
+      // Increase the child node's top margin to make room for the edge
+      // that will connect to the parent group's title area
+      if (isSourceChildOfTarget) {
+        const childNode = g.node(r.from.name)
+        if (childNode) {
+          childNode.margint = Math.min((childNode.margint || 0) + 20, 40)
         }
-      } else if (isFromGroup) {
-        const fromGroup = ir.groups[r.from.name]
-        const firstChild = fromGroup?.children[0]
-        if (firstChild && 'name' in firstChild) g.setEdge(firstChild.name, r.to.name, { isDummyEdge: true } as EdgeData)
+      } else if (isTargetChildOfSource) {
+        const childNode = g.node(r.to.name)
+        if (childNode) {
+          childNode.margint = Math.min((childNode.margint || 0) + 20, 40)
+        }
       }
     }
+
+    const shouldDrawArrow = r.line.lineType !== LineType.STRAIGHT
 
     const relationGroupMark = makeMark(
       'group',
@@ -497,8 +565,131 @@ function drawRelationshipsTo(parentMark: Group, ir: ComponentDiagramIR, g: Layou
       },
     )
 
+    // Only add edge to dagre if it's not a problematic parent-child relationship
+    if (!shouldSkipEdge) {
+      g.setEdge(r.from.name, r.to.name, {
+        name: getEdgeName(r),
+        relationship: r,
+        labelpos: 'r',
+        labelSize: labelDims,
+        onLayout(data, context) {
+          applyEdgeLayout({
+            points: data.points,
+            lineMark,
+            relText,
+            relTextBg,
+            labelDims,
+            shouldDrawArrow,
+            relationGroupMark,
+            updateBounds: context.updateBounds,
+          })
+        },
+      } as EdgeData)
+
+      // Add dummy edges for group connections (but only if not a problematic relationship)
+      if (isFromGroup || isToGroup) {
+        if (isToGroup) {
+          const toGroup = ir.groups[r.to.name]
+          const firstChild = toGroup?.children[0]
+          if (firstChild && 'name' in firstChild && firstChild.name !== r.from.name) {
+            if (!isChildOfGroup(r.from.name, r.to.name)) {
+              g.setEdge(r.from.name, firstChild.name, { isDummyEdge: true } as EdgeData)
+            }
+          }
+        } else if (isFromGroup) {
+          const fromGroup = ir.groups[r.from.name]
+          const firstChild = fromGroup?.children[0]
+          if (firstChild && 'name' in firstChild && firstChild.name !== r.to.name) {
+            if (!isChildOfGroup(r.to.name, r.from.name)) {
+              g.setEdge(firstChild.name, r.to.name, { isDummyEdge: true } as EdgeData)
+            }
+          }
+        }
+      }
+    } else {
+      // Collect skipped edges for manual drawing after layout
+      skippedEdges.push({
+        relationship: r,
+        lineMark,
+        relationGroupMark,
+        shouldDrawArrow,
+        relText,
+        relTextBg,
+        labelDims,
+      })
+    }
+
     parentMark.children.push(relationGroupMark)
   })
+
+  return { skippedEdges }
+}
+
+/**
+ * Draw edges that were skipped in dagre layout (child-parent relationships).
+ * These edges are calculated manually after layout using node positions.
+ * For child -> parent edges, the arrow points to the parent's title label area.
+ * Returns bounds for all label backgrounds to ensure they are included in final diagram bounds.
+ */
+function drawSkippedEdges(skippedEdges: SkippedEdgeData[], g: LayoutGraph): Bounds {
+  const labelBounds = makeBounds()
+
+  skippedEdges.forEach(edgeData => {
+    const { relationship: r, lineMark, relationGroupMark, shouldDrawArrow, relText, relTextBg, labelDims } = edgeData
+
+    // Get source and target node positions from dagre layout
+    const fromNode = g.node(r.from.name) as LayoutNode
+    const toNode = g.node(r.to.name) as LayoutNode
+
+    if (!fromNode || !toNode) return
+
+    const isToGroup = r.to.type === 'group'
+    const isFromGroup = r.from.type === 'group'
+
+    const fromCenter = { x: fromNode.x, y: fromNode.y }
+    const toCenter = { x: toNode.x, y: toNode.y }
+
+    // Calculate the half dimensions
+    const toHalfHeight = (toNode.height || 0) / 2
+    const fromHalfHeight = (fromNode.height || 0) / 2
+
+    let startPoint: { x: number; y: number }
+    let endPoint: { x: number; y: number }
+
+    if (isToGroup) {
+      // Child -> Parent: arrow points to parent group's title label (top of the group)
+      // Use the stored title anchor offset calculated during drawGroupsTo
+      const titleAnchorOffset = getNodeExtra(toNode, 'titleAnchorYOffset') || labelDims?.height || 15
+      const titleY = toCenter.y - toHalfHeight + titleAnchorOffset
+
+      startPoint = { x: fromCenter.x, y: fromCenter.y - fromHalfHeight }
+      endPoint = { x: toCenter.x, y: titleY }
+    } else if (isFromGroup) {
+      // Parent -> Child: arrow comes from parent group's title area
+      const titleAnchorOffset = getNodeExtra(fromNode, 'titleAnchorYOffset') || labelDims?.height || 15
+      const titleY = fromCenter.y - fromHalfHeight + titleAnchorOffset
+
+      startPoint = { x: fromCenter.x, y: titleY }
+      endPoint = { x: toCenter.x, y: toCenter.y - toHalfHeight }
+    } else {
+      // Fallback (shouldn't happen for skipped edges)
+      startPoint = { ...fromCenter }
+      endPoint = { ...toCenter }
+    }
+
+    applyEdgeLayout({
+      points: [startPoint, endPoint],
+      lineMark,
+      relText,
+      relTextBg,
+      labelDims,
+      shouldDrawArrow,
+      relationGroupMark,
+      updateBounds: b => tryExpandBounds(labelBounds, b),
+    })
+  })
+
+  return labelBounds
 }
 
 const adjustMarkInGraph = function (dagreWrapper: DagreWrapper) {
