@@ -236,13 +236,13 @@ importers:
   packages/pintora-cli:
     dependencies:
       '@pintora/core':
-        specifier: workspace:^0.8.0
+        specifier: workspace:^0.8.1
         version: link:../pintora-core
       '@pintora/renderer':
-        specifier: workspace:^0.8.0
+        specifier: workspace:^0.8.1
         version: link:../pintora-renderer
       '@pintora/standalone':
-        specifier: workspace:^0.8.0
+        specifier: workspace:^0.8.1
         version: link:../pintora-standalone
       canvas:
         specifier: ^3.0.1
@@ -319,7 +319,7 @@ importers:
         specifier: ^2.21.0-beta.1
         version: 2.21.0-beta.2
       '@pintora/core':
-        specifier: workspace:^0.8.0
+        specifier: workspace:^0.8.1
         version: link:../pintora-core
       '@pintora/dagre':
         specifier: ^0.10.10
@@ -347,7 +347,7 @@ importers:
         version: 1.5.1(babel-plugin-macros@3.1.0)
     devDependencies:
       '@pintora/development-kit':
-        specifier: workspace:^0.1.1
+        specifier: workspace:^0.1.2
         version: link:../development-kit
       '@pintora/test-shared':
         specifier: workspace:^0.5.2
@@ -398,7 +398,7 @@ importers:
         specifier: ^0.5.6
         version: 0.5.6
       '@pintora/core':
-        specifier: workspace:^0.8.0
+        specifier: workspace:^0.8.1
         version: link:../pintora-core
       '@types/node':
         specifier: ^16.11.7
@@ -414,13 +414,13 @@ importers:
   packages/pintora-standalone:
     dependencies:
       '@pintora/core':
-        specifier: workspace:^0.8.0
+        specifier: workspace:^0.8.1
         version: link:../pintora-core
       '@pintora/diagrams':
-        specifier: workspace:^0.8.0
+        specifier: workspace:^0.8.1
         version: link:../pintora-diagrams
       '@pintora/renderer':
-        specifier: workspace:^0.8.0
+        specifier: workspace:^0.8.1
         version: link:../pintora-renderer
     devDependencies:
       '@pintora/test-shared':
