@@ -77,7 +77,7 @@ export interface LayoutNodeOption extends Omit<NodeOpts, 'width' | 'height'> {
   minwidth?: number
 }
 
-export interface LayoutNode extends LayoutNodeOption {
+export interface LayoutNode<E = object> extends LayoutNodeOption {
   id?: string
   mark?: Mark
   name?: string // debug
@@ -85,6 +85,7 @@ export interface LayoutNode extends LayoutNodeOption {
   height: number
   x: number
   y: number
+  extra?: E
 }
 
 export type LayoutEdge<T> = BaseEdgeData & T
