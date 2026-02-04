@@ -22,13 +22,20 @@ import {
   makeEmptyGroup,
   makeLabelBg,
 } from '../util/artist-util'
-import { calcBound } from '../util/bound'
+import { calcBound, calcTextBound } from '../util/bound'
 import type { EnhancedConf } from '../util/config'
 import { DagreWrapper } from '../util/dagre-wrapper'
 import { setDevGlobal } from '../util/env'
 import { getFontConfig } from '../util/font-config'
-import { BaseEdgeData, createLayoutGraph, getGraphSplinesOption, LayoutGraph, LayoutNode } from '../util/graph'
-import { getMedianPoint, getPointsCurvePath, getPointsLinearPath } from '../util/line-util'
+import {
+  BaseEdgeData,
+  createLayoutGraph,
+  getGraphSplinesOption,
+  LayoutEdgeOption,
+  LayoutGraph,
+  LayoutNode,
+} from '../util/graph'
+import { getPointsCurvePath, getPointsLinearPath } from '../util/line-util'
 import { makeBounds, positionGroupContents, tryExpandBounds } from '../util/mark-positioner'
 import { ClassConf, getConf } from './config'
 import { ClassIR, ClassRelation, Note, Relation, TClass } from './db'
@@ -67,6 +74,13 @@ class ClassArtist extends BaseArtist<ClassIR, ClassConf> {
   }
 }
 const artist = new ClassArtist()
+
+// Layout constants for relation edges
+const DUMMY_NODE_PADDING = { width: 10, height: 4 }
+const DUMMY_NODE_SIZE = 1
+const ARROW_SIZE = 8
+const DASH_PATTERN: number[] = [2, 2]
+
 class ClassDiagramDraw {
   dagreWrapper: DagreWrapper
   rootMark: Group
@@ -75,6 +89,9 @@ class ClassDiagramDraw {
   theme: ITheme
   fontConfig: IFont
   protected elementBounds = makeBounds()
+  /** Track edge count between node pairs to handle multiple edges */
+  protected edgeCountMap = new Map<string, number>()
+
   constructor(
     public ir: ClassIR,
     public conf: EnhancedConf<ClassConf>,
@@ -172,26 +189,24 @@ class ClassDiagramDraw {
     let labelDims: TSize
 
     const startNodeId = r.reversed ? r.right : r.left
-    const ednNodeId = r.reversed ? r.left : r.right
+    const endNodeId = r.reversed ? r.left : r.right
 
-    let minlen = 1
+    // Track edge count between this node pair
+    const edgeKey = `${startNodeId}--${endNodeId}`
+    const edgeIndex = this.edgeCountMap.get(edgeKey) || 0
+    this.edgeCountMap.set(edgeKey, edgeIndex + 1)
+
+    // Calculate label dimensions
     if (r.label) {
       labelDims = calculateTextDimensions(r.label, fontConfig)
-      minlen = Math.ceil(labelDims.height / conf.ranksep) + 1
-      const startNode = g.node(startNodeId)
-      const extraPad = (labelDims.width - startNode.width) / 2
-      if (extraPad > 0) {
-        // so label won't overlap
-        startNode.marginr = extraPad
-        startNode.marginl = extraPad
-      }
     }
     const leftLabelDims = r.labelLeft ? calculateTextDimensions(r.labelLeft, fontConfig) : null
     const rightLabelDims = r.labelRight ? calculateTextDimensions(r.labelRight, fontConfig) : null
+
+    // Create label marks for multiplicity labels
     let leftLabelMark: Text
     let rightLabelMark: Text
     if (r.labelLeft) {
-      minlen += Math.ceil(leftLabelDims.height / conf.ranksep)
       leftLabelMark = makeMark('text', {
         text: r.labelLeft,
         fill: conf.relationLineColor,
@@ -201,7 +216,6 @@ class ClassDiagramDraw {
       relationGroupMark.children.push(leftLabelMark)
     }
     if (r.labelRight) {
-      minlen += Math.ceil(rightLabelDims.height / conf.ranksep)
       rightLabelMark = makeMark('text', {
         text: r.labelRight,
         fill: conf.relationLineColor,
@@ -213,25 +227,37 @@ class ClassDiagramDraw {
     const startLabelMark = r.reversed ? rightLabelMark : leftLabelMark
     const endLabelMark = r.reversed ? leftLabelMark : rightLabelMark
 
-    g.setEdge(startNodeId, ednNodeId, {
-      label: r.relation,
-      minlen,
-      onLayout: (data: BaseEdgeData) => {
-        // console.log('edge onlayout', data)
-        const newPath = conf.edgeType === 'curved' ? getPointsCurvePath(data.points) : getPointsLinearPath(data.points)
-        const lineMark = makeMark(
-          'path',
-          {
-            path: newPath,
-            stroke: conf.relationLineColor,
-            lineCap: 'round',
-            lineDash: r.dashed ? [2, 2] : null,
-          },
-          { class: 'class__rel-line' },
-        )
-        relationGroupMark.children.push(lineMark)
+    const startLabelDims = r.labelLeft ? leftLabelDims : rightLabelDims
+    const endLabelDims = r.labelLeft ? rightLabelDims : leftLabelDims
+
+    // Use edge index as the edge name to support multiple edges between same nodes
+    const edgeName = `edge_${edgeIndex}`
+
+    // Calculate minlen based on labelLeft and labelRight heights
+    let minlenLeft = 1
+    if (r.labelLeft) {
+      minlenLeft += Math.ceil(leftLabelDims.height / conf.ranksep)
+    }
+    let minlenRight = 1
+    if (r.labelRight) {
+      minlenRight += Math.ceil(rightLabelDims.height / conf.ranksep)
+    }
+
+    // Always use a dummy node in the middle to ensure consistent layout
+    // This helps dagre to properly separate multiple edges between the same nodes
+    const dummyNodeId = `dummy_${edgeKey}_${edgeIndex}`
+
+    // Calculate dummy node size based on label
+    const dummyWidth = r.label ? labelDims.width + DUMMY_NODE_PADDING.width : DUMMY_NODE_SIZE
+    const dummyHeight = r.label ? labelDims.height + DUMMY_NODE_PADDING.height : DUMMY_NODE_SIZE
+
+    g.setNode(dummyNodeId, {
+      width: dummyWidth,
+      height: dummyHeight,
+      isDummy: true,
+      onLayout: (data: LayoutNode) => {
+        // Draw the relation label at the dummy node position
         if (r.label) {
-          const anchorPoint = (minlen === 1 ? data.labelPoint : null) || getMedianPoint(data.points).point
           const relText = makeMark(
             'text',
             {
@@ -239,44 +265,115 @@ class ClassDiagramDraw {
               fill: conf.relationTextColor,
               textAlign: 'center',
               textBaseline: 'middle',
-              ...anchorPoint,
+              x: data.x,
+              y: data.y,
               ...fontConfig,
             },
             { class: 'class__rel-text' },
           )
-          const relTextBg = makeLabelBg(labelDims, anchorPoint, {
-            fill: conf.labelBackground,
-          })
+          const relTextBg = makeLabelBg(
+            labelDims,
+            { x: data.x, y: data.y },
+            {
+              fill: conf.labelBackground,
+            },
+          )
           const labelBounds = calcBound([relTextBg])
           tryExpandBounds(this.elementBounds, labelBounds)
-
           relationGroupMark.children.push(relTextBg, relText)
         }
+      },
+    })
+
+    const edgeSpaceWidth = Math.max(startLabelDims?.width || 0, endLabelDims?.width || 0, labelDims?.width || 0)
+    const SIDE_LABEL_X_OFFSET = 5
+
+    // Create two edges: start -> dummy -> end
+    // First edge: start -> dummy
+    this.createEdgeSegment(
+      startNodeId,
+      dummyNodeId,
+      minlenLeft,
+      (data: BaseEdgeData) => {
+        const lineMark = this.createEdgeLineMark(data, r.dashed)
+        relationGroupMark.children.push(lineMark)
+
+        // Draw start label beside the first segment
+        if (startLabelMark && data.points.length >= 2) {
+          const startIntersectionPoint = data.points[2]
+          safeAssign(startLabelMark.attrs, movePointPosition(startIntersectionPoint, { x: SIDE_LABEL_X_OFFSET, y: 0 }))
+          const labelBounds = calcTextBound(startLabelMark, fontConfig)
+          tryExpandBounds(this.elementBounds, labelBounds)
+        }
+      },
+      `${edgeName}_1`,
+      {
+        width: edgeSpaceWidth,
+      },
+    )
+
+    // Second edge: dummy -> end
+    this.createEdgeSegment(
+      dummyNodeId,
+      endNodeId,
+      minlenRight,
+      (data: BaseEdgeData) => {
+        const lineMark = this.createEdgeLineMark(data, r.dashed)
+        relationGroupMark.children.push(lineMark)
 
         const lastPoint = data.points[data.points.length - 1]
         const pointsForDirection = data.points.slice(-2)
         const arrowRad = calcDirection.apply(null, pointsForDirection)
         const arrowHeadType: ArrowType = RELATION_TO_ARROW_TYPE[r.relation]
         if (arrowHeadType) {
-          const arrowMark = drawArrowTo(lastPoint, 8, arrowRad, {
+          const arrowMark = drawArrowTo(lastPoint, ARROW_SIZE, arrowRad, {
             color: conf.relationLineColor,
             type: arrowHeadType,
           })
           relationGroupMark.children.push(arrowMark)
         }
 
-        // draw label beside intersection of node and line
-        const LABEL_X_OFFSET = 5
-        if (startLabelMark) {
-          const startIntersectionPoint = data.points[2]
-          safeAssign(startLabelMark.attrs, movePointPosition(startIntersectionPoint, { x: LABEL_X_OFFSET, y: 0 }))
-        }
-
-        if (endLabelMark) {
-          safeAssign(endLabelMark.attrs, movePointPosition(lastPoint, { x: LABEL_X_OFFSET, y: 0 }))
+        // Draw end label beside the last segment
+        if (endLabelMark && data.points.length >= 2) {
+          const endIntersectionPoint = data.points[data.points.length - 2]
+          safeAssign(endLabelMark.attrs, movePointPosition(endIntersectionPoint, { x: SIDE_LABEL_X_OFFSET, y: 0 }))
+          const labelBounds = calcTextBound(endLabelMark, fontConfig)
+          tryExpandBounds(this.elementBounds, labelBounds)
         }
       },
-    })
+      `${edgeName}_2`,
+      {
+        width: edgeSpaceWidth,
+      },
+    )
+  }
+
+  /** Creates a line mark for an edge segment */
+  private createEdgeLineMark(data: BaseEdgeData, dashed: boolean) {
+    const { conf } = this
+    const newPath = conf.edgeType === 'curved' ? getPointsCurvePath(data.points) : getPointsLinearPath(data.points)
+    return makeMark(
+      'path',
+      {
+        path: newPath,
+        stroke: conf.relationLineColor,
+        lineCap: 'round',
+        lineDash: dashed ? DASH_PATTERN : null,
+      },
+      { class: 'class__rel-line' },
+    )
+  }
+
+  /** Creates an edge segment with its layout callback */
+  private createEdgeSegment(
+    sourceId: string,
+    targetId: string,
+    minlen: number,
+    onLayout: (data: BaseEdgeData) => void,
+    edgeName: string,
+    extraOptions: Partial<LayoutEdgeOption>,
+  ) {
+    this.dagreWrapper.g.setEdge(sourceId, targetId, { minlen, onLayout, ...extraOptions }, edgeName)
   }
 
   protected drawNote(note: Note) {

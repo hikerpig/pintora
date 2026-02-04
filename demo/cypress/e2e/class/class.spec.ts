@@ -25,5 +25,20 @@ describe('Class Diagram', () => {
       Container "1" *-- "many" Fruit : holds
 `),
     },
+    {
+      // issue #394
+      description: 'will draw multiple edges between two classes without overlapping',
+      code: stripStartEmptyLines(`
+      classDiagram
+        class Cancion {
+          nombre
+        }
+
+        class Album
+
+        Cancion "1..*" -- "1..1" Album : a
+        Cancion "1..*" -- "1..*" Album : b
+`),
+    },
   ])
 })
