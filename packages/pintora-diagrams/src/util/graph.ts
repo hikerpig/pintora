@@ -92,6 +92,7 @@ export type LayoutEdge<T> = BaseEdgeData & T
 
 export interface LayoutEdgeOption extends Partial<EdgeOpts> {
   onLayout?(data: LayoutEdge<unknown>): void
+  width?: number
 }
 
 export function isSubgraph(g: LayoutGraph, id: string) {

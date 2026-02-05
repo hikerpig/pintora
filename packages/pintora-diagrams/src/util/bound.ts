@@ -1,9 +1,41 @@
-import { Mark, MarkType, MarkTypeMap, Bounds, Point } from '@pintora/core'
+import { Mark, MarkType, MarkTypeMap, Bounds, Point, Text, calculateTextDimensions, IFont } from '@pintora/core'
 import { makeBounds } from './mark-positioner'
 
 export type MarkBoundCalculator<K extends MarkType> = (mark: MarkTypeMap[K]) => BoundsWithoutSize
 
 type BoundsWithoutSize = Omit<Bounds, 'width' | 'height'>
+
+/**
+ * Calculate text position based on alignment and baseline
+ * @returns Object containing left and top coordinates
+ */
+export function calcTextPosition(
+  x: number,
+  y: number,
+  width: number,
+  height: number,
+  textAlign: string = 'left',
+  textBaseline: string = 'alphabetic',
+): { left: number; top: number } {
+  let left = x
+  if (textAlign === 'center') {
+    left = x - width / 2
+  } else if (textAlign === 'right' || textAlign === 'end') {
+    left = x - width
+  }
+
+  let top = y
+  if (textBaseline === 'middle') {
+    top = y - height / 2
+  } else if (textBaseline === 'top' || textBaseline === 'hanging') {
+    top = y
+  } else {
+    // 'bottom', 'alphabetic', 'ideographic'
+    top = y - height
+  }
+
+  return { left, top }
+}
 
 // TODO: should consider matrix, if there is rotate
 export const MARK_BOUND_CALCULATORS: Partial<{ [K in MarkType]: MarkBoundCalculator<K> }> = {
@@ -42,6 +74,22 @@ export const MARK_BOUND_CALCULATORS: Partial<{ [K in MarkType]: MarkBoundCalcula
   path() {
     return makeBounds()
     // return calcPathBound(attrs.path as PathCommand[])
+  },
+  text(mark) {
+    const { attrs } = mark
+    const x = attrs.x || 0
+    const y = attrs.y || 0
+    const width = attrs.width || 0
+    const height = attrs.height || 0
+
+    const { left, top } = calcTextPosition(x, y, width, height, attrs.textAlign, attrs.textBaseline)
+
+    return {
+      left,
+      right: left + width,
+      top,
+      bottom: top + height,
+    }
   },
 }
 
@@ -121,4 +169,25 @@ export function floorValues<O>(o: O) {
     if (o[k]) o[k] = Math.floor(o[k])
   }
   return o
+}
+
+export function calcTextBound(textMark: Pick<Text, 'attrs'>, fontConfig: IFont): Bounds {
+  const { attrs } = textMark
+  const x = attrs.x || 0
+  const y = attrs.y || 0
+  const text = attrs.text || ''
+  const dims = calculateTextDimensions(text, fontConfig)
+  const width = dims.width || 0
+  const height = dims.height || 0
+
+  const { left, top } = calcTextPosition(x, y, width, height, attrs.textAlign, attrs.textBaseline)
+
+  return {
+    left,
+    right: left + width,
+    top,
+    bottom: top + height,
+    width,
+    height,
+  }
 }
