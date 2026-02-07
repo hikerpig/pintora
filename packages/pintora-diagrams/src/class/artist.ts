@@ -3,7 +3,6 @@ import {
   Group,
   ITheme,
   last,
-  Line,
   makeMark,
   movePointPosition,
   Rect,
@@ -148,24 +147,18 @@ class ClassDiagramDraw {
 
     const fields = classObj.members.filter(m => !m.isMethod)
     const methods = classObj.members.filter(m => m.isMethod)
-
-    for (const memberList of [fields, methods]) {
-      const { index } = markBuilder.getCurrentSection()
-      const nextSectionIndex = index + 1
-      if (memberList.length) {
-        for (const member of memberList) {
-          markBuilder.addRow(nextSectionIndex, [
-            {
-              label: member.raw,
-              italic: member.modifier === 'abstract',
-              underline: member.modifier === 'static',
-            },
-          ])
-        }
-      } else {
-        markBuilder.addRow(nextSectionIndex, [''])
-      }
-    }
+    markBuilder.addMemberSections([
+      fields.map(member => ({
+        label: member.raw,
+        italic: member.modifier === 'abstract',
+        underline: member.modifier === 'static',
+      })),
+      methods.map(member => ({
+        label: member.raw,
+        italic: member.modifier === 'abstract',
+        underline: member.modifier === 'static',
+      })),
+    ])
 
     this.rootMark.children.push(markBuilder.group)
 
@@ -493,28 +486,199 @@ const RELATION_TO_ARROW_TYPE: Partial<Record<Relation, ArrowType>> = {
   [Relation.AGGREGATION]: 'ediamond',
 }
 
-type EntityMarkPair = {
-  labelMark: Text
-  decorationLine?: Line
+export type RowConfig = {
+  label: string
+  italic?: boolean
+  underline?: boolean
 }
 
-type EntityMarkRow = {
+type RowInput = {
   labels: Array<string | RowConfig>
-  marks: Array<EntityMarkPair>
+  isHeader?: boolean
+}
+
+type RowInputSection = {
+  rows: RowInput[]
+}
+
+type MeasuredLabel = {
+  label: string
+  dims: TSize
+  italic?: boolean
+  underline?: boolean
+  bold?: boolean
+  localYOffset: number
+}
+
+type MeasuredRow = {
+  labels: MeasuredLabel[]
   labelDims: TSize
+  rowHeight: number
   yOffsetStart: number
   yOffsetEnd: number
   isHeader?: boolean
 }
 
-type EntitySection = {
-  rows: EntityMarkRow[]
+type SectionLayout = {
+  rows: MeasuredRow[]
 }
 
-type RowConfig = {
-  label: string
+type EntityLayoutLabel = {
+  text: string
+  dims: TSize
+  isHeader?: boolean
   italic?: boolean
   underline?: boolean
+  bold?: boolean
+  x: number
+  y: number
+  underlineY?: number
+}
+
+type EntityLayout = {
+  size: TSize
+  contentHeight: number
+  sections: SectionLayout[]
+  sectionSeparatorYs: number[]
+  bodySectionBounds?: { y: number; height: number }
+  labels: EntityLayoutLabel[]
+}
+
+type MeasuredSectionsResult = {
+  sections: SectionLayout[]
+  contentHeight: number
+}
+
+class EntityLayoutEngine {
+  static build(sections: RowInputSection[], rowPadding: number, fontConfig: IFont): EntityLayout {
+    return new EntityLayoutEngine(rowPadding, fontConfig).build(sections)
+  }
+
+  constructor(
+    private readonly rowPadding: number,
+    private readonly fontConfig: IFont,
+  ) {}
+
+  build(sections: RowInputSection[]): EntityLayout {
+    const measured = this.measureSections(sections)
+    return this.computeEntityLayout(measured)
+  }
+
+  private measureRow(row: RowInput): MeasuredRow {
+    const labelDims = { width: 0, height: 0 }
+    let labelYOffset = 0
+    const labels = row.labels.map((_l, index) => {
+      const labelConfig = typeof _l === 'string' ? { label: _l } : _l
+      const dims = calculateTextDimensions(labelConfig.label, this.fontConfig)
+      const localYOffset = labelYOffset
+      const labelYDiff = dims.height + Math.floor(this.rowPadding / 2)
+      labelYOffset += labelYDiff
+      labelDims.width = Math.max(labelDims.width, dims.width)
+      labelDims.height += labelYDiff
+      return {
+        label: labelConfig.label,
+        dims,
+        italic: labelConfig.italic,
+        underline: labelConfig.underline,
+        bold: row.isHeader && index === row.labels.length - 1,
+        localYOffset,
+      }
+    })
+    const rowHeight = labelDims.height + this.rowPadding
+    return { labels, labelDims, rowHeight, yOffsetStart: 0, yOffsetEnd: 0, isHeader: row.isHeader }
+  }
+
+  private measureSections(sections: RowInputSection[]): MeasuredSectionsResult {
+    let curY = 0
+    const measuredSections: SectionLayout[] = []
+    sections.forEach((section, sectionIndex) => {
+      if (!section) {
+        return
+      }
+      const rows: MeasuredRow[] = []
+      for (const row of section.rows) {
+        const measured = this.measureRow(row)
+        measured.yOffsetStart = curY
+        curY += measured.rowHeight
+        measured.yOffsetEnd = curY
+        rows.push(measured)
+      }
+      measuredSections[sectionIndex] = { rows }
+    })
+    return {
+      sections: measuredSections,
+      contentHeight: curY,
+    }
+  }
+
+  private computeEntityLayout(measured: MeasuredSectionsResult): EntityLayout {
+    const { sections, contentHeight } = measured
+    let maxWidth = 0
+    sections.forEach(section => {
+      if (!section) {
+        return
+      }
+      for (const row of section.rows) {
+        maxWidth = Math.max(maxWidth, row.labelDims.width)
+      }
+    })
+    const size = {
+      width: maxWidth + this.rowPadding * 2,
+      height: contentHeight + this.rowPadding,
+    }
+    const halfHeight = size.height / 2
+
+    const sectionSeparatorYs: number[] = []
+    let bodySectionYStart: number | undefined
+    let bodySectionYEnd: number | undefined
+
+    const labels: EntityLayoutLabel[] = []
+    const lastSection = last(sections)
+    sections.forEach((section, sectionIndex) => {
+      if (!section || !section.rows.length) {
+        return
+      }
+      const firstRow = section.rows[0]
+      const lastRow = last(section.rows)
+
+      if (sectionIndex === 1) {
+        bodySectionYStart = firstRow.yOffsetStart - halfHeight + this.rowPadding
+      }
+
+      if (sectionIndex > 0) {
+        sectionSeparatorYs.push(firstRow.yOffsetStart - halfHeight + this.rowPadding)
+      }
+
+      if (section === lastSection) {
+        bodySectionYEnd = lastRow.yOffsetEnd + this.rowPadding - halfHeight
+      }
+
+      for (const row of section.rows) {
+        for (const label of row.labels) {
+          const baseX = row.isHeader ? 0 : (label.dims.width - size.width) / 2 + this.rowPadding
+          const baseY = row.yOffsetStart + label.localYOffset + this.rowPadding - halfHeight + this.rowPadding / 2
+          labels.push({
+            text: label.label,
+            dims: label.dims,
+            isHeader: row.isHeader,
+            italic: label.italic,
+            underline: label.underline,
+            bold: label.bold,
+            x: baseX,
+            y: baseY,
+            underlineY: label.underline ? baseY + label.dims.height : undefined,
+          })
+        }
+      }
+    })
+
+    const bodySectionBounds =
+      typeof bodySectionYStart !== 'undefined' && typeof bodySectionYEnd !== 'undefined'
+        ? { y: bodySectionYStart, height: bodySectionYEnd - bodySectionYStart }
+        : undefined
+
+    return { size, contentHeight, sections, sectionSeparatorYs, bodySectionBounds, labels }
+  }
 }
 
 /**
@@ -525,11 +689,9 @@ class EntityMarkBuilder {
     class: 'class__entity',
   })
   rowPadding = 8
-  /** y offset inside entity */
-  curY = 0
-  curContentHeight = 0
 
-  sections: EntitySection[] = []
+  sections: RowInputSection[] = []
+  private layoutCache?: EntityLayout
 
   constructor(
     public g: LayoutGraph,
@@ -537,15 +699,23 @@ class EntityMarkBuilder {
   ) {}
 
   addHeader(label: string, annotation?: string) {
-    let row: EntityMarkRow
-    if (annotation) {
-      row = this.addRow(0, [`<<${annotation}>>`, label])
-    } else {
-      row = this.addRow(0, [label])
-    }
+    const row = this.addRow(0, annotation ? [`<<${annotation}>>`, label] : [label])
     row.isHeader = true
-    last(row.marks).labelMark.attrs.fontWeight = 'bold'
     return row
+  }
+
+  addMemberSections(memberSections: Array<Array<string | RowConfig>>) {
+    for (const memberList of memberSections) {
+      const { index } = this.getCurrentSection()
+      const nextSectionIndex = index + 1
+      if (memberList.length) {
+        for (const member of memberList) {
+          this.addRow(nextSectionIndex, [member])
+        }
+        continue
+      }
+      this.addRow(nextSectionIndex, [''])
+    }
   }
 
   addRow(sectionIndex: number, labels: Array<string | RowConfig>) {
@@ -555,68 +725,9 @@ class EntityMarkBuilder {
       }
     }
     const section = this.sections[sectionIndex]
-    const { rowPadding } = this
-    const marks: EntityMarkPair[] = []
-    const labelDims = { width: 0, height: 0 }
-    let labelYOffset = 0
-    for (const _l of labels) {
-      const labelConfig = typeof _l === 'string' ? { label: _l } : _l
-      const label = labelConfig.label
-      const fontConfig = this.getFontConfig()
-      const dims = calculateTextDimensions(label, fontConfig)
-      const textY = this.curY + labelYOffset + rowPadding
-      const textAttrs: Text['attrs'] = {
-        text: label,
-        fill: this.conf.entityTextColor,
-        x: 0,
-        y: textY,
-        textAlign: 'center',
-        textBaseline: 'hanging',
-        ...dims,
-        ...this.getFontConfig(),
-      }
-      if (labelConfig.italic) {
-        Object.assign(textAttrs, {
-          fontStyle: 'italic',
-        })
-      }
-
-      const labelMark = makeMark('text', textAttrs)
-      const mark: EntityMarkPair = {
-        labelMark,
-      }
-      if (labelConfig.underline) {
-        const lineMark = makeMark('line', {
-          x1: 0,
-          x2: dims.width,
-          y1: textY,
-          y2: textY,
-          stroke: this.conf.entityTextColor,
-          class: 'class-entity__underline',
-        })
-        mark.decorationLine = lineMark
-      }
-      const labelYDiff = dims.height + Math.floor(rowPadding / 2)
-      labelYOffset += labelYDiff
-      marks.push(mark)
-      labelDims.width = Math.max(labelDims.width, dims.width)
-      labelDims.height += labelYDiff
-    }
-
-    const yOffsetStart = this.curY
-    const yDiff = labelDims.height + rowPadding
-    this.curY += yDiff
-    this.curContentHeight += yDiff
-    const row: EntityMarkRow = { labels, marks, labelDims, yOffsetStart, yOffsetEnd: this.curY }
+    const row: RowInput = { labels }
     section.rows.push(row)
-
-    for (const pair of marks) {
-      this.group.children.push(pair.labelMark)
-      if (pair.decorationLine) {
-        this.group.children.push(pair.decorationLine)
-      }
-    }
-
+    this.invalidateLayout()
     return row
   }
 
@@ -629,94 +740,51 @@ class EntityMarkBuilder {
   }
 
   getSize() {
-    let maxWidth = 0
-    for (const section of this.sections) {
-      for (const row of section.rows) {
-        const { labelDims } = row
-        maxWidth = Math.max(labelDims.width, maxWidth)
-      }
-    }
-    return {
-      width: maxWidth + this.rowPadding * 2,
-      height: this.curContentHeight + this.rowPadding,
-    }
+    return this.getLayout().size
   }
 
   onLayout(data: LayoutNode) {
-    const rectSize = this.getSize()
+    const layout = this.getLayout()
+    this.renderLayout(layout, data)
+  }
+
+  getFontConfig() {
+    return getFontConfig(this.conf)
+  }
+
+  private invalidateLayout() {
+    this.layoutCache = undefined
+  }
+
+  private getLayout() {
+    if (!this.layoutCache) {
+      this.layoutCache = EntityLayoutEngine.build(this.sections, this.rowPadding, this.getFontConfig())
+    }
+    return this.layoutCache
+  }
+
+  private renderLayout(layout: EntityLayout, data: LayoutNode) {
+    const { size } = layout
+    const fontConfig = this.getFontConfig()
     const bgRect = makeMark('rect', {
-      ...rectSize,
-      x: -rectSize.width / 2,
-      y: -rectSize.height / 2,
+      ...size,
+      x: -size.width / 2,
+      y: -size.height / 2,
       fill: this.conf.entityBackground,
       radius: this.conf.entityRadius,
       stroke: this.conf.entityBorderColor,
     })
-    const halfClassHeight = rectSize.height / 2
 
-    const sectionBgMarks = []
-    const { rowPadding } = this
+    const children: Group['children'] = [bgRect]
 
-    const lastSection = last(this.sections)
-    let bodySectionYStart = undefined
-    let bodySectionYEnd = undefined
-    this.sections.forEach((section, sectionIndex) => {
-      if (!section.rows.length) {
-        return
-      }
-      for (const row of section.rows) {
-        // console.log('row', row.labels, row.labelDims)
-        for (const { labelMark, decorationLine } of row.marks) {
-          if (!row.isHeader) {
-            labelMark.attrs.x += (labelMark.attrs.width - rectSize.width) / 2 + rowPadding
-          }
-          labelMark.attrs.y += -halfClassHeight + rowPadding / 2
-          if (decorationLine) {
-            const offsetY = labelMark.attrs.height
-            decorationLine.attrs.y1 = labelMark.attrs.y + offsetY
-            decorationLine.attrs.y2 = labelMark.attrs.y + offsetY
-            const offsetX = -rectSize.width / 2 + rowPadding / 2
-            decorationLine.attrs.x1 += offsetX
-            decorationLine.attrs.x2 += offsetX
-          }
-        }
-      }
-      const firstRow = section.rows[0]
-      const lastRow = last(section.rows)
-
-      if (sectionIndex === 1) {
-        bodySectionYStart = firstRow.yOffsetStart - halfClassHeight + rowPadding
-      }
-
-      if (sectionIndex > 0) {
-        const lineY = firstRow.yOffsetStart - halfClassHeight + rowPadding
-        const sepLine = makeMark(
-          'line',
-          {
-            x1: -rectSize.width / 2,
-            x2: rectSize.width / 2,
-            y1: lineY,
-            y2: lineY,
-            stroke: this.conf.entityBorderColor,
-          },
-          { class: 'class-entity__sep-line' },
-        )
-
-        this.group.children.push(sepLine)
-      }
-      if (section === lastSection) {
-        bodySectionYEnd = lastRow.yOffsetEnd + rowPadding - halfClassHeight
-      }
-    })
-    if (typeof bodySectionYStart !== 'undefined' && typeof bodySectionYEnd !== 'undefined') {
-      const lineY = bodySectionYStart
+    if (layout.bodySectionBounds) {
       const sectionBg = makeMark(
         'rect',
         {
-          width: rectSize.width,
-          height: bodySectionYEnd - bodySectionYStart,
-          x: -rectSize.width / 2,
-          y: lineY,
+          width: size.width,
+          height: layout.bodySectionBounds.height,
+          x: -size.width / 2,
+          y: layout.bodySectionBounds.y,
           fill: this.conf.entityBodyBackground,
           stroke: this.conf.entityBorderColor,
           // opacity: 0.4, // for layout debug
@@ -725,20 +793,71 @@ class EntityMarkBuilder {
           class: 'class__section-bg',
         },
       )
-      this.group.children.unshift(sectionBg)
+      children.push(sectionBg)
     }
-    this.group.children.unshift(bgRect, ...sectionBgMarks)
 
+    for (const label of layout.labels) {
+      const attrs: Text['attrs'] = {
+        text: label.text,
+        fill: this.conf.entityTextColor,
+        x: label.x,
+        y: label.y,
+        textAlign: 'center',
+        textBaseline: 'hanging',
+        ...label.dims,
+        ...fontConfig,
+      }
+      if (label.italic) {
+        attrs.fontStyle = 'italic'
+      }
+      if (label.bold) {
+        attrs.fontWeight = 'bold'
+      }
+      const labelMark = makeMark('text', attrs)
+      children.push(labelMark)
+      if (label.underline && label.underlineY !== undefined) {
+        children.push(
+          makeMark('line', {
+            x1: -size.width / 2 + this.rowPadding / 2,
+            x2: -size.width / 2 + this.rowPadding / 2 + label.dims.width,
+            y1: label.underlineY,
+            y2: label.underlineY,
+            stroke: this.conf.entityTextColor,
+            class: 'class-entity__underline',
+          }),
+        )
+      }
+    }
+
+    const separatorYsToDraw =
+      layout.bodySectionBounds && layout.sectionSeparatorYs.length > 0
+        ? layout.sectionSeparatorYs.slice(1)
+        : layout.sectionSeparatorYs
+
+    for (const lineY of separatorYsToDraw) {
+      children.push(
+        makeMark(
+          'line',
+          {
+            x1: -size.width / 2,
+            x2: size.width / 2,
+            y1: lineY,
+            y2: lineY,
+            stroke: this.conf.entityBorderColor,
+          },
+          { class: 'class-entity__sep-line' },
+        ),
+      )
+    }
+
+    this.group.children = children
     positionGroupContents(this.group, data)
-    // // debug
-    // const debugPoint = makeCircleWithCoordInPoint(data)
-    // this.group.children.push(debugPoint)
-    // // end --- debug
   }
+}
 
-  getFontConfig() {
-    return getFontConfig(this.conf)
-  }
+export const __testing = {
+  EntityLayoutEngine,
+  EntityMarkBuilder,
 }
 
 export default artist
