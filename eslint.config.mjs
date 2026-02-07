@@ -4,6 +4,9 @@ import prettierPlugin from 'eslint-plugin-prettier'
 import unusedImportPlugin from 'eslint-plugin-unused-imports'
 
 export default [
+  {
+    ignores: ['packages/**/*/parser/*.[tj]s', 'packages/**/*/grammar/*.[tj]s'],
+  },
   ...tseslint.config(...tseslint.configs.recommended),
   {
     plugins: {
