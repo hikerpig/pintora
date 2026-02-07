@@ -2,8 +2,6 @@ import { Point, MarkAttrs, safeAssign, mat3, Mark, Group, Text } from '@pintora/
 import { makeMark } from '../util/artist-util'
 import { Cardinality } from './db'
 
-type MarkerDirection = 'start' | 'end'
-
 type MarkerGenerator = (attrs?: MarkAttrs) => Mark
 
 const MARKER_GENERATORS: Partial<Record<Cardinality, MarkerGenerator>> = {
@@ -21,8 +19,8 @@ const MARKER_GENERATORS: Partial<Record<Cardinality, MarkerGenerator>> = {
     const circle = makeMark('circle', {
       ...attrs,
       fill: '#fff',
-      x: 28,
-      y: 0,
+      cx: 28,
+      cy: 0,
       r: 6,
     })
     const path = makeMark('path', {
@@ -50,8 +48,8 @@ const MARKER_GENERATORS: Partial<Record<Cardinality, MarkerGenerator>> = {
     const circle = makeMark('circle', {
       ...attrs,
       fill: '#fff',
-      x: 28,
-      y: 0,
+      cx: 28,
+      cy: 0,
       r: 6,
     })
     const path = makeMark('path', {
@@ -72,6 +70,7 @@ export function drawMarkerTo(dest: Point, type: Cardinality, rad: number, attrs?
   if (!generator) return
 
   const mark = generator(attrs || {})
+  mark.attrs = mark.attrs || {}
   safeAssign(mark.attrs, attrs || {})
 
   const finalMatrix = mat3.create()

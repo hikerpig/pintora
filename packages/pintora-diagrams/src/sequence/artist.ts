@@ -23,7 +23,6 @@ import {
   safeAssign,
   symbolRegistry,
 } from '@pintora/core'
-import { makeEmptyGroup } from '../util/artist-util'
 import type { EnhancedConf } from '../util/config'
 import { makeBounds, tryExpandBounds } from '../util/mark-positioner'
 import { getTextDimensionsInPresicion } from '../util/text'
@@ -75,7 +74,11 @@ class SequenceArtist extends BaseArtist<SequenceDiagramIR, SequenceConf> {
     const { messages, title } = ir
     const actorKeys = db.getActorKeys()
 
-    const rootMark = makeEmptyGroup()
+    const rootMark: Group = {
+      type: 'group',
+      attrs: {},
+      children: [],
+    }
 
     const context: SequenceArtistContext = {
       ir,
@@ -710,7 +713,6 @@ const drawMessage = function (msgModel: MessageModel): DrawResult<Group> {
     const dx = Math.max(textDims.width / 2, conf.actorWidth / 2)
     model.insert(startx - dx, verticalPos - 10 + totalOffset, stopx + dx, verticalPos + offsetBump + totalOffset)
   } else {
-    // totalOffset += conf.boxMrgin
     lineStarty = verticalPos + totalOffset
     safeAssign(lineAttrs, {
       x1: startx,
@@ -781,14 +783,14 @@ const drawMessage = function (msgModel: MessageModel): DrawResult<Group> {
         textBaseline: 'middle',
         fill: conf.actorBackground,
         fontWeight: 'bold',
+        fontSize: Math.floor(SHOW_NUMBER_CIRCLE_RADIUS * 1.6),
       },
       { class: 'sequence__number' },
     )
     const circleColor = conf.actorBorderColor
-    const circleMark = makeMark('marker', {
-      symbol: 'circle',
-      x: startx,
-      y: lineStarty,
+    const circleMark = makeMark('circle', {
+      cx: startx,
+      cy: lineStarty,
       r: SHOW_NUMBER_CIRCLE_RADIUS,
       fill: circleColor,
       stroke: circleColor,
@@ -838,11 +840,12 @@ const drawNoteTo = function (noteModel: NoteModel, container: Group) {
   const textHeight = textDims.height
   noteModel.height = textHeight + 2 * conf.noteMargin
   noteModel.starty = model.verticalPos
+  const noteWidth = noteModel.width || conf.noteWidth
   const rectAttrs = getBaseNote(theme)
   safeAssign(rectAttrs, {
-    x: noteModel.startx,
-    y: noteModel.starty,
-    width: noteModel.width || conf.noteWidth,
+    x: 0,
+    y: 0,
+    width: noteWidth,
     height: noteModel.height,
   })
   const noteRect: Rect = {
@@ -853,9 +856,9 @@ const drawNoteTo = function (noteModel: NoteModel, container: Group) {
 
   const textAttrs: Text['attrs'] = { fill: conf.noteTextColor, text: noteModel.text, ...noteFont(conf) }
   safeAssign(textAttrs, {
-    x: noteModel.startx + noteModel.width / 2,
-    y: noteModel.starty + noteModel.height / 2,
-    width: noteModel.width,
+    x: noteWidth / 2,
+    y: noteModel.height / 2,
+    width: noteWidth,
     textAlign: 'center',
     textBaseline: 'middle',
   })
@@ -867,10 +870,11 @@ const drawNoteTo = function (noteModel: NoteModel, container: Group) {
 
   model.bumpVerticalPos(textHeight + 2 * conf.noteMargin)
   noteModel.stopy = noteModel.starty + textHeight + 2 * conf.noteMargin
-  noteModel.stopx = noteModel.startx + rectAttrs.width
+  noteModel.stopx = noteModel.startx + noteWidth
   model.insert(noteModel.startx, noteModel.starty, noteModel.stopx, noteModel.stopy)
   const mark: Group = {
     type: 'group',
+    matrix: mat3.fromTranslation(mat3.create(), [noteModel.startx, noteModel.starty]),
     class: 'note sequence__note',
     children: [noteRect, textMark],
   }
@@ -943,7 +947,9 @@ export const drawActors = function (rootMark: Group, ir: SequenceDiagramIR, opts
       y: verticalPos,
       radius: 4,
     })
-    const actorCenter: Point = { x: attrs.x + attrs.width / 2, y: attrs.y + attrs.height / 2 }
+    actorMark.matrix = mat3.fromTranslation(mat3.create(), [attrs.x, attrs.y])
+
+    const actorCenter: Point = { x: attrs.width / 2, y: attrs.height / 2 }
     const labelFontFonfig = actorFont(conf)
     const textAttrs: Text['attrs'] = {
       fill: conf.actorTextColor,
@@ -961,8 +967,8 @@ export const drawActors = function (rootMark: Group, ir: SequenceDiagramIR, opts
     if (actor.classifier && symbolRegistry.get(actor.classifier)) {
       const symbolHeight = areaHeight - labelDims.height
       const contentArea: ContentArea = {
-        x: attrs.x + areaWidth / 2,
-        y: attrs.y + (areaHeight - labelDims.height) / 2,
+        x: areaWidth / 2,
+        y: (areaHeight - labelDims.height) / 2,
         width: clamp(symbolHeight * 1.4, areaWidth / 2, areaWidth),
         height: symbolHeight,
       }
@@ -982,10 +988,15 @@ export const drawActors = function (rootMark: Group, ir: SequenceDiagramIR, opts
       }
     }
     if (!sym) {
+      const actorRectAttrs: Rect['attrs'] = {
+        ...attrs,
+        x: 0,
+        y: 0,
+      }
       // console.log('drawActors', attrsKey, verticalPos, 'attrs', attrs)
       actorMark.children.push({
         type: 'rect',
-        attrs: attrs,
+        attrs: actorRectAttrs,
       })
     }
 
@@ -1001,18 +1012,19 @@ export const drawActors = function (rootMark: Group, ir: SequenceDiagramIR, opts
         type: 'line',
         class: 'sequence__actor__line',
         attrs: {
-          x1: actorCenter.x,
-          x2: actorCenter.x,
-          y1: attrs.y + areaHeight + lineStartOffsetY,
-          y2: 2000,
+          x1: areaWidth / 2,
+          x2: areaWidth / 2,
+          y1: areaHeight + lineStartOffsetY,
+          y2: 2000 - attrs.y,
           stroke: conf.actorLineColor,
         },
       }
       model.actorLineMarkMap.set(key, lineMark)
     } else {
       const prevLineMark = model.actorLineMarkMap.get(key)
+      const prevActorAttrs = model.actorAttrsMap.get(key)
       if (prevLineMark) {
-        prevLineMark.attrs.y2 = attrs.y
+        prevLineMark.attrs.y2 = attrs.y - (prevActorAttrs?.y || 0)
       }
     }
     if (lineMark) {
@@ -1050,18 +1062,25 @@ function drawParticipantBoxes(context: SequenceArtistContext) {
 
   if (!model.hasParticipantBox()) return
 
-  const boxesGroup = makeEmptyGroup()
-  boxesGroup.class = 'sequence__participant-boxes'
+  const boxesGroup: Group = {
+    type: 'group',
+    attrs: {},
+    children: [],
+    class: 'sequence__participant-boxes',
+  }
   const padding = conf.participantBoxPadding
   rootMark.children.unshift(boxesGroup)
   const modelBounds = model.getBounds()
+  const boxesOffsetX = modelBounds.startx
+  boxesGroup.matrix = mat3.fromTranslation(mat3.create(), [boxesOffsetX, 0])
   for (const boxInfo of model.boxInfos.values()) {
     const { participantBox, bounds, textDims } = boxInfo
     const width = Math.max(textDims.width, bounds.width) + padding * 2
     if (!isFinite(width)) continue
     const startx = bounds.left - padding
+    const localStartx = startx - boxesOffsetX
     const rect = makeMark('rect', {
-      x: startx,
+      x: localStartx,
       y: 0,
       width,
       height: modelBounds.stopy - modelBounds.starty,
@@ -1073,7 +1092,7 @@ function drawParticipantBoxes(context: SequenceArtistContext) {
       const fontConfig = boxFont(conf)
       const textMark = makeMark('text', {
         text: participantBox.text,
-        x: startx + width / 2,
+        x: localStartx + width / 2,
         y: conf.participantBoxPadding,
         textBaseline: 'top',
         textAlign: 'center',

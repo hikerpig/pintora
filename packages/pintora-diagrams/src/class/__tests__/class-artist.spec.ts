@@ -106,6 +106,36 @@ describe('class-artist', () => {
     })
   })
 
+  it('positions entity groups by matrix instead of group x/y attrs', () => {
+    const code = stripStartEmptyLines(`
+    classDiagram
+      class User {
+        +id: string
+        +getId(): string
+      }
+    `)
+    const result = testDraw(code)
+    expect(result.graphicIR.mark).toBeTruthy()
+
+    const entityGroups: any[] = []
+    traverseGraphicsIR(result.graphicIR, mark => {
+      if (mark.class === 'class__entity') {
+        entityGroups.push(mark)
+      }
+    })
+
+    expect(entityGroups.length).toBeGreaterThan(0)
+    const group = entityGroups[0]
+    expect(group.attrs?.x).toBeUndefined()
+    expect(group.attrs?.y).toBeUndefined()
+    expect(group.matrix).toBeTruthy()
+
+    const bgRect = group.children?.find((child: any) => child.type === 'rect')
+    expect(bgRect).toBeTruthy()
+    expect(bgRect.attrs?.width).toBeGreaterThan(0)
+    expect(bgRect.attrs.x + bgRect.attrs.width / 2).toBeCloseTo(0, 5)
+  })
+
   describe('EntityLayoutEngine', () => {
     type ClassEntityLayoutInput = {
       header: string | string[]

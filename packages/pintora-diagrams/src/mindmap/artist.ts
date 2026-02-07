@@ -4,6 +4,7 @@ import {
   getPositionOfRect,
   Group,
   IFont,
+  mat3,
   Point,
   PositionH,
   PositionV,
@@ -12,13 +13,13 @@ import { createLayoutGraph, isGraphVertical, LayoutEdge, LayoutGraph, LayoutNode
 import { getConf, MindmapConf } from './config'
 import { MindmapIR, MMItem, MMTree } from './db'
 
-import { adjustRootMarkBounds, DiagramTitleMaker, makeEmptyGroup, makeMark } from '../util/artist-util'
+import { adjustRootMarkBounds, DiagramTitleMaker, makeMark } from '../util/artist-util'
 import { BaseArtist } from '../util/base-artist'
 import { DagreWrapper } from '../util/dagre-wrapper'
 import { setDevGlobal } from '../util/env'
 import { getFontConfig } from '../util/font-config'
 import { getPointsLinearPath } from '../util/line-util'
-import { makeBounds, positionGroupContents, TRANSFORM_GRAPH } from '../util/mark-positioner'
+import { makeBounds, TRANSFORM_GRAPH } from '../util/mark-positioner'
 import db from './db'
 
 let conf: MindmapConf
@@ -133,7 +134,11 @@ class MMDraw {
     const fontConfig = getFontConfig(conf, { fontSize, fontWeight: conf.nodeFontWeight })
     const labelDim = calculateTextDimensions(node.label, fontConfig)
 
-    const group = makeEmptyGroup()
+    const group: Group = {
+      type: 'group',
+      attrs: {},
+      children: [],
+    }
     group.class = 'mindmap__node'
     group.itemId = node.itemId
 
@@ -165,8 +170,7 @@ class MMDraw {
       width: rectWidth,
       height: rectHeight,
       onLayout(data) {
-        // console.log('[drawNode] onLayout', data)
-        positionGroupContents(group, data)
+        group.matrix = mat3.fromTranslation(mat3.create(), [data.x, data.y])
       },
     })
 
@@ -183,7 +187,11 @@ class MMDraw {
   }
 
   protected drawEdgesTo(rootMark: Group) {
-    const edgeGroup = makeEmptyGroup()
+    const edgeGroup: Group = {
+      type: 'group',
+      attrs: {},
+      children: [],
+    }
     const g = this.g
     this.g.edges().forEach(e => {
       const edge: EdgeData = g.edge(e)

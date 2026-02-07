@@ -26,8 +26,8 @@ function makeContainer({ width, height, x, y }: ContentArea) {
       children: [
         makeMark('circle', {
           r,
-          x: x,
-          y: y,
+          cx: x,
+          cy: y,
         }),
       ],
     },

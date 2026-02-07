@@ -1,4 +1,4 @@
-import { GraphicsIR } from '@pintora/core/lib/type'
+import { GraphicsIR } from '@pintora/core'
 import { BaseRenderer } from './base'
 import { SvgRenderer } from './SvgRenderer'
 import { CanvasRenderer } from './CanvasRenderer'

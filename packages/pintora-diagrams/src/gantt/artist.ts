@@ -17,7 +17,7 @@ import {
 } from '@pintora/core'
 import { scaleTime, ScaleTime } from 'd3-scale'
 import dayjs from 'dayjs'
-import { drawDiamondTo, LayerManager, makeEmptyGroup } from '../util/artist-util'
+import { drawDiamondTo, LayerManager, makeGroup } from '../util/artist-util'
 import { setDevGlobal } from '../util/env'
 import { GanttConf, getConf } from './config'
 import { GanttIR, getAxisTimeInterval, isInvalidDate, Task } from './db'
@@ -27,7 +27,7 @@ const artist = makeArtist<GanttIR, GanttConf>({
   draw(ir, config, opts) {
     const conf = getConf(ir, config)
 
-    const rootMark = makeEmptyGroup()
+    const rootMark = makeGroup()
 
     let w = 1000
     if (opts.containerSize?.width) {
@@ -213,7 +213,7 @@ class GanttDraw {
    * draw axis labels and grids
    */
   protected drawGrid(opts: { sectionsHeight: number }) {
-    const gridGroup = makeEmptyGroup()
+    const gridGroup = makeGroup()
     gridGroup.class = 'gantt__grid'
     this.layerManager.addMark('gridLine', gridGroup)
 
@@ -255,7 +255,7 @@ class GanttDraw {
     const { conf } = this
     const w = this.width
 
-    const sectionBackgrounGroup = makeEmptyGroup()
+    const sectionBackgrounGroup = makeGroup()
     const { gridLineStartPadding, gridLineWidth, sectionBackgrounds, sidePadding, topPadding, barHeight, barGap } = conf
     const yStart = gridLineStartPadding + topPadding + (this.titleTextDims.height || 0)
 
@@ -273,7 +273,7 @@ class GanttDraw {
     const taskXOffset = this.sectionLabelWidth + sidePadding
 
     taskArray.forEach((task, i) => {
-      const sectionGroup = makeEmptyGroup()
+      const sectionGroup = makeGroup()
       this.layerManager.addMark('bar', sectionGroup)
 
       if (!sectionsMap.get(task.section)) {
@@ -394,7 +394,7 @@ class GanttDraw {
 
   protected drawExcludeDays(opts: { sectionsHeight: number }) {
     const { conf } = this
-    const excludesBackgrounGroup = makeEmptyGroup()
+    const excludesBackgrounGroup = makeGroup()
     const { gridLineStartPadding, gridLineColor, sidePadding, topPadding } = conf
     const yStart = topPadding + (this.titleTextDims.height || 0)
 
@@ -451,7 +451,7 @@ class GanttDraw {
     const yStart = topPadding + titleHeight
     const yEnd = yStart + opts.sectionsHeight + gridLineStartPadding
 
-    const markLineGroup = makeEmptyGroup()
+    const markLineGroup = makeGroup()
     this.layerManager.addMark('markLine', markLineGroup)
     this.ir.markDates.forEach(date => {
       const x = this.getScaledTimeX(date) + sidePadding + this.sectionLabelWidth

@@ -35,7 +35,6 @@ class GlobalPatcher {
 
 function renderPrepare(opts: CLIRenderOptions) {
   const { code, backgroundColor, pintoraConfig } = opts
-  const devicePixelRatio = opts.devicePixelRatio || 2
 
   const dom = new JSDOM('<!DOCTYPE html><body></body>')
   const document = dom.window.document
@@ -44,15 +43,15 @@ function renderPrepare(opts: CLIRenderOptions) {
 
   // setup the env for renderer
   const patcher = new GlobalPatcher()
-  patcher.set('window', dom.window)
   patcher.set('document', document)
-  patcher.set('CanvasPattern', CanvasPattern)
-  ;(dom.window as any).devicePixelRatio = devicePixelRatio
 
-  global.window = dom.window as any
-  global.document = document
-  ;(dom.window as any).devicePixelRatio = devicePixelRatio
-  ;(global as any).CanvasPattern = CanvasPattern
+  // Mock browser APIs for @antv/g v6
+  patcher.set('navigator', {})
+  // @antv/g v6 also uses addEventListener on globalThis
+  if (typeof globalThis.addEventListener !== 'function') {
+    ;(globalThis as any).addEventListener = () => {}
+    ;(globalThis as any).removeEventListener = () => {}
+  }
 
   return {
     container,
