@@ -202,8 +202,8 @@ importers:
         specifier: ^1.0.0
         version: 1.0.0(vite@7.2.6(@types/node@18.18.6)(jiti@2.6.1)(less@4.2.0)(lightningcss@1.29.1)(terser@5.46.0)(yaml@2.6.1))(workbox-build@7.1.0(@types/babel__core@7.20.5))(workbox-window@7.1.0)
       vite-tsconfig-paths:
-        specifier: ^5.0.0
-        version: 5.1.4(typescript@5.9.3)(vite@7.2.6(@types/node@18.18.6)(jiti@2.6.1)(less@4.2.0)(lightningcss@1.29.1)(terser@5.46.0)(yaml@2.6.1))
+        specifier: ^6.0.0
+        version: 6.1.0(typescript@5.9.3)(vite@7.2.6(@types/node@18.18.6)(jiti@2.6.1)(less@4.2.0)(lightningcss@1.29.1)(terser@5.46.0)(yaml@2.6.1))
       workbox-core:
         specifier: ^7.0.0
         version: 7.3.0
@@ -11922,13 +11922,10 @@ packages:
       '@vite-pwa/assets-generator':
         optional: true
 
-  vite-tsconfig-paths@5.1.4:
-    resolution: {integrity: sha512-cYj0LRuLV2c2sMqhqhGpaO3LretdtMn/BVX4cPLanIZuwwrkVl+lK84E/miEXkCHWXuq65rhNN4rXsBcOB3S4w==}
+  vite-tsconfig-paths@6.1.0:
+    resolution: {integrity: sha512-kpd3sY9glHIDaq4V/Tlc1Y8WaKtutoc3B525GHxEVKWX42FKfQsXvjFOemu1I8VIN8pNbrMLWVTbW79JaRUxKg==}
     peerDependencies:
       vite: '*'
-    peerDependenciesMeta:
-      vite:
-        optional: true
 
   vite@7.2.6:
     resolution: {integrity: sha512-tI2l/nFHC5rLh7+5+o7QjKjSR04ivXDF4jcgV0f/bTQ+OJiITy5S6gaynVsEM+7RqzufMnVbIon6Sr5x1SDYaQ==}
@@ -12564,7 +12561,7 @@ snapshots:
       '@babel/traverse': 7.26.4
       '@babel/types': 7.26.3
       convert-source-map: 2.0.0
-      debug: 4.4.0(supports-color@8.1.1)
+      debug: 4.4.3
       gensync: 1.0.0-beta.2
       json5: 2.2.3
       semver: 6.3.1
@@ -14390,7 +14387,7 @@ snapshots:
       '@babel/parser': 7.26.3
       '@babel/template': 7.25.9
       '@babel/types': 7.26.3
-      debug: 4.4.0(supports-color@8.1.1)
+      debug: 4.4.3
       globals: 11.12.0
     transitivePeerDependencies:
       - supports-color
@@ -16480,7 +16477,7 @@ snapshots:
 
   '@manypkg/find-root@1.1.0':
     dependencies:
-      '@babel/runtime': 7.28.4
+      '@babel/runtime': 7.28.6
       '@types/node': 12.20.55
       find-up: 4.1.0
       fs-extra: 8.1.0
@@ -19785,7 +19782,7 @@ snapshots:
   detect-port@1.5.1:
     dependencies:
       address: 1.2.0
-      debug: 4.4.0(supports-color@8.1.1)
+      debug: 4.4.3
     transitivePeerDependencies:
       - supports-color
 
@@ -21170,7 +21167,7 @@ snapshots:
 
   history@4.10.1:
     dependencies:
-      '@babel/runtime': 7.27.6
+      '@babel/runtime': 7.28.6
       loose-envify: 1.4.0
       resolve-pathname: 3.0.0
       tiny-invariant: 1.2.0
@@ -21289,7 +21286,7 @@ snapshots:
   http-proxy-agent@7.0.2:
     dependencies:
       agent-base: 7.1.3
-      debug: 4.4.0(supports-color@8.1.1)
+      debug: 4.4.3
     transitivePeerDependencies:
       - supports-color
 
@@ -21334,7 +21331,7 @@ snapshots:
   https-proxy-agent@7.0.6:
     dependencies:
       agent-base: 7.1.3
-      debug: 4.4.0(supports-color@8.1.1)
+      debug: 4.4.3
     transitivePeerDependencies:
       - supports-color
 
@@ -26532,12 +26529,11 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  vite-tsconfig-paths@5.1.4(typescript@5.9.3)(vite@7.2.6(@types/node@18.18.6)(jiti@2.6.1)(less@4.2.0)(lightningcss@1.29.1)(terser@5.46.0)(yaml@2.6.1)):
+  vite-tsconfig-paths@6.1.0(typescript@5.9.3)(vite@7.2.6(@types/node@18.18.6)(jiti@2.6.1)(less@4.2.0)(lightningcss@1.29.1)(terser@5.46.0)(yaml@2.6.1)):
     dependencies:
-      debug: 4.4.0(supports-color@8.1.1)
+      debug: 4.4.3
       globrex: 0.1.2
       tsconfck: 3.1.4(typescript@5.9.3)
-    optionalDependencies:
       vite: 7.2.6(@types/node@18.18.6)(jiti@2.6.1)(less@4.2.0)(lightningcss@1.29.1)(terser@5.46.0)(yaml@2.6.1)
     transitivePeerDependencies:
       - supports-color
