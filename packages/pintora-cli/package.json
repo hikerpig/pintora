@@ -48,7 +48,7 @@
   },
   "devDependencies": {
     "@pintora/test-shared": "workspace:^0.5.2",
-    "@types/jsdom": "^21.0.0",
+    "@types/jsdom": "^27.0.0",
     "@types/mime-types": "^3.0.0",
     "@types/node": "^18.12.0",
     "@types/yargs": "^17.0.33",
