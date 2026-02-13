@@ -1,4 +1,4 @@
-import type { mat3, vec2, vec3 } from 'gl-matrix'
+import { mat3, vec2, vec3 } from '@antv/matrix-util'
 
 export type Mark = Group | Rect | Circle | Ellipse | Text | Line | PolyLine | Polygon | Path | GSymbol
 
@@ -14,11 +14,34 @@ export interface GraphicsIR extends Figure {
 
 export type TransformPolicy = 'stretch' | 'fixed' | 'scale'
 
+export type MarkSemanticRole = 'container' | 'backdrop' | 'separator' | 'decoration'
+
+export type MarkStrokePolicy = 'always' | 'optional' | 'none'
+
+export interface MarkSemantic {
+  /**
+   * Semantic role used by different renderers to interpret a mark
+   * without guessing from colors or CSS classes.
+   */
+  role?: MarkSemanticRole
+  /**
+   * Whether this mark should visually cover lower-layer content in renderers
+   * that support only a subset of fill/stroke semantics.
+   */
+  occludesBelow?: boolean
+  /**
+   * Whether the mark stroke is required, optional, or should never be shown.
+   * Lower-fidelity renderers may omit `optional` strokes.
+   */
+  strokePolicy?: MarkStrokePolicy
+}
+
 export interface IMark {
   attrs?: MarkAttrs
   class?: string
   /** for style cluster */
   cluster?: string
+  semantic?: MarkSemantic
   /** for transform */
   matrix?: Matrix | number[]
   /** come in handy when a symbol needs to be adjusted to fit new position and size */

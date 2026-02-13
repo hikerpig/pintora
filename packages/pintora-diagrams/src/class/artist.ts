@@ -760,14 +760,22 @@ class EntityMarkBuilder {
   private renderLayout(layout: EntityLayout, data: LayoutNode) {
     const { size } = layout
     const fontConfig = this.getFontConfig()
-    const bgRect = makeMark('rect', {
-      ...size,
-      x: -size.width / 2,
-      y: -size.height / 2,
-      fill: this.conf.entityBackground,
-      radius: this.conf.entityRadius,
-      stroke: this.conf.entityBorderColor,
-    })
+    const bgRect = makeMark(
+      'rect',
+      {
+        ...size,
+        x: -size.width / 2,
+        y: -size.height / 2,
+        fill: this.conf.entityBackground,
+        radius: this.conf.entityRadius,
+        stroke: this.conf.entityBorderColor,
+      },
+      {
+        semantic: {
+          role: 'container',
+        },
+      },
+    )
 
     const children: Group['children'] = [bgRect]
 
@@ -785,6 +793,10 @@ class EntityMarkBuilder {
         },
         {
           class: 'class__section-bg',
+          semantic: {
+            role: 'backdrop',
+            strokePolicy: 'optional',
+          },
         },
       )
       children.push(sectionBg)
@@ -811,14 +823,23 @@ class EntityMarkBuilder {
       children.push(labelMark)
       if (label.underline && label.underlineY !== undefined) {
         children.push(
-          makeMark('line', {
-            x1: -size.width / 2 + this.rowPadding / 2,
-            x2: -size.width / 2 + this.rowPadding / 2 + label.dims.width,
-            y1: label.underlineY,
-            y2: label.underlineY,
-            stroke: this.conf.entityTextColor,
-            class: 'class-entity__underline',
-          }),
+          makeMark(
+            'line',
+            {
+              x1: -size.width / 2 + this.rowPadding / 2,
+              x2: -size.width / 2 + this.rowPadding / 2 + label.dims.width,
+              y1: label.underlineY,
+              y2: label.underlineY,
+              stroke: this.conf.entityTextColor,
+              class: 'class-entity__underline',
+            },
+            {
+              semantic: {
+                role: 'decoration',
+                strokePolicy: 'optional',
+              },
+            },
+          ),
         )
       }
     }
@@ -839,7 +860,12 @@ class EntityMarkBuilder {
             y2: lineY,
             stroke: this.conf.entityBorderColor,
           },
-          { class: 'class-entity__sep-line' },
+          {
+            class: 'class-entity__sep-line',
+            semantic: {
+              role: 'separator',
+            },
+          },
         ),
       )
     }

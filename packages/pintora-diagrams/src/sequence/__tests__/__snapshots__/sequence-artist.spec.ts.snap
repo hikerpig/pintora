@@ -911,6 +911,11 @@ is possible",
               "lineWidth": 2,
               "stroke": "#3b4044",
             },
+            "semantic": {
+              "occludesBelow": true,
+              "role": "backdrop",
+              "strokePolicy": "always",
+            },
             "type": "rect",
           },
           {

@@ -332,6 +332,11 @@ exports[`activity-artist draw fork 1`] = `
               "opacity": 0.85,
             },
             "class": "label-bg",
+            "semantic": {
+              "occludesBelow": true,
+              "role": "backdrop",
+              "strokePolicy": "optional",
+            },
             "type": "rect",
           },
           {
@@ -383,6 +388,11 @@ exports[`activity-artist draw fork 1`] = `
               "opacity": 0.85,
             },
             "class": "label-bg",
+            "semantic": {
+              "occludesBelow": true,
+              "role": "backdrop",
+              "strokePolicy": "optional",
+            },
             "type": "rect",
           },
           {
@@ -694,6 +704,11 @@ exports[`activity-artist draw repeat 1`] = `
               "opacity": 0.85,
             },
             "class": "label-bg",
+            "semantic": {
+              "occludesBelow": true,
+              "role": "backdrop",
+              "strokePolicy": "optional",
+            },
             "type": "rect",
           },
           {
@@ -787,6 +802,11 @@ exports[`activity-artist draw repeat 1`] = `
               "opacity": 0.85,
             },
             "class": "label-bg",
+            "semantic": {
+              "occludesBelow": true,
+              "role": "backdrop",
+              "strokePolicy": "optional",
+            },
             "type": "rect",
           },
           {
@@ -824,6 +844,11 @@ exports[`activity-artist draw repeat 1`] = `
               "opacity": 0.85,
             },
             "class": "label-bg",
+            "semantic": {
+              "occludesBelow": true,
+              "role": "backdrop",
+              "strokePolicy": "optional",
+            },
             "type": "rect",
           },
           {

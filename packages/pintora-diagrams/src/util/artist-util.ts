@@ -128,7 +128,14 @@ export function makeLabelBg(labelDims: TSize, center: Point, attrs: Partial<Rect
       opacity: 0.85,
       ...attrs,
     },
-    { class: 'label-bg' },
+    {
+      class: 'label-bg',
+      semantic: {
+        role: 'backdrop',
+        occludesBelow: true,
+        strokePolicy: 'optional',
+      },
+    },
   )
   return labelBg
 }

@@ -3,7 +3,7 @@ import { pintoraStandalone, PintoraConfig } from '@pintora/standalone'
 import { JSDOM } from 'jsdom'
 import { implForWrapper } from 'jsdom/lib/jsdom/living/generated/utils'
 import { Canvas } from 'canvas'
-import { SVG_MIME_TYPE, DEFAUT_BGS } from './const'
+import { SVG_MIME_TYPE, TEXT_MIME_TYPE, DEFAUT_BGS } from './const'
 import type { CLIRenderOptions } from './type'
 
 export type { CLIRenderOptions } from './type'
@@ -113,6 +113,7 @@ export function render(opts: CLIRenderOptions) {
   const { pintorRender } = renderPrepare(opts)
 
   const isSvg = mimeType === SVG_MIME_TYPE
+  const isText = mimeType === TEXT_MIME_TYPE
   if (isSvg) {
     function renderToSvg() {
       return new Promise<string>((resolve, reject) => {
@@ -128,6 +129,19 @@ export function render(opts: CLIRenderOptions) {
       })
     }
     return renderToSvg()
+  } else if (isText) {
+    function renderToText() {
+      return new Promise<string>((resolve, reject) => {
+        pintorRender({ renderer: 'ascii' })
+          .then(({ renderer, cleanup }) => {
+            const text = renderer.getTextContent?.() || renderer.getRootElement()?.textContent || ''
+            cleanup()
+            resolve(text)
+          })
+          .catch(reject)
+      })
+    }
+    return renderToText()
   } else {
     function renderToImageBuffer() {
       return new Promise<Buffer>((resolve, reject) => {

@@ -10,6 +10,13 @@ export interface PintoraConfig {
     defaultRenderer: string
     defaultFontFamily: string
     useMaxWidth: boolean
+    textRenderer?: {
+      charset?: 'unicode' | 'ascii'
+      cellWidth?: number
+      cellHeight?: number
+      trimRight?: boolean
+      ansi?: boolean
+    }
   }
   themeConfig: {
     theme: string
@@ -23,6 +30,13 @@ let config: PintoraConfig = {
     defaultRenderer: 'svg',
     defaultFontFamily: DEFAULT_FONT_FAMILY,
     useMaxWidth: false,
+    textRenderer: {
+      charset: 'unicode',
+      cellWidth: 8,
+      cellHeight: 16,
+      trimRight: true,
+      ansi: false,
+    },
   },
   themeConfig: {
     theme: 'default',

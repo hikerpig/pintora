@@ -26,15 +26,25 @@ export function drawDivider(context: SequenceArtistContext, divider: MessageMode
   const rectX = startx + (bounds.stopx - rectWidth) / 2
   const localRectX = rectX - startx
 
-  const rect = makeMark('rect', {
-    x: localRectX,
-    y: 0,
-    width: rectWidth,
-    height: height + conf.wrapPadding * 2,
-    fill: conf.activationBackground,
-    stroke: conf.actorBorderColor,
-    lineWidth: 2,
-  })
+  const rect = makeMark(
+    'rect',
+    {
+      x: localRectX,
+      y: 0,
+      width: rectWidth,
+      height: height + conf.wrapPadding * 2,
+      fill: conf.activationBackground,
+      stroke: conf.actorBorderColor,
+      lineWidth: 2,
+    },
+    {
+      semantic: {
+        role: 'backdrop',
+        occludesBelow: true,
+        strokePolicy: 'always',
+      },
+    },
+  )
 
   const textDims = calculateTextDimensions(divider.text)
   const textMark = makeMark('text', {

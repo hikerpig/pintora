@@ -287,6 +287,9 @@ importers:
       '@antv/event-emitter':
         specifier: ^0.1.2
         version: 0.1.3
+      '@antv/matrix-util':
+        specifier: ^3.0.4
+        version: 3.0.4
       '@types/node':
         specifier: ^16.11.7
         version: 16.11.39
@@ -296,9 +299,6 @@ importers:
       deepmerge:
         specifier: ^4.2.2
         version: 4.3.1
-      gl-matrix:
-        specifier: ^3.4.3
-        version: 3.4.3
       tinycolor2:
         specifier: ^1.4.2
         version: 1.4.2
@@ -315,6 +315,15 @@ importers:
 
   packages/pintora-diagrams:
     dependencies:
+      '@antv/g':
+        specifier: ^6.3.1
+        version: 6.3.1
+      '@antv/g-canvas':
+        specifier: ^2.2.0
+        version: 2.2.0
+      '@antv/g-svg':
+        specifier: ^2.1.1
+        version: 2.1.1
       '@hikerpig/moo':
         specifier: ^0.5.2-beta.2
         version: 0.5.2-beta.2
@@ -394,12 +403,12 @@ importers:
 
   packages/pintora-renderer:
     dependencies:
+      '@antv/g':
+        specifier: ^6.3.1
+        version: 6.3.1
       '@antv/g-canvas':
         specifier: ^2.2.0
         version: 2.2.0
-      '@antv/g-lite':
-        specifier: ^2.7.0
-        version: 2.7.0
       '@antv/g-svg':
         specifier: ^2.1.1
         version: 2.1.1
@@ -410,6 +419,9 @@ importers:
         specifier: ^16.11.7
         version: 16.11.39
     devDependencies:
+      '@pintora/diagrams':
+        specifier: workspace:^0.8.1
+        version: link:../pintora-diagrams
       typescript:
         specifier: ^5.9.0
         version: 5.9.3
@@ -712,6 +724,15 @@ packages:
 
   '@antv/g-svg@2.1.1':
     resolution: {integrity: sha512-gVzBkjqA8FzDTbkuIxj6L0Omz/X/hFbYLzK6alWr0sHTfywqP6czcjDUJU8DF2MRIY1Twy55uZYW4dqqLXOXXg==}
+
+  '@antv/g@6.3.1':
+    resolution: {integrity: sha512-WYEKqy86LHB2PzTmrZXrIsIe+3Epeds2f68zceQ+BJtRoGki7Sy4IhlC8LrUMztgfT1t3d/0L745NWZwITroKA==}
+
+  '@antv/matrix-util@3.0.4':
+    resolution: {integrity: sha512-BAPyu6dUliHcQ7fm9hZSGKqkwcjEDVLVAstlHULLvcMZvANHeLXgHEgV7JqcAV/GIhIz8aZChIlzM1ZboiXpYQ==}
+
+  '@antv/util@2.0.17':
+    resolution: {integrity: sha512-o6I9hi5CIUvLGDhth0RxNSFDRwXeywmt6ExR4+RmVAzIi48ps6HUy+svxOCayvrPBN37uE6TAc2KDofRo0nK9Q==}
 
   '@antv/util@3.3.11':
     resolution: {integrity: sha512-FII08DFM4ABh2q5rPYdr0hMtKXRgeZazvXaFYCs7J7uTcWDHUhczab2qOCJLNDugoj8jFag1djb7wS9ehaRYBg==}
@@ -5329,6 +5350,10 @@ packages:
   balanced-match@1.0.2:
     resolution: {integrity: sha512-3oSeUO0TMV67hN1AmbXsK4yaqU7tjiHlbxRDZOpH0KW9+CeX4bRAaX0Anxt0tx2MrpRpWwQaPwIlISEJhYU5Pw==}
 
+  base64-arraybuffer@1.0.2:
+    resolution: {integrity: sha512-I3yl4r9QB5ZRY3XuJVEPfc2XhZO6YweFPI+UovAzn+8/hb3oJ6lnysaFcjVpkCPfVWFUDvoZ8kmVDP7WyRtYtQ==}
+    engines: {node: '>= 0.6.0'}
+
   base64-js@1.5.1:
     resolution: {integrity: sha512-AKpaYlHn8t4SVbOHCy+b5+KKgvR4vrsD8vbvrbiQJps7fKDTkjkDry6ji0rUJjC0kzbNePLwzxq8iypo41qeWA==}
 
@@ -5938,6 +5963,9 @@ packages:
     engines: {node: '>=18'}
     peerDependencies:
       postcss: ^8.4
+
+  css-line-break@2.1.0:
+    resolution: {integrity: sha512-FHcKFCZcAha3LwfVBhCQbW2nCNbkZXn7KVUJcsT5/P8YmfsVja0FMPJr0B903j/E69HUphKiV9iQArX8SDYA4w==}
 
   css-loader@6.8.1:
     resolution: {integrity: sha512-xDAXtEVGlD0gJ07iclwWVkLoZOpEvAWaSyf6W18S2pOC//K8+qUDIx8IIT3D+HjnmkJPQeesOPv5aiUaJsCM2g==}
@@ -7449,6 +7477,10 @@ packages:
         optional: true
       webpack:
         optional: true
+
+  html2canvas@1.4.1:
+    resolution: {integrity: sha512-fPU6BHNpsyIhr8yyMpTLLxAbkaK8ArIBcmZIRiBLiDhjeqvXolaEmDGmELFuX9I4xDcaKKcJl+TKZLqruBbmWA==}
+    engines: {node: '>=8.0.0'}
 
   htmlparser2@6.1.0:
     resolution: {integrity: sha512-gyyPk6rgonLFEDGoeRgQNaEUvdJ4ktTmmUh/h2t7s+M8oPpIPxgNACWa+6ESR57kXstwqPiCut0V8NRpcwgU7A==}
@@ -11194,6 +11226,9 @@ packages:
     resolution: {integrity: sha512-cAGWPIyOHU6zlmg88jwm7VRyXnMN7iV68OGAbYDk/Mh/xC/pzVPlQtY6ngoIH/5/tciuhGfvESU8GrHrcxD56w==}
     engines: {node: '>=8'}
 
+  text-segmentation@1.0.3:
+    resolution: {integrity: sha512-iOiPUo/BGnZ6+54OsWxZidGCsdU8YbE4PSpdPinp7DeMtUJNJBoJ/ouUSTJjHkh1KntHaltHl/gDs2FC4i5+Nw==}
+
   text-table@0.2.0:
     resolution: {integrity: sha512-N+8UisAXDGk8PFXP4HAzVR9nbfmVJ3zYLAWiTIoqC5v5isinhr+r5uaO8+7r3BMfuNIufIsA7RdpVgacC2cSpw==}
 
@@ -11627,6 +11662,9 @@ packages:
   utils-merge@1.0.1:
     resolution: {integrity: sha512-pMZTvIkT1d+TFGvDOqodOclx0QWkkgi6Tdoa8gC8ffGAAqz9pzPTZWAybbsHHoED/ztMtkv/VoYTYyShUn81hA==}
     engines: {node: '>= 0.4.0'}
+
+  utrie@1.0.2:
+    resolution: {integrity: sha512-1MLa5ouZiOmQzUbjbu9VmjLzn1QLXBhwpUa7kdLUQK+KQ5KA9I1vk5U4YHe/X2Ch7PYnJfWuWT+VbuxbGwljhw==}
 
   uuid@8.3.2:
     resolution: {integrity: sha512-+NYs2QeMWy+GWFOEm9xnn6HCDp0l7QBD7ml8zLUmJ+93Q5NF0NocErnwkTkXVFNiX3/fpC6afS8Dhb/gz7R7eg==}
@@ -12202,6 +12240,25 @@ snapshots:
       '@babel/runtime': 7.28.6
       gl-matrix: 3.4.3
       tslib: 2.8.1
+
+  '@antv/g@6.3.1':
+    dependencies:
+      '@antv/g-lite': 2.7.0
+      '@antv/util': 3.3.11
+      '@babel/runtime': 7.28.6
+      gl-matrix: 3.4.3
+      html2canvas: 1.4.1
+
+  '@antv/matrix-util@3.0.4':
+    dependencies:
+      '@antv/util': 2.0.17
+      gl-matrix: 3.4.3
+      tslib: 2.6.2
+
+  '@antv/util@2.0.17':
+    dependencies:
+      csstype: 3.1.3
+      tslib: 2.6.2
 
   '@antv/util@3.3.11':
     dependencies:
@@ -15007,7 +15064,7 @@ snapshots:
       react-dom: 18.2.0(react@18.2.0)
       reading-time: 1.5.0
       srcset: 4.0.0
-      tslib: 2.8.1
+      tslib: 2.6.2
       unist-util-visit: 5.0.0
       utility-types: 3.10.0
       webpack: 5.90.3(@swc/core@1.10.12(@swc/helpers@0.5.18))(esbuild@0.27.0)
@@ -15049,7 +15106,7 @@ snapshots:
       lodash: 4.17.21
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
-      tslib: 2.8.1
+      tslib: 2.6.2
       utility-types: 3.10.0
       webpack: 5.90.3(@swc/core@1.10.12(@swc/helpers@0.5.18))(esbuild@0.27.0)
     transitivePeerDependencies:
@@ -15082,7 +15139,7 @@ snapshots:
       fs-extra: 11.2.0
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
-      tslib: 2.8.1
+      tslib: 2.6.2
       webpack: 5.90.3(@swc/core@1.10.12(@swc/helpers@0.5.18))(esbuild@0.27.0)
     transitivePeerDependencies:
       - '@docusaurus/faster'
@@ -15113,7 +15170,7 @@ snapshots:
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
       react-json-view-lite: 1.2.1(react@18.2.0)
-      tslib: 2.8.1
+      tslib: 2.6.2
     transitivePeerDependencies:
       - '@docusaurus/faster'
       - '@mdx-js/react'
@@ -15141,7 +15198,7 @@ snapshots:
       '@docusaurus/utils-validation': 3.7.0(@swc/core@1.10.12(@swc/helpers@0.5.18))(esbuild@0.27.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
-      tslib: 2.8.1
+      tslib: 2.6.2
     transitivePeerDependencies:
       - '@docusaurus/faster'
       - '@mdx-js/react'
@@ -15170,7 +15227,7 @@ snapshots:
       '@types/gtag.js': 0.0.12
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
-      tslib: 2.8.1
+      tslib: 2.6.2
     transitivePeerDependencies:
       - '@docusaurus/faster'
       - '@mdx-js/react'
@@ -15198,7 +15255,7 @@ snapshots:
       '@docusaurus/utils-validation': 3.7.0(@swc/core@1.10.12(@swc/helpers@0.5.18))(esbuild@0.27.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0)
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
-      tslib: 2.8.1
+      tslib: 2.6.2
     transitivePeerDependencies:
       - '@docusaurus/faster'
       - '@mdx-js/react'
@@ -15231,7 +15288,7 @@ snapshots:
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
       sitemap: 7.1.1
-      tslib: 2.8.1
+      tslib: 2.6.2
     transitivePeerDependencies:
       - '@docusaurus/faster'
       - '@mdx-js/react'
@@ -15262,7 +15319,7 @@ snapshots:
       '@svgr/webpack': 8.1.0(typescript@5.9.3)
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
-      tslib: 2.8.1
+      tslib: 2.6.2
       webpack: 5.90.3(@swc/core@1.10.12(@swc/helpers@0.5.18))(esbuild@0.27.0)
     transitivePeerDependencies:
       - '@docusaurus/faster'
@@ -15358,7 +15415,7 @@ snapshots:
       react-dom: 18.2.0(react@18.2.0)
       react-router-dom: 5.3.4(react@18.2.0)
       rtlcss: 4.1.1
-      tslib: 2.8.1
+      tslib: 2.6.2
       utility-types: 3.10.0
     transitivePeerDependencies:
       - '@docusaurus/faster'
@@ -15422,7 +15479,7 @@ snapshots:
       lodash: 4.17.21
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
-      tslib: 2.8.1
+      tslib: 2.6.2
       utility-types: 3.10.0
     transitivePeerDependencies:
       - '@algolia/client-search'
@@ -15450,7 +15507,7 @@ snapshots:
   '@docusaurus/theme-translations@3.7.0':
     dependencies:
       fs-extra: 11.2.0
-      tslib: 2.8.1
+      tslib: 2.6.2
 
   '@docusaurus/tsconfig@3.7.0': {}
 
@@ -18347,6 +18404,8 @@ snapshots:
 
   balanced-match@1.0.2: {}
 
+  base64-arraybuffer@1.0.2: {}
+
   base64-js@1.5.1: {}
 
   base@0.11.2:
@@ -18998,6 +19057,10 @@ snapshots:
       postcss: 8.5.6
       postcss-selector-parser: 7.0.0
       postcss-value-parser: 4.2.0
+
+  css-line-break@2.1.0:
+    dependencies:
+      utrie: 1.0.2
 
   css-loader@6.8.1(webpack@5.97.1(@swc/core@1.10.12(@swc/helpers@0.5.18))(esbuild@0.27.0)):
     dependencies:
@@ -20871,6 +20934,11 @@ snapshots:
     optionalDependencies:
       '@rspack/core': 1.7.5(@swc/helpers@0.5.18)
       webpack: 5.97.1(@swc/core@1.10.12(@swc/helpers@0.5.18))(esbuild@0.27.0)
+
+  html2canvas@1.4.1:
+    dependencies:
+      css-line-break: 2.1.0
+      text-segmentation: 1.0.3
 
   htmlparser2@6.1.0:
     dependencies:
@@ -24615,7 +24683,7 @@ snapshots:
 
   rxjs@7.8.1:
     dependencies:
-      tslib: 2.8.1
+      tslib: 2.6.2
 
   sade@1.8.1:
     dependencies:
@@ -24926,7 +24994,7 @@ snapshots:
   snake-case@3.0.4:
     dependencies:
       dot-case: 3.0.4
-      tslib: 2.8.1
+      tslib: 2.6.2
 
   snapdragon-node@2.1.1:
     dependencies:
@@ -25416,6 +25484,10 @@ snapshots:
       glob: 7.2.3
       minimatch: 3.1.2
 
+  text-segmentation@1.0.3:
+    dependencies:
+      utrie: 1.0.2
+
   text-table@0.2.0: {}
 
   throttle-debounce@5.0.0: {}
@@ -25863,6 +25935,10 @@ snapshots:
   utility-types@3.10.0: {}
 
   utils-merge@1.0.1: {}
+
+  utrie@1.0.2:
+    dependencies:
+      base64-arraybuffer: 1.0.2
 
   uuid@8.3.2: {}
 

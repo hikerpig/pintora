@@ -8,7 +8,7 @@ import AppSidebar from './containers/AppSidebar'
 import store from './redux/store'
 import EditorSpace from 'src/live-editor/containers/EditorSpace'
 import ThemePreviewSpace from 'src/live-editor/containers/ThemePreviewSpace'
-import { actions } from 'src/live-editor/redux/slice'
+import { actions, type RendererType } from 'src/live-editor/redux/slice'
 import { HashRouter, Routes, Route, Outlet } from 'react-router-dom'
 import './App.css'
 import classNames from 'classnames'
@@ -121,6 +121,11 @@ const AppLayout = () => {
       } catch (error) {
         console.error('[editfor] error when processing config in url', error)
       }
+    }
+
+    const renderer = params.get('renderer') as RendererType
+    if (renderer) {
+      store.dispatch(actions.updatePreviewConfig({ renderer }))
     }
 
     const newParams = new URLSearchParams(params)

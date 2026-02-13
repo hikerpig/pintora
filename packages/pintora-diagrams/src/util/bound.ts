@@ -140,7 +140,7 @@ export function calcBound(marks: Mark[], opts: { recursive?: boolean } = {}): Bo
     if (calculator) {
       bound = calculator(mark)
     } else {
-      console.warn('[calcBound] missing calculator', type)
+      // console.warn('[calcBound] missing calculator', type)
     }
     if (bound.left !== null) left = Math.min(bound.left, left)
     if (bound.top !== null) top = Math.min(bound.top, top)

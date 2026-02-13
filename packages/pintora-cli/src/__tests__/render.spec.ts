@@ -1,6 +1,6 @@
 import { pintoraStandalone } from '@pintora/standalone'
 import { EXAMPLES } from '@pintora/test-shared'
-import { SVG_MIME_TYPE } from '../const'
+import { SVG_MIME_TYPE, TEXT_MIME_TYPE } from '../const'
 import { render } from '../render'
 
 describe('render', () => {
@@ -19,6 +19,24 @@ describe('render', () => {
     })
     expect(buf.constructor).toBe(Buffer)
     expect(buf.length).toBeGreaterThan(0)
+  })
+
+  it('can output plain text with ascii renderer', async () => {
+    const code = `
+      sequenceDiagram
+        participant 张三
+        participant 李四
+        张三->>李四: 你好
+    `
+    const text = await render({
+      code,
+      mimeType: TEXT_MIME_TYPE,
+    })
+    expect(typeof text).toBe('string')
+    expect((text as string).length).toBeGreaterThan(0)
+    const compact = (text as string).replace(/\s/g, '')
+    expect(compact).toContain('张三')
+    expect(compact).toContain('李四')
   })
 
   it('pintoraConfig should not alter global config', async () => {
