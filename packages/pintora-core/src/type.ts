@@ -61,5 +61,6 @@ export interface IRenderer {
   render(): void
   setContainer(container: any): void
   getRootElement(): Element
+  getTextContent?(): string
   on(name: string, handler: GrahpicEventHandler): () => void
 }

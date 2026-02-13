@@ -13,9 +13,8 @@ export { BaseRenderer, rendererRegistry, GraphicEvent, makeRenderer }
 export type { IRenderer }
 
 export function render(ir: GraphicsIR, opts: RenderOptions) {
-  // console.log('TBD, render', ir)
-  const renderer = makeRenderer(ir, opts.renderer).setContainer(opts.container)
-
+  const renderer = makeRenderer(ir, opts.renderer)
+  renderer.setContainer(opts.container)
   renderer.render()
 
   if (opts.onRender) {

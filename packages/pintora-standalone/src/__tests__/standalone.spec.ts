@@ -157,6 +157,31 @@ describe('pintora standalone', () => {
         expect(pathEl.getAttribute('d')).toBeTruthy()
       })
     })
+
+    it('can render unicode text diagram with ascii renderer', () => {
+      const code = `
+      sequenceDiagram
+        participant 张三
+        participant 李四
+        张三->>李四: 你好
+      `
+
+      let text = ''
+      pintoraStandalone.renderTo(code, {
+        container,
+        renderer: 'ascii',
+        onRender(renderer) {
+          text = renderer.getTextContent?.() || ''
+        },
+      })
+
+      const pre = container.querySelector('pre')
+      expect(pre).toBeTruthy()
+      expect(text.length).toBeGreaterThan(10)
+      const compact = text.replace(/\s/g, '')
+      expect(compact).toContain('张三')
+      expect(compact).toContain('李四')
+    })
   })
 
   describe('renderContentOf', () => {

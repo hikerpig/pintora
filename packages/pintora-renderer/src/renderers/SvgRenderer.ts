@@ -1,6 +1,6 @@
 import { Mark } from '@pintora/core'
 import { BaseRenderer } from './base'
-import { Element as GElement } from '@antv/g-lite'
+import { Element as GElement } from '@antv/g'
 import { Renderer } from '@antv/g-svg'
 
 export class SvgRenderer extends BaseRenderer {
