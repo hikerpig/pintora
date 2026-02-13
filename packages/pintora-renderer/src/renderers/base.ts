@@ -17,7 +17,7 @@ import {
   Text,
   Image,
   DisplayObject,
-} from '@antv/g'
+} from '@antv/g-lite'
 import { EventHandler, IRenderer } from '../type'
 import { noop, Stack } from '../util'
 import { GraphicEvent } from '../event'

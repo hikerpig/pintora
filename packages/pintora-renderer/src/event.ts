@@ -1,4 +1,4 @@
-import { FederatedEvent } from '@antv/g'
+import { FederatedEvent } from '@antv/g-lite'
 import { IGraphicEvent, Mark, DiagramEventType } from '@pintora/core'
 
 export type EventType = DiagramEventType
