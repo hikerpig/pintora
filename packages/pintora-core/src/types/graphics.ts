@@ -1,4 +1,4 @@
-import { mat3, vec2, vec3 } from '@antv/matrix-util'
+import type { mat3, vec2, vec3 } from 'gl-matrix'
 
 export type Mark = Group | Rect | Circle | Ellipse | Text | Line | PolyLine | Polygon | Path | GSymbol
 
