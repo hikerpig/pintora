@@ -5,5 +5,6 @@ module.exports = {
     '<rootDir>/packages/pintora-diagrams/jest.config.js',
     '<rootDir>/packages/pintora-cli/jest.config.js',
     '<rootDir>/packages/pintora-standalone/jest.config.js',
+    '<rootDir>/packages/pintora-renderer/jest.config.js',
   ],
 }
