@@ -1,5 +1,14 @@
 # Change Log
 
+## 0.8.2
+
+### Patch Changes
+
+- fff26e5: feat: [classDiagram] adjust sizing configs
+- d5b271f: feat: [classDiagram] adjust layout nodes to avoid line overlap when multiple lines between two entities
+- 0901b69: feat: [classDiagram] refactor artist and fix double seperator bug
+- 3030201: fix: [componentDiagram] child to parent edge freeze
+
 ## 0.8.1
 
 ### Patch Changes
