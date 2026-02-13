@@ -42,11 +42,12 @@
     "@changesets/cli": "^2.29.8",
     "@types/eslint__js": "^8.42.0",
     "@types/jest": "^30.0.0",
+    "@typescript-eslint/eslint-plugin": "^8.55.0",
     "codecov": "^3.8.3",
     "esbuild-jest": "^0.5.0",
-    "eslint": "^9.0.0",
-    "eslint-plugin-prettier": "^5.0.0",
-    "eslint-plugin-unused-imports": "^4.0.0",
+    "eslint": "^10.0.0",
+    "eslint-plugin-prettier": "^5.5.5",
+    "eslint-plugin-unused-imports": "^4.4.1",
     "husky": "^9.0.0",
     "jest": "^30.0.0",
     "jest-junit": "^16.0.0",
@@ -55,7 +56,7 @@
     "rimraf": "6.1.2",
     "turbo": "^2.0.4",
     "typescript": "^5.9.0",
-    "typescript-eslint": "^8.47.0"
+    "typescript-eslint": "^8.55.0"
   },
   "packageManager": "pnpm@9.15.9"
 }
