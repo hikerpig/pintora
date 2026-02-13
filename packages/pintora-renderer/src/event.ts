@@ -1,4 +1,4 @@
-import { Event as GEvent } from '@antv/g-base'
+import { FederatedEvent } from '@antv/g-lite'
 import { IGraphicEvent, Mark, DiagramEventType } from '@pintora/core'
 
 export type EventType = DiagramEventType
@@ -8,12 +8,12 @@ export type EventType = DiagramEventType
  */
 export class GraphicEvent implements IGraphicEvent {
   type: EventType
-  gEvent: GEvent
+  gEvent: FederatedEvent
 
   mark: Mark | undefined
   markPath: Mark[] | undefined
 
-  constructor(gEvent: GEvent) {
+  constructor(gEvent: FederatedEvent) {
     this.type = gEvent.type as EventType
     this.gEvent = gEvent
   }
@@ -31,10 +31,10 @@ export class GraphicEvent implements IGraphicEvent {
   }
 
   public get clientX(): number {
-    return this.gEvent.clientX
+    return this.gEvent.viewportX
   }
 
   public get clientY(): number {
-    return this.gEvent.clientY
+    return this.gEvent.viewportY
   }
 }

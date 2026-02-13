@@ -15,18 +15,18 @@ import {
   adjustRootMarkBounds,
   calcDirection,
   DiagramTitleMaker,
-  getBaseText,
-  makeEmptyGroup,
   makeLabelBg,
+  makeGroup,
   makeMark,
   makeTriangle,
+  getBaseText,
 } from '../util/artist-util'
 import { calcBound, updateBoundsByPoints } from '../util/bound'
 import { DagreWrapper } from '../util/dagre-wrapper'
 import { getFontConfig } from '../util/font-config'
 import { BaseEdgeData, createLayoutGraph, getGraphSplinesOption, LayoutGraph } from '../util/graph'
 import { getPointsCurvePath, getPointsLinearPath } from '../util/line-util'
-import { makeBounds, positionGroupContents, tryExpandBounds } from '../util/mark-positioner'
+import { makeBounds, tryExpandBounds } from '../util/mark-positioner'
 import { toFixed } from '../util/number'
 import { getTextDimensionsInPresicion } from '../util/text'
 import { CELL_ORDER, CellName, drawMarkerTo, TableBuilder, TableCell, TableRow } from './artist-util'
@@ -53,11 +53,7 @@ class ErArtist extends BaseArtist<ErDiagramIR, ErConf> {
     // 6. And finally, create all the edges in the svg node using information from the graph
     // ---
 
-    const rootMark: Group = {
-      type: 'group',
-      attrs: {},
-      children: [],
-    }
+    const rootMark: Group = makeGroup()
 
     const g = createLayoutGraph({
       multigraph: true,
@@ -147,7 +143,7 @@ const drawAttributes = (group: Group, entityText: Text, attributes: Entity['attr
   let cumulativeHeight = labelBBox.height + attribPaddingY * 2
   let attrNum = 1
 
-  const attributeGroup = makeEmptyGroup()
+  const attributeGroup = makeGroup()
   group.children.push(attributeGroup)
 
   const tableBuilder = new TableBuilder()
@@ -226,7 +222,6 @@ const drawAttributes = (group: Group, entityText: Text, attributes: Entity['attr
     .forEach(k => {
       cellOffsets[k] = cumulativeOffsetX
       if (columnMaxWidths[k]) {
-        // cumulativeOffsetX += columnMaxWidths[k] + 2 * attribPaddingX
         cumulativeOffsetX += Math.floor(columnMaxWidths[k] + 2 * attribPaddingX)
       }
     })
@@ -242,7 +237,8 @@ const drawAttributes = (group: Group, entityText: Text, attributes: Entity['attr
 
   if (attributes.length > 0) {
     // Position the entity label near the top of the entity bounding box
-    entityText.matrix = mat3.fromTranslation(mat3.create(), [bBox.width / 2, attribPaddingY + labelBBox.height / 2])
+    entityText.attrs.x += bBox.width / 2
+    entityText.attrs.y += attribPaddingY + labelBBox.height / 2
 
     // Add rectangular boxes for the attribute types/names
     let heightOffset = toFixed(labelBBox.height + attribPaddingY * 2) // Start at the bottom of the entity label
@@ -269,7 +265,7 @@ const drawAttributes = (group: Group, entityText: Text, attributes: Entity['attr
       // Calculate the alignment y co-ordinate for the text attribute
       const alignY = toFixed(heightOffset + attribPaddingY + rowTextHeight / 2)
 
-      const rowGroup = makeEmptyGroup()
+      const rowGroup: Group = makeGroup()
       attributeGroup.children.push(rowGroup)
 
       let lastColumnRect: Rect
@@ -290,7 +286,8 @@ const drawAttributes = (group: Group, entityText: Text, attributes: Entity['attr
         lastColumnRect = rect
         if (cell) {
           rowGroup.children.push(cell.mark)
-          cell.mark.matrix = mat3.fromTranslation(mat3.create(), [offsetX + attribPaddingX, alignY])
+          cell.mark.attrs.x = offsetX + attribPaddingX
+          cell.mark.attrs.y = alignY
         }
       })
 
@@ -312,7 +309,8 @@ const drawAttributes = (group: Group, entityText: Text, attributes: Entity['attr
     bBox.height = Math.max(conf.minEntityHeight, cumulativeHeight)
 
     // Position the entity label in the middle of the box
-    entityText.matrix = mat3.fromTranslation(mat3.create(), [bBox.width / 2, bBox.height / 2])
+    entityText.attrs.x += bBox.width / 2
+    entityText.attrs.y += bBox.height / 2
   }
 
   return {
@@ -374,11 +372,7 @@ const drawEntities = function (rootMark: Group, ir: ErDiagramIR, graph: LayoutGr
     )
     group.children.push(rectMark, textMark)
 
-    const {
-      width: entityWidth,
-      height: entityHeight,
-      attributeGroup,
-    } = drawAttributes(group, textMark, ir.entities[id].attributes)
+    const { width: entityWidth, height: entityHeight } = drawAttributes(group, textMark, ir.entities[id].attributes)
     safeAssign(rectMark.attrs, {
       width: entityWidth,
       height: entityHeight,
@@ -392,20 +386,9 @@ const drawEntities = function (rootMark: Group, ir: ErDiagramIR, graph: LayoutGr
       onLayout(data) {
         const x = Math.floor(data.x)
         const y = Math.floor(data.y)
-        const marks = [rectMark, textMark]
-        marks.forEach(mark => {
-          // center the marks to dest point
-          safeAssign(mark.attrs, { x: x - rectMark.attrs.width / 2, y: y - rectMark.attrs.height / 2 })
-        })
-
-        if (attributeGroup) {
-          positionGroupContents(attributeGroup, {
-            x: toFixed(x - entityWidth / 2),
-            y: toFixed(y - entityHeight / 2),
-            width: data.width,
-            height: data.height,
-          })
-        }
+        const tx = toFixed(x - entityWidth / 2)
+        const ty = toFixed(y - entityHeight / 2)
+        group.matrix = mat3.fromTranslation(mat3.create(), [tx, ty])
       },
     })
 
@@ -496,6 +479,7 @@ const drawRelationshipFromLayout = function (group: Group, rel: Relationship, g:
     stroke: conf.stroke,
     id: `${edge.name}-start`,
   })
+
   // Now label the relationship
 
   // Find the half-way point
@@ -537,14 +521,15 @@ const drawRelationshipFromLayout = function (group: Group, rel: Relationship, g:
   group.children.push(...insertingMarks)
 
   // debug
-  // const secondPointMarker = makeCircleWithCoordInPoint(secondPoint)
-  // group.children.push(secondPointMarker)
+  // const secondPointMarker = makeCircleInPoint(secondPoint)
+  // const lastPointMarker = makeCircleInPoint(lastPoint)
+  // group.children.push(secondPointMarker, lastPointMarker)
   return { bounds }
 }
 
 function drawInheritances(ir: ErDiagramIR, g: LayoutGraph, rootMark: Group) {
   const fontConfig = getFontConfig(conf)
-  const inheritanceGroup = makeEmptyGroup()
+  const inheritanceGroup = makeGroup()
   rootMark.children.push(inheritanceGroup)
 
   ir.inheritances.forEach(inh => {

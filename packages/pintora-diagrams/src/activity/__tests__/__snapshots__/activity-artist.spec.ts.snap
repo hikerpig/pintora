@@ -6,11 +6,7 @@ exports[`activity-artist draw fork 1`] = `
     "attrs": {},
     "children": [
       {
-        "attrs": {
-          "id": "id-1",
-          "mark": [Circular],
-          "onLayout": [Function],
-        },
+        "attrs": {},
         "children": [
           {
             "attrs": {
@@ -23,11 +19,7 @@ exports[`activity-artist draw fork 1`] = `
         "type": "group",
       },
       {
-        "attrs": {
-          "id": "id-2",
-          "mark": [Circular],
-          "onLayout": [Function],
-        },
+        "attrs": {},
         "children": [
           {
             "attrs": {
@@ -75,11 +67,7 @@ exports[`activity-artist draw fork 1`] = `
             "attrs": {},
             "children": [
               {
-                "attrs": {
-                  "id": "id-5",
-                  "mark": [Circular],
-                  "onLayout": [Function],
-                },
+                "attrs": {},
                 "children": [
                   {
                     "attrs": {
@@ -108,11 +96,7 @@ exports[`activity-artist draw fork 1`] = `
             "type": "group",
           },
           {
-            "attrs": {
-              "id": "id-5",
-              "mark": [Circular],
-              "onLayout": [Function],
-            },
+            "attrs": {},
             "children": [
               {
                 "attrs": {
@@ -141,11 +125,7 @@ exports[`activity-artist draw fork 1`] = `
             "attrs": {},
             "children": [
               {
-                "attrs": {
-                  "id": "id-7",
-                  "mark": [Circular],
-                  "onLayout": [Function],
-                },
+                "attrs": {},
                 "children": [
                   {
                     "attrs": {
@@ -174,11 +154,7 @@ exports[`activity-artist draw fork 1`] = `
             "type": "group",
           },
           {
-            "attrs": {
-              "id": "id-7",
-              "mark": [Circular],
-              "onLayout": [Function],
-            },
+            "attrs": {},
             "children": [
               {
                 "attrs": {
@@ -214,11 +190,7 @@ exports[`activity-artist draw fork 1`] = `
         "type": "rect",
       },
       {
-        "attrs": {
-          "id": "id-8",
-          "mark": [Circular],
-          "onLayout": [Function],
-        },
+        "attrs": {},
         "children": [
           {
             "attrs": {
@@ -244,11 +216,7 @@ exports[`activity-artist draw fork 1`] = `
         "type": "group",
       },
       {
-        "attrs": {
-          "id": "id-9",
-          "mark": [Circular],
-          "onLayout": [Function],
-        },
+        "attrs": {},
         "children": [
           {
             "attrs": {
@@ -274,11 +242,7 @@ exports[`activity-artist draw fork 1`] = `
         "type": "group",
       },
       {
-        "attrs": {
-          "id": "id-10",
-          "mark": [Circular],
-          "onLayout": [Function],
-        },
+        "attrs": {},
         "children": [
           {
             "attrs": {
@@ -514,11 +478,7 @@ exports[`activity-artist draw repeat 1`] = `
     "attrs": {},
     "children": [
       {
-        "attrs": {
-          "id": "id-1",
-          "mark": [Circular],
-          "onLayout": [Function],
-        },
+        "attrs": {},
         "children": [
           {
             "attrs": {
@@ -531,11 +491,7 @@ exports[`activity-artist draw repeat 1`] = `
         "type": "group",
       },
       {
-        "attrs": {
-          "id": "id-2-end",
-          "mark": [Circular],
-          "onLayout": [Function],
-        },
+        "attrs": {},
         "children": [
           {
             "attrs": {
@@ -562,11 +518,7 @@ exports[`activity-artist draw repeat 1`] = `
         "type": "group",
       },
       {
-        "attrs": {
-          "id": "id-2",
-          "mark": [Circular],
-          "onLayout": [Function],
-        },
+        "attrs": {},
         "children": [
           {
             "attrs": {
@@ -593,11 +545,7 @@ exports[`activity-artist draw repeat 1`] = `
         "type": "group",
       },
       {
-        "attrs": {
-          "id": "id-3",
-          "mark": [Circular],
-          "onLayout": [Function],
-        },
+        "attrs": {},
         "children": [
           {
             "attrs": {
@@ -623,11 +571,7 @@ exports[`activity-artist draw repeat 1`] = `
         "type": "group",
       },
       {
-        "attrs": {
-          "id": "id-4-end",
-          "mark": [Circular],
-          "onLayout": [Function],
-        },
+        "attrs": {},
         "children": [
           {
             "attrs": {
@@ -662,11 +606,7 @@ exports[`activity-artist draw repeat 1`] = `
         "type": "path",
       },
       {
-        "attrs": {
-          "id": "id-5",
-          "mark": [Circular],
-          "onLayout": [Function],
-        },
+        "attrs": {},
         "children": [
           {
             "attrs": {
@@ -692,11 +632,7 @@ exports[`activity-artist draw repeat 1`] = `
         "type": "group",
       },
       {
-        "attrs": {
-          "id": "id-6",
-          "mark": [Circular],
-          "onLayout": [Function],
-        },
+        "attrs": {},
         "children": [
           {
             "attrs": {

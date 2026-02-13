@@ -1,6 +1,6 @@
-import { mat3 } from '@antv/matrix-util'
+import type { mat3, vec2, vec3 } from 'gl-matrix'
 
-export type Mark = Group | Rect | Circle | Ellipse | Text | Line | PolyLine | Polygon | Marker | Path | GSymbol
+export type Mark = Group | Rect | Circle | Ellipse | Text | Line | PolyLine | Polygon | Path | GSymbol
 
 export interface Figure {
   mark: Mark
@@ -43,8 +43,8 @@ export interface Rect extends IMark {
 export interface Circle extends IMark {
   type: 'circle'
   attrs: MarkAttrs & {
-    x: number
-    y: number
+    cx: number
+    cy: number
     r: number
   }
 }
@@ -79,13 +79,6 @@ export interface Polygon extends IMark {
   attrs: MarkAttrs & { points: PointTuple[] }
 }
 
-type MarkerSymbol = 'square' | 'circle' | 'diamond' | 'triangle' | 'triangle-down'
-
-export interface Marker extends IMark {
-  type: 'marker'
-  attrs: MarkAttrs & { symbol: MarkerSymbol }
-}
-
 export interface Path extends IMark {
   type: 'path'
   attrs: MarkAttrs & { path: string | PathCommand[] }
@@ -103,7 +96,6 @@ export interface MarkTypeMap {
   line: Line
   polyline: PolyLine
   polygon: Polygon
-  marker: Marker
   symbol: GSymbol
 }
 
@@ -233,6 +225,11 @@ export type MarkAttrs = {
   fontVariant?: 'normal' | 'small-caps' | string
   /** line height */
   lineHeight?: number
+  /**
+   * how do we define the 'position' of a shape?
+   * eg. the default anchor of a Rect is top-left, we can change it to its' center [0.5, 0.5].
+   */
+  anchor?: vec2 | vec3 | string
   [key: string]: any
 }
 

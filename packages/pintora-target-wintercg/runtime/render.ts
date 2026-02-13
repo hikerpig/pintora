@@ -38,6 +38,16 @@ function renderPrepare(opts: RuntimeRenderOptions) {
 
   const global = globalThis
 
+  const noop = () => {}
+  Object.assign(global as any, {
+    navigator: {},
+    addEventListener: noop,
+    removeEventListener: noop,
+    requestAnimationFrame(cb: () => void) {
+      cb()
+    },
+  })
+
   // setup the env for renderer
   ;(global as any).document = document
 

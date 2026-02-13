@@ -2,7 +2,7 @@
 import { defineConfig } from 'rolldown'
 
 export default defineConfig([
-  // ESM build
+  // ESM build - 优化版本
   {
     input: './src/index.ts',
     output: {
@@ -11,11 +11,8 @@ export default defineConfig([
       sourcemap: false,
     },
     platform: 'browser',
-    resolve: {
-      // Bundle all dependencies (no external)
-    },
   },
-  // UMD build (minified)
+  // UMD build (minified) - 优化版本
   {
     input: './src/index.ts',
     output: {
@@ -26,8 +23,5 @@ export default defineConfig([
       minify: true,
     },
     platform: 'browser',
-    resolve: {
-      // Bundle all dependencies (no external)
-    },
   },
 ])
