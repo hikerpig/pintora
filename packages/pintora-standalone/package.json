@@ -44,8 +44,8 @@
     "directory": "packages/pintora-standalone"
   },
   "scripts": {
-    "compile": "microbundle --no-sourcemap --external none --name pintora -f umd,esm",
-    "compile:fast": "rolldown -c rolldown.config.mjs",
+    "compile:old": "microbundle --no-sourcemap --external none --name pintora -f umd,esm",
+    "compile": "rolldown -c rolldown.config.mjs",
     "watch": "microbundle --no-compress --no-sourcemap -f esm watch",
     "watch-all": "microbundle --no-compress --no-sourcemap --external none --name pintora -f umd,esm watch",
     "dev-demo:esm": "microbundle --no-compress --no-sourcemap -f esm watch",
@@ -63,11 +63,11 @@
   },
   "devDependencies": {
     "@pintora/test-shared": "workspace:*",
-    "@rolldown/binding-darwin-arm64": "1.0.0-rc.7",
+    "@rolldown/binding-darwin-arm64": "1.0.0",
     "@types/node": "^16.11.39",
     "@types/tinycolor2": "^1.4.3",
     "microbundle": "^0.15.1",
-    "rolldown": "1.0.0-rc.7",
+    "rolldown": "1.0.0",
     "tsx": "^4.0.0",
     "typescript": "^5.9.0"
   }

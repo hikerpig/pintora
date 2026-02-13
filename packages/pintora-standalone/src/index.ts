@@ -63,6 +63,23 @@ type ConfigOnElement = {
   theme: string
 }
 
+export type PintoraStandalone = {
+  renderTo(code: string, options: RenderToOptions): void
+  initBrowser(options?: InitBrowserOptions): void
+  renderContentOf(container: HTMLElement, opts?: RenderContentOptions): HTMLElement
+  getConfigFromElement(ele: HTMLElement): Partial<ConfigOnElement>
+  getConfig: typeof configApi.getConfig
+  setConfig: typeof configApi.setConfig
+  diagramEventManager: typeof diagramEventManager
+  configApi: typeof configApi
+  configEngine: typeof configEngine
+  diagramRegistry: typeof diagramRegistry
+  themeRegistry: typeof themeRegistry
+  symbolRegistry: typeof symbolRegistry
+  parseAndDraw: typeof parseAndDraw
+  util: typeof util
+}
+
 const CLASSES = {
   wrapper: 'pintora-wrapper',
 }
@@ -83,7 +100,7 @@ class ConfigStack<T> {
 
 const configStack = new ConfigStack<PintoraConfig>()
 
-const pintoraStandalone = {
+const pintoraStandalone: PintoraStandalone = {
   renderTo(code: string, options: RenderToOptions) {
     const { container, config } = options
     let ctn: HTMLElement
