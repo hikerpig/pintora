@@ -31,7 +31,7 @@ export const defaultConfig: ClassConf = {
   diagramPadding: 15,
 
   layoutDirection: 'TB',
-  ranksep: 20,
+  ranksep: 10,
   nodesep: 20,
   edgesep: 10,
   edgeType: 'polyline',

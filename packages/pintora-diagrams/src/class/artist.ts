@@ -100,7 +100,7 @@ class ClassDiagramDraw {
       directed: true,
       compound: true,
     }).setGraph({
-      nodesep: 20,
+      nodesep: conf.nodesep,
       edgesep: conf.edgesep,
       ranksep: conf.ranksep,
       splines: getGraphSplinesOption(conf.edgeType),
@@ -467,8 +467,8 @@ class ClassDiagramDraw {
 
         const node = g.node(id)
         if (isHorizontal) {
-          // node.outerLeft = x
-          // node.outerRight = x + noteModel.width
+          node.outerLeft = x
+          node.outerRight = x + noteModel.width
         } else {
           node.outerTop = y
           node.outerBottom = y + noteModel.height
