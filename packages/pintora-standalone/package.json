@@ -63,7 +63,7 @@
   },
   "devDependencies": {
     "@pintora/test-shared": "workspace:*",
-    "@rolldown/binding-darwin-arm64": "1.0.0-rc.3",
+    "@rolldown/binding-darwin-arm64": "1.0.0-rc.5",
     "@types/node": "^16.11.39",
     "@types/tinycolor2": "^1.4.3",
     "microbundle": "^0.15.1",
