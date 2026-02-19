@@ -67,7 +67,7 @@
     "@types/node": "^16.11.39",
     "@types/tinycolor2": "^1.4.3",
     "microbundle": "^0.15.1",
-    "rolldown": "1.0.0-rc.4",
+    "rolldown": "1.0.0-rc.5",
     "tsx": "^4.0.0",
     "typescript": "^5.9.0"
   }
