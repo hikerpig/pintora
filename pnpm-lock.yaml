@@ -120,8 +120,8 @@ importers:
         specifier: ^2.10.0
         version: 2.10.1(react-redux@9.0.4(@types/react@18.0.12)(react@18.2.0)(redux@5.0.1))(react@18.2.0)
       browser-fs-access:
-        specifier: ^0.35.0
-        version: 0.35.0
+        specifier: ^0.38.0
+        version: 0.38.0
       classnames:
         specifier: ^2.3.2
         version: 2.3.2
@@ -5372,8 +5372,8 @@ packages:
   brotli@1.3.3:
     resolution: {integrity: sha512-oTKjJdShmDuGW94SyyaoQvAjf30dZaHnjJ8uAF+u2/vGJkJbJPJAT1gDiOJP5v1Zb6f9KEyW/1HpuaWIXtGHPg==}
 
-  browser-fs-access@0.35.0:
-    resolution: {integrity: sha512-sLoadumpRfsjprP8XzVjpQc0jK8yqHBx0PtUTGYj2fftT+P/t+uyDAQdMgGAPKD011in/O+YYGh7fIs0oG/viw==}
+  browser-fs-access@0.38.0:
+    resolution: {integrity: sha512-JveqW2w6pEZqFEEfMgCszXzYpE89dG+nPsmOdcs741mFFAROeL+iqjGEpR07RI+s0YY0EFr+4KnOoACprJTpOw==}
 
   browserslist@4.24.3:
     resolution: {integrity: sha512-1CPmv8iobE2fyRMV97dAcMVegvvWKxmq94hkLiAkUGwKVTyDLw33K+ZxiFrREKmmps4rIw6grcCFCnTMSZ/YiA==}
@@ -18285,7 +18285,7 @@ snapshots:
     dependencies:
       base64-js: 1.5.1
 
-  browser-fs-access@0.35.0: {}
+  browser-fs-access@0.38.0: {}
 
   browserslist@4.24.3:
     dependencies:
