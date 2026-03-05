@@ -42,13 +42,13 @@
     "@pintora/standalone": "workspace:^0.8.1",
     "canvas": "^3.0.1",
     "consola": "^3.0.0",
-    "jsdom": "^26.0.0",
+    "jsdom": "^28.0.0",
     "mime-types": "^3.0.0",
     "yargs": "^17.7.2"
   },
   "devDependencies": {
     "@pintora/test-shared": "workspace:^0.5.2",
-    "@types/jsdom": "^21.0.0",
+    "@types/jsdom": "^28.0.0",
     "@types/mime-types": "^3.0.0",
     "@types/node": "^18.12.0",
     "@types/yargs": "^17.0.33",
