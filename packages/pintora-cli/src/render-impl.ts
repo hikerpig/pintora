@@ -1,7 +1,8 @@
 import { RenderOptions, IRenderer } from '@pintora/renderer'
 import { pintoraStandalone, PintoraConfig } from '@pintora/standalone'
 import { JSDOM } from 'jsdom'
-import { implForWrapper } from 'jsdom/lib/jsdom/living/generated/utils'
+// @ts-ignore - jsdom internal API
+import { implForWrapper } from 'jsdom/lib/generated/idl/utils'
 import { Canvas, CanvasPattern } from 'canvas'
 import { SVG_MIME_TYPE, DEFAUT_BGS } from './const'
 import type { CLIRenderOptions } from './type'
