@@ -148,4 +148,45 @@ describe('rasterizer', () => {
     expect(grid.getGlyphAt(3, 2)).toBe('A')
     expect(grid.getGlyphAt(2, 2)).not.toBe('A')
   })
+
+  it('clears lower-priority horizontal strokes across a centered title row', () => {
+    const ops: DrawOp[] = [
+      {
+        kind: 'segment',
+        p0: { x: 8, y: 32 },
+        p1: { x: 72, y: 32 },
+        layer: AsciiLayer.LINES,
+      },
+      {
+        kind: 'text',
+        point: { x: 40, y: 32 },
+        text: 'PERSON',
+        textAlign: 'left',
+        textBaseline: 'top',
+        repairs: [
+          {
+            kind: 'clear-horizontal-lines',
+            row: 2,
+            minCol: 1,
+            maxCol: 9,
+          },
+        ],
+        layer: AsciiLayer.TEXT,
+      },
+    ]
+
+    const grid = rasterize(ops, {
+      charset: 'ascii',
+      cellWidth: 8,
+      cellHeight: 16,
+      cols: 12,
+      rows: 6,
+      trimRight: true,
+    })
+
+    expect(grid.getGlyphAt(1, 2)).toBe(' ')
+    expect(grid.getGlyphAt(5, 2)).toBe('P')
+    expect(grid.getGlyphAt(9, 2)).toBe('O')
+    expect(grid.getGlyphAt(10, 2)).toBe('N')
+  })
 })

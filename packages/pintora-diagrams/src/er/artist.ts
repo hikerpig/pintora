@@ -139,8 +139,9 @@ const drawAttributes = (group: Group, entityText: Text, attributes: Entity['attr
   const attribPaddingX = conf.entityPaddingX / 2 // Ditto
   const attrFontSize = conf.fontSize * 0.85
   const labelBBox = { width: Math.ceil(entityText.attrs.width), height: Math.ceil(entityText.attrs.height) }
+  const headerGap = labelBBox.height
   let maxRowContentWidth = 0
-  let cumulativeHeight = labelBBox.height + attribPaddingY * 2
+  let cumulativeHeight = labelBBox.height + attribPaddingY * 2 + headerGap
   let attrNum = 1
 
   const attributeGroup = makeGroup()
@@ -241,17 +242,48 @@ const drawAttributes = (group: Group, entityText: Text, attributes: Entity['attr
     entityText.attrs.y += attribPaddingY + labelBBox.height / 2
 
     // Add rectangular boxes for the attribute types/names
-    let heightOffset = toFixed(labelBBox.height + attribPaddingY * 2) // Start at the bottom of the entity label
+    let heightOffset = toFixed(labelBBox.height + attribPaddingY * 2 + headerGap) // Start below the label band
     let attribStyle = 'attributeBoxOdd' // We will flip the style on alternate rows to achieve a banded effect
 
     const attributeFill = conf.attributeFill
 
+    attributeGroup.children.push(
+      makeMark(
+        'line',
+        {
+          x1: 0,
+          x2: bBox.width,
+          y1: heightOffset,
+          y2: heightOffset,
+          stroke: conf.stroke,
+          strokeOpacity: 0,
+        },
+        {
+          class: 'er__entity-separator',
+          semantic: {
+            role: 'separator',
+            strokePolicy: 'optional',
+          },
+        },
+      ),
+    )
+
     function makeAttribLabelRect(attrs: Partial<Rect['attrs']>) {
-      return makeMark('rect', {
-        fill: attributeFill,
-        stroke: conf.stroke,
-        ...attrs,
-      })
+      return makeMark(
+        'rect',
+        {
+          fill: attributeFill,
+          stroke: conf.stroke,
+          ...attrs,
+        },
+        {
+          class: 'er__attribute-cell',
+          semantic: {
+            role: 'container',
+            strokePolicy: 'always',
+          },
+        },
+      )
     }
 
     const cellOrderKeys = Object.keys(CELL_ORDER)
@@ -368,7 +400,13 @@ const drawEntities = function (rootMark: Group, ir: ErDiagramIR, graph: LayoutGr
         y: 0,
         radius: conf.borderRadius,
       },
-      { class: 'er__entity-box' },
+      {
+        class: 'er__entity-box',
+        semantic: {
+          role: 'container',
+          strokePolicy: 'always',
+        },
+      },
     )
     group.children.push(rectMark, textMark)
 

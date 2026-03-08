@@ -101,6 +101,12 @@ function drawText(grid: TextGrid, op: TextOp, options: RasterizeOptions): void {
     textBaseline: op.textBaseline,
   })
 
+  for (const repair of op.repairs || []) {
+    if (repair.kind === 'clear-horizontal-lines') {
+      grid.clearHorizontalLineRange(repair.row, repair.minCol, repair.maxCol, op.layer - 1)
+    }
+  }
+
   for (let lineIndex = 0; lineIndex < metrics.lines.length; lineIndex++) {
     const row = placement.row + lineIndex * metrics.lineHeightRows
     let col = placement.col

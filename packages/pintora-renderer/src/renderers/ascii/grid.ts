@@ -124,6 +124,22 @@ export class TextGrid {
     }
   }
 
+  clearHorizontalLineRange(row: number, colStart: number, colEnd: number, maxPriority = Number.POSITIVE_INFINITY): void {
+    const left = Math.max(0, Math.min(colStart, colEnd))
+    const right = Math.min(this.cols - 1, Math.max(colStart, colEnd))
+    if (row < 0 || row >= this.rows) return
+
+    for (let col = left; col <= right; col++) {
+      const cell = this.cells[this.getIndex(col, row)]
+      if (cell.priority > maxPriority) continue
+
+      cell.lineMask &= ~(DIR_E | DIR_W)
+      if (!cell.text && !cell.textContinuation && cell.lineMask === 0 && cell.diagonalMask === 0) {
+        cell.priority = 0
+      }
+    }
+  }
+
   getGlyphAt(col: number, row: number): string {
     if (!this.inBounds(col, row)) return ' '
     const cell = this.cells[this.getIndex(col, row)]

@@ -52,6 +52,68 @@ describe('normalizeDrawOps', () => {
     expect(text.textBaseline).toBe('top')
   })
 
+  it('snaps semantic container rects outward to stable grid bounds', () => {
+    const ops: DrawOp[] = [
+      {
+        kind: 'rect',
+        points: [
+          { x: 101, y: 49.25 },
+          { x: 201, y: 49.25 },
+          { x: 201, y: 81.75 },
+          { x: 101, y: 81.75 },
+        ],
+        layer: AsciiLayer.LINES,
+        semantic: { role: 'container', strokePolicy: 'always' },
+      },
+    ]
+
+    const normalized = normalizeDrawOps(ops, { cellWidth: 8, cellHeight: 16 })
+    const rect = normalized[0] as Extract<DrawOp, { kind: 'rect' }>
+
+    expect(rect.points).toEqual([
+      { x: 96, y: 48 },
+      { x: 208, y: 48 },
+      { x: 208, y: 96 },
+      { x: 96, y: 96 },
+    ])
+  })
+
+  it('snaps shared semantic container borders to one grid line', () => {
+    const ops: DrawOp[] = [
+      {
+        kind: 'rect',
+        points: [
+          { x: 15, y: 49.25 },
+          { x: 43.5, y: 49.25 },
+          { x: 43.5, y: 81.75 },
+          { x: 15, y: 81.75 },
+        ],
+        layer: AsciiLayer.LINES,
+        semantic: { role: 'container', strokePolicy: 'always' },
+      },
+      {
+        kind: 'rect',
+        points: [
+          { x: 43.5, y: 49.25 },
+          { x: 101, y: 49.25 },
+          { x: 101, y: 81.75 },
+          { x: 43.5, y: 81.75 },
+        ],
+        layer: AsciiLayer.LINES,
+        semantic: { role: 'container', strokePolicy: 'always' },
+      },
+    ]
+
+    const normalized = normalizeDrawOps(ops, { cellWidth: 8, cellHeight: 16 })
+    const left = normalized[0] as Extract<DrawOp, { kind: 'rect' }>
+    const right = normalized[1] as Extract<DrawOp, { kind: 'rect' }>
+
+    expect(left.points[1].x).toBe(40)
+    expect(left.points[2].x).toBe(40)
+    expect(right.points[0].x).toBe(40)
+    expect(right.points[3].x).toBe(40)
+  })
+
   it('moves container text off semantic separator rows', () => {
     const ops: DrawOp[] = [
       {
@@ -91,5 +153,41 @@ describe('normalizeDrawOps', () => {
 
     expect(text.point.y).not.toBe(separator.p0.y)
     expect(text.point.y).toBe(80)
+  })
+
+  it('prefers moving middle-baseline text upward off semantic separator rows', () => {
+    const ops: DrawOp[] = [
+      {
+        kind: 'rect',
+        points: [
+          { x: 16, y: 16 },
+          { x: 240, y: 16 },
+          { x: 240, y: 96 },
+          { x: 16, y: 96 },
+        ],
+        layer: AsciiLayer.LINES,
+        semantic: { role: 'container', strokePolicy: 'always' },
+      },
+      {
+        kind: 'segment',
+        p0: { x: 16, y: 64.1 },
+        p1: { x: 240, y: 64.1 },
+        layer: AsciiLayer.LINES,
+        semantic: { role: 'separator' },
+      },
+      {
+        kind: 'text',
+        point: { x: 96, y: 72 },
+        text: 'PERSON',
+        textAlign: 'center',
+        textBaseline: 'middle',
+        layer: AsciiLayer.MARKERS,
+      },
+    ]
+
+    const normalized = normalizeDrawOps(ops, { cellWidth: 8, cellHeight: 16 })
+    const text = normalized.find(op => op.kind === 'text') as Extract<DrawOp, { kind: 'text' }>
+
+    expect(text.point.y).toBe(48)
   })
 })

@@ -11,6 +11,10 @@ export type RenderToAsciiOptions = {
   container?: HTMLElement
 }
 
+function shouldLogAsciiText() {
+  return process.env.PINTORA_ASCII_TEST_DEBUG === '1'
+}
+
 /**
  * Helper to render DSL code to ASCII text output.
  * This is useful for testing ASCII renderer behavior without going through the full standalone layer.
@@ -34,6 +38,11 @@ export function renderToAscii(code: string, options: RenderToAsciiOptions = {}):
       text = renderer.getTextContent?.() || ''
     },
   })
+
+  if (shouldLogAsciiText()) {
+    // Helpful for debugging renderer regressions without editing test bodies.
+    console.log(`\n${text}\n`)
+  }
 
   return text
 }

@@ -2,6 +2,7 @@ import { configApi } from '@pintora/core'
 import { AsciiRenderer } from '../../AsciiRenderer'
 import { sequenceIr } from './fixtures/sequence-ir'
 import { resolveTextRendererOptions } from '../config'
+import { renderToAscii } from './test-helpers'
 
 describe('AsciiRenderer', () => {
   const originalConfig = configApi.cloneConfig()
@@ -31,5 +32,26 @@ describe('AsciiRenderer', () => {
     expect(options.cellHeight).toBe(15)
     expect(options.trimRight).toBe(false)
     expect(options.ansi).toBe(false)
+  })
+
+  it('can print rendered ascii text when debug env is enabled', () => {
+    const spy = jest.spyOn(console, 'log').mockImplementation(() => {})
+    const prev = process.env.PINTORA_ASCII_TEST_DEBUG
+    process.env.PINTORA_ASCII_TEST_DEBUG = '1'
+
+    try {
+      renderToAscii(`
+sequenceDiagram
+  User->>Pintora: render this
+      `)
+      expect(spy).toHaveBeenCalled()
+    } finally {
+      if (prev === undefined) {
+        delete process.env.PINTORA_ASCII_TEST_DEBUG
+      } else {
+        process.env.PINTORA_ASCII_TEST_DEBUG = prev
+      }
+      spy.mockRestore()
+    }
   })
 })

@@ -35,6 +35,33 @@ Issues:
 2. Placement is computed directly in grid space (rows/cols)
 3. Semantic metadata (container, separator, backdrop) guides placement constraints
 
+### 1.4 ER Entity Header/Separator Collision
+Another regression class appeared in `erDiagram` entities with attributes and comments:
+
+```text
+erDiagram
+  PERSON {
+    string phone "phone number"
+  }
+```
+
+Issues:
+- The attribute comment could overwrite the right border (`phone numbe|`-style breakage in ASCII mode)
+- The entity title `PERSON` could share a row with a header separator or top border
+- A renderer-side "clear horizontal line under centered title" fix could preserve the title row but accidentally erase the real separator row above the attributes
+
+**Root Cause**:
+- The ER artist originally emitted only the outer container; attribute cells also needed to participate as semantic containers for low-fidelity text placement
+- Container bounds that looked fine in SVG pixel space could collapse after ASCII grid snapping, leaving no stable inner row/col for text
+- Naive "outward snap every container independently" fixed text-vs-border collisions but introduced double borders (`||`, `++`) on shared cell boundaries
+- A generic renderer-side repair hook was too broad when applied automatically to all centered/middle text
+
+**Refined Direction**:
+1. Let artists emit semantic structure, but do not change base SVG/Canvas geometry just to satisfy ASCII
+2. Let ASCII normalization interpret container semantics with grid-aware rules, including outward snapping where needed
+3. Snap shared container borders collaboratively so adjacent cells still share one border line
+4. Use renderer-side repairs only as explicit, low-level capabilities, not as broad heuristics
+
 ---
 
 ## 2. Design Goals
@@ -96,6 +123,8 @@ Responsibilities:
 - **Separator Snapping**: Align separator segments to stable grid rows/cols
 - **Text Anchor Resolution**: Convert `textAlign`/`textBaseline` to final pixel top-left and snapped grid position
 - **Container Clamping**: Keep text placement inside container inner bounds
+- **Container Grid Fitting**: Expand semantic container bounds to stable ASCII grid cells without mutating source diagram layout
+- **Shared Border Coordination**: When adjacent semantic containers share a border, snap both sides to the same grid line to avoid doubled borders
 
 Location: `packages/pintora-renderer/src/renderers/ascii/normalize-ops.ts`
 
@@ -142,14 +171,15 @@ interface MarkSemantic {
 
 | Role | Description | Current Usage |
 |------|-------------|---------------|
-| **container** | Defines an area with inner content and outer border | Class entity outer rect |
+| **container** | Defines an area with inner content and outer border | Class entity outer rect, ER entity outer rect |
 | **backdrop** | Background area that may occlude content below | Label backgrounds, section backgrounds, divider label boxes |
-| **separator** | Horizontal/vertical dividing line | Class section separators |
+| **separator** | Horizontal/vertical dividing line | Class section separators, ER header/body separator |
 | **decoration** | Visual accent that can be omitted in low-fidelity | Static member underlines |
 
 #### Semantic Behaviors
 
 - **container**: Text placement is clamped inside container boundaries (inner rows/cols)
+- **container**: In ASCII normalization, container rects may be grid-fit outward; shared borders between neighboring containers are unified onto one snapped grid line
 - **backdrop**: Clears content below when `occludesBelow: true`
 - **separator**: Horizontal lines that text should avoid overlapping; snapped to stable grid positions
 - **strokePolicy**: 
@@ -162,16 +192,30 @@ To reduce post-layout patching, ASCII applies semantic-aware normalization befor
 
 1. **Separator Snapping**: `separator` segments are aligned to stable grid rows/cols to prevent drift
 2. **Text Anchor Resolution**: Derive final grid position from `textAlign`/`textBaseline` semantics
-3. **Container Clamping**: Restrict text placement to inner bounds of `container` rects
-4. **Separator Avoidance**: Move text off rows occupied by separators when possible
+3. **Container Grid Fitting**: `container` rects are snapped outward to stable grid bounds in ASCII only
+4. **Shared Border Unification**: neighboring `container` rects that already share a border are snapped to one common grid line
+5. **Container Clamping**: Restrict text placement to inner bounds of the normalized `container` rects
+6. **Separator Avoidance**: Move text off rows occupied by separators when possible
 
 This keeps rules generic and semantic-driven instead of class-name driven.
 
-### 4.5 Degradation Strategy
+### 4.5 Conflict Resolution Principle
+
+The later ER fixes clarified an important rule: collision handling should be split between **semantic layout intent**, **renderer-specific normalization**, and **draw-time repair**.
+
+1. **Artist intent first**: If a diagram has real structure (e.g. ER title band + body rows), emit semantic containers/separators so renderers understand the contract
+2. **Normalizer second**: Resolve text-vs-separator and text-vs-container-border conflicts by snapping and clamping against renderer-specific grid constraints
+3. **Raster repair last**: Keep local repair abilities available for narrow cases, but do not apply them as a blanket heuristic for all centered labels
+
+This avoids two fragile patterns:
+- mutating base diagram layout just to satisfy one renderer
+- renderer-side line clearing that makes one row look correct while destroying adjacent semantic structure
+
+### 4.6 Degradation Strategy
 - Complex Bezier curves, cloud shapes, and other non-exactly-reproducible shapes: approximate with discrete line segments
 - If discretization fails: fall back to bounding box outline while preserving text
 
-### 4.6 CJK Wide Character Support
+### 4.7 CJK Wide Character Support
 - Use `wcwidth`-like logic for CJK wide characters (display width = 2)
 - Ensure mixed Chinese/English text alignment without label drift
 
@@ -243,6 +287,33 @@ Assertions:
 - Actor label row does not contain both actor text and horizontal border glyphs
 - Divider label row does not contain both divider text and crossing line glyphs
 
+**ER Diagram:**
+```text
+erDiagram
+  PERSON {
+    string phone "phone number"
+  }
+```
+
+Assertions:
+- Attribute comment row retains the closing right border in ASCII mode
+- Entity title row is not pierced by horizontal border glyphs
+- The header/body separator row still exists and is not mistakenly removed by title-related repairs
+- Adjacent attribute cells do not produce doubled shared borders such as `||` or `++`
+
+### 6.6 Test Debugging Workflow
+
+Repeated temporary `console.log` edits in tests were error-prone and noisy. The test helper now supports an environment-variable-based debug path:
+
+```bash
+PINTORA_ASCII_TEST_DEBUG=1 pnpm exec jest path/to/spec --runInBand
+```
+
+Behavior:
+- `renderToAscii(...)` still returns plain text normally
+- When `PINTORA_ASCII_TEST_DEBUG=1`, the helper prints the rendered ASCII text automatically
+- This allows inspection of failing snapshots/cases without editing individual test bodies
+
 ## 7. Constraints & Limitations
 
 ### 7.1 Implementation Constraints
@@ -255,11 +326,13 @@ Assertions:
 
 ### 7.3 Known Limitations
 
-- Only a first semantic subset is implemented: `backdrop`, `decoration`, `occludesBelow`, `strokePolicy`
+- The semantic subset is still intentionally small; `container`, `separator`, `backdrop`, `decoration`, `occludesBelow`, and `strokePolicy` are the main primitives in active use
 - Some diagrams still create rects/lines that are visually "background-like" but are not yet tagged with semantics
-- Normalization is centralized but still focused on text + separator + container constraints; richer constraints (e.g., separator-vs-text interval avoidance in dense rows) are not implemented yet
+- Normalization is centralized but still focused on text + separator + container constraints; richer constraints (e.g., dense multi-label packing, interval-aware line carving) are not implemented yet
 - Divider assertions were narrowed to "text is not pierced directly" rather than "the entire row has no horizontal line", because with the new backdrop semantics the outer line may legitimately continue outside the backdrop bounds
-- Container-aware clamping currently relies on `container` semantics only where artists already emit them (class entity is covered; other diagrams still need migration where relevant)
+- Container-aware clamping currently relies on `container` semantics only where artists already emit them (class and ER entity are covered; other diagrams still need migration where relevant)
+- Container snapping is renderer-specific: ASCII may expand and unify semantic container borders during normalization, while SVG/Canvas keep the original geometry
+- Renderer-side repair hooks exist, but broad automatic use of them is considered risky; the preferred fix path is still artist semantics plus normalization
 
 ### 7.4 Non-Goals of This Iteration
 
@@ -284,27 +357,34 @@ Assertions:
 - Too implicit and renderer-dependent
 - Artists already know the intent and should express it directly
 
-**Aggressive text-row avoidance in rasterizer**
-- Fixed one diagram while breaking others
-- Changed placement after layout instead of defining intended semantics up front
+**Aggressive automatic repair in rasterizer**
+- Can fix one row while destroying nearby semantic structure
+- ER title/header experiments showed that blindly clearing horizontal lines for centered titles can erase the true separator row
+- Changed placement or visibility too late in the pipeline, after structural intent should already have been decided
 
 #### Chosen Approach
 
 1. Put intent on `Mark` through `semantic` metadata
-2. Preserve intent through normalization
-3. Let each renderer interpret the same intent according to its fidelity
+2. Let artists emit enough structure for text-bearing containers (ER header/body split and attribute cell containers were concrete examples)
+3. Preserve intent through normalization
+4. Let each renderer interpret the same intent according to its fidelity, with repair hooks reserved for narrow explicit use
 
 This enables:
 - SVG/Canvas: Render all strokes and fills as specified
-- ASCII: Skip optional strokes, clear backdrops, clamp text to containers
+- ASCII: Skip optional strokes, grid-fit semantic containers, unify shared borders, and clamp text to containers
 
 ### 8.2 Pre-Snapping vs Post-Repair
 
 **Earlier approach**: Detect collisions at rasterization time and repair placement
 - **Problem**: Unstable, caused regressions across diagram types
+- **Additional lesson**: generic repair heuristics are especially risky when they can remove lines that carry real semantic meaning
 
 **Current approach**: Resolve placement deterministically before rasterization
 - **Benefit**: Consistent, testable, no diagram-specific hacks
+- **Refinement from ER work**:
+  - add semantic structure in artists when it is genuinely missing
+  - but keep renderer-specific geometric compromise in normalization, so non-ASCII renderers preserve original layout
+  - when snapping semantic containers, shared borders must be coordinated globally rather than expanding each rect independently
 
 ---
 
@@ -322,6 +402,7 @@ This enables:
 - Revisit line snapping once more ASCII fidelity work is needed, but keep that change semantic-driven instead of diagram-driven
 - Extend container semantics to other diagrams that have clear "inner content area vs border" contracts
 - Consider adding constraint solving in normalization (priority + candidate-row scoring) instead of fixed per-role snapping rules
+- If container snapping rules become more varied, consider extending `MarkSemantic` with explicit low-fidelity snapping hints instead of baking more assumptions into artists
 
 ### 9.2 Optimization Guidance
 

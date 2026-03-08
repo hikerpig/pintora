@@ -1,6 +1,13 @@
+import { configApi } from '@pintora/core'
 import { renderToAscii } from './test-helpers'
 
 describe('ascii-renderer-cases', () => {
+  const originalConfig = configApi.cloneConfig()
+
+  afterEach(() => {
+    configApi.replaceConfig(originalConfig)
+  })
+
   describe('sequence diagram', () => {
     it('can render unicode text diagram with ascii renderer', () => {
       const code = `
@@ -102,6 +109,76 @@ classDiagram
       expect(sweetnessLine).not.toMatch(hasHorizontalBorder)
       expect(ageLine).not.toMatch(hasHorizontalBorder)
       expect(methodLine).not.toMatch(hasHorizontalBorder)
+    })
+  })
+
+  describe('er diagram', () => {
+    it('keeps attribute comment text off the entity border in ascii renderer', () => {
+      configApi.setConfig({
+        core: {
+          textRenderer: {
+            charset: 'ascii',
+          },
+        },
+      })
+
+      const code = `
+erDiagram
+  PERSON {
+    int phone "phone number"
+  }
+      `
+
+      const text = renderToAscii(code)
+      const lines = text.split('\n')
+      const numberLine = lines.find(line => line.includes('phone number'))
+      const personLine = lines.find(line => line.includes('PERSON'))
+
+      expect(numberLine).toBeTruthy()
+      expect(numberLine).toContain('r|')
+      expect(numberLine).not.toContain('||')
+      expect(personLine).toBeTruthy()
+      expect(personLine).not.toContain('--')
+
+      // should not eliminate this separator line
+      const itemLineIndex = lines.findIndex(line => line.includes('phone'))
+      const separatorLine = lines[itemLineIndex - 1]
+      expect(separatorLine).toContain('---')
+    })
+
+    it('keeps er entity title, separator, and long comment on separate rows in ascii renderer', () => {
+      configApi.setConfig({
+        core: {
+          textRenderer: {
+            charset: 'ascii',
+          },
+        },
+      })
+
+      const code = `
+erDiagram
+  ORDER {
+    int order_number PK
+    string adress "delivery address"
+  }
+      `
+
+      const text = renderToAscii(code)
+      const lines = text.split('\n')
+      const titleLineIndex = lines.findIndex(line => line.includes('ORDER'))
+      const orderNumberLineIndex = lines.findIndex(line => line.includes('order_number'))
+      const commentLineIndex = lines.findIndex(line => line.includes('delivery address'))
+
+      expect(titleLineIndex).toBeGreaterThanOrEqual(0)
+      expect(orderNumberLineIndex).toBeGreaterThan(titleLineIndex)
+      expect(commentLineIndex).toBeGreaterThan(orderNumberLineIndex)
+
+      expect(lines[titleLineIndex]).not.toMatch(/-{2,}/)
+      expect(lines[commentLineIndex]).not.toMatch(/-{2,}/)
+
+      const separatorLine = lines[orderNumberLineIndex - 1]
+      expect(separatorLine).toContain('---')
+      expect(separatorLine).not.toContain('ORDER')
     })
   })
 })

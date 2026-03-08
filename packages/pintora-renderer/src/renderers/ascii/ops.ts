@@ -46,6 +46,12 @@ export type TextOp = {
   textAlign?: MarkAttrs['textAlign'] | string
   textBaseline?: MarkAttrs['textBaseline'] | string
   lineHeight?: number
+  repairs?: Array<{
+    kind: 'clear-horizontal-lines'
+    row: number
+    minCol: number
+    maxCol: number
+  }>
   layer: TextLayer
 }
 

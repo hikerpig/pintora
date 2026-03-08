@@ -1,4 +1,5 @@
 import * as pintora from '@pintora/core'
+import type { Group, Rect } from '@pintora/core'
 import { EXAMPLES } from '@pintora/test-shared'
 import { testDraw, prepareDiagramConfig, stripDrawResultForSnapshot } from '../../__tests__/test-util'
 import { erDiagram } from '../index'
@@ -59,5 +60,54 @@ describe('er-artist', () => {
     @bindClass entity-e1 test-class
     `
     expect(stripDrawResultForSnapshot(testDraw(code))).toMatchSnapshot()
+  })
+
+  it('marks entity box as semantic container for text renderers', () => {
+    const code = `
+erDiagram
+  PERSON {
+    string phone "phone number"
+  }
+    `
+
+    const { graphicIR } = testDraw(code)
+    const entityGroup = (graphicIR.mark as Group).children.find(
+      child => child.type === 'group' && child.class === 'er__entity',
+    ) as Group | undefined
+    const entityBox = entityGroup?.children.find(child => child.type === 'rect' && child.class === 'er__entity-box') as
+      | Rect
+      | undefined
+
+    expect(entityBox?.semantic).toEqual({
+      role: 'container',
+      strokePolicy: 'always',
+    })
+  })
+
+  it('marks attribute cells as semantic containers for text renderers', () => {
+    const code = `
+erDiagram
+  ORDER {
+    int order_number PK
+    string adress "delivery address"
+  }
+    `
+
+    const { graphicIR } = testDraw(code)
+    const entityGroup = (graphicIR.mark as Group).children.find(
+      child => child.type === 'group' && child.class === 'er__entity',
+    ) as Group | undefined
+    const attributeGroup = entityGroup?.children.find(child => child.type === 'group') as Group | undefined
+    const firstRowGroup = attributeGroup?.children.find(
+      child => child.type === 'group' && child.children.some(grandChild => grandChild.type === 'rect'),
+    ) as Group | undefined
+    const attributeCell = firstRowGroup?.children.find(
+      child => child.type === 'rect' && child.class === 'er__attribute-cell',
+    ) as Rect | undefined
+
+    expect(attributeCell?.semantic).toEqual({
+      role: 'container',
+      strokePolicy: 'always',
+    })
   })
 })
