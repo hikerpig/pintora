@@ -504,7 +504,7 @@ exports[`component-artist match example snapshot 1`] = `
           {
             "attrs": {
               "lineCap": "round",
-              "stroke": "#fdb05e",
+              "stroke": "#3b4044",
             },
             "class": "component__rel-line",
             "type": "path",
@@ -534,7 +534,7 @@ exports[`component-artist match example snapshot 1`] = `
           {
             "attrs": {
               "lineCap": "round",
-              "stroke": "#fdb05e",
+              "stroke": "#3b4044",
             },
             "type": "path",
           },
@@ -547,7 +547,7 @@ exports[`component-artist match example snapshot 1`] = `
           {
             "attrs": {
               "lineCap": "round",
-              "stroke": "#fdb05e",
+              "stroke": "#3b4044",
             },
             "class": "component__rel-line",
             "type": "path",
@@ -577,7 +577,7 @@ exports[`component-artist match example snapshot 1`] = `
           {
             "attrs": {
               "lineCap": "round",
-              "stroke": "#fdb05e",
+              "stroke": "#3b4044",
             },
             "type": "path",
           },
@@ -590,7 +590,7 @@ exports[`component-artist match example snapshot 1`] = `
           {
             "attrs": {
               "lineCap": "round",
-              "stroke": "#fdb05e",
+              "stroke": "#3b4044",
             },
             "class": "component__rel-line",
             "type": "path",
@@ -620,7 +620,7 @@ exports[`component-artist match example snapshot 1`] = `
           {
             "attrs": {
               "lineCap": "round",
-              "stroke": "#fdb05e",
+              "stroke": "#3b4044",
             },
             "type": "path",
           },
@@ -637,7 +637,7 @@ exports[`component-artist match example snapshot 1`] = `
                 4,
                 4,
               ],
-              "stroke": "#fdb05e",
+              "stroke": "#3b4044",
             },
             "class": "component__rel-line",
             "type": "path",
@@ -667,7 +667,7 @@ exports[`component-artist match example snapshot 1`] = `
           {
             "attrs": {
               "lineCap": "round",
-              "stroke": "#fdb05e",
+              "stroke": "#3b4044",
             },
             "type": "path",
           },
@@ -680,7 +680,7 @@ exports[`component-artist match example snapshot 1`] = `
           {
             "attrs": {
               "lineCap": "round",
-              "stroke": "#fdb05e",
+              "stroke": "#3b4044",
             },
             "class": "component__rel-line",
             "type": "path",
@@ -710,7 +710,7 @@ exports[`component-artist match example snapshot 1`] = `
           {
             "attrs": {
               "lineCap": "round",
-              "stroke": "#fdb05e",
+              "stroke": "#3b4044",
             },
             "type": "path",
           },
@@ -723,7 +723,7 @@ exports[`component-artist match example snapshot 1`] = `
           {
             "attrs": {
               "lineCap": "round",
-              "stroke": "#fdb05e",
+              "stroke": "#3b4044",
             },
             "class": "component__rel-line",
             "type": "path",
@@ -753,7 +753,7 @@ exports[`component-artist match example snapshot 1`] = `
           {
             "attrs": {
               "lineCap": "round",
-              "stroke": "#fdb05e",
+              "stroke": "#3b4044",
             },
             "type": "path",
           },
@@ -766,7 +766,7 @@ exports[`component-artist match example snapshot 1`] = `
           {
             "attrs": {
               "lineCap": "round",
-              "stroke": "#fdb05e",
+              "stroke": "#3b4044",
             },
             "class": "component__rel-line",
             "type": "path",
@@ -796,7 +796,7 @@ exports[`component-artist match example snapshot 1`] = `
           {
             "attrs": {
               "lineCap": "round",
-              "stroke": "#fdb05e",
+              "stroke": "#3b4044",
             },
             "type": "path",
           },
@@ -809,7 +809,7 @@ exports[`component-artist match example snapshot 1`] = `
           {
             "attrs": {
               "lineCap": "round",
-              "stroke": "#fdb05e",
+              "stroke": "#3b4044",
             },
             "class": "component__rel-line",
             "type": "path",
@@ -839,7 +839,7 @@ exports[`component-artist match example snapshot 1`] = `
           {
             "attrs": {
               "lineCap": "round",
-              "stroke": "#fdb05e",
+              "stroke": "#3b4044",
             },
             "type": "path",
           },

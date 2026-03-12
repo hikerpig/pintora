@@ -65,20 +65,11 @@ const configurator = makeConfigurator<ClassConf>({
   },
   getConfigFromTheme(t) {
     const primaryCorlorInstance = tinycolor(t.primaryColor)
-    const canvasBgInstance = tinycolor(t.canvasBackground || PALETTE.white)
-    const isBgLight = canvasBgInstance.isLight()
-    let relationLineColor: string
-    if (isBgLight) {
-      relationLineColor = PALETTE.normalDark
-    } else {
-      relationLineColor = PALETTE.white
-    }
-
     const entityBodyBackground = primaryCorlorInstance.brighten(60).toHexString()
     return {
       entityBackground: t.primaryColor,
       entityBodyBackground,
-      relationLineColor,
+      relationLineColor: t.primaryLineColor,
     }
   },
 })

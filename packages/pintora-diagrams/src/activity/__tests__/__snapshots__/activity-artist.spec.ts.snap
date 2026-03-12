@@ -14,7 +14,7 @@ exports[`activity-artist draw fork 1`] = `
         "children": [
           {
             "attrs": {
-              "fill": "#3b4044",
+              "fill": "#fdb05e",
             },
             "type": "circle",
           },
@@ -66,7 +66,7 @@ exports[`activity-artist draw fork 1`] = `
         "children": [
           {
             "attrs": {
-              "fill": "#3b4044",
+              "fill": "#fdb05e",
               "radius": 2,
             },
             "type": "rect",
@@ -208,7 +208,7 @@ exports[`activity-artist draw fork 1`] = `
       },
       {
         "attrs": {
-          "fill": "#3b4044",
+          "fill": "#fdb05e",
           "radius": 2,
         },
         "type": "rect",
@@ -282,13 +282,13 @@ exports[`activity-artist draw fork 1`] = `
         "children": [
           {
             "attrs": {
-              "stroke": "#3b4044",
+              "stroke": "#fdb05e",
             },
             "type": "circle",
           },
           {
             "attrs": {
-              "fill": "#3b4044",
+              "fill": "#fdb05e",
             },
             "type": "circle",
           },
@@ -302,63 +302,63 @@ exports[`activity-artist draw fork 1`] = `
           {
             "attrs": {
               "lineJoin": "round",
-              "stroke": "#fdb05e",
+              "stroke": "#3b4044",
             },
             "type": "path",
           },
           {
             "attrs": {
               "lineCap": "round",
-              "stroke": "#fdb05e",
+              "stroke": "#3b4044",
             },
             "type": "path",
           },
           {
             "attrs": {
               "lineJoin": "round",
-              "stroke": "#fdb05e",
+              "stroke": "#3b4044",
             },
             "type": "path",
           },
           {
             "attrs": {
               "lineCap": "round",
-              "stroke": "#fdb05e",
+              "stroke": "#3b4044",
             },
             "type": "path",
           },
           {
             "attrs": {
               "lineJoin": "round",
-              "stroke": "#fdb05e",
+              "stroke": "#3b4044",
             },
             "type": "path",
           },
           {
             "attrs": {
               "lineCap": "round",
-              "stroke": "#fdb05e",
+              "stroke": "#3b4044",
             },
             "type": "path",
           },
           {
             "attrs": {
               "lineJoin": "round",
-              "stroke": "#fdb05e",
+              "stroke": "#3b4044",
             },
             "type": "path",
           },
           {
             "attrs": {
               "lineCap": "round",
-              "stroke": "#fdb05e",
+              "stroke": "#3b4044",
             },
             "type": "path",
           },
           {
             "attrs": {
               "lineJoin": "round",
-              "stroke": "#fdb05e",
+              "stroke": "#3b4044",
             },
             "type": "path",
           },
@@ -388,28 +388,28 @@ exports[`activity-artist draw fork 1`] = `
           {
             "attrs": {
               "lineCap": "round",
-              "stroke": "#fdb05e",
+              "stroke": "#3b4044",
             },
             "type": "path",
           },
           {
             "attrs": {
               "lineJoin": "round",
-              "stroke": "#fdb05e",
+              "stroke": "#3b4044",
             },
             "type": "path",
           },
           {
             "attrs": {
               "lineCap": "round",
-              "stroke": "#fdb05e",
+              "stroke": "#3b4044",
             },
             "type": "path",
           },
           {
             "attrs": {
               "lineJoin": "round",
-              "stroke": "#fdb05e",
+              "stroke": "#3b4044",
             },
             "type": "path",
           },
@@ -439,63 +439,63 @@ exports[`activity-artist draw fork 1`] = `
           {
             "attrs": {
               "lineCap": "round",
-              "stroke": "#fdb05e",
+              "stroke": "#3b4044",
             },
             "type": "path",
           },
           {
             "attrs": {
               "lineJoin": "round",
-              "stroke": "#fdb05e",
+              "stroke": "#3b4044",
             },
             "type": "path",
           },
           {
             "attrs": {
               "lineCap": "round",
-              "stroke": "#fdb05e",
+              "stroke": "#3b4044",
             },
             "type": "path",
           },
           {
             "attrs": {
               "lineJoin": "round",
-              "stroke": "#fdb05e",
+              "stroke": "#3b4044",
             },
             "type": "path",
           },
           {
             "attrs": {
               "lineCap": "round",
-              "stroke": "#fdb05e",
+              "stroke": "#3b4044",
             },
             "type": "path",
           },
           {
             "attrs": {
               "lineJoin": "round",
-              "stroke": "#fdb05e",
+              "stroke": "#3b4044",
             },
             "type": "path",
           },
           {
             "attrs": {
               "lineCap": "round",
-              "stroke": "#fdb05e",
+              "stroke": "#3b4044",
             },
             "type": "path",
           },
           {
             "attrs": {
               "lineJoin": "round",
-              "stroke": "#fdb05e",
+              "stroke": "#3b4044",
             },
             "type": "path",
           },
           {
             "attrs": {
               "lineCap": "round",
-              "stroke": "#fdb05e",
+              "stroke": "#3b4044",
             },
             "type": "path",
           },
@@ -522,7 +522,7 @@ exports[`activity-artist draw repeat 1`] = `
         "children": [
           {
             "attrs": {
-              "fill": "#3b4044",
+              "fill": "#fdb05e",
             },
             "type": "circle",
           },
@@ -700,13 +700,13 @@ exports[`activity-artist draw repeat 1`] = `
         "children": [
           {
             "attrs": {
-              "stroke": "#3b4044",
+              "stroke": "#fdb05e",
             },
             "type": "circle",
           },
           {
             "attrs": {
-              "fill": "#3b4044",
+              "fill": "#fdb05e",
             },
             "type": "circle",
           },
@@ -720,35 +720,35 @@ exports[`activity-artist draw repeat 1`] = `
           {
             "attrs": {
               "lineJoin": "round",
-              "stroke": "#fdb05e",
+              "stroke": "#3b4044",
             },
             "type": "path",
           },
           {
             "attrs": {
               "lineCap": "round",
-              "stroke": "#fdb05e",
+              "stroke": "#3b4044",
             },
             "type": "path",
           },
           {
             "attrs": {
               "lineJoin": "round",
-              "stroke": "#fdb05e",
+              "stroke": "#3b4044",
             },
             "type": "path",
           },
           {
             "attrs": {
               "lineCap": "round",
-              "stroke": "#fdb05e",
+              "stroke": "#3b4044",
             },
             "type": "path",
           },
           {
             "attrs": {
               "lineJoin": "round",
-              "stroke": "#fdb05e",
+              "stroke": "#3b4044",
             },
             "type": "path",
           },
@@ -778,70 +778,70 @@ exports[`activity-artist draw repeat 1`] = `
           {
             "attrs": {
               "lineCap": "round",
-              "stroke": "#fdb05e",
+              "stroke": "#3b4044",
             },
             "type": "path",
           },
           {
             "attrs": {
               "lineJoin": "round",
-              "stroke": "#fdb05e",
+              "stroke": "#3b4044",
             },
             "type": "path",
           },
           {
             "attrs": {
               "lineCap": "round",
-              "stroke": "#fdb05e",
+              "stroke": "#3b4044",
             },
             "type": "path",
           },
           {
             "attrs": {
               "lineJoin": "round",
-              "stroke": "#fdb05e",
+              "stroke": "#3b4044",
             },
             "type": "path",
           },
           {
             "attrs": {
               "lineCap": "round",
-              "stroke": "#fdb05e",
+              "stroke": "#3b4044",
             },
             "type": "path",
           },
           {
             "attrs": {
               "lineJoin": "round",
-              "stroke": "#fdb05e",
+              "stroke": "#3b4044",
             },
             "type": "path",
           },
           {
             "attrs": {
               "lineCap": "round",
-              "stroke": "#fdb05e",
+              "stroke": "#3b4044",
             },
             "type": "path",
           },
           {
             "attrs": {
               "lineJoin": "round",
-              "stroke": "#fdb05e",
+              "stroke": "#3b4044",
             },
             "type": "path",
           },
           {
             "attrs": {
               "lineCap": "round",
-              "stroke": "#fdb05e",
+              "stroke": "#3b4044",
             },
             "type": "path",
           },
           {
             "attrs": {
               "lineJoin": "round",
-              "stroke": "#fdb05e",
+              "stroke": "#3b4044",
             },
             "type": "path",
           },
@@ -871,14 +871,14 @@ exports[`activity-artist draw repeat 1`] = `
           {
             "attrs": {
               "lineCap": "round",
-              "stroke": "#fdb05e",
+              "stroke": "#3b4044",
             },
             "type": "path",
           },
           {
             "attrs": {
               "lineJoin": "round",
-              "stroke": "#fdb05e",
+              "stroke": "#3b4044",
             },
             "type": "path",
           },
@@ -908,7 +908,7 @@ exports[`activity-artist draw repeat 1`] = `
           {
             "attrs": {
               "lineCap": "round",
-              "stroke": "#fdb05e",
+              "stroke": "#3b4044",
             },
             "type": "path",
           },
