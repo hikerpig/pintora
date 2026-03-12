@@ -141,6 +141,35 @@ module.exports = {
     'docusaurus-plugin-less',
     require.resolve('./plugins/webpack5-plugin'),
     require.resolve('./plugins/site-ad-plugin'),
+    [
+      'docusaurus-plugin-llms',
+      {
+        generateLLMsTxt: true,
+        generateLLMsFullTxt: true,
+        docsDir: 'docs',
+        excludeImports: true,
+        removeDuplicateHeadings: true,
+        title: 'Pintora Documentation',
+        description: 'An extensible text-to-diagrams library that works in both browser and node.js',
+        includeBlog: false,
+        includeOrder: ['intro.md', 'getting-started/*', 'diagrams/*', 'configuration/*', 'advanced/*'],
+        includeUnmatchedLast: true,
+        rootContent: `This documentation is optimized for AI assistants and LLMs.
+Pintora supports the following diagram types:
+- Sequence Diagram
+- ER Diagram (Entity Relationship Diagram)
+- Component Diagram
+- Activity Diagram
+- Mind Map
+- Gantt Diagram
+- DOT Diagram
+- Class Diagram
+
+For code examples, search for "Example:"
+For configuration options, search for "Config:"
+All code examples are MIT licensed unless otherwise noted.`,
+      },
+    ],
   ],
   future: {
     experimental_faster: {
