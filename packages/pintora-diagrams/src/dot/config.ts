@@ -58,7 +58,7 @@ const configurator = makeConfigurator<DOTConf>({
     return {
       backgroundColor: t.canvasBackground,
       labelTextColor: t.textColor,
-      nodeBorderColor: t.primaryLineColor,
+      nodeBorderColor: t.primaryBorderColor,
       edgeColor: t.primaryLineColor,
     }
   },

@@ -48,7 +48,7 @@ export const defaultConfig: ComponentConf = {
   groupBorderColor: PALETTE.normalDark,
   groupBorderWidth: 2,
 
-  relationLineColor: PALETTE.orange,
+  relationLineColor: PALETTE.normalDark,
   textColor: PALETTE.normalDark,
   lineWidth: 1,
 
@@ -88,7 +88,7 @@ const configurator = makeConfigurator<ComponentConf>({
       componentBorderColor: t.primaryBorderColor,
       groupBackground: t.groupBackground,
       groupBorderColor: t.primaryBorderColor,
-      relationLineColor: t.primaryColor,
+      relationLineColor: t.primaryLineColor,
       labelBackground: t.canvasBackground || t.background1,
       textColor: t.textColor,
     }

@@ -97,7 +97,7 @@ const configurator = makeConfigurator<ActivityConf>({
       groupBackground: t.groupBackground,
       groupBorderColor: t.primaryBorderColor,
       textColor: t.textColor,
-      edgeColor: t.primaryColor,
+      edgeColor: t.primaryLineColor,
       keywordBackground: t.textColor,
       labelBackground: t.canvasBackground || t.background1,
       labelTextColor: t.textColor,
