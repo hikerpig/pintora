@@ -40,6 +40,7 @@
   "devDependencies": {
     "@changesets/changelog-git": "^0.2.1",
     "@changesets/cli": "^2.29.8",
+    "@swc/core": "^1.15.18",
     "@types/eslint__js": "^8.42.0",
     "@types/jest": "^30.0.0",
     "@typescript-eslint/eslint-plugin": "^8.55.0",
@@ -49,7 +50,7 @@
     "eslint-plugin-prettier": "^5.5.5",
     "eslint-plugin-unused-imports": "^4.4.1",
     "husky": "^9.0.0",
-    "jest": "^30.0.0",
+    "jest": "^30.3.0",
     "jest-junit": "^16.0.0",
     "lint-staged": "^16.0.0",
     "prettier": "^3.0.3",
