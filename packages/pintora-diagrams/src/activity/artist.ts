@@ -119,7 +119,7 @@ const erArtist: IDiagramArtist<ActivityDiagramIR, ActivityConf> = {
     const titleMaker = new DiagramTitleMaker({
       title: ir.title,
       titleFont,
-      fill: conf.textColor,
+      theme: conf.themeConfig.themeVariables,
       className: 'activity__title',
     })
     const titleResult = titleMaker.appendTitleMark(rootMark)

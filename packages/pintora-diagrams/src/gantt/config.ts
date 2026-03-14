@@ -92,7 +92,7 @@ const configurator = makeConfigurator<GanttConf>({
     tinycolor(fontColorOverBackground)
     return {
       barBackground: t.primaryColor,
-      barBorderColor: conf.fontColor,
+      barBorderColor: t.primaryBorderColor,
       fontColor: t.textColor,
       axisLabelColor: fontColorOverBackground,
       sectionLabelColor: fontColorOverBackground,

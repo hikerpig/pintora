@@ -10,6 +10,7 @@ import {
 } from '@pintora/core'
 import { createLayoutGraph, isGraphVertical, LayoutEdge, LayoutGraph, LayoutNode } from '../util/graph'
 import { getConf, MindmapConf } from './config'
+import type { EnhancedConf } from '../util/config'
 import { MindmapIR, MMItem, MMTree } from './db'
 
 import { adjustRootMarkBounds, DiagramTitleMaker, makeEmptyGroup, makeMark } from '../util/artist-util'
@@ -21,7 +22,7 @@ import { getPointsLinearPath } from '../util/line-util'
 import { makeBounds, positionGroupContents, TRANSFORM_GRAPH } from '../util/mark-positioner'
 import db from './db'
 
-let conf: MindmapConf
+let conf: EnhancedConf<MindmapConf>
 let mmDraw: MMDraw
 
 class MindmapArtist extends BaseArtist<MindmapIR, MindmapConf> {
@@ -48,7 +49,7 @@ class MindmapArtist extends BaseArtist<MindmapIR, MindmapConf> {
     const titleMaker = new DiagramTitleMaker({
       title: ir.title,
       titleFont,
-      fill: conf.textColor,
+      theme: conf.themeConfig.themeVariables,
       className: 'mindmap__title',
     })
     const titleResult = titleMaker.appendTitleMark(rootMark)

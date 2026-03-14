@@ -128,13 +128,13 @@ const configurator = makeConfigurator<SequenceConf>({
       actorBackground: t.primaryColor,
       actorBorderColor: t.primaryBorderColor,
       messageTextColor: t.textColor,
-      loopLineColor: t.primaryColor,
+      loopLineColor: t.primaryColor, // Keep primaryColor for loop border to make it more prominent
       actorTextColor: t.textColor,
       actorLineColor: t.primaryLineColor,
       noteTextColor: t.noteTextColor || t.textColor,
       activationBackground: t.background1,
       dividerTextColor: t.secondaryTextColor,
-      participantBorderColor: t.textColor,
+      participantBorderColor: t.primaryBorderColor,
     }
   },
 })
