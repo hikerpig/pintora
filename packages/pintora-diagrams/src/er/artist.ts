@@ -33,8 +33,9 @@ import { CELL_ORDER, CellName, drawMarkerTo, TableBuilder, TableCell, TableRow }
 import { ErConf, getConf } from './config'
 import { Entity, ErDiagramIR, Identification, Relationship } from './db'
 import { BaseArtist } from '../util/base-artist'
+import type { EnhancedConf } from '../util/config'
 
-let conf: ErConf
+let conf: EnhancedConf<ErConf>
 
 class ErArtist extends BaseArtist<ErDiagramIR, ErConf> {
   customDraw(ir: ErDiagramIR, config?: ErConf, opts?: DiagramArtistOptions): GraphicsIR {
@@ -112,7 +113,7 @@ class ErArtist extends BaseArtist<ErDiagramIR, ErConf> {
     const titleMaker = new DiagramTitleMaker({
       title: ir.title,
       titleFont,
-      fill: conf.textColor,
+      theme: conf.themeConfig.themeVariables,
       className: 'er__title',
     })
     const titleResult = titleMaker.appendTitleMark(rootMark)

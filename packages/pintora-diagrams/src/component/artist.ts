@@ -15,6 +15,7 @@ import {
 } from '@pintora/core'
 import { ComponentDiagramIR, LineType, Relationship } from './db'
 import { ComponentConf, getConf } from './config'
+import type { EnhancedConf } from '../util/config'
 import {
   createLayoutGraph,
   getGraphSplinesOption,
@@ -37,7 +38,7 @@ import { DagreWrapper } from '../util/dagre-wrapper'
 import { getFontConfig } from '../util/font-config'
 import { BaseArtist } from '../util/base-artist'
 
-let conf: ComponentConf
+let conf: EnhancedConf<ComponentConf>
 let fontConfig: IFont
 
 function getEdgeName(relationship: Relationship) {
@@ -184,7 +185,7 @@ class ComponentArtist extends BaseArtist<ComponentDiagramIR, ComponentConf> {
     const titleMaker = new DiagramTitleMaker({
       title: ir.title,
       titleFont,
-      fill: conf.textColor,
+      theme: conf.themeConfig.themeVariables,
       className: 'component__title',
     })
     const titleResult = titleMaker.appendTitleMark(rootMark)

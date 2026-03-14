@@ -151,7 +151,7 @@ const configurator = makeConfigurator<MindmapConf>({
     const nodeBgColorInstance = tinycolor(nodeBgColor)
     const bgIsLight = nodeBgColorInstance.isLight()
     const textColorIsLight = tinycolor(t.textColor).isLight()
-    const normalNodeTextColor = bgIsLight !== textColorIsLight ? t.textColor : t.canvasBackground
+    const normalNodeTextColor = bgIsLight !== textColorIsLight ? t.textColor : bgIsLight ? '#000' : '#fff'
     return {
       nodeBgColor,
       textColor: normalNodeTextColor,

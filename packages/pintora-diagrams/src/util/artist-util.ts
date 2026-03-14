@@ -198,14 +198,23 @@ export function makeTitleMark(title: string, titleFont: IFont, attrs: Partial<Ma
   }
 }
 
+export type DiagramTitleMakerOptions = {
+  title: string
+  titleFont: IFont
+  fill?: string
+  className: string
+  theme?: { textColor: string }
+}
+
 export class DiagramTitleMaker {
-  constructor(public opts: { title: string; titleFont: IFont; fill: string; className: string }) {}
+  constructor(public opts: DiagramTitleMakerOptions) {}
   appendTitleMark(rootMark: Group) {
-    const { title, titleFont, fill, className } = this.opts
+    const { title, titleFont, fill, className, theme } = this.opts
+    const titleFill = fill || theme?.textColor || '#000'
     let titleSize: Maybe<TSize> = undefined
     let titleMark: Text | undefined = undefined
     if (title) {
-      const titleResult = makeTitleMark(title, titleFont, { fill })
+      const titleResult = makeTitleMark(title, titleFont, { fill: titleFill })
       titleSize = titleResult.titleSize
       titleMark = titleResult.mark
       titleMark.class = className

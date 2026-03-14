@@ -52,7 +52,7 @@ class ClassArtist extends BaseArtist<ClassIR, ClassConf> {
     const titleMaker = new DiagramTitleMaker({
       title: ir.title,
       titleFont: draw.fontConfig,
-      fill: conf.noteTextColor,
+      theme: conf.themeConfig.themeVariables,
       className: 'class__title',
     })
     const titleResult = titleMaker.appendTitleMark(rootMark)
