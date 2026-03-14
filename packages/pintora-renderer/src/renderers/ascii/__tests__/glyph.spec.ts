@@ -6,12 +6,11 @@ describe('glyph', () => {
     const maskNS = DIR_N | DIR_S
     const maskEW = DIR_E | DIR_W
 
-    expect(resolveLineGlyph(maskNS, 'unicode')).toBe('│')
-    expect(resolveLineGlyph(maskEW, 'unicode')).toBe('─')
+    expect(resolveLineGlyph(maskNS)).toBe('│')
+    expect(resolveLineGlyph(maskEW)).toBe('─')
   })
 
-  it('merges crossing glyphs for unicode and ascii', () => {
-    expect(mergeGlyph('─', '│', 'unicode')).toBe('┼')
-    expect(mergeGlyph('-', '|', 'ascii')).toBe('+')
+  it('merges crossing unicode glyphs', () => {
+    expect(mergeGlyph('─', '│')).toBe('┼')
   })
 })

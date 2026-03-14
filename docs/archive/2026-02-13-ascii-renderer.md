@@ -1,9 +1,9 @@
-# Pintora ASCII/Unicode Text Renderer Requirements
+# Pintora ASCII Text Renderer Requirements
 
 ## 1. Problem & Background
 
 ### 1.1 Current Issues
-- **Rough Implementation**: The current `AsciiRenderer` implementation is crude and cannot stably output readable Unicode/ASCII plain text.
+- **Rough Implementation**: The current `AsciiRenderer` implementation is crude and cannot stably output readable Unicode plain text.
 - **Lack of Regression Test Baseline**: No stable rendering baseline exists, making regression testing difficult.
 - **Incomplete Diagram Type Coverage**: Needs to support basic usability across all diagram types (sequence/er/component/activity/mindmap/gantt/dot/class).
 
@@ -132,14 +132,14 @@ Issues:
 1. Keep `role` semantics (`backdrop`, `container`) for layout/occlusion, but add optional `frame` semantics for border meaning
 2. Let note backgrounds remain rect-based text regions, but render them as annotation cards in ASCII
 3. Let activity decision bodies keep path geometry for SVG/Canvas while ASCII renders them from reviewed frame templates
-4. Use frame-specific templates in Unicode and strict ASCII, with geometric fallback when the compact frame does not fit
+4. Use frame-specific Unicode templates, with geometric fallback when the compact frame does not fit
 
 ---
 
 ## 2. Design Goals
 
 ### 2.1 Overall Objective
-Rewrite `AsciiRenderer` based on `GraphicsIR` to provide stable Unicode/ASCII plain text rendering and a regression-testable baseline.
+Rewrite `AsciiRenderer` based on `GraphicsIR` to provide stable Unicode plain text rendering and a regression-testable baseline.
 
 ### 2.2 Design Principles
 1. **Diagram-Agnostic**: Not dependent on specific diagram semantics; achieve full diagram coverage through generic `GraphicsIR`.
@@ -165,8 +165,8 @@ Graphics IR → Semantic Op Collection → IR Normalization → Grid Rasterizati
 | **TextGrid** | 2D character buffer + layer priority buffer | `grid.ts` - `TextGrid` class |
 | **GlyphResolver** | Select Unicode box-drawing characters (`─│┌┐└┘├┤┬┴┼`) based on adjacency direction bitmask; use `/\` for diagonals | `glyph.ts` - `resolveLineGlyph()`, `mergeGlyph()` functions |
 | **PathFlattener** | Discretize `path` (array/string) into line segment collections; sample curves/arcs with adaptive step intervals | `path-flattener.ts` - `flattenPath()` function |
-| **ConnectorGlyphRegistry** | Map semantic connector terminators to compact horizontal/vertical glyph templates for Unicode and ASCII charsets | `connector-glyphs.ts` |
-| **FrameGlyphRegistry** | Map semantic note/decision frames to Unicode and ASCII border templates | `frame-glyphs.ts` |
+| **ConnectorGlyphRegistry** | Map semantic connector terminators to compact horizontal/vertical Unicode glyph templates | `connector-glyphs.ts` |
+| **FrameGlyphRegistry** | Map semantic note/decision frames to compact Unicode border templates | `frame-glyphs.ts` |
 | **TextPlacer** | Place text according to `textAlign`/`textBaseline`, handling CJK wide character widths | `text-layout.ts` - `resolveTextPlacement()` function |
 | **MarkWalker** | Traverse `GraphicsIR`, normalize various Marks (rect/line/poly/path/text/group) into standard draw operations, including semantic connectors, symbols, and path-backed frames | `mark-walker.ts` - `collectDrawOps()` function |
 | **Normalizer** | Normalize text placement to avoid separator lines, clamp text inside containers | `normalize-ops.ts` - `normalizeDrawOps()` function |
@@ -217,15 +217,13 @@ This separation is critical because earlier renderer-only fixes failed by mixing
 ## 4. Key Features
 
 ### 4.1 Character Set Support
-- **Unicode Box-Drawing** (default): Use Unicode box-drawing characters like `─│┌┐└┘├┤┬┴┼`
-- **Strict ASCII** (configurable fallback): Use ASCII characters like `-|+/`
+- **Unicode Box-Drawing**: Use Unicode box-drawing characters like `─│┌┐└┘├┤┬┴┼`
 
 ### 4.2 Coordinate & Grid Mapping
 - **Pixel to Character Grid**: `col = round(x / cellWidth)`, `row = round(y / cellHeight)`
 - **Default Parameters**:
   - `cellWidth`: 8
   - `cellHeight`: 16
-  - `charset`: 'unicode'
   - `trimRight`: true
   - `ansi`: false (v1 only supports false)
 
@@ -331,12 +329,6 @@ When a mark carries `semantic.frame`, ASCII can treat it as a reviewed frame ins
 Current compact coverage:
 
 - **Note Frame**
-  - strict ASCII: quoted-card style
-    ```text
-    .--------.
-    : note   :
-    '--------'
-    ```
   - Unicode: folded-corner note card, refined toward a B1-style structured fold
     ```text
     ╭────────┬╮
@@ -347,12 +339,6 @@ Current compact coverage:
   - notes keep their `backdrop` semantics for occlusion and text-region selection; `frame` only changes border treatment
 
 - **Activity Decision Frame**
-  - strict ASCII:
-    ```text
-    <-------->
-    |Decision|
-    <---+---->
-    ```
   - Unicode:
     ```text
     ◇────────◇
@@ -413,7 +399,6 @@ The connector work exposed a few practical rules that are easy to forget:
 ```typescript
 core: {
   textRenderer: {
-    charset: 'unicode' | 'ascii'     // default 'unicode'
     cellWidth: number                // default 8
     cellHeight: number               // default 16
     trimRight: boolean               // default true
@@ -438,7 +423,7 @@ core: {
 - **Grid Rasterization**: Corners, cross intersections, diagonals, text overlay priority
 - **Connector Glyph Mapping**: Horizontal and vertical compact glyph templates for sequence arrows and ER cardinality markers
 - **Connector Fallback**: Non-axis-aligned semantic connectors fall back to geometric rasterization
-- **Frame Glyph Mapping**: Note-card and decision-frame templates in Unicode and strict ASCII
+- **Frame Glyph Mapping**: Note-card and decision-frame templates in Unicode
 - **Frame Fallback**: Unsupported or undersized semantic frames fall back to geometric rect/path borders
 
 ### 6.2 Integration Testing
@@ -447,7 +432,7 @@ core: {
 
 ### 6.3 Golden File Regression
 - Use standardized whitespace handling to reduce regression costs
-- ASCII/Unicode dual modes share same test cases for quick character mapping regression detection
+- Golden files track the current Unicode-oriented renderer output
 
 ### 6.4 E2E Testing
 - **standalone**: ASCII rendering outputs correctly
@@ -477,10 +462,10 @@ erDiagram
 ```
 
 Assertions:
-- Attribute comment row retains the closing right border in ASCII mode
+- Attribute comment row retains the closing right border
 - Entity title row is not pierced by horizontal border glyphs
 - The header/body separator row still exists and is not mistakenly removed by title-related repairs
-- Adjacent attribute cells do not produce doubled shared borders such as `||` or `++`
+- Adjacent attribute cells do not produce doubled shared borders such as `││`
 
 **ER Cardinality Markers:**
 ```text
@@ -552,7 +537,6 @@ activityDiagram
 
 Assertions:
 - Unicode output uses decorated corners such as `◇`
-- strict ASCII output uses decorated edges such as `<...>` and bottom `+`
 - the decision body remains readable as a content frame rather than sampled path noise
 
 ### 6.6 Test Debugging Workflow

@@ -9,7 +9,6 @@ export function renderText(ir: GraphicsIR, options: TextRendererOptions): string
   const rows = Math.max(1, Math.round(ir.height / options.cellHeight) + 2)
   const ops = collectDrawOps(ir.mark, IDENTITY_MATRIX)
   const grid = rasterize(ops, {
-    charset: options.charset,
     cellWidth: options.cellWidth,
     cellHeight: options.cellHeight,
     cols,

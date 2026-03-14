@@ -24,16 +24,11 @@ describe('ascii renderer golden', () => {
       charset: 'unicode' as const,
       filePath: path.join(baseDir, 'unicode', 'sequence-basic.txt'),
     },
-    {
-      charset: 'ascii' as const,
-      filePath: path.join(baseDir, 'ascii', 'sequence-basic.txt'),
-    },
   ]
 
-  it.each(cases)('matches golden output for $charset', ({ charset, filePath }) => {
+  it.each(cases)('matches golden output for $charset', ({ filePath }) => {
     const expected = fs.readFileSync(filePath, 'utf8')
     const actual = renderText(sequenceIr, {
-      charset,
       cellWidth: 8,
       cellHeight: 16,
       trimRight: true,

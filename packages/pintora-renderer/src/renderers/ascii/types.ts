@@ -1,4 +1,3 @@
-export type Charset = 'unicode' | 'ascii'
 export type Matrix = number[]
 export type Point = {
   x: number

@@ -39,7 +39,7 @@ describe('normalizeDrawOps', () => {
         text: 'A',
         textAlign: 'left',
         textBaseline: 'top',
-        layer: AsciiLayer.MARKERS,
+        layer: AsciiLayer.TEXT,
       },
     ]
 
@@ -259,7 +259,7 @@ describe('normalizeDrawOps', () => {
         text: 'Apple fromString(str)',
         textAlign: 'left',
         textBaseline: 'top',
-        layer: AsciiLayer.MARKERS,
+        layer: AsciiLayer.TEXT,
       },
     ]
 
@@ -300,7 +300,7 @@ describe('normalizeDrawOps', () => {
         text: 'PERSON',
         textAlign: 'center',
         textBaseline: 'middle',
-        layer: AsciiLayer.MARKERS,
+        layer: AsciiLayer.TEXT,
       },
     ]
 

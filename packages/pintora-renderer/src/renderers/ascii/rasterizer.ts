@@ -12,10 +12,9 @@ import { normalizeDrawOps } from './normalize-ops'
 import { getSymbolGlyph } from './symbol-glyphs'
 import { measureAsciiText } from './text-metrics'
 import { resolveTextPlacement } from './text-layout'
-import { Charset, Point } from './types'
+import { Point } from './types'
 
 export type RasterizeOptions = {
-  charset: Charset
   cellWidth: number
   cellHeight: number
   cols: number
@@ -110,7 +109,7 @@ function drawRectFrame(
   const frame = op.semantic?.frame
   if (!frame || frame.kind !== 'note') return false
 
-  const glyphs = getNoteFrameGlyphs(frame, options.charset)
+  const glyphs = getNoteFrameGlyphs(frame)
   if (!glyphs) return false
   if (maxCol - minCol < 2 || maxRow - minRow < 2) return false
 
@@ -216,7 +215,7 @@ function drawVerticalGlyphString(grid: TextGrid, col: number, row: number, text:
 
 function drawHorizontalCompactConnector(grid: TextGrid, op: ConnectorOp, options: RasterizeOptions): boolean {
   const connector = op.semantic.connector
-  const glyph = getConnectorShaftGlyph(connector, options.charset)
+  const glyph = getConnectorShaftGlyph(connector)
   if (!glyph) return false
 
   const start = lineToGrid(op.points[0], options)
@@ -228,8 +227,8 @@ function drawHorizontalCompactConnector(grid: TextGrid, op: ConnectorOp, options
   const rightCol = Math.max(start.col, end.col)
   const direction = end.col >= start.col ? 'right' : 'left'
 
-  const startGlyph = getHorizontalTerminatorGlyph(connector.startTerminator?.kind || 'none', 'left', options.charset)
-  const endGlyph = getHorizontalTerminatorGlyph(connector.endTerminator?.kind || 'none', 'right', options.charset)
+  const startGlyph = getHorizontalTerminatorGlyph(connector.startTerminator?.kind || 'none', 'left')
+  const endGlyph = getHorizontalTerminatorGlyph(connector.endTerminator?.kind || 'none', 'right')
   if (startGlyph == null || endGlyph == null) return false
 
   const startReserved = Array.from(startGlyph).reduce((sum, ch) => sum + Math.max(1, charWidth(ch)), 0)
@@ -250,12 +249,8 @@ function drawHorizontalCompactConnector(grid: TextGrid, op: ConnectorOp, options
   }
 
   if (direction === 'left') {
-    const leftFacingStart = getHorizontalTerminatorGlyph(
-      connector.startTerminator?.kind || 'none',
-      'right',
-      options.charset,
-    )
-    const leftFacingEnd = getHorizontalTerminatorGlyph(connector.endTerminator?.kind || 'none', 'left', options.charset)
+    const leftFacingStart = getHorizontalTerminatorGlyph(connector.startTerminator?.kind || 'none', 'right')
+    const leftFacingEnd = getHorizontalTerminatorGlyph(connector.endTerminator?.kind || 'none', 'left')
     if (leftFacingStart == null || leftFacingEnd == null) return false
     grid.clearRect(leftCol, row, rightCol, row, AsciiLayer.MARKERS)
     const leftEndReserved = Array.from(leftFacingEnd).reduce((sum, ch) => sum + Math.max(1, charWidth(ch)), 0)
@@ -289,7 +284,7 @@ function drawConnectorFallback(grid: TextGrid, op: ConnectorOp, options: Rasteri
 
 function drawVerticalCompactConnector(grid: TextGrid, op: ConnectorOp, options: RasterizeOptions): boolean {
   const connector = op.semantic.connector
-  const glyph = getVerticalConnectorShaftGlyph(connector, options.charset)
+  const glyph = getVerticalConnectorShaftGlyph(connector)
   if (!glyph) return false
   const start = lineToGrid(op.points[0], options)
   const end = lineToGrid(op.points[op.points.length - 1], options)
@@ -303,12 +298,10 @@ function drawVerticalCompactConnector(grid: TextGrid, op: ConnectorOp, options: 
   const topGlyph = getVerticalTerminatorGlyph(
     startIsTop ? connector.startTerminator?.kind || 'none' : connector.endTerminator?.kind || 'none',
     'up',
-    options.charset,
   )
   const bottomGlyph = getVerticalTerminatorGlyph(
     startIsTop ? connector.endTerminator?.kind || 'none' : connector.startTerminator?.kind || 'none',
     'down',
-    options.charset,
   )
   if (topGlyph == null || bottomGlyph == null) return false
 
@@ -354,7 +347,7 @@ function drawSymbol(grid: TextGrid, op: SymbolOp, options: RasterizeOptions): vo
     return
   }
 
-  const glyph = getSymbolGlyph(op.semantic.symbol.kind, options.charset)
+  const glyph = getSymbolGlyph(op.semantic.symbol.kind)
   if (!glyph) {
     drawSymbolFallback(grid, op, options)
     return
@@ -398,7 +391,7 @@ function drawFrameFallback(grid: TextGrid, op: FrameOp, options: RasterizeOption
 }
 
 function drawDecisionFrame(grid: TextGrid, op: FrameOp, options: RasterizeOptions): boolean {
-  const glyphs = getDecisionFrameGlyphs(op.semantic.frame, options.charset)
+  const glyphs = getDecisionFrameGlyphs(op.semantic.frame)
   if (!glyphs) return false
 
   const center = lineToGrid(op.point, options)
@@ -447,7 +440,7 @@ function drawFrame(grid: TextGrid, op: FrameOp, options: RasterizeOptions): void
 }
 
 export function rasterize(ops: DrawOp[], options: RasterizeOptions): TextGrid {
-  const grid = new TextGrid(options.cols, options.rows, options.charset, options.trimRight)
+  const grid = new TextGrid(options.cols, options.rows, options.trimRight)
   const normalized = normalizeDrawOps(ops, {
     cellWidth: options.cellWidth,
     cellHeight: options.cellHeight,

@@ -11,7 +11,6 @@ export interface PintoraConfig {
     defaultFontFamily: string
     useMaxWidth: boolean
     textRenderer?: {
-      charset?: 'unicode' | 'ascii'
       cellWidth?: number
       cellHeight?: number
       trimRight?: boolean
@@ -31,7 +30,6 @@ let config: PintoraConfig = {
     defaultFontFamily: DEFAULT_FONT_FAMILY,
     useMaxWidth: false,
     textRenderer: {
-      charset: 'unicode',
       cellWidth: 8,
       cellHeight: 16,
       trimRight: true,

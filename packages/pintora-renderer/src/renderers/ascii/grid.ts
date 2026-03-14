@@ -1,5 +1,5 @@
 import { resolveDiagonalGlyph, resolveLineGlyph } from './glyph'
-import { Charset, DIAGONAL_BACKWARD, DIAGONAL_FORWARD, DIR_E, DIR_N, DIR_S, DIR_W } from './types'
+import { DIAGONAL_BACKWARD, DIAGONAL_FORWARD, DIR_E, DIR_N, DIR_S, DIR_W } from './types'
 
 type GridCell = {
   text: string | null
@@ -16,7 +16,6 @@ export class TextGrid {
   constructor(
     readonly cols: number,
     readonly rows: number,
-    private readonly charset: Charset,
     trimRight = true,
   ) {
     this.trimRight = trimRight
@@ -152,10 +151,10 @@ export class TextGrid {
       return cell.textContinuation ? ' ' : cell.text
     }
     if (cell.lineMask) {
-      return resolveLineGlyph(cell.lineMask, this.charset)
+      return resolveLineGlyph(cell.lineMask)
     }
     if (cell.diagonalMask) {
-      return resolveDiagonalGlyph(cell.diagonalMask, this.charset)
+      return resolveDiagonalGlyph(cell.diagonalMask)
     }
     return ' '
   }

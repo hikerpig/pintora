@@ -3,8 +3,8 @@ import { DIAGRAMS } from '@pintora/diagrams'
 import { render } from '../../../index'
 
 // Register all diagrams
-Object.keys(DIAGRAMS).forEach(name => {
-  diagramRegistry.registerDiagram(name, DIAGRAMS[name])
+Object.keys(DIAGRAMS).forEach((name) => {
+  diagramRegistry.registerDiagram(name, DIAGRAMS[name as keyof typeof DIAGRAMS])
 })
 
 export type RenderToAsciiOptions = {

@@ -1,13 +1,6 @@
-import { configApi } from '@pintora/core'
 import { renderToAscii } from './test-helpers'
 
 describe('ascii-renderer-cases', () => {
-  const originalConfig = configApi.cloneConfig()
-
-  afterEach(() => {
-    configApi.replaceConfig(originalConfig)
-  })
-
   describe('sequence diagram', () => {
     it('can render unicode text diagram with ascii renderer', () => {
       const code = `
@@ -217,15 +210,7 @@ activityDiagram
       expect(compact).toContain('◇')
     })
 
-    it('renders notes as annotation cards instead of ordinary boxes in strict ascii', () => {
-      configApi.setConfig({
-        core: {
-          textRenderer: {
-            charset: 'ascii',
-          },
-        },
-      })
-
+    it('renders notes as annotation cards instead of ordinary boxes', () => {
       const code = `
 activityDiagram
   :Do work;
@@ -236,10 +221,10 @@ activityDiagram
       const lines = text.split('\n')
       const noteLine = lines.find(line => line.includes('side note')) || ''
 
-      expect(text).toContain('.')
-      expect(text).toContain("'")
-      expect(noteLine).toContain(':')
-      expect(noteLine).not.toMatch(/\|\s*side note\s*\|/)
+      expect(text).toContain('╭')
+      expect(text).toContain('╰')
+      expect(noteLine).toContain('side note')
+      expect(noteLine).not.toMatch(/│\s*side note\s*│/)
     })
 
     it('renders unicode notes as folded-corner cards', () => {
@@ -278,14 +263,6 @@ activityDiagram
     })
 
     it('keeps a single partition action off the outer border in ascii renderer', () => {
-      configApi.setConfig({
-        core: {
-          textRenderer: {
-            charset: 'ascii',
-          },
-        },
-      })
-
       const code = `
 activityDiagram
   start
@@ -300,19 +277,11 @@ activityDiagram
       const readConfigLine = readConfigLineIndex >= 0 ? lines[readConfigLineIndex] : ''
 
       expect(readConfigLineIndex).toBeGreaterThanOrEqual(0)
-      expect(lines[readConfigLineIndex - 1]).toMatch(/\+[-v]+\+/)
-      expect(readConfigLine).toMatch(/\|\s*read config\s+\|/)
+      expect(lines[readConfigLineIndex - 1]).toContain('▼')
+      expect(readConfigLine).toMatch(/│\s*read config\s+│/)
     })
 
     it('keeps partition actions and note borders separated in ascii renderer', () => {
-      configApi.setConfig({
-        core: {
-          textRenderer: {
-            charset: 'ascii',
-          },
-        },
-      })
-
       const code = `
 activityDiagram
   start
@@ -332,21 +301,14 @@ activityDiagram
 
       expect(readConfigLineIndex).toBeGreaterThanOrEqual(0)
       expect(initServicesLineIndex).toBeGreaterThanOrEqual(0)
-      expect(lines[readConfigLineIndex - 1]).toMatch(/\+[-v]+\+/)
-      expect(readConfigLine).toMatch(/\|\s*read config\s+\|/)
-      expect(initServicesLine).toMatch(/:\s*init themes\s*:\s{2}\|init internal services\s+\|/)
-      expect(initServicesLine).not.toContain('||')
+      expect(lines[readConfigLineIndex - 1]).toContain('▼')
+      expect(readConfigLine).toMatch(/│\s*read config\s+│/)
+      expect(initServicesLine).toContain('init themes')
+      expect(initServicesLine).toContain('init internal services')
+      expect(initServicesLine).not.toContain('││')
     })
 
     it('keeps right-side notes outside partition action text in ascii renderer', () => {
-      configApi.setConfig({
-        core: {
-          textRenderer: {
-            charset: 'ascii',
-          },
-        },
-      })
-
       const code = `
 activityDiagram
   start
@@ -361,19 +323,11 @@ activityDiagram
       const lines = text.split('\n')
       const sharedLine = lines.find(line => line.includes('init internal services')) || ''
 
-      expect(sharedLine).toMatch(/init internal services\s+\|\s{2}: ?init themes ?:/)
+      expect(sharedLine).toMatch(/init internal services.+init themes/)
       expect(sharedLine).not.toContain('init internal serviinit themes')
     })
 
     it('keeps left-side notes from piercing the partition title row in ascii renderer', () => {
-      configApi.setConfig({
-        core: {
-          textRenderer: {
-            charset: 'ascii',
-          },
-        },
-      })
-
       const code = `
 activityDiagram
   start
@@ -389,20 +343,13 @@ activityDiagram
       const actionLine = lines.find(line => line.includes('init internal services')) || ''
 
       expect(titleLine).not.toContain('Init────────')
-      expect(actionLine).toMatch(/:\s*init themes\s*:\s{2}\|init internal services\s+\|/)
+      expect(actionLine).toContain('init themes')
+      expect(actionLine).toContain('init internal services')
     })
   })
 
   describe('er diagram', () => {
     it('keeps attribute comment text off the entity border in ascii renderer', () => {
-      configApi.setConfig({
-        core: {
-          textRenderer: {
-            charset: 'ascii',
-          },
-        },
-      })
-
       const code = `
 erDiagram
   PERSON {
@@ -416,26 +363,18 @@ erDiagram
       const personLine = lines.find(line => line.includes('PERSON'))
 
       expect(numberLine).toBeTruthy()
-      expect(numberLine).toContain('r|')
-      expect(numberLine).not.toContain('||')
+      expect(numberLine).toContain('phone number')
+      expect(numberLine).not.toContain('││')
       expect(personLine).toBeTruthy()
-      expect(personLine).not.toContain('--')
+      expect(personLine).not.toContain('──')
 
       // should not eliminate this separator line
       const itemLineIndex = lines.findIndex(line => line.includes('phone'))
       const separatorLine = lines[itemLineIndex - 1]
-      expect(separatorLine).toContain('---')
+      expect(separatorLine).toContain('─')
     })
 
     it('keeps er entity title, separator, and long comment on separate rows in ascii renderer', () => {
-      configApi.setConfig({
-        core: {
-          textRenderer: {
-            charset: 'ascii',
-          },
-        },
-      })
-
       const code = `
 erDiagram
   ORDER {
@@ -454,11 +393,11 @@ erDiagram
       expect(orderNumberLineIndex).toBeGreaterThan(titleLineIndex)
       expect(commentLineIndex).toBeGreaterThan(orderNumberLineIndex)
 
-      expect(lines[titleLineIndex]).not.toMatch(/-{2,}/)
-      expect(lines[commentLineIndex]).not.toMatch(/-{2,}/)
+      expect(lines[titleLineIndex]).not.toMatch(/─{2,}/)
+      expect(lines[commentLineIndex]).not.toMatch(/─{2,}/)
 
       const separatorLine = lines[orderNumberLineIndex - 1]
-      expect(separatorLine).toContain('---')
+      expect(separatorLine).toContain('─')
       expect(separatorLine).not.toContain('ORDER')
     })
 

@@ -16,12 +16,11 @@ describe('rasterizer', () => {
         text: 'A',
         textAlign: 'left',
         textBaseline: 'top',
-        layer: AsciiLayer.MARKERS,
+        layer: AsciiLayer.TEXT,
       },
     ]
 
     const grid = rasterize(ops, {
-      charset: 'unicode',
       cellWidth: 8,
       cellHeight: 16,
       cols: 10,
@@ -60,12 +59,11 @@ describe('rasterizer', () => {
         text: 'A',
         textAlign: 'center',
         textBaseline: 'middle',
-        layer: AsciiLayer.MARKERS,
+        layer: AsciiLayer.TEXT,
       },
     ]
 
     const grid = rasterize(ops, {
-      charset: 'unicode',
       cellWidth: 8,
       cellHeight: 16,
       cols: 10,
@@ -93,12 +91,11 @@ describe('rasterizer', () => {
         text: 'ABC',
         textAlign: 'left',
         textBaseline: 'hanging',
-        layer: AsciiLayer.MARKERS,
+        layer: AsciiLayer.TEXT,
       },
     ]
 
     const grid = rasterize(ops, {
-      charset: 'unicode',
       cellWidth: 8,
       cellHeight: 16,
       cols: 12,
@@ -131,12 +128,11 @@ describe('rasterizer', () => {
         text: 'A',
         textAlign: 'left',
         textBaseline: 'top',
-        layer: AsciiLayer.MARKERS,
+        layer: AsciiLayer.TEXT,
       },
     ]
 
     const grid = rasterize(ops, {
-      charset: 'unicode',
       cellWidth: 8,
       cellHeight: 16,
       cols: 16,
@@ -176,7 +172,6 @@ describe('rasterizer', () => {
     ]
 
     const grid = rasterize(ops, {
-      charset: 'ascii',
       cellWidth: 8,
       cellHeight: 16,
       cols: 12,
@@ -214,7 +209,6 @@ describe('rasterizer', () => {
     ] as any
 
     const grid = rasterize(ops, {
-      charset: 'unicode',
       cellWidth: 8,
       cellHeight: 16,
       cols: 12,
@@ -251,7 +245,6 @@ describe('rasterizer', () => {
     ] as any
 
     const grid = rasterize(ops, {
-      charset: 'unicode',
       cellWidth: 8,
       cellHeight: 16,
       cols: 12,
@@ -270,7 +263,7 @@ describe('rasterizer', () => {
         point: { x: 16, y: 16 },
         width: 16,
         height: 16,
-        layer: AsciiLayer.MARKERS,
+        layer: AsciiLayer.TEXT,
         semantic: {
           role: 'symbol',
           strokePolicy: 'always',
@@ -287,7 +280,7 @@ describe('rasterizer', () => {
         point: { x: 40, y: 16 },
         width: 16,
         height: 16,
-        layer: AsciiLayer.MARKERS,
+        layer: AsciiLayer.TEXT,
         semantic: {
           role: 'symbol',
           strokePolicy: 'always',
@@ -302,7 +295,6 @@ describe('rasterizer', () => {
     ] as any
 
     const grid = rasterize(ops, {
-      charset: 'unicode',
       cellWidth: 8,
       cellHeight: 16,
       cols: 8,
@@ -321,7 +313,7 @@ describe('rasterizer', () => {
         point: { x: 16, y: 16 },
         width: 16,
         height: 16,
-        layer: AsciiLayer.MARKERS,
+        layer: AsciiLayer.TEXT,
         semantic: {
           role: 'symbol',
           strokePolicy: 'always',
@@ -343,7 +335,6 @@ describe('rasterizer', () => {
     ] as any
 
     const grid = rasterize(ops, {
-      charset: 'ascii',
       cellWidth: 8,
       cellHeight: 16,
       cols: 6,
@@ -351,11 +342,11 @@ describe('rasterizer', () => {
       trimRight: true,
     })
 
-    expect(grid.getGlyphAt(1, 1)).toBe('-')
+    expect(grid.getGlyphAt(1, 1)).toBe('─')
     expect(grid.toString()).not.toContain('@')
   })
 
-  it('renders quoted-card note frames in strict ascii', () => {
+  it('renders quoted-card note frames', () => {
     const ops: DrawOp[] = [
       {
         kind: 'rect',
@@ -389,7 +380,6 @@ describe('rasterizer', () => {
     ]
 
     const grid = rasterize(ops, {
-      charset: 'ascii',
       cellWidth: 8,
       cellHeight: 16,
       cols: 10,
@@ -398,9 +388,10 @@ describe('rasterizer', () => {
     })
 
     const lines = grid.toString().split('\n')
-    expect(lines[1]).toContain('.')
-    expect(lines[2]).toContain(':')
-    expect(lines[3]).toContain("'")
+    expect(lines[1]).toContain('╭')
+    expect(lines[1]).toContain('┬')
+    expect(lines[2]).toContain('note')
+    expect(lines[3]).toContain('╰')
   })
 
   it('renders folded-corner note frames in unicode', () => {
@@ -437,7 +428,6 @@ describe('rasterizer', () => {
     ]
 
     const grid = rasterize(ops, {
-      charset: 'unicode',
       cellWidth: 8,
       cellHeight: 16,
       cols: 12,
@@ -483,7 +473,6 @@ describe('rasterizer', () => {
     ] as any
 
     const grid = rasterize(ops, {
-      charset: 'unicode',
       cellWidth: 8,
       cellHeight: 16,
       cols: 12,
@@ -526,7 +515,6 @@ describe('rasterizer', () => {
     ] as any
 
     const grid = rasterize(ops, {
-      charset: 'ascii',
       cellWidth: 8,
       cellHeight: 16,
       cols: 6,
@@ -534,6 +522,6 @@ describe('rasterizer', () => {
       trimRight: true,
     })
 
-    expect(grid.getGlyphAt(1, 1)).toBe('-')
+    expect(grid.getGlyphAt(1, 1)).toBe('─')
   })
 })

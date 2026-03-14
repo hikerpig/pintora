@@ -24,10 +24,9 @@ describe('AsciiRenderer', () => {
 
   it('resolves text renderer options with sane defaults', () => {
     const options = resolveTextRendererOptions({
-      core: { textRenderer: { charset: 'ascii', cellWidth: 7, cellHeight: 15, trimRight: false, ansi: true } },
+      core: { textRenderer: { cellWidth: 7, cellHeight: 15, trimRight: false, ansi: true } },
     })
 
-    expect(options.charset).toBe('ascii')
     expect(options.cellWidth).toBe(7)
     expect(options.cellHeight).toBe(15)
     expect(options.trimRight).toBe(false)

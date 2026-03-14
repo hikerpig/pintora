@@ -1,5 +1,4 @@
 import { FrameSemantic } from '@pintora/core'
-import { Charset } from './types'
 
 export type NoteFrameGlyphs = {
   topLeft: string
@@ -27,20 +26,8 @@ export type DecisionFrameGlyphs = {
   bottomCenter: string
 }
 
-export function getNoteFrameGlyphs(frame: FrameSemantic, charset: Charset): NoteFrameGlyphs | null {
+export function getNoteFrameGlyphs(frame: FrameSemantic): NoteFrameGlyphs | null {
   if (frame.kind !== 'note') return null
-  if (charset === 'ascii') {
-    return {
-      topLeft: '.',
-      topRight: '.',
-      top: '-',
-      sideLeft: ':',
-      sideRight: ':',
-      bottomLeft: "'",
-      bottomRight: "'",
-      bottom: '-',
-    }
-  }
 
   return {
     topLeft: '╭',
@@ -57,21 +44,8 @@ export function getNoteFrameGlyphs(frame: FrameSemantic, charset: Charset): Note
   }
 }
 
-export function getDecisionFrameGlyphs(frame: FrameSemantic, charset: Charset): DecisionFrameGlyphs | null {
+export function getDecisionFrameGlyphs(frame: FrameSemantic): DecisionFrameGlyphs | null {
   if (frame.kind !== 'decision') return null
-  if (charset === 'ascii') {
-    return {
-      topLeft: '<',
-      topRight: '>',
-      top: '-',
-      sideLeft: '|',
-      sideRight: '|',
-      bottomLeft: '<',
-      bottomRight: '>',
-      bottom: '-',
-      bottomCenter: '+',
-    }
-  }
 
   return {
     topLeft: '◇',
