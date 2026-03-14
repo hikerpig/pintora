@@ -94,12 +94,31 @@ exports[`sequence-artist draw cross mark to 1`] = `
             },
             "class": "sequence__message__line",
             "itemId": "message-0-4",
+            "semantic": {
+              "connector": {
+                "compact": true,
+                "endTerminator": {
+                  "kind": "cross",
+                },
+                "family": "sequence-message",
+                "shaftStyle": "dashed",
+                "startTerminator": {
+                  "kind": "none",
+                },
+              },
+              "role": "connector",
+              "strokePolicy": "always",
+            },
             "type": "line",
           },
           {
             "attrs": {
               "lineWidth": 2,
               "stroke": "#3b4044",
+            },
+            "semantic": {
+              "role": "decoration",
+              "strokePolicy": "optional",
             },
             "type": "path",
           },
@@ -586,11 +605,30 @@ exports[`sequence-artist match example snapshot 1`] = `
             },
             "class": "sequence__message__line",
             "itemId": "message-0-0",
+            "semantic": {
+              "connector": {
+                "compact": true,
+                "endTerminator": {
+                  "kind": "arrow-filled",
+                },
+                "family": "sequence-message",
+                "shaftStyle": "solid",
+                "startTerminator": {
+                  "kind": "none",
+                },
+              },
+              "role": "connector",
+              "strokePolicy": "always",
+            },
             "type": "line",
           },
           {
             "attrs": {
               "fill": "#3b4044",
+            },
+            "semantic": {
+              "role": "decoration",
+              "strokePolicy": "optional",
             },
             "type": "path",
           },
@@ -651,11 +689,30 @@ exports[`sequence-artist match example snapshot 1`] = `
             },
             "class": "sequence__message__line",
             "itemId": "message-3-1",
+            "semantic": {
+              "connector": {
+                "compact": true,
+                "endTerminator": {
+                  "kind": "arrow-filled",
+                },
+                "family": "sequence-message",
+                "shaftStyle": "dashed",
+                "startTerminator": {
+                  "kind": "none",
+                },
+              },
+              "role": "connector",
+              "strokePolicy": "always",
+            },
             "type": "path",
           },
           {
             "attrs": {
               "fill": "#3b4044",
+            },
+            "semantic": {
+              "role": "decoration",
+              "strokePolicy": "optional",
             },
             "type": "path",
           },
@@ -756,11 +813,30 @@ exports[`sequence-artist match example snapshot 1`] = `
             },
             "class": "sequence__message__line",
             "itemId": "message-5-1",
+            "semantic": {
+              "connector": {
+                "compact": true,
+                "endTerminator": {
+                  "kind": "arrow-filled",
+                },
+                "family": "sequence-message",
+                "shaftStyle": "dashed",
+                "startTerminator": {
+                  "kind": "none",
+                },
+              },
+              "role": "connector",
+              "strokePolicy": "always",
+            },
             "type": "line",
           },
           {
             "attrs": {
               "fill": "#3b4044",
+            },
+            "semantic": {
+              "role": "decoration",
+              "strokePolicy": "optional",
             },
             "type": "path",
           },

@@ -1,5 +1,6 @@
 import { Point, MarkAttrs, safeAssign, mat3, Mark, Group, Text } from '@pintora/core'
 import { makeMark } from '../util/artist-util'
+import { makeAsciiDecorationSemantic } from '../util/connector'
 import { Cardinality } from './db'
 
 type MarkerGenerator = (attrs?: MarkAttrs) => Mark
@@ -78,9 +79,17 @@ export function drawMarkerTo(dest: Point, type: Cardinality, rad: number, attrs?
   mat3.rotate(finalMatrix, finalMatrix, rad)
   mark.matrix = finalMatrix
   if (mark.class) mark.class = `er-marker ${mark.class}`
+  applyAsciiDecorationSemantic(mark)
   // console.log('drawMarkerTo', type, rad, finalMatrix, mark)
 
   return mark
+}
+
+function applyAsciiDecorationSemantic(mark: Mark) {
+  mark.semantic = makeAsciiDecorationSemantic()
+  if (mark.type === 'group') {
+    mark.children.forEach(child => applyAsciiDecorationSemantic(child))
+  }
 }
 
 export type CellName = 'type' | 'name' | 'key' | 'comment'

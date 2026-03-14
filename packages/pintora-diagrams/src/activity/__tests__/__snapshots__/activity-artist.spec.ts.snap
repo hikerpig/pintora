@@ -268,12 +268,31 @@ exports[`activity-artist draw fork 1`] = `
               "lineJoin": "round",
               "stroke": "#fdb05e",
             },
+            "semantic": {
+              "connector": {
+                "compact": true,
+                "endTerminator": {
+                  "kind": "arrow-filled",
+                },
+                "family": "activity-flow",
+                "shaftStyle": "solid",
+                "startTerminator": {
+                  "kind": "none",
+                },
+              },
+              "role": "connector",
+              "strokePolicy": "always",
+            },
             "type": "path",
           },
           {
             "attrs": {
               "lineCap": "round",
               "stroke": "#fdb05e",
+            },
+            "semantic": {
+              "role": "decoration",
+              "strokePolicy": "optional",
             },
             "type": "path",
           },
@@ -282,12 +301,31 @@ exports[`activity-artist draw fork 1`] = `
               "lineJoin": "round",
               "stroke": "#fdb05e",
             },
+            "semantic": {
+              "connector": {
+                "compact": true,
+                "endTerminator": {
+                  "kind": "arrow-filled",
+                },
+                "family": "activity-flow",
+                "shaftStyle": "solid",
+                "startTerminator": {
+                  "kind": "none",
+                },
+              },
+              "role": "connector",
+              "strokePolicy": "always",
+            },
             "type": "path",
           },
           {
             "attrs": {
               "lineCap": "round",
               "stroke": "#fdb05e",
+            },
+            "semantic": {
+              "role": "decoration",
+              "strokePolicy": "optional",
             },
             "type": "path",
           },
@@ -296,12 +334,31 @@ exports[`activity-artist draw fork 1`] = `
               "lineJoin": "round",
               "stroke": "#fdb05e",
             },
+            "semantic": {
+              "connector": {
+                "compact": true,
+                "endTerminator": {
+                  "kind": "arrow-filled",
+                },
+                "family": "activity-flow",
+                "shaftStyle": "solid",
+                "startTerminator": {
+                  "kind": "none",
+                },
+              },
+              "role": "connector",
+              "strokePolicy": "always",
+            },
             "type": "path",
           },
           {
             "attrs": {
               "lineCap": "round",
               "stroke": "#fdb05e",
+            },
+            "semantic": {
+              "role": "decoration",
+              "strokePolicy": "optional",
             },
             "type": "path",
           },
@@ -310,12 +367,31 @@ exports[`activity-artist draw fork 1`] = `
               "lineJoin": "round",
               "stroke": "#fdb05e",
             },
+            "semantic": {
+              "connector": {
+                "compact": true,
+                "endTerminator": {
+                  "kind": "arrow-filled",
+                },
+                "family": "activity-flow",
+                "shaftStyle": "solid",
+                "startTerminator": {
+                  "kind": "none",
+                },
+              },
+              "role": "connector",
+              "strokePolicy": "always",
+            },
             "type": "path",
           },
           {
             "attrs": {
               "lineCap": "round",
               "stroke": "#fdb05e",
+            },
+            "semantic": {
+              "role": "decoration",
+              "strokePolicy": "optional",
             },
             "type": "path",
           },
@@ -422,12 +498,31 @@ exports[`activity-artist draw fork 1`] = `
               "lineJoin": "round",
               "stroke": "#fdb05e",
             },
+            "semantic": {
+              "connector": {
+                "compact": true,
+                "endTerminator": {
+                  "kind": "arrow-filled",
+                },
+                "family": "activity-flow",
+                "shaftStyle": "solid",
+                "startTerminator": {
+                  "kind": "none",
+                },
+              },
+              "role": "connector",
+              "strokePolicy": "always",
+            },
             "type": "path",
           },
           {
             "attrs": {
               "lineCap": "round",
               "stroke": "#fdb05e",
+            },
+            "semantic": {
+              "role": "decoration",
+              "strokePolicy": "optional",
             },
             "type": "path",
           },
@@ -450,12 +545,31 @@ exports[`activity-artist draw fork 1`] = `
               "lineJoin": "round",
               "stroke": "#fdb05e",
             },
+            "semantic": {
+              "connector": {
+                "compact": true,
+                "endTerminator": {
+                  "kind": "arrow-filled",
+                },
+                "family": "activity-flow",
+                "shaftStyle": "solid",
+                "startTerminator": {
+                  "kind": "none",
+                },
+              },
+              "role": "connector",
+              "strokePolicy": "always",
+            },
             "type": "path",
           },
           {
             "attrs": {
               "lineCap": "round",
               "stroke": "#fdb05e",
+            },
+            "semantic": {
+              "role": "decoration",
+              "strokePolicy": "optional",
             },
             "type": "path",
           },
@@ -464,12 +578,31 @@ exports[`activity-artist draw fork 1`] = `
               "lineJoin": "round",
               "stroke": "#fdb05e",
             },
+            "semantic": {
+              "connector": {
+                "compact": true,
+                "endTerminator": {
+                  "kind": "arrow-filled",
+                },
+                "family": "activity-flow",
+                "shaftStyle": "solid",
+                "startTerminator": {
+                  "kind": "none",
+                },
+              },
+              "role": "connector",
+              "strokePolicy": "always",
+            },
             "type": "path",
           },
           {
             "attrs": {
               "lineCap": "round",
               "stroke": "#fdb05e",
+            },
+            "semantic": {
+              "role": "decoration",
+              "strokePolicy": "optional",
             },
             "type": "path",
           },
@@ -738,12 +871,31 @@ exports[`activity-artist draw repeat 1`] = `
               "lineJoin": "round",
               "stroke": "#fdb05e",
             },
+            "semantic": {
+              "connector": {
+                "compact": true,
+                "endTerminator": {
+                  "kind": "arrow-filled",
+                },
+                "family": "activity-flow",
+                "shaftStyle": "solid",
+                "startTerminator": {
+                  "kind": "none",
+                },
+              },
+              "role": "connector",
+              "strokePolicy": "always",
+            },
             "type": "path",
           },
           {
             "attrs": {
               "lineCap": "round",
               "stroke": "#fdb05e",
+            },
+            "semantic": {
+              "role": "decoration",
+              "strokePolicy": "optional",
             },
             "type": "path",
           },
@@ -793,6 +945,21 @@ exports[`activity-artist draw repeat 1`] = `
             "attrs": {
               "lineJoin": "round",
               "stroke": "#fdb05e",
+            },
+            "semantic": {
+              "connector": {
+                "compact": true,
+                "endTerminator": {
+                  "kind": "arrow-filled",
+                },
+                "family": "activity-flow",
+                "shaftStyle": "solid",
+                "startTerminator": {
+                  "kind": "none",
+                },
+              },
+              "role": "connector",
+              "strokePolicy": "always",
             },
             "type": "path",
           },
@@ -829,12 +996,31 @@ exports[`activity-artist draw repeat 1`] = `
               "lineCap": "round",
               "stroke": "#fdb05e",
             },
+            "semantic": {
+              "role": "decoration",
+              "strokePolicy": "optional",
+            },
             "type": "path",
           },
           {
             "attrs": {
               "lineJoin": "round",
               "stroke": "#fdb05e",
+            },
+            "semantic": {
+              "connector": {
+                "compact": true,
+                "endTerminator": {
+                  "kind": "arrow-filled",
+                },
+                "family": "activity-flow",
+                "shaftStyle": "solid",
+                "startTerminator": {
+                  "kind": "none",
+                },
+              },
+              "role": "connector",
+              "strokePolicy": "always",
             },
             "type": "path",
           },
@@ -870,6 +1056,10 @@ exports[`activity-artist draw repeat 1`] = `
             "attrs": {
               "lineCap": "round",
               "stroke": "#fdb05e",
+            },
+            "semantic": {
+              "role": "decoration",
+              "strokePolicy": "optional",
             },
             "type": "path",
           },

@@ -36,6 +36,7 @@ import { LayoutEdge, LayoutGraph, LayoutNode, createLayoutGraph, getGraphSplines
 import { getPointsCurvePath, getPointsLinearPath } from '../util/line-util'
 import { makeBounds, tryExpandBounds } from '../util/mark-positioner'
 import { getTextDimensionsInPresicion } from '../util/text'
+import { makeAsciiDecorationSemantic, makeConnectorSemantic } from '../util/connector'
 import { makeTextMark } from './artist-util'
 import { ActivityConf, getConf } from './config'
 import {
@@ -1364,6 +1365,25 @@ type EdgeData = LayoutEdge<{
   isDummyEdge?: boolean
 }>
 
+function getActivityConnectorSemantic(points: { x: number; y: number }[]) {
+  if (model.conf.edgeType === 'curved' || points.length < 2) return null
+
+  const epsilon = 0.001
+  const xs = points.map(point => point.x)
+  const ys = points.map(point => point.y)
+  const isVertical = xs.every(x => Math.abs(x - xs[0]) <= epsilon)
+  const isHorizontal = ys.every(y => Math.abs(y - ys[0]) <= epsilon)
+
+  if (!isVertical && !isHorizontal) return null
+
+  return makeConnectorSemantic({
+    family: 'activity-flow',
+    shaftStyle: 'solid',
+    startTerminator: 'none',
+    endTerminator: 'arrow-filled',
+  })
+}
+
 function drawEdges(parent: Group, g: LayoutGraph) {
   const edgeGroup = makeMark('group', {}, { children: [] })
   const bounds = makeBounds()
@@ -1401,17 +1421,24 @@ function drawEdges(parent: Group, g: LayoutGraph) {
 
     const shouldUseCurvePath = conf.edgeType === 'curved'
     const path = shouldUseCurvePath ? getPointsCurvePath(edge.points) : getPointsLinearPath(edge.points)
+    const connectorSemantic = getActivityConnectorSemantic(edge.points)
 
     const linePath = makeMark('path', {
       path,
       stroke: conf.edgeColor,
       lineJoin: 'round',
     })
+    if (connectorSemantic) {
+      linePath.semantic = connectorSemantic
+    }
     const pointsForDirection = restPoints.slice(-2)
     const arrowRad = calcDirection.apply(null, pointsForDirection)
     const arrowMark = drawArrowTo(lastPoint, 8, arrowRad, {
       color: conf.edgeColor,
     })
+    if (connectorSemantic) {
+      arrowMark.semantic = makeAsciiDecorationSemantic()
+    }
 
     // Find the half-way point
     const labelPoint = edge.labelPoint || getPointAt(edge.points, 0.4, true)

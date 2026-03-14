@@ -507,6 +507,21 @@ exports[`component-artist match example snapshot 1`] = `
               "stroke": "#fdb05e",
             },
             "class": "component__rel-line",
+            "semantic": {
+              "connector": {
+                "compact": true,
+                "endTerminator": {
+                  "kind": "arrow-filled",
+                },
+                "family": "component-relationship",
+                "shaftStyle": "solid",
+                "startTerminator": {
+                  "kind": "none",
+                },
+              },
+              "role": "connector",
+              "strokePolicy": "always",
+            },
             "type": "path",
           },
           {
@@ -540,6 +555,10 @@ exports[`component-artist match example snapshot 1`] = `
             "attrs": {
               "lineCap": "round",
               "stroke": "#fdb05e",
+            },
+            "semantic": {
+              "role": "decoration",
+              "strokePolicy": "optional",
             },
             "type": "path",
           },
@@ -555,6 +574,21 @@ exports[`component-artist match example snapshot 1`] = `
               "stroke": "#fdb05e",
             },
             "class": "component__rel-line",
+            "semantic": {
+              "connector": {
+                "compact": true,
+                "endTerminator": {
+                  "kind": "arrow-filled",
+                },
+                "family": "component-relationship",
+                "shaftStyle": "solid",
+                "startTerminator": {
+                  "kind": "none",
+                },
+              },
+              "role": "connector",
+              "strokePolicy": "always",
+            },
             "type": "path",
           },
           {
@@ -588,6 +622,10 @@ exports[`component-artist match example snapshot 1`] = `
             "attrs": {
               "lineCap": "round",
               "stroke": "#fdb05e",
+            },
+            "semantic": {
+              "role": "decoration",
+              "strokePolicy": "optional",
             },
             "type": "path",
           },
@@ -603,6 +641,21 @@ exports[`component-artist match example snapshot 1`] = `
               "stroke": "#fdb05e",
             },
             "class": "component__rel-line",
+            "semantic": {
+              "connector": {
+                "compact": true,
+                "endTerminator": {
+                  "kind": "arrow-filled",
+                },
+                "family": "component-relationship",
+                "shaftStyle": "solid",
+                "startTerminator": {
+                  "kind": "none",
+                },
+              },
+              "role": "connector",
+              "strokePolicy": "always",
+            },
             "type": "path",
           },
           {
@@ -636,6 +689,10 @@ exports[`component-artist match example snapshot 1`] = `
             "attrs": {
               "lineCap": "round",
               "stroke": "#fdb05e",
+            },
+            "semantic": {
+              "role": "decoration",
+              "strokePolicy": "optional",
             },
             "type": "path",
           },
@@ -655,6 +712,21 @@ exports[`component-artist match example snapshot 1`] = `
               "stroke": "#fdb05e",
             },
             "class": "component__rel-line",
+            "semantic": {
+              "connector": {
+                "compact": true,
+                "endTerminator": {
+                  "kind": "arrow-filled",
+                },
+                "family": "component-relationship",
+                "shaftStyle": "dashed",
+                "startTerminator": {
+                  "kind": "none",
+                },
+              },
+              "role": "connector",
+              "strokePolicy": "always",
+            },
             "type": "path",
           },
           {
@@ -689,6 +761,10 @@ exports[`component-artist match example snapshot 1`] = `
               "lineCap": "round",
               "stroke": "#fdb05e",
             },
+            "semantic": {
+              "role": "decoration",
+              "strokePolicy": "optional",
+            },
             "type": "path",
           },
         ],
@@ -703,6 +779,21 @@ exports[`component-artist match example snapshot 1`] = `
               "stroke": "#fdb05e",
             },
             "class": "component__rel-line",
+            "semantic": {
+              "connector": {
+                "compact": true,
+                "endTerminator": {
+                  "kind": "arrow-filled",
+                },
+                "family": "component-relationship",
+                "shaftStyle": "solid",
+                "startTerminator": {
+                  "kind": "none",
+                },
+              },
+              "role": "connector",
+              "strokePolicy": "always",
+            },
             "type": "path",
           },
           {
@@ -737,6 +828,10 @@ exports[`component-artist match example snapshot 1`] = `
               "lineCap": "round",
               "stroke": "#fdb05e",
             },
+            "semantic": {
+              "role": "decoration",
+              "strokePolicy": "optional",
+            },
             "type": "path",
           },
         ],
@@ -751,6 +846,21 @@ exports[`component-artist match example snapshot 1`] = `
               "stroke": "#fdb05e",
             },
             "class": "component__rel-line",
+            "semantic": {
+              "connector": {
+                "compact": true,
+                "endTerminator": {
+                  "kind": "arrow-filled",
+                },
+                "family": "component-relationship",
+                "shaftStyle": "solid",
+                "startTerminator": {
+                  "kind": "none",
+                },
+              },
+              "role": "connector",
+              "strokePolicy": "always",
+            },
             "type": "path",
           },
           {
@@ -785,6 +895,10 @@ exports[`component-artist match example snapshot 1`] = `
               "lineCap": "round",
               "stroke": "#fdb05e",
             },
+            "semantic": {
+              "role": "decoration",
+              "strokePolicy": "optional",
+            },
             "type": "path",
           },
         ],
@@ -799,6 +913,21 @@ exports[`component-artist match example snapshot 1`] = `
               "stroke": "#fdb05e",
             },
             "class": "component__rel-line",
+            "semantic": {
+              "connector": {
+                "compact": true,
+                "endTerminator": {
+                  "kind": "arrow-filled",
+                },
+                "family": "component-relationship",
+                "shaftStyle": "solid",
+                "startTerminator": {
+                  "kind": "none",
+                },
+              },
+              "role": "connector",
+              "strokePolicy": "always",
+            },
             "type": "path",
           },
           {
@@ -833,6 +962,10 @@ exports[`component-artist match example snapshot 1`] = `
               "lineCap": "round",
               "stroke": "#fdb05e",
             },
+            "semantic": {
+              "role": "decoration",
+              "strokePolicy": "optional",
+            },
             "type": "path",
           },
         ],
@@ -847,6 +980,21 @@ exports[`component-artist match example snapshot 1`] = `
               "stroke": "#fdb05e",
             },
             "class": "component__rel-line",
+            "semantic": {
+              "connector": {
+                "compact": true,
+                "endTerminator": {
+                  "kind": "arrow-filled",
+                },
+                "family": "component-relationship",
+                "shaftStyle": "solid",
+                "startTerminator": {
+                  "kind": "none",
+                },
+              },
+              "role": "connector",
+              "strokePolicy": "always",
+            },
             "type": "path",
           },
           {
@@ -880,6 +1028,10 @@ exports[`component-artist match example snapshot 1`] = `
             "attrs": {
               "lineCap": "round",
               "stroke": "#fdb05e",
+            },
+            "semantic": {
+              "role": "decoration",
+              "strokePolicy": "optional",
             },
             "type": "path",
           },

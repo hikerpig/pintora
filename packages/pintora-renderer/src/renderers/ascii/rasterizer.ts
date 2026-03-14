@@ -1,6 +1,12 @@
 import { charWidth } from './char-width'
+import {
+  getConnectorShaftGlyph,
+  getHorizontalTerminatorGlyph,
+  getVerticalConnectorShaftGlyph,
+  getVerticalTerminatorGlyph,
+} from './connector-glyphs'
 import { TextGrid } from './grid'
-import { DrawOp, RectOp, SegmentOp, TextOp } from './ops'
+import { AsciiLayer, ConnectorOp, DrawOp, RectOp, SegmentOp, TextOp } from './ops'
 import { normalizeDrawOps } from './normalize-ops'
 import { measureAsciiText } from './text-metrics'
 import { resolveTextPlacement } from './text-layout'
@@ -124,6 +130,161 @@ function drawText(grid: TextGrid, op: TextOp, options: RasterizeOptions): void {
   }
 }
 
+function drawGlyphString(grid: TextGrid, col: number, row: number, text: string, priority: number): void {
+  let cursor = col
+  for (const ch of Array.from(text)) {
+    const widthInCells = charWidth(ch)
+    if (widthInCells <= 0) continue
+    grid.setText(cursor, row, ch, priority)
+    if (widthInCells > 1) {
+      for (let i = 1; i < widthInCells; i++) {
+        grid.setTextContinuation(cursor + i, row, priority)
+      }
+    }
+    cursor += widthInCells
+  }
+}
+
+function drawVerticalGlyphString(grid: TextGrid, col: number, row: number, text: string, priority: number): void {
+  let cursor = row
+  for (const ch of Array.from(text)) {
+    const widthInCells = charWidth(ch)
+    if (widthInCells <= 0) continue
+    grid.setText(col, cursor, ch, priority)
+    cursor += 1
+  }
+}
+
+function drawHorizontalCompactConnector(grid: TextGrid, op: ConnectorOp, options: RasterizeOptions): boolean {
+  const connector = op.semantic.connector
+  const glyph = getConnectorShaftGlyph(connector, options.charset)
+  if (!glyph) return false
+
+  const start = lineToGrid(op.points[0], options)
+  const end = lineToGrid(op.points[op.points.length - 1], options)
+  if (start.row !== end.row) return false
+
+  const row = start.row
+  const leftCol = Math.min(start.col, end.col)
+  const rightCol = Math.max(start.col, end.col)
+  const direction = end.col >= start.col ? 'right' : 'left'
+
+  const startGlyph = getHorizontalTerminatorGlyph(connector.startTerminator?.kind || 'none', 'left', options.charset)
+  const endGlyph = getHorizontalTerminatorGlyph(connector.endTerminator?.kind || 'none', 'right', options.charset)
+  if (startGlyph == null || endGlyph == null) return false
+
+  const startReserved = Array.from(startGlyph).reduce((sum, ch) => sum + Math.max(1, charWidth(ch)), 0)
+  const endReserved = Array.from(endGlyph).reduce((sum, ch) => sum + Math.max(1, charWidth(ch)), 0)
+
+  const shaftStartCol = leftCol + startReserved
+  const shaftEndCol = rightCol - endReserved
+
+  if (startGlyph) {
+    drawGlyphString(grid, leftCol, row, startGlyph, AsciiLayer.MARKERS)
+  }
+  if (endGlyph) {
+    drawGlyphString(grid, rightCol - endReserved + 1, row, endGlyph, AsciiLayer.MARKERS)
+  }
+
+  for (let col = shaftStartCol; col <= shaftEndCol; col++) {
+    grid.setText(col, row, glyph, op.layer)
+  }
+
+  if (direction === 'left') {
+    const leftFacingStart = getHorizontalTerminatorGlyph(
+      connector.startTerminator?.kind || 'none',
+      'right',
+      options.charset,
+    )
+    const leftFacingEnd = getHorizontalTerminatorGlyph(connector.endTerminator?.kind || 'none', 'left', options.charset)
+    if (leftFacingStart == null || leftFacingEnd == null) return false
+    grid.clearRect(leftCol, row, rightCol, row, AsciiLayer.MARKERS)
+    const leftEndReserved = Array.from(leftFacingEnd).reduce((sum, ch) => sum + Math.max(1, charWidth(ch)), 0)
+    const rightStartReserved = Array.from(leftFacingStart).reduce((sum, ch) => sum + Math.max(1, charWidth(ch)), 0)
+    if (leftFacingEnd) drawGlyphString(grid, leftCol, row, leftFacingEnd, AsciiLayer.MARKERS)
+    if (leftFacingStart)
+      drawGlyphString(grid, rightCol - rightStartReserved + 1, row, leftFacingStart, AsciiLayer.MARKERS)
+    for (let col = leftCol + leftEndReserved; col <= rightCol - rightStartReserved; col++) {
+      grid.setText(col, row, glyph, op.layer)
+    }
+  }
+
+  return true
+}
+
+function drawConnectorFallback(grid: TextGrid, op: ConnectorOp, options: RasterizeOptions): void {
+  for (let i = 1; i < op.points.length; i++) {
+    drawSegment(
+      grid,
+      {
+        kind: 'segment',
+        p0: op.points[i - 1],
+        p1: op.points[i],
+        layer: op.layer,
+        semantic: op.semantic,
+      },
+      options,
+    )
+  }
+}
+
+function drawVerticalCompactConnector(grid: TextGrid, op: ConnectorOp, options: RasterizeOptions): boolean {
+  const connector = op.semantic.connector
+  const glyph = getVerticalConnectorShaftGlyph(connector, options.charset)
+  if (!glyph) return false
+  const start = lineToGrid(op.points[0], options)
+  const end = lineToGrid(op.points[op.points.length - 1], options)
+  if (start.col !== end.col) return false
+
+  const col = start.col
+  const topRow = Math.min(start.row, end.row)
+  const bottomRow = Math.max(start.row, end.row)
+  const startIsTop = start.row <= end.row
+
+  const topGlyph = getVerticalTerminatorGlyph(
+    startIsTop ? connector.startTerminator?.kind || 'none' : connector.endTerminator?.kind || 'none',
+    'up',
+    options.charset,
+  )
+  const bottomGlyph = getVerticalTerminatorGlyph(
+    startIsTop ? connector.endTerminator?.kind || 'none' : connector.startTerminator?.kind || 'none',
+    'down',
+    options.charset,
+  )
+  if (topGlyph == null || bottomGlyph == null) return false
+
+  const topReserved = Array.from(topGlyph).length
+  const bottomReserved = Array.from(bottomGlyph).length
+
+  if (topGlyph) {
+    drawVerticalGlyphString(grid, col, topRow, topGlyph, AsciiLayer.MARKERS)
+  }
+  if (bottomGlyph) {
+    drawVerticalGlyphString(grid, col, bottomRow - bottomReserved + 1, bottomGlyph, AsciiLayer.MARKERS)
+  }
+
+  for (let row = topRow + topReserved; row <= bottomRow - bottomReserved; row++) {
+    grid.setText(col, row, glyph, op.layer)
+  }
+
+  return true
+}
+
+function drawConnector(grid: TextGrid, op: ConnectorOp, options: RasterizeOptions): void {
+  const start = lineToGrid(op.points[0], options)
+  const end = lineToGrid(op.points[op.points.length - 1], options)
+
+  if (op.semantic.connector.compact && start.row === end.row && drawHorizontalCompactConnector(grid, op, options)) {
+    return
+  }
+
+  if (op.semantic.connector.compact && start.col === end.col && drawVerticalCompactConnector(grid, op, options)) {
+    return
+  }
+
+  drawConnectorFallback(grid, op, options)
+}
+
 export function rasterize(ops: DrawOp[], options: RasterizeOptions): TextGrid {
   const grid = new TextGrid(options.cols, options.rows, options.charset, options.trimRight)
   const normalized = normalizeDrawOps(ops, {
@@ -138,6 +299,10 @@ export function rasterize(ops: DrawOp[], options: RasterizeOptions): TextGrid {
     }
     if (op.kind === 'rect') {
       drawRect(grid, op, options)
+      continue
+    }
+    if (op.kind === 'connector') {
+      drawConnector(grid, op, options)
       continue
     }
     drawText(grid, op, options)

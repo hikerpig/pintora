@@ -116,4 +116,73 @@ describe('sequence-artist', () => {
 
     expect(minDistance).toBeLessThan(2)
   })
+
+  it.each([
+    [
+      'filled solid arrow',
+      `
+    sequenceDiagram
+      A->>B: sync
+    `,
+      {
+        shaftStyle: 'solid',
+        endTerminator: { kind: 'arrow-filled' },
+      },
+    ],
+    [
+      'filled dashed arrow',
+      `
+    sequenceDiagram
+      A-->>B: return
+    `,
+      {
+        shaftStyle: 'dashed',
+        endTerminator: { kind: 'arrow-filled' },
+      },
+    ],
+    [
+      'open arrow',
+      `
+    sequenceDiagram
+      A-)B: async
+    `,
+      {
+        shaftStyle: 'solid',
+        endTerminator: { kind: 'arrow-open' },
+      },
+    ],
+    [
+      'cross arrow',
+      `
+    sequenceDiagram
+      A--xB: stop
+    `,
+      {
+        shaftStyle: 'dashed',
+        endTerminator: { kind: 'cross' },
+      },
+    ],
+  ])('annotates sequence message shaft with connector semantics for %s', (_name, code, expected) => {
+    const result = testDraw(code)
+    const root = result.graphicIR.mark as pintora.Group
+    const messageGroup = root.children.find(mark => mark.type === 'group' && mark.class === 'sequence__message')
+    expect(messageGroup).toBeTruthy()
+    if (!messageGroup || messageGroup.type !== 'group') return
+
+    const lineMark = messageGroup.children.find(
+      mark => (mark.type === 'line' || mark.type === 'path') && mark.class === 'sequence__message__line',
+    ) as pintora.Line | pintora.Path | undefined
+
+    expect(lineMark?.semantic).toMatchObject({
+      role: 'connector',
+      strokePolicy: 'always',
+      connector: {
+        family: 'sequence-message',
+        compact: true,
+        shaftStyle: expected.shaftStyle,
+        startTerminator: { kind: 'none' },
+        endTerminator: expected.endTerminator,
+      },
+    })
+  })
 })

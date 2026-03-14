@@ -110,4 +110,29 @@ erDiagram
       strokePolicy: 'always',
     })
   })
+
+  it('marks relationship shaft with semantic connector metadata for cardinality rendering', () => {
+    const code = `
+erDiagram
+  A ||--o{ B : has
+    `
+
+    const { graphicIR } = testDraw(code)
+    const relationsGroup = (graphicIR.mark as Group).children.find(
+      child => child.type === 'group' && child.class === 'er__relations',
+    ) as Group | undefined
+    const relationPath = relationsGroup?.children.find(child => child.type === 'path') as pintora.Path | undefined
+
+    expect(relationPath?.semantic).toMatchObject({
+      role: 'connector',
+      strokePolicy: 'always',
+      connector: {
+        family: 'er-relationship',
+        compact: true,
+        shaftStyle: 'solid',
+        startTerminator: { kind: 'er-only-one' },
+        endTerminator: { kind: 'er-zero-or-more' },
+      },
+    })
+  })
 })

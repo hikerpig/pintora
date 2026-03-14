@@ -63,4 +63,51 @@ describe('component-artist', () => {
     expect(lineMarks[0].attrs.path).toBeTruthy()
     expect(lineMarks[0].attrs.path.length).toBeGreaterThan(0)
   })
+
+  it.each([
+    [
+      'solid arrow',
+      `
+      componentDiagram
+      [A] --> [B] : use
+      `,
+      {
+        shaftStyle: 'solid',
+        startTerminator: { kind: 'none' },
+        endTerminator: { kind: 'arrow-filled' },
+      },
+    ],
+    [
+      'dotted reversed arrow',
+      `
+      componentDiagram
+      [A] <.. [B] : use
+      `,
+      {
+        shaftStyle: 'dashed',
+        startTerminator: { kind: 'arrow-filled' },
+        endTerminator: { kind: 'none' },
+      },
+    ],
+  ])('marks component relationship shaft with connector semantics for %s', (_name, code, expected) => {
+    const result = testDraw(code)
+    const relGroup = result.graphicIR.mark.children.find(
+      child => child.type === 'group' && child.children?.some(grandChild => grandChild.class === 'component__rel-line'),
+    )
+    expect(relGroup).toBeTruthy()
+    if (!relGroup || relGroup.type !== 'group') return
+
+    const lineMark = relGroup.children.find(child => child.class === 'component__rel-line')
+    expect(lineMark?.semantic).toMatchObject({
+      role: 'connector',
+      strokePolicy: 'always',
+      connector: {
+        family: 'component-relationship',
+        compact: true,
+        shaftStyle: expected.shaftStyle,
+        startTerminator: expected.startTerminator,
+        endTerminator: expected.endTerminator,
+      },
+    })
+  })
 })

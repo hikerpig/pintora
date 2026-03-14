@@ -43,6 +43,24 @@ describe('ascii-renderer-cases', () => {
       expect(dividerLine).not.toMatch(/[─-]Divider|Divider[─-]/)
       expect(dividerLine).toMatch(/[│|] Divider\s+[│|]/)
     })
+
+    it('renders compact glyph variants for filled, dashed, and open arrows', () => {
+      const code = `
+      sequenceDiagram
+        A->>B: Solid arrow
+        B-->>A: Dashed arrow
+        A-)B: Open arrow
+        B--)A: Open dashed arrow
+      `
+
+      const text = renderToAscii(code)
+      const compact = text.replace(/\s/g, '')
+
+      expect(compact).toContain('▶')
+      expect(compact).toContain('▷')
+      expect(compact).toContain('╌')
+      expect(compact).toContain('◁')
+    })
   })
 
   describe('class diagram', () => {
@@ -109,6 +127,61 @@ classDiagram
       expect(sweetnessLine).not.toMatch(hasHorizontalBorder)
       expect(ageLine).not.toMatch(hasHorizontalBorder)
       expect(methodLine).not.toMatch(hasHorizontalBorder)
+    })
+  })
+
+  describe('component diagram', () => {
+    it('renders compact arrow markers for component relationships', () => {
+      const code = `
+componentDiagram
+  [A] --> [B] : solid
+  [B] ..> [C] : dotted
+  [A] <.. [C] : reverse
+      `
+
+      const text = renderToAscii(code)
+      const compact = text.replace(/\s/g, '')
+
+      expect(compact).toMatch(/[▶◀▼▲]/)
+      expect(compact).toMatch(/[╌╎]/)
+    })
+
+    it('points component dependency arrows toward the implemented interface inside packages', () => {
+      const code = `
+componentDiagram
+  package "@pintora/core" {
+    () IDiagram
+  }
+  package "@pintora/diagrams" {
+    [...Multiple Diagrams...] as diagrams
+    [diagrams] --> IDiagram : implements
+  }
+      `
+
+      const text = renderToAscii(code)
+      const compact = text.replace(/\s/g, '')
+
+      expect(compact).toContain('implements')
+      expect(compact).toContain('▼')
+      expect(compact).not.toContain('▲')
+    })
+  })
+
+  describe('activity diagram', () => {
+    it('renders compact arrow markers for straight activity flows', () => {
+      const code = `
+activityDiagram
+  start
+  :Do work;
+  stop
+      `
+
+      const text = renderToAscii(code)
+      const compact = text.replace(/\s/g, '')
+
+      expect(compact).toContain('Do work'.replace(/\s/g, ''))
+      expect(compact).toContain('▼')
+      expect(compact).not.toContain('▲')
     })
   })
 
@@ -179,6 +252,44 @@ erDiagram
       const separatorLine = lines[orderNumberLineIndex - 1]
       expect(separatorLine).toContain('---')
       expect(separatorLine).not.toContain('ORDER')
+    })
+
+    it('renders compact cardinality markers instead of flattened path noise', () => {
+      const code = `
+erDiagram
+  @param {
+    layoutDirection LR
+  }
+  A ||--|| B : r1
+  C ||--o{ D : r2
+  E |o--|{ F : r3
+  G }|--o{ H : r4
+      `
+
+      const text = renderToAscii(code)
+      const compact = text.replace(/\s/g, '')
+
+      expect(compact).toContain('○')
+      expect(compact).toContain('╟')
+      expect(compact).toContain('╢')
+      expect(compact).not.toContain('╳')
+    })
+
+    it('renders compact cardinality markers for TD layout too', () => {
+      const code = `
+erDiagram
+  A ||--|| B : r1
+  C ||--o{ D : r2
+  E |o--|{ F : r3
+  G }|--o{ H : r4
+      `
+
+      const text = renderToAscii(code)
+      const compact = text.replace(/\s/g, '')
+
+      expect(compact).toContain('○')
+      expect(compact).toMatch(/[╤╧]/)
+      expect(compact).not.toContain('╳')
     })
   })
 })

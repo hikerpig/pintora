@@ -36,6 +36,7 @@ import { getPointsCurvePath, getPointsLinearPath } from '../util/line-util'
 import { DagreWrapper } from '../util/dagre-wrapper'
 import { getFontConfig } from '../util/font-config'
 import { BaseArtist } from '../util/base-artist'
+import { makeAsciiDecorationSemantic, makeConnectorSemantic } from '../util/connector'
 
 let conf: ComponentConf
 let fontConfig: IFont
@@ -66,6 +67,21 @@ type SkippedEdgeData = {
   relText?: Text
   relTextBg?: Rect
   labelDims?: TSize
+}
+
+function getComponentConnectorSemantic(relationship: Relationship) {
+  const shaftStyle = relationship.line.lineType === LineType.DOTTED_ARROW || relationship.line.lineType === LineType.DOTTED
+    ? 'dashed'
+    : 'solid'
+  const hasArrow = relationship.line.lineType === LineType.SOLID_ARROW || relationship.line.lineType === LineType.DOTTED_ARROW
+  const isReversed = !!relationship.line.isReversed
+
+  return makeConnectorSemantic({
+    family: 'component-relationship',
+    shaftStyle,
+    startTerminator: hasArrow && isReversed ? 'arrow-filled' : 'none',
+    endTerminator: hasArrow && !isReversed ? 'arrow-filled' : 'none',
+  })
 }
 
 type NodeExtra = {
@@ -125,12 +141,16 @@ function applyEdgeLayout(params: {
 
   // Draw arrow if needed
   if (shouldDrawArrow) {
-    const lastPoint = points[points.length - 1]
-    const pointsForDirection = points.slice(-2)
+    const isReversed = params.lineMark.semantic?.connector
+      ? params.lineMark.semantic.connector.startTerminator?.kind === 'arrow-filled'
+      : false
+    const lastPoint = isReversed ? points[0] : points[points.length - 1]
+    const pointsForDirection = isReversed ? [points[1], points[0]] : points.slice(-2)
     const arrowRad = calcDirection.apply(null, pointsForDirection)
     const arrowMark = drawArrowTo(lastPoint, 8, arrowRad, {
       color: conf.relationLineColor,
     })
+    arrowMark.semantic = makeAsciiDecorationSemantic()
     relationGroupMark.children.push(arrowMark)
   }
 }
@@ -505,7 +525,10 @@ function drawRelationshipsTo(parentMark: Group, ir: ComponentDiagramIR, g: Layou
         stroke: conf.relationLineColor,
         lineCap: 'round',
       },
-      { class: 'component__rel-line' },
+      {
+        class: 'component__rel-line',
+        semantic: getComponentConnectorSemantic(r),
+      },
     )
     if ([LineType.DOTTED_ARROW, LineType.DOTTED].includes(r.line.lineType)) {
       lineMark.attrs.lineDash = [4, 4]

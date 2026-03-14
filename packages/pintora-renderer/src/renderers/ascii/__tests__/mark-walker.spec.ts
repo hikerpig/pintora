@@ -55,4 +55,37 @@ describe('mark walker', () => {
     expect(ops.some(op => op.kind === 'segment')).toBe(true)
     expect(ops.some(op => op.kind === 'text')).toBe(true)
   })
+
+  it('collects semantic connector marks as connector ops', () => {
+    const mark: Group = {
+      type: 'group',
+      children: [
+        {
+          type: 'line',
+          attrs: { x1: 0, y1: 16, x2: 64, y2: 16 },
+          semantic: {
+            role: 'connector',
+            strokePolicy: 'always',
+            connector: {
+              family: 'sequence-message',
+              compact: true,
+              shaftStyle: 'solid',
+              startTerminator: { kind: 'none' },
+              endTerminator: { kind: 'arrow-filled' },
+            },
+          } as any,
+        } as any,
+      ],
+    }
+
+    const ops = collectDrawOps(mark, IDENTITY_MATRIX)
+    const connectorOp = ops.find((op: any) => op.kind === 'connector') as any
+
+    expect(connectorOp).toBeTruthy()
+    expect(connectorOp.semantic.connector.endTerminator.kind).toBe('arrow-filled')
+    expect(connectorOp.points).toEqual([
+      { x: 0, y: 16 },
+      { x: 64, y: 16 },
+    ])
+  })
 })

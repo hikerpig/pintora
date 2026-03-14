@@ -12,6 +12,7 @@
 - **Character Conflict Resolution**: Line intersection points (junctions) require intelligent character merging (e.g., `─` + `│` → `┼`).
 - **CJK Wide Character Alignment**: Chinese and other wide characters display with width 2 in monospace fonts, requiring special handling to ensure text alignment.
 - **Geometric Dimensionality Reduction Distortion**: Converting 2D graphics to character grids inevitably involves precision loss, requiring controllable degradation strategies.
+- **Connector Endpoint Semantics**: Arrows and ER cardinality markers carry meaning at connector endpoints; once flattened into generic segments, distinctions such as filled/open/dashed arrows or crow-foot cardinalities are lost.
 
 ### 1.3 Text Layout Alignment Problem
 A specific class of rendering failures occurred in sequence diagrams and class diagrams where centered or middle-aligned labels overlapped with their container borders or divider lines:
@@ -62,6 +63,40 @@ Issues:
 3. Snap shared container borders collaboratively so adjacent cells still share one border line
 4. Use renderer-side repairs only as explicit, low-level capabilities, not as broad heuristics
 
+### 1.5 Connector Marker Distortion
+Another regression class appeared once the ASCII renderer started covering more real diagrams: sequence arrowheads and ER cardinality markers were being emitted by artists as plain geometric `path` / grouped marks, then rasterized like generic strokes.
+
+Representative examples:
+
+```text
+sequenceDiagram
+  A->>B: solid
+  B-->>A: dashed
+  A-)B: open
+```
+
+```text
+erDiagram
+  A ||--o{ B : one-to-many
+  C }|--o{ D : many-to-many
+```
+
+Issues:
+- sequence `->>`, `-->>`, `-)`, `--)`, `--x` could collapse into almost the same shaft+noise output
+- ER `o|`, `|{`, `}|`, `o{` markers were approximated as circles/curves/lines, which produced unreadable clutter on a text grid
+- fixing this by “sampling paths better” still did not solve the core problem: the renderer needed to know marker meaning, not just marker geometry
+
+**Root Cause**:
+- artist output encoded connector meaning only in geometry, not in semantics
+- `mark-walker` flattened those geometric marks too early, so the ASCII renderer had no way to distinguish shaft from endpoint marker
+- `AsciiLayer.MARKERS` existed conceptually, but there was no dedicated connector op or glyph registry to consume it
+
+**Refined Direction**:
+1. Put connector semantics on the shaft mark, not on the sampled marker geometry
+2. Keep existing SVG/Canvas marker geometry as fallback, but mark it as optional decoration for ASCII
+3. Let ASCII collect a dedicated `ConnectorOp` and render compact endpoint glyph templates directly
+4. Support horizontal and vertical compact rendering separately; if a connector does not normalize to a stable axis-aligned span, fall back to geometric rasterization
+
 ---
 
 ## 2. Design Goals
@@ -83,7 +118,7 @@ Rewrite `AsciiRenderer` based on `GraphicsIR` to provide stable Unicode/ASCII pl
 Adopt a **layered pipeline** architecture:
 
 ```
-Graphics IR → IR Normalization → Path Flattening → Grid Rasterization → Layer Composition → Text Output
+Graphics IR → Semantic Op Collection → IR Normalization → Grid Rasterization → Layer Composition → Text Output
 ```
 
 ### 3.2 Key Components
@@ -93,8 +128,9 @@ Graphics IR → IR Normalization → Path Flattening → Grid Rasterization → 
 | **TextGrid** | 2D character buffer + layer priority buffer | `grid.ts` - `TextGrid` class |
 | **GlyphResolver** | Select Unicode box-drawing characters (`─│┌┐└┘├┤┬┴┼`) based on adjacency direction bitmask; use `/\` for diagonals | `glyph.ts` - `resolveLineGlyph()`, `mergeGlyph()` functions |
 | **PathFlattener** | Discretize `path` (array/string) into line segment collections; sample curves/arcs with adaptive step intervals | `path-flattener.ts` - `flattenPath()` function |
+| **ConnectorGlyphRegistry** | Map semantic connector terminators to compact horizontal/vertical glyph templates for Unicode and ASCII charsets | `connector-glyphs.ts` |
 | **TextPlacer** | Place text according to `textAlign`/`textBaseline`, handling CJK wide character widths | `text-layout.ts` - `resolveTextPlacement()` function |
-| **MarkWalker** | Traverse `GraphicsIR`, normalize various Marks (rect/line/poly/path/text/group) into standard draw operations | `mark-walker.ts` - `collectDrawOps()` function |
+| **MarkWalker** | Traverse `GraphicsIR`, normalize various Marks (rect/line/poly/path/text/group) into standard draw operations, including semantic connectors | `mark-walker.ts` - `collectDrawOps()` function |
 | **Normalizer** | Normalize text placement to avoid separator lines, clamp text inside containers | `normalize-ops.ts` - `normalizeDrawOps()` function |
 | **TextMetrics** | Calculate text dimensions and line breaks for ASCII grid | `text-metrics.ts` - `measureAsciiText()` function |
 
@@ -102,7 +138,7 @@ Graphics IR → IR Normalization → Path Flattening → Grid Rasterization → 
 Fixed layer ordering to avoid accidental overwrites:
 1. **Background/Fill** (layer 1)
 2. **Borders/Lines** (layer 2)
-3. **Arrows/Markers** (layer 3) - *reserved for future use*
+3. **Arrows/Markers** (layer 3)
 4. **Text** (layer 4, highest priority)
 
 ### 3.4 Three-Layer Rendering Contract
@@ -115,6 +151,7 @@ Emits geometry plus semantic intent. Marks declare whether they are:
 - Decorative underlines (can be omitted in low-fidelity renderers)
 - Text backdrops (clear lower content, provide contrast)
 - Containers (define inner content areas with border boundaries)
+- Connectors (shaft style plus endpoint terminator semantics)
 
 #### 2. Normalization Layer
 Preserves semantic intent into renderer-facing operations instead of flattening everything into generic lines too early.
@@ -133,6 +170,7 @@ Applies renderer-specific fidelity rules:
 - Whether a backdrop clears lower content (`occludesBelow`)
 - Whether an optional stroke is visible in ASCII (`strokePolicy`)
 - How text anchor semantics snap to the character grid
+- How semantic connectors are turned into compact endpoint glyph templates or geometric fallback
 
 This separation is critical because earlier renderer-only fixes failed by mixing semantic interpretation and final draw-time collision avoidance together.
 
@@ -157,13 +195,30 @@ This separation is critical because earlier renderer-only fixes failed by mixing
 The renderer respects `MarkSemantic` annotations from `GraphicsIR`:
 
 ```typescript
-type MarkSemanticRole = 'container' | 'backdrop' | 'separator' | 'decoration'
+type MarkSemanticRole = 'container' | 'backdrop' | 'separator' | 'decoration' | 'connector'
 type MarkStrokePolicy = 'always' | 'optional' | 'none'
+
+type ConnectorTerminatorKind =
+  | 'none'
+  | 'arrow-filled'
+  | 'arrow-open'
+  | 'cross'
+  | 'er-only-one'
+  | 'er-zero-or-one'
+  | 'er-one-or-more'
+  | 'er-zero-or-more'
 
 interface MarkSemantic {
   role?: MarkSemanticRole
   occludesBelow?: boolean  // Clears lower-layer content (for backdrop)
   strokePolicy?: MarkStrokePolicy  // Controls stroke rendering
+  connector?: {
+    family: 'sequence-message' | 'er-relationship'
+    compact: boolean
+    shaftStyle: 'solid' | 'dashed'
+    startTerminator?: { kind: ConnectorTerminatorKind }
+    endTerminator?: { kind: ConnectorTerminatorKind }
+  }
 }
 ```
 
@@ -175,6 +230,7 @@ interface MarkSemantic {
 | **backdrop** | Background area that may occlude content below | Label backgrounds, section backgrounds, divider label boxes |
 | **separator** | Horizontal/vertical dividing line | Class section separators, ER header/body separator |
 | **decoration** | Visual accent that can be omitted in low-fidelity | Static member underlines |
+| **connector** | A semantic shaft whose endpoints carry marker meaning | Sequence messages, ER relationships |
 
 #### Semantic Behaviors
 
@@ -182,6 +238,8 @@ interface MarkSemantic {
 - **container**: In ASCII normalization, container rects may be grid-fit outward; shared borders between neighboring containers are unified onto one snapped grid line
 - **backdrop**: Clears content below when `occludesBelow: true`
 - **separator**: Horizontal lines that text should avoid overlapping; snapped to stable grid positions
+- **connector**: May bypass generic path flattening and instead become a dedicated `ConnectorOp`
+- **connector**: ASCII can render compact endpoint glyphs such as `▶`, `▷`, `○╟`, `╢`, `╤`, `╧`
 - **strokePolicy**: 
   - `'none'` or `'optional'` strokes are skipped in ASCII output
   - `'always'` strokes are preserved even in low-fidelity renderers
@@ -199,7 +257,21 @@ To reduce post-layout patching, ASCII applies semantic-aware normalization befor
 
 This keeps rules generic and semantic-driven instead of class-name driven.
 
-### 4.5 Conflict Resolution Principle
+### 4.5 Semantic Connector Rendering
+
+When a shaft mark carries connector semantics, the ASCII pipeline now treats it differently from plain geometry:
+
+1. `mark-walker` emits a `ConnectorOp` instead of flattening the shaft into ordinary segments
+2. `rasterizer` checks whether the connector normalizes to a stable horizontal or vertical span
+3. If stable, it reserves endpoint cells/rows and writes compact glyph templates directly
+4. If unstable, it falls back to geometric segment rasterization
+
+Current compact coverage:
+- **Sequence**: filled/open arrows, dashed shafts, cross ends
+- **ER LR**: `│`, `○│`, `╟`, `╢`, `○╟`, `○╢`
+- **ER TD**: `─`, `○─`, `╤`, `╧`, `○╤`, `○╧`
+
+### 4.6 Conflict Resolution Principle
 
 The later ER fixes clarified an important rule: collision handling should be split between **semantic layout intent**, **renderer-specific normalization**, and **draw-time repair**.
 
@@ -211,13 +283,24 @@ This avoids two fragile patterns:
 - mutating base diagram layout just to satisfy one renderer
 - renderer-side line clearing that makes one row look correct while destroying adjacent semantic structure
 
-### 4.6 Degradation Strategy
+### 4.7 Degradation Strategy
 - Complex Bezier curves, cloud shapes, and other non-exactly-reproducible shapes: approximate with discrete line segments
+- Semantic connectors that do not normalize to a stable horizontal or vertical span: fall back to geometric segment rasterization
 - If discretization fails: fall back to bounding box outline while preserving text
 
-### 4.7 CJK Wide Character Support
+### 4.8 CJK Wide Character Support
 - Use `wcwidth`-like logic for CJK wide characters (display width = 2)
 - Ensure mixed Chinese/English text alignment without label drift
+
+### 4.9 Connector Lessons Learned
+
+The connector work exposed a few practical rules that are easy to forget:
+
+1. **Do not “improve” marker fidelity by sampling paths more densely**. That only makes ASCII output noisier if the renderer still does not know the marker's meaning.
+2. **Put semantics on the shaft, not on the endpoint geometry**. The shaft already owns routing and direction; it is the only stable place to attach endpoint intent.
+3. **Keep geometric markers for SVG/Canvas, but mark them as optional decoration for ASCII**. Otherwise ASCII renders both the compact glyph and the old geometry on top of each other.
+4. **Horizontal and vertical compact rendering need separate template sets**. The LR solution does not automatically handle TD layouts.
+5. **Role labels and marker cells compete for the same compact area**. Short labels are fine in regression tests, but real diagrams may still need future spacing policies if labels are extremely close to connector ends.
 
 ---
 
@@ -259,6 +342,8 @@ core: {
 - **Wide Character Alignment**: `wcwidth` wide character alignment correct (mixed Chinese/English labels don't drift)
 - **Path Flattening**: Minimum viable coverage for `M/L/A/C/Q/Z` path commands
 - **Grid Rasterization**: Corners, cross intersections, diagonals, text overlay priority
+- **Connector Glyph Mapping**: Horizontal and vertical compact glyph templates for sequence arrows and ER cardinality markers
+- **Connector Fallback**: Non-axis-aligned semantic connectors fall back to geometric rasterization
 
 ### 6.2 Integration Testing
 - `renderTo(..., { renderer: 'ascii' })` generates `<pre>` and `getTextContent()` is non-empty
@@ -300,6 +385,25 @@ Assertions:
 - Entity title row is not pierced by horizontal border glyphs
 - The header/body separator row still exists and is not mistakenly removed by title-related repairs
 - Adjacent attribute cells do not produce doubled shared borders such as `||` or `++`
+
+**ER Cardinality Markers:**
+```text
+erDiagram
+  @param {
+    layoutDirection LR
+  }
+  A ||--o{ B : r
+```
+
+```text
+erDiagram
+  A ||--o{ B : r
+```
+
+Assertions:
+- LR layout renders compact horizontal marker glyphs such as `○╟`, `╢`
+- TD layout renders compact vertical marker glyphs such as `○╤`, `╧`
+- Both layouts avoid falling back to distorted curve/cross noise for supported cardinalities
 
 ### 6.6 Test Debugging Workflow
 

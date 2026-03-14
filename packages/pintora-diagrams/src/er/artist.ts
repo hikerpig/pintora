@@ -31,10 +31,28 @@ import { toFixed } from '../util/number'
 import { getTextDimensionsInPresicion } from '../util/text'
 import { CELL_ORDER, CellName, drawMarkerTo, TableBuilder, TableCell, TableRow } from './artist-util'
 import { ErConf, getConf } from './config'
-import { Entity, ErDiagramIR, Identification, Relationship } from './db'
+import { Cardinality, Entity, ErDiagramIR, Identification, Relationship } from './db'
 import { BaseArtist } from '../util/base-artist'
+import { makeConnectorSemantic } from '../util/connector'
 
 let conf: ErConf
+
+function cardinalityToConnectorKind(
+  cardinality: Cardinality,
+): 'er-only-one' | 'er-zero-or-one' | 'er-one-or-more' | 'er-zero-or-more' {
+  switch (cardinality) {
+    case Cardinality.ZERO_OR_ONE:
+      return 'er-zero-or-one'
+    case Cardinality.ZERO_OR_MORE:
+      return 'er-zero-or-more'
+    case Cardinality.ONE_OR_MORE:
+    case Cardinality.MORE:
+      return 'er-one-or-more'
+    case Cardinality.ONLY_ONE:
+    default:
+      return 'er-only-one'
+  }
+}
 
 class ErArtist extends BaseArtist<ErDiagramIR, ErConf> {
   customDraw(ir: ErDiagramIR, config?: ErConf, opts?: DiagramArtistOptions): GraphicsIR {
@@ -499,7 +517,15 @@ const drawRelationshipFromLayout = function (group: Group, rel: Relationship, g:
       stroke: conf.edgeColor,
       lineJoin: 'round',
     },
-    { itemId },
+    {
+      itemId,
+      semantic: makeConnectorSemantic({
+        family: 'er-relationship',
+        shaftStyle: rel.relSpec.relType === Identification.NON_IDENTIFYING ? 'dashed' : 'solid',
+        startTerminator: cardinalityToConnectorKind(rel.relSpec.cardB),
+        endTerminator: cardinalityToConnectorKind(rel.relSpec.cardA),
+      }),
+    },
   )
 
   // with dashes if necessary

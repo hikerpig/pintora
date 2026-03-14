@@ -96,4 +96,34 @@ describe('activity-artist', () => {
     const result = testDraw(code)
     expect(result.graphicIR.mark).toBeTruthy()
   }, 1000) // 1s timeout
+
+  it('marks straight activity flow shafts with connector semantics', () => {
+    const code = stripStartEmptyLines(`
+    activityDiagram
+    start
+    :Do work;
+    stop
+    `)
+
+    const result = testDraw(code)
+    const connectors: any[] = []
+    traverseGraphicsIR(result.graphicIR, mark => {
+      if (mark.semantic?.role === 'connector' && mark.semantic.connector?.family === 'activity-flow') {
+        connectors.push(mark)
+      }
+    })
+
+    expect(connectors.length).toBeGreaterThan(0)
+    expect(connectors[0].semantic).toMatchObject({
+      role: 'connector',
+      strokePolicy: 'always',
+      connector: {
+        family: 'activity-flow',
+        compact: true,
+        shaftStyle: 'solid',
+        startTerminator: { kind: 'none' },
+        endTerminator: { kind: 'arrow-filled' },
+      },
+    })
+  })
 })

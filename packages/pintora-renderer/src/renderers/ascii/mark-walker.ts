@@ -1,6 +1,6 @@
 import { Mark } from '@pintora/core'
 import { flattenPath } from './path-flattener'
-import { DrawOp, RectOp, SegmentOp, TextOp, AsciiLayer, ShapeLayer } from './ops'
+import { ConnectorOp, DrawOp, RectOp, SegmentOp, TextOp, AsciiLayer, ShapeLayer } from './ops'
 import { IDENTITY_MATRIX, Matrix, Point } from './types'
 
 function multiplyMat3(a: Matrix, b: Matrix): Matrix {
@@ -53,6 +53,17 @@ function addPolyline(
   if (close && points.length > 2) {
     addSegment(ops, points[points.length - 1], points[0], layer, semantic)
   }
+}
+
+function addConnector(ops: DrawOp[], points: Point[], semantic: ConnectorOp['semantic']): void {
+  if (points.length < 2) return
+  const op: ConnectorOp = {
+    kind: 'connector',
+    points,
+    layer: AsciiLayer.LINES,
+    semantic,
+  }
+  ops.push(op)
 }
 
 function sampleCircle(cx: number, cy: number, r: number, matrix: Matrix): Point[] {
@@ -128,18 +139,24 @@ function collect(mark: Mark, parentMatrix: Matrix, ops: DrawOp[]): void {
 
   if (mark.type === 'line') {
     const attrs = mark.attrs
-    addSegment(
-      ops,
+    const points = [
       transformPoint({ x: attrs.x1, y: attrs.y1 }, matrix),
       transformPoint({ x: attrs.x2, y: attrs.y2 }, matrix),
-      AsciiLayer.LINES,
-      mark.semantic,
-    )
+    ]
+    if (mark.semantic?.role === 'connector' && mark.semantic.connector) {
+      addConnector(ops, points, mark.semantic as ConnectorOp['semantic'])
+      return
+    }
+    addSegment(ops, points[0], points[1], AsciiLayer.LINES, mark.semantic)
     return
   }
 
   if (mark.type === 'polyline' || mark.type === 'polygon') {
     const points = (mark.attrs.points || []).map(point => transformPoint({ x: point[0], y: point[1] }, matrix))
+    if (mark.semantic?.role === 'connector' && mark.semantic.connector && mark.type === 'polyline') {
+      addConnector(ops, points, mark.semantic as ConnectorOp['semantic'])
+      return
+    }
     addPolyline(ops, points, mark.type === 'polygon', AsciiLayer.LINES, mark.semantic)
     return
   }
@@ -166,6 +183,10 @@ function collect(mark: Mark, parentMatrix: Matrix, ops: DrawOp[]): void {
   if (mark.type === 'path') {
     const maxStep = 4
     const sampled = flattenPath(mark.attrs.path, maxStep).map(point => transformPoint(point, matrix))
+    if (mark.semantic?.role === 'connector' && mark.semantic.connector) {
+      addConnector(ops, sampled, mark.semantic as ConnectorOp['semantic'])
+      return
+    }
     addPolyline(ops, sampled, false, AsciiLayer.LINES, mark.semantic)
     return
   }

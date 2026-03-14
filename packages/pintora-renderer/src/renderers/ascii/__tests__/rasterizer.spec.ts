@@ -189,4 +189,77 @@ describe('rasterizer', () => {
     expect(grid.getGlyphAt(9, 2)).toBe('O')
     expect(grid.getGlyphAt(10, 2)).toBe('N')
   })
+
+  it('renders compact connector glyphs for semantic sequence arrows', () => {
+    const ops = [
+      {
+        kind: 'connector',
+        points: [
+          { x: 8, y: 16 },
+          { x: 72, y: 16 },
+        ],
+        layer: AsciiLayer.LINES,
+        semantic: {
+          role: 'connector',
+          strokePolicy: 'always',
+          connector: {
+            family: 'sequence-message',
+            compact: true,
+            shaftStyle: 'solid',
+            startTerminator: { kind: 'none' },
+            endTerminator: { kind: 'arrow-open' },
+          },
+        },
+      },
+    ] as any
+
+    const grid = rasterize(ops, {
+      charset: 'unicode',
+      cellWidth: 8,
+      cellHeight: 16,
+      cols: 12,
+      rows: 4,
+      trimRight: true,
+    })
+
+    expect(grid.toString()).toContain('▷')
+    expect(grid.toString()).toContain('─')
+  })
+
+  it('falls back to geometric rasterization for unsupported compact connector geometry', () => {
+    const ops = [
+      {
+        kind: 'connector',
+        points: [
+          { x: 8, y: 16 },
+          { x: 40, y: 32 },
+          { x: 72, y: 48 },
+        ],
+        layer: AsciiLayer.LINES,
+        semantic: {
+          role: 'connector',
+          strokePolicy: 'always',
+          connector: {
+            family: 'sequence-message',
+            compact: true,
+            shaftStyle: 'solid',
+            startTerminator: { kind: 'none' },
+            endTerminator: { kind: 'arrow-filled' },
+          },
+        },
+      },
+    ] as any
+
+    const grid = rasterize(ops, {
+      charset: 'unicode',
+      cellWidth: 8,
+      cellHeight: 16,
+      cols: 12,
+      rows: 4,
+      trimRight: true,
+    })
+
+    expect(grid.toString().split('\n').filter(Boolean).length).toBeGreaterThan(1)
+    expect(grid.toString()).not.toContain('▶')
+  })
 })

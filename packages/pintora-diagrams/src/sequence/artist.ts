@@ -34,6 +34,7 @@ import { SequenceConf, getConf } from './config'
 import { LINETYPE, Message, PLACEMENT, ParticipantBox, SequenceDiagramIR, WrappedText, db } from './db'
 import { getFontConfig } from '../util/font-config'
 import { BaseArtist } from '../util/base-artist'
+import { makeAsciiDecorationSemantic, makeConnectorSemantic } from '../util/connector'
 
 let conf: EnhancedConf<SequenceConf>
 let theme: ITheme
@@ -61,6 +62,37 @@ export type SequenceArtistContext = {
 }
 
 const SHOW_NUMBER_CIRCLE_RADIUS = 8
+
+function getSequenceConnectorSemantic(type: LINETYPE) {
+  const shaftStyle =
+    type === LINETYPE.DOTTED ||
+    type === LINETYPE.DOTTED_CROSS ||
+    type === LINETYPE.DOTTED_POINT ||
+    type === LINETYPE.DOTTED_OPEN
+      ? 'dashed'
+      : 'solid'
+
+  let endTerminator: 'none' | 'arrow-filled' | 'arrow-open' | 'cross' = 'none'
+  if (type === LINETYPE.SOLID || type === LINETYPE.DOTTED) {
+    endTerminator = 'arrow-filled'
+  } else if (
+    type === LINETYPE.SOLID_OPEN ||
+    type === LINETYPE.DOTTED_OPEN ||
+    type === LINETYPE.SOLID_POINT ||
+    type === LINETYPE.DOTTED_POINT
+  ) {
+    endTerminator = 'arrow-open'
+  } else if (type === LINETYPE.SOLID_CROSS || type === LINETYPE.DOTTED_CROSS) {
+    endTerminator = 'cross'
+  }
+
+  return makeConnectorSemantic({
+    family: 'sequence-message',
+    shaftStyle,
+    startTerminator: 'none',
+    endTerminator,
+  })
+}
 
 class SequenceArtist extends BaseArtist<SequenceDiagramIR, SequenceConf> {
   customDraw(ir: SequenceDiagramIR, config?: SequenceConf, opts?: any) {
@@ -741,6 +773,8 @@ const drawMessage = function (msgModel: MessageModel): DrawResult<Group> {
     })
   }
 
+  lineMark.semantic = getSequenceConnectorSemantic(type)
+
   const isRightArrow = stopx > startx
   const arrowRad = isRightArrow ? 0 : -Math.PI
   let lineEndMark: Path = null
@@ -753,6 +787,7 @@ const drawMessage = function (msgModel: MessageModel): DrawResult<Group> {
       type: 'triangle',
       color: lineAttrs.stroke,
     })
+    lineEndMark.semantic = makeAsciiDecorationSemantic()
     lineEndHalfH = side / 2
   }
 
@@ -764,6 +799,7 @@ const drawMessage = function (msgModel: MessageModel): DrawResult<Group> {
       stroke: lineAttrs.stroke,
       lineWidth: 2,
     })
+    lineEndMark.semantic = makeAsciiDecorationSemantic()
     lineAttrs.x2 += isRightArrow ? -crossOffset : crossOffset
     lineEndHalfH = arrowHeight / 2
   }

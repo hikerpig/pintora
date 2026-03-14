@@ -14,9 +14,35 @@ export interface GraphicsIR extends Figure {
 
 export type TransformPolicy = 'stretch' | 'fixed' | 'scale'
 
-export type MarkSemanticRole = 'container' | 'backdrop' | 'separator' | 'decoration'
+export type MarkSemanticRole = 'container' | 'backdrop' | 'separator' | 'decoration' | 'connector'
 
 export type MarkStrokePolicy = 'always' | 'optional' | 'none'
+
+export type ConnectorFamily = 'sequence-message' | 'er-relationship' | 'component-relationship' | 'activity-flow'
+
+export type ConnectorShaftStyle = 'solid' | 'dashed'
+
+export type ConnectorTerminatorKind =
+  | 'none'
+  | 'arrow-filled'
+  | 'arrow-open'
+  | 'cross'
+  | 'er-only-one'
+  | 'er-zero-or-one'
+  | 'er-one-or-more'
+  | 'er-zero-or-more'
+
+export interface ConnectorTerminator {
+  kind: ConnectorTerminatorKind
+}
+
+export interface ConnectorSemantic {
+  family: ConnectorFamily
+  compact: boolean
+  shaftStyle: ConnectorShaftStyle
+  startTerminator?: ConnectorTerminator
+  endTerminator?: ConnectorTerminator
+}
 
 export interface MarkSemantic {
   /**
@@ -34,6 +60,11 @@ export interface MarkSemantic {
    * Lower-fidelity renderers may omit `optional` strokes.
    */
   strokePolicy?: MarkStrokePolicy
+  /**
+   * Optional semantic connector data for low-fidelity renderers that need to
+   * preserve endpoint meaning instead of flattening marker geometry.
+   */
+  connector?: ConnectorSemantic
 }
 
 export interface IMark {
