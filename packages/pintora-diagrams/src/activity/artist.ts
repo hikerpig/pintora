@@ -37,6 +37,7 @@ import { getPointsCurvePath, getPointsLinearPath } from '../util/line-util'
 import { makeBounds, tryExpandBounds } from '../util/mark-positioner'
 import { getTextDimensionsInPresicion } from '../util/text'
 import { makeAsciiDecorationSemantic, makeConnectorSemantic } from '../util/connector'
+import { makeFrameSemantic } from '../util/frame'
 import { makeSymbolSemantic } from '../util/symbol'
 import { makeTextMark } from './artist-util'
 import { ActivityConf, getConf } from './config'
@@ -614,6 +615,18 @@ class ActivityDraw {
         ],
       },
       { class: 'activity__decision-bg' },
+    )
+    decisionBg.semantic = makeFrameSemantic(
+      {
+        family: 'activity-node',
+        kind: 'decision',
+        borderStyle: 'solid',
+        cornerStyle: 'decision',
+      },
+      {
+        role: 'container',
+        strokePolicy: 'always',
+      },
     )
 
     const textDims = calcTextDims(message)
@@ -1266,11 +1279,18 @@ class ActivityDraw {
       type: 'rect',
       class: 'note__bg',
       attrs: rectAttrs,
-      semantic: {
-        role: 'backdrop',
-        occludesBelow: true,
-        strokePolicy: 'always',
-      },
+      semantic: makeFrameSemantic(
+        {
+          family: 'annotation',
+          kind: 'note',
+          borderStyle: 'note-card',
+        },
+        {
+          role: 'backdrop',
+          occludesBelow: true,
+          strokePolicy: 'always',
+        },
+      ),
     }
 
     const textMark: Text = {

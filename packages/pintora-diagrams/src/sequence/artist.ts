@@ -35,6 +35,7 @@ import { LINETYPE, Message, PLACEMENT, ParticipantBox, SequenceDiagramIR, Wrappe
 import { getFontConfig } from '../util/font-config'
 import { BaseArtist } from '../util/base-artist'
 import { makeAsciiDecorationSemantic, makeConnectorSemantic } from '../util/connector'
+import { makeFrameSemantic } from '../util/frame'
 
 let conf: EnhancedConf<SequenceConf>
 let theme: ITheme
@@ -888,6 +889,18 @@ const drawNoteTo = function (noteModel: NoteModel, container: Group) {
     type: 'rect',
     class: 'note__bg',
     attrs: rectAttrs,
+    semantic: makeFrameSemantic(
+      {
+        family: 'annotation',
+        kind: 'note',
+        borderStyle: 'note-card',
+      },
+      {
+        role: 'backdrop',
+        occludesBelow: true,
+        strokePolicy: 'always',
+      },
+    ),
   }
 
   const textAttrs: Text['attrs'] = { fill: conf.noteTextColor, text: noteModel.text, ...noteFont(conf) }

@@ -36,6 +36,17 @@ exports[`activity-artist draw fork 1`] = `
               "stroke": "#3b4044",
             },
             "class": "activity__decision-bg",
+            "semantic": {
+              "frame": {
+                "borderStyle": "solid",
+                "compact": true,
+                "cornerStyle": "decision",
+                "family": "activity-node",
+                "kind": "decision",
+              },
+              "role": "container",
+              "strokePolicy": "always",
+            },
             "type": "path",
           },
           {
@@ -702,6 +713,17 @@ exports[`activity-artist draw repeat 1`] = `
               "stroke": "#3b4044",
             },
             "class": "activity__decision-bg",
+            "semantic": {
+              "frame": {
+                "borderStyle": "solid",
+                "compact": true,
+                "cornerStyle": "decision",
+                "family": "activity-node",
+                "kind": "decision",
+              },
+              "role": "container",
+              "strokePolicy": "always",
+            },
             "type": "path",
           },
           {
@@ -790,6 +812,17 @@ exports[`activity-artist draw repeat 1`] = `
               "stroke": "#3b4044",
             },
             "class": "activity__decision-bg",
+            "semantic": {
+              "frame": {
+                "borderStyle": "solid",
+                "compact": true,
+                "cornerStyle": "decision",
+                "family": "activity-node",
+                "kind": "decision",
+              },
+              "role": "container",
+              "strokePolicy": "always",
+            },
             "type": "path",
           },
           {

@@ -13,6 +13,7 @@
 - **CJK Wide Character Alignment**: Chinese and other wide characters display with width 2 in monospace fonts, requiring special handling to ensure text alignment.
 - **Geometric Dimensionality Reduction Distortion**: Converting 2D graphics to character grids inevitably involves precision loss, requiring controllable degradation strategies.
 - **Connector Endpoint Semantics**: Arrows and ER cardinality markers carry meaning at connector endpoints; once flattened into generic segments, distinctions such as filled/open/dashed arrows or crow-foot cardinalities are lost.
+- **Frame Semantics Loss**: Notes and decision bodies also carry meaning through border style and corner treatment; once reduced to plain rect/path geometry, they become indistinguishable from ordinary content boxes.
 
 ### 1.3 Text Layout Alignment Problem
 A specific class of rendering failures occurred in sequence diagrams and class diagrams where centered or middle-aligned labels overlapped with their container borders or divider lines:
@@ -97,6 +98,42 @@ Issues:
 3. Let ASCII collect a dedicated `ConnectorOp` and render compact endpoint glyph templates directly
 4. Support horizontal and vertical compact rendering separately; if a connector does not normalize to a stable axis-aligned span, fall back to geometric rasterization
 
+### 1.6 Frame Meaning Lost Without Color
+Another regression class appeared after connector and compact symbol handling improved: larger framed regions were still rendered as generic boxes or sampled paths.
+
+Representative examples:
+
+```text
+activityDiagram
+  :Do work;
+  note right: side note
+```
+
+```text
+activityDiagram
+  if (ready?) then
+    :Accept;
+  else (no)
+    :Reject;
+  endif
+```
+
+Issues:
+- notes relied on background color in SVG/Canvas to read as annotations, but collapsed into ordinary `|...|` boxes in ASCII
+- activity decision bodies were emitted as path geometry and degraded into noisy pseudo-diamonds on the text grid
+- fixing either case by “sampling better” still did not tell the renderer whether the user was looking at a note card or a decision frame
+
+**Root Cause**:
+- note semantics were only partially expressed as `backdrop` occlusion, not as “annotation frame”
+- decision body semantics lived only in path geometry, not in a renderer-facing frame contract
+- ASCII had compact glyph handling for connectors and symbols, but no frame-aware border templates
+
+**Refined Direction**:
+1. Keep `role` semantics (`backdrop`, `container`) for layout/occlusion, but add optional `frame` semantics for border meaning
+2. Let note backgrounds remain rect-based text regions, but render them as annotation cards in ASCII
+3. Let activity decision bodies keep path geometry for SVG/Canvas while ASCII renders them from reviewed frame templates
+4. Use frame-specific templates in Unicode and strict ASCII, with geometric fallback when the compact frame does not fit
+
 ---
 
 ## 2. Design Goals
@@ -129,8 +166,9 @@ Graphics IR → Semantic Op Collection → IR Normalization → Grid Rasterizati
 | **GlyphResolver** | Select Unicode box-drawing characters (`─│┌┐└┘├┤┬┴┼`) based on adjacency direction bitmask; use `/\` for diagonals | `glyph.ts` - `resolveLineGlyph()`, `mergeGlyph()` functions |
 | **PathFlattener** | Discretize `path` (array/string) into line segment collections; sample curves/arcs with adaptive step intervals | `path-flattener.ts` - `flattenPath()` function |
 | **ConnectorGlyphRegistry** | Map semantic connector terminators to compact horizontal/vertical glyph templates for Unicode and ASCII charsets | `connector-glyphs.ts` |
+| **FrameGlyphRegistry** | Map semantic note/decision frames to Unicode and ASCII border templates | `frame-glyphs.ts` |
 | **TextPlacer** | Place text according to `textAlign`/`textBaseline`, handling CJK wide character widths | `text-layout.ts` - `resolveTextPlacement()` function |
-| **MarkWalker** | Traverse `GraphicsIR`, normalize various Marks (rect/line/poly/path/text/group) into standard draw operations, including semantic connectors | `mark-walker.ts` - `collectDrawOps()` function |
+| **MarkWalker** | Traverse `GraphicsIR`, normalize various Marks (rect/line/poly/path/text/group) into standard draw operations, including semantic connectors, symbols, and path-backed frames | `mark-walker.ts` - `collectDrawOps()` function |
 | **Normalizer** | Normalize text placement to avoid separator lines, clamp text inside containers | `normalize-ops.ts` - `normalizeDrawOps()` function |
 | **TextMetrics** | Calculate text dimensions and line breaks for ASCII grid | `text-metrics.ts` - `measureAsciiText()` function |
 
@@ -219,6 +257,13 @@ interface MarkSemantic {
     startTerminator?: { kind: ConnectorTerminatorKind }
     endTerminator?: { kind: ConnectorTerminatorKind }
   }
+  frame?: {
+    family: 'annotation' | 'activity-node'
+    kind: 'note' | 'decision'
+    compact: boolean
+    borderStyle: 'solid' | 'dashed' | 'note-card'
+    cornerStyle?: 'square' | 'decision'
+  }
 }
 ```
 
@@ -232,6 +277,13 @@ interface MarkSemantic {
 | **decoration** | Visual accent that can be omitted in low-fidelity | Static member underlines |
 | **connector** | A semantic shaft whose endpoints carry marker meaning | Sequence messages, ER relationships |
 
+`frame` is intentionally orthogonal to `role`:
+- `role` still answers “how does this participate in layout, clamping, and occlusion?”
+- `frame` answers “what kind of border treatment should ASCII use?”
+- current usage:
+  - notes: `role: 'backdrop'` + `frame.kind = 'note'`
+  - activity decision bodies: `role: 'container'` + `frame.kind = 'decision'`
+
 #### Semantic Behaviors
 
 - **container**: Text placement is clamped inside container boundaries (inner rows/cols)
@@ -240,6 +292,7 @@ interface MarkSemantic {
 - **separator**: Horizontal lines that text should avoid overlapping; snapped to stable grid positions
 - **connector**: May bypass generic path flattening and instead become a dedicated `ConnectorOp`
 - **connector**: ASCII can render compact endpoint glyphs such as `▶`, `▷`, `○╟`, `╢`, `╤`, `╧`
+- **frame**: ASCII can replace a generic box/path border with a reviewed frame template while preserving the original geometry as fallback
 - **strokePolicy**: 
   - `'none'` or `'optional'` strokes are skipped in ASCII output
   - `'always'` strokes are preserved even in low-fidelity renderers
@@ -271,7 +324,44 @@ Current compact coverage:
 - **ER LR**: `│`, `○│`, `╟`, `╢`, `○╟`, `○╢`
 - **ER TD**: `─`, `○─`, `╤`, `╧`, `○╤`, `○╧`
 
-### 4.6 Conflict Resolution Principle
+### 4.6 Semantic Frame Rendering
+
+When a mark carries `semantic.frame`, ASCII can treat it as a reviewed frame instead of a generic box/path.
+
+Current compact coverage:
+
+- **Note Frame**
+  - strict ASCII: quoted-card style
+    ```text
+    .--------.
+    : note   :
+    '--------'
+    ```
+  - Unicode: folded-corner note card, refined toward a B1-style structured fold
+    ```text
+    ╭────────┬╮
+    │ note   ││
+    │ text   ╰│
+    ╰─────────╯
+    ```
+  - notes keep their `backdrop` semantics for occlusion and text-region selection; `frame` only changes border treatment
+
+- **Activity Decision Frame**
+  - strict ASCII:
+    ```text
+    <-------->
+    |Decision|
+    <---+---->
+    ```
+  - Unicode:
+    ```text
+    ◇────────◇
+    │Decision│
+    ◇────┬───◇
+    ```
+  - decision bodies keep path geometry for SVG/Canvas; ASCII uses a path-backed semantic frame op and falls back to geometry when the template does not fit
+
+### 4.7 Conflict Resolution Principle
 
 The later ER fixes clarified an important rule: collision handling should be split between **semantic layout intent**, **renderer-specific normalization**, and **draw-time repair**.
 
@@ -283,16 +373,17 @@ This avoids two fragile patterns:
 - mutating base diagram layout just to satisfy one renderer
 - renderer-side line clearing that makes one row look correct while destroying adjacent semantic structure
 
-### 4.7 Degradation Strategy
+### 4.8 Degradation Strategy
 - Complex Bezier curves, cloud shapes, and other non-exactly-reproducible shapes: approximate with discrete line segments
 - Semantic connectors that do not normalize to a stable horizontal or vertical span: fall back to geometric segment rasterization
+- Semantic frames that lack enough space or glyph support: fall back to the original rect/path border rendering
 - If discretization fails: fall back to bounding box outline while preserving text
 
-### 4.8 CJK Wide Character Support
+### 4.9 CJK Wide Character Support
 - Use `wcwidth`-like logic for CJK wide characters (display width = 2)
 - Ensure mixed Chinese/English text alignment without label drift
 
-### 4.9 Connector Lessons Learned
+### 4.10 Connector And Frame Lessons Learned
 
 The connector work exposed a few practical rules that are easy to forget:
 
@@ -301,6 +392,9 @@ The connector work exposed a few practical rules that are easy to forget:
 3. **Keep geometric markers for SVG/Canvas, but mark them as optional decoration for ASCII**. Otherwise ASCII renders both the compact glyph and the old geometry on top of each other.
 4. **Horizontal and vertical compact rendering need separate template sets**. The LR solution does not automatically handle TD layouts.
 5. **Role labels and marker cells compete for the same compact area**. Short labels are fine in regression tests, but real diagrams may still need future spacing policies if labels are extremely close to connector ends.
+6. **Do not overload `role` with visual identity**. Notes still need `backdrop` behavior, but their “this is a note card” meaning belongs in a separate frame contract.
+7. **Rect-based frames and path-backed frames need different collection strategies**. Notes can reuse rect normalization directly; decision bodies benefit from a dedicated frame op because their source geometry is path-based.
+8. **Folded-corner note cards need text-region reservation**. Once the top-right corner becomes a visible fold, normalization must reserve right-side cells so note text does not collide with the fold.
 
 ---
 
@@ -344,6 +438,8 @@ core: {
 - **Grid Rasterization**: Corners, cross intersections, diagonals, text overlay priority
 - **Connector Glyph Mapping**: Horizontal and vertical compact glyph templates for sequence arrows and ER cardinality markers
 - **Connector Fallback**: Non-axis-aligned semantic connectors fall back to geometric rasterization
+- **Frame Glyph Mapping**: Note-card and decision-frame templates in Unicode and strict ASCII
+- **Frame Fallback**: Unsupported or undersized semantic frames fall back to geometric rect/path borders
 
 ### 6.2 Integration Testing
 - `renderTo(..., { renderer: 'ascii' })` generates `<pre>` and `getTextContent()` is non-empty
@@ -429,8 +525,35 @@ activityDiagram
 Assertions:
 - a nested action box inside a semantic `container` still keeps its own top border instead of collapsing onto the partition border row
 - a left-side note box and a sibling action box keep at least one blank grid column between their visible borders
-- a right-side note label stays inside its own bordered backdrop instead of being clamped back into the outer partition text region
+- a right-side note label stays inside its own note-card frame instead of being clamped back into the outer partition text region
 - a single left-side note no longer forces the partition title row to visually merge with the note/action top border row
+
+**Unicode Note Card:**
+```text
+activityDiagram
+  :Do work;
+  note right: side note
+```
+
+Assertions:
+- the note uses a folded-corner card rather than a plain `┌...┐ / └...┘` box
+- the top row contains the fold marker structure (`┬╮`)
+- the fold descends on the right side (`││`, then `╰│`) without overwriting note text
+
+**Activity Decision Frame:**
+```text
+activityDiagram
+  if (ready?) then
+    :Accept;
+  else (no)
+    :Reject;
+  endif
+```
+
+Assertions:
+- Unicode output uses decorated corners such as `◇`
+- strict ASCII output uses decorated edges such as `<...>` and bottom `+`
+- the decision body remains readable as a content frame rather than sampled path noise
 
 ### 6.6 Test Debugging Workflow
 
@@ -458,12 +581,14 @@ Behavior:
 ### 7.3 Known Limitations
 
 - The semantic subset is still intentionally small; `container`, `separator`, `backdrop`, `decoration`, `occludesBelow`, and `strokePolicy` are the main primitives in active use
+- The semantic subset now also includes optional `connector`, `symbol`, and `frame` extensions, but coverage remains intentionally selective
 - Some diagrams still create rects/lines that are visually "background-like" but are not yet tagged with semantics
 - Normalization is centralized but still focused on text + separator + container constraints; richer constraints (e.g., dense multi-label packing, interval-aware line carving) are not implemented yet
 - Divider assertions were narrowed to "text is not pierced directly" rather than "the entire row has no horizontal line", because with the new backdrop semantics the outer line may legitimately continue outside the backdrop bounds
 - Container-aware clamping and text-region selection now cover class, ER, and the migrated activity shapes (action boxes, partition frames, and note backdrops), but many other diagrams still rely on plain geometry only
+- Note-card frame semantics are currently wired for activity/sequence/class notes; other note-capable diagrams may still need explicit adoption
 - Container snapping is renderer-specific: ASCII may expand and unify semantic container borders during normalization, while SVG/Canvas keep the original geometry
-- The text-region rule now prefers the smallest visible rect (`container` or bordered `backdrop`) that contains the text anchor. This fixes activity notes, but it is still a heuristic rather than a full constraint solver.
+- The text-region rule now prefers the smallest visible rect (`container` or bordered `backdrop`) that contains the text anchor. For note cards it additionally reserves right-side columns for the folded corner, but this is still a heuristic rather than a full constraint solver.
 - Visible-rect spacing now preserves a minimal blank-cell gap when raw geometry already contains a positive gap, but this is still grid-quantized and may need more explicit policy if future diagrams stack many bordered labels densely
 - Renderer-side repair hooks exist, but broad automatic use of them is considered risky; the preferred fix path is still artist semantics plus normalization
 

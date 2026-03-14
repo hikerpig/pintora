@@ -5,8 +5,9 @@ import {
   getVerticalConnectorShaftGlyph,
   getVerticalTerminatorGlyph,
 } from './connector-glyphs'
+import { getDecisionFrameGlyphs, getNoteFrameGlyphs } from './frame-glyphs'
 import { TextGrid } from './grid'
-import { AsciiLayer, ConnectorOp, DrawOp, RectOp, SegmentOp, SymbolOp, TextOp } from './ops'
+import { AsciiLayer, ConnectorOp, DrawOp, FrameOp, RectOp, SegmentOp, SymbolOp, TextOp } from './ops'
 import { normalizeDrawOps } from './normalize-ops'
 import { getSymbolGlyph } from './symbol-glyphs'
 import { measureAsciiText } from './text-metrics'
@@ -78,6 +79,12 @@ function drawRect(grid: TextGrid, op: RectOp, options: RasterizeOptions): void {
     grid.clearRect(minCol, minRow, maxCol, maxRow, op.layer)
   }
 
+  if (op.semantic?.frame?.compact) {
+    if (drawRectFrame(grid, op, options, minCol, maxCol, minRow, maxRow)) {
+      return
+    }
+  }
+
   if (op.semantic?.strokePolicy === 'none' || op.semantic?.strokePolicy === 'optional') {
     return
   }
@@ -89,6 +96,57 @@ function drawRect(grid: TextGrid, op: RectOp, options: RasterizeOptions): void {
     { kind: 'segment', p0: op.points[3], p1: op.points[0], layer: op.layer },
   ]
   borderSegments.forEach(segment => drawSegment(grid, segment, options))
+}
+
+function drawRectFrame(
+  grid: TextGrid,
+  op: RectOp,
+  options: RasterizeOptions,
+  minCol: number,
+  maxCol: number,
+  minRow: number,
+  maxRow: number,
+): boolean {
+  const frame = op.semantic?.frame
+  if (!frame || frame.kind !== 'note') return false
+
+  const glyphs = getNoteFrameGlyphs(frame, options.charset)
+  if (!glyphs) return false
+  if (maxCol - minCol < 2 || maxRow - minRow < 2) return false
+
+  drawGlyphString(grid, minCol, minRow, glyphs.topLeft, AsciiLayer.MARKERS)
+  if (glyphs.foldTop && maxCol - minCol >= 3) {
+    drawGlyphString(grid, maxCol - 1, minRow, glyphs.foldTop, AsciiLayer.MARKERS)
+  }
+  drawGlyphString(grid, maxCol, minRow, glyphs.topRight, AsciiLayer.MARKERS)
+  drawGlyphString(grid, minCol, maxRow, glyphs.bottomLeft, AsciiLayer.MARKERS)
+  drawGlyphString(grid, maxCol, maxRow, glyphs.bottomRight, AsciiLayer.MARKERS)
+
+  const topEndCol = glyphs.foldTop && maxCol - minCol >= 3 ? maxCol - 2 : maxCol - 1
+  for (let col = minCol + 1; col <= topEndCol; col++) {
+    drawGlyphString(grid, col, minRow, glyphs.top, AsciiLayer.MARKERS)
+  }
+  for (let col = minCol + 1; col < maxCol; col++) {
+    drawGlyphString(grid, col, maxRow, glyphs.bottom, AsciiLayer.MARKERS)
+  }
+
+  for (let row = minRow + 1; row < maxRow; row++) {
+    drawGlyphString(grid, minCol, row, glyphs.sideLeft, AsciiLayer.MARKERS)
+    drawGlyphString(grid, maxCol, row, glyphs.sideRight, AsciiLayer.MARKERS)
+  }
+
+  if (maxRow - minRow >= 2 && maxCol - minCol >= 3) {
+    for (let row = minRow + 1; row < maxRow - 1; row++) {
+      if (glyphs.foldSide) {
+        drawGlyphString(grid, maxCol - 1, row, glyphs.foldSide, AsciiLayer.MARKERS)
+      }
+    }
+    if (glyphs.foldBottom) {
+      drawGlyphString(grid, maxCol - 1, maxRow - 1, glyphs.foldBottom, AsciiLayer.MARKERS)
+    }
+  }
+
+  return true
 }
 
 function drawText(grid: TextGrid, op: TextOp, options: RasterizeOptions): void {
@@ -335,6 +393,59 @@ function drawSymbol(grid: TextGrid, op: SymbolOp, options: RasterizeOptions): vo
   })
 }
 
+function drawFrameFallback(grid: TextGrid, op: FrameOp, options: RasterizeOptions): void {
+  op.fallbackOps.forEach(fallbackOp => drawSegment(grid, fallbackOp, options))
+}
+
+function drawDecisionFrame(grid: TextGrid, op: FrameOp, options: RasterizeOptions): boolean {
+  const glyphs = getDecisionFrameGlyphs(op.semantic.frame, options.charset)
+  if (!glyphs) return false
+
+  const center = lineToGrid(op.point, options)
+  const widthCells = Math.max(3, Math.round(op.width / options.cellWidth))
+  const heightRows = Math.max(3, Math.round(op.height / options.cellHeight))
+  const minCol = center.col - Math.floor(widthCells / 2)
+  const maxCol = minCol + widthCells - 1
+  const minRow = center.row - Math.floor(heightRows / 2)
+  const maxRow = minRow + heightRows - 1
+
+  if (minCol < 0 || minRow < 0 || maxCol >= grid.cols || maxRow >= grid.rows) return false
+  if (maxCol - minCol < 2 || maxRow - minRow < 2) return false
+
+  drawGlyphString(grid, minCol, minRow, glyphs.topLeft, AsciiLayer.MARKERS)
+  drawGlyphString(grid, maxCol, minRow, glyphs.topRight, AsciiLayer.MARKERS)
+  drawGlyphString(grid, minCol, maxRow, glyphs.bottomLeft, AsciiLayer.MARKERS)
+  drawGlyphString(grid, maxCol, maxRow, glyphs.bottomRight, AsciiLayer.MARKERS)
+
+  for (let col = minCol + 1; col < maxCol; col++) {
+    drawGlyphString(grid, col, minRow, glyphs.top, AsciiLayer.MARKERS)
+    drawGlyphString(grid, col, maxRow, glyphs.bottom, AsciiLayer.MARKERS)
+  }
+
+  const centerBottomCol = minCol + Math.floor((maxCol - minCol) / 2)
+  drawGlyphString(grid, centerBottomCol, maxRow, glyphs.bottomCenter, AsciiLayer.MARKERS)
+
+  for (let row = minRow + 1; row < maxRow; row++) {
+    drawGlyphString(grid, minCol, row, glyphs.sideLeft, AsciiLayer.MARKERS)
+    drawGlyphString(grid, maxCol, row, glyphs.sideRight, AsciiLayer.MARKERS)
+  }
+
+  return true
+}
+
+function drawFrame(grid: TextGrid, op: FrameOp, options: RasterizeOptions): void {
+  if (!op.semantic.frame.compact) {
+    drawFrameFallback(grid, op, options)
+    return
+  }
+
+  if (op.semantic.frame.kind === 'decision' && drawDecisionFrame(grid, op, options)) {
+    return
+  }
+
+  drawFrameFallback(grid, op, options)
+}
+
 export function rasterize(ops: DrawOp[], options: RasterizeOptions): TextGrid {
   const grid = new TextGrid(options.cols, options.rows, options.charset, options.trimRight)
   const normalized = normalizeDrawOps(ops, {
@@ -357,6 +468,10 @@ export function rasterize(ops: DrawOp[], options: RasterizeOptions): TextGrid {
     }
     if (op.kind === 'symbol') {
       drawSymbol(grid, op, options)
+      continue
+    }
+    if (op.kind === 'frame') {
+      drawFrame(grid, op, options)
       continue
     }
     drawText(grid, op, options)

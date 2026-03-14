@@ -152,6 +152,12 @@ describe('activity-artist', () => {
       role: 'backdrop',
       occludesBelow: true,
       strokePolicy: 'always',
+      frame: {
+        family: 'annotation',
+        kind: 'note',
+        compact: true,
+        borderStyle: 'note-card',
+      },
     })
   })
 
@@ -206,5 +212,34 @@ describe('activity-artist', () => {
     })
 
     expect(symbolKinds).toEqual(new Set(['activity-start', 'activity-end', 'activity-decision']))
+  })
+
+  it('marks activity decision bodies with frame semantics', () => {
+    const code = stripStartEmptyLines(`
+    activityDiagram
+    if (ready?) then
+      :Ship it;
+    else (no)
+      :Wait;
+    endif
+    `)
+
+    const result = testDraw(code)
+    const decisionBg = findMarkInGraphicsIR(
+      result.graphicIR,
+      mark => mark.type === 'path' && mark.class === 'activity__decision-bg',
+    )
+
+    expect(decisionBg?.semantic).toMatchObject({
+      role: 'container',
+      strokePolicy: 'always',
+      frame: {
+        family: 'activity-node',
+        kind: 'decision',
+        compact: true,
+        borderStyle: 'solid',
+        cornerStyle: 'decision',
+      },
+    })
   })
 })

@@ -354,4 +354,186 @@ describe('rasterizer', () => {
     expect(grid.getGlyphAt(1, 1)).toBe('-')
     expect(grid.toString()).not.toContain('@')
   })
+
+  it('renders quoted-card note frames in strict ascii', () => {
+    const ops: DrawOp[] = [
+      {
+        kind: 'rect',
+        points: [
+          { x: 8, y: 16 },
+          { x: 56, y: 16 },
+          { x: 56, y: 48 },
+          { x: 8, y: 48 },
+        ],
+        layer: AsciiLayer.LINES,
+        semantic: {
+          role: 'backdrop',
+          occludesBelow: true,
+          strokePolicy: 'always',
+          frame: {
+            family: 'annotation',
+            kind: 'note',
+            compact: true,
+            borderStyle: 'note-card',
+          },
+        } as any,
+      },
+      {
+        kind: 'text',
+        point: { x: 32, y: 32 },
+        text: 'note',
+        textAlign: 'center',
+        textBaseline: 'middle',
+        layer: AsciiLayer.TEXT,
+      },
+    ]
+
+    const grid = rasterize(ops, {
+      charset: 'ascii',
+      cellWidth: 8,
+      cellHeight: 16,
+      cols: 10,
+      rows: 5,
+      trimRight: true,
+    })
+
+    const lines = grid.toString().split('\n')
+    expect(lines[1]).toContain('.')
+    expect(lines[2]).toContain(':')
+    expect(lines[3]).toContain("'")
+  })
+
+  it('renders folded-corner note frames in unicode', () => {
+    const ops: DrawOp[] = [
+      {
+        kind: 'rect',
+        points: [
+          { x: 8, y: 16 },
+          { x: 72, y: 16 },
+          { x: 72, y: 64 },
+          { x: 8, y: 64 },
+        ],
+        layer: AsciiLayer.LINES,
+        semantic: {
+          role: 'backdrop',
+          occludesBelow: true,
+          strokePolicy: 'always',
+          frame: {
+            family: 'annotation',
+            kind: 'note',
+            compact: true,
+            borderStyle: 'note-card',
+          },
+        } as any,
+      },
+      {
+        kind: 'text',
+        point: { x: 40, y: 40 },
+        text: 'memo',
+        textAlign: 'center',
+        textBaseline: 'middle',
+        layer: AsciiLayer.TEXT,
+      },
+    ]
+
+    const grid = rasterize(ops, {
+      charset: 'unicode',
+      cellWidth: 8,
+      cellHeight: 16,
+      cols: 12,
+      rows: 6,
+      trimRight: true,
+    })
+
+    const lines = grid.toString().split('\n').filter(Boolean)
+    expect(lines[0]).toMatch(/╭.*┬╮/)
+    expect(lines[1] || '').toMatch(/╰│|││/)
+    expect(lines[lines.length - 1]).toMatch(/╰.*╯/)
+  })
+
+  it('renders decision frames with decorated unicode corners', () => {
+    const ops = [
+      {
+        kind: 'frame',
+        point: { x: 40, y: 32 },
+        width: 64,
+        height: 48,
+        layer: AsciiLayer.LINES,
+        semantic: {
+          role: 'container',
+          strokePolicy: 'always',
+          frame: {
+            family: 'activity-node',
+            kind: 'decision',
+            compact: true,
+            borderStyle: 'solid',
+            cornerStyle: 'decision',
+          },
+        },
+        fallbackOps: [],
+      },
+      {
+        kind: 'text',
+        point: { x: 40, y: 32 },
+        text: 'Decision',
+        textAlign: 'center',
+        textBaseline: 'middle',
+        layer: AsciiLayer.TEXT,
+      },
+    ] as any
+
+    const grid = rasterize(ops, {
+      charset: 'unicode',
+      cellWidth: 8,
+      cellHeight: 16,
+      cols: 12,
+      rows: 6,
+      trimRight: true,
+    })
+
+    const rendered = grid.toString()
+    expect(rendered).toContain('◇')
+    expect(rendered).toContain('Decision')
+  })
+
+  it('falls back to geometric rendering for unsupported semantic frames', () => {
+    const ops = [
+      {
+        kind: 'frame',
+        point: { x: 16, y: 16 },
+        width: 32,
+        height: 16,
+        layer: AsciiLayer.LINES,
+        semantic: {
+          role: 'container',
+          strokePolicy: 'always',
+          frame: {
+            family: 'annotation',
+            kind: 'unknown-frame',
+            compact: true,
+            borderStyle: 'solid',
+          },
+        },
+        fallbackOps: [
+          {
+            kind: 'segment',
+            p0: { x: 8, y: 16 },
+            p1: { x: 24, y: 16 },
+            layer: AsciiLayer.LINES,
+          },
+        ],
+      },
+    ] as any
+
+    const grid = rasterize(ops, {
+      charset: 'ascii',
+      cellWidth: 8,
+      cellHeight: 16,
+      cols: 6,
+      rows: 4,
+      trimRight: true,
+    })
+
+    expect(grid.getGlyphAt(1, 1)).toBe('-')
+  })
 })

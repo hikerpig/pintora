@@ -19,6 +19,9 @@ type ContainerBounds = {
 }
 
 type TextRegionBounds = ContainerBounds
+type TextRegionBoundsWithSemantic = TextRegionBounds & {
+  semantic?: RectOp['semantic']
+}
 
 type HorizontalSeparator = {
   row: number
@@ -103,7 +106,7 @@ function shouldUseAsTextRegion(op: RectOp): boolean {
   return op.semantic?.role === 'backdrop' && op.semantic.strokePolicy === 'always'
 }
 
-function collectTextRegions(ops: DrawOp[], options: NormalizeOptions): TextRegionBounds[] {
+function collectTextRegions(ops: DrawOp[], options: NormalizeOptions): TextRegionBoundsWithSemantic[] {
   return ops
     .filter((op): op is RectOp => op.kind === 'rect' && shouldUseAsTextRegion(op))
     .map(op => {
@@ -122,6 +125,7 @@ function collectTextRegions(ops: DrawOp[], options: NormalizeOptions): TextRegio
         rightBorderCol: Math.round(maxX / options.cellWidth),
         topBorderRow: Math.round(minY / options.cellHeight),
         bottomBorderRow: Math.round(maxY / options.cellHeight),
+        semantic: op.semantic,
       }
     })
 }
@@ -315,7 +319,10 @@ function preventVisibleRectBorderOverlap(
   })
 }
 
-function findTextRegionForText(op: TextOp, regions: TextRegionBounds[]): TextRegionBounds | undefined {
+function findTextRegionForText(
+  op: TextOp,
+  regions: TextRegionBoundsWithSemantic[],
+): TextRegionBoundsWithSemantic | undefined {
   const matches = regions.filter(
     region =>
       op.point.x >= region.minX && op.point.x <= region.maxX && op.point.y >= region.minY && op.point.y <= region.maxY,
@@ -339,9 +346,13 @@ function clampTextPlacementToContainer(
   }
 }
 
-function getInnerBounds(container: ContainerBounds, metrics: ReturnType<typeof measureAsciiText>): InnerBounds | null {
+function getInnerBounds(
+  container: TextRegionBoundsWithSemantic,
+  metrics: ReturnType<typeof measureAsciiText>,
+): InnerBounds | null {
   const innerMinCol = container.leftBorderCol + 1
-  const innerMaxCol = container.rightBorderCol - metrics.textWidthCells
+  const reservedRightCols = container.semantic?.frame?.kind === 'note' ? 2 : 0
+  const innerMaxCol = container.rightBorderCol - metrics.textWidthCells - reservedRightCols
   const innerMinRow = container.topBorderRow + 1
   const innerMaxRow = container.bottomBorderRow - metrics.textHeightRows
 

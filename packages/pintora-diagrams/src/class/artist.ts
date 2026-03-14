@@ -37,6 +37,7 @@ import {
 } from '../util/graph'
 import { getPointsCurvePath, getPointsLinearPath } from '../util/line-util'
 import { makeBounds, tryExpandBounds } from '../util/mark-positioner'
+import { makeFrameSemantic } from '../util/frame'
 import { ClassConf, getConf } from './config'
 import { ClassIR, ClassRelation, Note, Relation, TClass } from './db'
 import { BaseArtist } from '../util/base-artist'
@@ -394,6 +395,18 @@ class ClassDiagramDraw {
       type: 'rect',
       class: 'note__bg',
       attrs: rectAttrs,
+      semantic: makeFrameSemantic(
+        {
+          family: 'annotation',
+          kind: 'note',
+          borderStyle: 'note-card',
+        },
+        {
+          role: 'backdrop',
+          occludesBelow: true,
+          strokePolicy: 'always',
+        },
+      ),
     }
 
     const textMark: Text = {

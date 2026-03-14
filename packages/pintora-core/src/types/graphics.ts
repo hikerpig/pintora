@@ -26,6 +26,14 @@ export type SymbolFamily = 'activity-node' | 'component-node'
 
 export type SymbolKind = 'activity-start' | 'activity-end' | 'activity-decision' | 'component-interface'
 
+export type FrameFamily = 'annotation' | 'activity-node'
+
+export type FrameKind = 'note' | 'decision'
+
+export type FrameBorderStyle = 'solid' | 'dashed' | 'note-card'
+
+export type FrameCornerStyle = 'square' | 'decision'
+
 export type ConnectorTerminatorKind =
   | 'none'
   | 'arrow-filled'
@@ -54,6 +62,14 @@ export interface SymbolSemantic {
   compact: boolean
 }
 
+export interface FrameSemantic {
+  family: FrameFamily
+  kind: FrameKind
+  compact: boolean
+  borderStyle: FrameBorderStyle
+  cornerStyle?: FrameCornerStyle
+}
+
 export interface MarkSemantic {
   /**
    * Semantic role used by different renderers to interpret a mark
@@ -80,6 +96,11 @@ export interface MarkSemantic {
    * preserve node meaning instead of sampling small shapes into noisy geometry.
    */
   symbol?: SymbolSemantic
+  /**
+   * Optional semantic frame data for low-fidelity renderers that need to
+   * preserve frame meaning instead of flattening everything into plain boxes.
+   */
+  frame?: FrameSemantic
 }
 
 export interface IMark {

@@ -892,6 +892,18 @@ exports[`sequence-artist match example snapshot 1`] = `
               "stroke": "#3b4044",
             },
             "class": "note__bg",
+            "semantic": {
+              "frame": {
+                "borderStyle": "note-card",
+                "compact": true,
+                "cornerStyle": undefined,
+                "family": "annotation",
+                "kind": "note",
+              },
+              "occludesBelow": true,
+              "role": "backdrop",
+              "strokePolicy": "always",
+            },
             "type": "rect",
           },
           {
@@ -919,6 +931,18 @@ exports[`sequence-artist match example snapshot 1`] = `
               "stroke": "#3b4044",
             },
             "class": "note__bg",
+            "semantic": {
+              "frame": {
+                "borderStyle": "note-card",
+                "compact": true,
+                "cornerStyle": undefined,
+                "family": "annotation",
+                "kind": "note",
+              },
+              "occludesBelow": true,
+              "role": "backdrop",
+              "strokePolicy": "always",
+            },
             "type": "rect",
           },
           {
@@ -946,6 +970,18 @@ exports[`sequence-artist match example snapshot 1`] = `
               "stroke": "#3b4044",
             },
             "class": "note__bg",
+            "semantic": {
+              "frame": {
+                "borderStyle": "note-card",
+                "compact": true,
+                "cornerStyle": undefined,
+                "family": "annotation",
+                "kind": "note",
+              },
+              "occludesBelow": true,
+              "role": "backdrop",
+              "strokePolicy": "always",
+            },
             "type": "rect",
           },
           {

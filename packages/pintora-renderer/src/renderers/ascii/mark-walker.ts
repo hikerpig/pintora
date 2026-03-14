@@ -1,6 +1,6 @@
 import { Mark } from '@pintora/core'
 import { flattenPath } from './path-flattener'
-import { ConnectorOp, DrawOp, RectOp, SegmentOp, SymbolOp, TextOp, AsciiLayer, ShapeLayer } from './ops'
+import { ConnectorOp, DrawOp, FrameOp, RectOp, SegmentOp, SymbolOp, TextOp, AsciiLayer, ShapeLayer } from './ops'
 import { IDENTITY_MATRIX, Matrix, Point } from './types'
 
 function multiplyMat3(a: Matrix, b: Matrix): Matrix {
@@ -91,6 +91,26 @@ function addSymbol(
     width,
     height,
     layer: AsciiLayer.MARKERS,
+    semantic,
+    fallbackOps,
+  }
+  ops.push(op)
+}
+
+function addFrame(
+  ops: DrawOp[],
+  point: Point,
+  width: number,
+  height: number,
+  semantic: FrameOp['semantic'],
+  fallbackOps: SegmentOp[],
+): void {
+  const op: FrameOp = {
+    kind: 'frame',
+    point,
+    width,
+    height,
+    layer: AsciiLayer.LINES,
     semantic,
     fallbackOps,
   }
@@ -240,6 +260,23 @@ function collect(mark: Mark, parentMatrix: Matrix, ops: DrawOp[]): void {
     const sampled = flattenPath(mark.attrs.path, maxStep).map(point => transformPoint(point, matrix))
     if (mark.semantic?.role === 'connector' && mark.semantic.connector) {
       addConnector(ops, sampled, mark.semantic as ConnectorOp['semantic'])
+      return
+    }
+    if (mark.semantic?.frame) {
+      const xs = sampled.map(point => point.x)
+      const ys = sampled.map(point => point.y)
+      const minX = Math.min(...xs)
+      const maxX = Math.max(...xs)
+      const minY = Math.min(...ys)
+      const maxY = Math.max(...ys)
+      addFrame(
+        ops,
+        { x: (minX + maxX) / 2, y: (minY + maxY) / 2 },
+        maxX - minX,
+        maxY - minY,
+        mark.semantic as FrameOp['semantic'],
+        buildPolylineSegments(sampled, false, AsciiLayer.LINES, mark.semantic),
+      )
       return
     }
     if (mark.semantic?.role === 'symbol' && mark.semantic.symbol) {

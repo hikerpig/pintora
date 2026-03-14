@@ -124,7 +124,12 @@ export class TextGrid {
     }
   }
 
-  clearHorizontalLineRange(row: number, colStart: number, colEnd: number, maxPriority = Number.POSITIVE_INFINITY): void {
+  clearHorizontalLineRange(
+    row: number,
+    colStart: number,
+    colEnd: number,
+    maxPriority = Number.POSITIVE_INFINITY,
+  ): void {
     const left = Math.max(0, Math.min(colStart, colEnd))
     const right = Math.min(this.cols - 1, Math.max(colStart, colEnd))
     if (row < 0 || row >= this.rows) return

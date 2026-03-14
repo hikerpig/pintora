@@ -217,6 +217,66 @@ activityDiagram
       expect(compact).toContain('◇')
     })
 
+    it('renders notes as annotation cards instead of ordinary boxes in strict ascii', () => {
+      configApi.setConfig({
+        core: {
+          textRenderer: {
+            charset: 'ascii',
+          },
+        },
+      })
+
+      const code = `
+activityDiagram
+  :Do work;
+  note right: side note
+      `
+
+      const text = renderToAscii(code)
+      const lines = text.split('\n')
+      const noteLine = lines.find(line => line.includes('side note')) || ''
+
+      expect(text).toContain('.')
+      expect(text).toContain("'")
+      expect(noteLine).toContain(':')
+      expect(noteLine).not.toMatch(/\|\s*side note\s*\|/)
+    })
+
+    it('renders unicode notes as folded-corner cards', () => {
+      const code = `
+activityDiagram
+  :Do work;
+  note right: side note
+      `
+
+      const text = renderToAscii(code)
+
+      const noteLines = text
+        .split('\n')
+        .filter(line => line.includes('side note') || line.includes('╭') || line.includes('╰'))
+
+      expect(noteLines[0] || '').toMatch(/╭.*┬╮/)
+      expect(noteLines.join('\n')).toMatch(/╰│/)
+      expect(text).toContain('side note')
+    })
+
+    it('renders activity decision bodies with decorated frame corners in unicode mode', () => {
+      const code = `
+activityDiagram
+  if (ready?) then
+    :Accept;
+  else (no)
+    :Reject;
+  endif
+      `
+
+      const text = renderToAscii(code)
+      const compact = text.replace(/\s/g, '')
+
+      expect(compact).toContain('ready?'.replace(/\s/g, ''))
+      expect(compact).toContain('◇')
+    })
+
     it('keeps a single partition action off the outer border in ascii renderer', () => {
       configApi.setConfig({
         core: {
@@ -274,7 +334,7 @@ activityDiagram
       expect(initServicesLineIndex).toBeGreaterThanOrEqual(0)
       expect(lines[readConfigLineIndex - 1]).toMatch(/\+[-v]+\+/)
       expect(readConfigLine).toMatch(/\|\s*read config\s+\|/)
-      expect(initServicesLine).toMatch(/\|\s+\|init themes\s+\|\s{2}\|init internal services\s+\|/)
+      expect(initServicesLine).toMatch(/:\s*init themes\s*:\s{2}\|init internal services\s+\|/)
       expect(initServicesLine).not.toContain('||')
     })
 
@@ -301,7 +361,7 @@ activityDiagram
       const lines = text.split('\n')
       const sharedLine = lines.find(line => line.includes('init internal services')) || ''
 
-      expect(sharedLine).toMatch(/\|\s+init internal services\s+\|\s{2}\|\s*init themes\s+\|/)
+      expect(sharedLine).toMatch(/init internal services\s+\|\s{2}: ?init themes ?:/)
       expect(sharedLine).not.toContain('init internal serviinit themes')
     })
 
@@ -329,7 +389,7 @@ activityDiagram
       const actionLine = lines.find(line => line.includes('init internal services')) || ''
 
       expect(titleLine).not.toContain('Init────────')
-      expect(actionLine).toMatch(/\|\s+\|init themes\s+\|\s{2}\|init internal services\s+\|/)
+      expect(actionLine).toMatch(/:\s*init themes\s*:\s{2}\|init internal services\s+\|/)
     })
   })
 
