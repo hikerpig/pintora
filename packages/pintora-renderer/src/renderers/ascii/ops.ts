@@ -1,4 +1,4 @@
-import { ConnectorSemantic, MarkAttrs, MarkSemantic } from '@pintora/core'
+import { ConnectorSemantic, MarkAttrs, MarkSemantic, SymbolSemantic } from '@pintora/core'
 import { Point } from './types'
 
 /**
@@ -37,6 +37,16 @@ export type ConnectorOp = {
   semantic: MarkSemantic & { connector: ConnectorSemantic }
 }
 
+export type SymbolOp = {
+  kind: 'symbol'
+  point: Point
+  width: number
+  height: number
+  layer: ShapeLayer
+  semantic: MarkSemantic & { symbol: SymbolSemantic }
+  fallbackOps: SegmentOp[]
+}
+
 export type RectOp = {
   kind: 'rect'
   points: [Point, Point, Point, Point]
@@ -62,4 +72,4 @@ export type TextOp = {
   layer: TextLayer
 }
 
-export type DrawOp = SegmentOp | RectOp | ConnectorOp | TextOp
+export type DrawOp = SegmentOp | RectOp | ConnectorOp | SymbolOp | TextOp

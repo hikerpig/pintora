@@ -37,6 +37,7 @@ import { getPointsCurvePath, getPointsLinearPath } from '../util/line-util'
 import { makeBounds, tryExpandBounds } from '../util/mark-positioner'
 import { getTextDimensionsInPresicion } from '../util/text'
 import { makeAsciiDecorationSemantic, makeConnectorSemantic } from '../util/connector'
+import { makeSymbolSemantic } from '../util/symbol'
 import { makeTextMark } from './artist-util'
 import { ActivityConf, getConf } from './config'
 import {
@@ -655,6 +656,10 @@ class ActivityDraw {
       },
       { class: opts.class || 'activity__condition-end' },
     )
+    diamondMark.semantic = makeSymbolSemantic({
+      family: 'activity-node',
+      kind: 'activity-decision',
+    })
 
     const moveDiamond = (x: number, y: number) => {
       // for some strange reason, we can't specify two move commands at the first of the path,
@@ -1016,11 +1021,19 @@ class ActivityDraw {
         r,
         fill,
       })
+      bgMark.semantic = makeSymbolSemantic({
+        family: 'activity-node',
+        kind: 'activity-start',
+      })
       group.children.push(bgMark)
     } else if (label === 'stop' || label === 'end') {
       const bgMark = makeCircle({
         r,
         stroke,
+      })
+      bgMark.semantic = makeSymbolSemantic({
+        family: 'activity-node',
+        kind: 'activity-end',
       })
       const centerCircle = makeCircle({
         r: r * 0.6,

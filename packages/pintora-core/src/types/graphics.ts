@@ -14,13 +14,17 @@ export interface GraphicsIR extends Figure {
 
 export type TransformPolicy = 'stretch' | 'fixed' | 'scale'
 
-export type MarkSemanticRole = 'container' | 'backdrop' | 'separator' | 'decoration' | 'connector'
+export type MarkSemanticRole = 'container' | 'backdrop' | 'separator' | 'decoration' | 'connector' | 'symbol'
 
 export type MarkStrokePolicy = 'always' | 'optional' | 'none'
 
 export type ConnectorFamily = 'sequence-message' | 'er-relationship' | 'component-relationship' | 'activity-flow'
 
 export type ConnectorShaftStyle = 'solid' | 'dashed'
+
+export type SymbolFamily = 'activity-node' | 'component-node'
+
+export type SymbolKind = 'activity-start' | 'activity-end' | 'activity-decision' | 'component-interface'
 
 export type ConnectorTerminatorKind =
   | 'none'
@@ -44,6 +48,12 @@ export interface ConnectorSemantic {
   endTerminator?: ConnectorTerminator
 }
 
+export interface SymbolSemantic {
+  family: SymbolFamily
+  kind: SymbolKind
+  compact: boolean
+}
+
 export interface MarkSemantic {
   /**
    * Semantic role used by different renderers to interpret a mark
@@ -65,6 +75,11 @@ export interface MarkSemantic {
    * preserve endpoint meaning instead of flattening marker geometry.
    */
   connector?: ConnectorSemantic
+  /**
+   * Optional semantic symbol data for low-fidelity renderers that need to
+   * preserve node meaning instead of sampling small shapes into noisy geometry.
+   */
+  symbol?: SymbolSemantic
 }
 
 export interface IMark {

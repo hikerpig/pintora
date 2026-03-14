@@ -385,6 +385,15 @@ exports[`component-artist match example snapshot 1`] = `
             },
             "class": "component__interface-circle",
             "itemId": "node-GraphicsIR",
+            "semantic": {
+              "role": "symbol",
+              "strokePolicy": "always",
+              "symbol": {
+                "compact": true,
+                "family": "component-node",
+                "kind": "component-interface",
+              },
+            },
             "type": "circle",
           },
           {
@@ -416,6 +425,15 @@ exports[`component-artist match example snapshot 1`] = `
             },
             "class": "component__interface-circle",
             "itemId": "node-IRenderer",
+            "semantic": {
+              "role": "symbol",
+              "strokePolicy": "always",
+              "symbol": {
+                "compact": true,
+                "family": "component-node",
+                "kind": "component-interface",
+              },
+            },
             "type": "circle",
           },
           {
@@ -447,6 +465,15 @@ exports[`component-artist match example snapshot 1`] = `
             },
             "class": "component__interface-circle",
             "itemId": "node-IDiagram",
+            "semantic": {
+              "role": "symbol",
+              "strokePolicy": "always",
+              "symbol": {
+                "compact": true,
+                "family": "component-node",
+                "kind": "component-interface",
+              },
+            },
             "type": "circle",
           },
           {
@@ -478,6 +505,15 @@ exports[`component-artist match example snapshot 1`] = `
             },
             "class": "component__interface-circle",
             "itemId": "node-renderFn",
+            "semantic": {
+              "role": "symbol",
+              "strokePolicy": "always",
+              "symbol": {
+                "compact": true,
+                "family": "component-node",
+                "kind": "component-interface",
+              },
+            },
             "type": "circle",
           },
           {

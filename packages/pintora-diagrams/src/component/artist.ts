@@ -37,6 +37,7 @@ import { DagreWrapper } from '../util/dagre-wrapper'
 import { getFontConfig } from '../util/font-config'
 import { BaseArtist } from '../util/base-artist'
 import { makeAsciiDecorationSemantic, makeConnectorSemantic } from '../util/connector'
+import { makeSymbolSemantic } from '../util/symbol'
 
 let conf: ComponentConf
 let fontConfig: IFont
@@ -70,10 +71,12 @@ type SkippedEdgeData = {
 }
 
 function getComponentConnectorSemantic(relationship: Relationship) {
-  const shaftStyle = relationship.line.lineType === LineType.DOTTED_ARROW || relationship.line.lineType === LineType.DOTTED
-    ? 'dashed'
-    : 'solid'
-  const hasArrow = relationship.line.lineType === LineType.SOLID_ARROW || relationship.line.lineType === LineType.DOTTED_ARROW
+  const shaftStyle =
+    relationship.line.lineType === LineType.DOTTED_ARROW || relationship.line.lineType === LineType.DOTTED
+      ? 'dashed'
+      : 'solid'
+  const hasArrow =
+    relationship.line.lineType === LineType.SOLID_ARROW || relationship.line.lineType === LineType.DOTTED_ARROW
   const isReversed = !!relationship.line.isReversed
 
   return makeConnectorSemantic({
@@ -302,6 +305,10 @@ function drawInterfacesTo(parentMark: Group, ir: ComponentDiagramIR, g: LayoutGr
       },
       { class: 'component__interface-circle', itemId },
     )
+    circleMark.semantic = makeSymbolSemantic({
+      family: 'component-node',
+      kind: 'component-interface',
+    })
 
     const textMark = makeMark('text', {
       text: label,
@@ -331,8 +338,16 @@ function drawInterfacesTo(parentMark: Group, ir: ComponentDiagramIR, g: LayoutGr
       outerWidth,
       onLayout(data: LayoutNode) {
         const { x, y } = data // the center of the node
-        safeAssign(circleMark.attrs, { cx: x, cy: y - labelDims.height / 2 + 2 })
+        const circleCy = y - labelDims.height / 2 + 2
+        safeAssign(circleMark.attrs, { cx: x, cy: circleCy })
         safeAssign(textMark.attrs, { x, y: y + 2 })
+        safeAssign(data, {
+          outerLeft: x - outerWidth / 2,
+          outerRight: x + outerWidth / 2,
+          outerTop: circleCy - interfaceSize / 2,
+          outerBottom: y + 2 + labelDims.height,
+          outerHeight: labelDims.height + interfaceSize,
+        })
       },
     }
 

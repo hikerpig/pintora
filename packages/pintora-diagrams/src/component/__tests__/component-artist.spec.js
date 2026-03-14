@@ -1,6 +1,11 @@
 import { diagramRegistry } from '@pintora/core'
 import { EXAMPLES } from '@pintora/test-shared'
-import { testDraw, prepareDiagramConfig, stripDrawResultForSnapshot } from '../../__tests__/test-util'
+import {
+  findMarkInGraphicsIR,
+  testDraw,
+  prepareDiagramConfig,
+  stripDrawResultForSnapshot,
+} from '../../__tests__/test-util'
 import { componentDiagram } from '../index'
 
 describe('component-artist', () => {
@@ -107,6 +112,29 @@ describe('component-artist', () => {
         shaftStyle: expected.shaftStyle,
         startTerminator: expected.startTerminator,
         endTerminator: expected.endTerminator,
+      },
+    })
+  })
+
+  it('marks component interface circles with symbol semantics', () => {
+    const code = `
+componentDiagram
+  () ServiceApi
+`
+
+    const result = testDraw(code)
+    const circleMark = findMarkInGraphicsIR(
+      result.graphicIR,
+      mark => mark.type === 'circle' && mark.class === 'component__interface-circle',
+    )
+
+    expect(circleMark?.semantic).toMatchObject({
+      role: 'symbol',
+      strokePolicy: 'always',
+      symbol: {
+        family: 'component-node',
+        kind: 'component-interface',
+        compact: true,
       },
     })
   })

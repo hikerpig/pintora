@@ -184,4 +184,27 @@ describe('activity-artist', () => {
       },
     })
   })
+
+  it('marks activity start, end, and decision nodes with symbol semantics', () => {
+    const code = stripStartEmptyLines(`
+    activityDiagram
+    start
+    if (ready?) then
+      :Ship it;
+    else (no)
+      :Wait;
+    endif
+    stop
+    `)
+
+    const result = testDraw(code)
+    const symbolKinds = new Set<string>()
+
+    traverseGraphicsIR(result.graphicIR, mark => {
+      const kind = mark.semantic?.symbol?.kind
+      if (kind) symbolKinds.add(kind)
+    })
+
+    expect(symbolKinds).toEqual(new Set(['activity-start', 'activity-end', 'activity-decision']))
+  })
 })

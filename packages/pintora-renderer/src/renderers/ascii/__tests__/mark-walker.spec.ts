@@ -88,4 +88,33 @@ describe('mark walker', () => {
       { x: 64, y: 16 },
     ])
   })
+
+  it('collects semantic symbol marks as symbol ops with fallback geometry', () => {
+    const mark: Group = {
+      type: 'group',
+      children: [
+        {
+          type: 'circle',
+          attrs: { cx: 24, cy: 16, r: 8 },
+          semantic: {
+            role: 'symbol',
+            strokePolicy: 'always',
+            symbol: {
+              family: 'component-node',
+              kind: 'component-interface',
+              compact: true,
+            },
+          } as any,
+        } as any,
+      ],
+    }
+
+    const ops = collectDrawOps(mark, IDENTITY_MATRIX)
+    const symbolOp = ops.find((op: any) => op.kind === 'symbol') as any
+
+    expect(symbolOp).toBeTruthy()
+    expect(symbolOp.point).toEqual({ x: 24, y: 16 })
+    expect(symbolOp.semantic.symbol.kind).toBe('component-interface')
+    expect(symbolOp.fallbackOps.length).toBeGreaterThan(0)
+  })
 })

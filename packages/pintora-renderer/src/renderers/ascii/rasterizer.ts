@@ -6,8 +6,9 @@ import {
   getVerticalTerminatorGlyph,
 } from './connector-glyphs'
 import { TextGrid } from './grid'
-import { AsciiLayer, ConnectorOp, DrawOp, RectOp, SegmentOp, TextOp } from './ops'
+import { AsciiLayer, ConnectorOp, DrawOp, RectOp, SegmentOp, SymbolOp, TextOp } from './ops'
 import { normalizeDrawOps } from './normalize-ops'
+import { getSymbolGlyph } from './symbol-glyphs'
 import { measureAsciiText } from './text-metrics'
 import { resolveTextPlacement } from './text-layout'
 import { Charset, Point } from './types'
@@ -285,6 +286,55 @@ function drawConnector(grid: TextGrid, op: ConnectorOp, options: RasterizeOption
   drawConnectorFallback(grid, op, options)
 }
 
+function drawSymbolFallback(grid: TextGrid, op: SymbolOp, options: RasterizeOptions): void {
+  op.fallbackOps.forEach(fallbackOp => drawSegment(grid, fallbackOp, options))
+}
+
+function drawSymbol(grid: TextGrid, op: SymbolOp, options: RasterizeOptions): void {
+  if (!op.semantic.symbol.compact) {
+    drawSymbolFallback(grid, op, options)
+    return
+  }
+
+  const glyph = getSymbolGlyph(op.semantic.symbol.kind, options.charset)
+  if (!glyph) {
+    drawSymbolFallback(grid, op, options)
+    return
+  }
+
+  const glyphWidthCells = Array.from(glyph).reduce((sum, ch) => sum + Math.max(1, charWidth(ch)), 0)
+  const glyphHeightRows = Math.max(1, glyph.split('\n').length)
+  const availableWidthCells = Math.max(1, Math.round(op.width / options.cellWidth))
+  const availableHeightRows = Math.max(1, Math.round(op.height / options.cellHeight))
+
+  if (glyphWidthCells > availableWidthCells || glyphHeightRows > availableHeightRows) {
+    drawSymbolFallback(grid, op, options)
+    return
+  }
+
+  const { col, row } = lineToGrid(op.point, options)
+  const startCol = col - Math.floor(glyphWidthCells / 2)
+  const alignedRow =
+    op.semantic.symbol.kind === 'component-interface'
+      ? Math.floor((op.point.y - op.height / 2) / options.cellHeight)
+      : row - Math.floor(glyphHeightRows / 2)
+  const startRow = alignedRow
+
+  if (
+    startCol < 0 ||
+    startRow < 0 ||
+    startCol + glyphWidthCells > grid.cols ||
+    startRow + glyphHeightRows > grid.rows
+  ) {
+    drawSymbolFallback(grid, op, options)
+    return
+  }
+
+  glyph.split('\n').forEach((line, index) => {
+    drawGlyphString(grid, startCol, startRow + index, line, op.layer)
+  })
+}
+
 export function rasterize(ops: DrawOp[], options: RasterizeOptions): TextGrid {
   const grid = new TextGrid(options.cols, options.rows, options.charset, options.trimRight)
   const normalized = normalizeDrawOps(ops, {
@@ -303,6 +353,10 @@ export function rasterize(ops: DrawOp[], options: RasterizeOptions): TextGrid {
     }
     if (op.kind === 'connector') {
       drawConnector(grid, op, options)
+      continue
+    }
+    if (op.kind === 'symbol') {
+      drawSymbol(grid, op, options)
       continue
     }
     drawText(grid, op, options)

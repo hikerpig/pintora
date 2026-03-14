@@ -262,4 +262,96 @@ describe('rasterizer', () => {
     expect(grid.toString().split('\n').filter(Boolean).length).toBeGreaterThan(1)
     expect(grid.toString()).not.toContain('▶')
   })
+
+  it('renders compact glyphs for semantic symbols', () => {
+    const ops = [
+      {
+        kind: 'symbol',
+        point: { x: 16, y: 16 },
+        width: 16,
+        height: 16,
+        layer: AsciiLayer.MARKERS,
+        semantic: {
+          role: 'symbol',
+          strokePolicy: 'always',
+          symbol: {
+            family: 'activity-node',
+            kind: 'activity-start',
+            compact: true,
+          },
+        },
+        fallbackOps: [],
+      },
+      {
+        kind: 'symbol',
+        point: { x: 40, y: 16 },
+        width: 16,
+        height: 16,
+        layer: AsciiLayer.MARKERS,
+        semantic: {
+          role: 'symbol',
+          strokePolicy: 'always',
+          symbol: {
+            family: 'component-node',
+            kind: 'component-interface',
+            compact: true,
+          },
+        },
+        fallbackOps: [],
+      },
+    ] as any
+
+    const grid = rasterize(ops, {
+      charset: 'unicode',
+      cellWidth: 8,
+      cellHeight: 16,
+      cols: 8,
+      rows: 4,
+      trimRight: true,
+    })
+
+    expect(grid.getGlyphAt(2, 1)).toBe('●')
+    expect(grid.getGlyphAt(5, 0)).toBe('○')
+  })
+
+  it('falls back to geometric rasterization for unsupported semantic symbols', () => {
+    const ops = [
+      {
+        kind: 'symbol',
+        point: { x: 16, y: 16 },
+        width: 16,
+        height: 16,
+        layer: AsciiLayer.MARKERS,
+        semantic: {
+          role: 'symbol',
+          strokePolicy: 'always',
+          symbol: {
+            family: 'activity-node',
+            kind: 'unknown-symbol',
+            compact: true,
+          },
+        },
+        fallbackOps: [
+          {
+            kind: 'segment',
+            p0: { x: 8, y: 16 },
+            p1: { x: 24, y: 16 },
+            layer: AsciiLayer.LINES,
+          },
+        ],
+      },
+    ] as any
+
+    const grid = rasterize(ops, {
+      charset: 'ascii',
+      cellWidth: 8,
+      cellHeight: 16,
+      cols: 6,
+      rows: 4,
+      trimRight: true,
+    })
+
+    expect(grid.getGlyphAt(1, 1)).toBe('-')
+    expect(grid.toString()).not.toContain('@')
+  })
 })

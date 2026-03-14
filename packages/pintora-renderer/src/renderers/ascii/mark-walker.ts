@@ -1,6 +1,6 @@
 import { Mark } from '@pintora/core'
 import { flattenPath } from './path-flattener'
-import { ConnectorOp, DrawOp, RectOp, SegmentOp, TextOp, AsciiLayer, ShapeLayer } from './ops'
+import { ConnectorOp, DrawOp, RectOp, SegmentOp, SymbolOp, TextOp, AsciiLayer, ShapeLayer } from './ops'
 import { IDENTITY_MATRIX, Matrix, Point } from './types'
 
 function multiplyMat3(a: Matrix, b: Matrix): Matrix {
@@ -46,13 +46,7 @@ function addPolyline(
   layer: ShapeLayer = AsciiLayer.LINES,
   semantic?: SegmentOp['semantic'],
 ): void {
-  if (points.length < 2) return
-  for (let i = 1; i < points.length; i++) {
-    addSegment(ops, points[i - 1], points[i], layer, semantic)
-  }
-  if (close && points.length > 2) {
-    addSegment(ops, points[points.length - 1], points[0], layer, semantic)
-  }
+  buildPolylineSegments(points, close, layer, semantic).forEach(op => ops.push(op))
 }
 
 function addConnector(ops: DrawOp[], points: Point[], semantic: ConnectorOp['semantic']): void {
@@ -62,6 +56,43 @@ function addConnector(ops: DrawOp[], points: Point[], semantic: ConnectorOp['sem
     points,
     layer: AsciiLayer.LINES,
     semantic,
+  }
+  ops.push(op)
+}
+
+function buildPolylineSegments(
+  points: Point[],
+  close = false,
+  layer: ShapeLayer = AsciiLayer.LINES,
+  semantic?: SegmentOp['semantic'],
+): SegmentOp[] {
+  if (points.length < 2) return []
+  const segments: SegmentOp[] = []
+  for (let i = 1; i < points.length; i++) {
+    segments.push({ kind: 'segment', p0: points[i - 1], p1: points[i], layer, semantic })
+  }
+  if (close && points.length > 2) {
+    segments.push({ kind: 'segment', p0: points[points.length - 1], p1: points[0], layer, semantic })
+  }
+  return segments
+}
+
+function addSymbol(
+  ops: DrawOp[],
+  point: Point,
+  width: number,
+  height: number,
+  semantic: SymbolOp['semantic'],
+  fallbackOps: SegmentOp[],
+): void {
+  const op: SymbolOp = {
+    kind: 'symbol',
+    point,
+    width,
+    height,
+    layer: AsciiLayer.MARKERS,
+    semantic,
+    fallbackOps,
   }
   ops.push(op)
 }
@@ -166,7 +197,19 @@ function collect(mark: Mark, parentMatrix: Matrix, ops: DrawOp[]): void {
     const cx = Number(attrs.cx ?? attrs.x ?? 0)
     const cy = Number(attrs.cy ?? attrs.y ?? 0)
     const r = Number(attrs.r || 0)
-    addPolyline(ops, sampleCircle(cx, cy, r, matrix), false, AsciiLayer.LINES, mark.semantic)
+    const sampledPoints = sampleCircle(cx, cy, r, matrix)
+    if (mark.semantic?.role === 'symbol' && mark.semantic.symbol) {
+      addSymbol(
+        ops,
+        transformPoint({ x: cx, y: cy }, matrix),
+        r * 2,
+        r * 2,
+        mark.semantic as SymbolOp['semantic'],
+        buildPolylineSegments(sampledPoints, false, AsciiLayer.LINES, mark.semantic),
+      )
+      return
+    }
+    addPolyline(ops, sampledPoints, false, AsciiLayer.LINES, mark.semantic)
     return
   }
 
@@ -176,7 +219,19 @@ function collect(mark: Mark, parentMatrix: Matrix, ops: DrawOp[]): void {
     const cy = Number(attrs.cy ?? 0)
     const rx = Number(attrs.rx ?? 0)
     const ry = Number(attrs.ry ?? 0)
-    addPolyline(ops, sampleEllipse(cx, cy, rx, ry, matrix), false, AsciiLayer.LINES, mark.semantic)
+    const sampledPoints = sampleEllipse(cx, cy, rx, ry, matrix)
+    if (mark.semantic?.role === 'symbol' && mark.semantic.symbol) {
+      addSymbol(
+        ops,
+        transformPoint({ x: cx, y: cy }, matrix),
+        rx * 2,
+        ry * 2,
+        mark.semantic as SymbolOp['semantic'],
+        buildPolylineSegments(sampledPoints, false, AsciiLayer.LINES, mark.semantic),
+      )
+      return
+    }
+    addPolyline(ops, sampledPoints, false, AsciiLayer.LINES, mark.semantic)
     return
   }
 
@@ -185,6 +240,23 @@ function collect(mark: Mark, parentMatrix: Matrix, ops: DrawOp[]): void {
     const sampled = flattenPath(mark.attrs.path, maxStep).map(point => transformPoint(point, matrix))
     if (mark.semantic?.role === 'connector' && mark.semantic.connector) {
       addConnector(ops, sampled, mark.semantic as ConnectorOp['semantic'])
+      return
+    }
+    if (mark.semantic?.role === 'symbol' && mark.semantic.symbol) {
+      const xs = sampled.map(point => point.x)
+      const ys = sampled.map(point => point.y)
+      const minX = Math.min(...xs)
+      const maxX = Math.max(...xs)
+      const minY = Math.min(...ys)
+      const maxY = Math.max(...ys)
+      addSymbol(
+        ops,
+        { x: (minX + maxX) / 2, y: (minY + maxY) / 2 },
+        maxX - minX,
+        maxY - minY,
+        mark.semantic as SymbolOp['semantic'],
+        buildPolylineSegments(sampled, false, AsciiLayer.LINES, mark.semantic),
+      )
       return
     }
     addPolyline(ops, sampled, false, AsciiLayer.LINES, mark.semantic)

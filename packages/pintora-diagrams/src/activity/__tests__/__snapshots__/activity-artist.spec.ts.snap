@@ -12,6 +12,15 @@ exports[`activity-artist draw fork 1`] = `
             "attrs": {
               "fill": "#3b4044",
             },
+            "semantic": {
+              "role": "symbol",
+              "strokePolicy": "always",
+              "symbol": {
+                "compact": true,
+                "family": "activity-node",
+                "kind": "activity-start",
+              },
+            },
             "type": "circle",
           },
         ],
@@ -51,6 +60,15 @@ exports[`activity-artist draw fork 1`] = `
           "stroke": "#3b4044",
         },
         "class": "activity__condition-end",
+        "semantic": {
+          "role": "symbol",
+          "strokePolicy": "always",
+          "symbol": {
+            "compact": true,
+            "family": "activity-node",
+            "kind": "activity-decision",
+          },
+        },
         "type": "path",
       },
       {
@@ -271,6 +289,15 @@ exports[`activity-artist draw fork 1`] = `
           {
             "attrs": {
               "stroke": "#3b4044",
+            },
+            "semantic": {
+              "role": "symbol",
+              "strokePolicy": "always",
+              "symbol": {
+                "compact": true,
+                "family": "activity-node",
+                "kind": "activity-end",
+              },
             },
             "type": "circle",
           },
@@ -651,6 +678,15 @@ exports[`activity-artist draw repeat 1`] = `
             "attrs": {
               "fill": "#3b4044",
             },
+            "semantic": {
+              "role": "symbol",
+              "strokePolicy": "always",
+              "symbol": {
+                "compact": true,
+                "family": "activity-node",
+                "kind": "activity-start",
+              },
+            },
             "type": "circle",
           },
         ],
@@ -778,6 +814,15 @@ exports[`activity-artist draw repeat 1`] = `
           "stroke": "#3b4044",
         },
         "class": "activity__repeat-start",
+        "semantic": {
+          "role": "symbol",
+          "strokePolicy": "always",
+          "symbol": {
+            "compact": true,
+            "family": "activity-node",
+            "kind": "activity-decision",
+          },
+        },
         "type": "path",
       },
       {
@@ -816,6 +861,15 @@ exports[`activity-artist draw repeat 1`] = `
           {
             "attrs": {
               "stroke": "#3b4044",
+            },
+            "semantic": {
+              "role": "symbol",
+              "strokePolicy": "always",
+              "symbol": {
+                "compact": true,
+                "family": "activity-node",
+                "kind": "activity-end",
+              },
             },
             "type": "circle",
           },

@@ -165,6 +165,19 @@ componentDiagram
       expect(compact).toContain('▼')
       expect(compact).not.toContain('▲')
     })
+
+    it('renders semantic interface symbols compactly in unicode mode', () => {
+      const code = `
+componentDiagram
+  () ServiceApi
+`
+
+      const text = renderToAscii(code)
+      const compact = text.replace(/\s/g, '')
+
+      expect(compact).toContain('ServiceApi')
+      expect(compact).toContain('○')
+    })
   })
 
   describe('activity diagram', () => {
@@ -182,6 +195,26 @@ activityDiagram
       expect(compact).toContain('Do work'.replace(/\s/g, ''))
       expect(compact).toContain('▼')
       expect(compact).not.toContain('▲')
+    })
+
+    it('renders semantic start, end, and decision symbols compactly in unicode mode', () => {
+      const code = `
+activityDiagram
+  start
+  if (ready?) then
+    :Ship it;
+  else (no)
+    :Wait;
+  endif
+  stop
+      `
+
+      const text = renderToAscii(code)
+      const compact = text.replace(/\s/g, '')
+
+      expect(compact).toContain('●')
+      expect(compact).toContain('◉')
+      expect(compact).toContain('◇')
     })
 
     it('keeps a single partition action off the outer border in ascii renderer', () => {
