@@ -753,7 +753,13 @@ class ActivityDraw {
         lineWidth: 2,
         radius: 2,
       },
-      { class: 'activity__group-rect' },
+      {
+        class: 'activity__group-rect',
+        semantic: {
+          role: 'container',
+          strokePolicy: 'always',
+        },
+      },
     )
 
     const groupLabel = aGroup.label || aGroup.name
@@ -1247,6 +1253,11 @@ class ActivityDraw {
       type: 'rect',
       class: 'note__bg',
       attrs: rectAttrs,
+      semantic: {
+        role: 'backdrop',
+        occludesBelow: true,
+        strokePolicy: 'always',
+      },
     }
 
     const textMark: Text = {
@@ -1333,14 +1344,23 @@ function drawActionMarks({ message, conf }: DrawActionMarksOpts) {
   const fontConfig = getFontConfig(conf)
   const textDims = getTextDimensionsInPresicion(message, fontConfig)
   const actionInfo = getActionRectSize(message)
-  const rectMark = makeMark('rect', {
-    width: actionInfo.rectWidth,
-    height: actionInfo.rectHeight,
-    x: 0,
-    y: 0,
-    fill: conf.actionBackground,
-    stroke: conf.actionBorderColor,
-  })
+  const rectMark = makeMark(
+    'rect',
+    {
+      width: actionInfo.rectWidth,
+      height: actionInfo.rectHeight,
+      x: 0,
+      y: 0,
+      fill: conf.actionBackground,
+      stroke: conf.actionBorderColor,
+    },
+    {
+      semantic: {
+        role: 'container',
+        strokePolicy: 'always',
+      },
+    },
+  )
   const textMark = makeTextMark(conf, message, textDims, {
     y: actionInfo.rectHeight / 2,
     x: actionInfo.rectWidth / 2,

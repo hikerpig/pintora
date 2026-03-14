@@ -1,6 +1,7 @@
 import { diagramRegistry } from '@pintora/core'
 import { EXAMPLES, stripStartEmptyLines } from '@pintora/test-shared'
 import {
+  findMarkInGraphicsIR,
   testDraw,
   prepareDiagramConfig,
   stripDrawResultForSnapshot,
@@ -96,6 +97,63 @@ describe('activity-artist', () => {
     const result = testDraw(code)
     expect(result.graphicIR.mark).toBeTruthy()
   }, 1000) // 1s timeout
+
+  it('marks action boxes as semantic containers for text renderers', () => {
+    const code = stripStartEmptyLines(`
+    activityDiagram
+    :Do work;
+    `)
+
+    const result = testDraw(code)
+    const actionGroup = findMarkInGraphicsIR(
+      result.graphicIR,
+      mark =>
+        mark.type === 'group' && mark.children?.some(child => child.type === 'text' && child.attrs.text === 'Do work'),
+    )
+    const actionBox = actionGroup?.type === 'group' ? actionGroup.children.find(child => child.type === 'rect') : null
+
+    expect(actionBox?.semantic).toEqual({
+      role: 'container',
+      strokePolicy: 'always',
+    })
+  })
+
+  it('marks partition frames as semantic containers for text renderers', () => {
+    const code = stripStartEmptyLines(`
+    activityDiagram
+    partition Batch {
+      :Do work;
+    }
+    `)
+
+    const result = testDraw(code)
+    const groupRect = findMarkInGraphicsIR(
+      result.graphicIR,
+      mark => mark.type === 'rect' && mark.class === 'activity__group-rect',
+    )
+
+    expect(groupRect?.semantic).toEqual({
+      role: 'container',
+      strokePolicy: 'always',
+    })
+  })
+
+  it('marks note backgrounds as semantic backdrops for text renderers', () => {
+    const code = stripStartEmptyLines(`
+    activityDiagram
+    :Do work;
+    note right: side note
+    `)
+
+    const result = testDraw(code)
+    const noteBg = findMarkInGraphicsIR(result.graphicIR, mark => mark.type === 'rect' && mark.class === 'note__bg')
+
+    expect(noteBg?.semantic).toEqual({
+      role: 'backdrop',
+      occludesBelow: true,
+      strokePolicy: 'always',
+    })
+  })
 
   it('marks straight activity flow shafts with connector semantics', () => {
     const code = stripStartEmptyLines(`

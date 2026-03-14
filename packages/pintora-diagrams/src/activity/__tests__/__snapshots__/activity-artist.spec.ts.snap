@@ -74,6 +74,10 @@ exports[`activity-artist draw fork 1`] = `
                       "fill": "#fdb05e",
                       "stroke": "#3b4044",
                     },
+                    "semantic": {
+                      "role": "container",
+                      "strokePolicy": "always",
+                    },
                     "type": "rect",
                   },
                   {
@@ -102,6 +106,10 @@ exports[`activity-artist draw fork 1`] = `
                 "attrs": {
                   "fill": "#fdb05e",
                   "stroke": "#3b4044",
+                },
+                "semantic": {
+                  "role": "container",
+                  "strokePolicy": "always",
                 },
                 "type": "rect",
               },
@@ -132,6 +140,10 @@ exports[`activity-artist draw fork 1`] = `
                       "fill": "#fdb05e",
                       "stroke": "#3b4044",
                     },
+                    "semantic": {
+                      "role": "container",
+                      "strokePolicy": "always",
+                    },
                     "type": "rect",
                   },
                   {
@@ -160,6 +172,10 @@ exports[`activity-artist draw fork 1`] = `
                 "attrs": {
                   "fill": "#fdb05e",
                   "stroke": "#3b4044",
+                },
+                "semantic": {
+                  "role": "container",
+                  "strokePolicy": "always",
                 },
                 "type": "rect",
               },
@@ -197,6 +213,10 @@ exports[`activity-artist draw fork 1`] = `
               "fill": "#fdb05e",
               "stroke": "#3b4044",
             },
+            "semantic": {
+              "role": "container",
+              "strokePolicy": "always",
+            },
             "type": "rect",
           },
           {
@@ -222,6 +242,10 @@ exports[`activity-artist draw fork 1`] = `
             "attrs": {
               "fill": "#fdb05e",
               "stroke": "#3b4044",
+            },
+            "semantic": {
+              "role": "container",
+              "strokePolicy": "always",
             },
             "type": "rect",
           },
@@ -668,6 +692,10 @@ exports[`activity-artist draw repeat 1`] = `
               "fill": "#fdb05e",
               "stroke": "#3b4044",
             },
+            "semantic": {
+              "role": "container",
+              "strokePolicy": "always",
+            },
             "type": "rect",
           },
           {
@@ -694,6 +722,10 @@ exports[`activity-artist draw repeat 1`] = `
             "attrs": {
               "fill": "#fdb05e",
               "stroke": "#3b4044",
+            },
+            "semantic": {
+              "role": "container",
+              "strokePolicy": "always",
             },
             "type": "rect",
           },
@@ -755,6 +787,10 @@ exports[`activity-artist draw repeat 1`] = `
             "attrs": {
               "fill": "#fdb05e",
               "stroke": "#3b4044",
+            },
+            "semantic": {
+              "role": "container",
+              "strokePolicy": "always",
             },
             "type": "rect",
           },

@@ -18,6 +18,8 @@ type ContainerBounds = {
   bottomBorderRow: number
 }
 
+type TextRegionBounds = ContainerBounds
+
 type HorizontalSeparator = {
   row: number
   minCol: number
@@ -36,6 +38,18 @@ type SharedContainerBorders = {
   maxXWithMatchingMin: Set<string>
   minYWithMatchingMax: Set<string>
   maxYWithMatchingMin: Set<string>
+}
+
+type RawContainerBounds = {
+  index: number
+  minX: number
+  maxX: number
+  minY: number
+  maxY: number
+}
+
+type RawRectBounds = RawContainerBounds & {
+  semantic?: RectOp['semantic']
 }
 
 function makeBorderKey(value: number): string {
@@ -84,9 +98,14 @@ function collectSharedContainerBorders(ops: DrawOp[]): SharedContainerBorders {
   }
 }
 
-function collectContainers(ops: DrawOp[], options: NormalizeOptions): ContainerBounds[] {
+function shouldUseAsTextRegion(op: RectOp): boolean {
+  if (op.semantic?.role === 'container') return true
+  return op.semantic?.role === 'backdrop' && op.semantic.strokePolicy === 'always'
+}
+
+function collectTextRegions(ops: DrawOp[], options: NormalizeOptions): TextRegionBounds[] {
   return ops
-    .filter((op): op is RectOp => op.kind === 'rect' && op.semantic?.role === 'container')
+    .filter((op): op is RectOp => op.kind === 'rect' && shouldUseAsTextRegion(op))
     .map(op => {
       const xs = op.points.map(point => point.x)
       const ys = op.points.map(point => point.y)
@@ -107,13 +126,199 @@ function collectContainers(ops: DrawOp[], options: NormalizeOptions): ContainerB
     })
 }
 
-function findContainerForText(op: TextOp, containers: ContainerBounds[]): ContainerBounds | undefined {
+function collectRawContainers(ops: DrawOp[]): RawContainerBounds[] {
+  return ops.flatMap((op, index) => {
+    if (op.kind !== 'rect' || op.semantic?.role !== 'container') return []
+    const xs = op.points.map(point => point.x)
+    const ys = op.points.map(point => point.y)
+    return [
+      {
+        index,
+        minX: Math.min(...xs),
+        maxX: Math.max(...xs),
+        minY: Math.min(...ys),
+        maxY: Math.max(...ys),
+      },
+    ]
+  })
+}
+
+function hasVisibleAsciiStroke(op: Extract<DrawOp, { kind: 'rect' }>): boolean {
+  return op.semantic?.strokePolicy !== 'none' && op.semantic?.strokePolicy !== 'optional'
+}
+
+function collectRawVisibleRects(ops: DrawOp[]): RawRectBounds[] {
+  return ops.flatMap((op, index) => {
+    if (op.kind !== 'rect' || !hasVisibleAsciiStroke(op)) return []
+    const xs = op.points.map(point => point.x)
+    const ys = op.points.map(point => point.y)
+    return [
+      {
+        index,
+        minX: Math.min(...xs),
+        maxX: Math.max(...xs),
+        minY: Math.min(...ys),
+        maxY: Math.max(...ys),
+        semantic: op.semantic,
+      },
+    ]
+  })
+}
+
+function findParentRawContainer(
+  target: RawContainerBounds,
+  containers: RawContainerBounds[],
+): RawContainerBounds | undefined {
   const matches = containers.filter(
     container =>
-      op.point.x >= container.minX &&
-      op.point.x <= container.maxX &&
-      op.point.y >= container.minY &&
-      op.point.y <= container.maxY,
+      container.index !== target.index &&
+      container.minX < target.minX &&
+      container.maxX > target.maxX &&
+      container.minY < target.minY &&
+      container.maxY > target.maxY,
+  )
+  if (matches.length === 0) return
+
+  return matches.reduce((smallest, current) => {
+    const smallestArea = (smallest.maxX - smallest.minX) * (smallest.maxY - smallest.minY)
+    const currentArea = (current.maxX - current.minX) * (current.maxY - current.minY)
+    return currentArea < smallestArea ? current : smallest
+  })
+}
+
+function preventNestedContainerBorderCollapse(
+  ops: DrawOp[],
+  rawContainers: RawContainerBounds[],
+  options: NormalizeOptions,
+): DrawOp[] {
+  return ops.map((op, index) => {
+    if (op.kind !== 'rect' || op.semantic?.role !== 'container') return op
+
+    const rawContainer = rawContainers.find(container => container.index === index)
+    if (!rawContainer) return op
+
+    const parentRaw = findParentRawContainer(rawContainer, rawContainers)
+    if (!parentRaw) return op
+
+    const parentOp = ops[parentRaw.index]
+    if (parentOp?.kind !== 'rect') return op
+
+    const xs = op.points.map(point => point.x)
+    const ys = op.points.map(point => point.y)
+    const parentXs = parentOp.points.map(point => point.x)
+    const parentYs = parentOp.points.map(point => point.y)
+
+    let minX = Math.min(...xs)
+    let maxX = Math.max(...xs)
+    let minY = Math.min(...ys)
+    let maxY = Math.max(...ys)
+
+    const parentMinX = Math.min(...parentXs)
+    const parentMaxX = Math.max(...parentXs)
+    const parentMinY = Math.min(...parentYs)
+    const parentMaxY = Math.max(...parentYs)
+
+    if (rawContainer.minX > parentRaw.minX && minX <= parentMinX) {
+      minX = parentMinX + options.cellWidth
+    }
+    if (rawContainer.maxX < parentRaw.maxX && maxX >= parentMaxX) {
+      maxX = parentMaxX - options.cellWidth
+    }
+    if (rawContainer.minY > parentRaw.minY && minY <= parentMinY) {
+      minY = parentMinY + options.cellHeight
+    }
+    if (rawContainer.maxY < parentRaw.maxY && maxY >= parentMaxY) {
+      maxY = parentMaxY - options.cellHeight
+    }
+
+    if (minX >= maxX || minY >= maxY) {
+      return op
+    }
+
+    return {
+      ...op,
+      points: [
+        { x: minX, y: minY },
+        { x: maxX, y: minY },
+        { x: maxX, y: maxY },
+        { x: minX, y: maxY },
+      ],
+    }
+  })
+}
+
+function preventVisibleRectBorderOverlap(
+  ops: DrawOp[],
+  rawRects: RawRectBounds[],
+  options: NormalizeOptions,
+): DrawOp[] {
+  return ops.map((op, index) => {
+    if (op.kind !== 'rect' || !hasVisibleAsciiStroke(op)) return op
+
+    const rawRect = rawRects.find(rect => rect.index === index)
+    if (!rawRect) return op
+
+    const xs = op.points.map(point => point.x)
+    const ys = op.points.map(point => point.y)
+    let minX = Math.min(...xs)
+    let maxX = Math.max(...xs)
+    let minY = Math.min(...ys)
+    let maxY = Math.max(...ys)
+
+    for (const otherRaw of rawRects) {
+      if (otherRaw.index === index) continue
+
+      const overlapsY = rawRect.minY < otherRaw.maxY && rawRect.maxY > otherRaw.minY
+      if (overlapsY) {
+        const currentMaxCol = Math.round(maxX / options.cellWidth)
+        const currentMinCol = Math.round(minX / options.cellWidth)
+        const otherMinCol = Math.round(otherRaw.minX / options.cellWidth)
+        const otherMaxCol = Math.round(otherRaw.maxX / options.cellWidth)
+
+        if (rawRect.maxX < otherRaw.minX && currentMaxCol >= otherMinCol - 1) {
+          maxX = Math.min(maxX, (otherMinCol - 2) * options.cellWidth)
+        }
+        if (rawRect.minX > otherRaw.maxX && currentMinCol <= otherMaxCol + 1) {
+          minX = Math.max(minX, (otherMaxCol + 2) * options.cellWidth)
+        }
+      }
+
+      const overlapsX = rawRect.minX < otherRaw.maxX && rawRect.maxX > otherRaw.minX
+      if (overlapsX) {
+        const currentMaxRow = Math.round(maxY / options.cellHeight)
+        const currentMinRow = Math.round(minY / options.cellHeight)
+        const otherMinRow = Math.round(otherRaw.minY / options.cellHeight)
+        const otherMaxRow = Math.round(otherRaw.maxY / options.cellHeight)
+
+        if (rawRect.maxY < otherRaw.minY && currentMaxRow >= otherMinRow - 1) {
+          maxY = Math.min(maxY, (otherMinRow - 2) * options.cellHeight)
+        }
+        if (rawRect.minY > otherRaw.maxY && currentMinRow <= otherMaxRow + 1) {
+          minY = Math.max(minY, (otherMaxRow + 2) * options.cellHeight)
+        }
+      }
+    }
+
+    if (minX >= maxX || minY >= maxY) {
+      return op
+    }
+
+    return {
+      ...op,
+      points: [
+        { x: minX, y: minY },
+        { x: maxX, y: minY },
+        { x: maxX, y: maxY },
+        { x: minX, y: maxY },
+      ],
+    }
+  })
+}
+
+function findTextRegionForText(op: TextOp, regions: TextRegionBounds[]): TextRegionBounds | undefined {
+  const matches = regions.filter(
+    region =>
+      op.point.x >= region.minX && op.point.x <= region.maxX && op.point.y >= region.minY && op.point.y <= region.maxY,
   )
   if (matches.length === 0) return
 
@@ -289,7 +494,7 @@ function normalizeRect(op: RectOp, options: NormalizeOptions, sharedBorders: Sha
 function normalizeText(
   op: TextOp,
   options: NormalizeOptions,
-  containers: ContainerBounds[],
+  textRegions: TextRegionBounds[],
   separators: HorizontalSeparator[],
 ): TextOp {
   const metrics = measureAsciiText(op.text, {
@@ -311,11 +516,11 @@ function normalizeText(
 
   let col = placement.col
   let row = placement.row
-  let repairs = op.repairs ? [...op.repairs] : undefined
+  const repairs = op.repairs ? [...op.repairs] : undefined
 
-  const container = findContainerForText(op, containers)
-  if (container) {
-    const innerBounds = getInnerBounds(container, metrics)
+  const textRegion = findTextRegionForText(op, textRegions)
+  if (textRegion) {
+    const innerBounds = getInnerBounds(textRegion, metrics)
     if (innerBounds) {
       const clamped = clampTextPlacementToContainer({ col, row }, innerBounds)
       col = clamped.col
@@ -337,7 +542,6 @@ function normalizeText(
         separators: containerSeparators,
         preferUp: op.textBaseline === 'middle',
       })
-
     }
   }
 
@@ -357,16 +561,20 @@ function normalizeText(
 
 export function normalizeDrawOps(ops: DrawOp[], options: NormalizeOptions): DrawOp[] {
   const sharedBorders = collectSharedContainerBorders(ops)
-  const normalizedShapes = ops.map(op => {
+  const rawContainers = collectRawContainers(ops)
+  const rawRects = collectRawVisibleRects(ops)
+  const snappedShapes = ops.map(op => {
     if (op.kind === 'segment') return normalizeSegment(op, options)
     if (op.kind === 'rect') return normalizeRect(op, options, sharedBorders)
     return op
   })
-  const containers = collectContainers(normalizedShapes, options)
+  const nestedSafeShapes = preventNestedContainerBorderCollapse(snappedShapes, rawContainers, options)
+  const normalizedShapes = preventVisibleRectBorderOverlap(nestedSafeShapes, rawRects, options)
+  const textRegions = collectTextRegions(normalizedShapes, options)
   const separators = collectHorizontalSeparators(normalizedShapes, options)
 
   return normalizedShapes.map(op => {
-    if (op.kind === 'text') return normalizeText(op, options, containers, separators)
+    if (op.kind === 'text') return normalizeText(op, options, textRegions, separators)
     return op
   })
 }

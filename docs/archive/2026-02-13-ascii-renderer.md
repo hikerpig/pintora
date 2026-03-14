@@ -405,6 +405,33 @@ Assertions:
 - TD layout renders compact vertical marker glyphs such as `○╤`, `╧`
 - Both layouts avoid falling back to distorted curve/cross noise for supported cardinalities
 
+**Activity Diagram:**
+```text
+activityDiagram
+  start
+  partition Init {
+    :read config;
+    :init internal services;
+    note left: init themes
+  }
+```
+
+```text
+activityDiagram
+  start
+  partition Init {
+    :read config;
+    :init internal services;
+    note right: init themes
+  }
+```
+
+Assertions:
+- a nested action box inside a semantic `container` still keeps its own top border instead of collapsing onto the partition border row
+- a left-side note box and a sibling action box keep at least one blank grid column between their visible borders
+- a right-side note label stays inside its own bordered backdrop instead of being clamped back into the outer partition text region
+- a single left-side note no longer forces the partition title row to visually merge with the note/action top border row
+
 ### 6.6 Test Debugging Workflow
 
 Repeated temporary `console.log` edits in tests were error-prone and noisy. The test helper now supports an environment-variable-based debug path:
@@ -434,8 +461,10 @@ Behavior:
 - Some diagrams still create rects/lines that are visually "background-like" but are not yet tagged with semantics
 - Normalization is centralized but still focused on text + separator + container constraints; richer constraints (e.g., dense multi-label packing, interval-aware line carving) are not implemented yet
 - Divider assertions were narrowed to "text is not pierced directly" rather than "the entire row has no horizontal line", because with the new backdrop semantics the outer line may legitimately continue outside the backdrop bounds
-- Container-aware clamping currently relies on `container` semantics only where artists already emit them (class and ER entity are covered; other diagrams still need migration where relevant)
+- Container-aware clamping and text-region selection now cover class, ER, and the migrated activity shapes (action boxes, partition frames, and note backdrops), but many other diagrams still rely on plain geometry only
 - Container snapping is renderer-specific: ASCII may expand and unify semantic container borders during normalization, while SVG/Canvas keep the original geometry
+- The text-region rule now prefers the smallest visible rect (`container` or bordered `backdrop`) that contains the text anchor. This fixes activity notes, but it is still a heuristic rather than a full constraint solver.
+- Visible-rect spacing now preserves a minimal blank-cell gap when raw geometry already contains a positive gap, but this is still grid-quantized and may need more explicit policy if future diagrams stack many bordered labels densely
 - Renderer-side repair hooks exist, but broad automatic use of them is considered risky; the preferred fix path is still artist semantics plus normalization
 
 ### 7.4 Non-Goals of This Iteration
@@ -496,7 +525,7 @@ This enables:
 
 ### 9.1 Follow-ups
 
-- Migrate note backgrounds, relation label backdrops, and similar helpers to semantic metadata where appropriate
+- Continue migrating note backgrounds, relation label backdrops, and similar helpers to semantic metadata where appropriate. Activity notes are now covered; the remaining gap is broader diagram coverage and more uniform helper usage.
 - Consider introducing a general `NormalizedDrawOp` pass so text, rect, and line snapping all derive from the same normalized layout contract
 - Consider adding explicit semantic variants for:
   - `labelBackdrop`

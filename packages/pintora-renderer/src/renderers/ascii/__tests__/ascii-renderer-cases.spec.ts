@@ -183,6 +183,121 @@ activityDiagram
       expect(compact).toContain('▼')
       expect(compact).not.toContain('▲')
     })
+
+    it('keeps a single partition action off the outer border in ascii renderer', () => {
+      configApi.setConfig({
+        core: {
+          textRenderer: {
+            charset: 'ascii',
+          },
+        },
+      })
+
+      const code = `
+activityDiagram
+  start
+  partition Init {
+    :read config;
+  }
+      `
+
+      const text = renderToAscii(code)
+      const lines = text.split('\n')
+      const readConfigLineIndex = lines.findIndex(line => line.includes('read config'))
+      const readConfigLine = readConfigLineIndex >= 0 ? lines[readConfigLineIndex] : ''
+
+      expect(readConfigLineIndex).toBeGreaterThanOrEqual(0)
+      expect(lines[readConfigLineIndex - 1]).toMatch(/\+[-v]+\+/)
+      expect(readConfigLine).toMatch(/\|\s*read config\s+\|/)
+    })
+
+    it('keeps partition actions and note borders separated in ascii renderer', () => {
+      configApi.setConfig({
+        core: {
+          textRenderer: {
+            charset: 'ascii',
+          },
+        },
+      })
+
+      const code = `
+activityDiagram
+  start
+  partition Init {
+    :read config;
+    :init internal services;
+    note left: init themes
+  }
+      `
+
+      const text = renderToAscii(code)
+      const lines = text.split('\n')
+      const readConfigLineIndex = lines.findIndex(line => line.includes('read config'))
+      const initServicesLineIndex = lines.findIndex(line => line.includes('init internal services'))
+      const readConfigLine = readConfigLineIndex >= 0 ? lines[readConfigLineIndex] : ''
+      const initServicesLine = initServicesLineIndex >= 0 ? lines[initServicesLineIndex] : ''
+
+      expect(readConfigLineIndex).toBeGreaterThanOrEqual(0)
+      expect(initServicesLineIndex).toBeGreaterThanOrEqual(0)
+      expect(lines[readConfigLineIndex - 1]).toMatch(/\+[-v]+\+/)
+      expect(readConfigLine).toMatch(/\|\s*read config\s+\|/)
+      expect(initServicesLine).toMatch(/\|\s+\|init themes\s+\|\s{2}\|init internal services\s+\|/)
+      expect(initServicesLine).not.toContain('||')
+    })
+
+    it('keeps right-side notes outside partition action text in ascii renderer', () => {
+      configApi.setConfig({
+        core: {
+          textRenderer: {
+            charset: 'ascii',
+          },
+        },
+      })
+
+      const code = `
+activityDiagram
+  start
+  partition Init {
+    :read config;
+    :init internal services;
+    note right: init themes
+  }
+      `
+
+      const text = renderToAscii(code)
+      const lines = text.split('\n')
+      const sharedLine = lines.find(line => line.includes('init internal services')) || ''
+
+      expect(sharedLine).toMatch(/\|\s+init internal services\s+\|\s{2}\|\s*init themes\s+\|/)
+      expect(sharedLine).not.toContain('init internal serviinit themes')
+    })
+
+    it('keeps left-side notes from piercing the partition title row in ascii renderer', () => {
+      configApi.setConfig({
+        core: {
+          textRenderer: {
+            charset: 'ascii',
+          },
+        },
+      })
+
+      const code = `
+activityDiagram
+  start
+  partition Init {
+    :init internal services;
+    note left: init themes
+  }
+      `
+
+      const text = renderToAscii(code)
+      const lines = text.split('\n')
+      const titleLine = lines.find(line => line.includes('Init')) || ''
+      const actionLine = lines.find(line => line.includes('init internal services')) || ''
+
+      expect(titleLine).not.toContain('Init────────')
+      expect(actionLine).toMatch(/\|\s+\|init themes\s+\|\s{2}\|init internal services\s+\|/)
+    })
   })
 
   describe('er diagram', () => {
