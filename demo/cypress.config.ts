@@ -10,4 +10,7 @@ export default defineConfig({
     },
     specPattern: 'cypress/e2e/**/*.{js,jsx,ts,tsx}',
   },
+  env: {
+    SAVE_SCREENSHOTS: process.env.SAVE_SCREENSHOTS || 'false',
+  },
 })
