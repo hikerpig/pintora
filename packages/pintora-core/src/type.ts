@@ -63,3 +63,32 @@ export interface IRenderer {
   getRootElement(): Element
   on(name: string, handler: GrahpicEventHandler): () => void
 }
+
+/**
+ * Configuration for defineDiagram factory function
+ */
+export type DefineDiagramConfig<D = unknown, Config = unknown, DB = any> = {
+  /** Pattern to detect if input text should be handled by this diagram */
+  pattern: RegExp
+  /** Grammar for parsing the diagram text */
+  grammar?: any
+  /** Database instance for the diagram */
+  db?: DB
+  /** Either a draw function that converts IR to GraphicsIR, or an existing artist instance */
+  draw: ((diagramIR: D, config?: Config, opts?: DiagramArtistOptions) => GraphicsIR) | IDiagramArtist<D, Config>
+  /** Config key for this diagram type */
+  configKey?: string
+  /** Optional event recognizer for interactive diagrams */
+  eventRecognizer?: IDiagramEventRecognizer<D>
+  /** Optional custom parser implementation (overrides default grammar-based parser) */
+  parser?: IDiagramParser<D>
+  /** Optional custom clear function for state cleanup */
+  clear?: () => void
+}
+
+/**
+ * Factory function to define a new diagram with minimal boilerplate
+ */
+export type DefineDiagramFn = <D = unknown, Config = unknown>(
+  config: DefineDiagramConfig<D, Config>,
+) => IDiagram<D, Config>

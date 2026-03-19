@@ -1,17 +1,15 @@
-import { IDiagram } from '@pintora/core'
+import { defineDiagram } from '../util/define-diagram'
 import db, { MindmapIR } from './db'
 import artist from './artist'
-import { parser } from './parser'
+import grammar from './parser/mindmap'
 import { configKey, MindmapConf } from './config'
 
 export type { MindmapIR, MindmapConf }
 
-export const mindmap: IDiagram<MindmapIR, MindmapConf> = {
+export const mindmap = defineDiagram<MindmapIR, MindmapConf>({
   pattern: /^\s*mindmap/,
-  parser,
-  artist,
+  grammar,
+  db,
+  draw: artist,
   configKey,
-  clear() {
-    db.clear()
-  },
-}
+})

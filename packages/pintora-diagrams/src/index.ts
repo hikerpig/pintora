@@ -9,6 +9,7 @@ import { gantt, GanttIR } from './gantt'
 import { classDiagram, ClassIR } from './class'
 import { BaseDiagramIR } from './util/ir'
 import * as PARSER_SHARED from './util/parser-shared'
+import { defineDiagram } from './util/define-diagram'
 import './type' // type augmentation
 import './util/symbols'
 
@@ -36,4 +37,14 @@ export type {
   GanttIR,
   ClassIR,
 }
-export { sequenceDiagram, erDiagram, componentDiagram, dotDiagram, mindmap, gantt, classDiagram, PARSER_SHARED }
+export {
+  sequenceDiagram,
+  erDiagram,
+  componentDiagram,
+  dotDiagram,
+  mindmap,
+  gantt,
+  classDiagram,
+  PARSER_SHARED,
+  defineDiagram,
+}

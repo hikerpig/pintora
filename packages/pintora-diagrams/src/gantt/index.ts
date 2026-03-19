@@ -1,21 +1,15 @@
-import { IDiagram } from '@pintora/core'
+import { defineDiagram } from '../util/define-diagram'
 import db, { GanttIR } from './db'
 import artist from './artist'
-import { parse } from './parser'
+import grammar from './parser/gantt'
 import { configKey, GanttConf } from './config'
-import { ParserWithPreprocessor } from '../util/preproccesor'
 
 export type { GanttIR, GanttConf }
 
-export const gantt: IDiagram<GanttIR, GanttConf> = {
+export const gantt = defineDiagram<GanttIR, GanttConf>({
   pattern: /^\s*gantt/,
-  parser: new ParserWithPreprocessor({
-    db,
-    parse,
-  }),
-  artist,
+  grammar,
+  db,
+  draw: artist,
   configKey,
-  clear() {
-    db.clear()
-  },
-}
+})

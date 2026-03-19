@@ -1,23 +1,17 @@
-import { IDiagram } from '@pintora/core'
+import { defineDiagram } from '../util/define-diagram'
 import db, { DotIR } from './db'
 import artist from './artist'
-import { parse } from './parser'
+import grammar from './parser/dotDiagram'
 import { DOTConf } from './config'
-import { ParserWithPreprocessor } from '../util/preproccesor'
 
 export type { DOTConf, DotIR }
 
-export const dotDiagram: IDiagram<DotIR, DOTConf> = {
+export const dotDiagram = defineDiagram<DotIR, DOTConf>({
   pattern: /^\s*dotDiagram/,
-  parser: new ParserWithPreprocessor({
-    db,
-    parse,
-  }),
-  artist,
+  grammar,
+  db,
+  draw: artist,
   configKey: 'dot',
-  clear() {
-    db.clear()
-  },
-}
+})
 
 export default dotDiagram

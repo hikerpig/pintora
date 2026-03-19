@@ -1,23 +1,17 @@
-import { IDiagram } from '@pintora/core'
+import { defineDiagram } from '../util/define-diagram'
 import { db, ActivityDiagramIR } from './db'
 import artist from './artist'
-import { parse } from './parser'
+import grammar from './parser/activityDiagram'
 import { ActivityConf } from './config'
-import { ParserWithPreprocessor } from '../util/preproccesor'
 
 export type { ActivityConf, ActivityDiagramIR }
 
-export const activityDiagram: IDiagram<ActivityDiagramIR, ActivityConf> = {
+export const activityDiagram = defineDiagram<ActivityDiagramIR, ActivityConf>({
   pattern: /^\s*activityDiagram/,
-  parser: new ParserWithPreprocessor<ActivityDiagramIR>({
-    db,
-    parse,
-  }),
-  artist,
+  grammar,
+  db,
+  draw: artist,
   configKey: 'activity',
-  clear() {
-    db.clear()
-  },
-}
+})
 
 export default activityDiagram
