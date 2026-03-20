@@ -7,6 +7,7 @@ import { dotDiagram, DotIR } from './dot'
 import { mindmap, MindmapIR } from './mindmap'
 import { gantt, GanttIR } from './gantt'
 import { classDiagram, ClassIR } from './class'
+import { useCaseDiagram, UseCaseDiagramIR, UseCaseConf } from './usecase'
 import { BaseDiagramIR } from './util/ir'
 import * as PARSER_SHARED from './util/parser-shared'
 import { defineDiagram } from './util/define-diagram'
@@ -24,6 +25,7 @@ export const DIAGRAMS = {
   gantt,
   dotDiagram,
   classDiagram,
+  useCaseDiagram,
 }
 
 export type {
@@ -36,6 +38,8 @@ export type {
   MindmapIR,
   GanttIR,
   ClassIR,
+  UseCaseDiagramIR,
+  UseCaseConf,
 }
 export {
   sequenceDiagram,
@@ -45,6 +49,7 @@ export {
   mindmap,
   gantt,
   classDiagram,
+  useCaseDiagram,
   PARSER_SHARED,
   defineDiagram,
 }

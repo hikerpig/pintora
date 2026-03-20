@@ -1,0 +1,557 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`usecase-artist will draw simple usecase diagram 1`] = `
+{
+  "mark": {
+    "attrs": {},
+    "children": [
+      {
+        "children": [
+          {
+            "attrs": {
+              "lineDash": null,
+              "lineJoin": "round",
+              "stroke": "#3b4044",
+            },
+            "itemId": "relation-Customer-order-1",
+            "type": "path",
+          },
+          {
+            "attrs": {
+              "fill": "#3b4044",
+            },
+            "type": "path",
+          },
+          {
+            "attrs": {
+              "lineDash": null,
+              "lineJoin": "round",
+              "stroke": "#3b4044",
+            },
+            "itemId": "relation-Customer-pay-2",
+            "type": "path",
+          },
+          {
+            "attrs": {
+              "fill": "#3b4044",
+            },
+            "type": "path",
+          },
+          {
+            "attrs": {
+              "lineDash": null,
+              "lineJoin": "round",
+              "stroke": "#3b4044",
+            },
+            "itemId": "relation-Staff-order-3",
+            "type": "path",
+          },
+          {
+            "attrs": {
+              "fill": "#3b4044",
+            },
+            "type": "path",
+          },
+        ],
+        "class": "usecase__relations",
+        "type": "group",
+      },
+      {
+        "attrs": {
+          "id": "Customer",
+        },
+        "children": [
+          {
+            "attrs": {
+              "fill": "#3b4044",
+              "fontFamily": "Source Code Pro, sans-serif",
+              "fontSize": 14,
+              "fontStyle": "normal",
+              "fontWeight": "normal",
+              "id": "actor-Customer",
+              "text": "顾客",
+              "textAlign": "center",
+              "textBaseline": "top",
+            },
+            "class": "usecase__actor-label",
+            "type": "text",
+          },
+          {
+            "attrs": {
+              "fill": "#fff",
+              "stroke": "#3b4044",
+            },
+            "type": "circle",
+          },
+          {
+            "attrs": {
+              "stroke": "#3b4044",
+            },
+            "type": "line",
+          },
+          {
+            "attrs": {
+              "stroke": "#3b4044",
+            },
+            "type": "line",
+          },
+          {
+            "attrs": {
+              "stroke": "#3b4044",
+            },
+            "type": "line",
+          },
+          {
+            "attrs": {
+              "stroke": "#3b4044",
+            },
+            "type": "line",
+          },
+        ],
+        "class": "usecase__actor",
+        "itemId": "actor-Customer",
+        "type": "group",
+      },
+      {
+        "attrs": {
+          "id": "Staff",
+        },
+        "children": [
+          {
+            "attrs": {
+              "fill": "#3b4044",
+              "fontFamily": "Source Code Pro, sans-serif",
+              "fontSize": 14,
+              "fontStyle": "normal",
+              "fontWeight": "normal",
+              "id": "actor-Staff",
+              "text": "员工",
+              "textAlign": "center",
+              "textBaseline": "top",
+            },
+            "class": "usecase__actor-label",
+            "type": "text",
+          },
+          {
+            "attrs": {
+              "fill": "#fff",
+              "stroke": "#3b4044",
+            },
+            "type": "circle",
+          },
+          {
+            "attrs": {
+              "stroke": "#3b4044",
+            },
+            "type": "line",
+          },
+          {
+            "attrs": {
+              "stroke": "#3b4044",
+            },
+            "type": "line",
+          },
+          {
+            "attrs": {
+              "stroke": "#3b4044",
+            },
+            "type": "line",
+          },
+          {
+            "attrs": {
+              "stroke": "#3b4044",
+            },
+            "type": "line",
+          },
+        ],
+        "class": "usecase__actor",
+        "itemId": "actor-Staff",
+        "type": "group",
+      },
+      {
+        "attrs": {
+          "id": "PlaceOrder",
+        },
+        "children": [
+          {
+            "attrs": {
+              "fill": "#fdb05e",
+              "stroke": "#3b4044",
+            },
+            "class": "usecase__usecase-ellipse",
+            "type": "ellipse",
+          },
+          {
+            "attrs": {
+              "fill": "#3b4044",
+              "fontFamily": "Source Code Pro, sans-serif",
+              "fontSize": 14,
+              "fontStyle": "normal",
+              "fontWeight": "normal",
+              "id": "usecase-PlaceOrder",
+              "text": "order",
+              "textAlign": "center",
+              "textBaseline": "middle",
+            },
+            "class": "usecase__usecase-label",
+            "type": "text",
+          },
+        ],
+        "class": "usecase__usecase",
+        "itemId": "usecase-PlaceOrder",
+        "type": "group",
+      },
+      {
+        "attrs": {
+          "id": "Pay",
+        },
+        "children": [
+          {
+            "attrs": {
+              "fill": "#fdb05e",
+              "stroke": "#3b4044",
+            },
+            "class": "usecase__usecase-ellipse",
+            "type": "ellipse",
+          },
+          {
+            "attrs": {
+              "fill": "#3b4044",
+              "fontFamily": "Source Code Pro, sans-serif",
+              "fontSize": 14,
+              "fontStyle": "normal",
+              "fontWeight": "normal",
+              "id": "usecase-Pay",
+              "text": "pay",
+              "textAlign": "center",
+              "textBaseline": "middle",
+            },
+            "class": "usecase__usecase-label",
+            "type": "text",
+          },
+        ],
+        "class": "usecase__usecase",
+        "itemId": "usecase-Pay",
+        "type": "group",
+      },
+    ],
+    "type": "group",
+  },
+}
+`;
+
+exports[`usecase-artist will draw usecase diagram with title 1`] = `
+{
+  "mark": {
+    "attrs": {},
+    "children": [
+      {
+        "children": [
+          {
+            "attrs": {
+              "lineDash": null,
+              "lineJoin": "round",
+              "stroke": "#3b4044",
+            },
+            "itemId": "relation-User-borrow-1",
+            "type": "path",
+          },
+          {
+            "attrs": {
+              "fill": "#3b4044",
+            },
+            "type": "path",
+          },
+          {
+            "attrs": {
+              "lineDash": null,
+              "lineJoin": "round",
+              "stroke": "#3b4044",
+            },
+            "itemId": "relation-User-returnBook-2",
+            "type": "path",
+          },
+          {
+            "attrs": {
+              "fill": "#3b4044",
+            },
+            "type": "path",
+          },
+          {
+            "attrs": {
+              "lineDash": null,
+              "lineJoin": "round",
+              "stroke": "#3b4044",
+            },
+            "itemId": "relation-Librarian-borrow-3",
+            "type": "path",
+          },
+          {
+            "attrs": {
+              "fill": "#3b4044",
+            },
+            "type": "path",
+          },
+          {
+            "attrs": {
+              "lineDash": null,
+              "lineJoin": "round",
+              "stroke": "#3b4044",
+            },
+            "itemId": "relation-Librarian-returnBook-4",
+            "type": "path",
+          },
+          {
+            "attrs": {
+              "fill": "#3b4044",
+            },
+            "type": "path",
+          },
+          {
+            "attrs": {
+              "lineDash": null,
+              "lineJoin": "round",
+              "stroke": "#3b4044",
+            },
+            "itemId": "relation-Librarian-manageCatalog-5",
+            "type": "path",
+          },
+          {
+            "attrs": {
+              "fill": "#3b4044",
+            },
+            "type": "path",
+          },
+        ],
+        "class": "usecase__relations",
+        "type": "group",
+      },
+      {
+        "attrs": {
+          "id": "User",
+        },
+        "children": [
+          {
+            "attrs": {
+              "fill": "#3b4044",
+              "fontFamily": "Source Code Pro, sans-serif",
+              "fontSize": 14,
+              "fontStyle": "normal",
+              "fontWeight": "normal",
+              "id": "actor-User",
+              "text": "用户",
+              "textAlign": "center",
+              "textBaseline": "top",
+            },
+            "class": "usecase__actor-label",
+            "type": "text",
+          },
+          {
+            "attrs": {
+              "fill": "#fff",
+              "stroke": "#3b4044",
+            },
+            "type": "circle",
+          },
+          {
+            "attrs": {
+              "stroke": "#3b4044",
+            },
+            "type": "line",
+          },
+          {
+            "attrs": {
+              "stroke": "#3b4044",
+            },
+            "type": "line",
+          },
+          {
+            "attrs": {
+              "stroke": "#3b4044",
+            },
+            "type": "line",
+          },
+          {
+            "attrs": {
+              "stroke": "#3b4044",
+            },
+            "type": "line",
+          },
+        ],
+        "class": "usecase__actor",
+        "itemId": "actor-User",
+        "type": "group",
+      },
+      {
+        "attrs": {
+          "id": "Librarian",
+        },
+        "children": [
+          {
+            "attrs": {
+              "fill": "#3b4044",
+              "fontFamily": "Source Code Pro, sans-serif",
+              "fontSize": 14,
+              "fontStyle": "normal",
+              "fontWeight": "normal",
+              "id": "actor-Librarian",
+              "text": "图书管理员",
+              "textAlign": "center",
+              "textBaseline": "top",
+            },
+            "class": "usecase__actor-label",
+            "type": "text",
+          },
+          {
+            "attrs": {
+              "fill": "#fff",
+              "stroke": "#3b4044",
+            },
+            "type": "circle",
+          },
+          {
+            "attrs": {
+              "stroke": "#3b4044",
+            },
+            "type": "line",
+          },
+          {
+            "attrs": {
+              "stroke": "#3b4044",
+            },
+            "type": "line",
+          },
+          {
+            "attrs": {
+              "stroke": "#3b4044",
+            },
+            "type": "line",
+          },
+          {
+            "attrs": {
+              "stroke": "#3b4044",
+            },
+            "type": "line",
+          },
+        ],
+        "class": "usecase__actor",
+        "itemId": "actor-Librarian",
+        "type": "group",
+      },
+      {
+        "attrs": {
+          "id": "Borrow",
+        },
+        "children": [
+          {
+            "attrs": {
+              "fill": "#fdb05e",
+              "stroke": "#3b4044",
+            },
+            "class": "usecase__usecase-ellipse",
+            "type": "ellipse",
+          },
+          {
+            "attrs": {
+              "fill": "#3b4044",
+              "fontFamily": "Source Code Pro, sans-serif",
+              "fontSize": 14,
+              "fontStyle": "normal",
+              "fontWeight": "normal",
+              "id": "usecase-Borrow",
+              "text": "borrow",
+              "textAlign": "center",
+              "textBaseline": "middle",
+            },
+            "class": "usecase__usecase-label",
+            "type": "text",
+          },
+        ],
+        "class": "usecase__usecase",
+        "itemId": "usecase-Borrow",
+        "type": "group",
+      },
+      {
+        "attrs": {
+          "id": "Return",
+        },
+        "children": [
+          {
+            "attrs": {
+              "fill": "#fdb05e",
+              "stroke": "#3b4044",
+            },
+            "class": "usecase__usecase-ellipse",
+            "type": "ellipse",
+          },
+          {
+            "attrs": {
+              "fill": "#3b4044",
+              "fontFamily": "Source Code Pro, sans-serif",
+              "fontSize": 14,
+              "fontStyle": "normal",
+              "fontWeight": "normal",
+              "id": "usecase-Return",
+              "text": "returnBook",
+              "textAlign": "center",
+              "textBaseline": "middle",
+            },
+            "class": "usecase__usecase-label",
+            "type": "text",
+          },
+        ],
+        "class": "usecase__usecase",
+        "itemId": "usecase-Return",
+        "type": "group",
+      },
+      {
+        "attrs": {
+          "id": "ManageCatalog",
+        },
+        "children": [
+          {
+            "attrs": {
+              "fill": "#fdb05e",
+              "stroke": "#3b4044",
+            },
+            "class": "usecase__usecase-ellipse",
+            "type": "ellipse",
+          },
+          {
+            "attrs": {
+              "fill": "#3b4044",
+              "fontFamily": "Source Code Pro, sans-serif",
+              "fontSize": 14,
+              "fontStyle": "normal",
+              "fontWeight": "normal",
+              "id": "usecase-ManageCatalog",
+              "text": "manageCatalog",
+              "textAlign": "center",
+              "textBaseline": "middle",
+            },
+            "class": "usecase__usecase-label",
+            "type": "text",
+          },
+        ],
+        "class": "usecase__usecase",
+        "itemId": "usecase-ManageCatalog",
+        "type": "group",
+      },
+      {
+        "attrs": {
+          "fill": "#3b4044",
+          "fontFamily": "Source Code Pro, sans-serif",
+          "fontSize": 14,
+          "fontStyle": "normal",
+          "fontWeight": "bold",
+          "text": "Library Management System",
+          "textAlign": "center",
+        },
+        "class": "usecase__title",
+        "type": "text",
+      },
+    ],
+    "type": "group",
+  },
+}
+`;

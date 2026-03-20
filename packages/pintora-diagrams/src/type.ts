@@ -6,6 +6,7 @@ import { MindmapConf } from './mindmap'
 import { GanttConf } from './gantt'
 import { DOTConf } from './dot'
 import { ClassConf } from './class'
+import { UseCaseConf } from './usecase'
 
 // type augmentation
 declare module '@pintora/core' {
@@ -18,6 +19,7 @@ declare module '@pintora/core' {
     gantt: GanttConf
     dot: DOTConf
     class: ClassConf
+    usecase: UseCaseConf
   }
 
   interface PintoraDiagramItemDatas {
