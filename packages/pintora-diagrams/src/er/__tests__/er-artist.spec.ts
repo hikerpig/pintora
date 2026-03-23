@@ -1,5 +1,5 @@
 import * as pintora from '@pintora/core'
-import type { Group, Rect } from '@pintora/core'
+import type { Group, Path, Rect } from '@pintora/core'
 import { EXAMPLES } from '@pintora/test-shared'
 import { testDraw, prepareDiagramConfig, stripDrawResultForSnapshot } from '../../__tests__/test-util'
 import { erDiagram } from '../index'
@@ -129,9 +129,36 @@ erDiagram
       connector: {
         family: 'er-relationship',
         compact: true,
+        compactEndpointClearance: 'both',
         shaftStyle: 'solid',
         startTerminator: { kind: 'er-only-one' },
         endTerminator: { kind: 'er-zero-or-more' },
+      },
+    })
+  })
+
+  it('marks inheritance triangle as semantic symbol for text renderers', () => {
+    const code = `
+erDiagram
+  CUSTOMER inherit PERSON
+    `
+
+    const { graphicIR } = testDraw(code)
+    const inheritanceGroup = (graphicIR.mark as Group).children.find(
+      child => child.type === 'group' && child.children.some(grandChild => grandChild.type === 'path'),
+    ) as Group | undefined
+    const trianglePath = inheritanceGroup?.children.find(
+      child => child.type === 'path' && child.semantic?.role === 'symbol',
+    ) as Path | undefined
+
+    expect(trianglePath?.semantic).toMatchObject({
+      role: 'symbol',
+      strokePolicy: 'always',
+      symbol: {
+        family: 'er-node',
+        kind: 'er-inheritance-triangle',
+        compact: true,
+        direction: 'down',
       },
     })
   })

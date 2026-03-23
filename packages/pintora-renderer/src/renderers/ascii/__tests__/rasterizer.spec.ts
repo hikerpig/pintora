@@ -306,6 +306,58 @@ describe('rasterizer', () => {
     expect(grid.getGlyphAt(5, 0)).toBe('○')
   })
 
+  it('renders directional glyph variants for inheritance triangle symbols', () => {
+    const ops = [
+      {
+        kind: 'symbol',
+        point: { x: 16, y: 16 },
+        width: 16,
+        height: 16,
+        layer: AsciiLayer.TEXT,
+        semantic: {
+          role: 'symbol',
+          strokePolicy: 'always',
+          symbol: {
+            family: 'er-node',
+            kind: 'er-inheritance-triangle',
+            compact: true,
+            direction: 'down',
+          },
+        },
+        fallbackOps: [],
+      },
+      {
+        kind: 'symbol',
+        point: { x: 40, y: 16 },
+        width: 16,
+        height: 16,
+        layer: AsciiLayer.TEXT,
+        semantic: {
+          role: 'symbol',
+          strokePolicy: 'always',
+          symbol: {
+            family: 'er-node',
+            kind: 'er-inheritance-triangle',
+            compact: true,
+            direction: 'left',
+          },
+        },
+        fallbackOps: [],
+      },
+    ] as any
+
+    const grid = rasterize(ops, {
+      cellWidth: 8,
+      cellHeight: 16,
+      cols: 8,
+      rows: 4,
+      trimRight: true,
+    })
+
+    expect(grid.getGlyphAt(2, 1)).toBe('▽')
+    expect(grid.getGlyphAt(5, 1)).toBe('◁')
+  })
+
   it('falls back to geometric rasterization for unsupported semantic symbols', () => {
     const ops = [
       {

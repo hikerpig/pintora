@@ -97,6 +97,8 @@ exports[`sequence-artist draw cross mark to 1`] = `
             "semantic": {
               "connector": {
                 "compact": true,
+                "compactEndpointClearance": undefined,
+                "compactLaneReservation": undefined,
                 "endTerminator": {
                   "kind": "cross",
                 },
@@ -608,6 +610,8 @@ exports[`sequence-artist match example snapshot 1`] = `
             "semantic": {
               "connector": {
                 "compact": true,
+                "compactEndpointClearance": undefined,
+                "compactLaneReservation": undefined,
                 "endTerminator": {
                   "kind": "arrow-filled",
                 },
@@ -692,6 +696,8 @@ exports[`sequence-artist match example snapshot 1`] = `
             "semantic": {
               "connector": {
                 "compact": true,
+                "compactEndpointClearance": undefined,
+                "compactLaneReservation": undefined,
                 "endTerminator": {
                   "kind": "arrow-filled",
                 },
@@ -816,6 +822,8 @@ exports[`sequence-artist match example snapshot 1`] = `
             "semantic": {
               "connector": {
                 "compact": true,
+                "compactEndpointClearance": undefined,
+                "compactLaneReservation": undefined,
                 "endTerminator": {
                   "kind": "arrow-filled",
                 },

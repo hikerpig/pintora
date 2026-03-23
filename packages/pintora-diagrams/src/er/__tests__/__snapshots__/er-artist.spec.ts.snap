@@ -750,6 +750,16 @@ exports[`er-artist will draw inheritance 1`] = `
               "lineJoin": "round",
               "stroke": "#3b4044",
             },
+            "semantic": {
+              "role": "symbol",
+              "strokePolicy": "always",
+              "symbol": {
+                "compact": true,
+                "direction": "down",
+                "family": "er-node",
+                "kind": "er-inheritance-triangle",
+              },
+            },
             "type": "path",
           },
           {
@@ -757,6 +767,16 @@ exports[`er-artist will draw inheritance 1`] = `
               "fill": "#fffbf9",
               "lineJoin": "round",
               "stroke": "#3b4044",
+            },
+            "semantic": {
+              "role": "symbol",
+              "strokePolicy": "always",
+              "symbol": {
+                "compact": true,
+                "direction": "down",
+                "family": "er-node",
+                "kind": "er-inheritance-triangle",
+              },
             },
             "type": "path",
           },

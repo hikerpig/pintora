@@ -56,6 +56,10 @@ type RawRectBounds = RawContainerBounds & {
   semantic?: RectOp['semantic']
 }
 
+function axisIncludes(setting: ConnectorOp['semantic']['connector']['compactEndpointClearance'], axis: 'horizontal' | 'vertical') {
+  return setting === 'both' || setting === axis
+}
+
 function clampRectSpan(params: { min: number; max: number; minSpan: number }): { min: number; max: number } {
   const { minSpan } = params
   let { min, max } = params
@@ -226,6 +230,48 @@ function findNearestContainerBelow(
   })
 }
 
+function findNearestContainerRight(
+  point: { col: number; row: number },
+  regions: TextRegionBoundsWithSemantic[],
+): TextRegionBoundsWithSemantic | undefined {
+  const matches = regions.filter(region => {
+    if (region.semantic?.role !== 'container') return false
+    if (point.row < region.topBorderRow || point.row > region.bottomBorderRow) return false
+    return region.leftBorderCol > point.col
+  })
+  if (matches.length === 0) return
+
+  return matches.reduce((current, candidate) => {
+    if (candidate.leftBorderCol !== current.leftBorderCol) {
+      return candidate.leftBorderCol < current.leftBorderCol ? candidate : current
+    }
+    const currentArea = (current.maxX - current.minX) * (current.maxY - current.minY)
+    const candidateArea = (candidate.maxX - candidate.minX) * (candidate.maxY - candidate.minY)
+    return candidateArea < currentArea ? candidate : current
+  })
+}
+
+function findNearestContainerLeft(
+  point: { col: number; row: number },
+  regions: TextRegionBoundsWithSemantic[],
+): TextRegionBoundsWithSemantic | undefined {
+  const matches = regions.filter(region => {
+    if (region.semantic?.role !== 'container') return false
+    if (point.row < region.topBorderRow || point.row > region.bottomBorderRow) return false
+    return region.rightBorderCol < point.col
+  })
+  if (matches.length === 0) return
+
+  return matches.reduce((current, candidate) => {
+    if (candidate.rightBorderCol !== current.rightBorderCol) {
+      return candidate.rightBorderCol > current.rightBorderCol ? candidate : current
+    }
+    const currentArea = (current.maxX - current.minX) * (current.maxY - current.minY)
+    const candidateArea = (candidate.maxX - candidate.minX) * (candidate.maxY - candidate.minY)
+    return candidateArea < currentArea ? candidate : current
+  })
+}
+
 function translatePoint(point: { x: number; y: number }, dx: number, dy: number) {
   return {
     x: point.x + dx,
@@ -296,7 +342,7 @@ function translateConnectorEndpointIfTouchingRegion(
     : op
 }
 
-function reserveActivityConnectorGaps(ops: DrawOp[], options: NormalizeOptions): DrawOp[] {
+function reserveCompactConnectorGaps(ops: DrawOp[], options: NormalizeOptions): DrawOp[] {
   let current = ops
 
   for (let iteration = 0; iteration < 8; iteration++) {
@@ -305,7 +351,11 @@ function reserveActivityConnectorGaps(ops: DrawOp[], options: NormalizeOptions):
 
     for (const op of current) {
       if (op.kind !== 'connector') continue
-      if (op.semantic.connector.family !== 'activity-flow' || !op.semantic.connector.compact || op.points.length < 2) {
+      if (
+        !op.semantic.connector.compact ||
+        !axisIncludes(op.semantic.connector.compactLaneReservation, 'vertical') ||
+        op.points.length < 2
+      ) {
         continue
       }
 
@@ -814,7 +864,9 @@ function normalizeConnector(
   options: NormalizeOptions,
   textRegions: TextRegionBoundsWithSemantic[],
 ): ConnectorOp {
-  if (op.semantic.connector.family !== 'activity-flow' || !op.semantic.connector.compact || op.points.length < 2) {
+  const endpointClearance = op.semantic.connector.compactEndpointClearance
+
+  if (!op.semantic.connector.compact || op.points.length < 2) {
     return op
   }
 
@@ -823,7 +875,7 @@ function normalizeConnector(
   const start = pointToGrid(points[0], options)
   const end = pointToGrid(points[lastIndex], options)
 
-  if (start.col === end.col) {
+  if (start.col === end.col && axisIncludes(endpointClearance, 'vertical')) {
     const sourceRegion = findContainingContainerRegion(start, textRegions)
     const endTouch = findContainerBorderTouch(end, textRegions)
     const targetRegion =
@@ -855,6 +907,58 @@ function normalizeConnector(
     }
   }
 
+  if (start.row === end.row && axisIncludes(endpointClearance, 'horizontal')) {
+    const sourceRegion = findContainingContainerRegion(start, textRegions)
+    const endTouch = findContainerBorderTouch(end, textRegions)
+
+    if (!sourceRegion) {
+      return op
+    }
+
+    if (end.col >= start.col) {
+      const targetRegion =
+        (endTouch?.edge === 'left' ? endTouch : undefined) ||
+        findNearestContainerRight(end, textRegions) ||
+        findContainingContainerRegion(end, textRegions)
+
+      if (!targetRegion) {
+        return op
+      }
+
+      points[0] = {
+        ...points[0],
+        x: (sourceRegion.rightBorderCol + 1) * options.cellWidth,
+      }
+      points[lastIndex] = {
+        ...points[lastIndex],
+        x: (targetRegion.leftBorderCol - 1) * options.cellWidth,
+      }
+    } else {
+      const targetRegion =
+        (endTouch?.edge === 'right' ? endTouch : undefined) ||
+        findNearestContainerLeft(end, textRegions) ||
+        findContainingContainerRegion(end, textRegions)
+
+      if (!targetRegion) {
+        return op
+      }
+
+      points[0] = {
+        ...points[0],
+        x: (sourceRegion.leftBorderCol - 1) * options.cellWidth,
+      }
+      points[lastIndex] = {
+        ...points[lastIndex],
+        x: (targetRegion.rightBorderCol + 1) * options.cellWidth,
+      }
+    }
+
+    return {
+      ...op,
+      points,
+    }
+  }
+
   return op
 }
 
@@ -869,7 +973,7 @@ export function normalizeDrawOps(ops: DrawOp[], options: NormalizeOptions): Draw
   })
   const nestedSafeShapes = preventNestedContainerBorderCollapse(snappedShapes, rawContainers, options)
   const normalizedShapes = preventVisibleRectBorderOverlap(nestedSafeShapes, rawRects, options)
-  const gapReservedShapes = reserveActivityConnectorGaps(normalizedShapes, options)
+  const gapReservedShapes = reserveCompactConnectorGaps(normalizedShapes, options)
   const textRegions = collectTextRegions(gapReservedShapes, options)
   const separators = collectHorizontalSeparators(normalizedShapes, options)
 

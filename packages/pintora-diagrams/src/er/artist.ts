@@ -34,6 +34,7 @@ import { ErConf, getConf } from './config'
 import { Cardinality, Entity, ErDiagramIR, Identification, Relationship } from './db'
 import { BaseArtist } from '../util/base-artist'
 import { makeConnectorSemantic } from '../util/connector'
+import { makeSymbolSemantic } from '../util/symbol'
 
 let conf: ErConf
 
@@ -52,6 +53,17 @@ function cardinalityToConnectorKind(
     default:
       return 'er-only-one'
   }
+}
+
+function getSymbolDirectionFromRad(rad: number): 'up' | 'down' | 'left' | 'right' {
+  const normalized = ((rad % (Math.PI * 2)) + Math.PI * 2) % (Math.PI * 2)
+  const x = Math.cos(normalized)
+  const y = Math.sin(normalized)
+
+  if (Math.abs(x) >= Math.abs(y)) {
+    return x >= 0 ? 'right' : 'left'
+  }
+  return y >= 0 ? 'down' : 'up'
 }
 
 class ErArtist extends BaseArtist<ErDiagramIR, ErConf> {
@@ -522,6 +534,7 @@ const drawRelationshipFromLayout = function (group: Group, rel: Relationship, g:
       semantic: makeConnectorSemantic({
         family: 'er-relationship',
         shaftStyle: rel.relSpec.relType === Identification.NON_IDENTIFYING ? 'dashed' : 'solid',
+        compactEndpointClearance: 'both',
         startTerminator: cardinalityToConnectorKind(rel.relSpec.cardB),
         endTerminator: cardinalityToConnectorKind(rel.relSpec.cardA),
       }),
@@ -644,6 +657,11 @@ function drawInheritances(ir: ErDiagramIR, g: LayoutGraph, rootMark: Group) {
           stroke: conf.edgeColor,
           fill: conf.attributeFill,
           lineJoin: 'round',
+        })
+        triangle.semantic = makeSymbolSemantic({
+          family: 'er-node',
+          kind: 'er-inheritance-triangle',
+          direction: getSymbolDirectionFromRad(rad),
         })
         inheritanceGroup.children.unshift(triangle)
 

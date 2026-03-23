@@ -347,7 +347,7 @@ function drawSymbol(grid: TextGrid, op: SymbolOp, options: RasterizeOptions): vo
     return
   }
 
-  const glyph = getSymbolGlyph(op.semantic.symbol.kind)
+  const glyph = getSymbolGlyph(op.semantic.symbol.kind, op.semantic.symbol.direction)
   if (!glyph) {
     drawSymbolFallback(grid, op, options)
     return

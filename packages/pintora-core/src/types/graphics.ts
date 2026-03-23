@@ -22,9 +22,18 @@ export type ConnectorFamily = 'sequence-message' | 'er-relationship' | 'componen
 
 export type ConnectorShaftStyle = 'solid' | 'dashed'
 
-export type SymbolFamily = 'activity-node' | 'component-node'
+export type ConnectorCompactAxis = 'none' | 'horizontal' | 'vertical' | 'both'
 
-export type SymbolKind = 'activity-start' | 'activity-end' | 'activity-decision' | 'component-interface'
+export type SymbolFamily = 'activity-node' | 'component-node' | 'er-node'
+
+export type SymbolDirection = 'up' | 'down' | 'left' | 'right'
+
+export type SymbolKind =
+  | 'activity-start'
+  | 'activity-end'
+  | 'activity-decision'
+  | 'component-interface'
+  | 'er-inheritance-triangle'
 
 export type FrameFamily = 'annotation' | 'activity-node'
 
@@ -52,6 +61,8 @@ export interface ConnectorSemantic {
   family: ConnectorFamily
   compact: boolean
   shaftStyle: ConnectorShaftStyle
+  compactEndpointClearance?: ConnectorCompactAxis
+  compactLaneReservation?: ConnectorCompactAxis
   startTerminator?: ConnectorTerminator
   endTerminator?: ConnectorTerminator
 }
@@ -60,6 +71,7 @@ export interface SymbolSemantic {
   family: SymbolFamily
   kind: SymbolKind
   compact: boolean
+  direction?: SymbolDirection
 }
 
 export interface FrameSemantic {

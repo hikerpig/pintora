@@ -450,6 +450,23 @@ erDiagram
       expect(compact).not.toContain('╳')
     })
 
+    it('keeps horizontal er cardinality markers outside entity borders in LR layout', () => {
+      const code = `
+erDiagram
+  @param layoutDirection LR
+
+  CUSTOMER ||--o{ ORDER : places
+      `
+
+      const text = renderToAscii(code)
+      const lines = text.split('\n')
+      const markerLine = lines.find(line => line.includes('○╟')) || ''
+      const orderTitleLine = lines.find(line => line.includes('ORDER')) || ''
+
+      expect(orderTitleLine).toContain('ORDER')
+      expect(markerLine).toContain('○╟│')
+    })
+
     it('renders compact cardinality markers for TD layout too', () => {
       const code = `
 erDiagram
@@ -465,6 +482,53 @@ erDiagram
       expect(compact).toContain('○')
       expect(compact).toMatch(/[╤╧]/)
       expect(compact).not.toContain('╳')
+    })
+
+    it('keeps vertical er cardinality markers outside entity borders', () => {
+      const code = `
+erDiagram
+  DELIVERER ||--o{ DELIVERY : completes
+      `
+
+      const text = renderToAscii(code)
+      const lines = text.split('\n')
+      const delivererLineIndex = lines.findIndex(line => line.includes('DELIVERER'))
+      const deliveryLineIndex = lines.findIndex(line => line.includes('DELIVERY'))
+
+      expect(delivererLineIndex).toBeGreaterThanOrEqual(0)
+      expect(deliveryLineIndex).toBeGreaterThanOrEqual(0)
+
+      const delivererBottomBorder = lines[delivererLineIndex + 3] || ''
+      const lineBelowDeliverer = lines[delivererLineIndex + 4] || ''
+      const deliveryTopBorder = lines[deliveryLineIndex - 2] || ''
+      const crowFootLine = lines[deliveryLineIndex - 3] || ''
+      const circleLine = lines[deliveryLineIndex - 4] || ''
+
+      expect(delivererBottomBorder).toMatch(/└[─]+┘/)
+      expect(delivererBottomBorder).not.toMatch(/[│○╤╧]/)
+      expect(lineBelowDeliverer).toContain('─')
+      expect(deliveryTopBorder).toMatch(/┌[─]+┐/)
+      expect(deliveryTopBorder).not.toMatch(/[○╤╧]/)
+      expect(circleLine).toContain('○')
+      expect(crowFootLine).toContain('╤')
+    })
+
+    it('renders inheritance triangles as compact symbol glyphs', () => {
+      const code = `
+erDiagram
+  PERSON {
+    int age
+  }
+  CUSTOMER inherit PERSON
+      `
+
+      const text = renderToAscii(code)
+      const compact = text.replace(/\s/g, '')
+
+      expect(compact).toContain('ISA')
+      expect(compact).toContain('▽')
+      expect(compact).not.toContain('△')
+      expect(text).not.toContain('/\\')
     })
   })
 })

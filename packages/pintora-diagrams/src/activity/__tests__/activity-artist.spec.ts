@@ -184,6 +184,8 @@ describe('activity-artist', () => {
       connector: {
         family: 'activity-flow',
         compact: true,
+        compactEndpointClearance: 'vertical',
+        compactLaneReservation: 'vertical',
         shaftStyle: 'solid',
         startTerminator: { kind: 'none' },
         endTerminator: { kind: 'arrow-filled' },

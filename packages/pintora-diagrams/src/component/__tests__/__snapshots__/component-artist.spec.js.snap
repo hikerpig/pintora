@@ -390,6 +390,7 @@ exports[`component-artist match example snapshot 1`] = `
               "strokePolicy": "always",
               "symbol": {
                 "compact": true,
+                "direction": undefined,
                 "family": "component-node",
                 "kind": "component-interface",
               },
@@ -430,6 +431,7 @@ exports[`component-artist match example snapshot 1`] = `
               "strokePolicy": "always",
               "symbol": {
                 "compact": true,
+                "direction": undefined,
                 "family": "component-node",
                 "kind": "component-interface",
               },
@@ -470,6 +472,7 @@ exports[`component-artist match example snapshot 1`] = `
               "strokePolicy": "always",
               "symbol": {
                 "compact": true,
+                "direction": undefined,
                 "family": "component-node",
                 "kind": "component-interface",
               },
@@ -510,6 +513,7 @@ exports[`component-artist match example snapshot 1`] = `
               "strokePolicy": "always",
               "symbol": {
                 "compact": true,
+                "direction": undefined,
                 "family": "component-node",
                 "kind": "component-interface",
               },
@@ -546,6 +550,8 @@ exports[`component-artist match example snapshot 1`] = `
             "semantic": {
               "connector": {
                 "compact": true,
+                "compactEndpointClearance": undefined,
+                "compactLaneReservation": undefined,
                 "endTerminator": {
                   "kind": "arrow-filled",
                 },
@@ -613,6 +619,8 @@ exports[`component-artist match example snapshot 1`] = `
             "semantic": {
               "connector": {
                 "compact": true,
+                "compactEndpointClearance": undefined,
+                "compactLaneReservation": undefined,
                 "endTerminator": {
                   "kind": "arrow-filled",
                 },
@@ -680,6 +688,8 @@ exports[`component-artist match example snapshot 1`] = `
             "semantic": {
               "connector": {
                 "compact": true,
+                "compactEndpointClearance": undefined,
+                "compactLaneReservation": undefined,
                 "endTerminator": {
                   "kind": "arrow-filled",
                 },
@@ -751,6 +761,8 @@ exports[`component-artist match example snapshot 1`] = `
             "semantic": {
               "connector": {
                 "compact": true,
+                "compactEndpointClearance": undefined,
+                "compactLaneReservation": undefined,
                 "endTerminator": {
                   "kind": "arrow-filled",
                 },
@@ -818,6 +830,8 @@ exports[`component-artist match example snapshot 1`] = `
             "semantic": {
               "connector": {
                 "compact": true,
+                "compactEndpointClearance": undefined,
+                "compactLaneReservation": undefined,
                 "endTerminator": {
                   "kind": "arrow-filled",
                 },
@@ -885,6 +899,8 @@ exports[`component-artist match example snapshot 1`] = `
             "semantic": {
               "connector": {
                 "compact": true,
+                "compactEndpointClearance": undefined,
+                "compactLaneReservation": undefined,
                 "endTerminator": {
                   "kind": "arrow-filled",
                 },
@@ -952,6 +968,8 @@ exports[`component-artist match example snapshot 1`] = `
             "semantic": {
               "connector": {
                 "compact": true,
+                "compactEndpointClearance": undefined,
+                "compactLaneReservation": undefined,
                 "endTerminator": {
                   "kind": "arrow-filled",
                 },
@@ -1019,6 +1037,8 @@ exports[`component-artist match example snapshot 1`] = `
             "semantic": {
               "connector": {
                 "compact": true,
+                "compactEndpointClearance": undefined,
+                "compactLaneReservation": undefined,
                 "endTerminator": {
                   "kind": "arrow-filled",
                 },

@@ -1432,6 +1432,8 @@ function getActivityConnectorSemantic(points: { x: number; y: number }[]) {
   return makeConnectorSemantic({
     family: 'activity-flow',
     shaftStyle: 'solid',
+    compactEndpointClearance: 'vertical',
+    compactLaneReservation: 'vertical',
     startTerminator: 'none',
     endTerminator: 'arrow-filled',
   })
