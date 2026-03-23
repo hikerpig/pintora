@@ -262,6 +262,34 @@ activityDiagram
       expect(compact).toContain('◇')
     })
 
+    it('keeps arrows and connector spacing between sequential actions in ascii renderer', () => {
+      const code = `
+activityDiagram
+  :one;
+  :two;
+  :three;
+      `
+
+      const text = renderToAscii(code)
+      const lines = text.split('\n')
+      const oneLineIndex = lines.findIndex(line => line.includes('one'))
+      const twoLineIndex = lines.findIndex(line => line.includes('two'))
+      const threeLineIndex = lines.findIndex(line => line.includes('three'))
+
+      expect(oneLineIndex).toBeGreaterThanOrEqual(0)
+      expect(twoLineIndex).toBeGreaterThan(oneLineIndex)
+      expect(threeLineIndex).toBeGreaterThan(twoLineIndex)
+
+      expect(lines.slice(oneLineIndex + 1, twoLineIndex).join('\n')).toContain('▼')
+      expect(lines.slice(twoLineIndex + 1, threeLineIndex).join('\n')).toContain('▼')
+      expect(lines[oneLineIndex]).toMatch(/│\s*one\s+│/)
+      expect(lines[twoLineIndex]).toMatch(/│\s*two\s+│/)
+      expect(lines[threeLineIndex]).toMatch(/│\s*three\s+│/)
+      expect(lines.filter(line => line.includes('▼')).every(line => !/[┌┐└┘]/.test(line))).toBe(true)
+      expect(lines[oneLineIndex + 1]).not.toMatch(/[│▼▲]/)
+      expect(lines[twoLineIndex + 1]).not.toMatch(/[│▼▲]/)
+    })
+
     it('keeps a single partition action off the outer border in ascii renderer', () => {
       const code = `
 activityDiagram

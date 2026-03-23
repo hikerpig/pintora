@@ -200,6 +200,7 @@ Responsibilities:
 - **Container Clamping**: Keep text placement inside container inner bounds
 - **Container Grid Fitting**: Expand semantic container bounds to stable ASCII grid cells without mutating source diagram layout
 - **Shared Border Coordination**: When adjacent semantic containers share a border, snap both sides to the same grid line to avoid doubled borders
+- **Connector Gap Reservation**: For selected semantic connectors, reserve an external marker/shaft row or column before final rasterization so endpoint glyphs do not collapse back onto container borders
 
 Location: `packages/pintora-renderer/src/renderers/ascii/normalize-ops.ts`
 
@@ -231,7 +232,7 @@ This separation is critical because earlier renderer-only fixes failed by mixing
 The renderer respects `MarkSemantic` annotations from `GraphicsIR`:
 
 ```typescript
-type MarkSemanticRole = 'container' | 'backdrop' | 'separator' | 'decoration' | 'connector'
+type MarkSemanticRole = 'container' | 'backdrop' | 'separator' | 'decoration' | 'connector' | 'symbol'
 type MarkStrokePolicy = 'always' | 'optional' | 'none'
 
 type ConnectorTerminatorKind =
@@ -249,7 +250,7 @@ interface MarkSemantic {
   occludesBelow?: boolean  // Clears lower-layer content (for backdrop)
   strokePolicy?: MarkStrokePolicy  // Controls stroke rendering
   connector?: {
-    family: 'sequence-message' | 'er-relationship'
+    family: 'sequence-message' | 'er-relationship' | 'component-relationship' | 'activity-flow'
     compact: boolean
     shaftStyle: 'solid' | 'dashed'
     startTerminator?: { kind: ConnectorTerminatorKind }
@@ -273,7 +274,7 @@ interface MarkSemantic {
 | **backdrop** | Background area that may occlude content below | Label backgrounds, section backgrounds, divider label boxes |
 | **separator** | Horizontal/vertical dividing line | Class section separators, ER header/body separator |
 | **decoration** | Visual accent that can be omitted in low-fidelity | Static member underlines |
-| **connector** | A semantic shaft whose endpoints carry marker meaning | Sequence messages, ER relationships |
+| **connector** | A semantic shaft whose endpoints carry marker meaning | Sequence messages, ER relationships, activity flows |
 
 `frame` is intentionally orthogonal to `role`:
 - `role` still answers “how does this participate in layout, clamping, and occlusion?”
@@ -305,6 +306,7 @@ To reduce post-layout patching, ASCII applies semantic-aware normalization befor
 4. **Shared Border Unification**: neighboring `container` rects that already share a border are snapped to one common grid line
 5. **Container Clamping**: Restrict text placement to inner bounds of the normalized `container` rects
 6. **Separator Avoidance**: Move text off rows occupied by separators when possible
+7. **Connector Gap Reservation**: For selected `activity-flow` connectors, reserve an external connector row before compact glyph placement so arrows remain outside action boxes
 
 This keeps rules generic and semantic-driven instead of class-name driven.
 
@@ -321,6 +323,7 @@ Current compact coverage:
 - **Sequence**: filled/open arrows, dashed shafts, cross ends
 - **ER LR**: `│`, `○│`, `╟`, `╢`, `○╟`, `○╢`
 - **ER TD**: `─`, `○─`, `╤`, `╧`, `○╤`, `○╧`
+- **Activity**: straight vertical action-to-action flows keep the arrow on an external connector row rather than merging into the action border
 
 ### 4.6 Semantic Frame Rendering
 
@@ -381,6 +384,8 @@ The connector work exposed a few practical rules that are easy to forget:
 6. **Do not overload `role` with visual identity**. Notes still need `backdrop` behavior, but their “this is a note card” meaning belongs in a separate frame contract.
 7. **Rect-based frames and path-backed frames need different collection strategies**. Notes can reuse rect normalization directly; decision bodies benefit from a dedicated frame op because their source geometry is path-based.
 8. **Folded-corner note cards need text-region reservation**. Once the top-right corner becomes a visible fold, normalization must reserve right-side cells so note text does not collide with the fold.
+9. **Connector endpoint meaning is not enough when container borders compete for the same grid row**. In activity flows between stacked action boxes, normalization must also reserve space between semantic containers before compact arrow placement.
+10. **Sampled connector endpoints are not always the right anchor**. After snapping, a connector point may land inside a container row; the renderer should recover the effective top/bottom border from semantic container bounds instead of trusting the sampled point blindly.
 
 ---
 
@@ -489,6 +494,18 @@ Assertions:
 **Activity Diagram:**
 ```text
 activityDiagram
+  :one;
+  :two;
+  :three;
+```
+
+Assertions:
+- each arrow is rendered on its own connector row between action boxes
+- arrow glyphs do not share a row with `┌┐└┘`
+- action text still renders on inner rows, and the box bottom rows are not pierced by a vertical connector
+
+```text
+activityDiagram
   start
   partition Init {
     :read config;
@@ -574,6 +591,8 @@ Behavior:
 - Container snapping is renderer-specific: ASCII may expand and unify semantic container borders during normalization, while SVG/Canvas keep the original geometry
 - The text-region rule now prefers the smallest visible rect (`container` or bordered `backdrop`) that contains the text anchor. For note cards it additionally reserves right-side columns for the folded corner, but this is still a heuristic rather than a full constraint solver.
 - Visible-rect spacing now preserves a minimal blank-cell gap when raw geometry already contains a positive gap, but this is still grid-quantized and may need more explicit policy if future diagrams stack many bordered labels densely
+- Connector-aware spacing is now slightly richer than pure text/container rules: selected `activity-flow` connectors may reserve an extra external row between semantic containers, but this is still a targeted policy rather than a general constraint solver
+- The connector anchor used by ASCII may be derived from the smallest relevant semantic container instead of the sampled endpoint cell; this is intentional, but currently limited to selective activity-flow handling
 - Renderer-side repair hooks exist, but broad automatic use of them is considered risky; the preferred fix path is still artist semantics plus normalization
 
 ### 7.4 Non-Goals of This Iteration
@@ -636,6 +655,7 @@ This enables:
 
 - Continue migrating note backgrounds, relation label backdrops, and similar helpers to semantic metadata where appropriate. Activity notes are now covered; the remaining gap is broader diagram coverage and more uniform helper usage.
 - Consider introducing a general `NormalizedDrawOp` pass so text, rect, and line snapping all derive from the same normalized layout contract
+- Revisit whether connector gap reservation should become a first-class normalized op instead of remaining a targeted activity-flow rule inside normalization
 - Consider adding explicit semantic variants for:
   - `labelBackdrop`
   - `sectionBackdrop`

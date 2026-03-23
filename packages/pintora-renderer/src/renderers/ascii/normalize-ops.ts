@@ -1,4 +1,4 @@
-import { DrawOp, RectOp, SegmentOp, TextOp } from './ops'
+import { ConnectorOp, DrawOp, RectOp, SegmentOp, TextOp } from './ops'
 import { measureAsciiText } from './text-metrics'
 import { resolveTextPlacement } from './text-layout'
 
@@ -20,6 +20,7 @@ type ContainerBounds = {
 
 type TextRegionBounds = ContainerBounds
 type TextRegionBoundsWithSemantic = TextRegionBounds & {
+  index: number
   semantic?: RectOp['semantic']
 }
 
@@ -53,6 +54,27 @@ type RawContainerBounds = {
 
 type RawRectBounds = RawContainerBounds & {
   semantic?: RectOp['semantic']
+}
+
+function clampRectSpan(params: { min: number; max: number; minSpan: number }): { min: number; max: number } {
+  const { minSpan } = params
+  let { min, max } = params
+  if (max - min >= minSpan) {
+    return { min, max }
+  }
+
+  const center = (min + max) / 2
+  const halfSpan = minSpan / 2
+  min = center - halfSpan
+  max = center + halfSpan
+  return { min, max }
+}
+
+function pointToGrid(point: { x: number; y: number }, options: NormalizeOptions): { col: number; row: number } {
+  return {
+    col: Math.round(point.x / options.cellWidth),
+    row: Math.round(point.y / options.cellHeight),
+  }
 }
 
 function makeBorderKey(value: number): string {
@@ -107,16 +129,17 @@ function shouldUseAsTextRegion(op: RectOp): boolean {
 }
 
 function collectTextRegions(ops: DrawOp[], options: NormalizeOptions): TextRegionBoundsWithSemantic[] {
-  return ops
-    .filter((op): op is RectOp => op.kind === 'rect' && shouldUseAsTextRegion(op))
-    .map(op => {
-      const xs = op.points.map(point => point.x)
-      const ys = op.points.map(point => point.y)
-      const minX = Math.min(...xs)
-      const maxX = Math.max(...xs)
-      const minY = Math.min(...ys)
-      const maxY = Math.max(...ys)
-      return {
+  return ops.flatMap((op, index) => {
+    if (op.kind !== 'rect' || !shouldUseAsTextRegion(op)) return []
+    const xs = op.points.map(point => point.x)
+    const ys = op.points.map(point => point.y)
+    const minX = Math.min(...xs)
+    const maxX = Math.max(...xs)
+    const minY = Math.min(...ys)
+    const maxY = Math.max(...ys)
+    return [
+      {
+        index,
         minX,
         maxX,
         minY,
@@ -126,8 +149,219 @@ function collectTextRegions(ops: DrawOp[], options: NormalizeOptions): TextRegio
         topBorderRow: Math.round(minY / options.cellHeight),
         bottomBorderRow: Math.round(maxY / options.cellHeight),
         semantic: op.semantic,
+      },
+    ]
+  })
+}
+
+function findContainerBorderTouch(
+  point: { col: number; row: number },
+  regions: TextRegionBoundsWithSemantic[],
+): (TextRegionBoundsWithSemantic & { edge: 'top' | 'bottom' | 'left' | 'right' }) | undefined {
+  const matches = regions.filter(region => {
+    if (region.semantic?.role !== 'container') return false
+    const withinCols = point.col >= region.leftBorderCol && point.col <= region.rightBorderCol
+    const withinRows = point.row >= region.topBorderRow && point.row <= region.bottomBorderRow
+    return (
+      (withinCols && point.row === region.topBorderRow) ||
+      (withinCols && point.row === region.bottomBorderRow) ||
+      (withinRows && point.col === region.leftBorderCol) ||
+      (withinRows && point.col === region.rightBorderCol)
+    )
+  })
+  if (matches.length === 0) return
+
+  const smallest = matches.reduce((current, candidate) => {
+    const currentArea = (current.maxX - current.minX) * (current.maxY - current.minY)
+    const candidateArea = (candidate.maxX - candidate.minX) * (candidate.maxY - candidate.minY)
+    return candidateArea < currentArea ? candidate : current
+  })
+
+  if (point.row === smallest.topBorderRow) return { ...smallest, edge: 'top' }
+  if (point.row === smallest.bottomBorderRow) return { ...smallest, edge: 'bottom' }
+  if (point.col === smallest.leftBorderCol) return { ...smallest, edge: 'left' }
+  return { ...smallest, edge: 'right' }
+}
+
+function findContainingContainerRegion(
+  point: { col: number; row: number },
+  regions: TextRegionBoundsWithSemantic[],
+): TextRegionBoundsWithSemantic | undefined {
+  const matches = regions.filter(region => {
+    if (region.semantic?.role !== 'container') return false
+    return (
+      point.col >= region.leftBorderCol &&
+      point.col <= region.rightBorderCol &&
+      point.row >= region.topBorderRow &&
+      point.row <= region.bottomBorderRow
+    )
+  })
+  if (matches.length === 0) return
+
+  return matches.reduce((current, candidate) => {
+    const currentArea = (current.maxX - current.minX) * (current.maxY - current.minY)
+    const candidateArea = (candidate.maxX - candidate.minX) * (candidate.maxY - candidate.minY)
+    return candidateArea < currentArea ? candidate : current
+  })
+}
+
+function findNearestContainerBelow(
+  point: { col: number; row: number },
+  regions: TextRegionBoundsWithSemantic[],
+): TextRegionBoundsWithSemantic | undefined {
+  const matches = regions.filter(region => {
+    if (region.semantic?.role !== 'container') return false
+    if (point.col < region.leftBorderCol || point.col > region.rightBorderCol) return false
+    return region.topBorderRow > point.row
+  })
+  if (matches.length === 0) return
+
+  return matches.reduce((current, candidate) => {
+    if (candidate.topBorderRow !== current.topBorderRow) {
+      return candidate.topBorderRow < current.topBorderRow ? candidate : current
+    }
+    const currentArea = (current.maxX - current.minX) * (current.maxY - current.minY)
+    const candidateArea = (candidate.maxX - candidate.minX) * (candidate.maxY - candidate.minY)
+    return candidateArea < currentArea ? candidate : current
+  })
+}
+
+function translatePoint(point: { x: number; y: number }, dx: number, dy: number) {
+  return {
+    x: point.x + dx,
+    y: point.y + dy,
+  }
+}
+
+function translateOp(op: DrawOp, dx: number, dy: number): DrawOp {
+  if (dx === 0 && dy === 0) return op
+
+  switch (op.kind) {
+    case 'rect':
+      return {
+        ...op,
+        points: op.points.map(point => translatePoint(point, dx, dy)) as RectOp['points'],
       }
-    })
+    case 'segment':
+      return {
+        ...op,
+        p0: translatePoint(op.p0, dx, dy),
+        p1: translatePoint(op.p1, dx, dy),
+      }
+    case 'connector':
+      return {
+        ...op,
+        points: op.points.map(point => translatePoint(point, dx, dy)),
+      }
+    case 'symbol':
+    case 'frame':
+      return {
+        ...op,
+        point: translatePoint(op.point, dx, dy),
+      }
+    case 'text':
+      return {
+        ...op,
+        point: translatePoint(op.point, dx, dy),
+      }
+  }
+}
+
+function translateConnectorEndpointIfTouchingRegion(
+  op: ConnectorOp,
+  region: TextRegionBoundsWithSemantic,
+  options: NormalizeOptions,
+  dx: number,
+  dy: number,
+): ConnectorOp {
+  const points = [...op.points]
+  let changed = false
+  const startTouch = findContainerBorderTouch(pointToGrid(points[0], options), [region])
+  const endTouch = findContainerBorderTouch(pointToGrid(points[points.length - 1], options), [region])
+
+  if (startTouch) {
+    points[0] = translatePoint(points[0], dx, dy)
+    changed = true
+  }
+  if (endTouch) {
+    points[points.length - 1] = translatePoint(points[points.length - 1], dx, dy)
+    changed = true
+  }
+
+  return changed
+    ? {
+        ...op,
+        points,
+      }
+    : op
+}
+
+function reserveActivityConnectorGaps(ops: DrawOp[], options: NormalizeOptions): DrawOp[] {
+  let current = ops
+
+  for (let iteration = 0; iteration < 8; iteration++) {
+    const regions = collectTextRegions(current, options)
+    let shifted = false
+
+    for (const op of current) {
+      if (op.kind !== 'connector') continue
+      if (op.semantic.connector.family !== 'activity-flow' || !op.semantic.connector.compact || op.points.length < 2) {
+        continue
+      }
+
+      const start = pointToGrid(op.points[0], options)
+      const end = pointToGrid(op.points[op.points.length - 1], options)
+      if (start.col !== end.col || end.row <= start.row) continue
+
+      const startTouch = findContainerBorderTouch(start, regions)
+      const endTouch = findContainerBorderTouch(end, regions)
+      const sourceRegion =
+        (startTouch && startTouch.edge === 'bottom' ? startTouch : undefined) ||
+        findContainingContainerRegion(start, regions)
+      const targetRegion =
+        (endTouch && endTouch.edge === 'top' ? endTouch : undefined) ||
+        findNearestContainerBelow(end, regions) ||
+        findContainingContainerRegion(end, regions)
+      if (!sourceRegion || !targetRegion) continue
+
+      const desiredStartRow = sourceRegion.bottomBorderRow + 1
+      const desiredEndRow = targetRegion.topBorderRow - 1
+      if (desiredStartRow <= desiredEndRow) continue
+
+      const deltaRows = desiredStartRow - desiredEndRow
+      const dy = deltaRows * options.cellHeight
+
+      current = current.map((item, index) => {
+        if (index === targetRegion.index) {
+          return translateOp(item, 0, dy)
+        }
+
+        if (item.kind === 'text') {
+          const insideX = item.point.x >= targetRegion.minX && item.point.x <= targetRegion.maxX
+          const insideY = item.point.y >= targetRegion.minY && item.point.y <= targetRegion.maxY
+          if (insideX && insideY) {
+            return translateOp(item, 0, dy)
+          }
+          return item
+        }
+
+        if (item.kind === 'connector') {
+          return translateConnectorEndpointIfTouchingRegion(item, targetRegion, options, 0, dy)
+        }
+
+        return item
+      })
+
+      shifted = true
+      break
+    }
+
+    if (!shifted) {
+      return current
+    }
+  }
+
+  return current
 }
 
 function collectRawContainers(ops: DrawOp[]): RawContainerBounds[] {
@@ -302,6 +536,11 @@ function preventVisibleRectBorderOverlap(
         }
       }
     }
+
+    const minRectWidth = options.cellWidth * 2
+    const minRectHeight = options.cellHeight * 2
+    ;({ min: minX, max: maxX } = clampRectSpan({ min: minX, max: maxX, minSpan: minRectWidth }))
+    ;({ min: minY, max: maxY } = clampRectSpan({ min: minY, max: maxY, minSpan: minRectHeight }))
 
     if (minX >= maxX || minY >= maxY) {
       return op
@@ -570,6 +809,55 @@ function normalizeText(
   }
 }
 
+function normalizeConnector(
+  op: ConnectorOp,
+  options: NormalizeOptions,
+  textRegions: TextRegionBoundsWithSemantic[],
+): ConnectorOp {
+  if (op.semantic.connector.family !== 'activity-flow' || !op.semantic.connector.compact || op.points.length < 2) {
+    return op
+  }
+
+  const points = [...op.points]
+  const lastIndex = points.length - 1
+  const start = pointToGrid(points[0], options)
+  const end = pointToGrid(points[lastIndex], options)
+
+  if (start.col === end.col) {
+    const sourceRegion = findContainingContainerRegion(start, textRegions)
+    const endTouch = findContainerBorderTouch(end, textRegions)
+    const targetRegion =
+      (endTouch?.edge === 'top' ? endTouch : undefined) ||
+      findNearestContainerBelow(end, textRegions) ||
+      findContainingContainerRegion(end, textRegions)
+
+    if (!sourceRegion || !targetRegion || end.row < start.row) {
+      return op
+    }
+
+    if (sourceRegion) {
+      points[0] = {
+        ...points[0],
+        y: (sourceRegion.bottomBorderRow + 1) * options.cellHeight,
+      }
+    }
+
+    if (targetRegion) {
+      points[lastIndex] = {
+        ...points[lastIndex],
+        y: (targetRegion.topBorderRow - 1) * options.cellHeight,
+      }
+    }
+
+    return {
+      ...op,
+      points,
+    }
+  }
+
+  return op
+}
+
 export function normalizeDrawOps(ops: DrawOp[], options: NormalizeOptions): DrawOp[] {
   const sharedBorders = collectSharedContainerBorders(ops)
   const rawContainers = collectRawContainers(ops)
@@ -581,10 +869,12 @@ export function normalizeDrawOps(ops: DrawOp[], options: NormalizeOptions): Draw
   })
   const nestedSafeShapes = preventNestedContainerBorderCollapse(snappedShapes, rawContainers, options)
   const normalizedShapes = preventVisibleRectBorderOverlap(nestedSafeShapes, rawRects, options)
-  const textRegions = collectTextRegions(normalizedShapes, options)
+  const gapReservedShapes = reserveActivityConnectorGaps(normalizedShapes, options)
+  const textRegions = collectTextRegions(gapReservedShapes, options)
   const separators = collectHorizontalSeparators(normalizedShapes, options)
 
-  return normalizedShapes.map(op => {
+  return gapReservedShapes.map(op => {
+    if (op.kind === 'connector') return normalizeConnector(op, options, textRegions)
     if (op.kind === 'text') return normalizeText(op, options, textRegions, separators)
     return op
   })

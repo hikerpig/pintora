@@ -326,11 +326,11 @@ function drawConnector(grid: TextGrid, op: ConnectorOp, options: RasterizeOption
   const start = lineToGrid(op.points[0], options)
   const end = lineToGrid(op.points[op.points.length - 1], options)
 
-  if (op.semantic.connector.compact && start.row === end.row && drawHorizontalCompactConnector(grid, op, options)) {
+  if (op.semantic.connector.compact && start.col === end.col && drawVerticalCompactConnector(grid, op, options)) {
     return
   }
 
-  if (op.semantic.connector.compact && start.col === end.col && drawVerticalCompactConnector(grid, op, options)) {
+  if (op.semantic.connector.compact && start.row === end.row && drawHorizontalCompactConnector(grid, op, options)) {
     return
   }
 
