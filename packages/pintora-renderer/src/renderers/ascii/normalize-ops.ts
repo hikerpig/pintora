@@ -56,7 +56,10 @@ type RawRectBounds = RawContainerBounds & {
   semantic?: RectOp['semantic']
 }
 
-function axisIncludes(setting: ConnectorOp['semantic']['connector']['compactEndpointClearance'], axis: 'horizontal' | 'vertical') {
+function axisIncludes(
+  setting: ConnectorOp['semantic']['connector']['compactEndpointClearance'],
+  axis: 'horizontal' | 'vertical',
+) {
   return setting === 'both' || setting === axis
 }
 
@@ -865,6 +868,7 @@ function normalizeConnector(
   textRegions: TextRegionBoundsWithSemantic[],
 ): ConnectorOp {
   const endpointClearance = op.semantic.connector.compactEndpointClearance
+  const allowPartialEndpointClearance = op.semantic.connector.compactEndpointClearanceMode === 'allow-partial'
 
   if (!op.semantic.connector.compact || op.points.length < 2) {
     return op
@@ -883,7 +887,11 @@ function normalizeConnector(
       findNearestContainerBelow(end, textRegions) ||
       findContainingContainerRegion(end, textRegions)
 
-    if (!sourceRegion || !targetRegion || end.row < start.row) {
+    if (
+      (!sourceRegion && !targetRegion) ||
+      (!allowPartialEndpointClearance && (!sourceRegion || !targetRegion)) ||
+      end.row < start.row
+    ) {
       return op
     }
 
@@ -911,27 +919,27 @@ function normalizeConnector(
     const sourceRegion = findContainingContainerRegion(start, textRegions)
     const endTouch = findContainerBorderTouch(end, textRegions)
 
-    if (!sourceRegion) {
-      return op
-    }
-
     if (end.col >= start.col) {
       const targetRegion =
         (endTouch?.edge === 'left' ? endTouch : undefined) ||
         findNearestContainerRight(end, textRegions) ||
         findContainingContainerRegion(end, textRegions)
 
-      if (!targetRegion) {
+      if ((!sourceRegion && !targetRegion) || (!allowPartialEndpointClearance && (!sourceRegion || !targetRegion))) {
         return op
       }
 
-      points[0] = {
-        ...points[0],
-        x: (sourceRegion.rightBorderCol + 1) * options.cellWidth,
+      if (sourceRegion) {
+        points[0] = {
+          ...points[0],
+          x: (sourceRegion.rightBorderCol + 1) * options.cellWidth,
+        }
       }
-      points[lastIndex] = {
-        ...points[lastIndex],
-        x: (targetRegion.leftBorderCol - 1) * options.cellWidth,
+      if (targetRegion) {
+        points[lastIndex] = {
+          ...points[lastIndex],
+          x: (targetRegion.leftBorderCol - 1) * options.cellWidth,
+        }
       }
     } else {
       const targetRegion =
@@ -939,17 +947,21 @@ function normalizeConnector(
         findNearestContainerLeft(end, textRegions) ||
         findContainingContainerRegion(end, textRegions)
 
-      if (!targetRegion) {
+      if ((!sourceRegion && !targetRegion) || (!allowPartialEndpointClearance && (!sourceRegion || !targetRegion))) {
         return op
       }
 
-      points[0] = {
-        ...points[0],
-        x: (sourceRegion.leftBorderCol - 1) * options.cellWidth,
+      if (sourceRegion) {
+        points[0] = {
+          ...points[0],
+          x: (sourceRegion.leftBorderCol - 1) * options.cellWidth,
+        }
       }
-      points[lastIndex] = {
-        ...points[lastIndex],
-        x: (targetRegion.rightBorderCol + 1) * options.cellWidth,
+      if (targetRegion) {
+        points[lastIndex] = {
+          ...points[lastIndex],
+          x: (targetRegion.rightBorderCol + 1) * options.cellWidth,
+        }
       }
     }
 

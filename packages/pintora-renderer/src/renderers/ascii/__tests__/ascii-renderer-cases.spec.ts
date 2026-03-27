@@ -467,6 +467,25 @@ erDiagram
       expect(markerLine).toContain('○╟│')
     })
 
+    it('keeps er relationship labels off compact markers in LR layout', () => {
+      const code = `
+erDiagram
+  @param layoutDirection LR
+
+  CUSTOMER ||--o{ ORDER : places
+      `
+
+      const text = renderToAscii(code)
+      const lines = text.split('\n')
+      const labelLine = lines.find(line => line.includes('places')) || ''
+      const markerLine = lines.find(line => line.includes('○╟')) || ''
+
+      expect(labelLine).toContain('places')
+      expect(labelLine).not.toMatch(/[○╟╢╤╧]/)
+      expect(markerLine).toContain('○╟')
+      expect(markerLine).not.toContain('places')
+    })
+
     it('renders compact cardinality markers for TD layout too', () => {
       const code = `
 erDiagram
@@ -525,10 +544,26 @@ erDiagram
       const text = renderToAscii(code)
       const compact = text.replace(/\s/g, '')
 
-      expect(compact).toContain('ISA')
       expect(compact).toContain('▽')
+      expect(compact).not.toContain('ISA')
       expect(compact).not.toContain('△')
       expect(text).not.toContain('/\\')
+    })
+
+    it('can omit ISA label in ascii renderer when it overlaps the inheritance triangle', () => {
+      const code = `
+erDiagram
+  PERSON {
+    int age
+  }
+  CUSTOMER inherit PERSON
+      `
+
+      const text = renderToAscii(code)
+      const compact = text.replace(/\s/g, '')
+
+      expect(compact).toContain('▽')
+      expect(compact).not.toContain('ISA')
     })
   })
 })

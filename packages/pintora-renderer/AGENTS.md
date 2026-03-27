@@ -24,6 +24,11 @@ src/
     └── CanvasRenderer.ts # Canvas 渲染器
 ```
 
+## 架构限制
+
+- 不要感知 diagram 特化的 class 作区分，按照 semantic 做能力区分。
+
+
 ## 核心模块说明
 
 ### 1. index.ts

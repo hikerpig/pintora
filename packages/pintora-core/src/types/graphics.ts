@@ -24,6 +24,8 @@ export type ConnectorShaftStyle = 'solid' | 'dashed'
 
 export type ConnectorCompactAxis = 'none' | 'horizontal' | 'vertical' | 'both'
 
+export type ConnectorEndpointClearanceMode = 'strict' | 'allow-partial'
+
 export type SymbolFamily = 'activity-node' | 'component-node' | 'er-node'
 
 export type SymbolDirection = 'up' | 'down' | 'left' | 'right'
@@ -62,6 +64,7 @@ export interface ConnectorSemantic {
   compact: boolean
   shaftStyle: ConnectorShaftStyle
   compactEndpointClearance?: ConnectorCompactAxis
+  compactEndpointClearanceMode?: ConnectorEndpointClearanceMode
   compactLaneReservation?: ConnectorCompactAxis
   startTerminator?: ConnectorTerminator
   endTerminator?: ConnectorTerminator
@@ -80,6 +83,12 @@ export interface FrameSemantic {
   compact: boolean
   borderStyle: FrameBorderStyle
   cornerStyle?: FrameCornerStyle
+}
+
+export type TextLowFidelityVisibility = 'render' | 'omit'
+
+export interface TextSemantic {
+  lowFidelityVisibility?: TextLowFidelityVisibility
 }
 
 export interface MarkSemantic {
@@ -113,6 +122,10 @@ export interface MarkSemantic {
    * preserve frame meaning instead of flattening everything into plain boxes.
    */
   frame?: FrameSemantic
+  /**
+   * Optional text rendering hints for low-fidelity renderers.
+   */
+  text?: TextSemantic
 }
 
 export interface IMark {

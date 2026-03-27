@@ -4,6 +4,7 @@ export type ConnectorDescriptor = {
   family: ConnectorFamily
   shaftStyle: ConnectorSemantic['shaftStyle']
   compactEndpointClearance?: ConnectorSemantic['compactEndpointClearance']
+  compactEndpointClearanceMode?: ConnectorSemantic['compactEndpointClearanceMode']
   compactLaneReservation?: ConnectorSemantic['compactLaneReservation']
   startTerminator: ConnectorTerminatorKind
   endTerminator: ConnectorTerminatorKind
@@ -19,6 +20,7 @@ export function makeConnectorSemantic(descriptor: ConnectorDescriptor): MarkSema
       compact: descriptor.compact ?? true,
       shaftStyle: descriptor.shaftStyle,
       compactEndpointClearance: descriptor.compactEndpointClearance,
+      compactEndpointClearanceMode: descriptor.compactEndpointClearanceMode,
       compactLaneReservation: descriptor.compactLaneReservation,
       startTerminator: { kind: descriptor.startTerminator },
       endTerminator: { kind: descriptor.endTerminator },

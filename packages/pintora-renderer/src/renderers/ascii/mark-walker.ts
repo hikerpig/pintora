@@ -301,6 +301,7 @@ function collect(mark: Mark, parentMatrix: Matrix, ops: DrawOp[]): void {
   }
 
   if (mark.type === 'text') {
+    if (mark.semantic?.text?.lowFidelityVisibility === 'omit') return
     const attrs = mark.attrs
     const text = attrs.text || ''
     if (!text) return
@@ -320,6 +321,7 @@ function collect(mark: Mark, parentMatrix: Matrix, ops: DrawOp[]): void {
       textAlign: attrs.textAlign,
       textBaseline: attrs.textBaseline,
       lineHeight: attrs.lineHeight,
+      semantic: mark.semantic,
       layer: AsciiLayer.TEXT,
     }
     ops.push(op)

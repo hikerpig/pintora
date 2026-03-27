@@ -117,4 +117,25 @@ describe('mark walker', () => {
     expect(symbolOp.semantic.symbol.kind).toBe('component-interface')
     expect(symbolOp.fallbackOps.length).toBeGreaterThan(0)
   })
+
+  it('omits text marks that opt out of low-fidelity rendering via semantic metadata', () => {
+    const mark: Group = {
+      type: 'group',
+      children: [
+        {
+          type: 'text',
+          attrs: { x: 4, y: 6, text: 'ISA', textAlign: 'center', textBaseline: 'middle' },
+          semantic: {
+            text: {
+              lowFidelityVisibility: 'omit',
+            },
+          } as any,
+        },
+      ],
+    }
+
+    const ops = collectDrawOps(mark, IDENTITY_MATRIX)
+
+    expect(ops.some(op => op.kind === 'text')).toBe(false)
+  })
 })

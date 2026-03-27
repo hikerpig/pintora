@@ -791,7 +791,12 @@ exports[`er-artist will draw inheritance 1`] = `
               "textAlign": "center",
               "textBaseline": "middle",
             },
-            "class": "er__relationship-label",
+            "class": "er__inheritance-label",
+            "semantic": {
+              "text": {
+                "lowFidelityVisibility": "omit",
+              },
+            },
             "type": "text",
           },
           {
@@ -805,7 +810,12 @@ exports[`er-artist will draw inheritance 1`] = `
               "textAlign": "center",
               "textBaseline": "middle",
             },
-            "class": "er__relationship-label",
+            "class": "er__inheritance-label",
+            "semantic": {
+              "text": {
+                "lowFidelityVisibility": "omit",
+              },
+            },
             "type": "text",
           },
           {

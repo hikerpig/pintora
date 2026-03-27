@@ -76,14 +76,17 @@ ASCII quality depends on artists emitting semantics instead of only geometry.
 - `connector`: compact arrows and ER cardinality markers
 - `symbol`: compact activity, component, and ER inheritance symbols
 - `frame`: compact note and decision frame rendering
+- `text`: low-fidelity text visibility hints
 
 Recent practical additions:
 
 - `er-relationship` vertical connectors now reserve external space before drawing compact markers
 - connector layout hints are now part of `ConnectorSemantic` instead of being inferred from `family`
 - `compactEndpointClearance` controls whether compact endpoints must sit outside container borders on the horizontal axis, vertical axis, or both
+- `compactEndpointClearanceMode` controls whether endpoint clearance must succeed on both sides or may still apply when only one side touches a semantic container
 - `compactLaneReservation` controls whether normalization may reserve extra external lanes before compact connector rendering
 - `er-inheritance-triangle` now uses `symbol.direction` so ASCII preserves triangle orientation instead of always drawing a fixed `△`
+- `text.lowFidelityVisibility` lets diagram artists explicitly omit labels that would damage low-fidelity output instead of teaching the renderer diagram-specific class rules
 
 ## Important Regressions That Shaped The Design
 
@@ -152,6 +155,7 @@ What changed:
 
 - normalization now supports horizontal endpoint clearance as a semantic connector policy
 - compact LR markers stay outside entity borders in the same way TD markers already did
+- ER relationship labels now get a diagram-side stable layout lane, so ASCII no longer has to recover from marker/label overlap after the fact
 
 ### 7. Connector semantic contract tightened
 
@@ -161,9 +165,10 @@ What changed:
 
 - connector spacing policy now lives in `ConnectorSemantic`
 - `compactEndpointClearance` expresses whether compact endpoints need external space on `horizontal`, `vertical`, or `both` axes
+- `compactEndpointClearanceMode` expresses whether clearance is `strict` or may `allow-partial` success when only one endpoint is adjacent to a semantic container
 - `compactLaneReservation` expresses whether normalization may reserve extra external lanes before rasterization
 - current usage:
-  - ER relationships: endpoint clearance on both axes
+  - ER relationships: endpoint clearance on both axes, with `allow-partial` so split label connectors still preserve outer marker spacing
   - activity flows: vertical endpoint clearance plus vertical lane reservation
 
 ### 8. ER inheritance triangle direction
@@ -176,6 +181,19 @@ What changed:
 - symbol semantics now carry optional `direction`
 - ASCII maps that direction to `△`, `▽`, `◁`, or `▷`
 
+### 9. Low-fidelity text should not depend on diagram classes
+
+An early fix for ER inheritance hid `ISA` in ASCII by checking the mark class. That solved the immediate overlap, but it leaked diagram knowledge into the renderer.
+
+What changed:
+
+- low-fidelity text visibility is now expressed as `semantic.text.lowFidelityVisibility`
+- `mark-walker` skips text only from that semantic hint
+- renderer normalization no longer needs diagram-specific text exceptions
+- current usage:
+  - ER inheritance `ISA`: `omit` in ASCII so the compact triangle glyph stays legible
+  - other labels remain renderer-visible unless artists opt out semantically
+
 ## Current Renderer Rules
 
 ### Text
@@ -183,6 +201,7 @@ What changed:
 - text is measured with CJK-aware width handling
 - placement comes from `textAlign` and `textBaseline`
 - normalized placement is chosen before rasterization
+- low-fidelity text omission is driven by `semantic.text.lowFidelityVisibility`, not by renderer-side class checks
 
 ### Connectors
 
@@ -190,6 +209,7 @@ What changed:
 - otherwise the renderer falls back to geometric rasterization
 - endpoint meaning is preferred over sampled endpoint geometry
 - endpoint spacing and lane reservation are driven by connector semantics, not renderer-side family heuristics
+- partial endpoint clearance is allowed only when the connector semantic opts into it
 
 ### Symbols
 

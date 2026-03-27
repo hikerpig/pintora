@@ -6,6 +6,7 @@ export type ErConf = BaseFontConfig & {
   diagramPadding: number
 
   layoutDirection: string
+  nodesep: number
   ranksep: number
   edgesep: number
 
@@ -35,7 +36,8 @@ export const defaultConfig: ErConf = {
   diagramPadding: 15,
 
   layoutDirection: 'TB',
-  ranksep: 100,
+  nodesep: 80,
+  ranksep: 50,
   edgesep: 80,
 
   edgeType: 'polyline',

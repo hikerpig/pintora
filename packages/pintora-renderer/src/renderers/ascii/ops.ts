@@ -79,6 +79,7 @@ export type TextOp = {
     minCol: number
     maxCol: number
   }>
+  semantic?: MarkSemantic
   layer: TextLayer
 }
 

@@ -121,20 +121,80 @@ erDiagram
     const relationsGroup = (graphicIR.mark as Group).children.find(
       child => child.type === 'group' && child.class === 'er__relations',
     ) as Group | undefined
-    const relationPath = relationsGroup?.children.find(child => child.type === 'path') as pintora.Path | undefined
+    const relationPaths = (relationsGroup?.children.filter(
+      child => child.type === 'path' && child.semantic?.role === 'connector',
+    ) || []) as pintora.Path[]
 
-    expect(relationPath?.semantic).toMatchObject({
-      role: 'connector',
-      strokePolicy: 'always',
-      connector: {
-        family: 'er-relationship',
-        compact: true,
-        compactEndpointClearance: 'both',
-        shaftStyle: 'solid',
-        startTerminator: { kind: 'er-only-one' },
-        endTerminator: { kind: 'er-zero-or-more' },
-      },
-    })
+    expect(relationPaths).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          semantic: expect.objectContaining({
+            role: 'connector',
+            strokePolicy: 'always',
+            connector: expect.objectContaining({
+              family: 'er-relationship',
+              compact: true,
+              compactEndpointClearance: 'both',
+              shaftStyle: 'solid',
+              startTerminator: { kind: 'er-only-one' },
+              endTerminator: { kind: 'none' },
+            }),
+          }),
+        }),
+        expect.objectContaining({
+          semantic: expect.objectContaining({
+            role: 'connector',
+            strokePolicy: 'always',
+            connector: expect.objectContaining({
+              family: 'er-relationship',
+              compact: true,
+              compactEndpointClearance: 'both',
+              shaftStyle: 'solid',
+              startTerminator: { kind: 'none' },
+              endTerminator: { kind: 'er-zero-or-more' },
+            }),
+          }),
+        }),
+      ]),
+    )
+  })
+
+  it('splits relationship connector into two segments with a label gap node', () => {
+    const code = `
+erDiagram
+  @param layoutDirection LR
+  A ||--o{ B : has
+    `
+
+    const { graphicIR } = testDraw(code)
+    const relationsGroup = (graphicIR.mark as Group).children.find(
+      child => child.type === 'group' && child.class === 'er__relations',
+    ) as Group | undefined
+    const relationPaths = (relationsGroup?.children.filter(
+      child => child.type === 'path' && child.semantic?.role === 'connector',
+    ) || []) as Path[]
+
+    expect(relationPaths).toHaveLength(2)
+    expect(relationPaths).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          semantic: expect.objectContaining({
+            connector: expect.objectContaining({
+              startTerminator: { kind: 'er-only-one' },
+              endTerminator: { kind: 'none' },
+            }),
+          }),
+        }),
+        expect.objectContaining({
+          semantic: expect.objectContaining({
+            connector: expect.objectContaining({
+              startTerminator: { kind: 'none' },
+              endTerminator: { kind: 'er-zero-or-more' },
+            }),
+          }),
+        }),
+      ]),
+    )
   })
 
   it('marks inheritance triangle as semantic symbol for text renderers', () => {
@@ -159,6 +219,72 @@ erDiagram
         kind: 'er-inheritance-triangle',
         compact: true,
         direction: 'down',
+      },
+    })
+  })
+
+  it('keeps inheritance label and triangle on the same layout node', () => {
+    const code = `
+erDiagram
+  CUSTOMER inherit PERSON
+    `
+
+    const { graphicIR } = testDraw(code)
+    const inheritanceGroup = (graphicIR.mark as Group).children.find(
+      child => child.type === 'group' && child.children.some(grandChild => grandChild.type === 'path'),
+    ) as Group | undefined
+    const inheritanceLines = (inheritanceGroup?.children.filter(
+      child => child.type === 'path' && child.semantic?.role !== 'symbol',
+    ) || []) as Path[]
+
+    expect(inheritanceGroup?.children.some(child => child.type === 'text' && child.attrs.text === 'ISA')).toBe(true)
+    expect(inheritanceLines).toHaveLength(2)
+  })
+
+  it('centers inheritance label on the triangle node', () => {
+    const code = `
+erDiagram
+  CUSTOMER inherit PERSON
+    `
+
+    const { graphicIR } = testDraw(code)
+    const inheritanceGroup = (graphicIR.mark as Group).children.find(
+      child => child.type === 'group' && child.children.some(grandChild => grandChild.type === 'path'),
+    ) as Group | undefined
+    const labelMark = inheritanceGroup?.children.find(child => child.type === 'text' && child.attrs.text === 'ISA') as
+      | pintora.Text
+      | undefined
+    const trianglePath = inheritanceGroup?.children.find(
+      child => child.type === 'path' && child.semantic?.role === 'symbol',
+    ) as Path | undefined
+    const triangleCommands = trianglePath?.attrs.path as unknown[] | undefined
+    const topPoint = triangleCommands?.[0] as ['M', number, number] | undefined
+    const leftPoint = triangleCommands?.[1] as ['L', number, number] | undefined
+
+    expect(labelMark).toBeTruthy()
+    expect(topPoint).toBeTruthy()
+    expect(leftPoint).toBeTruthy()
+    expect(labelMark?.attrs.x).toBe(topPoint?.[1])
+    expect(labelMark?.attrs.y).toBe((topPoint?.[2] + leftPoint?.[2]) / 2)
+  })
+
+  it('marks inheritance label with low-fidelity omit semantic', () => {
+    const code = `
+erDiagram
+  CUSTOMER inherit PERSON
+    `
+
+    const { graphicIR } = testDraw(code)
+    const inheritanceGroup = (graphicIR.mark as Group).children.find(
+      child => child.type === 'group' && child.children.some(grandChild => grandChild.type === 'path'),
+    ) as Group | undefined
+    const labelMark = inheritanceGroup?.children.find(child => child.type === 'text' && child.attrs.text === 'ISA') as
+      | pintora.Text
+      | undefined
+
+    expect(labelMark?.semantic).toMatchObject({
+      text: {
+        lowFidelityVisibility: 'omit',
       },
     })
   })

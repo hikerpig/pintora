@@ -309,4 +309,89 @@ describe('normalizeDrawOps', () => {
 
     expect(text.point.y).toBe(48)
   })
+
+  it('keeps compact connector endpoints unchanged when only one side touches a container in strict mode', () => {
+    const ops: DrawOp[] = [
+      {
+        kind: 'rect',
+        points: [
+          { x: 16, y: 16 },
+          { x: 80, y: 16 },
+          { x: 80, y: 64 },
+          { x: 16, y: 64 },
+        ],
+        layer: AsciiLayer.LINES,
+        semantic: { role: 'container', strokePolicy: 'always' },
+      },
+      {
+        kind: 'connector',
+        points: [
+          { x: 40, y: 32 },
+          { x: 120, y: 32 },
+        ],
+        layer: AsciiLayer.LINES,
+        semantic: {
+          role: 'connector',
+          strokePolicy: 'always',
+          connector: {
+            family: 'sequence-message',
+            compact: true,
+            shaftStyle: 'solid',
+            compactEndpointClearance: 'horizontal',
+            startTerminator: { kind: 'none' },
+            endTerminator: { kind: 'arrow-filled' },
+          },
+        },
+      },
+    ]
+
+    const normalized = normalizeDrawOps(ops, { cellWidth: 8, cellHeight: 16 })
+    const connector = normalized.find(op => op.kind === 'connector') as Extract<DrawOp, { kind: 'connector' }>
+
+    expect(connector.points[0].x).toBe(40)
+    expect(connector.points[1].x).toBe(120)
+  })
+
+  it('allows compact connector endpoint clearance from a single touched container when semantic opts in', () => {
+    const ops: DrawOp[] = [
+      {
+        kind: 'rect',
+        points: [
+          { x: 16, y: 16 },
+          { x: 80, y: 16 },
+          { x: 80, y: 64 },
+          { x: 16, y: 64 },
+        ],
+        layer: AsciiLayer.LINES,
+        semantic: { role: 'container', strokePolicy: 'always' },
+      },
+      {
+        kind: 'connector',
+        points: [
+          { x: 40, y: 32 },
+          { x: 120, y: 32 },
+        ],
+        layer: AsciiLayer.LINES,
+        semantic: {
+          role: 'connector',
+          strokePolicy: 'always',
+          connector: {
+            family: 'sequence-message',
+            compact: true,
+            shaftStyle: 'solid',
+            compactEndpointClearance: 'horizontal',
+            compactEndpointClearanceMode: 'allow-partial',
+            startTerminator: { kind: 'none' },
+            endTerminator: { kind: 'arrow-filled' },
+          },
+        },
+      },
+    ]
+
+    const normalized = normalizeDrawOps(ops, { cellWidth: 8, cellHeight: 16 })
+    const connector = normalized.find(op => op.kind === 'connector') as Extract<DrawOp, { kind: 'connector' }>
+
+    expect(connector.points[0].x).toBe(88)
+    expect(connector.points[1].x).toBe(120)
+  })
 })

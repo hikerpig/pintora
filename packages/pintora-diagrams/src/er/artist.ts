@@ -1,5 +1,4 @@
 import {
-  getPointAt,
   Group,
   IFont,
   mat3,
@@ -37,6 +36,7 @@ import { makeConnectorSemantic } from '../util/connector'
 import { makeSymbolSemantic } from '../util/symbol'
 
 let conf: ErConf
+const RELATION_LABEL_DUMMY_MIN_SIZE = 1
 
 function cardinalityToConnectorKind(
   cardinality: Cardinality,
@@ -92,7 +92,7 @@ class ErArtist extends BaseArtist<ErDiagramIR, ErConf> {
     })
       .setGraph({
         rankdir: conf.layoutDirection,
-        nodesep: 80,
+        nodesep: conf.nodesep,
         edgesep: conf.edgesep,
         ranksep: conf.ranksep,
         splines: getGraphSplinesOption(conf.edgeType),
@@ -124,7 +124,7 @@ class ErArtist extends BaseArtist<ErDiagramIR, ErConf> {
     const relationshipsBounds = makeBounds()
     // Draw the relationships
     relationships.forEach(function (rel) {
-      const { bounds: relationBounds } = drawRelationshipFromLayout(relationsGroup, rel, g)
+      const { bounds: relationBounds } = drawRelationshipFromLayout(relationsGroup, rel)
       tryExpandBounds(relationshipsBounds, relationBounds)
     })
     rootMark.children.unshift(relationsGroup)
@@ -482,46 +482,46 @@ type EdgeData = BaseEdgeData &
     onLayout(data: EdgeData): void
   }
 
-/**
- * Add each relationship to the graph
- * @param relationships the relationships to be added
- * @param g the graph
- * @return The array of relationships
- */
-const addRelationships = function (relationships: ErDiagramIR['relationships'], g: LayoutGraph) {
-  relationships.forEach(function (r) {
-    g.setEdge(r.entityA, r.entityB, { name: getEdgeName(r), relationship: r } as EdgeData)
+type RelationshipLayout = {
+  relationship: Relationship
+  edgeName: string
+  labelDims: {
+    width: number
+    height: number
+  }
+  labelPoint?: Point
+  startEdge?: EdgeData
+  endEdge?: EdgeData
+}
+
+function getRelationshipFontConfig() {
+  return getFontConfig(conf, {
+    fontWeight: 400,
   })
-  return relationships
-} // addRelationships
+}
 
-let relCnt = 0
-/**
- * Draw a relationship using edge information from the graph
- */
-const drawRelationshipFromLayout = function (group: Group, rel: Relationship, g: LayoutGraph) {
-  relCnt++
+function getRelationshipLabelDims(label: string) {
+  const dims = getTextDimensionsInPresicion(label, getRelationshipFontConfig())
+  return {
+    width: dims.width + conf.fontSize / 2,
+    height: dims.height + conf.fontSize / 2,
+  }
+}
 
-  const bounds = makeBounds()
-
-  // Find the edge relating to this relationship
-  const edge: EdgeData = g.edge(rel.entityA, rel.entityB)
-  if (!('relationship' in edge)) return
-
-  const [startPoint, ...restPoints] = edge.points
-  const secondPoint = restPoints[0]
-  const lastPoint = restPoints[restPoints.length - 1]
-  updateBoundsByPoints(bounds, edge.points)
-
+function makeRelationshipPath(
+  relationship: Relationship,
+  points: Point[],
+  itemId: string,
+  startTerminator: Cardinality | 'none',
+  endTerminator: Cardinality | 'none',
+) {
   let pathCommands: PathCommand[] | string
   if (conf.edgeType === 'curved') {
-    const pathString = getPointsCurvePath(edge.points)
-    pathCommands = pathString
+    pathCommands = getPointsCurvePath(points)
   } else {
-    pathCommands = getPointsLinearPath(edge.points)
+    pathCommands = getPointsLinearPath(points)
   }
 
-  const itemId = rel.itemId
   const linePath = makeMark(
     'path',
     {
@@ -533,42 +533,131 @@ const drawRelationshipFromLayout = function (group: Group, rel: Relationship, g:
       itemId,
       semantic: makeConnectorSemantic({
         family: 'er-relationship',
-        shaftStyle: rel.relSpec.relType === Identification.NON_IDENTIFYING ? 'dashed' : 'solid',
+        shaftStyle: relationship.relSpec.relType === Identification.NON_IDENTIFYING ? 'dashed' : 'solid',
         compactEndpointClearance: 'both',
-        startTerminator: cardinalityToConnectorKind(rel.relSpec.cardB),
-        endTerminator: cardinalityToConnectorKind(rel.relSpec.cardA),
+        compactEndpointClearanceMode: 'allow-partial',
+        startTerminator: startTerminator === 'none' ? 'none' : cardinalityToConnectorKind(startTerminator),
+        endTerminator: endTerminator === 'none' ? 'none' : cardinalityToConnectorKind(endTerminator),
       }),
     },
   )
 
-  // with dashes if necessary
-  if (rel.relSpec.relType === Identification.NON_IDENTIFYING) {
+  if (relationship.relSpec.relType === Identification.NON_IDENTIFYING) {
     linePath.attrs.lineDash = [4, 4]
   }
-  const endMarkerDirection = calcDirection(restPoints[restPoints.length - 1], restPoints[restPoints.length - 2])
+
+  return linePath
+}
+
+/**
+ * Add each relationship to the graph
+ * @param relationships the relationships to be added
+ * @param g the graph
+ * @return The array of relationships
+ */
+const addRelationships = function (relationships: ErDiagramIR['relationships'], g: LayoutGraph) {
+  const relationshipLayouts: RelationshipLayout[] = []
+
+  relationships.forEach(function (r, index) {
+    const edgeName = `${getEdgeName(r)}_${index}`
+    const dummyNodeId = `${edgeName}_label_dummy`
+    const labelDims = getRelationshipLabelDims(r.roleA)
+    const relationshipLayout: RelationshipLayout = {
+      relationship: r,
+      edgeName,
+      labelDims,
+    }
+
+    // Reserve a stable label lane in dagre so the relationship text does not
+    // compete with endpoint markers on short edges.
+    g.setNode(dummyNodeId, {
+      width: Math.max(labelDims.width, RELATION_LABEL_DUMMY_MIN_SIZE),
+      height: Math.max(labelDims.height, RELATION_LABEL_DUMMY_MIN_SIZE),
+      isDummy: true,
+      onLayout(data) {
+        relationshipLayout.labelPoint = {
+          x: data.x,
+          y: data.y,
+        }
+      },
+    })
+
+    g.setEdge(
+      r.entityA,
+      dummyNodeId,
+      {
+        name: `${edgeName}-start`,
+        relationship: r,
+        onLayout(data) {
+          relationshipLayout.startEdge = data
+        },
+      } as EdgeData,
+      `${edgeName}-start`,
+    )
+
+    g.setEdge(
+      dummyNodeId,
+      r.entityB,
+      {
+        name: `${edgeName}-end`,
+        relationship: r,
+        onLayout(data) {
+          relationshipLayout.endEdge = data
+        },
+      } as EdgeData,
+      `${edgeName}-end`,
+    )
+
+    relationshipLayouts.push(relationshipLayout)
+  })
+
+  return relationshipLayouts
+} // addRelationships
+
+let relCnt = 0
+/**
+ * Draw a relationship using edge information from the graph
+ */
+const drawRelationshipFromLayout = function (group: Group, relationshipLayout: RelationshipLayout) {
+  relCnt++
+  const rel = relationshipLayout.relationship
+
+  const bounds = makeBounds()
+  const { startEdge, endEdge } = relationshipLayout
+  if (!startEdge || !endEdge) return
+
+  updateBoundsByPoints(bounds, startEdge.points)
+  updateBoundsByPoints(bounds, endEdge.points)
+
+  const [startPoint, secondPoint] = startEdge.points
+  const lastPoint = endEdge.points[endEdge.points.length - 1]
+  const secondLastPoint = endEdge.points[endEdge.points.length - 2]
+
+  const itemId = rel.itemId
+  const startLinePath = makeRelationshipPath(rel, startEdge.points, itemId, rel.relSpec.cardB, 'none')
+  const endLinePath = makeRelationshipPath(rel, endEdge.points, itemId, 'none', rel.relSpec.cardA)
+
+  const endMarkerDirection = calcDirection(lastPoint, secondLastPoint)
   const endMarker = drawMarkerTo(lastPoint, rel.relSpec.cardA, endMarkerDirection, {
     stroke: conf.stroke,
-    id: `${edge.name}-end`,
+    id: `${relationshipLayout.edgeName}-end`,
   })
 
   const startMarkerDirection = calcDirection(startPoint, secondPoint)
   const startMarker = drawMarkerTo(startPoint, rel.relSpec.cardB, startMarkerDirection, {
     stroke: conf.stroke,
-    id: `${edge.name}-start`,
+    id: `${relationshipLayout.edgeName}-start`,
   })
 
   // Now label the relationship
-
-  // Find the half-way point
-  const labelPoint = edge.labelPoint || getPointAt(edge.points, 0.4, true)
+  const labelPoint = relationshipLayout.labelPoint
+  if (!labelPoint) return
   const labelX = labelPoint.x
   const labelY = labelPoint.y
 
   // Append a text node containing the label
   const labelId = 'rel' + relCnt
-  const fontConfig = getFontConfig(conf, {
-    fontWeight: 400,
-  })
+  const fontConfig = getRelationshipFontConfig()
 
   const labelMark = makeMark(
     'text',
@@ -585,15 +674,13 @@ const drawRelationshipFromLayout = function (group: Group, rel: Relationship, g:
     { itemId, class: 'er__relationship-label' },
   )
 
-  const labelDims = getTextDimensionsInPresicion(rel.roleA, fontConfig)
-  labelDims.width += conf.fontSize / 2
-  labelDims.height += conf.fontSize / 2
+  const labelDims = relationshipLayout.labelDims
   const labelBg = makeLabelBg(labelDims, { x: labelX, y: labelY }, { id: `#${labelId}`, fill: conf.labelBackground })
 
   const labelBgBound = calcBound([labelBg])
   tryExpandBounds(bounds, labelBgBound)
 
-  const insertingMarks = [linePath, labelBg, labelMark, startMarker, endMarker].filter(o => !!o)
+  const insertingMarks = [startLinePath, endLinePath, labelBg, labelMark, startMarker, endMarker].filter(o => !!o)
 
   group.children.push(...insertingMarks)
 
@@ -622,22 +709,36 @@ function drawInheritances(ir: ErDiagramIR, g: LayoutGraph, rootMark: Group) {
         fill: conf.textColor,
         ...fontConfig,
       },
-      { class: 'er__relationship-label' },
+      {
+        class: 'er__inheritance-label',
+        semantic: {
+          text: {
+            lowFidelityVisibility: 'omit',
+          },
+        },
+      },
     )
     inheritanceGroup.children.push(labelMark)
 
-    const labelId = `inherit-${inh.sup}-${inh.sub}`
+    const triangleNodeId = `inherit-triangle-${inh.sup}-${inh.sub}`
     const triangleBaseLength = Math.max(labelDims.width, labelDims.height) * 1.8
-    const size = {
+    const triangleSize = {
       width: triangleBaseLength,
       // add extra height, otherwise edge will point through the triangle
       height: Math.ceil(triangleBaseLength * Math.sin(Math.PI / 3)) + 5,
     }
+    const nodeSize = {
+      width: triangleSize.width + labelDims.width,
+      height: triangleSize.height + labelDims.height,
+    }
 
     let inheritNodeCenter: Point
 
-    g.setNode(labelId, {
-      ...size,
+    // Triangle and ISA label share one layout node so they keep moving as a unit.
+
+    g.setNode(triangleNodeId, {
+      ...nodeSize,
+      isDummy: true,
       onLayout(data) {
         inheritNodeCenter = {
           x: toFixed(data.x),
@@ -646,12 +747,9 @@ function drawInheritances(ir: ErDiagramIR, g: LayoutGraph, rootMark: Group) {
       },
     })
 
-    g.setEdge(labelId, inh.sup, {
+    g.setEdge(triangleNodeId, inh.sup, {
       isInheritance: true,
       onLayout(edge) {
-        const linePath = makeLinePath(edge, conf)
-        inheritanceGroup.children.push(linePath)
-
         const rad = calcDirection(edge.points[0], edge.points[1])
         const { mark: triangle } = makeTriangle(inheritNodeCenter, triangleBaseLength, rad + Math.PI / 2, {
           stroke: conf.edgeColor,
@@ -665,16 +763,17 @@ function drawInheritances(ir: ErDiagramIR, g: LayoutGraph, rootMark: Group) {
         })
         inheritanceGroup.children.unshift(triangle)
 
-        const labelOffseX = (-labelDims.width * Math.cos(rad)) / 4
-        const labelOffseY = -labelDims.height * Math.sin(rad)
         safeAssign(labelMark.attrs, {
-          x: inheritNodeCenter.x + labelOffseX,
-          y: inheritNodeCenter.y + labelOffseY,
+          x: inheritNodeCenter.x,
+          y: inheritNodeCenter.y,
         })
+
+        const linePath = makeLinePath(edge, conf)
+        inheritanceGroup.children.push(linePath)
       },
     } as EdgeData)
 
-    g.setEdge(inh.sub, labelId, {
+    g.setEdge(inh.sub, triangleNodeId, {
       isInheritance: true,
       onLayout(edge) {
         const linePath = makeLinePath(edge, conf)
