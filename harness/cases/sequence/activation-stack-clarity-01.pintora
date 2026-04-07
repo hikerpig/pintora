@@ -1,0 +1,12 @@
+sequenceDiagram
+  participant Client
+  participant Gateway
+  participant Worker
+  Client->>Gateway: submit job
+  activate Gateway
+  Gateway->>Worker: enqueue and start
+  activate Worker
+  Worker-->>Gateway: accepted
+  deactivate Worker
+  Gateway-->>Client: job id
+  deactivate Gateway

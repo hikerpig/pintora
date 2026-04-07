@@ -1,0 +1,15 @@
+erDiagram
+  USER ||--o{ SESSION : owns
+  USER {
+    string id
+    string email
+    string region
+    string locale
+    string timezone
+  }
+  SESSION {
+    string id
+    string device
+    string ip
+    string createdAt
+  }

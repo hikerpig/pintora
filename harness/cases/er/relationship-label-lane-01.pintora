@@ -1,0 +1,15 @@
+erDiagram
+  CUSTOMER ||--o{ ORDER : submits
+  ORDER ||--|{ ORDER_LINE : contains
+  CUSTOMER {
+    string id
+    string tier
+  }
+  ORDER {
+    string id
+    string status
+  }
+  ORDER_LINE {
+    string sku
+    int quantity
+  }

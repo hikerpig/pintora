@@ -1,0 +1,8 @@
+erDiagram
+  PERSON ||--o{ ORDER : places
+  PERSON {
+    string name
+  }
+  ORDER {
+    string id
+  }

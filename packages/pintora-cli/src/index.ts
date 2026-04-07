@@ -2,7 +2,8 @@ import { pintoraStandalone } from '@pintora/standalone'
 
 export { renderInCurrentProcess } from './sameprocess-render'
 export { renderInSubprocess } from './subprocess-render'
-export { render } from './render'
+export { render, renderToImage, renderToSvg } from './render'
+export type { RenderToImageOptions, RenderToSvgOptions } from './render'
 
 export { pintoraStandalone }
 

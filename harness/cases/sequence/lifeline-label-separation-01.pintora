@@ -1,0 +1,4 @@
+sequenceDiagram
+  participant CS as "Customer Support"
+  participant Billing as "Billing Service"
+  CS->>Billing: reconcile invoice

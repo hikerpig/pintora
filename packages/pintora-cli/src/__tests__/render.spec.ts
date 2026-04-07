@@ -2,6 +2,7 @@ import { pintoraStandalone } from '@pintora/standalone'
 import { EXAMPLES } from '@pintora/test-shared'
 import { SVG_MIME_TYPE } from '../const'
 import { render } from '../render'
+import { renderToImage, renderToSvg } from '../index'
 
 describe('render', () => {
   it('can output svg', async () => {
@@ -10,6 +11,25 @@ describe('render', () => {
       mimeType: SVG_MIME_TYPE,
     })
     expect(svgString.length).toBeGreaterThan(20)
+  })
+
+  it('exposes a programmatic svg renderer without requiring callers to pass a mime type', async () => {
+    const svgString = await renderToSvg({
+      code: EXAMPLES.er.code,
+      renderInSubprocess: false,
+    })
+
+    expect(svgString).toContain('<svg')
+  })
+
+  it('exposes a programmatic image renderer that defaults to png output', async () => {
+    const buf = await renderToImage({
+      code: EXAMPLES.er.code,
+      renderInSubprocess: false,
+    })
+
+    expect(buf.constructor).toBe(Buffer)
+    expect(buf.length).toBeGreaterThan(0)
   })
 
   it('can output jpeg', async () => {
