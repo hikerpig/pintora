@@ -13,7 +13,7 @@
     "pintora-harness": "./bin/pintora-harness"
   },
   "scripts": {
-    "compile": "rimraf lib tsconfig.tsbuildinfo && tsc",
+    "compile": "tsc",
     "watch": "tsc -w",
     "test": "jest --forceExit"
   },

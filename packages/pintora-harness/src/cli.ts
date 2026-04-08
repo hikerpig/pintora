@@ -37,6 +37,7 @@ type RunCaseArgs = {
   'artifacts-dir': string
   'base-url'?: string
   viewport?: string
+  captureBrowser?: boolean
   'no-capture-browser'?: boolean
 }
 
@@ -45,6 +46,7 @@ type RunSuiteArgs = {
   'artifacts-dir': string
   'base-url'?: string
   viewport?: string
+  captureBrowser?: boolean
   'no-capture-browser'?: boolean
   'max-concurrency'?: number
 }
@@ -136,7 +138,7 @@ try {
 
 async function handleRenderSvgCommand(args: RenderSvgArgs) {
   try {
-    const { runHarnessRenderSvg } = require('./rendering/render-svg') as typeof import('./rendering/render-svg')
+    const { runHarnessRenderSvg } = await import('./rendering/render-svg')
     const result = await runHarnessRenderSvg({
       cwd: CWD,
       caseId: args.case,
@@ -152,7 +154,7 @@ async function handleRenderSvgCommand(args: RenderSvgArgs) {
 
 async function handleInspectSvgCommand(args: InspectSvgArgs) {
   try {
-    const { runHarnessInspectSvg } = require('./inspection/inspect-svg') as typeof import('./inspection/inspect-svg')
+    const { runHarnessInspectSvg } = await import('./inspection/inspect-svg')
     const result = await runHarnessInspectSvg({
       cwd: CWD,
       svgFile: args.in,
@@ -169,7 +171,7 @@ async function handleInspectSvgCommand(args: InspectSvgArgs) {
 
 async function handleCaptureBrowserCommand(args: CaptureBrowserArgs) {
   try {
-    const { runHarnessCaptureBrowser } = require('./browser/capture-browser') as typeof import('./browser/capture-browser')
+    const { runHarnessCaptureBrowser } = await import('./browser/capture-browser')
     const result = await runHarnessCaptureBrowser({
       cwd: CWD,
       caseId: args.case,
@@ -187,7 +189,7 @@ async function handleCaptureBrowserCommand(args: CaptureBrowserArgs) {
 
 async function handleSummarizeCaseCommand(args: SummarizeCaseArgs) {
   try {
-    const { runHarnessSummarizeCase } = require('./summary/summarize-case') as typeof import('./summary/summarize-case')
+    const { runHarnessSummarizeCase } = await import('./summary/summarize-case')
     const result = await runHarnessSummarizeCase({
       artifactsDir: args.artifacts,
       outFile: args.out,
@@ -202,7 +204,7 @@ async function handleSummarizeCaseCommand(args: SummarizeCaseArgs) {
 
 async function handleRunCaseCommand(args: RunCaseArgs) {
   try {
-    const { runHarnessCase } = require('./orchestration/run-case') as typeof import('./orchestration/run-case')
+    const { runHarnessCase } = await import('./orchestration/run-case')
     const result = await runHarnessCase({
       cwd: CWD,
       caseId: args.case,
@@ -210,7 +212,7 @@ async function handleRunCaseCommand(args: RunCaseArgs) {
       artifactsDir: args['artifacts-dir'],
       baseUrl: args['base-url'],
       viewport: parseViewport(args.viewport),
-      enableCaptureBrowser: !args['no-capture-browser'],
+      enableCaptureBrowser: isCaptureBrowserEnabled(args),
     })
     process.stdout.write(`${JSON.stringify(result)}\n`)
     process.exitCode = statusToExitCode(result.status)
@@ -222,14 +224,14 @@ async function handleRunCaseCommand(args: RunCaseArgs) {
 
 async function handleRunSuiteCommand(args: RunSuiteArgs) {
   try {
-    const { runHarnessSuite } = require('./orchestration/run-suite') as typeof import('./orchestration/run-suite')
+    const { runHarnessSuite } = await import('./orchestration/run-suite')
     const result = await runHarnessSuite({
       cwd: CWD,
       suite: args.suite,
       artifactsDir: args['artifacts-dir'],
       baseUrl: args['base-url'],
       viewport: parseViewport(args.viewport),
-      enableCaptureBrowser: !args['no-capture-browser'],
+      enableCaptureBrowser: isCaptureBrowserEnabled(args),
       maxConcurrency: args['max-concurrency'] || 1,
     })
     process.stdout.write(`${JSON.stringify(result)}\n`)
@@ -238,6 +240,11 @@ async function handleRunSuiteCommand(args: RunSuiteArgs) {
     consola.error(error)
     process.exitCode = 1
   }
+}
+
+function isCaptureBrowserEnabled(args: { captureBrowser?: boolean; 'no-capture-browser'?: boolean }) {
+  if (typeof args.captureBrowser === 'boolean') return args.captureBrowser
+  return !args['no-capture-browser']
 }
 
 function parseViewport(input?: string): CaptureViewport | undefined {

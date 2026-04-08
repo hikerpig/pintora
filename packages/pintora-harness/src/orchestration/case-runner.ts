@@ -1,5 +1,4 @@
 import * as path from 'node:path'
-import { runHarnessCaptureBrowser } from '../browser/capture-browser'
 import { runHarnessInspectSvg } from '../inspection/inspect-svg'
 import { runHarnessRenderSvg } from '../rendering/render-svg'
 import { runHarnessSummarizeCase } from '../summary/summarize-case'
@@ -30,6 +29,7 @@ export async function executeHarnessCase(opts: RunCaseOptions): Promise<RunCaseR
 
   let captureBrowserTriggered = false
   if (summary.nextAction === 'capture_browser' && opts.enableCaptureBrowser) {
+    const { runHarnessCaptureBrowser } = await import('../browser/capture-browser')
     await runHarnessCaptureBrowser({
       cwd: opts.cwd,
       caseId: opts.caseId,
