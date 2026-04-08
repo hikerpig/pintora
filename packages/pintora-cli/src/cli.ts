@@ -5,6 +5,7 @@ import * as mime from 'mime-types'
 import * as path from 'node:path'
 import yargs from 'yargs'
 import { SUPPORTED_MIME_TYPES } from './const'
+import { runHarnessCaptureBrowser } from './harness/capture-browser'
 import { statusToExitCode } from './harness/exit-codes'
 import { runHarnessInspectSvg } from './harness/inspect-svg'
 import { runHarnessRenderSvg } from './harness/render-svg'
@@ -42,6 +43,14 @@ type HarnessInspectSvgArgs = {
   in: string
   case?: string
   'out-dir': string
+}
+
+type HarnessCaptureBrowserArgs = {
+  case?: string
+  input?: string
+  'out-dir': string
+  'base-url'?: string
+  viewport?: string
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-expressions
@@ -130,6 +139,18 @@ yargs
           },
           handler: handleHarnessInspectSvgCommand,
         })
+        .command<HarnessCaptureBrowserArgs>({
+          command: 'capture-browser',
+          describe: 'Capture browser evidence from the preview surface',
+          builder: {
+            case: { describe: 'Harness case id', type: 'string' },
+            input: { describe: 'Input file path', type: 'string' },
+            'out-dir': { describe: 'Output artifact directory', type: 'string', demandOption: true },
+            'base-url': { describe: 'Preview base URL', type: 'string' },
+            viewport: { describe: 'Viewport formatted as WIDTHxHEIGHT', type: 'string' },
+          },
+          handler: handleHarnessCaptureBrowserCommand,
+        })
         .demandCommand(1),
     handler() {},
   })
@@ -216,5 +237,34 @@ async function handleHarnessInspectSvgCommand(args: HarnessInspectSvgArgs) {
   } catch (error) {
     consola.error(error)
     process.exitCode = 1
+  }
+}
+
+async function handleHarnessCaptureBrowserCommand(args: HarnessCaptureBrowserArgs) {
+  try {
+    const result = await runHarnessCaptureBrowser({
+      cwd: CWD,
+      caseId: args.case,
+      inputFile: args.input,
+      outDir: args['out-dir'],
+      baseUrl: args['base-url'],
+      viewport: parseViewport(args.viewport),
+    })
+    process.stdout.write(`${JSON.stringify(result)}\n`)
+  } catch (error) {
+    consola.error(error)
+    process.exitCode = 1
+  }
+}
+
+function parseViewport(input?: string) {
+  if (!input) return undefined
+  const match = /^(\d+)x(\d+)$/.exec(input)
+  if (!match) {
+    throw new Error(`Invalid viewport: ${input}. Expected WIDTHxHEIGHT`)
+  }
+  return {
+    width: Number.parseInt(match[1], 10),
+    height: Number.parseInt(match[2], 10),
   }
 }
