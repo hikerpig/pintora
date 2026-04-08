@@ -1,5 +1,5 @@
 import path from 'node:path'
-import { loadCaseRegistry, resolveCaseInput, resolveHarnessWorkspaceRoot } from '../../harness/case-registry'
+import { loadCaseRegistry, resolveCaseInput, resolveHarnessWorkspaceRoot } from '../cases/case-registry'
 
 describe('harness case registry', () => {
   it('loads a case by id from harness/cases/registry.json', () => {

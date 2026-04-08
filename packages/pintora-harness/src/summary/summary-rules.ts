@@ -1,6 +1,6 @@
-import { HarnessFinding } from './findings'
-import { HarnessStatus } from './contracts'
-import { HarnessSummary, SummaryArtifacts, SummaryScores } from './summary-contracts'
+import { HarnessFinding } from '../inspection/findings'
+import { HarnessStatus } from '../contracts/harness'
+import { HarnessSummary, SummaryArtifacts, SummaryScores } from '../contracts/summary'
 
 type HarnessSummaryRulesInput = {
   run_id: string

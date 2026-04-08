@@ -1,7 +1,7 @@
-import { DEFAULT_CAPTURE_ARTIFACTS, DEFAULT_CAPTURE_VIEWPORT } from './browser-contracts'
+import { DEFAULT_CAPTURE_ARTIFACTS, DEFAULT_CAPTURE_VIEWPORT } from '../contracts/browser'
 import { capturePreviewArtifacts } from './browser-capture'
 import { buildBrowserPreviewUrl } from './browser-preview-url'
-import { readHarnessSource, resolveHarnessInput } from './read-input'
+import { readHarnessSource, resolveHarnessInput } from '../cases/read-input'
 
 export async function runHarnessCaptureBrowser(opts: {
   cwd: string

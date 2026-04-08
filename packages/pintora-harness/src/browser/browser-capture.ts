@@ -1,7 +1,7 @@
 import * as fs from 'node:fs'
 import * as path from 'node:path'
 import { chromium, type Page } from 'playwright'
-import { CaptureViewport, DEFAULT_CAPTURE_ARTIFACTS, DEFAULT_CAPTURE_VIEWPORT } from './browser-contracts'
+import { CaptureViewport, DEFAULT_CAPTURE_ARTIFACTS, DEFAULT_CAPTURE_VIEWPORT } from '../contracts/browser'
 
 export async function waitForStablePreview(page: Page) {
   await page.waitForSelector('.preview')

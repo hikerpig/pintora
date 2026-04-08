@@ -5,7 +5,6 @@ import * as mime from 'mime-types'
 import * as path from 'node:path'
 import yargs from 'yargs'
 import { SUPPORTED_MIME_TYPES } from './const'
-import { statusToExitCode } from './harness/exit-codes'
 
 const CWD = process.cwd()
 
@@ -29,33 +28,10 @@ type CliRenderArgs = {
   width?: number
 }
 
-type HarnessRenderSvgArgs = {
-  case?: string
-  input?: string
-  out: string
-}
-
-type HarnessInspectSvgArgs = {
-  in: string
-  case?: string
-  'out-dir': string
-}
-
-type HarnessCaptureBrowserArgs = {
-  case?: string
-  input?: string
-  'out-dir': string
-  'base-url'?: string
-  viewport?: string
-}
-
-type HarnessSummarizeCaseArgs = {
-  artifacts: string
-  out: string
-}
-
 // eslint-disable-next-line @typescript-eslint/no-unused-expressions
-yargs
+const parser = yargs
+  .exitProcess(false)
+  .strictCommands()
   .command<CliRenderArgs>({
     command: 'render',
     describe: 'Render DSL to diagram image',
@@ -94,86 +70,18 @@ yargs
     },
     handler: handleRenderCommand,
   })
-  .command({
-    command: 'harness <command>',
-    describe: 'Harness utilities for layout validation',
-    builder: y =>
-      y
-        .command<HarnessRenderSvgArgs>({
-          command: 'render-svg',
-          describe: 'Render a harness case or input file to svg',
-          builder: {
-            case: {
-              describe: 'Harness case id',
-              type: 'string',
-            },
-            input: {
-              describe: 'Input file path',
-              type: 'string',
-            },
-            out: {
-              describe: 'Output svg file path',
-              type: 'string',
-              demandOption: true,
-            },
-          },
-          handler: handleHarnessRenderSvgCommand,
-        })
-        .command<HarnessInspectSvgArgs>({
-          command: 'inspect-svg',
-          describe: 'Inspect a rendered svg and emit harness artifacts',
-          builder: {
-            in: {
-              describe: 'Input svg path',
-              type: 'string',
-              demandOption: true,
-            },
-            case: {
-              describe: 'Harness case id',
-              type: 'string',
-            },
-            'out-dir': {
-              describe: 'Output artifact directory',
-              type: 'string',
-              demandOption: true,
-            },
-          },
-          handler: handleHarnessInspectSvgCommand,
-        })
-        .command<HarnessCaptureBrowserArgs>({
-          command: 'capture-browser',
-          describe: 'Capture browser evidence from the preview surface',
-          builder: {
-            case: { describe: 'Harness case id', type: 'string' },
-            input: { describe: 'Input file path', type: 'string' },
-            'out-dir': { describe: 'Output artifact directory', type: 'string', demandOption: true },
-            'base-url': { describe: 'Preview base URL', type: 'string' },
-            viewport: { describe: 'Viewport formatted as WIDTHxHEIGHT', type: 'string' },
-          },
-          handler: handleHarnessCaptureBrowserCommand,
-        })
-        .command<HarnessSummarizeCaseArgs>({
-          command: 'summarize-case',
-          describe: 'Summarize harness artifacts into summary.json',
-          builder: {
-            artifacts: {
-              describe: 'Harness artifacts directory',
-              type: 'string',
-              demandOption: true,
-            },
-            out: {
-              describe: 'Output summary file path',
-              type: 'string',
-              demandOption: true,
-            },
-          },
-          handler: handleHarnessSummarizeCaseCommand,
-        })
-        .demandCommand(1),
-    handler() {},
+  .fail((message, error) => {
+    const output = message || error?.message
+    if (output) consola.error(output)
+    process.exitCode = 1
   })
   .help()
-  .showHelpOnFail(true).argv
+  .showHelpOnFail(true)
+try {
+  parser.parse()
+} catch {
+  process.exitCode = process.exitCode || 1
+}
 
 async function handleRenderCommand(args: CliRenderArgs) {
   // consola.log('args', args)
@@ -225,83 +133,5 @@ async function handleRenderCommand(args: CliRenderArgs) {
     consola.success(`Render success, saved to ${args.output}`)
   } catch (error) {
     console.error(error)
-  }
-}
-
-async function handleHarnessRenderSvgCommand(args: HarnessRenderSvgArgs) {
-  try {
-    const { runHarnessRenderSvg } = require('./harness/render-svg') as typeof import('./harness/render-svg')
-    const result = await runHarnessRenderSvg({
-      cwd: CWD,
-      caseId: args.case,
-      inputFile: args.input,
-      outFile: args.out,
-    })
-    process.stdout.write(`${JSON.stringify(result)}\n`)
-  } catch (error) {
-    consola.error(error)
-    process.exitCode = 1
-  }
-}
-
-async function handleHarnessInspectSvgCommand(args: HarnessInspectSvgArgs) {
-  try {
-    const { runHarnessInspectSvg } = require('./harness/inspect-svg') as typeof import('./harness/inspect-svg')
-    const result = await runHarnessInspectSvg({
-      cwd: CWD,
-      svgFile: args.in,
-      caseId: args.case,
-      outDir: args['out-dir'],
-    })
-    process.stdout.write(`${JSON.stringify(result)}\n`)
-    process.exitCode = statusToExitCode(result.status)
-  } catch (error) {
-    consola.error(error)
-    process.exitCode = 1
-  }
-}
-
-async function handleHarnessCaptureBrowserCommand(args: HarnessCaptureBrowserArgs) {
-  try {
-    const { runHarnessCaptureBrowser } = require('./harness/capture-browser') as typeof import('./harness/capture-browser')
-    const result = await runHarnessCaptureBrowser({
-      cwd: CWD,
-      caseId: args.case,
-      inputFile: args.input,
-      outDir: args['out-dir'],
-      baseUrl: args['base-url'],
-      viewport: parseViewport(args.viewport),
-    })
-    process.stdout.write(`${JSON.stringify(result)}\n`)
-  } catch (error) {
-    consola.error(error)
-    process.exitCode = 1
-  }
-}
-
-async function handleHarnessSummarizeCaseCommand(args: HarnessSummarizeCaseArgs) {
-  try {
-    const { runHarnessSummarizeCase } = require('./harness/summarize-case') as typeof import('./harness/summarize-case')
-    const result = await runHarnessSummarizeCase({
-      artifactsDir: args.artifacts,
-      outFile: args.out,
-    })
-    process.stdout.write(`${JSON.stringify(result)}\n`)
-    process.exitCode = statusToExitCode(result.status)
-  } catch (error) {
-    consola.error(error)
-    process.exitCode = 1
-  }
-}
-
-function parseViewport(input?: string) {
-  if (!input) return undefined
-  const match = /^(\d+)x(\d+)$/.exec(input)
-  if (!match) {
-    throw new Error(`Invalid viewport: ${input}. Expected WIDTHxHEIGHT`)
-  }
-  return {
-    width: Number.parseInt(match[1], 10),
-    height: Number.parseInt(match[2], 10),
   }
 }

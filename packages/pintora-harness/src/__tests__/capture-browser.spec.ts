@@ -1,12 +1,12 @@
 import * as mockFs from 'node:fs'
 import * as mockOs from 'node:os'
 import * as mockPath from 'node:path'
-import { DEFAULT_CAPTURE_VIEWPORT } from '../../harness/browser-contracts'
-import { runHarnessCaptureBrowser } from '../../harness/capture-browser'
+import { DEFAULT_CAPTURE_VIEWPORT } from '../contracts/browser'
+import { runHarnessCaptureBrowser } from '../browser/capture-browser'
 
 var mockCapturePreviewArtifacts: jest.Mock
 
-jest.mock('../../harness/browser-capture', () => ({
+jest.mock('../browser/browser-capture', () => ({
   capturePreviewArtifacts: (mockCapturePreviewArtifacts = jest.fn(async ({ outDir }) => {
     mockFs.mkdirSync(outDir, { recursive: true })
     mockFs.writeFileSync(mockPath.join(outDir, 'browser.png'), 'png-bytes')
@@ -46,7 +46,7 @@ describe('runHarnessCaptureBrowser', () => {
 describe('capturePreviewArtifacts', () => {
   it('waits for preview stability before capturing artifacts', async () => {
     const callOrder: string[] = []
-    const { waitForStablePreview } = jest.requireActual('../../harness/browser-capture') as typeof import('../../harness/browser-capture')
+    const { waitForStablePreview } = jest.requireActual('../browser/browser-capture') as typeof import('../browser/browser-capture')
     const page = {
       waitForSelector: jest.fn(async (selector: string) => {
         callOrder.push(`waitForSelector:${selector}`)

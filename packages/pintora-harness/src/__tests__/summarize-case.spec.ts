@@ -1,7 +1,7 @@
 import * as fs from 'node:fs'
 import * as os from 'node:os'
 import * as path from 'node:path'
-import { runHarnessSummarizeCase } from '../../harness/summarize-case'
+import { runHarnessSummarizeCase } from '../summary/summarize-case'
 
 describe('runHarnessSummarizeCase', () => {
   it('writes summary.json and returns the summary file metadata', async () => {

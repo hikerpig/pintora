@@ -1,8 +1,8 @@
 import * as fs from 'node:fs'
 import * as os from 'node:os'
 import * as path from 'node:path'
-import { runHarnessInspectSvg } from '../../harness/inspect-svg'
-import { runHarnessRenderSvg } from '../../harness/render-svg'
+import { runHarnessInspectSvg } from '../inspection/inspect-svg'
+import { runHarnessRenderSvg } from '../rendering/render-svg'
 
 describe('phase-1 harness e2e', () => {
   it('renders and inspects a registry case with machine-readable artifacts', async () => {

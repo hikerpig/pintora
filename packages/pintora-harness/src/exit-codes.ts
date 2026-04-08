@@ -1,4 +1,4 @@
-import { HarnessStatus } from './contracts'
+import { HarnessStatus } from './contracts/harness'
 
 export function statusToExitCode(status: HarnessStatus) {
   if (status === 'suspicious') return 10

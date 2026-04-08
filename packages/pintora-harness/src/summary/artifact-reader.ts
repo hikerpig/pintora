@@ -1,7 +1,7 @@
 import * as fs from 'node:fs'
 import * as path from 'node:path'
-import { HarnessFinding } from './findings'
-import { SummaryArtifacts } from './summary-contracts'
+import { HarnessFinding } from '../inspection/findings'
+import { SummaryArtifacts } from '../contracts/summary'
 
 const OPTIONAL_ARTIFACTS = {
   svg: 'render.svg',

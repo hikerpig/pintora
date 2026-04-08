@@ -1,4 +1,4 @@
-import { buildHarnessSummary } from '../../harness/summary-rules'
+import { buildHarnessSummary } from '../summary/summary-rules'
 
 type MetricViewBox = {
   x: number

@@ -1,8 +1,8 @@
 import * as fs from 'node:fs'
 import * as path from 'node:path'
-import { readHarnessArtifacts } from './artifact-reader'
-import { statusToExitCode } from './exit-codes'
-import { buildHarnessSummary } from './summary-rules'
+import { readHarnessArtifacts } from '../summary/artifact-reader'
+import { statusToExitCode } from '../exit-codes'
+import { buildHarnessSummary } from '../summary/summary-rules'
 
 export async function runHarnessSummarizeCase(opts: { artifactsDir: string; outFile: string }) {
   const { artifacts, findings, metrics } = readHarnessArtifacts({ artifactsDir: opts.artifactsDir })

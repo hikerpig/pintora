@@ -1,0 +1,12 @@
+{
+  "extends": "../../tsconfig.json",
+  "compilerOptions": {
+    "outDir": "lib",
+    "rootDir": "src",
+    "module": "commonjs",
+    "declaration": true,
+    "declarationDir": "lib",
+    "types": ["node", "jest"]
+  },
+  "include": ["src/**/*"]
+}

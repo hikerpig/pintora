@@ -1,4 +1,4 @@
-import { buildBrowserPreviewUrl, DEFAULT_PREVIEW_BASE_URL } from '../../harness/browser-preview-url'
+import { buildBrowserPreviewUrl, DEFAULT_PREVIEW_BASE_URL } from '../browser/browser-preview-url'
 
 describe('buildBrowserPreviewUrl', () => {
   it('uses the default preview base url and required params', () => {

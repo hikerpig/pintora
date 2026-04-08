@@ -1,8 +1,7 @@
 import * as fs from 'node:fs'
 import * as path from 'node:path'
-import { SVG_MIME_TYPE } from '../const'
-import { render } from '../render'
-import { readHarnessSource, resolveHarnessInput } from './read-input'
+import { readHarnessSource, resolveHarnessInput } from '../cases/read-input'
+import { renderHarnessSvg } from './render-adapter'
 
 export async function runHarnessRenderSvg(opts: {
   cwd: string
@@ -12,11 +11,7 @@ export async function runHarnessRenderSvg(opts: {
 }) {
   const resolved = resolveHarnessInput(opts)
   const code = readHarnessSource(resolved.inputFile)
-  const svg = (await render({
-    code,
-    mimeType: SVG_MIME_TYPE,
-    renderInSubprocess: false,
-  })) as string
+  const svg = await renderHarnessSvg({ code })
 
   fs.mkdirSync(path.dirname(opts.outFile), { recursive: true })
   fs.writeFileSync(opts.outFile, svg)

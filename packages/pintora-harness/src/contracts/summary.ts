@@ -1,4 +1,4 @@
-import { HarnessStatus } from './contracts'
+import { HarnessStatus } from './harness'
 
 export type SummaryNextAction =
   | 'done'

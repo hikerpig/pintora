@@ -1,11 +1,11 @@
 import * as fs from 'node:fs'
 import * as path from 'node:path'
-import { loadCaseRegistry } from './case-registry'
-import { HarnessStatus } from './contracts'
+import { loadCaseRegistry } from '../cases/case-registry'
+import { HarnessStatus } from '../contracts/harness'
 import { runErRules } from './rules/er-rules'
 import { runSequenceRules } from './rules/sequence-rules'
-import { parseSvg } from './svg-parse'
-import { buildSvgMetrics } from './svg-metrics'
+import { parseSvg } from '../inspection/svg-parse'
+import { buildSvgMetrics } from '../inspection/svg-metrics'
 
 export async function runHarnessInspectSvg(opts: {
   cwd: string

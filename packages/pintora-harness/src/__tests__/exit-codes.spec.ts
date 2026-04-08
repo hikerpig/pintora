@@ -1,4 +1,4 @@
-import { statusToExitCode } from '../../harness/exit-codes'
+import { statusToExitCode } from '../exit-codes'
 
 describe('statusToExitCode', () => {
   it.each([

@@ -1,7 +1,7 @@
 import { encodeForUrl } from '@pintora/core'
-import { DEFAULT_PREVIEW_BASE_URL } from './browser-contracts'
+import { DEFAULT_PREVIEW_BASE_URL } from '../contracts/browser'
 
-export { DEFAULT_PREVIEW_BASE_URL } from './browser-contracts'
+export { DEFAULT_PREVIEW_BASE_URL } from '../contracts/browser'
 
 export function buildBrowserPreviewUrl(opts: { code: string; baseUrl?: string }) {
   const baseUrl = opts.baseUrl || DEFAULT_PREVIEW_BASE_URL

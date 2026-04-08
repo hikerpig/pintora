@@ -1,8 +1,8 @@
 import * as fs from 'node:fs'
 import * as os from 'node:os'
 import * as path from 'node:path'
-import { resolveHarnessWorkspaceRoot } from '../../harness/case-registry'
-import { runHarnessRenderSvg } from '../../harness/render-svg'
+import { resolveHarnessWorkspaceRoot } from '../cases/case-registry'
+import { runHarnessRenderSvg } from '../rendering/render-svg'
 
 describe('runHarnessRenderSvg', () => {
   it('renders svg from a registry case into the target file', async () => {
