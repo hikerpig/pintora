@@ -6,6 +6,7 @@ export { loadCaseRegistry, resolveCaseInput, resolveHarnessWorkspaceRoot } from 
 export { readHarnessSource, resolveHarnessInput } from './cases/read-input'
 export { statusToExitCode } from './exit-codes'
 export { runHarnessCase } from './orchestration/run-case'
+export { runHarnessSuite } from './orchestration/run-suite'
 export { runHarnessRenderSvg } from './rendering/render-svg'
 export { runHarnessInspectSvg } from './inspection/inspect-svg'
 export { runHarnessCaptureBrowser } from './browser/capture-browser'

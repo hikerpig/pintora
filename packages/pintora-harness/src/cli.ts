@@ -40,6 +40,15 @@ type RunCaseArgs = {
   'no-capture-browser'?: boolean
 }
 
+type RunSuiteArgs = {
+  suite: 'smoke' | 'all'
+  'artifacts-dir': string
+  'base-url'?: string
+  viewport?: string
+  'no-capture-browser'?: boolean
+  'max-concurrency'?: number
+}
+
 const parser = yargs(hideBin(process.argv))
   .scriptName('pintora-harness')
   .exitProcess(false)
@@ -97,6 +106,19 @@ const parser = yargs(hideBin(process.argv))
       'no-capture-browser': { describe: 'Disable automatic browser escalation', type: 'boolean', default: false },
     },
     handler: handleRunCaseCommand,
+  })
+  .command<RunSuiteArgs>({
+    command: 'run-suite',
+    describe: 'Run the harness pipeline for a predefined suite of cases',
+    builder: {
+      suite: { describe: 'Harness suite name', type: 'string', demandOption: true },
+      'artifacts-dir': { describe: 'Target suite artifact directory', type: 'string', demandOption: true },
+      'base-url': { describe: 'Preview base URL', type: 'string' },
+      viewport: { describe: 'Viewport formatted as WIDTHxHEIGHT', type: 'string' },
+      'no-capture-browser': { describe: 'Disable automatic browser escalation', type: 'boolean', default: false },
+      'max-concurrency': { describe: 'Maximum parallel cases', type: 'number', default: 1 },
+    },
+    handler: handleRunSuiteCommand,
   })
   .fail((message, error) => {
     const output = message || error?.message
@@ -192,6 +214,26 @@ async function handleRunCaseCommand(args: RunCaseArgs) {
     })
     process.stdout.write(`${JSON.stringify(result)}\n`)
     process.exitCode = statusToExitCode(result.status)
+  } catch (error) {
+    consola.error(error)
+    process.exitCode = 1
+  }
+}
+
+async function handleRunSuiteCommand(args: RunSuiteArgs) {
+  try {
+    const { runHarnessSuite } = require('./orchestration/run-suite') as typeof import('./orchestration/run-suite')
+    const result = await runHarnessSuite({
+      cwd: CWD,
+      suite: args.suite,
+      artifactsDir: args['artifacts-dir'],
+      baseUrl: args['base-url'],
+      viewport: parseViewport(args.viewport),
+      enableCaptureBrowser: !args['no-capture-browser'],
+      maxConcurrency: args['max-concurrency'] || 1,
+    })
+    process.stdout.write(`${JSON.stringify(result)}\n`)
+    process.exitCode = result.fail > 0 ? 20 : result.suspicious > 0 ? 10 : 0
   } catch (error) {
     consola.error(error)
     process.exitCode = 1
