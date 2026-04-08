@@ -26,7 +26,7 @@ export async function runHarnessInspectSvg(opts: {
         : []
 
   const status: HarnessStatus =
-    !metrics.viewBox || root.childElementCount === 0 ? 'fail' : findings.length > 0 ? 'suspicious' : 'ok'
+    !metrics.viewBox || metrics.rootChildCount === 0 ? 'fail' : findings.length > 0 ? 'suspicious' : 'ok'
 
   fs.mkdirSync(opts.outDir, { recursive: true })
   fs.writeFileSync(path.join(opts.outDir, 'metrics.json'), JSON.stringify(metrics, null, 2))

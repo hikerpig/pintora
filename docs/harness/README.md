@@ -1,4 +1,4 @@
-# Harness Phase 1
+# Harness Phase 3
 
 ## Commands
 
@@ -20,6 +20,16 @@ Outputs:
 
 - `browser.png`
 - `dom.html`
+
+## Summary
+
+- `pintora harness summarize-case --artifacts artifacts/harness/dev --out artifacts/harness/dev/summary.json`
+
+Outputs:
+
+- `summary.json`
+
+`summary.json` is the machine-readable rollup of the artifact directory. It includes the run id, case metadata placeholders, status, next action, score block, top findings, and judge inputs. The command does not recompute diagram rules; it only reads the existing artifacts and packages them into the summary file.
 
 ## Exit codes
 

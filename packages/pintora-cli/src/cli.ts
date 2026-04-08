@@ -1,15 +1,11 @@
-import { PintoraConfig } from '@pintora/standalone'
+import type { PintoraConfig } from '@pintora/standalone'
 import consola from 'consola'
 import * as fs from 'node:fs'
 import * as mime from 'mime-types'
 import * as path from 'node:path'
 import yargs from 'yargs'
 import { SUPPORTED_MIME_TYPES } from './const'
-import { runHarnessCaptureBrowser } from './harness/capture-browser'
 import { statusToExitCode } from './harness/exit-codes'
-import { runHarnessInspectSvg } from './harness/inspect-svg'
-import { runHarnessRenderSvg } from './harness/render-svg'
-import { render } from './render'
 
 const CWD = process.cwd()
 
@@ -51,6 +47,11 @@ type HarnessCaptureBrowserArgs = {
   'out-dir': string
   'base-url'?: string
   viewport?: string
+}
+
+type HarnessSummarizeCaseArgs = {
+  artifacts: string
+  out: string
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-expressions
@@ -151,6 +152,23 @@ yargs
           },
           handler: handleHarnessCaptureBrowserCommand,
         })
+        .command<HarnessSummarizeCaseArgs>({
+          command: 'summarize-case',
+          describe: 'Summarize harness artifacts into summary.json',
+          builder: {
+            artifacts: {
+              describe: 'Harness artifacts directory',
+              type: 'string',
+              demandOption: true,
+            },
+            out: {
+              describe: 'Output summary file path',
+              type: 'string',
+              demandOption: true,
+            },
+          },
+          handler: handleHarnessSummarizeCaseCommand,
+        })
         .demandCommand(1),
     handler() {},
   })
@@ -189,6 +207,7 @@ async function handleRenderCommand(args: CliRenderArgs) {
   }
 
   try {
+    const { render } = require('./render') as typeof import('./render')
     const buf = await render({
       code,
       devicePixelRatio,
@@ -211,6 +230,7 @@ async function handleRenderCommand(args: CliRenderArgs) {
 
 async function handleHarnessRenderSvgCommand(args: HarnessRenderSvgArgs) {
   try {
+    const { runHarnessRenderSvg } = require('./harness/render-svg') as typeof import('./harness/render-svg')
     const result = await runHarnessRenderSvg({
       cwd: CWD,
       caseId: args.case,
@@ -226,6 +246,7 @@ async function handleHarnessRenderSvgCommand(args: HarnessRenderSvgArgs) {
 
 async function handleHarnessInspectSvgCommand(args: HarnessInspectSvgArgs) {
   try {
+    const { runHarnessInspectSvg } = require('./harness/inspect-svg') as typeof import('./harness/inspect-svg')
     const result = await runHarnessInspectSvg({
       cwd: CWD,
       svgFile: args.in,
@@ -242,6 +263,7 @@ async function handleHarnessInspectSvgCommand(args: HarnessInspectSvgArgs) {
 
 async function handleHarnessCaptureBrowserCommand(args: HarnessCaptureBrowserArgs) {
   try {
+    const { runHarnessCaptureBrowser } = require('./harness/capture-browser') as typeof import('./harness/capture-browser')
     const result = await runHarnessCaptureBrowser({
       cwd: CWD,
       caseId: args.case,
@@ -251,6 +273,21 @@ async function handleHarnessCaptureBrowserCommand(args: HarnessCaptureBrowserArg
       viewport: parseViewport(args.viewport),
     })
     process.stdout.write(`${JSON.stringify(result)}\n`)
+  } catch (error) {
+    consola.error(error)
+    process.exitCode = 1
+  }
+}
+
+async function handleHarnessSummarizeCaseCommand(args: HarnessSummarizeCaseArgs) {
+  try {
+    const { runHarnessSummarizeCase } = require('./harness/summarize-case') as typeof import('./harness/summarize-case')
+    const result = await runHarnessSummarizeCase({
+      artifactsDir: args.artifacts,
+      outFile: args.out,
+    })
+    process.stdout.write(`${JSON.stringify(result)}\n`)
+    process.exitCode = statusToExitCode(result.status)
   } catch (error) {
     consola.error(error)
     process.exitCode = 1

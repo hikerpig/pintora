@@ -1,5 +1,6 @@
 export type SvgMetricSnapshot = {
   viewBox: { x: number; y: number; width: number; height: number } | null
+  rootChildCount: number
   textNodes: Array<{ text: string; x: number; y: number }>
   elementCounts: Record<string, number>
   minTextToEdge: number | null
@@ -37,6 +38,7 @@ function parseViewBox(root: Element) {
 
 export function buildSvgMetrics(root: Element): SvgMetricSnapshot {
   const viewBox = parseViewBox(root)
+  const rootChildCount = root.childElementCount
   const textNodes = Array.from(root.querySelectorAll('text'))
     .map(node => {
       const x = readNumericAttr(node, 'x')
@@ -64,6 +66,7 @@ export function buildSvgMetrics(root: Element): SvgMetricSnapshot {
 
   return {
     viewBox,
+    rootChildCount,
     textNodes,
     elementCounts: countElements(root, ['text', 'rect', 'line', 'path', 'polygon']),
     minTextToEdge,

@@ -40,6 +40,24 @@ describe('runHarnessInspectSvg', () => {
     expect(result.findingCount).toBeGreaterThan(0)
   })
 
+  it('returns fail for an empty svg with viewBox and writes rootChildCount into metrics.json', async () => {
+    const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), 'pintora-harness-inspect-'))
+    const svg = path.join(tmpDir, 'render.svg')
+    fs.writeFileSync(svg, '<svg viewBox="0 0 120 40"></svg>')
+
+    const result = await runHarnessInspectSvg({
+      cwd: process.cwd(),
+      svgFile: svg,
+      caseId: 'sequence.lifeline-label-separation-01',
+      outDir: tmpDir,
+    })
+
+    const metrics = JSON.parse(fs.readFileSync(path.join(tmpDir, 'metrics.json'), 'utf8'))
+
+    expect(result.status).toBe('fail')
+    expect(metrics.rootChildCount).toBe(0)
+  })
+
   it('treats svg width and height as a fallback viewport when viewBox is absent', async () => {
     const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), 'pintora-harness-inspect-'))
     const svg = path.join(tmpDir, 'render.svg')
