@@ -29,7 +29,7 @@
     "directory": "packages/pintora-cli"
   },
   "scripts": {
-    "compile": "tsc",
+    "compile": "rimraf lib tsconfig.tsbuildinfo && tsc",
     "watch": "tsc -w",
     "test": "jest"
   },

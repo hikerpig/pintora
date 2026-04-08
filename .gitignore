@@ -85,3 +85,6 @@ lib/
 .turbo
 .vercel/
 api/
+
+# Harness runtime artifacts
+artifacts/

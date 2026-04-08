@@ -5,6 +5,9 @@ import * as mime from 'mime-types'
 import * as path from 'node:path'
 import yargs from 'yargs'
 import { SUPPORTED_MIME_TYPES } from './const'
+import { statusToExitCode } from './harness/exit-codes'
+import { runHarnessInspectSvg } from './harness/inspect-svg'
+import { runHarnessRenderSvg } from './harness/render-svg'
 import { render } from './render'
 
 const CWD = process.cwd()
@@ -27,6 +30,18 @@ type CliRenderArgs = {
   backgroundColor?: string
   theme?: string
   width?: number
+}
+
+type HarnessRenderSvgArgs = {
+  case?: string
+  input?: string
+  out: string
+}
+
+type HarnessInspectSvgArgs = {
+  in: string
+  case?: string
+  'out-dir': string
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-expressions
@@ -68,6 +83,55 @@ yargs
       // },
     },
     handler: handleRenderCommand,
+  })
+  .command({
+    command: 'harness <command>',
+    describe: 'Harness utilities for layout validation',
+    builder: y =>
+      y
+        .command<HarnessRenderSvgArgs>({
+          command: 'render-svg',
+          describe: 'Render a harness case or input file to svg',
+          builder: {
+            case: {
+              describe: 'Harness case id',
+              type: 'string',
+            },
+            input: {
+              describe: 'Input file path',
+              type: 'string',
+            },
+            out: {
+              describe: 'Output svg file path',
+              type: 'string',
+              demandOption: true,
+            },
+          },
+          handler: handleHarnessRenderSvgCommand,
+        })
+        .command<HarnessInspectSvgArgs>({
+          command: 'inspect-svg',
+          describe: 'Inspect a rendered svg and emit harness artifacts',
+          builder: {
+            in: {
+              describe: 'Input svg path',
+              type: 'string',
+              demandOption: true,
+            },
+            case: {
+              describe: 'Harness case id',
+              type: 'string',
+            },
+            'out-dir': {
+              describe: 'Output artifact directory',
+              type: 'string',
+              demandOption: true,
+            },
+          },
+          handler: handleHarnessInspectSvgCommand,
+        })
+        .demandCommand(1),
+    handler() {},
   })
   .help()
   .showHelpOnFail(true).argv
@@ -121,5 +185,36 @@ async function handleRenderCommand(args: CliRenderArgs) {
     consola.success(`Render success, saved to ${args.output}`)
   } catch (error) {
     console.error(error)
+  }
+}
+
+async function handleHarnessRenderSvgCommand(args: HarnessRenderSvgArgs) {
+  try {
+    const result = await runHarnessRenderSvg({
+      cwd: CWD,
+      caseId: args.case,
+      inputFile: args.input,
+      outFile: args.out,
+    })
+    process.stdout.write(`${JSON.stringify(result)}\n`)
+  } catch (error) {
+    consola.error(error)
+    process.exitCode = 1
+  }
+}
+
+async function handleHarnessInspectSvgCommand(args: HarnessInspectSvgArgs) {
+  try {
+    const result = await runHarnessInspectSvg({
+      cwd: CWD,
+      svgFile: args.in,
+      caseId: args.case,
+      outDir: args['out-dir'],
+    })
+    process.stdout.write(`${JSON.stringify(result)}\n`)
+    process.exitCode = statusToExitCode(result.status)
+  } catch (error) {
+    consola.error(error)
+    process.exitCode = 1
   }
 }

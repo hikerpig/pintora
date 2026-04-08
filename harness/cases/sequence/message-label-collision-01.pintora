@@ -1,0 +1,8 @@
+sequenceDiagram
+  participant UI
+  participant API
+  participant DB
+  UI->>API: fetch account summary
+  API->>DB: load account and invoice aggregates
+  DB-->>API: rows
+  API-->>UI: summary payload

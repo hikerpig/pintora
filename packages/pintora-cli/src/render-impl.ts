@@ -16,19 +16,36 @@ export type { CLIRenderOptions } from './type'
 class GlobalPatcher {
   private records: any = {}
   set<K extends keyof typeof globalThis>(k: K, v: any) {
+    const descriptor = Object.getOwnPropertyDescriptor(globalThis, k)
     const prevValue = globalThis[k]
     this.records[k] = {
+      descriptor,
       prevValue,
       value: v,
     }
 
-    globalThis[k] = v
+    if (!descriptor || descriptor.writable) {
+      globalThis[k] = v
+      return
+    }
+
+    Object.defineProperty(globalThis, k, {
+      configurable: true,
+      enumerable: descriptor.enumerable ?? true,
+      writable: true,
+      value: v,
+    })
   }
 
   restore() {
     for (const k in this.records) {
       if ((globalThis as any)[k] === this.records[k].value) {
-        ;(globalThis as any)[k] = this.records[k].prevValue
+        const record = this.records[k]
+        if (record.descriptor) {
+          Object.defineProperty(globalThis, k, record.descriptor)
+        } else {
+          ;(globalThis as any)[k] = record.prevValue
+        }
       }
     }
   }
