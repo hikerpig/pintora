@@ -31,6 +31,15 @@ type SummarizeCaseArgs = {
   out: string
 }
 
+type RunCaseArgs = {
+  case?: string
+  input?: string
+  'artifacts-dir': string
+  'base-url'?: string
+  viewport?: string
+  'no-capture-browser'?: boolean
+}
+
 const parser = yargs(hideBin(process.argv))
   .scriptName('pintora-harness')
   .exitProcess(false)
@@ -75,6 +84,19 @@ const parser = yargs(hideBin(process.argv))
       out: { describe: 'Output summary file path', type: 'string', demandOption: true },
     },
     handler: handleSummarizeCaseCommand,
+  })
+  .command<RunCaseArgs>({
+    command: 'run-case',
+    describe: 'Run the full harness pipeline for one case or input',
+    builder: {
+      case: { describe: 'Harness case id', type: 'string' },
+      input: { describe: 'Input file path', type: 'string' },
+      'artifacts-dir': { describe: 'Target artifact directory', type: 'string', demandOption: true },
+      'base-url': { describe: 'Preview base URL', type: 'string' },
+      viewport: { describe: 'Viewport formatted as WIDTHxHEIGHT', type: 'string' },
+      'no-capture-browser': { describe: 'Disable automatic browser escalation', type: 'boolean', default: false },
+    },
+    handler: handleRunCaseCommand,
   })
   .fail((message, error) => {
     const output = message || error?.message
@@ -147,6 +169,26 @@ async function handleSummarizeCaseCommand(args: SummarizeCaseArgs) {
     const result = await runHarnessSummarizeCase({
       artifactsDir: args.artifacts,
       outFile: args.out,
+    })
+    process.stdout.write(`${JSON.stringify(result)}\n`)
+    process.exitCode = statusToExitCode(result.status)
+  } catch (error) {
+    consola.error(error)
+    process.exitCode = 1
+  }
+}
+
+async function handleRunCaseCommand(args: RunCaseArgs) {
+  try {
+    const { runHarnessCase } = require('./orchestration/run-case') as typeof import('./orchestration/run-case')
+    const result = await runHarnessCase({
+      cwd: CWD,
+      caseId: args.case,
+      inputFile: args.input,
+      artifactsDir: args['artifacts-dir'],
+      baseUrl: args['base-url'],
+      viewport: parseViewport(args.viewport),
+      enableCaptureBrowser: !args['no-capture-browser'],
     })
     process.stdout.write(`${JSON.stringify(result)}\n`)
     process.exitCode = statusToExitCode(result.status)
