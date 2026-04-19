@@ -31,7 +31,22 @@ export type SequenceAsciiRenderData = {
         text: string
       }
   >
-  spans: Array<unknown>
+  activations: Array<{
+    actorId: string
+    startEventIndex: number
+    endEventIndex: number
+    level: number
+  }>
+  spans: Array<{
+    kind: 'loop' | 'opt' | 'alt' | 'par'
+    startEventIndex: number
+    endEventIndex: number
+    label: string
+    sections?: Array<{
+      eventIndex: number
+      label: string
+    }>
+  }>
 }
 
 export function isSequenceAsciiRenderData(input: unknown): input is SequenceAsciiRenderData {
@@ -50,9 +65,10 @@ export type SequenceTextPlan = {
     lifelineCol: number
   }>
   rows: Array<{
-    kind: 'message-label' | 'message-arrow' | 'self-message' | 'divider' | 'note' | 'block-header'
+    kind: 'message-label' | 'message-arrow' | 'self-message' | 'divider' | 'note' | 'block-header' | 'block-section'
     startRow: number
     endRow: number
+    eventIndex?: number
   }>
   messages: Array<{
     eventIndex: number
@@ -69,5 +85,27 @@ export type SequenceTextPlan = {
     lane: 'left' | 'right' | 'over'
     boxCols: [number, number]
     boxRows: [number, number]
+  }>
+  blocks: Array<{
+    kind: 'loop' | 'opt' | 'alt' | 'par'
+    label: string
+    startEventIndex: number
+    endEventIndex: number
+    headerRow: number
+    bodyRows: [number, number]
+    frameCols: [number, number]
+    sections: Array<{
+      label: string
+      row: number
+      eventIndex: number
+    }>
+  }>
+  activations: Array<{
+    actorId: string
+    startEventIndex: number
+    endEventIndex: number
+    level: number
+    barCols: [number, number]
+    barRows: [number, number]
   }>
 }
