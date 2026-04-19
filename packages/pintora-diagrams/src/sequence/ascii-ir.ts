@@ -11,6 +11,7 @@ export type SequenceAsciiIR = {
     classifier?: string
   }>
   events: SequenceLayoutResult['events']
+  activations: SequenceLayoutResult['activations']
   spans: SequenceLayoutResult['spans']
 }
 
@@ -26,6 +27,7 @@ export function toSequenceAsciiIR(layoutResult: SequenceLayoutResult): SequenceA
       classifier: actor.classifier,
     })),
     events: layoutResult.events,
+    activations: layoutResult.activations,
     spans: layoutResult.spans,
   }
 }
