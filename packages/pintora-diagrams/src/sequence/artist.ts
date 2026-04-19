@@ -33,6 +33,9 @@ import { drawLoopTo } from './artist/loop'
 import { ActivationData, LoopModel, MessageModel, SequenceDiagramBounds } from './artist/type'
 import { SequenceConf, getConf } from './config'
 import { LINETYPE, Message, PLACEMENT, ParticipantBox, SequenceDiagramIR, WrappedText, db } from './db'
+import { captureSequenceLayoutSnapshot } from './layout-snapshot'
+import { buildSequenceLayoutResult } from './layout-result'
+import { toSequenceAsciiIR } from './ascii-ir'
 import { getFontConfig } from '../util/font-config'
 import { BaseArtist } from '../util/base-artist'
 
@@ -276,6 +279,26 @@ class SequenceArtist extends BaseArtist<SequenceDiagramIR, SequenceConf> {
       mark: rootMark,
       width,
       height,
+    }
+
+    const snapshot = captureSequenceLayoutSnapshot(ir, {
+      actorAttrsMap: model.actorAttrsMap,
+      msgModelMap: model.msgModelMap,
+      noteModelMap: model.noteModelMap,
+      dividerMap: model.dividerMap,
+      activations: model.activations,
+      loops: model.loops,
+    })
+    const layoutResult = buildSequenceLayoutResult(snapshot)
+    const sequenceAsciiIR = toSequenceAsciiIR(layoutResult)
+
+    graphicsIR.rendererData = {
+      ...(graphicsIR.rendererData || {}),
+      ascii: {
+        ...(graphicsIR.rendererData?.ascii || {}),
+        layout: layoutResult,
+        sequence: sequenceAsciiIR,
+      },
     }
 
     return graphicsIR

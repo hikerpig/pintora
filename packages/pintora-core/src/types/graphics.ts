@@ -12,6 +12,7 @@ export interface GraphicsIR extends Figure {
   bgColor?: string
   rendererData?: {
     ascii?: {
+      layout?: unknown
       sequence?: unknown
     }
   }

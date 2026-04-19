@@ -7,6 +7,9 @@ import { eventRecognizer, SequenceDiagramItemDatas } from './event-recognizer'
 import { ParserWithPreprocessor } from '../util/preproccesor'
 
 export type { SequenceDiagramIR, SequenceConf, SequenceDiagramItemDatas }
+export type { SequenceLayoutSnapshot } from './layout-snapshot'
+export type { SequenceLayoutResult } from './layout-result'
+export type { SequenceAsciiIR } from './ascii-ir'
 
 export const sequenceDiagram: IDiagram<SequenceDiagramIR, SequenceConf> = {
   pattern: /^\s*sequenceDiagram/,

@@ -50,3 +50,25 @@ export type MessageModel = {
   fromBound?: number
   toBound?: number
 }
+
+export type NoteModel = {
+  width: number
+  height: number
+  startx: number
+  stopx: number
+  starty: number
+  stopy: number
+  text: Message['text']
+  sequenceIndex?: number
+  fromBound?: number
+  toBound?: number
+}
+
+export type SequenceArtistLayoutState = {
+  actorAttrsMap: Map<string, { x: number; width: number }>
+  msgModelMap: Map<string, MessageModel>
+  noteModelMap: Map<string, NoteModel>
+  dividerMap: Map<string, MessageModel>
+  activations: ActivationData[]
+  loops: LoopModel[]
+}
