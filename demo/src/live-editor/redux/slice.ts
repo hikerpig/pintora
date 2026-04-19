@@ -18,11 +18,13 @@ export type State = {
     code: string
     autoSync: boolean
     config: {
-      renderer: 'svg' | 'canvas'
+      renderer: RendererType
     }
     pintoraConfig: DeepPartial<PintoraConfig>
   }
 }
+
+export type RendererType = 'svg' | 'canvas' | 'ascii'
 
 const isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches
 const defaultTheme = isDarkMode ? 'dark' : 'default'
