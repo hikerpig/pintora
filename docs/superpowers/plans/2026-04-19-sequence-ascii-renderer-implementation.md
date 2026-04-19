@@ -4,7 +4,7 @@
 
 **Goal:** Build the phase-1 sequence ASCII renderer path so `sequenceDiagram` renders from `SequenceAsciiIR` and `SequenceTextPlan` rather than from generic `GraphicsIR` geometry.
 
-**Architecture:** Keep one sequence parser and one upstream layout truth, then add a renderer-neutral `SequenceLayoutResult` adapter and a `SequenceAsciiIR` adapter. Preserve the existing `render(ir, opts)` API by attaching `SequenceAsciiIR` to a new `GraphicsIR.rendererData.ascii.sequence` field, then let a dedicated `AsciiRenderer` build a `SequenceTextPlan` and render Unicode text directly from it.
+**Architecture:** Keep one sequence parser and one upstream layout truth, but make phase 1 explicit by first capturing the current artist state into a `SequenceLayoutSnapshot`, then adapting that into `SequenceLayoutResult` and `SequenceAsciiIR`. Preserve the existing `render(ir, opts)` API by attaching ASCII-only payloads to `GraphicsIR.rendererData.ascii`, and let a dedicated `AsciiRenderer` validate the embedded sequence payload, build a `SequenceTextPlan`, and render Unicode text directly from it without reading generic scene geometry.
 
 **Tech Stack:** TypeScript, Jest, Pintora core types, sequence diagram artist in `@pintora/diagrams`, renderer registry in `@pintora/renderer`
 
@@ -22,6 +22,7 @@
 
 ### Sequence layout and ASCII contracts
 
+- Create: `packages/pintora-diagrams/src/sequence/layout-snapshot.ts`
 - Create: `packages/pintora-diagrams/src/sequence/layout-result.ts`
 - Create: `packages/pintora-diagrams/src/sequence/ascii-ir.ts`
 - Modify: `packages/pintora-diagrams/src/sequence/index.ts`
@@ -139,6 +140,7 @@ export interface GraphicsIR extends Figure {
   bgColor?: string
   rendererData?: {
     ascii?: {
+      layout?: unknown
       sequence?: unknown
     }
   }
@@ -237,7 +239,7 @@ export class AsciiRenderer implements IRenderer {
 }
 ```
 
-- [ ] **Step 4: Add the renderer project to the root Jest matrix and verify the smoke test passes**
+- [ ] **Step 4: Add the renderer project to the root Jest matrix and verify the plumbing test reaches the placeholder output**
 
 ```js
 // jest.config.js
@@ -255,7 +257,7 @@ module.exports = {
 
 Run: `pnpm exec jest --config packages/pintora-renderer/jest.config.js packages/pintora-renderer/src/renderers/ascii/__tests__/ascii-renderer.spec.ts --runInBand`
 
-Expected: FAIL message disappears, but the test still fails until the placeholder `'[sequence-ascii-pending]'` is replaced by real rendering in a later task.
+Expected: The constructor and registration errors disappear, and the only remaining mismatch is the test still expecting real text instead of the placeholder `'[sequence-ascii-pending]'`.
 
 - [ ] **Step 5: Update the smoke test expectation for the placeholder and commit the plumbing**
 
@@ -282,6 +284,7 @@ git commit -m "test: add ascii renderer plumbing"
 ## Task 2: Extract SequenceLayoutResult And SequenceAsciiIR
 
 **Files:**
+- Create: `packages/pintora-diagrams/src/sequence/layout-snapshot.ts`
 - Create: `packages/pintora-diagrams/src/sequence/layout-result.ts`
 - Create: `packages/pintora-diagrams/src/sequence/ascii-ir.ts`
 - Modify: `packages/pintora-diagrams/src/sequence/index.ts`
@@ -290,19 +293,134 @@ git commit -m "test: add ascii renderer plumbing"
 - Test: `packages/pintora-diagrams/src/sequence/__tests__/sequence-layout-result.spec.ts`
 - Test: `packages/pintora-diagrams/src/sequence/__tests__/sequence-ascii-ir.spec.ts`
 
-- [ ] **Step 1: Write the failing adapter tests for layout result and ASCII IR**
+- [ ] **Step 1: Write the failing snapshot, layout-result, and ASCII-IR tests**
 
 ```ts
 // packages/pintora-diagrams/src/sequence/__tests__/sequence-layout-result.spec.ts
 import { parseAndDraw, diagramRegistry } from '@pintora/core'
 import { DIAGRAMS } from '../../index'
+import { LINETYPE, PLACEMENT, SequenceDiagramIR } from '../db'
+import { captureSequenceLayoutSnapshot } from '../layout-snapshot'
+import { buildSequenceLayoutResult } from '../layout-result'
+import { SequenceArtistLayoutState } from '../artist/type'
 
 Object.keys(DIAGRAMS).forEach(name => {
   diagramRegistry.registerDiagram(name, DIAGRAMS[name as keyof typeof DIAGRAMS])
 })
 
-describe('buildSequenceLayoutResult', () => {
-  it('extracts stable actor order and event order from sequence layout state', () => {
+describe('sequence ascii adapters', () => {
+  it('captures actor and event geometry from explicit artist layout state', () => {
+    const ir = {
+      title: '',
+      actorOrder: ['User', 'Pintora'],
+      actors: {
+        User: { name: 'User', description: 'User', itemId: 'actor-User' },
+        Pintora: { name: 'Pintora', description: 'Pintora', itemId: 'actor-Pintora' },
+      },
+      messages: [
+        {
+          id: 'message-0',
+          itemId: 'message-0-0',
+          from: 'User',
+          to: 'Pintora',
+          text: 'render this',
+          wrap: false,
+          type: LINETYPE.SOLID,
+        },
+        {
+          id: 'message-1',
+          itemId: 'message-1-2',
+          from: 'Pintora',
+          to: 'Pintora',
+          text: 'ascii lane',
+          wrap: false,
+          type: LINETYPE.NOTE,
+          placement: PLACEMENT.RIGHTOF,
+        },
+        {
+          id: 'message-2',
+          itemId: 'message-2-26',
+          from: undefined,
+          to: undefined,
+          text: 'Divider',
+          wrap: false,
+          type: LINETYPE.DIVIDER,
+        },
+      ],
+      notes: [],
+      participantBoxes: {},
+      showSequenceNumbers: false,
+      configParams: [],
+      overrideConfigs: [],
+      params: [],
+    } as unknown as SequenceDiagramIR
+
+    const state: SequenceArtistLayoutState = {
+      actorAttrsMap: new Map([
+        ['User', { x: 0, width: 80 }],
+        ['Pintora', { x: 180, width: 90 }],
+      ]),
+      msgModelMap: new Map([
+        [
+          'message-0',
+          {
+            width: 190,
+            height: 30,
+            startx: 80,
+            stopx: 180,
+            starty: 50,
+            stopy: 80,
+            text: 'render this',
+            type: LINETYPE.SOLID,
+            itemId: 'message-0-0',
+            fromBound: 40,
+            toBound: 225,
+          },
+        ],
+      ]),
+      noteModelMap: new Map([
+        [
+          'message-1',
+          {
+            width: 120,
+            height: 40,
+            startx: 225,
+            stopx: 345,
+            starty: 96,
+            stopy: 136,
+            text: 'ascii lane',
+          },
+        ],
+      ]),
+      dividerMap: new Map([
+        [
+          'message-2',
+          {
+            width: 80,
+            height: 20,
+            startx: 0,
+            stopx: 345,
+            starty: 160,
+            stopy: 180,
+            text: 'Divider',
+            type: LINETYPE.DIVIDER,
+            itemId: 'message-2-26',
+          },
+        ],
+      ]),
+      activations: [],
+      loops: [],
+    }
+
+    const snapshot = captureSequenceLayoutSnapshot(ir, state)
+    const layoutResult = buildSequenceLayoutResult(snapshot)
+
+    expect(snapshot.actors[0]).toMatchObject({ id: 'User', centerX: 40 })
+    expect(snapshot.events.map(event => event.kind)).toEqual(['message', 'note', 'divider'])
+    expect(layoutResult.events.map(event => event.kind)).toEqual(['message', 'note', 'divider'])
+  })
+
+  it('attaches layout and ascii payloads to graphicIR.rendererData.ascii', () => {
     const result = parseAndDraw(
       `
 sequenceDiagram
@@ -317,9 +435,9 @@ sequenceDiagram
 
     const graphicIR = result.graphicIR as any
     const layoutResult = graphicIR.rendererData?.ascii?.layout
-
     expect(layoutResult.actors.map((actor: any) => actor.id)).toEqual(['User', 'Pintora'])
     expect(layoutResult.events.map((event: any) => event.kind)).toEqual(['message', 'note', 'divider'])
+    expect(graphicIR.rendererData?.ascii?.sequence.events).toHaveLength(3)
   })
 })
 ```
@@ -366,13 +484,238 @@ describe('toSequenceAsciiIR', () => {
 
 Run: `pnpm exec jest --config packages/pintora-diagrams/jest.config.js packages/pintora-diagrams/src/sequence/__tests__/sequence-layout-result.spec.ts packages/pintora-diagrams/src/sequence/__tests__/sequence-ascii-ir.spec.ts --runInBand`
 
-Expected: FAIL because `rendererData.ascii.layout` is missing and `toSequenceAsciiIR` does not exist.
+Expected: FAIL because `captureSequenceLayoutSnapshot`, `buildSequenceLayoutResult`, and `toSequenceAsciiIR` do not exist, and `graphicIR.rendererData.ascii` is still undefined.
 
-- [ ] **Step 3: Add the layout-result and ASCII-IR adapter files**
+- [ ] **Step 3: Define the artist-state snapshot contract and add the snapshot, layout-result, and ASCII-IR adapters**
+
+```ts
+// packages/pintora-diagrams/src/sequence/artist/type.ts
+import { Message } from '../db'
+
+export type ActivationData = {
+  startx: number
+  starty: number
+  stopx: number
+  stopy: number
+  actor: string
+}
+
+export type LoopModel = {
+  startx: number
+  stopx: number
+  starty: number
+  stopy: number
+  width: number
+  height: number
+  title: string
+  wrap?: boolean
+  sections?: LoopSection[]
+  fill?: string | null
+}
+
+export type LoopSection = {
+  y: number
+  width: number
+  height: number
+  fill: string | undefined
+  message: Message
+}
+
+export type SequenceDiagramBounds = {
+  startx: number
+  stopx: number
+  starty: number
+  stopy: number
+}
+
+export type MessageModel = {
+  width: number
+  height: number
+  startx: number
+  stopx: number
+  starty: number
+  stopy: number
+  text: Message['text']
+  type: Message['type']
+  itemId: string
+  sequenceIndex?: number
+  fromBound?: number
+  toBound?: number
+}
+
+export type NoteModel = {
+  width: number
+  height: number
+  startx: number
+  stopx: number
+  starty: number
+  stopy: number
+  text: Message['text']
+}
+
+export type SequenceArtistLayoutState = {
+  actorAttrsMap: Map<string, { x: number; width: number }>
+  msgModelMap: Map<string, MessageModel>
+  noteModelMap: Map<string, NoteModel>
+  dividerMap: Map<string, MessageModel>
+  activations: ActivationData[]
+  loops: LoopModel[]
+}
+```
+
+```ts
+// packages/pintora-diagrams/src/sequence/layout-snapshot.ts
+import { LINETYPE, Message, PLACEMENT, SequenceDiagramIR } from './db'
+import { SequenceArtistLayoutState } from './artist/type'
+
+type MessageStyle = 'solid' | 'dashed' | 'open' | 'open-dashed'
+type NotePlacement = 'left' | 'right' | 'over'
+
+export type SequenceLayoutSnapshot = {
+  title?: string
+  actors: Array<{
+    id: string
+    label: string
+    classifier?: string
+    order: number
+    centerX: number
+    leftX: number
+    rightX: number
+  }>
+  events: Array<
+    | {
+        kind: 'message'
+        index: number
+        fromActorId: string
+        toActorId: string
+        label: string
+        style: MessageStyle
+        isSelf: boolean
+        bounds: { startX: number; stopX: number; startY: number; stopY: number }
+      }
+    | {
+        kind: 'note'
+        index: number
+        anchorActorIds: string[]
+        placement: NotePlacement
+        text: string
+        bounds: { startX: number; stopX: number; startY: number; stopY: number }
+      }
+    | {
+        kind: 'divider'
+        index: number
+        text: string
+        bounds: { startX: number; stopX: number; startY: number; stopY: number }
+      }
+  >
+  activations: []
+  spans: []
+}
+
+function messageStyle(type: LINETYPE | undefined): MessageStyle {
+  switch (type) {
+    case LINETYPE.DOTTED:
+      return 'dashed'
+    case LINETYPE.SOLID_OPEN:
+      return 'open'
+    case LINETYPE.DOTTED_OPEN:
+      return 'open-dashed'
+    default:
+      return 'solid'
+  }
+}
+
+function notePlacement(value: PLACEMENT | undefined): NotePlacement {
+  switch (value) {
+    case PLACEMENT.LEFTOF:
+      return 'left'
+    case PLACEMENT.RIGHTOF:
+      return 'right'
+    default:
+      return 'over'
+  }
+}
+
+function messageId(msg: Message, index: number) {
+  if (msg.id) return msg.id
+  throw new Error(`Sequence message at index ${index} is missing an id after layout preparation`)
+}
+
+export function captureSequenceLayoutSnapshot(
+  ir: SequenceDiagramIR,
+  state: SequenceArtistLayoutState,
+): SequenceLayoutSnapshot {
+  const actors = ir.actorOrder.map((id, order) => {
+    const attrs = state.actorAttrsMap.get(id)
+    if (!attrs) throw new Error(`Missing actor layout attrs for ${id}`)
+    return {
+      id,
+      label: ir.actors[id].description,
+      classifier: ir.actors[id].classifier,
+      order,
+      centerX: attrs.x + attrs.width / 2,
+      leftX: attrs.x,
+      rightX: attrs.x + attrs.width,
+    }
+  })
+
+  const events = ir.messages.flatMap((msg, index) => {
+    const id = messageId(msg, index)
+    if (msg.type === LINETYPE.NOTE) {
+      const note = state.noteModelMap.get(id)
+      if (!note) return []
+      return [
+        {
+          kind: 'note' as const,
+          index,
+          anchorActorIds: Array.isArray(msg.from) ? msg.from : [msg.from, msg.to].filter(Boolean),
+          placement: notePlacement(msg.placement),
+          text: msg.text,
+          bounds: { startX: note.startx, stopX: note.stopx, startY: note.starty, stopY: note.stopy },
+        },
+      ]
+    }
+    if (msg.type === LINETYPE.DIVIDER) {
+      const divider = state.dividerMap.get(id)
+      if (!divider) return []
+      return [
+        {
+          kind: 'divider' as const,
+          index,
+          text: msg.text,
+          bounds: { startX: divider.startx, stopX: divider.stopx, startY: divider.starty, stopY: divider.stopy },
+        },
+      ]
+    }
+    const model = state.msgModelMap.get(id)
+    if (!model || !msg.from || !msg.to || msg.text == null) return []
+    return [
+      {
+        kind: 'message' as const,
+        index,
+        fromActorId: msg.from,
+        toActorId: msg.to,
+        label: msg.text,
+        style: messageStyle(msg.type),
+        isSelf: msg.from === msg.to,
+        bounds: { startX: model.startx, stopX: model.stopx, startY: model.starty, stopY: model.stopy },
+      },
+    ]
+  })
+
+  return {
+    title: ir.title || undefined,
+    actors,
+    events,
+    activations: [],
+    spans: [],
+  }
+}
+```
 
 ```ts
 // packages/pintora-diagrams/src/sequence/layout-result.ts
-import { LINETYPE, Message, SequenceDiagramIR } from './db'
+import { SequenceLayoutSnapshot } from './layout-snapshot'
 
 export type SequenceLayoutResult = {
   title?: string
@@ -420,65 +763,44 @@ export type SequenceLayoutResult = {
   }>
 }
 
-function messageStyle(type: LINETYPE | undefined) {
-  switch (type) {
-    case LINETYPE.DOTTED:
-      return 'dashed'
-    case LINETYPE.SOLID_OPEN:
-      return 'open'
-    case LINETYPE.DOTTED_OPEN:
-      return 'open-dashed'
-    default:
-      return 'solid'
-  }
-}
-
-export function buildSequenceLayoutResult(ir: SequenceDiagramIR): SequenceLayoutResult {
-  const actors = ir.actorOrder.map((id, order) => ({
-    id,
-    label: ir.actors[id].description,
-    classifier: ir.actors[id].classifier,
-    order,
-  }))
-
-  const events = ir.messages.flatMap((message, index) => {
-    if (message.type === LINETYPE.NOTE) {
-      return [
-        {
-          kind: 'note' as const,
-          index,
-          anchorActorIds: Array.isArray(message.from) ? message.from : [message.from, message.to].filter(Boolean),
-          placement:
-            message.placement === 0 ? 'left' : message.placement === 1 ? 'right' : 'over',
-          text: message.text,
-        },
-      ]
-    }
-    if (message.type === LINETYPE.DIVIDER) {
-      return [{ kind: 'divider' as const, index, text: message.text }]
-    }
-    if (message.from && message.to && message.text != null) {
-      return [
-        {
-          kind: 'message' as const,
-          index,
-          fromActorId: message.from,
-          toActorId: message.to,
-          label: message.text,
-          style: messageStyle(message.type),
-          isSelf: message.from === message.to,
-        },
-      ]
-    }
-    return []
-  })
-
+export function buildSequenceLayoutResult(snapshot: SequenceLayoutSnapshot): SequenceLayoutResult {
   return {
-    title: ir.title || undefined,
-    actors,
-    events,
-    activations: [],
-    spans: [],
+    title: snapshot.title,
+    actors: snapshot.actors.map(actor => ({
+      id: actor.id,
+      label: actor.label,
+      classifier: actor.classifier,
+      order: actor.order,
+    })),
+    events: snapshot.events.map(event => {
+      if (event.kind === 'message') {
+        return {
+          kind: 'message' as const,
+          index: event.index,
+          fromActorId: event.fromActorId,
+          toActorId: event.toActorId,
+          label: event.label,
+          style: event.style,
+          isSelf: event.isSelf,
+        }
+      }
+      if (event.kind === 'note') {
+        return {
+          kind: 'note' as const,
+          index: event.index,
+          anchorActorIds: event.anchorActorIds,
+          placement: event.placement,
+          text: event.text,
+        }
+      }
+      return {
+        kind: 'divider' as const,
+        index: event.index,
+        text: event.text,
+      }
+    }),
+    activations: snapshot.activations,
+    spans: snapshot.spans,
   }
 }
 ```
@@ -518,15 +840,24 @@ export function toSequenceAsciiIR(layoutResult: SequenceLayoutResult): SequenceA
 }
 ```
 
-- [ ] **Step 4: Attach both adapters to the returned `graphicIR.rendererData.ascii` payload**
+- [ ] **Step 4: Attach the snapshot-derived adapters to `graphicIR.rendererData.ascii`**
 
 ```ts
 // packages/pintora-diagrams/src/sequence/artist.ts
+import { captureSequenceLayoutSnapshot } from './layout-snapshot'
 import { buildSequenceLayoutResult } from './layout-result'
 import { toSequenceAsciiIR } from './ascii-ir'
 
 // inside customDraw, before `return graphicIR`
-const layoutResult = buildSequenceLayoutResult(ir)
+const snapshot = captureSequenceLayoutSnapshot(ir, {
+  actorAttrsMap: model.actorAttrsMap,
+  msgModelMap: model.msgModelMap,
+  noteModelMap: model.noteModelMap,
+  dividerMap: model.dividerMap,
+  activations: model.activations,
+  loops: model.loops,
+})
+const layoutResult = buildSequenceLayoutResult(snapshot)
 const sequenceAsciiIR = toSequenceAsciiIR(layoutResult)
 
 graphicIR.rendererData = {
@@ -541,6 +872,7 @@ graphicIR.rendererData = {
 
 ```ts
 // packages/pintora-diagrams/src/sequence/index.ts
+export type { SequenceLayoutSnapshot } from './layout-snapshot'
 export type { SequenceLayoutResult } from './layout-result'
 export type { SequenceAsciiIR } from './ascii-ir'
 ```
@@ -553,10 +885,12 @@ Expected: PASS
 
 ```bash
 git add \
+  packages/pintora-diagrams/src/sequence/layout-snapshot.ts \
   packages/pintora-diagrams/src/sequence/layout-result.ts \
   packages/pintora-diagrams/src/sequence/ascii-ir.ts \
   packages/pintora-diagrams/src/sequence/index.ts \
   packages/pintora-diagrams/src/sequence/artist.ts \
+  packages/pintora-diagrams/src/sequence/artist/type.ts \
   packages/pintora-diagrams/src/sequence/__tests__/sequence-layout-result.spec.ts \
   packages/pintora-diagrams/src/sequence/__tests__/sequence-ascii-ir.spec.ts
 git commit -m "feat: add sequence layout and ascii adapters"
@@ -634,10 +968,50 @@ Expected: FAIL because `buildSequenceTextPlan` and the sequence planning types d
 
 ```ts
 // packages/pintora-renderer/src/renderers/ascii/sequence/types.ts
-import { SequenceAsciiIR } from '@pintora/diagrams/src/sequence/ascii-ir'
+export type SequenceAsciiRenderData = {
+  meta: {
+    title?: string
+    direction: 'TB'
+  }
+  actors: Array<{
+    id: string
+    label: string
+    classifier?: string
+  }>
+  events: Array<
+    | {
+        kind: 'message'
+        index: number
+        fromActorId: string
+        toActorId: string
+        label: string
+        style: 'solid' | 'dashed' | 'open' | 'open-dashed'
+        isSelf: boolean
+      }
+    | {
+        kind: 'note'
+        index: number
+        anchorActorIds: string[]
+        placement: 'left' | 'right' | 'over'
+        text: string
+      }
+    | {
+        kind: 'divider'
+        index: number
+        text: string
+      }
+  >
+  spans: Array<unknown>
+}
+
+export function isSequenceAsciiRenderData(input: unknown): input is SequenceAsciiRenderData {
+  if (!input || typeof input !== 'object') return false
+  const value = input as SequenceAsciiRenderData
+  return Array.isArray(value.actors) && Array.isArray(value.events) && value.meta?.direction === 'TB'
+}
 
 export type SequenceTextPlan = {
-  source: SequenceAsciiIR
+  source: SequenceAsciiRenderData
   columns: Array<{
     actorId: string
     centerCol: number
@@ -651,8 +1025,10 @@ export type SequenceTextPlan = {
     endRow: number
   }>
   messages: Array<{
+    eventIndex: number
     fromActorId: string
     toActorId: string
+    label: string
     arrowRow: number
     labelRows: number[]
     style: 'solid' | 'dashed' | 'open' | 'open-dashed'
@@ -671,14 +1047,13 @@ export type SequenceTextPlan = {
 
 ```ts
 // packages/pintora-renderer/src/renderers/ascii/sequence/plan.ts
-import { SequenceAsciiIR } from '@pintora/diagrams/src/sequence/ascii-ir'
-import { SequenceTextPlan } from './types'
+import { SequenceAsciiRenderData, SequenceTextPlan } from './types'
 
 function widthOf(text: string) {
   return Array.from(text).reduce((sum, ch) => sum + (ch.charCodeAt(0) > 255 ? 2 : 1), 0)
 }
 
-export function buildSequenceTextPlan(source: SequenceAsciiIR): SequenceTextPlan {
+export function buildSequenceTextPlan(source: SequenceAsciiRenderData): SequenceTextPlan {
   const columns = source.actors.map((actor, index) => {
     const boxWidth = Math.max(6, widthOf(actor.label) + 4)
     const centerCol = index === 0 ? Math.ceil(boxWidth / 2) : 0
@@ -711,8 +1086,10 @@ export function buildSequenceTextPlan(source: SequenceAsciiIR): SequenceTextPlan
       const labelRow = cursorRow
       const arrowRow = cursorRow + 1
       messages.push({
+        eventIndex: event.index,
         fromActorId: event.fromActorId,
         toActorId: event.toActorId,
+        label: event.label,
         arrowRow,
         labelRows: [labelRow],
         style: event.style,
@@ -879,11 +1256,11 @@ export function canvasToString(canvas: string[][]) {
 
 ```ts
 // packages/pintora-renderer/src/renderers/ascii/sequence/render.ts
-import { SequenceAsciiIR } from '@pintora/diagrams/src/sequence/ascii-ir'
 import { buildSequenceTextPlan } from './plan'
 import { canvasToString, makeCanvas, put, putText } from './text-canvas'
+import { SequenceAsciiRenderData } from './types'
 
-export function renderSequenceAscii(source: SequenceAsciiIR) {
+export function renderSequenceAscii(source: SequenceAsciiRenderData) {
   const plan = buildSequenceTextPlan(source)
   const width = Math.max(40, ...plan.columns.map(column => column.headerRightCol + 10))
   const height = Math.max(10, ...plan.rows.map(row => row.endRow + 6))
@@ -905,14 +1282,7 @@ export function renderSequenceAscii(source: SequenceAsciiIR) {
   plan.messages.forEach(message => {
     const from = plan.columns.find(column => column.actorId === message.fromActorId)!
     const to = plan.columns.find(column => column.actorId === message.toActorId)!
-    const sourceEvent = source.events.find(
-      event =>
-        event.kind === 'message' &&
-        event.fromActorId === message.fromActorId &&
-        event.toActorId === message.toActorId &&
-        event.label,
-    ) as any
-    putText(canvas, Math.min(from.centerCol, to.centerCol), message.labelRows[0] + 4, sourceEvent.label)
+    putText(canvas, Math.min(from.centerCol, to.centerCol), message.labelRows[0] + 4, message.label)
     if (message.isSelf) {
       put(canvas, from.centerCol + 4, message.arrowRow + 4, '┐')
       put(canvas, from.centerCol + 4, message.arrowRow + 5, '│')
@@ -944,11 +1314,12 @@ export function renderSequenceAscii(source: SequenceAsciiIR) {
 
 ```ts
 // packages/pintora-renderer/src/renderers/AsciiRenderer.ts
+import { isSequenceAsciiRenderData } from './ascii/sequence/types'
 import { renderSequenceAscii } from './ascii/sequence/render'
 
 render() {
-  const sequence = this.ir.rendererData?.ascii?.sequence as any
-  this.textContent = sequence ? renderSequenceAscii(sequence) : ''
+  const sequence = this.ir.rendererData?.ascii?.sequence
+  this.textContent = isSequenceAsciiRenderData(sequence) ? renderSequenceAscii(sequence) : ''
   const root = this.getRootElement()
   root.textContent = this.textContent
   if (this.container) {

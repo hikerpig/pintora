@@ -10,6 +10,11 @@ export interface Figure {
 
 export interface GraphicsIR extends Figure {
   bgColor?: string
+  rendererData?: {
+    ascii?: {
+      sequence?: unknown
+    }
+  }
 }
 
 export type TransformPolicy = 'stretch' | 'fixed' | 'scale'
