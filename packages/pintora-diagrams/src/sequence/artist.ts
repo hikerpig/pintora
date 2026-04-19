@@ -118,8 +118,8 @@ class SequenceArtist extends BaseArtist<SequenceDiagramIR, SequenceConf> {
     )
     // push this group early so it won't lay on top of other messages
     rootMark.children.push(activationGroup)
-    function activeEnd(msg: Message, verticalPos: number) {
-      const activationData = model.endActivation(msg)
+    function activeEnd(msg: Message, verticalPos: number, messageIndex?: number) {
+      const activationData = model.endActivation(msg, messageIndex)
       if (activationData.starty + 18 > verticalPos) {
         activationData.starty = verticalPos - 6
         verticalPos += 12
@@ -131,24 +131,27 @@ class SequenceArtist extends BaseArtist<SequenceDiagramIR, SequenceConf> {
 
     // Draw the messages/signals
     let sequenceIndex = 1
-    messages.forEach(function (msg) {
+    let eventIndex = 0
+    messages.forEach(function (msg, messageIndex) {
       let loopModel, noteModel, msgModel
 
       switch (msg.type) {
         case LINETYPE.NOTE:
           noteModel = model.noteModelMap.get(msg.id)
           drawNoteTo(noteModel, rootMark)
+          eventIndex++
           break
         case LINETYPE.ACTIVE_START:
-          model.newActivation(msg)
+          model.newActivation(msg, eventIndex - 1)
           break
         case LINETYPE.ACTIVE_END:
-          activeEnd(msg, model.verticalPos)
+          activeEnd(msg, model.verticalPos, eventIndex - 1)
           break
         case LINETYPE.LOOP_START:
         case LINETYPE.OPT_START:
         case LINETYPE.ALT_START:
-        case LINETYPE.PAR_START:
+        case LINETYPE.PAR_START: {
+          const loopKind = GROUP_LABEL_MAP[msg.type]
           adjustLoopSizeForWrap(
             loopWidths,
             msg,
@@ -156,10 +159,11 @@ class SequenceArtist extends BaseArtist<SequenceDiagramIR, SequenceConf> {
             conf.boxMargin + conf.boxTextMargin,
             ({ message, width }) => {
               const fill = msg.attrs?.background
-              model.newLoop(message, width, fill)
+              model.newLoop(message, width, fill, loopKind as LoopModel['kind'])
             },
           )
           break
+        }
         case LINETYPE.ALT_ELSE:
         case LINETYPE.PAR_AND:
           adjustLoopSizeForWrap(
@@ -186,6 +190,7 @@ class SequenceArtist extends BaseArtist<SequenceDiagramIR, SequenceConf> {
         case LINETYPE.DIVIDER:
           msgModel = model.dividerMap.get(msg.id)
           drawDivider(context, msgModel)
+          eventIndex++
           break
         default:
           try {
@@ -198,6 +203,7 @@ class SequenceArtist extends BaseArtist<SequenceDiagramIR, SequenceConf> {
             // console.log('msgModel starty', msgModel, model.verticalPos)
             msgModel.sequenceIndex = sequenceIndex
             rootMark.children.push(drawMessage(msgModel).mark)
+            eventIndex++
           } catch (e) {
             logger.error('error while drawing message', e)
           }
@@ -287,6 +293,7 @@ class SequenceArtist extends BaseArtist<SequenceDiagramIR, SequenceConf> {
       noteModelMap: model.noteModelMap,
       dividerMap: model.dividerMap,
       activations: model.activations,
+      completedActivations: model.completedActivations,
       loops: model.loops,
     })
     const layoutResult = buildSequenceLayoutResult(snapshot)
@@ -328,6 +335,7 @@ type BoxInfo = {
 class Model {
   sequenceItems: LoopModel[]
   activations: ActivationData[] = []
+  completedActivations: ActivationData[] = []
   data: SequenceDiagramBounds
   verticalPos: number
   actorAttrsMap = new Map<string, MarkAttrs>()
@@ -359,6 +367,7 @@ class Model {
       stopy: 0,
     }
     this.activations = []
+    this.completedActivations = []
     this.verticalPos = 0
     this.loops = []
     this.loopMinWidths = {}
@@ -368,6 +377,7 @@ class Model {
   }
   clear() {
     this.activations = []
+    this.completedActivations = []
     this.actorAttrsMap.clear()
     this.actorLineMarkMap.clear()
     this.msgModelMap.clear()
@@ -443,7 +453,7 @@ class Model {
 
     this.updateBounds(_startx, _starty, _stopx, _stopy)
   }
-  newActivation(message: Message) {
+  newActivation(message: Message, eventIndex?: number) {
     const actorRect = this.actorAttrsMap.get(message.from)
     const stackedSize = actorActivations(message.from).length || 0
     const x = actorRect.x + actorRect.width / 2 + ((stackedSize - 1) * conf.activationWidth) / 2
@@ -453,18 +463,25 @@ class Model {
       stopx: x + conf.activationWidth,
       stopy: undefined,
       actor: message.from,
+      startEventIndex: eventIndex,
+      level: stackedSize,
     })
   }
-  endActivation(message: Message) {
+  endActivation(message: Message, eventIndex?: number) {
     // find most recent activation for given actor
     const lastActorActivationIdx = this.activations
       .map(activation => {
         return activation.actor
       })
       .lastIndexOf(message.from)
-    return this.activations.splice(lastActorActivationIdx, 1)[0]
+    const activation = this.activations.splice(lastActorActivationIdx, 1)[0]
+    if (activation) {
+      activation.endEventIndex = eventIndex
+      this.completedActivations.push(activation)
+    }
+    return activation
   }
-  createLoop(title: WrappedText = { text: undefined, wrap: false }, width: number, fill?) {
+  createLoop(title: WrappedText = { text: undefined, wrap: false }, width: number, fill?, kind?: LoopModel['kind']) {
     return {
       startx: undefined,
       starty: this.verticalPos,
@@ -475,10 +492,11 @@ class Model {
       width,
       height: 0,
       fill: fill,
+      kind,
     }
   }
-  newLoop(title: WrappedText = { text: undefined, wrap: false }, width: number, fill?) {
-    this.sequenceItems.push(this.createLoop(title, width, fill))
+  newLoop(title: WrappedText = { text: undefined, wrap: false }, width: number, fill?, kind?: LoopModel['kind']) {
+    this.sequenceItems.push(this.createLoop(title, width, fill, kind))
   }
   endLoop() {
     return this.sequenceItems.pop()

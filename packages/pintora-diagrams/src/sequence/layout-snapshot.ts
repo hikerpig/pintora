@@ -3,6 +3,7 @@ import { SequenceArtistLayoutState } from './artist/type'
 
 type MessageStyle = 'solid' | 'dashed' | 'open' | 'open-dashed'
 type NotePlacement = 'left' | 'right' | 'over'
+type SpanKind = 'loop' | 'opt' | 'alt' | 'par'
 
 export type SequenceLayoutSnapshot = {
   title?: string
@@ -41,8 +42,19 @@ export type SequenceLayoutSnapshot = {
         bounds: { startX: number; stopX: number; startY: number; stopY: number }
       }
   >
-  activations: []
-  spans: []
+  activations: Array<{
+    actorId: string
+    startEventIndex: number
+    endEventIndex: number
+    level: number
+  }>
+  spans: Array<{
+    kind: SpanKind
+    startEventIndex: number
+    endEventIndex: number
+    label: string
+    sections?: Array<{ eventIndex: number; label: string }>
+  }>
 }
 
 function messageStyle(type: LINETYPE | undefined): MessageStyle {
@@ -74,6 +86,36 @@ function messageId(msg: Message, index: number) {
   throw new Error(`Sequence message at index ${index} is missing an id after layout preparation`)
 }
 
+function normalizeLoopKind(loop: { kind?: SpanKind; title?: string }): SpanKind {
+  if (loop.kind) return loop.kind
+  if (!loop.title) return 'loop'
+  const lower = loop.title.toLowerCase()
+  if (lower.startsWith('opt')) return 'opt'
+  if (lower.startsWith('alt')) return 'alt'
+  if (lower.startsWith('par')) return 'par'
+  return 'loop'
+}
+
+function findEventIndexAtOrAfterY(
+  events: SequenceLayoutSnapshot['events'],
+  y: number,
+): number {
+  for (let i = 0; i < events.length; i++) {
+    if (events[i].bounds.startY >= y) return i
+  }
+  return events.length > 0 ? events.length - 1 : 0
+}
+
+function findEventIndexAtOrBeforeY(
+  events: SequenceLayoutSnapshot['events'],
+  y: number,
+): number {
+  for (let i = events.length - 1; i >= 0; i--) {
+    if (events[i].bounds.stopY <= y) return i
+  }
+  return 0
+}
+
 export function captureSequenceLayoutSnapshot(
   ir: SequenceDiagramIR,
   state: SequenceArtistLayoutState,
@@ -93,37 +135,45 @@ export function captureSequenceLayoutSnapshot(
   })
 
   const events: SequenceLayoutSnapshot['events'] = []
-  ir.messages.forEach((msg, index) => {
-    const id = messageId(msg, index)
+  const messageIndexToEventIndex = new Map<number, number>()
+  let eventIndex = 0
+
+  ir.messages.forEach((msg, messageIndex) => {
+    const id = messageId(msg, messageIndex)
     if (msg.type === LINETYPE.NOTE) {
       const note = state.noteModelMap.get(id)
       if (!note) return
+      messageIndexToEventIndex.set(messageIndex, eventIndex)
       events.push({
         kind: 'note',
-        index,
+        index: eventIndex,
         anchorActorIds: Array.isArray(msg.from) ? msg.from : [msg.from, msg.to].filter((v): v is string => Boolean(v)),
         placement: notePlacement(msg.placement),
         text: msg.text,
         bounds: { startX: note.startx, stopX: note.stopx, startY: note.starty, stopY: note.stopy },
       })
+      eventIndex++
       return
     }
     if (msg.type === LINETYPE.DIVIDER) {
       const divider = state.dividerMap.get(id)
       if (!divider) return
+      messageIndexToEventIndex.set(messageIndex, eventIndex)
       events.push({
         kind: 'divider',
-        index,
+        index: eventIndex,
         text: msg.text,
         bounds: { startX: divider.startx, stopX: divider.stopx, startY: divider.starty, stopY: divider.stopy },
       })
+      eventIndex++
       return
     }
     const model = state.msgModelMap.get(id)
     if (!model || !msg.from || !msg.to || msg.text == null) return
+    messageIndexToEventIndex.set(messageIndex, eventIndex)
     events.push({
       kind: 'message',
-      index,
+      index: eventIndex,
       fromActorId: msg.from,
       toActorId: msg.to,
       label: msg.text,
@@ -131,13 +181,42 @@ export function captureSequenceLayoutSnapshot(
       isSelf: msg.from === msg.to,
       bounds: { startX: model.startx, stopX: model.stopx, startY: model.starty, stopY: model.stopy },
     })
+    eventIndex++
+  })
+
+  const activations = state.completedActivations.map(activation => {
+    const startEventIndex = activation.startEventIndex ?? findEventIndexAtOrAfterY(events, activation.starty)
+    const endEventIndex = activation.endEventIndex ?? findEventIndexAtOrBeforeY(events, activation.stopy)
+    return {
+      actorId: activation.actor,
+      startEventIndex,
+      endEventIndex: Math.max(startEventIndex, endEventIndex),
+      level: activation.level ?? 0,
+    }
+  })
+
+  const spans = state.loops.map(loop => {
+    const kind = normalizeLoopKind(loop)
+    const startEventIndex = findEventIndexAtOrAfterY(events, loop.starty)
+    const endEventIndex = findEventIndexAtOrBeforeY(events, loop.stopy)
+    const label = (loop.title || '').replace(/^\[(.*)\]$/, '$1')
+    return {
+      kind,
+      startEventIndex,
+      endEventIndex: Math.max(startEventIndex, endEventIndex),
+      label,
+      sections: (loop.sections || []).map(section => ({
+        eventIndex: findEventIndexAtOrAfterY(events, section.y),
+        label: (section.message.text || '').replace(/^\[(.*)\]$/, '$1'),
+      })),
+    }
   })
 
   return {
     title: ir.title || undefined,
     actors,
     events,
-    activations: [],
-    spans: [],
+    activations,
+    spans,
   }
 }

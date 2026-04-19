@@ -6,6 +6,9 @@ export type ActivationData = {
   stopx: number
   stopy: number
   actor: string
+  startEventIndex?: number
+  endEventIndex?: number
+  level?: number
 }
 
 export type LoopModel = {
@@ -19,6 +22,7 @@ export type LoopModel = {
   wrap?: boolean
   sections?: LoopSection[]
   fill?: string | null
+  kind?: 'loop' | 'opt' | 'alt' | 'par'
 }
 
 export type LoopSection = {
@@ -70,5 +74,6 @@ export type SequenceArtistLayoutState = {
   noteModelMap: Map<string, NoteModel>
   dividerMap: Map<string, MessageModel>
   activations: ActivationData[]
+  completedActivations: ActivationData[]
   loops: LoopModel[]
 }

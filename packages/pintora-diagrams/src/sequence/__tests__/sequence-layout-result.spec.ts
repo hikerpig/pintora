@@ -63,4 +63,31 @@ sequenceDiagram
     expect(layoutResult.actors.map((actor: any) => actor.id)).toEqual(['User', 'Pintora'])
     expect(layoutResult.events.map((event: any) => event.kind)).toEqual(['message', 'note', 'divider'])
   })
+
+  it('attaches parsed spans and activations to graphicIR.rendererData.ascii', () => {
+    const result = parseAndDraw(
+      `
+sequenceDiagram
+  A->>+B: enter
+  alt cache miss
+    B->>B: recompute
+  else cache hit
+    B-->>A: return
+  end
+  deactivate B
+    `,
+      { containerSize: { width: 900 } },
+    )!
+
+    const ascii = (result.graphicIR as any).rendererData.ascii
+
+    expect(ascii.sequence.activations).toEqual([
+      { actorId: 'B', startEventIndex: 0, endEventIndex: 2, level: 0 },
+    ])
+    expect(ascii.sequence.spans[0]).toMatchObject({
+      kind: 'alt',
+      label: 'cache miss',
+    })
+    expect(ascii.sequence.spans[0].sections).toEqual([{ eventIndex: 2, label: 'cache hit' }])
+  })
 })
