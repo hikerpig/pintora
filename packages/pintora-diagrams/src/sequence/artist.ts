@@ -282,7 +282,7 @@ class SequenceArtist extends BaseArtist<SequenceDiagramIR, SequenceConf> {
     }
 
     const snapshot = captureSequenceLayoutSnapshot(ir, {
-      actorAttrsMap: model.actorAttrsMap,
+      actorAttrsMap: model.actorAttrsMap as Map<string, { x: number; width: number }>,
       msgModelMap: model.msgModelMap,
       noteModelMap: model.noteModelMap,
       dividerMap: model.dividerMap,

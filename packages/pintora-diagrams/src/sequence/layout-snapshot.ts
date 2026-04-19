@@ -92,48 +92,45 @@ export function captureSequenceLayoutSnapshot(
     }
   })
 
-  const events = ir.messages.flatMap((msg, index) => {
+  const events: SequenceLayoutSnapshot['events'] = []
+  ir.messages.forEach((msg, index) => {
     const id = messageId(msg, index)
     if (msg.type === LINETYPE.NOTE) {
       const note = state.noteModelMap.get(id)
-      if (!note) return []
-      return [
-        {
-          kind: 'note' as const,
-          index,
-          anchorActorIds: Array.isArray(msg.from) ? msg.from : [msg.from, msg.to].filter(Boolean),
-          placement: notePlacement(msg.placement),
-          text: msg.text,
-          bounds: { startX: note.startx, stopX: note.stopx, startY: note.starty, stopY: note.stopy },
-        },
-      ]
+      if (!note) return
+      events.push({
+        kind: 'note',
+        index,
+        anchorActorIds: Array.isArray(msg.from) ? msg.from : [msg.from, msg.to].filter((v): v is string => Boolean(v)),
+        placement: notePlacement(msg.placement),
+        text: msg.text,
+        bounds: { startX: note.startx, stopX: note.stopx, startY: note.starty, stopY: note.stopy },
+      })
+      return
     }
     if (msg.type === LINETYPE.DIVIDER) {
       const divider = state.dividerMap.get(id)
-      if (!divider) return []
-      return [
-        {
-          kind: 'divider' as const,
-          index,
-          text: msg.text,
-          bounds: { startX: divider.startx, stopX: divider.stopx, startY: divider.starty, stopY: divider.stopy },
-        },
-      ]
+      if (!divider) return
+      events.push({
+        kind: 'divider',
+        index,
+        text: msg.text,
+        bounds: { startX: divider.startx, stopX: divider.stopx, startY: divider.starty, stopY: divider.stopy },
+      })
+      return
     }
     const model = state.msgModelMap.get(id)
-    if (!model || !msg.from || !msg.to || msg.text == null) return []
-    return [
-      {
-        kind: 'message' as const,
-        index,
-        fromActorId: msg.from,
-        toActorId: msg.to,
-        label: msg.text,
-        style: messageStyle(msg.type),
-        isSelf: msg.from === msg.to,
-        bounds: { startX: model.startx, stopX: model.stopx, startY: model.starty, stopY: model.stopy },
-      },
-    ]
+    if (!model || !msg.from || !msg.to || msg.text == null) return
+    events.push({
+      kind: 'message',
+      index,
+      fromActorId: msg.from,
+      toActorId: msg.to,
+      label: msg.text,
+      style: messageStyle(msg.type),
+      isSelf: msg.from === msg.to,
+      bounds: { startX: model.startx, stopX: model.stopx, startY: model.starty, stopY: model.stopy },
+    })
   })
 
   return {
