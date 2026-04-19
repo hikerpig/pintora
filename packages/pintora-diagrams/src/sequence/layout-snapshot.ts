@@ -86,34 +86,120 @@ function messageId(msg: Message, index: number) {
   throw new Error(`Sequence message at index ${index} is missing an id after layout preparation`)
 }
 
-function normalizeLoopKind(loop: { kind?: SpanKind; title?: string }): SpanKind {
-  if (loop.kind) return loop.kind
-  if (!loop.title) return 'loop'
-  const lower = loop.title.toLowerCase()
-  if (lower.startsWith('opt')) return 'opt'
-  if (lower.startsWith('alt')) return 'alt'
-  if (lower.startsWith('par')) return 'par'
-  return 'loop'
-}
-
-function findEventIndexAtOrAfterY(
-  events: SequenceLayoutSnapshot['events'],
-  y: number,
-): number {
+function findEventIndexAtOrAfterY(events: SequenceLayoutSnapshot['events'], y: number): number {
   for (let i = 0; i < events.length; i++) {
     if (events[i].bounds.startY >= y) return i
   }
   return events.length > 0 ? events.length - 1 : 0
 }
 
-function findEventIndexAtOrBeforeY(
-  events: SequenceLayoutSnapshot['events'],
-  y: number,
-): number {
+function findEventIndexAtOrBeforeY(events: SequenceLayoutSnapshot['events'], y: number): number {
   for (let i = events.length - 1; i >= 0; i--) {
     if (events[i].bounds.stopY <= y) return i
   }
   return 0
+}
+
+function spanKindFromStartType(type: LINETYPE | undefined): SpanKind {
+  switch (type) {
+    case LINETYPE.OPT_START:
+      return 'opt'
+    case LINETYPE.ALT_START:
+      return 'alt'
+    case LINETYPE.PAR_START:
+      return 'par'
+    default:
+      return 'loop'
+  }
+}
+
+function isSpanStart(type: LINETYPE | undefined) {
+  return (
+    type === LINETYPE.LOOP_START ||
+    type === LINETYPE.OPT_START ||
+    type === LINETYPE.ALT_START ||
+    type === LINETYPE.PAR_START
+  )
+}
+
+function isSpanEnd(type: LINETYPE | undefined) {
+  return (
+    type === LINETYPE.LOOP_END || type === LINETYPE.OPT_END || type === LINETYPE.ALT_END || type === LINETYPE.PAR_END
+  )
+}
+
+function findEventIndexAtOrAfterMessageIndex(messageIndexToEventIndex: Map<number, number>, messageIndex: number) {
+  const sortedMessageIndexes = Array.from(messageIndexToEventIndex.keys()).sort((a, b) => a - b)
+  for (const index of sortedMessageIndexes) {
+    if (index >= messageIndex) return messageIndexToEventIndex.get(index)
+  }
+}
+
+function findEventIndexAtOrBeforeMessageIndex(messageIndexToEventIndex: Map<number, number>, messageIndex: number) {
+  const sortedMessageIndexes = Array.from(messageIndexToEventIndex.keys()).sort((a, b) => b - a)
+  for (const index of sortedMessageIndexes) {
+    if (index <= messageIndex) return messageIndexToEventIndex.get(index)
+  }
+}
+
+function stripGroupLabel(label: string) {
+  return (label || '').replace(/^\[(.*)\]$/, '$1')
+}
+
+function buildSpanSnapshots(messages: Message[], messageIndexToEventIndex: Map<number, number>) {
+  const spans: SequenceLayoutSnapshot['spans'] = []
+  const stack: Array<{
+    kind: SpanKind
+    label: string
+    startMessageIndex: number
+    sections: Array<{ eventIndex: number; label: string }>
+  }> = []
+
+  messages.forEach((message, messageIndex) => {
+    if (isSpanStart(message.type)) {
+      stack.push({
+        kind: spanKindFromStartType(message.type),
+        label: stripGroupLabel(message.text),
+        startMessageIndex: messageIndex,
+        sections: [],
+      })
+      return
+    }
+
+    if (message.type === LINETYPE.ALT_ELSE || message.type === LINETYPE.PAR_AND) {
+      const current = stack[stack.length - 1]
+      const eventIndex = findEventIndexAtOrAfterMessageIndex(messageIndexToEventIndex, messageIndex + 1)
+      if (current && eventIndex != null) {
+        current.sections.push({
+          eventIndex,
+          label: stripGroupLabel(message.text),
+        })
+      }
+      return
+    }
+
+    if (isSpanEnd(message.type)) {
+      const current = stack.pop()
+      if (!current) return
+
+      const startEventIndex = findEventIndexAtOrAfterMessageIndex(
+        messageIndexToEventIndex,
+        current.startMessageIndex + 1,
+      )
+      const endEventIndex = findEventIndexAtOrBeforeMessageIndex(messageIndexToEventIndex, messageIndex - 1)
+
+      if (startEventIndex == null || endEventIndex == null) return
+      spans.push({
+        kind: current.kind,
+        startEventIndex,
+        endEventIndex: Math.max(startEventIndex, endEventIndex),
+        label: current.label,
+        sections: current.sections,
+      })
+    }
+  })
+
+  return spans
 }
 
 export function captureSequenceLayoutSnapshot(
@@ -195,22 +281,7 @@ export function captureSequenceLayoutSnapshot(
     }
   })
 
-  const spans = state.loops.map(loop => {
-    const kind = normalizeLoopKind(loop)
-    const startEventIndex = findEventIndexAtOrAfterY(events, loop.starty)
-    const endEventIndex = findEventIndexAtOrBeforeY(events, loop.stopy)
-    const label = (loop.title || '').replace(/^\[(.*)\]$/, '$1')
-    return {
-      kind,
-      startEventIndex,
-      endEventIndex: Math.max(startEventIndex, endEventIndex),
-      label,
-      sections: (loop.sections || []).map(section => ({
-        eventIndex: findEventIndexAtOrAfterY(events, section.y),
-        label: (section.message.text || '').replace(/^\[(.*)\]$/, '$1'),
-      })),
-    }
-  })
+  const spans = buildSpanSnapshots(ir.messages, messageIndexToEventIndex)
 
   return {
     title: ir.title || undefined,

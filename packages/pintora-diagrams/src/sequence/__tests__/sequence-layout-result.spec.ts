@@ -32,9 +32,7 @@ describe('buildSequenceLayoutResult', () => {
 
     const result = buildSequenceLayoutResult(snapshot)
 
-    expect(result.activations).toEqual([
-      { actorId: 'B', startEventIndex: 0, endEventIndex: 1, level: 0 },
-    ])
+    expect(result.activations).toEqual([{ actorId: 'B', startEventIndex: 0, endEventIndex: 1, level: 0 }])
     expect(result.spans[0]).toMatchObject({
       kind: 'alt',
       startEventIndex: 0,
@@ -81,13 +79,37 @@ sequenceDiagram
 
     const ascii = (result.graphicIR as any).rendererData.ascii
 
-    expect(ascii.sequence.activations).toEqual([
-      { actorId: 'B', startEventIndex: 0, endEventIndex: 2, level: 0 },
-    ])
+    expect(ascii.sequence.activations).toEqual([{ actorId: 'B', startEventIndex: 0, endEventIndex: 2, level: 0 }])
     expect(ascii.sequence.spans[0]).toMatchObject({
       kind: 'alt',
       label: 'cache miss',
     })
     expect(ascii.sequence.spans[0].sections).toEqual([{ eventIndex: 2, label: 'cache hit' }])
+  })
+
+  it('keeps a loop span ending before a following divider', () => {
+    const result = parseAndDraw(
+      `
+sequenceDiagram
+  activate Pintora
+  loop Check input
+    Pintora-->>Pintora: Has input changed?
+  end
+  Pintora-->>User: your figure here
+
+  == Divider ==
+    `,
+      { containerSize: { width: 900 } },
+    )!
+
+    const ascii = (result.graphicIR as any).rendererData.ascii
+
+    expect(ascii.sequence.events.map((event: any) => event.kind)).toEqual(['message', 'message', 'divider'])
+    expect(ascii.sequence.spans[0]).toMatchObject({
+      kind: 'loop',
+      label: 'Check input',
+      startEventIndex: 0,
+      endEventIndex: 0,
+    })
   })
 })
