@@ -181,6 +181,70 @@ exports[`sequence-artist draw cross mark to 1`] = `
     ],
     "type": "group",
   },
+  "rendererData": {
+    "ascii": {
+      "layout": {
+        "activations": [],
+        "actors": [
+          {
+            "classifier": undefined,
+            "id": "A",
+            "label": "A",
+            "order": 0,
+          },
+          {
+            "classifier": undefined,
+            "id": "B",
+            "label": "B",
+            "order": 1,
+          },
+        ],
+        "events": [
+          {
+            "fromActorId": "A",
+            "index": 0,
+            "isSelf": false,
+            "kind": "message",
+            "label": "Message",
+            "style": "solid",
+            "toActorId": "B",
+          },
+        ],
+        "spans": [],
+        "title": undefined,
+      },
+      "sequence": {
+        "actors": [
+          {
+            "classifier": undefined,
+            "id": "A",
+            "label": "A",
+          },
+          {
+            "classifier": undefined,
+            "id": "B",
+            "label": "B",
+          },
+        ],
+        "events": [
+          {
+            "fromActorId": "A",
+            "index": 0,
+            "isSelf": false,
+            "kind": "message",
+            "label": "Message",
+            "style": "solid",
+            "toActorId": "B",
+          },
+        ],
+        "meta": {
+          "direction": "TB",
+          "title": undefined,
+        },
+        "spans": [],
+      },
+    },
+  },
 }
 `;
 
@@ -472,6 +536,61 @@ exports[`sequence-artist draw participant classifier 1`] = `
       },
     ],
     "type": "group",
+  },
+  "rendererData": {
+    "ascii": {
+      "layout": {
+        "activations": [],
+        "actors": [
+          {
+            "classifier": "actor",
+            "id": "A",
+            "label": "A",
+            "order": 0,
+          },
+          {
+            "classifier": "database",
+            "id": "B",
+            "label": "B",
+            "order": 1,
+          },
+          {
+            "classifier": "diamond",
+            "id": "C",
+            "label": "C",
+            "order": 2,
+          },
+        ],
+        "events": [],
+        "spans": [],
+        "title": undefined,
+      },
+      "sequence": {
+        "actors": [
+          {
+            "classifier": "actor",
+            "id": "A",
+            "label": "A",
+          },
+          {
+            "classifier": "database",
+            "id": "B",
+            "label": "B",
+          },
+          {
+            "classifier": "diamond",
+            "id": "C",
+            "label": "C",
+          },
+        ],
+        "events": [],
+        "meta": {
+          "direction": "TB",
+          "title": undefined,
+        },
+        "spans": [],
+      },
+    },
   },
 }
 `;
@@ -1006,6 +1125,178 @@ is possible",
     ],
     "type": "group",
   },
+  "rendererData": {
+    "ascii": {
+      "layout": {
+        "activations": [],
+        "actors": [
+          {
+            "classifier": undefined,
+            "id": "User",
+            "label": "User",
+            "order": 0,
+          },
+          {
+            "classifier": undefined,
+            "id": "Pintora",
+            "label": "Pintora",
+            "order": 1,
+          },
+        ],
+        "events": [
+          {
+            "fromActorId": "User",
+            "index": 0,
+            "isSelf": false,
+            "kind": "message",
+            "label": "render this",
+            "style": "solid",
+            "toActorId": "Pintora",
+          },
+          {
+            "fromActorId": "Pintora",
+            "index": 3,
+            "isSelf": true,
+            "kind": "message",
+            "label": "Has input changed?",
+            "style": "dashed",
+            "toActorId": "Pintora",
+          },
+          {
+            "fromActorId": "Pintora",
+            "index": 5,
+            "isSelf": false,
+            "kind": "message",
+            "label": "your figure here",
+            "style": "dashed",
+            "toActorId": "User",
+          },
+          {
+            "anchorActorIds": [
+              "User",
+              "Pintora",
+            ],
+            "index": 7,
+            "kind": "note",
+            "placement": "over",
+            "text": "note over",
+          },
+          {
+            "anchorActorIds": [
+              "User",
+              "User",
+            ],
+            "index": 8,
+            "kind": "note",
+            "placement": "right",
+            "text": "note aside actor",
+          },
+          {
+            "anchorActorIds": [
+              "User",
+              "User",
+            ],
+            "index": 9,
+            "kind": "note",
+            "placement": "right",
+            "text": "multiline note
+is possible",
+          },
+          {
+            "index": 10,
+            "kind": "divider",
+            "text": "Divider",
+          },
+        ],
+        "spans": [],
+        "title": "Sequence Diagram Example",
+      },
+      "sequence": {
+        "actors": [
+          {
+            "classifier": undefined,
+            "id": "User",
+            "label": "User",
+          },
+          {
+            "classifier": undefined,
+            "id": "Pintora",
+            "label": "Pintora",
+          },
+        ],
+        "events": [
+          {
+            "fromActorId": "User",
+            "index": 0,
+            "isSelf": false,
+            "kind": "message",
+            "label": "render this",
+            "style": "solid",
+            "toActorId": "Pintora",
+          },
+          {
+            "fromActorId": "Pintora",
+            "index": 3,
+            "isSelf": true,
+            "kind": "message",
+            "label": "Has input changed?",
+            "style": "dashed",
+            "toActorId": "Pintora",
+          },
+          {
+            "fromActorId": "Pintora",
+            "index": 5,
+            "isSelf": false,
+            "kind": "message",
+            "label": "your figure here",
+            "style": "dashed",
+            "toActorId": "User",
+          },
+          {
+            "anchorActorIds": [
+              "User",
+              "Pintora",
+            ],
+            "index": 7,
+            "kind": "note",
+            "placement": "over",
+            "text": "note over",
+          },
+          {
+            "anchorActorIds": [
+              "User",
+              "User",
+            ],
+            "index": 8,
+            "kind": "note",
+            "placement": "right",
+            "text": "note aside actor",
+          },
+          {
+            "anchorActorIds": [
+              "User",
+              "User",
+            ],
+            "index": 9,
+            "kind": "note",
+            "placement": "right",
+            "text": "multiline note
+is possible",
+          },
+          {
+            "index": 10,
+            "kind": "divider",
+            "text": "Divider",
+          },
+        ],
+        "meta": {
+          "direction": "TB",
+          "title": "Sequence Diagram Example",
+        },
+        "spans": [],
+      },
+    },
+  },
 }
 `;
 
@@ -1175,6 +1466,50 @@ exports[`sequence-artist will render boxes 1`] = `
       },
     ],
     "type": "group",
+  },
+  "rendererData": {
+    "ascii": {
+      "layout": {
+        "activations": [],
+        "actors": [
+          {
+            "classifier": undefined,
+            "id": "A",
+            "label": "Alice",
+            "order": 0,
+          },
+          {
+            "classifier": undefined,
+            "id": "B",
+            "label": "B",
+            "order": 1,
+          },
+        ],
+        "events": [],
+        "spans": [],
+        "title": undefined,
+      },
+      "sequence": {
+        "actors": [
+          {
+            "classifier": undefined,
+            "id": "A",
+            "label": "Alice",
+          },
+          {
+            "classifier": undefined,
+            "id": "B",
+            "label": "B",
+          },
+        ],
+        "events": [],
+        "meta": {
+          "direction": "TB",
+          "title": undefined,
+        },
+        "spans": [],
+      },
+    },
   },
 }
 `;

@@ -6,5 +6,6 @@
   },
   "references": [
     { "path": "../pintora-core" }
-  ]
+  ],
+  "exclude": ["**/__tests__"]
 }

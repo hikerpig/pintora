@@ -459,6 +459,9 @@ importers:
       '@antv/g-base':
         specifier: ^0.5.11
         version: 0.5.11
+      '@pintora/diagrams':
+        specifier: workspace:*
+        version: link:../pintora-diagrams
       typescript:
         specifier: ^6.0.0
         version: 6.0.3

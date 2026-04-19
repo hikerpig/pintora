@@ -1,6 +1,7 @@
 import { buildSequenceTextPlan } from '../sequence/plan'
+import { SequenceAsciiRenderData } from '../sequence/types'
 
-const sequenceAsciiIR = {
+const sequenceAsciiIR: SequenceAsciiRenderData = {
   meta: { direction: 'TB' },
   actors: [
     { id: 'User', label: 'User' },
@@ -30,7 +31,7 @@ const sequenceAsciiIR = {
     },
   ],
   spans: [],
-} as const
+}
 
 describe('buildSequenceTextPlan', () => {
   it('allocates actor columns and separates label rows from arrow rows', () => {

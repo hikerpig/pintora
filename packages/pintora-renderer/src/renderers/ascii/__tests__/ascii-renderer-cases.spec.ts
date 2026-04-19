@@ -1,4 +1,4 @@
-import { renderToAscii } from './test-helpers'
+import { renderToAscii } from '../helpers'
 
 describe('sequence ascii rendering', () => {
   it('renders base messages with compact arrows', () => {
@@ -40,5 +40,18 @@ sequenceDiagram
     expect(text).toContain('张三')
     expect(text).toContain('李四')
     expect(text).toContain('你好')
+  })
+
+  it('renders dashed, open, and open-dashed arrows', () => {
+    const text = renderToAscii(`
+sequenceDiagram
+  A-->>B: dashed
+  B->A: open
+  A-->B: open dashed
+    `)
+
+    const compact = text.replace(/\s/g, '')
+    expect(compact).toContain('▷')
+    expect(compact).toContain('╌')
   })
 })

@@ -1,6 +1,6 @@
 import { parseAndDraw, diagramRegistry } from '@pintora/core'
 import { DIAGRAMS } from '@pintora/diagrams'
-import { render } from '../../../index'
+import { render } from '../../index'
 
 Object.keys(DIAGRAMS).forEach(name => {
   diagramRegistry.registerDiagram(name, DIAGRAMS[name as keyof typeof DIAGRAMS])

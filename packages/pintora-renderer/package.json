@@ -29,6 +29,7 @@
   },
   "devDependencies": {
     "@antv/g-base": "^0.5.11",
+    "@pintora/diagrams": "workspace:*",
     "typescript": "^6.0.0"
   }
 }
