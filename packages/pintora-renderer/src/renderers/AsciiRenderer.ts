@@ -1,6 +1,8 @@
 import { GraphicsIR } from '@pintora/core'
 import { IRenderer } from '../type'
 import { noop } from '../util'
+import { isSequenceAsciiRenderData } from './ascii/sequence/types'
+import { renderSequenceAscii } from './ascii/sequence/render'
 
 export class AsciiRenderer implements IRenderer {
   protected container: HTMLElement | null = null
@@ -17,8 +19,8 @@ export class AsciiRenderer implements IRenderer {
   }
 
   render() {
-    const sequence = this.ir.rendererData?.ascii?.sequence as any
-    this.textContent = sequence ? '[sequence-ascii-pending]' : ''
+    const sequence = this.ir.rendererData?.ascii?.sequence
+    this.textContent = isSequenceAsciiRenderData(sequence) ? renderSequenceAscii(sequence) : ''
     const root = this.getRootElement()
     root.textContent = this.textContent
     if (this.container) {

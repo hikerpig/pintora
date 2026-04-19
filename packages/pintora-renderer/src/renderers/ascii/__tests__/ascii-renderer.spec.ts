@@ -43,6 +43,6 @@ describe('AsciiRenderer', () => {
     renderer.render()
 
     expect(renderer.getRootElement().tagName).toBe('PRE')
-    expect(renderer.getTextContent?.()).toContain('[sequence-ascii-pending]')
+    expect(renderer.getTextContent?.()).toContain('render this')
   })
 })

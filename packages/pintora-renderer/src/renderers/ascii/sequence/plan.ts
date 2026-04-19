@@ -1,6 +1,6 @@
 import { SequenceAsciiRenderData, SequenceTextPlan } from './types'
 
-function widthOf(text: string) {
+export function widthOf(text: string) {
   return Array.from(text).reduce((sum, ch) => sum + (ch.charCodeAt(0) > 255 ? 2 : 1), 0)
 }
 
@@ -22,8 +22,9 @@ export function buildSequenceTextPlan(source: SequenceAsciiRenderData): Sequence
     const current = columns[index]
     const gap = Math.max(8, Math.ceil(widthOf(source.actors[index - 1].label) / 2 + widthOf(source.actors[index].label) / 2 + 4))
     current.centerCol = prev.centerCol + gap
-    current.headerLeftCol = current.centerCol - Math.floor((current.headerRightCol - current.headerLeftCol) / 2)
-    current.headerRightCol = current.headerLeftCol + (current.headerRightCol - current.headerLeftCol)
+    const boxWidth = current.headerRightCol - current.headerLeftCol
+    current.headerLeftCol = current.centerCol - Math.floor(boxWidth / 2)
+    current.headerRightCol = current.headerLeftCol + boxWidth
     current.lifelineCol = current.centerCol
   }
 
