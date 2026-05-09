@@ -2,6 +2,58 @@ import { mat3 } from '@antv/matrix-util'
 
 export type Mark = Group | Rect | Circle | Ellipse | Text | Line | PolyLine | Polygon | Marker | Path | GSymbol
 
+export type TextDiagramPoint = {
+  x: number
+  y: number
+}
+
+export type TextDiagramStroke = 'solid' | 'dashed'
+
+export type TextDiagramArrowHead = 'none' | 'filled' | 'open'
+
+export type TextDiagramTextOp = {
+  type: 'text'
+  x: number
+  y: number
+  text: string
+  align?: 'left' | 'center' | 'right'
+}
+
+export type TextDiagramLineOp = {
+  type: 'line'
+  from: TextDiagramPoint
+  to: TextDiagramPoint
+  stroke?: TextDiagramStroke
+  startHead?: TextDiagramArrowHead
+  endHead?: TextDiagramArrowHead
+}
+
+export type TextDiagramRectOp = {
+  type: 'rect'
+  x: number
+  y: number
+  width: number
+  height: number
+  stroke?: TextDiagramStroke
+}
+
+export type TextDiagramFillOp = {
+  type: 'fill'
+  x: number
+  y: number
+  width: number
+  height: number
+  char: string
+}
+
+export type TextDiagramOp = TextDiagramTextOp | TextDiagramLineOp | TextDiagramRectOp | TextDiagramFillOp
+
+export type TextDiagramPlan = {
+  width: number
+  height: number
+  ops: TextDiagramOp[]
+}
+
 export interface Figure {
   mark: Mark
   width: number
@@ -14,6 +66,7 @@ export interface GraphicsIR extends Figure {
     ascii?: {
       layout?: unknown
       sequence?: unknown
+      plan?: TextDiagramPlan
     }
   }
 }
