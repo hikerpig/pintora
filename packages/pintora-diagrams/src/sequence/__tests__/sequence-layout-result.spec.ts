@@ -112,4 +112,24 @@ sequenceDiagram
       endEventIndex: 0,
     })
   })
+
+  it('attaches a generic text diagram plan to graphicIR.rendererData.ascii', () => {
+    const result = parseAndDraw(
+      `
+sequenceDiagram
+  participant A
+  participant B
+  A->>B: enter
+    `,
+      { containerSize: { width: 900 } },
+    )!
+
+    const ascii = (result.graphicIR as any).rendererData.ascii
+    expect(ascii.plan).toMatchObject({
+      width: expect.any(Number),
+      height: expect.any(Number),
+      ops: expect.any(Array),
+    })
+    expect(ascii.plan.ops).toEqual(expect.arrayContaining([expect.objectContaining({ type: 'text', text: 'enter' })]))
+  })
 })

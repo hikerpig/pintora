@@ -36,6 +36,7 @@ import { LINETYPE, Message, PLACEMENT, ParticipantBox, SequenceDiagramIR, Wrappe
 import { captureSequenceLayoutSnapshot } from './layout-snapshot'
 import { buildSequenceLayoutResult } from './layout-result'
 import { toSequenceAsciiIR } from './ascii-ir'
+import { toSequenceTextDiagramPlan } from './ascii/text-plan'
 import { getFontConfig } from '../util/font-config'
 import { BaseArtist } from '../util/base-artist'
 
@@ -298,6 +299,7 @@ class SequenceArtist extends BaseArtist<SequenceDiagramIR, SequenceConf> {
     })
     const layoutResult = buildSequenceLayoutResult(snapshot)
     const sequenceAsciiIR = toSequenceAsciiIR(layoutResult)
+    const textDiagramPlan = toSequenceTextDiagramPlan(sequenceAsciiIR)
 
     graphicsIR.rendererData = {
       ...(graphicsIR.rendererData || {}),
@@ -305,6 +307,7 @@ class SequenceArtist extends BaseArtist<SequenceDiagramIR, SequenceConf> {
         ...(graphicsIR.rendererData?.ascii || {}),
         layout: layoutResult,
         sequence: sequenceAsciiIR,
+        plan: textDiagramPlan,
       },
     }
 
