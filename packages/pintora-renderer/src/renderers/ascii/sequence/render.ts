@@ -1,5 +1,5 @@
 import { buildSequenceTextPlan, messageLabelStartCol, textLinesOf, widthOf } from './plan'
-import { canvasToString, fillCols, makeCanvas, put, putText, strokeRect } from './text-canvas'
+import { canvasToString, fillCols, makeCanvas, put, putText, strokeRect } from '../text-canvas'
 import { SequenceAsciiRenderData } from './types'
 
 export function renderSequenceAscii(source: SequenceAsciiRenderData) {
