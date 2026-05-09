@@ -306,7 +306,6 @@ class SequenceArtist extends BaseArtist<SequenceDiagramIR, SequenceConf> {
       ascii: {
         ...(graphicsIR.rendererData?.ascii || {}),
         layout: layoutResult,
-        sequence: sequenceAsciiIR,
         plan: textDiagramPlan,
       },
     }

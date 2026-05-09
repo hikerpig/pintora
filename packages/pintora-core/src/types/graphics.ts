@@ -65,7 +65,6 @@ export interface GraphicsIR extends Figure {
   rendererData?: {
     ascii?: {
       layout?: unknown
-      sequence?: unknown
       plan?: TextDiagramPlan
     }
   }
