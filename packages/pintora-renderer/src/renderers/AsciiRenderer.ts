@@ -2,8 +2,6 @@ import { GraphicsIR } from '@pintora/core'
 import { IRenderer } from '../type'
 import { noop } from '../util'
 import { renderTextDiagramPlan } from './ascii/text-plan-renderer'
-import { isSequenceAsciiRenderData } from './ascii/sequence/types'
-import { renderSequenceAscii } from './ascii/sequence/render'
 
 export class AsciiRenderer implements IRenderer {
   protected container: HTMLElement | null = null
@@ -20,14 +18,8 @@ export class AsciiRenderer implements IRenderer {
   }
 
   render() {
-    const ascii = this.ir.rendererData?.ascii
-    if (ascii?.plan) {
-      this.textContent = renderTextDiagramPlan(ascii.plan)
-    } else {
-      const sequence = ascii?.sequence
-      this.textContent = isSequenceAsciiRenderData(sequence) ? renderSequenceAscii(sequence) : ''
-    }
-
+    const plan = this.ir.rendererData?.ascii?.plan
+    this.textContent = plan ? renderTextDiagramPlan(plan) : ''
     const root = this.getRootElement()
     root.textContent = this.textContent
     if (this.container) {
