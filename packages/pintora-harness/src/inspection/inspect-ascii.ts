@@ -3,13 +3,23 @@ import * as path from 'node:path'
 import type { TextDiagramPlan } from '@pintora/core'
 import { HarnessStatus } from '../contracts/harness'
 import { buildAsciiMetrics } from './ascii-metrics'
-import { runAsciiRules } from './rules/ascii-rules'
+import { runAsciiRules, runErAsciiRules } from './rules/ascii-rules'
 
-export async function runHarnessInspectAscii(opts: { textFile: string; planFile?: string; outDir: string }) {
-  const text = fs.readFileSync(opts.textFile, 'utf8')
-  const plan = opts.planFile && fs.existsSync(opts.planFile) ? readPlan(opts.planFile) : null
+export async function runHarnessInspectAscii(opts: {
+  textFile?: string
+  planFile?: string
+  caseId?: string
+  outDir: string
+}) {
+  const textFile = opts.textFile ?? path.join(opts.outDir, 'render.txt')
+  const planFile = opts.planFile ?? path.join(opts.outDir, 'plan.json')
+  const text = fs.readFileSync(textFile, 'utf8')
+  const plan = fs.existsSync(planFile) ? readPlan(planFile) : null
   const metrics = buildAsciiMetrics(text, plan)
   const findings = runAsciiRules(metrics)
+  if (opts.caseId?.startsWith('er.')) {
+    findings.push(...runErAsciiRules({ text }))
+  }
   const status: HarnessStatus =
     metrics.lineCount === 0 || metrics.maxDisplayWidth === 0
       ? 'fail'

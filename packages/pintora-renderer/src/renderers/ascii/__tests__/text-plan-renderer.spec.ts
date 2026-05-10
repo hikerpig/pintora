@@ -34,4 +34,32 @@ describe('renderTextDiagramPlan', () => {
 
     expect(() => renderTextDiagramPlan(plan)).toThrow('TextDiagramPlan line ops must be axis-aligned')
   })
+
+  it('merges solid horizontal and vertical line glyphs into readable junctions', () => {
+    const plan: TextDiagramPlan = {
+      width: 9,
+      height: 5,
+      ops: [
+        { type: 'line', from: { x: 1, y: 2 }, to: { x: 7, y: 2 } },
+        { type: 'line', from: { x: 4, y: 0 }, to: { x: 4, y: 4 } },
+      ],
+    }
+
+    const text = renderTextDiagramPlan(plan)
+
+    expect(text.split('\n')[2]).toBe(' ───┼───')
+  })
+
+  it('renders dashed rectangle borders when rect.stroke is dashed', () => {
+    const plan: TextDiagramPlan = {
+      width: 8,
+      height: 4,
+      ops: [{ type: 'rect', x: 0, y: 0, width: 8, height: 4, stroke: 'dashed' }],
+    }
+
+    const text = renderTextDiagramPlan(plan)
+
+    expect(text).toContain('┌╌╌╌╌╌╌┐')
+    expect(text).toContain('┆      ┆')
+  })
 })

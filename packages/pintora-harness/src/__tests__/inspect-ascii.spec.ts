@@ -80,4 +80,20 @@ describe('runHarnessInspectAscii', () => {
       ]),
     )
   })
+
+  it('flags ER ASCII output that falls back to raw relationship text', async () => {
+    const outDir = fs.mkdtempSync(path.join(os.tmpdir(), 'pintora-harness-er-inspect-'))
+    fs.writeFileSync(path.join(outDir, 'render.txt'), 'CUSTOMER ||--o{ ORDER : places\n')
+    fs.writeFileSync(path.join(outDir, 'plan.json'), JSON.stringify({ width: 34, height: 1, ops: [] }))
+
+    const result = await runHarnessInspectAscii({
+      caseId: 'er.relationship-layout-ascii-01',
+      outDir,
+    })
+
+    const findings = JSON.parse(fs.readFileSync(path.join(outDir, 'ascii-findings.json'), 'utf8'))
+
+    expect(result.findingCount).toBeGreaterThan(0)
+    expect(findings.some((finding: any) => finding.id === 'er-raw-relationship-legend')).toBe(true)
+  })
 })

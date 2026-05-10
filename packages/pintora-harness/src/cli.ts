@@ -30,6 +30,7 @@ type InspectSvgArgs = {
 type InspectAsciiArgs = {
   in: string
   plan?: string
+  case?: string
   'out-dir': string
 }
 
@@ -122,6 +123,7 @@ const parser = yargs(hideBin(process.argv))
     builder: {
       in: { describe: 'Input ascii text path', type: 'string', demandOption: true },
       plan: { describe: 'Input TextDiagramPlan json path', type: 'string' },
+      case: { describe: 'Harness case id', type: 'string' },
       'out-dir': { describe: 'Output artifact directory', type: 'string', demandOption: true },
     },
     handler: handleInspectAsciiCommand,
@@ -273,6 +275,7 @@ async function handleInspectAsciiCommand(args: InspectAsciiArgs) {
     const result = await runHarnessInspectAscii({
       textFile: args.in,
       planFile: args.plan,
+      caseId: args.case,
       outDir: args['out-dir'],
     })
     process.stdout.write(`${JSON.stringify(result)}\n`)

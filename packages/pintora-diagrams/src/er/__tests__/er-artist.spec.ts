@@ -60,4 +60,23 @@ describe('er-artist', () => {
     `
     expect(stripDrawResultForSnapshot(testDraw(code))).toMatchSnapshot()
   })
+
+  it('attaches an ER ASCII text plan with connector line ops', () => {
+    const code = `
+    erDiagram
+      CUSTOMER ||--o{ ORDER : places
+      CUSTOMER {
+        string id
+      }
+      ORDER {
+        int order_number PK
+      }
+    `
+    const result = testDraw(code)
+    const plan = result.graphicIR.rendererData?.ascii?.plan
+
+    expect(plan).toBeTruthy()
+    expect(plan?.ops).toEqual(expect.arrayContaining([expect.objectContaining({ type: 'line' })]))
+    expect(plan?.ops).toEqual(expect.arrayContaining([expect.objectContaining({ type: 'text', text: 'places' })]))
+  })
 })

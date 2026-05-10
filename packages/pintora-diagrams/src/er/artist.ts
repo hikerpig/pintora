@@ -138,7 +138,11 @@ class ErArtist extends BaseArtist<ErDiagramIR, ErConf> {
       ascii: {
         ...(graphicsIR.rendererData?.ascii || {}),
         layout: ir,
-        plan: toErTextDiagramPlan(ir),
+        plan: toErTextDiagramPlan(ir, {
+          layoutDirection: conf.layoutDirection,
+          useMaxWidth: conf.useMaxWidth,
+          containerWidth: opts?.containerSize?.width,
+        }),
       },
     }
 

@@ -31,3 +31,22 @@ export function runAsciiRules(metrics: AsciiMetricSnapshot): HarnessFinding[] {
 
   return findings
 }
+
+export function runErAsciiRules(input: { text: string }): HarnessFinding[] {
+  const findings: HarnessFinding[] = []
+  if (/\b[A-Za-z0-9_-]+\s+[|}o][|{][-.]{2}[o|][|{]\s+[A-Za-z0-9_-]+\s*:/.test(input.text)) {
+    findings.push({
+      id: 'er-raw-relationship-legend',
+      severity: 'error',
+      message: 'ER ASCII output still contains raw relationship DSL instead of visual connector layout',
+    })
+  }
+  if (/\binherit\b/.test(input.text)) {
+    findings.push({
+      id: 'er-raw-inheritance-legend',
+      severity: 'error',
+      message: 'ER ASCII output still contains raw inheritance text instead of an ISA connector',
+    })
+  }
+  return findings
+}

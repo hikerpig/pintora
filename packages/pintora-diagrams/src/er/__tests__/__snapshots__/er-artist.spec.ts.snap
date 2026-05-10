@@ -200,6 +200,118 @@ exports[`er-artist can parse and handle bindClass 1`] = `
     ],
     "type": "group",
   },
+  "rendererData": {
+    "ascii": {
+      "layout": {
+        "bindRules": [
+          {
+            "className": "test-class",
+            "nodes": [
+              "entity-e1",
+            ],
+          },
+        ],
+        "configParams": [],
+        "entities": {
+          "e1": {
+            "attributes": [
+              {
+                "attributeName": "age",
+                "attributeType": "int",
+                "comment": "",
+              },
+            ],
+            "itemId": "entity-e1",
+            "name": "e1",
+          },
+          "e2": {
+            "attributes": [
+              {
+                "attributeName": "name",
+                "attributeType": "string",
+                "comment": "",
+              },
+            ],
+            "itemId": "entity-e2",
+            "name": "e2",
+          },
+        },
+        "inheritances": [],
+        "overrideConfig": {},
+        "relationships": [],
+        "styleRules": [],
+        "title": "",
+      },
+      "plan": {
+        "height": 5,
+        "ops": [
+          {
+            "height": 5,
+            "type": "rect",
+            "width": 12,
+            "x": 0,
+            "y": 0,
+          },
+          {
+            "align": "center",
+            "text": "e1",
+            "type": "text",
+            "x": 6,
+            "y": 1,
+          },
+          {
+            "from": {
+              "x": 1,
+              "y": 2,
+            },
+            "to": {
+              "x": 10,
+              "y": 2,
+            },
+            "type": "line",
+          },
+          {
+            "text": "int age",
+            "type": "text",
+            "x": 2,
+            "y": 3,
+          },
+          {
+            "height": 5,
+            "type": "rect",
+            "width": 15,
+            "x": 18,
+            "y": 0,
+          },
+          {
+            "align": "center",
+            "text": "e2",
+            "type": "text",
+            "x": 25,
+            "y": 1,
+          },
+          {
+            "from": {
+              "x": 19,
+              "y": 2,
+            },
+            "to": {
+              "x": 31,
+              "y": 2,
+            },
+            "type": "line",
+          },
+          {
+            "text": "string name",
+            "type": "text",
+            "x": 20,
+            "y": 3,
+          },
+        ],
+        "width": 33,
+      },
+    },
+  },
 }
 `;
 
@@ -673,6 +785,262 @@ exports[`er-artist will draw inheritance 1`] = `
       },
     ],
     "type": "group",
+  },
+  "rendererData": {
+    "ascii": {
+      "layout": {
+        "bindRules": [],
+        "configParams": [],
+        "entities": {
+          "customer": {
+            "attributes": [
+              {
+                "attributeName": "address",
+                "attributeType": "string",
+                "comment": "deliver address",
+              },
+              {
+                "attributeKey": "PK",
+                "attributeName": "id",
+                "attributeType": "string",
+                "comment": "",
+              },
+            ],
+            "itemId": "entity-customer",
+            "name": "customer",
+          },
+          "deliverer": {
+            "attributes": [],
+            "itemId": "entity-deliverer",
+            "name": "deliverer",
+          },
+          "person": {
+            "attributes": [
+              {
+                "attributeName": "age",
+                "attributeType": "int",
+                "comment": "",
+              },
+              {
+                "attributeName": "phone_number",
+                "attributeType": "string",
+                "comment": "",
+              },
+            ],
+            "itemId": "entity-person",
+            "name": "person",
+          },
+        },
+        "inheritances": [
+          {
+            "sub": "customer",
+            "sup": "person",
+          },
+          {
+            "sub": "deliverer",
+            "sup": "person",
+          },
+        ],
+        "overrideConfig": {},
+        "relationships": [],
+        "styleRules": [],
+        "title": "",
+      },
+      "plan": {
+        "height": 17,
+        "ops": [
+          {
+            "from": {
+              "x": 18,
+              "y": 10,
+            },
+            "stroke": "solid",
+            "to": {
+              "x": 18,
+              "y": 7,
+            },
+            "type": "line",
+          },
+          {
+            "from": {
+              "x": 18,
+              "y": 7,
+            },
+            "stroke": "solid",
+            "to": {
+              "x": 27,
+              "y": 7,
+            },
+            "type": "line",
+          },
+          {
+            "from": {
+              "x": 27,
+              "y": 7,
+            },
+            "stroke": "solid",
+            "to": {
+              "x": 27,
+              "y": 6,
+            },
+            "type": "line",
+          },
+          {
+            "align": "center",
+            "text": "△",
+            "type": "text",
+            "x": 27,
+            "y": 6,
+          },
+          {
+            "align": "center",
+            "text": "ISA",
+            "type": "text",
+            "x": 27,
+            "y": 7,
+          },
+          {
+            "from": {
+              "x": 48,
+              "y": 10,
+            },
+            "stroke": "solid",
+            "to": {
+              "x": 48,
+              "y": 8,
+            },
+            "type": "line",
+          },
+          {
+            "from": {
+              "x": 48,
+              "y": 8,
+            },
+            "stroke": "solid",
+            "to": {
+              "x": 27,
+              "y": 8,
+            },
+            "type": "line",
+          },
+          {
+            "from": {
+              "x": 27,
+              "y": 8,
+            },
+            "stroke": "solid",
+            "to": {
+              "x": 27,
+              "y": 6,
+            },
+            "type": "line",
+          },
+          {
+            "align": "center",
+            "text": "△",
+            "type": "text",
+            "x": 27,
+            "y": 6,
+          },
+          {
+            "align": "center",
+            "text": "ISA",
+            "type": "text",
+            "x": 27,
+            "y": 8,
+          },
+          {
+            "height": 6,
+            "type": "rect",
+            "width": 23,
+            "x": 16,
+            "y": 0,
+          },
+          {
+            "align": "center",
+            "text": "person",
+            "type": "text",
+            "x": 27,
+            "y": 1,
+          },
+          {
+            "from": {
+              "x": 17,
+              "y": 2,
+            },
+            "to": {
+              "x": 37,
+              "y": 2,
+            },
+            "type": "line",
+          },
+          {
+            "text": "int age",
+            "type": "text",
+            "x": 18,
+            "y": 3,
+          },
+          {
+            "text": "string phone_number",
+            "type": "text",
+            "x": 18,
+            "y": 4,
+          },
+          {
+            "height": 6,
+            "type": "rect",
+            "width": 36,
+            "x": 0,
+            "y": 11,
+          },
+          {
+            "align": "center",
+            "text": "customer",
+            "type": "text",
+            "x": 18,
+            "y": 12,
+          },
+          {
+            "from": {
+              "x": 1,
+              "y": 13,
+            },
+            "to": {
+              "x": 34,
+              "y": 13,
+            },
+            "type": "line",
+          },
+          {
+            "text": "string address "deliver address"",
+            "type": "text",
+            "x": 2,
+            "y": 14,
+          },
+          {
+            "text": "PK string id",
+            "type": "text",
+            "x": 2,
+            "y": 15,
+          },
+          {
+            "height": 3,
+            "type": "rect",
+            "width": 13,
+            "x": 42,
+            "y": 11,
+          },
+          {
+            "align": "center",
+            "text": "deliverer",
+            "type": "text",
+            "x": 48,
+            "y": 12,
+          },
+        ],
+        "width": 55,
+      },
+    },
   },
 }
 `;

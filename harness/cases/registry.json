@@ -61,6 +61,21 @@
       }
     },
     {
+      "id": "er.relationship-layout-ascii-01",
+      "diagram_type": "er",
+      "title": "ER ASCII relationship layout should produce visual connectors",
+      "input_file": "er/relationship-layout-ascii-01.pintora",
+      "tags": ["ascii", "relationship", "layout"],
+      "checks": ["ascii-structure", "ascii-connector-layout"],
+      "escalation_policy": {
+        "capture_browser_on": ["suspicious", "fail"]
+      },
+      "golden": {
+        "require_svg": false,
+        "require_browser_png": false
+      }
+    },
+    {
       "id": "sequence.message-label-collision-01",
       "diagram_type": "sequence",
       "title": "Sequence message labels should avoid collisions",

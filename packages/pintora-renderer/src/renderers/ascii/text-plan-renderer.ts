@@ -1,5 +1,5 @@
 import type { TextDiagramArrowHead, TextDiagramLineOp, TextDiagramPlan, TextDiagramTextOp } from '@pintora/core'
-import { canvasToString, fillCols, makeCanvas, put, putText, strokeRect } from './text-canvas'
+import { canvasToString, fillCols, LineDirection, makeCanvas, put, putLine, putText, strokeRect } from './text-canvas'
 
 function widthOf(text: string) {
   return Array.from(text).reduce((sum, ch) => sum + (ch.charCodeAt(0) > 255 ? 2 : 1), 0)
@@ -27,9 +27,15 @@ function drawHorizontalLine(canvas: string[][], op: TextDiagramLineOp) {
   const inverse: 1 | -1 = direction === 1 ? -1 : 1
   const left = Math.min(op.from.x, op.to.x)
   const right = Math.max(op.from.x, op.to.x)
-  const glyph = op.stroke === 'dashed' ? '╌' : '─'
 
-  for (let x = left; x <= right; x++) put(canvas, x, y, glyph)
+  if (op.stroke === 'dashed') {
+    for (let x = left; x <= right; x++) put(canvas, x, y, '╌')
+  } else {
+    for (let x = left; x <= right; x++) {
+      const directions: LineDirection[] = x === left ? ['right'] : x === right ? ['left'] : ['left', 'right']
+      putLine(canvas, x, y, directions)
+    }
+  }
 
   const startHead = horizontalHead(op.startHead, inverse)
   const endHead = horizontalHead(op.endHead, direction)
@@ -43,9 +49,15 @@ function drawVerticalLine(canvas: string[][], op: TextDiagramLineOp) {
   const inverse: 1 | -1 = direction === 1 ? -1 : 1
   const top = Math.min(op.from.y, op.to.y)
   const bottom = Math.max(op.from.y, op.to.y)
-  const glyph = op.stroke === 'dashed' ? '┆' : '│'
 
-  for (let y = top; y <= bottom; y++) put(canvas, x, y, glyph)
+  if (op.stroke === 'dashed') {
+    for (let y = top; y <= bottom; y++) put(canvas, x, y, '┆')
+  } else {
+    for (let y = top; y <= bottom; y++) {
+      const directions: LineDirection[] = y === top ? ['down'] : y === bottom ? ['up'] : ['up', 'down']
+      putLine(canvas, x, y, directions)
+    }
+  }
 
   const startHead = verticalHead(op.startHead, inverse)
   const endHead = verticalHead(op.endHead, direction)
@@ -74,7 +86,7 @@ export function renderTextDiagramPlan(plan: TextDiagramPlan) {
     } else if (op.type === 'line') {
       drawLine(canvas, op)
     } else if (op.type === 'rect') {
-      strokeRect(canvas, [op.x, op.x + op.width - 1], [op.y, op.y + op.height - 1])
+      strokeRect(canvas, [op.x, op.x + op.width - 1], [op.y, op.y + op.height - 1], op.stroke)
     } else if (op.type === 'fill') {
       fillCols(canvas, [op.x, op.x + op.width - 1], [op.y, op.y + op.height - 1], op.char)
     }
