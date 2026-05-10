@@ -61,12 +61,12 @@ const sample: ErDiagramIR = {
 }
 
 describe('ER ASCII rank layout', () => {
-  it('places supertypes before subtypes and relationship targets after sources', () => {
+  it('places subtypes before supertypes and relationship targets after sources', () => {
     const ranked = rankEntities(sample, buildEntityBoxes(sample))
     const byId = Object.fromEntries(ranked.map(box => [box.id, box]))
 
-    expect(byId.PERSON.rank).toBeLessThan(byId.CUSTOMER.rank)
-    expect(byId.PERSON.rank).toBeLessThan(byId.DELIVERER.rank)
+    expect(byId.CUSTOMER.rank).toBeLessThan(byId.PERSON.rank)
+    expect(byId.DELIVERER.rank).toBeLessThan(byId.PERSON.rank)
     expect(byId.CUSTOMER.rank).toBeLessThanOrEqual(byId.ORDER.rank)
     expect(byId.ORDER.rank).toBeLessThanOrEqual(byId['LINE-ITEM'].rank)
   })

@@ -387,6 +387,10 @@ sequenceDiagram
 })
 
 describe('er ascii rendering', () => {
+  function firstLineContaining(text: string, needle: string) {
+    return text.split('\n').findIndex(line => line.includes(needle))
+  }
+
   it('renders entities, attributes, and relationship labels', () => {
     const text = renderToAscii(`
 erDiagram
@@ -408,6 +412,31 @@ erDiagram
     expect(text).toContain('foreign key')
     expect(text).toContain('│')
     expect(text).toContain('○╟')
+  })
+
+  it('matches SVG inheritance rank direction for subtypes above supertypes', () => {
+    const text = renderToAscii(`
+erDiagram
+  PERSON {
+    string phone "phone number"
+  }
+  CUSTOMER inherit PERSON
+  DELIVERER inherit PERSON
+  CUSTOMER ||--o{ ORDER : places
+    `)
+
+    const customerLine = firstLineContaining(text, 'CUSTOMER')
+    const delivererLine = firstLineContaining(text, 'DELIVERER')
+    const personLine = firstLineContaining(text, 'PERSON')
+    const orderLine = firstLineContaining(text, 'ORDER')
+
+    expect(customerLine).toBeGreaterThanOrEqual(0)
+    expect(delivererLine).toBeGreaterThanOrEqual(0)
+    expect(personLine).toBeGreaterThanOrEqual(0)
+    expect(orderLine).toBeGreaterThanOrEqual(0)
+    expect(customerLine).toBeLessThan(personLine)
+    expect(delivererLine).toBeLessThan(personLine)
+    expect(customerLine).toBeLessThan(orderLine)
   })
 
   it('keeps complex ER diagrams compact and avoids marker-line collisions', () => {
@@ -437,7 +466,6 @@ erDiagram
     expect(text).toContain('ISA')
     expect(text).toContain('○╟')
     expect(text).toContain('╟')
-    expect(text).toContain('╢')
     expect(text).toMatch(/[╌┆]/)
     expect(text).toMatch(/[─│┼┬┴├┤]/)
     expect(text).not.toContain('CUSTOMER ||--o{ ORDER : places')

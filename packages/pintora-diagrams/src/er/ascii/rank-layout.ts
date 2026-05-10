@@ -15,7 +15,7 @@ export function rankEntities(ir: ErDiagramIR, boxes: ErAsciiEntityBox[]) {
   }
 
   for (let i = 0; i < boxes.length; i++) {
-    ir.inheritances.forEach(inh => relax(inh.sup, inh.sub))
+    ir.inheritances.forEach(inh => relax(inh.sub, inh.sup))
     ir.relationships.forEach(rel => relax(rel.entityA, rel.entityB))
   }
 
