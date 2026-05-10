@@ -34,6 +34,7 @@ import { ErConf, getConf } from './config'
 import { Entity, ErDiagramIR, Identification, Relationship } from './db'
 import { BaseArtist } from '../util/base-artist'
 import type { EnhancedConf } from '../util/config'
+import { toErTextDiagramPlan } from './ascii'
 
 let conf: EnhancedConf<ErConf>
 
@@ -127,11 +128,21 @@ class ErArtist extends BaseArtist<ErDiagramIR, ErConf> {
       containerSize: opts?.containerSize,
       ...titleResult,
     })
-    return {
+    const graphicsIR: GraphicsIR = {
       mark: rootMark,
       width,
       height,
     }
+    graphicsIR.rendererData = {
+      ...(graphicsIR.rendererData || {}),
+      ascii: {
+        ...(graphicsIR.rendererData?.ascii || {}),
+        layout: ir,
+        plan: toErTextDiagramPlan(ir),
+      },
+    }
+
+    return graphicsIR
   }
 }
 const erArtist = new ErArtist()

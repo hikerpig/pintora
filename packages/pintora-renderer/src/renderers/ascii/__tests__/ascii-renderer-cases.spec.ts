@@ -385,3 +385,28 @@ sequenceDiagram
     expect(dividerIndex).toBeGreaterThan(loopBottomIndex)
   })
 })
+
+describe('er ascii rendering', () => {
+  it('renders entities, attributes, and relationship labels', () => {
+    const text = renderToAscii(`
+erDiagram
+  artists {
+    INTEGER ArtistId PK
+    NVARCHAR Name
+  }
+  albums {
+    INTEGER AlbumId PK
+    INTEGER ArtistId FK
+  }
+  artists ||--o{ albums : "foreign key"
+    `)
+
+    expect(text).toContain('artists')
+    expect(text).toContain('albums')
+    expect(text).toContain('PK INTEGER ArtistId')
+    expect(text).toContain('FK INTEGER ArtistId')
+    expect(text).toContain('foreign key')
+    expect(text).toContain('||')
+    expect(text).toContain('o{')
+  })
+})
