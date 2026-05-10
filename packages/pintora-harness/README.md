@@ -5,7 +5,10 @@
 ### Individual Steps
 
 - `pintora-harness render-svg --case er.relationship-spacing-01 --out artifacts/harness/dev/render.svg`
+- `pintora-harness render-ascii --case er.relationship-spacing-01 --out-dir artifacts/harness/dev`
 - `pintora-harness inspect-svg --in artifacts/harness/dev/render.svg --case er.relationship-spacing-01 --out-dir artifacts/harness/dev`
+- `pintora-harness inspect-ascii --in artifacts/harness/dev/render.txt --plan artifacts/harness/dev/plan.json --out-dir artifacts/harness/dev`
+- `pintora-harness render-ascii-preview --in artifacts/harness/dev/render.txt --out artifacts/harness/dev/ascii-preview.svg`
 - `pintora-harness capture-browser --case er.relationship-spacing-01 --out-dir artifacts/harness/dev`
 - `pintora-harness capture-browser --input ./tmp/case.pintora --out-dir artifacts/harness/dev --base-url http://localhost:3001/demo/preview/ --viewport 1440x960`
 - `pintora-harness summarize-case --artifacts artifacts/harness/dev --out artifacts/harness/dev/summary.json`
@@ -27,6 +30,11 @@
 - `render.svg`
 - `metrics.json`
 - `findings.json`
+- `render.txt`
+- `plan.json`
+- `ascii-metrics.json`
+- `ascii-findings.json`
+- `ascii-preview.svg`
 
 ### Browser Capture
 

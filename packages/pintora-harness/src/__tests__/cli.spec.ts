@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-require-imports */
 describe('pintora-harness cli shell', () => {
   const originalArgv = process.argv.slice()
   const originalExitCode = process.exitCode
@@ -73,6 +74,112 @@ describe('pintora-harness cli shell', () => {
       packDir: '/tmp/harness-case/review-pack-custom',
     })
     expect(process.exitCode).toBe(0)
+  })
+
+  it('dispatches render-ascii to the ascii renderer', async () => {
+    const mockRunHarnessRenderAscii = jest.fn(async () => ({
+      status: 'ok',
+      diagramType: 'er',
+      artifacts: ['render.txt', 'plan.json'],
+    }))
+
+    process.argv = [
+      'node',
+      'pintora-harness',
+      'render-ascii',
+      '--case',
+      'er.relationship-spacing-01',
+      '--out-dir',
+      '/tmp/ascii',
+    ]
+
+    jest.mock('../rendering/render-ascii', () => ({
+      runHarnessRenderAscii: mockRunHarnessRenderAscii,
+    }))
+
+    jest.isolateModules(() => {
+      require('../cli')
+    })
+
+    await new Promise(resolve => setImmediate(resolve))
+
+    expect(mockRunHarnessRenderAscii).toHaveBeenCalledWith({
+      cwd: process.cwd(),
+      caseId: 'er.relationship-spacing-01',
+      inputFile: undefined,
+      outDir: '/tmp/ascii',
+    })
+    expect(process.exitCode).toBeUndefined()
+  })
+
+  it('dispatches inspect-ascii to the ascii inspector', async () => {
+    const mockRunHarnessInspectAscii = jest.fn(async () => ({
+      status: 'suspicious',
+      findingCount: 1,
+      artifacts: ['ascii-metrics.json', 'ascii-findings.json'],
+    }))
+
+    process.argv = [
+      'node',
+      'pintora-harness',
+      'inspect-ascii',
+      '--in',
+      '/tmp/ascii/render.txt',
+      '--plan',
+      '/tmp/ascii/plan.json',
+      '--out-dir',
+      '/tmp/ascii',
+    ]
+
+    jest.mock('../inspection/inspect-ascii', () => ({
+      runHarnessInspectAscii: mockRunHarnessInspectAscii,
+    }))
+
+    jest.isolateModules(() => {
+      require('../cli')
+    })
+
+    await new Promise(resolve => setImmediate(resolve))
+
+    expect(mockRunHarnessInspectAscii).toHaveBeenCalledWith({
+      textFile: '/tmp/ascii/render.txt',
+      planFile: '/tmp/ascii/plan.json',
+      outDir: '/tmp/ascii',
+    })
+    expect(process.exitCode).toBe(10)
+  })
+
+  it('dispatches render-ascii-preview to the svg preview renderer', async () => {
+    const mockRunHarnessRenderAsciiPreview = jest.fn(async () => ({
+      status: 'ok',
+      artifact: 'ascii-preview.svg',
+    }))
+
+    process.argv = [
+      'node',
+      'pintora-harness',
+      'render-ascii-preview',
+      '--in',
+      '/tmp/ascii/render.txt',
+      '--out',
+      '/tmp/ascii/ascii-preview.svg',
+    ]
+
+    jest.mock('../rendering/render-ascii-preview', () => ({
+      runHarnessRenderAsciiPreview: mockRunHarnessRenderAsciiPreview,
+    }))
+
+    jest.isolateModules(() => {
+      require('../cli')
+    })
+
+    await new Promise(resolve => setImmediate(resolve))
+
+    expect(mockRunHarnessRenderAsciiPreview).toHaveBeenCalledWith({
+      textFile: '/tmp/ascii/render.txt',
+      outFile: '/tmp/ascii/ascii-preview.svg',
+    })
+    expect(process.exitCode).toBeUndefined()
   })
 
   it('dispatches apply-review to the ingestion runner', async () => {

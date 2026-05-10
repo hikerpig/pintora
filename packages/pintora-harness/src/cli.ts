@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-require-imports */
 import consola from 'consola'
 import yargs from 'yargs'
 import { hideBin } from 'yargs/helpers'
@@ -14,10 +15,27 @@ type RenderSvgArgs = {
   out: string
 }
 
+type RenderAsciiArgs = {
+  case?: string
+  input?: string
+  'out-dir': string
+}
+
 type InspectSvgArgs = {
   in: string
   case?: string
   'out-dir': string
+}
+
+type InspectAsciiArgs = {
+  in: string
+  plan?: string
+  'out-dir': string
+}
+
+type RenderAsciiPreviewArgs = {
+  in: string
+  out: string
 }
 
 type CaptureBrowserArgs = {
@@ -78,6 +96,16 @@ const parser = yargs(hideBin(process.argv))
     },
     handler: handleRenderSvgCommand,
   })
+  .command<RenderAsciiArgs>({
+    command: 'render-ascii',
+    describe: 'Render a harness case or input file to ascii artifacts',
+    builder: {
+      case: { describe: 'Harness case id', type: 'string' },
+      input: { describe: 'Input file path', type: 'string' },
+      'out-dir': { describe: 'Output artifact directory', type: 'string', demandOption: true },
+    },
+    handler: handleRenderAsciiCommand,
+  })
   .command<InspectSvgArgs>({
     command: 'inspect-svg',
     describe: 'Inspect a rendered svg and emit harness artifacts',
@@ -87,6 +115,25 @@ const parser = yargs(hideBin(process.argv))
       'out-dir': { describe: 'Output artifact directory', type: 'string', demandOption: true },
     },
     handler: handleInspectSvgCommand,
+  })
+  .command<InspectAsciiArgs>({
+    command: 'inspect-ascii',
+    describe: 'Inspect rendered ascii text and emit harness artifacts',
+    builder: {
+      in: { describe: 'Input ascii text path', type: 'string', demandOption: true },
+      plan: { describe: 'Input TextDiagramPlan json path', type: 'string' },
+      'out-dir': { describe: 'Output artifact directory', type: 'string', demandOption: true },
+    },
+    handler: handleInspectAsciiCommand,
+  })
+  .command<RenderAsciiPreviewArgs>({
+    command: 'render-ascii-preview',
+    describe: 'Render ascii text to a deterministic svg preview',
+    builder: {
+      in: { describe: 'Input ascii text path', type: 'string', demandOption: true },
+      out: { describe: 'Output svg file path', type: 'string', demandOption: true },
+    },
+    handler: handleRenderAsciiPreviewCommand,
   })
   .command<CaptureBrowserArgs>({
     command: 'capture-browser',
@@ -186,6 +233,22 @@ async function handleRenderSvgCommand(args: RenderSvgArgs) {
   }
 }
 
+async function handleRenderAsciiCommand(args: RenderAsciiArgs) {
+  try {
+    const { runHarnessRenderAscii } = require('./rendering/render-ascii') as typeof import('./rendering/render-ascii')
+    const result = await runHarnessRenderAscii({
+      cwd: CWD,
+      caseId: args.case,
+      inputFile: args.input,
+      outDir: args['out-dir'],
+    })
+    process.stdout.write(`${JSON.stringify(result)}\n`)
+  } catch (error) {
+    consola.error(error)
+    process.exitCode = 1
+  }
+}
+
 async function handleInspectSvgCommand(args: InspectSvgArgs) {
   try {
     const { runHarnessInspectSvg } = await import('./inspection/inspect-svg')
@@ -197,6 +260,38 @@ async function handleInspectSvgCommand(args: InspectSvgArgs) {
     })
     process.stdout.write(`${JSON.stringify(result)}\n`)
     process.exitCode = statusToExitCode(result.status)
+  } catch (error) {
+    consola.error(error)
+    process.exitCode = 1
+  }
+}
+
+async function handleInspectAsciiCommand(args: InspectAsciiArgs) {
+  try {
+    const { runHarnessInspectAscii } =
+      require('./inspection/inspect-ascii') as typeof import('./inspection/inspect-ascii')
+    const result = await runHarnessInspectAscii({
+      textFile: args.in,
+      planFile: args.plan,
+      outDir: args['out-dir'],
+    })
+    process.stdout.write(`${JSON.stringify(result)}\n`)
+    process.exitCode = statusToExitCode(result.status)
+  } catch (error) {
+    consola.error(error)
+    process.exitCode = 1
+  }
+}
+
+async function handleRenderAsciiPreviewCommand(args: RenderAsciiPreviewArgs) {
+  try {
+    const { runHarnessRenderAsciiPreview } =
+      require('./rendering/render-ascii-preview') as typeof import('./rendering/render-ascii-preview')
+    const result = await runHarnessRenderAsciiPreview({
+      textFile: args.in,
+      outFile: args.out,
+    })
+    process.stdout.write(`${JSON.stringify(result)}\n`)
   } catch (error) {
     consola.error(error)
     process.exitCode = 1

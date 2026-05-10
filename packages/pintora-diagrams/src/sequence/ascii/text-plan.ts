@@ -97,7 +97,9 @@ export function sequenceTextPlanToTextDiagramPlan(plan: SequenceTextPlan): TextD
 
     const leftCol = Math.min(from.centerCol, to.centerCol)
     const rightCol = Math.max(from.centerCol, to.centerCol)
-    ops.push(textOp(col(messageLabelStartCol(leftCol, rightCol, message.label)), row(message.labelRows[0]), message.label))
+    ops.push(
+      textOp(col(messageLabelStartCol(leftCol, rightCol, message.label)), row(message.labelRows[0]), message.label),
+    )
     ops.push(
       lineOp(
         { x: col(from.centerCol), y: row(message.arrowRow) },

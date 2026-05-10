@@ -41,7 +41,9 @@ describe('toSequenceTextDiagramPlan', () => {
     const source: SequenceAsciiRenderData = {
       meta: { direction: 'TB' },
       actors: [{ id: 'A', label: 'A' }],
-      events: [{ kind: 'message', index: 0, fromActorId: 'A', toActorId: 'A', label: 'self', style: 'solid', isSelf: true }],
+      events: [
+        { kind: 'message', index: 0, fromActorId: 'A', toActorId: 'A', label: 'self', style: 'solid', isSelf: true },
+      ],
       activations: [],
       spans: [],
     }
