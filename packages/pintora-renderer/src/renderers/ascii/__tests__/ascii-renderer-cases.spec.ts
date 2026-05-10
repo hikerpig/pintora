@@ -409,4 +409,31 @@ erDiagram
     expect(text).toContain('||')
     expect(text).toContain('o{')
   })
+
+  it('keeps complex ER diagrams compact and avoids marker-line collisions', () => {
+    const text = renderToAscii(`
+erDiagram
+  PERSON {
+    string phone "phone number"
+  }
+  CUSTOMER inherit PERSON
+  DELIVERER inherit PERSON
+  CUSTOMER ||--o{ ORDER : places
+  ORDER ||--|{ LINE-ITEM : contains
+  CUSTOMER }|..|{ DELIVERY-ADDRESS : uses
+  ORDER {
+    int order_number PK
+    string adress "delivery address"
+  }
+  DELIVERER ||--o{ DELIVERY : completes
+    `)
+
+    const maxLineWidth = Math.max(...text.split('\n').map(line => Array.from(line).length))
+    expect(maxLineWidth).toBeLessThanOrEqual(110)
+    expect(text).toContain('CUSTOMER ||--o{ ORDER : places')
+    expect(text).toContain('CUSTOMER }|..|{ DELIVERY-ADDRESS : uses')
+    expect(text).toContain('CUSTOMER inherit PERSON')
+    expect(text).not.toMatch(/[─╌][|}o][|{]/)
+    expect(text).not.toMatch(/[|}o][|{][─╌]/)
+  })
 })
