@@ -28,7 +28,7 @@ Create `packages/pintora-diagrams/src/<type>/parser.ne`. Use `packages/pintora-d
 ### 3. Compile the grammar
 
 ```bash
-pnpm --filter @pintora/diagrams build:grammar
+pnpm --filter @pintora/diagrams gen-parser
 ```
 
 This produces `parser.ts` alongside `parser.ne`. Commit both.
