@@ -8,6 +8,8 @@
     "./demo"
   ],
   "scripts": {
+    "ai:link": "node scripts/ai-sync.mjs link",
+    "ai:lint": "node scripts/ai-lint.mjs",
     "build-site": "sh ./scripts/build-site.sh",
     "ci:coverage": "pnpm exec jest --coverage --ci",
     "clean": "rimraf \"packages/**/lib\"",

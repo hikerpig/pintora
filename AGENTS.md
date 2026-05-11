@@ -1,197 +1,39 @@
-# Pintora Architecture Overview
+# Pintora — Agent Map
 
-## Project Overview
+Pintora is a TypeScript text-to-diagram library for browser and Node. The repo is a monorepo managed with pnpm workspaces and Turbo.
 
-Pintora is an extensible JavaScript text-to-diagram library that supports both browser and Node.js environments. The project adopts a monorepo architecture and uses pnpm workspaces to manage multiple related packages.
+## Where to look
 
-### Core Architecture
+| Task | Go to |
+|------|-------|
+| Edit code inside a package | `packages/<pkg>/AGENTS.md` |
+| Add a new diagram type (parser + artist + config) | [`.ai/skills/add-new-diagram/SKILL.md`](.ai/skills/add-new-diagram/SKILL.md) |
+| Cross-package architecture, data flow, terminology | [`.ai/docs/README.md`](.ai/docs/README.md) |
+| Why a past decision was made | [`.ai/docs/adr/README.md`](.ai/docs/adr/README.md) |
+| User-facing documentation | `website/docs/` |
 
-- **pintora-core**: Core engine providing diagram registration, theme management, and configuration system
-- **pintora-diagrams**: Implementation of various diagram types (sequence diagrams, ER diagrams, component diagrams, etc.)
-- **pintora-renderer**: Rendering engine supporting SVG and Canvas output
-- **pintora-standalone**: Standalone version integrating all functionalities
-- **pintora-cli**: Command line tool
-- **pintora-target-wintercg**: WinterCG compatible version
+## Repo quick-facts
 
-### Supported Diagram Types
+- 8 packages: `pintora-core` (registry + theme + config), `pintora-diagrams` (diagram implementations), `pintora-renderer`, `pintora-standalone`, `pintora-cli`, `pintora-target-wintercg`, `development-kit`, `test-shared`.
+- Internal dependencies use pnpm workspace protocol.
+- Diagram types: sequence, er, component, activity, mindmap, gantt, dot, class, usecase.
 
-- Sequence Diagram
-- ER Diagram (Entity Relationship Diagram)
-- Component Diagram
-- Activity Diagram
-- Mind Map
-- Gantt Diagram
-- DOT Diagram
-- Class Diagram
-
-## Build and Development Commands
-
-### Core Commands
+## Commands
 
 ```bash
-# Install dependencies
 pnpm install
-
-# Compile all packages
-pnpm compile
-
-# Compile browser version (excluding CLI)
-pnpm compile:browser
-
-# Run tests
-pnpm test
-
-# Run tests and generate coverage report
-pnpm coverage
-
-# Format code
-pnpm format
-
-# Check code format
-pnpm format:check
-
-# Lint code
-pnpm lint
-
-# Development in watch mode
-pnpm watch
-
-# Clean build files
-pnpm clean
+pnpm compile        # build all packages
+pnpm test           # Jest test suite
+pnpm watch          # turbo watch mode
+pnpm demo:dev       # local demo site
+pnpm website:dev    # local docs site
+pnpm ai:link        # symlink .ai/skills into tool dirs
+pnpm ai:lint        # validate .ai/ and AGENTS.md links
 ```
 
-### Development Environment
+## Hard rules
 
-```bash
-# Start demo site
-pnpm demo:dev
-
-# Start documentation site
-pnpm website:dev
-
-# Build sites
-pnpm build-site
-```
-
-### Testing Related
-
-```bash
-# Run all tests
-pnpm test
-
-# Generate coverage report
-pnpm coverage
-
-# CI environment tests
-pnpm ci:coverage
-
-# Upload coverage report
-pnpm upload-coverage
-```
-
-## Code Style
-
-### ESLint Configuration
-
-- Using TypeScript ESLint ruleset
-- Enabled Prettier integration
-- Enabled unused import detection
-
-### Formatting Rules
-
-- Using Prettier for code formatting
-- Supporting TypeScript and JavaScript files
-- Integrated with lint-staged for automatic formatting and fixing before commits
-
-- Using TypeScript strict mode
-- Following modular architecture, each diagram type is independent
-- Using clear file naming, such as `artist.ts`, `parser.ts`, `config.ts`
-
-## Testing Framework
-
-### Jest Configuration
-
-- Using Jest as the testing framework
-- Supporting TypeScript and JavaScript test files
-- Using esbuild-jest for fast transformation
-- Generating JUnit format test reports to `reports` directory
-
-### Testing Environment
-
-- **pintora-core**: Basic test configuration
-- **pintora-diagrams**: jsdom environment, supporting D3 library tests
-- **pintora-cli**: Basic test configuration
-- **pintora-standalone**: Basic test configuration
-
-### Test Coverage
-
-- Target coverage: 95%
-- Threshold: 5%
-- Using codecov for coverage reporting
-
-### Test File Patterns
-
-- Test file naming: `*.spec.ts`, `*.spec.js`, `*.test.ts`, `*.test.js`
-- Snapshot testing: Using Jest snapshot feature for regression testing
-
-## Security Considerations
-
-### Code Security
-
-- No environment variable files (.env)
-- Using TypeScript strict mode to reduce runtime errors
-- Regular dependency updates (configured with renovate.json)
-
-### Dependency Management
-
-- Using pnpm for dependency management, providing better consistency
-- Regular security scans and dependency updates
-- Using workspace protocol to manage internal dependencies
-
-### Deployment Security
-
-- Supporting Vercel deployment
-- Using HTTPS certificates (vite-plugin-mkcert)
-- Supporting PWA functionality
-
-## Configuration Management
-
-### TypeScript Configuration
-
-- Target: ES2019
-- Module system: ES6
-- Strict mode enabled
-- Declaration file generation supported
-- Sourcemap enabled
-
-### Build Configuration
-
-- Using Turbo for parallel build optimization
-- Supporting watch mode development
-- Output directories: `lib/`, `dist/`, `types/`
-
-### Package Management
-
-- Using pnpm workspaces to manage multiple packages
-- Internal packages using workspace protocol
-- Supporting changesets for version management
-
-### Environment Configuration
-
-- Supporting development, testing, and production environments
-- Using Vite for development server and build
-- Supporting hot reloading and module replacement
-
-## Development Recommendations
-
-1. **Modular Development**: Each diagram type should remain independent and follow unified interface specifications
-2. **Test-Driven**: Write tests for new features and maintain high coverage
-3. **Type Safety**: Make full use of TypeScript's type system
-4. **Performance Optimization**: Pay attention to rendering performance, especially when handling large diagrams
-5. **Compatibility**: Ensure code works properly in both browser and Node.js environments
-
-## Related Resources
-
-- [Online Documentation](http://pintorajs.vercel.app/docs/intro/)
-- [Online Editor](http://pintorajs.vercel.app/demo/live-editor/)
-- [VSCode Extension](https://marketplace.visualstudio.com/items?itemName=hikerpig.pintora-vscode)
+- Before editing inside a package, read its `AGENTS.md`. Do not infer conventions from one example file.
+- When adding a diagram, follow the `add-new-diagram` skill end-to-end; skipping steps misses registration, snapshots, or standalone wiring.
+- Snapshot diffs require human review. Never run Jest with `--updateSnapshot` blindly.
+- pnpm only. Do not introduce npm or yarn lockfiles.
