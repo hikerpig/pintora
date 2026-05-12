@@ -40,6 +40,13 @@ export type SequenceDiagramBounds = {
   stopy: number
 }
 
+export type SequenceActorLayoutAttrs = {
+  x: number
+  y?: number
+  width: number
+  height?: number
+}
+
 export type MessageModel = {
   width: number
   height: number
@@ -69,11 +76,12 @@ export type NoteModel = {
 }
 
 export type SequenceArtistLayoutState = {
-  actorAttrsMap: Map<string, { x: number; width: number }>
+  actorAttrsMap: Map<string, SequenceActorLayoutAttrs>
   msgModelMap: Map<string, MessageModel>
   noteModelMap: Map<string, NoteModel>
   dividerMap: Map<string, MessageModel>
   activations: ActivationData[]
   completedActivations: ActivationData[]
   loops: LoopModel[]
+  contentBounds?: SequenceDiagramBounds
 }

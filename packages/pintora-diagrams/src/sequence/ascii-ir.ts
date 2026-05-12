@@ -15,6 +15,7 @@ export type SequenceAsciiIR = {
   spans: SequenceLayoutResult['spans']
 }
 
+/** @deprecated Prefer toSequenceSnapshotTextDiagramPlan */
 export function toSequenceAsciiIR(layoutResult: SequenceLayoutResult): SequenceAsciiIR {
   return {
     meta: {

@@ -5,8 +5,16 @@ type MessageStyle = 'solid' | 'dashed' | 'open' | 'open-dashed'
 type NotePlacement = 'left' | 'right' | 'over'
 type SpanKind = 'loop' | 'opt' | 'alt' | 'par'
 
+export type SequenceSnapshotBounds = {
+  startX: number
+  stopX: number
+  startY: number
+  stopY: number
+}
+
 export type SequenceLayoutSnapshot = {
   title?: string
+  contentBounds: SequenceSnapshotBounds
   actors: Array<{
     id: string
     label: string
@@ -15,6 +23,7 @@ export type SequenceLayoutSnapshot = {
     centerX: number
     leftX: number
     rightX: number
+    headerBounds: SequenceSnapshotBounds
   }>
   events: Array<
     | {
@@ -25,7 +34,7 @@ export type SequenceLayoutSnapshot = {
         label: string
         style: MessageStyle
         isSelf: boolean
-        bounds: { startX: number; stopX: number; startY: number; stopY: number }
+        bounds: SequenceSnapshotBounds
       }
     | {
         kind: 'note'
@@ -33,13 +42,13 @@ export type SequenceLayoutSnapshot = {
         anchorActorIds: string[]
         placement: NotePlacement
         text: string
-        bounds: { startX: number; stopX: number; startY: number; stopY: number }
+        bounds: SequenceSnapshotBounds
       }
     | {
         kind: 'divider'
         index: number
         text: string
-        bounds: { startX: number; stopX: number; startY: number; stopY: number }
+        bounds: SequenceSnapshotBounds
       }
   >
   activations: Array<{
@@ -47,13 +56,15 @@ export type SequenceLayoutSnapshot = {
     startEventIndex: number
     endEventIndex: number
     level: number
+    bounds: SequenceSnapshotBounds
   }>
   spans: Array<{
     kind: SpanKind
     startEventIndex: number
     endEventIndex: number
     label: string
-    sections?: Array<{ eventIndex: number; label: string }>
+    bounds: SequenceSnapshotBounds
+    sections?: Array<{ eventIndex: number; label: string; y?: number }>
   }>
 }
 
@@ -128,16 +139,27 @@ function isSpanEnd(type: LINETYPE | undefined) {
   )
 }
 
-function findEventIndexAtOrAfterMessageIndex(messageIndexToEventIndex: Map<number, number>, messageIndex: number) {
-  const sortedMessageIndexes = Array.from(messageIndexToEventIndex.keys()).sort((a, b) => a - b)
-  for (const index of sortedMessageIndexes) {
+function buildSortedMessageIndexes(messageIndexToEventIndex: Map<number, number>) {
+  const sorted = Array.from(messageIndexToEventIndex.keys()).sort((a, b) => a - b)
+  return { sorted, reversed: sorted.slice().reverse() }
+}
+
+function findEventIndexAtOrAfterMessageIndex(
+  messageIndexToEventIndex: Map<number, number>,
+  messageIndex: number,
+  sorted: number[],
+) {
+  for (const index of sorted) {
     if (index >= messageIndex) return messageIndexToEventIndex.get(index)
   }
 }
 
-function findEventIndexAtOrBeforeMessageIndex(messageIndexToEventIndex: Map<number, number>, messageIndex: number) {
-  const sortedMessageIndexes = Array.from(messageIndexToEventIndex.keys()).sort((a, b) => b - a)
-  for (const index of sortedMessageIndexes) {
+function findEventIndexAtOrBeforeMessageIndex(
+  messageIndexToEventIndex: Map<number, number>,
+  messageIndex: number,
+  reversed: number[],
+) {
+  for (const index of reversed) {
     if (index <= messageIndex) return messageIndexToEventIndex.get(index)
   }
 }
@@ -146,8 +168,33 @@ function stripGroupLabel(label: string) {
   return (label || '').replace(/^\[(.*)\]$/, '$1')
 }
 
+function emptyBounds(): SequenceSnapshotBounds {
+  return { startX: 0, stopX: 0, startY: 0, stopY: 0 }
+}
+
+function toSnapshotBounds(bounds: {
+  startx: number
+  stopx: number
+  starty: number
+  stopy: number
+}): SequenceSnapshotBounds {
+  return {
+    startX: bounds.startx,
+    stopX: bounds.stopx,
+    startY: bounds.starty,
+    stopY: bounds.stopy,
+  }
+}
+
 function buildSpanSnapshots(messages: Message[], messageIndexToEventIndex: Map<number, number>) {
-  const spans: SequenceLayoutSnapshot['spans'] = []
+  const { sorted, reversed } = buildSortedMessageIndexes(messageIndexToEventIndex)
+  const spans: Array<{
+    kind: SpanKind
+    startEventIndex: number
+    endEventIndex: number
+    label: string
+    sections?: Array<{ eventIndex: number; label: string }>
+  }> = []
   const stack: Array<{
     kind: SpanKind
     label: string
@@ -168,7 +215,7 @@ function buildSpanSnapshots(messages: Message[], messageIndexToEventIndex: Map<n
 
     if (message.type === LINETYPE.ALT_ELSE || message.type === LINETYPE.PAR_AND) {
       const current = stack[stack.length - 1]
-      const eventIndex = findEventIndexAtOrAfterMessageIndex(messageIndexToEventIndex, messageIndex + 1)
+      const eventIndex = findEventIndexAtOrAfterMessageIndex(messageIndexToEventIndex, messageIndex + 1, sorted)
       if (current && eventIndex != null) {
         current.sections.push({
           eventIndex,
@@ -185,8 +232,9 @@ function buildSpanSnapshots(messages: Message[], messageIndexToEventIndex: Map<n
       const startEventIndex = findEventIndexAtOrAfterMessageIndex(
         messageIndexToEventIndex,
         current.startMessageIndex + 1,
+        sorted,
       )
-      const endEventIndex = findEventIndexAtOrBeforeMessageIndex(messageIndexToEventIndex, messageIndex - 1)
+      const endEventIndex = findEventIndexAtOrBeforeMessageIndex(messageIndexToEventIndex, messageIndex - 1, reversed)
 
       if (startEventIndex == null || endEventIndex == null) return
       spans.push({
@@ -217,6 +265,12 @@ export function captureSequenceLayoutSnapshot(
       centerX: attrs.x + attrs.width / 2,
       leftX: attrs.x,
       rightX: attrs.x + attrs.width,
+      headerBounds: {
+        startX: attrs.x,
+        stopX: attrs.x + attrs.width,
+        startY: attrs.y ?? 0,
+        stopY: (attrs.y ?? 0) + (attrs.height ?? 0),
+      },
     }
   })
 
@@ -278,13 +332,35 @@ export function captureSequenceLayoutSnapshot(
       startEventIndex,
       endEventIndex: Math.max(startEventIndex, endEventIndex),
       level: activation.level ?? 0,
+      bounds: {
+        startX: activation.startx,
+        stopX: activation.stopx,
+        startY: activation.starty,
+        stopY: activation.stopy,
+      },
     }
   })
 
-  const spans = buildSpanSnapshots(ir.messages, messageIndexToEventIndex)
+  const loopModels = state.loops
+  const spans = buildSpanSnapshots(ir.messages, messageIndexToEventIndex).map((span, index) => {
+    const loop = loopModels[index]
+    const sections = span.sections?.map(section => {
+      const sectionModel = loop?.sections?.find(item => stripGroupLabel(item.message.text || '') === section.label)
+      return {
+        ...section,
+        y: sectionModel?.y ?? events[section.eventIndex]?.bounds.startY ?? 0,
+      }
+    })
+    return {
+      ...span,
+      bounds: loop ? toSnapshotBounds(loop) : emptyBounds(),
+      sections,
+    }
+  })
 
   return {
     title: ir.title || undefined,
+    contentBounds: state.contentBounds ? toSnapshotBounds(state.contentBounds) : emptyBounds(),
     actors,
     events,
     activations,

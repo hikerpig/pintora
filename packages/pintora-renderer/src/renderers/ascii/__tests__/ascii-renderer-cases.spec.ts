@@ -221,6 +221,30 @@ is possible
     expect(dividerIndex).toBeGreaterThan(secondNoteLineIndex)
   })
 
+  it('extends divider rules across actor columns after multiline notes', () => {
+    const text = renderToAscii(`
+sequenceDiagram
+  User->>Pintora: render this
+  @start_note right of User
+  multiline note
+  is possible
+  @end_note
+  == Divider ==
+    `)
+
+    const lines = text.split('\n')
+    const actorLine = lines.find(line => line.includes('User') && line.includes('Pintora'))!
+    const dividerLine = lines.find(line => line.includes('Divider'))!
+    const userCenter = actorLine.indexOf('User') + Math.floor('User'.length / 2)
+    const pintoraCenter = actorLine.indexOf('Pintora') + Math.floor('Pintora'.length / 2)
+    const ruleCols = Array.from(dividerLine)
+      .map((char, index) => (char === '─' ? index : -1))
+      .filter(index => index >= 0)
+
+    expect(Math.min(...ruleCols)).toBeLessThanOrEqual(userCenter)
+    expect(Math.max(...ruleCols)).toBeGreaterThanOrEqual(pintoraCenter)
+  })
+
   it('renders self-message loops from planned template geometry', () => {
     const text = renderToAscii(`
 sequenceDiagram

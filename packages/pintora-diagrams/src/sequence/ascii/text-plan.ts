@@ -1,5 +1,7 @@
 import type { TextDiagramArrowHead, TextDiagramOp, TextDiagramPlan } from '@pintora/core'
+import type { SequenceLayoutSnapshot } from '../layout-snapshot'
 import { buildSequenceTextPlan, messageLabelStartCol, textLinesOf, widthOf } from './plan'
+import { buildSequenceTextPlanFromSnapshot } from './snapshot-plan'
 import type { SequenceAsciiRenderData, SequenceTextPlan } from './types'
 
 function messageArrowHead(style: SequenceTextPlan['messages'][number]['style']): TextDiagramArrowHead {
@@ -156,4 +158,8 @@ export function sequenceTextPlanToTextDiagramPlan(plan: SequenceTextPlan): TextD
 
 export function toSequenceTextDiagramPlan(source: SequenceAsciiRenderData): TextDiagramPlan {
   return sequenceTextPlanToTextDiagramPlan(buildSequenceTextPlan(source))
+}
+
+export function toSequenceSnapshotTextDiagramPlan(snapshot: SequenceLayoutSnapshot): TextDiagramPlan {
+  return buildSequenceTextPlanFromSnapshot(snapshot)
 }

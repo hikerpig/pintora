@@ -30,13 +30,12 @@ import { getTextDimensionsInPresicion } from '../util/text'
 import { drawArrowTo, drawCrossTo, getBaseNote, getBaseText, makeMark } from './artist-util'
 import { drawDivider } from './artist/divider'
 import { drawLoopTo } from './artist/loop'
-import { ActivationData, LoopModel, MessageModel, SequenceDiagramBounds } from './artist/type'
+import { ActivationData, LoopModel, MessageModel, SequenceActorLayoutAttrs, SequenceDiagramBounds } from './artist/type'
 import { SequenceConf, getConf } from './config'
 import { LINETYPE, Message, PLACEMENT, ParticipantBox, SequenceDiagramIR, WrappedText, db } from './db'
 import { captureSequenceLayoutSnapshot } from './layout-snapshot'
 import { buildSequenceLayoutResult } from './layout-result'
-import { toSequenceAsciiIR } from './ascii-ir'
-import { toSequenceTextDiagramPlan } from './ascii/text-plan'
+import { toSequenceSnapshotTextDiagramPlan } from './ascii/text-plan'
 import { getFontConfig } from '../util/font-config'
 import { BaseArtist } from '../util/base-artist'
 
@@ -133,7 +132,7 @@ class SequenceArtist extends BaseArtist<SequenceDiagramIR, SequenceConf> {
     // Draw the messages/signals
     let sequenceIndex = 1
     let eventIndex = 0
-    messages.forEach(function (msg, messageIndex) {
+    messages.forEach(function (msg) {
       let loopModel, noteModel, msgModel
 
       switch (msg.type) {
@@ -289,23 +288,24 @@ class SequenceArtist extends BaseArtist<SequenceDiagramIR, SequenceConf> {
     }
 
     const snapshot = captureSequenceLayoutSnapshot(ir, {
-      actorAttrsMap: model.actorAttrsMap as Map<string, { x: number; width: number }>,
+      actorAttrsMap: model.actorAttrsMap as Map<string, SequenceActorLayoutAttrs>,
       msgModelMap: model.msgModelMap,
       noteModelMap: model.noteModelMap,
       dividerMap: model.dividerMap,
       activations: model.activations,
       completedActivations: model.completedActivations,
       loops: model.loops,
+      contentBounds: box,
     })
-    const layoutResult = buildSequenceLayoutResult(snapshot)
-    const sequenceAsciiIR = toSequenceAsciiIR(layoutResult)
-    const textDiagramPlan = toSequenceTextDiagramPlan(sequenceAsciiIR)
+    const legacyLayout = buildSequenceLayoutResult(snapshot)
+    const textDiagramPlan = toSequenceSnapshotTextDiagramPlan(snapshot)
 
     graphicsIR.rendererData = {
       ...(graphicsIR.rendererData || {}),
       ascii: {
         ...(graphicsIR.rendererData?.ascii || {}),
-        layout: layoutResult,
+        layout: snapshot,
+        legacyLayout,
         plan: textDiagramPlan,
       },
     }

@@ -82,7 +82,21 @@ export function buildSequenceLayoutResult(snapshot: SequenceLayoutSnapshot): Seq
         text: event.text,
       }
     }),
-    activations: snapshot.activations,
-    spans: snapshot.spans,
+    activations: snapshot.activations.map(activation => ({
+      actorId: activation.actorId,
+      startEventIndex: activation.startEventIndex,
+      endEventIndex: activation.endEventIndex,
+      level: activation.level,
+    })),
+    spans: snapshot.spans.map(span => ({
+      kind: span.kind,
+      startEventIndex: span.startEventIndex,
+      endEventIndex: span.endEventIndex,
+      label: span.label,
+      sections: span.sections?.map(section => ({
+        eventIndex: section.eventIndex,
+        label: section.label,
+      })),
+    })),
   }
 }
