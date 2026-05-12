@@ -243,7 +243,7 @@ exports[`er-artist can parse and handle bindClass 1`] = `
         "title": "",
       },
       "plan": {
-        "height": 5,
+        "height": 6,
         "ops": [
           {
             "height": 5,
@@ -261,11 +261,11 @@ exports[`er-artist can parse and handle bindClass 1`] = `
           },
           {
             "from": {
-              "x": 1,
+              "x": 0,
               "y": 2,
             },
             "to": {
-              "x": 10,
+              "x": 11,
               "y": 2,
             },
             "type": "line",
@@ -292,11 +292,11 @@ exports[`er-artist can parse and handle bindClass 1`] = `
           },
           {
             "from": {
-              "x": 19,
+              "x": 18,
               "y": 2,
             },
             "to": {
-              "x": 31,
+              "x": 32,
               "y": 2,
             },
             "type": "line",
@@ -308,7 +308,7 @@ exports[`er-artist can parse and handle bindClass 1`] = `
             "y": 3,
           },
         ],
-        "width": 33,
+        "width": 34,
       },
     },
   },
@@ -847,167 +847,200 @@ exports[`er-artist will draw inheritance 1`] = `
         "title": "",
       },
       "plan": {
-        "height": 17,
+        "height": 24,
         "ops": [
           {
             "from": {
               "x": 18,
-              "y": 10,
+              "y": 6,
             },
             "stroke": "solid",
             "to": {
               "x": 18,
-              "y": 7,
+              "y": 9,
             },
             "type": "line",
           },
           {
             "from": {
               "x": 18,
-              "y": 7,
+              "y": 9,
             },
             "stroke": "solid",
             "to": {
-              "x": 27,
-              "y": 7,
+              "x": 18,
+              "y": 11,
             },
             "type": "line",
           },
           {
             "from": {
-              "x": 27,
-              "y": 7,
+              "x": 18,
+              "y": 11,
             },
             "stroke": "solid",
             "to": {
-              "x": 27,
-              "y": 6,
+              "x": 18,
+              "y": 12,
             },
             "type": "line",
           },
           {
-            "align": "center",
-            "text": "△",
+            "from": {
+              "x": 18,
+              "y": 12,
+            },
+            "stroke": "solid",
+            "to": {
+              "x": 18,
+              "y": 15,
+            },
+            "type": "line",
+          },
+          {
+            "from": {
+              "x": 18,
+              "y": 15,
+            },
+            "stroke": "solid",
+            "to": {
+              "x": 25,
+              "y": 15,
+            },
+            "type": "line",
+          },
+          {
+            "from": {
+              "x": 25,
+              "y": 15,
+            },
+            "stroke": "solid",
+            "to": {
+              "x": 25,
+              "y": 16,
+            },
+            "type": "line",
+          },
+          {
+            "text": "▽",
             "type": "text",
-            "x": 27,
-            "y": 6,
+            "x": 25,
+            "y": 16,
           },
           {
             "align": "center",
             "text": "ISA",
-            "type": "text",
-            "x": 27,
-            "y": 7,
-          },
-          {
-            "from": {
-              "x": 48,
-              "y": 10,
-            },
-            "stroke": "solid",
-            "to": {
-              "x": 48,
-              "y": 8,
-            },
-            "type": "line",
-          },
-          {
-            "from": {
-              "x": 48,
-              "y": 8,
-            },
-            "stroke": "solid",
-            "to": {
-              "x": 27,
-              "y": 8,
-            },
-            "type": "line",
-          },
-          {
-            "from": {
-              "x": 27,
-              "y": 8,
-            },
-            "stroke": "solid",
-            "to": {
-              "x": 27,
-              "y": 6,
-            },
-            "type": "line",
-          },
-          {
-            "align": "center",
-            "text": "△",
-            "type": "text",
-            "x": 27,
-            "y": 6,
-          },
-          {
-            "align": "center",
-            "text": "ISA",
-            "type": "text",
-            "x": 27,
-            "y": 8,
-          },
-          {
-            "height": 6,
-            "type": "rect",
-            "width": 23,
-            "x": 16,
-            "y": 0,
-          },
-          {
-            "align": "center",
-            "text": "person",
-            "type": "text",
-            "x": 27,
-            "y": 1,
-          },
-          {
-            "from": {
-              "x": 17,
-              "y": 2,
-            },
-            "to": {
-              "x": 37,
-              "y": 2,
-            },
-            "type": "line",
-          },
-          {
-            "text": "int age",
-            "type": "text",
-            "x": 18,
-            "y": 3,
-          },
-          {
-            "text": "string phone_number",
-            "type": "text",
-            "x": 18,
-            "y": 4,
-          },
-          {
-            "height": 6,
-            "type": "rect",
-            "width": 36,
-            "x": 0,
-            "y": 11,
-          },
-          {
-            "align": "center",
-            "text": "customer",
             "type": "text",
             "x": 18,
             "y": 12,
           },
           {
             "from": {
-              "x": 1,
-              "y": 13,
+              "x": 49,
+              "y": 5,
+            },
+            "stroke": "solid",
+            "to": {
+              "x": 49,
+              "y": 9,
+            },
+            "type": "line",
+          },
+          {
+            "from": {
+              "x": 49,
+              "y": 9,
+            },
+            "stroke": "solid",
+            "to": {
+              "x": 49,
+              "y": 11,
+            },
+            "type": "line",
+          },
+          {
+            "from": {
+              "x": 49,
+              "y": 11,
+            },
+            "stroke": "solid",
+            "to": {
+              "x": 49,
+              "y": 12,
+            },
+            "type": "line",
+          },
+          {
+            "from": {
+              "x": 49,
+              "y": 12,
+            },
+            "stroke": "solid",
+            "to": {
+              "x": 49,
+              "y": 15,
+            },
+            "type": "line",
+          },
+          {
+            "from": {
+              "x": 49,
+              "y": 15,
+            },
+            "stroke": "solid",
+            "to": {
+              "x": 42,
+              "y": 15,
+            },
+            "type": "line",
+          },
+          {
+            "from": {
+              "x": 42,
+              "y": 15,
+            },
+            "stroke": "solid",
+            "to": {
+              "x": 42,
+              "y": 16,
+            },
+            "type": "line",
+          },
+          {
+            "text": "▽",
+            "type": "text",
+            "x": 42,
+            "y": 16,
+          },
+          {
+            "align": "center",
+            "text": "ISA",
+            "type": "text",
+            "x": 49,
+            "y": 12,
+          },
+          {
+            "height": 6,
+            "type": "rect",
+            "width": 36,
+            "x": 0,
+            "y": 0,
+          },
+          {
+            "align": "center",
+            "text": "customer",
+            "type": "text",
+            "x": 18,
+            "y": 1,
+          },
+          {
+            "from": {
+              "x": 0,
+              "y": 2,
             },
             "to": {
-              "x": 34,
-              "y": 13,
+              "x": 35,
+              "y": 2,
             },
             "type": "line",
           },
@@ -1015,30 +1048,67 @@ exports[`er-artist will draw inheritance 1`] = `
             "text": "string address "deliver address"",
             "type": "text",
             "x": 2,
-            "y": 14,
+            "y": 3,
           },
           {
             "text": "PK string id",
             "type": "text",
             "x": 2,
-            "y": 15,
+            "y": 4,
           },
           {
             "height": 3,
             "type": "rect",
             "width": 13,
             "x": 42,
-            "y": 11,
+            "y": 2,
           },
           {
             "align": "center",
             "text": "deliverer",
             "type": "text",
             "x": 48,
-            "y": 12,
+            "y": 3,
+          },
+          {
+            "height": 6,
+            "type": "rect",
+            "width": 23,
+            "x": 22,
+            "y": 17,
+          },
+          {
+            "align": "center",
+            "text": "person",
+            "type": "text",
+            "x": 33,
+            "y": 18,
+          },
+          {
+            "from": {
+              "x": 22,
+              "y": 19,
+            },
+            "to": {
+              "x": 44,
+              "y": 19,
+            },
+            "type": "line",
+          },
+          {
+            "text": "int age",
+            "type": "text",
+            "x": 24,
+            "y": 20,
+          },
+          {
+            "text": "string phone_number",
+            "type": "text",
+            "x": 24,
+            "y": 21,
           },
         ],
-        "width": 55,
+        "width": 56,
       },
     },
   },

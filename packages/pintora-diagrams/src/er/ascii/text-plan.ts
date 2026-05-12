@@ -1,7 +1,6 @@
 import type { TextDiagramOp, TextDiagramPlan } from '@pintora/core'
-import { buildEntityBoxes } from './entity-layout'
-import { placeRankedEntities, rankEntities } from './rank-layout'
-import { attachRelationships, cardinalityMarker, relationshipStroke } from './relationship-layout'
+import { buildDagreErAsciiLayout } from './dagre-layout'
+import { cardinalityMarker, relationshipStroke } from './relationship-layout'
 import { lineOp, rectOp, textOp } from './text'
 import type { ErAsciiEntityBox, ErAsciiLayout } from './types'
 import type { ErDiagramIR } from '../db'
@@ -16,7 +15,7 @@ function pushEntity(ops: TextDiagramOp[], entity: ErAsciiEntityBox) {
   ops.push(rectOp(entity.left, entity.top, entity.width, entity.height))
   ops.push(textOp(entity.centerX, entity.top + 1, entity.id, 'center'))
   if (entity.attributes.length) {
-    ops.push(lineOp({ x: entity.left + 1, y: entity.top + 2 }, { x: entity.right - 1, y: entity.top + 2 }))
+    ops.push(lineOp({ x: entity.left, y: entity.top + 2 }, { x: entity.right, y: entity.top + 2 }))
     entity.attributes.forEach((attribute, index) => {
       ops.push(textOp(entity.left + 2, entity.top + 3 + index, attribute.text))
     })
@@ -55,11 +54,6 @@ function markerTextX(point: { x: number; y: number }, marker: string, side: Endp
   return point.x - Math.floor(markerWidth / 2)
 }
 
-function buildLayout(ir: ErDiagramIR): ErAsciiLayout {
-  const base = placeRankedEntities(rankEntities(ir, buildEntityBoxes(ir)), { title: ir.title })
-  return attachRelationships(ir, base)
-}
-
 export function erLayoutToTextDiagramPlan(layout: ErAsciiLayout): TextDiagramPlan {
   const ops: TextDiagramOp[] = []
 
@@ -80,7 +74,7 @@ export function erLayoutToTextDiagramPlan(layout: ErAsciiLayout): TextDiagramPla
     pushRoute(ops, edge.route, 'solid')
     const end = edge.route[edge.route.length - 1]
     const head = edge.route[0].y > end.y ? '△' : '▽'
-    ops.push(textOp(end.x, end.y, head, 'center'))
+    ops.push(textOp(end.x, end.y, head))
     ops.push(textOp(edge.labelPoint.x, edge.labelPoint.y, 'ISA', 'center'))
   })
   layout.entities.forEach(entity => pushEntity(ops, entity))
@@ -92,7 +86,6 @@ export function erLayoutToTextDiagramPlan(layout: ErAsciiLayout): TextDiagramPla
   }
 }
 
-export function toErTextDiagramPlan(ir: ErDiagramIR, _options: ErTextDiagramPlanOptions = {}): TextDiagramPlan {
-  void _options
-  return erLayoutToTextDiagramPlan(buildLayout(ir))
+export function toErTextDiagramPlan(ir: ErDiagramIR, options: ErTextDiagramPlanOptions = {}): TextDiagramPlan {
+  return erLayoutToTextDiagramPlan(buildDagreErAsciiLayout(ir, options))
 }

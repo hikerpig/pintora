@@ -59,6 +59,33 @@ describe('toErTextDiagramPlan', () => {
     expect(text).not.toContain('CUSTOMER ||--o{ ORDER : places')
   })
 
+  it('renders entity attributes under a table-style header separator', () => {
+    const plan = toErTextDiagramPlan({
+      title: '',
+      configParams: [],
+      overrideConfig: {},
+      entities: {
+        ORDER: {
+          name: 'ORDER',
+          attributes: [
+            { attributeType: 'int', attributeName: 'order_number', attributeKey: 'PK' },
+            { attributeType: 'string', attributeName: 'adress', comment: 'delivery address' },
+          ],
+        },
+      },
+      inheritances: [],
+      relationships: [],
+    })
+
+    const text = renderTextDiagramPlan(plan)
+
+    expect(text).toContain('ORDER')
+    expect(text).toContain('PK int order_number')
+    expect(text).toContain('string adress "delivery address"')
+    expect(text).toMatch(/├─+┤/)
+    expect(text).not.toMatch(/│─+│/)
+  })
+
   it('renders inheritance with an ISA label and open triangle head', () => {
     const plan = toErTextDiagramPlan({
       title: '',
@@ -79,6 +106,60 @@ describe('toErTextDiagramPlan', () => {
     expect(text).toContain('ISA')
     expect(text).toMatch(/[△▽◁▷]/)
     expect(text).not.toContain('CUSTOMER inherit PERSON')
+  })
+
+  it('places vertical inheritance arrow head on the connector line', () => {
+    const plan = toErTextDiagramPlan({
+      title: '',
+      configParams: [],
+      overrideConfig: {},
+      entities: {
+        PERSON: {
+          name: 'PERSON',
+          attributes: [{ attributeType: 'string', attributeName: 'phone', comment: 'phone number' }],
+        },
+        CUSTOMER: { name: 'CUSTOMER', attributes: [] },
+      },
+      inheritances: [{ sup: 'PERSON', sub: 'CUSTOMER' }],
+      relationships: [],
+    })
+
+    const text = renderTextDiagramPlan(plan)
+
+    expect(text).toMatch(/[△▽]/)
+    expect(text).not.toMatch(/[△▽]│/)
+  })
+
+  it('honors left-to-right layout direction for graph-oriented ASCII layout', () => {
+    const plan = toErTextDiagramPlan(
+      {
+        title: '',
+        configParams: [],
+        overrideConfig: {},
+        entities: {
+          CUSTOMER: { name: 'CUSTOMER', attributes: [] },
+          ORDER: { name: 'ORDER', attributes: [] },
+        },
+        inheritances: [],
+        relationships: [
+          {
+            entityA: 'CUSTOMER',
+            entityB: 'ORDER',
+            roleA: 'places',
+            relSpec: { cardA: 'ZERO_OR_MORE' as any, cardB: 'ONLY_ONE' as any, relType: 'IDENTIFYING' as any },
+          },
+        ],
+      },
+      { layoutDirection: 'LR' },
+    )
+
+    const customerText = plan.ops.find(op => op.type === 'text' && op.text === 'CUSTOMER')
+    const orderText = plan.ops.find(op => op.type === 'text' && op.text === 'ORDER')
+
+    expect(customerText).toBeTruthy()
+    expect(orderText).toBeTruthy()
+    expect(customerText!.x).toBeLessThan(orderText!.x)
+    expect(Math.abs(customerText!.y - orderText!.y)).toBeLessThanOrEqual(1)
   })
 
   it('renders non-identifying relationships with dashed connector segments', () => {
