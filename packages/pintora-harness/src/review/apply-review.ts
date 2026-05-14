@@ -7,14 +7,9 @@ import type {
   RunHarnessApplyReviewOptions,
   RunHarnessApplyReviewResult,
 } from './apply-review-contracts'
-import type {
-  HarnessReviewActionType,
-  HarnessReviewResult,
-  HarnessReviewVerdict,
-} from './review-contracts'
+import type { HarnessReviewActionType, HarnessReviewResult, HarnessReviewVerdict } from './review-contracts'
 import type { HarnessSummary } from '../contracts/summary'
 
-const VALID_ACTION_TYPES: HarnessOrchestrationActionType[] = ['accept', 'repair', 'rerun', 'escalate']
 const VALID_TARGETS = ['diagram_source', 'render_pipeline', 'browser_capture'] as const
 const VALID_VERDICTS: ReadonlySet<HarnessReviewVerdict> = new Set([
   'accept',
@@ -82,7 +77,7 @@ function assertValidReview(review: unknown): asserts review is HarnessReviewResu
     if (mapped === undefined) {
       throw new Error(`Invalid review: recommended_action.type is not valid: ${action.type}`)
     }
-    if (action.target !== undefined && !VALID_TARGETS.includes(action.target as typeof VALID_TARGETS[number])) {
+    if (action.target !== undefined && !VALID_TARGETS.includes(action.target as (typeof VALID_TARGETS)[number])) {
       throw new Error(`Invalid review: recommended_action.target is not valid: ${action.target}`)
     }
   }

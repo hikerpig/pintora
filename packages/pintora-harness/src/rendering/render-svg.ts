@@ -3,12 +3,7 @@ import * as path from 'node:path'
 import { readHarnessSource, resolveHarnessInput } from '../cases/read-input'
 import { renderHarnessSvg } from './render-adapter'
 
-export async function runHarnessRenderSvg(opts: {
-  cwd: string
-  caseId?: string
-  inputFile?: string
-  outFile: string
-}) {
+export async function runHarnessRenderSvg(opts: { cwd: string; caseId?: string; inputFile?: string; outFile: string }) {
   const resolved = resolveHarnessInput(opts)
   const code = readHarnessSource(resolved.inputFile)
   const svg = await renderHarnessSvg({ code })

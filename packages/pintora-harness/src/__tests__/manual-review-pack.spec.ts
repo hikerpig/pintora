@@ -4,13 +4,14 @@ import * as path from 'node:path'
 import { manualReviewPackAdapter } from '../review/adapters/manual-review-pack'
 import { noopReviewAdapter } from '../review/adapters/noop'
 import type { HarnessReviewPayload } from '../review/review-contracts'
+import { makeTempDir, readJson } from '../test-helpers/harness'
 
-function makeTempDir() {
-  return fs.mkdtempSync(path.join(os.tmpdir(), 'pintora-harness-review-adapter-'))
+function makeReviewAdapterTempDir() {
+  return makeTempDir('pintora-harness-review-adapter-')
 }
 
 function canCreateSymlink() {
-  const dir = makeTempDir()
+  const dir = makeReviewAdapterTempDir()
   const target = path.join(dir, 'target.txt')
   const link = path.join(dir, 'link.txt')
   fs.writeFileSync(target, 'target')
@@ -44,7 +45,7 @@ function makePayload(): HarnessReviewPayload {
 
 describe('manualReviewPackAdapter', () => {
   it('creates review-pack payload and README files by default', async () => {
-    const artifactsDir = makeTempDir()
+    const artifactsDir = makeReviewAdapterTempDir()
     const result = await manualReviewPackAdapter.run({
       artifactsDir,
       outFile: path.join(artifactsDir, 'out.json'),
@@ -54,7 +55,7 @@ describe('manualReviewPackAdapter', () => {
     const packDir = path.join(artifactsDir, 'review-pack')
     expect(fs.existsSync(path.join(packDir, 'payload.json'))).toBe(true)
     expect(fs.existsSync(path.join(packDir, 'README.md'))).toBe(true)
-    expect(JSON.parse(fs.readFileSync(path.join(packDir, 'payload.json'), 'utf8'))).toEqual(makePayload())
+    expect(readJson(path.join(packDir, 'payload.json'))).toEqual(makePayload())
     expect(fs.readFileSync(path.join(packDir, 'README.md'), 'utf8')).toContain(
       'Next task: make a review judgment, not another pipeline run.',
     )
@@ -81,7 +82,7 @@ describe('manualReviewPackAdapter', () => {
 
   it('creates the default review-pack correctly when artifactsDir is relative', async () => {
     const originalCwd = process.cwd()
-    const workspaceDir = makeTempDir()
+    const workspaceDir = makeReviewAdapterTempDir()
     const artifactsDir = path.join('tmp-artifacts', 'relative-case')
 
     try {
@@ -103,7 +104,7 @@ describe('manualReviewPackAdapter', () => {
   })
 
   it('honors a custom packDir', async () => {
-    const artifactsDir = makeTempDir()
+    const artifactsDir = makeReviewAdapterTempDir()
     const packDir = path.join(artifactsDir, 'custom-pack')
     const result = await manualReviewPackAdapter.run({
       artifactsDir,
@@ -118,7 +119,7 @@ describe('manualReviewPackAdapter', () => {
   })
 
   it('resolves a relative custom packDir inside artifactsDir', async () => {
-    const artifactsDir = makeTempDir()
+    const artifactsDir = makeReviewAdapterTempDir()
     const result = await manualReviewPackAdapter.run({
       artifactsDir,
       outFile: path.join(artifactsDir, 'out.json'),
@@ -132,7 +133,7 @@ describe('manualReviewPackAdapter', () => {
   })
 
   it('rejects a custom packDir outside artifactsDir', async () => {
-    const artifactsDir = makeTempDir()
+    const artifactsDir = makeReviewAdapterTempDir()
     const packDir = path.join(fs.mkdtempSync(path.join(os.tmpdir(), 'pintora-harness-outside-')), 'review-pack')
 
     await expect(
@@ -148,7 +149,7 @@ describe('manualReviewPackAdapter', () => {
   it('rejects a custom packDir that escapes through a symlinked parent', async () => {
     if (!canCreateSymlink()) return
 
-    const artifactsDir = makeTempDir()
+    const artifactsDir = makeReviewAdapterTempDir()
     const outsideDir = fs.mkdtempSync(path.join(os.tmpdir(), 'pintora-harness-outside-'))
     const linkPath = path.join(artifactsDir, 'link-out')
     fs.symlinkSync(outsideDir, linkPath)
@@ -166,7 +167,7 @@ describe('manualReviewPackAdapter', () => {
 
 describe('noopReviewAdapter', () => {
   it('does not create a review-pack directory by default', async () => {
-    const artifactsDir = makeTempDir()
+    const artifactsDir = makeReviewAdapterTempDir()
     const result = await noopReviewAdapter.run({
       artifactsDir,
       outFile: path.join(artifactsDir, 'out.json'),
@@ -185,7 +186,7 @@ describe('noopReviewAdapter', () => {
   })
 
   it('writes payload.json when a packDir is provided', async () => {
-    const artifactsDir = makeTempDir()
+    const artifactsDir = makeReviewAdapterTempDir()
     const packDir = path.join(artifactsDir, 'noop-pack')
     const result = await noopReviewAdapter.run({
       artifactsDir,
@@ -194,12 +195,12 @@ describe('noopReviewAdapter', () => {
       payload: makePayload(),
     })
 
-    expect(JSON.parse(fs.readFileSync(path.join(packDir, 'payload.json'), 'utf8'))).toEqual(makePayload())
+    expect(readJson(path.join(packDir, 'payload.json'))).toEqual(makePayload())
     expect(result.artifacts.pack_dir).toBe('noop-pack')
   })
 
   it('resolves a relative custom packDir inside artifactsDir', async () => {
-    const artifactsDir = makeTempDir()
+    const artifactsDir = makeReviewAdapterTempDir()
     const result = await noopReviewAdapter.run({
       artifactsDir,
       outFile: path.join(artifactsDir, 'out.json'),
@@ -207,14 +208,12 @@ describe('noopReviewAdapter', () => {
       payload: makePayload(),
     })
 
-    expect(JSON.parse(fs.readFileSync(path.join(artifactsDir, 'relative-noop-pack', 'payload.json'), 'utf8'))).toEqual(
-      makePayload(),
-    )
+    expect(readJson(path.join(artifactsDir, 'relative-noop-pack', 'payload.json'))).toEqual(makePayload())
     expect(result.artifacts.pack_dir).toBe('relative-noop-pack')
   })
 
   it('rejects a custom packDir outside artifactsDir', async () => {
-    const artifactsDir = makeTempDir()
+    const artifactsDir = makeReviewAdapterTempDir()
     const packDir = path.join(fs.mkdtempSync(path.join(os.tmpdir(), 'pintora-harness-outside-')), 'noop-pack')
 
     await expect(
@@ -230,7 +229,7 @@ describe('noopReviewAdapter', () => {
   it('rejects a custom packDir that escapes through a symlinked parent', async () => {
     if (!canCreateSymlink()) return
 
-    const artifactsDir = makeTempDir()
+    const artifactsDir = makeReviewAdapterTempDir()
     const outsideDir = fs.mkdtempSync(path.join(os.tmpdir(), 'pintora-harness-outside-'))
     const linkPath = path.join(artifactsDir, 'link-out')
     fs.symlinkSync(outsideDir, linkPath)

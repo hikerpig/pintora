@@ -54,11 +54,12 @@ describe('runHarnessCase', () => {
   })
 
   it('does not run capture-browser when browser capture is disabled', async () => {
-    mockSummaries.splice(
-      0,
-      mockSummaries.length,
-      { status: 'suspicious', nextAction: 'capture_browser', summary: 'summary.json', exitCode: 10 },
-    )
+    mockSummaries.splice(0, mockSummaries.length, {
+      status: 'suspicious',
+      nextAction: 'capture_browser',
+      summary: 'summary.json',
+      exitCode: 10,
+    })
 
     const result = await runHarnessCase({
       cwd: process.cwd(),

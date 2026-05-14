@@ -1,10 +1,6 @@
 import { HarnessStatus } from './harness'
 
-export type SummaryNextAction =
-  | 'done'
-  | 'capture_browser'
-  | 'human_review_or_visual_judge'
-  | 'repair_and_rerun'
+export type SummaryNextAction = 'done' | 'capture_browser' | 'human_review_or_visual_judge' | 'repair_and_rerun'
 
 export type SummaryArtifacts = {
   svg: string | null

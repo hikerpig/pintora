@@ -1,48 +1,11 @@
 import * as fs from 'node:fs'
-import * as os from 'node:os'
 import * as path from 'node:path'
 import { runHarnessReviewCase } from '../review/review-case'
-
-function makeTempDir() {
-  return fs.mkdtempSync(path.join(os.tmpdir(), 'pintora-harness-review-case-'))
-}
-
-function prepareReviewArtifacts(artifactsDir: string) {
-  fs.writeFileSync(path.join(artifactsDir, 'metrics.json'), JSON.stringify({ rootChildCount: 1 }, null, 2))
-  fs.writeFileSync(path.join(artifactsDir, 'findings.json'), JSON.stringify([], null, 2))
-  fs.writeFileSync(path.join(artifactsDir, 'render.svg'), '<svg></svg>')
-  fs.writeFileSync(
-    path.join(artifactsDir, 'summary.json'),
-    JSON.stringify(
-      {
-        run_id: path.basename(artifactsDir),
-        case_id: null,
-        diagram_type: null,
-        status: 'ok',
-        next_action: 'done',
-        top_findings: [],
-        artifacts: {
-          svg: 'render.svg',
-          browser_png: null,
-          dom_html: null,
-          metrics: 'metrics.json',
-          findings: 'findings.json',
-        },
-        judge: {
-          inputs: {
-            artifacts: ['render.svg', 'metrics.json', 'findings.json'],
-          },
-        },
-      },
-      null,
-      2,
-    ),
-  )
-}
+import { makeTempDir, prepareReviewArtifacts, readJson } from '../test-helpers/harness'
 
 describe('runHarnessReviewCase', () => {
   it('writes review.json and returns stable stdout metadata', async () => {
-    const artifactsDir = makeTempDir()
+    const artifactsDir = makeTempDir('pintora-harness-review-case-')
     const outFile = path.join(artifactsDir, 'review.json')
 
     prepareReviewArtifacts(artifactsDir)
@@ -59,7 +22,7 @@ describe('runHarnessReviewCase', () => {
       verdict: 'needs_human_review',
       review: 'review.json',
     })
-    expect(JSON.parse(fs.readFileSync(outFile, 'utf8'))).toEqual({
+    expect(readJson(outFile)).toEqual({
       adapter: 'manual-review-pack',
       status: 'completed',
       verdict: 'needs_human_review',
@@ -72,7 +35,7 @@ describe('runHarnessReviewCase', () => {
   })
 
   it('writes review.json for a nested output path', async () => {
-    const artifactsDir = makeTempDir()
+    const artifactsDir = makeTempDir('pintora-harness-review-case-')
     const outFile = path.join(artifactsDir, 'nested', 'review', 'review.json')
 
     prepareReviewArtifacts(artifactsDir)
@@ -84,7 +47,7 @@ describe('runHarnessReviewCase', () => {
     })
 
     expect(fs.existsSync(outFile)).toBe(true)
-    expect(JSON.parse(fs.readFileSync(outFile, 'utf8'))).toEqual({
+    expect(readJson(outFile)).toEqual({
       adapter: 'manual-review-pack',
       status: 'completed',
       verdict: 'needs_human_review',
@@ -98,7 +61,7 @@ describe('runHarnessReviewCase', () => {
   })
 
   it('throws when summary.json is missing', async () => {
-    const artifactsDir = makeTempDir()
+    const artifactsDir = makeTempDir('pintora-harness-review-case-')
 
     await expect(
       runHarnessReviewCase({
@@ -110,7 +73,7 @@ describe('runHarnessReviewCase', () => {
   })
 
   it('throws when artifactsDir does not exist', async () => {
-    const artifactsDir = path.join(makeTempDir(), 'missing')
+    const artifactsDir = path.join(makeTempDir('pintora-harness-review-case-'), 'missing')
 
     await expect(
       runHarnessReviewCase({

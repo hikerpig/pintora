@@ -24,4 +24,10 @@ export default [
       'prettier/prettier': 'warn',
     },
   },
+  {
+    files: ['packages/pintora-harness/**/*.{ts,js}'],
+    rules: {
+      '@typescript-eslint/no-require-imports': 'off',
+    },
+  },
 ]

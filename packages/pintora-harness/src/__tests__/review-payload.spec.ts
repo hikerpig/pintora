@@ -2,21 +2,24 @@ import * as fs from 'node:fs'
 import * as os from 'node:os'
 import * as path from 'node:path'
 import { buildHarnessReviewPayload } from '../review/review-payload'
+import { makeTempDir, writeJson } from '../test-helpers/harness'
 
 function makeArtifactsDir() {
-  return fs.mkdtempSync(path.join(os.tmpdir(), 'pintora-harness-review-payload-'))
+  return makeTempDir('pintora-harness-review-payload-')
 }
 
-function makeValidSummary(overrides: {
-  run_id?: unknown
-  case_id?: unknown
-  diagram_type?: unknown
-  status?: unknown
-  next_action?: unknown
-  top_findings?: unknown
-  artifacts?: Record<string, unknown>
-  judgeArtifacts?: unknown
-} = {}) {
+function makeValidSummary(
+  overrides: {
+    run_id?: unknown
+    case_id?: unknown
+    diagram_type?: unknown
+    status?: unknown
+    next_action?: unknown
+    top_findings?: unknown
+    artifacts?: Record<string, unknown>
+    judgeArtifacts?: unknown
+  } = {},
+) {
   return {
     run_id: overrides.run_id ?? 'run-123',
     case_id: overrides.case_id ?? 'er.relationship-spacing-01',
@@ -43,7 +46,7 @@ function makeValidSummary(overrides: {
 }
 
 function writeSummary(artifactsDir: string, summary: unknown) {
-  fs.writeFileSync(path.join(artifactsDir, 'summary.json'), JSON.stringify(summary, null, 2))
+  writeJson(path.join(artifactsDir, 'summary.json'), summary)
 }
 
 function writeArtifact(artifactsDir: string, relativePath: string, content = 'artifact') {
@@ -171,22 +174,34 @@ describe('buildHarnessReviewPayload', () => {
     )
   })
 
-  it('throws when summary.json status is invalid', () => {
-    const artifactsDir = makeArtifactsDir()
-    writeSummary(artifactsDir, makeValidSummary({ status: 'broken' }))
-
-    expect(() => buildHarnessReviewPayload({ artifactsDir })).toThrow(
+  it.each([
+    [
+      'status',
+      { status: 'broken' },
       'Invalid summary artifact: expected summary.json status to be one of ok, suspicious, fail',
-    )
-  })
-
-  it('throws when summary.json next_action is invalid', () => {
-    const artifactsDir = makeArtifactsDir()
-    writeSummary(artifactsDir, makeValidSummary({ next_action: 'wait' }))
-
-    expect(() => buildHarnessReviewPayload({ artifactsDir })).toThrow(
+    ],
+    [
+      'next_action',
+      { next_action: 'wait' },
       'Invalid summary artifact: expected summary.json next_action to be one of done, capture_browser, human_review_or_visual_judge, repair_and_rerun',
-    )
+    ],
+    [
+      'top_findings',
+      { top_findings: ['ok', 123] },
+      'Invalid summary artifact: expected summary.json top_findings to contain an array of strings',
+    ],
+    [
+      'judge.inputs.artifacts',
+      { judgeArtifacts: 'render.svg' },
+      'Invalid summary artifact: expected summary.json judge.inputs.artifacts to contain an array',
+    ],
+  ])('throws when summary.json %s is invalid', (_name, overrides, expectedMessage) => {
+    const artifactsDir = makeArtifactsDir()
+    const summary = makeValidSummary(overrides)
+    writeReferencedArtifacts(artifactsDir, makeValidSummary())
+    writeSummary(artifactsDir, summary)
+
+    expect(() => buildHarnessReviewPayload({ artifactsDir })).toThrow(expectedMessage)
   })
 
   it('throws when summary.json artifacts is not an object', () => {
@@ -201,56 +216,21 @@ describe('buildHarnessReviewPayload', () => {
     )
   })
 
-  it('throws when summary.json artifacts.metrics is an absolute path', () => {
+  const requiredArtifactPathCases: Array<[string, Record<string, string>, 'metrics' | 'findings']> = [
+    ['artifacts.metrics absolute path', { metrics: path.join(path.sep, 'tmp', 'metrics.json') }, 'metrics'],
+    ['artifacts.findings path traversal', { findings: '../findings.json' }, 'findings'],
+    ['artifacts.metrics Windows drive path', { metrics: 'C:\\tmp\\metrics.json' }, 'metrics'],
+    ['artifacts.findings UNC path', { findings: '\\\\server\\share\\findings.json' }, 'findings'],
+  ]
+
+  it.each(requiredArtifactPathCases)('throws when summary.json %s is invalid', (_name, artifacts, artifactKey) => {
     const artifactsDir = makeArtifactsDir()
-    const summary = makeValidSummary({ artifacts: { metrics: path.join(path.sep, 'tmp', 'metrics.json') } })
+    const summary = makeValidSummary({ artifacts })
     writeSummary(artifactsDir, summary)
-    writeReferencedArtifacts(artifactsDir, summary, { skip: [summary.artifacts.metrics as string] })
+    writeReferencedArtifacts(artifactsDir, summary, { skip: [summary.artifacts[artifactKey] as string] })
 
     expect(() => buildHarnessReviewPayload({ artifactsDir })).toThrow(
-      'Invalid summary artifact: expected summary.json artifacts.metrics to be a relative path',
-    )
-  })
-
-  it('throws when summary.json artifacts.findings contains path traversal', () => {
-    const artifactsDir = makeArtifactsDir()
-    const summary = makeValidSummary({ artifacts: { findings: '../findings.json' } })
-    writeSummary(artifactsDir, summary)
-    writeReferencedArtifacts(artifactsDir, summary, { skip: [summary.artifacts.findings as string] })
-
-    expect(() => buildHarnessReviewPayload({ artifactsDir })).toThrow(
-      'Invalid summary artifact: expected summary.json artifacts.findings to be a relative path',
-    )
-  })
-
-  it('throws when summary.json artifacts.metrics is a Windows drive absolute path', () => {
-    const artifactsDir = makeArtifactsDir()
-    const summary = makeValidSummary({ artifacts: { metrics: 'C:\\tmp\\metrics.json' } })
-    writeSummary(artifactsDir, summary)
-    writeReferencedArtifacts(artifactsDir, summary, { skip: [summary.artifacts.metrics as string] })
-
-    expect(() => buildHarnessReviewPayload({ artifactsDir })).toThrow(
-      'Invalid summary artifact: expected summary.json artifacts.metrics to be a relative path',
-    )
-  })
-
-  it('throws when summary.json artifacts.findings is a UNC path', () => {
-    const artifactsDir = makeArtifactsDir()
-    const summary = makeValidSummary({ artifacts: { findings: '\\\\server\\share\\findings.json' } })
-    writeSummary(artifactsDir, summary)
-    writeReferencedArtifacts(artifactsDir, summary, { skip: [summary.artifacts.findings as string] })
-
-    expect(() => buildHarnessReviewPayload({ artifactsDir })).toThrow(
-      'Invalid summary artifact: expected summary.json artifacts.findings to be a relative path',
-    )
-  })
-
-  it('throws when summary.json top_findings is not an array of strings', () => {
-    const artifactsDir = makeArtifactsDir()
-    writeSummary(artifactsDir, makeValidSummary({ top_findings: ['ok', 123] }))
-
-    expect(() => buildHarnessReviewPayload({ artifactsDir })).toThrow(
-      'Invalid summary artifact: expected summary.json top_findings to contain an array of strings',
+      `Invalid summary artifact: expected summary.json artifacts.${artifactKey} to be a relative path`,
     )
   })
 
@@ -278,7 +258,9 @@ describe('buildHarnessReviewPayload', () => {
 
   it('throws when a judge input artifact does not exist', () => {
     const artifactsDir = makeArtifactsDir()
-    const summary = makeValidSummary({ judgeArtifacts: ['render.svg', 'browser.png', 'findings.json', 'missing/dom.html'] })
+    const summary = makeValidSummary({
+      judgeArtifacts: ['render.svg', 'browser.png', 'findings.json', 'missing/dom.html'],
+    })
     writeSummary(artifactsDir, summary)
     writeReferencedArtifacts(artifactsDir, summary, { skip: ['missing/dom.html'] })
 
@@ -317,52 +299,18 @@ describe('buildHarnessReviewPayload', () => {
     )
   })
 
-  it('throws when summary.json artifacts.svg is an absolute path', () => {
+  it.each([
+    ['svg', path.join(path.sep, 'tmp', 'render.svg')],
+    ['browser_png', path.join(path.sep, 'tmp', 'browser.png')],
+    ['dom_html', path.join(path.sep, 'tmp', 'dom.html')],
+  ])('throws when summary.json artifacts.%s is an absolute path', (artifactKey, artifactPath) => {
     const artifactsDir = makeArtifactsDir()
-    const summary = makeValidSummary({ artifacts: { svg: path.join(path.sep, 'tmp', 'render.svg') } })
+    const summary = makeValidSummary({ artifacts: { [artifactKey]: artifactPath } })
     writeSummary(artifactsDir, summary)
-    writeReferencedArtifacts(artifactsDir, summary, { skip: [summary.artifacts.svg as string] })
+    writeReferencedArtifacts(artifactsDir, summary, { skip: [artifactPath] })
 
     expect(() => buildHarnessReviewPayload({ artifactsDir })).toThrow(
-      'Invalid summary artifact: expected summary.json artifacts.svg to be a relative path or null',
-    )
-  })
-
-  it('throws when summary.json artifacts.browser_png is an absolute path', () => {
-    const artifactsDir = makeArtifactsDir()
-    const summary = makeValidSummary({ artifacts: { browser_png: path.join(path.sep, 'tmp', 'browser.png') } })
-    writeSummary(artifactsDir, summary)
-    writeReferencedArtifacts(artifactsDir, summary, { skip: [summary.artifacts.browser_png as string] })
-
-    expect(() => buildHarnessReviewPayload({ artifactsDir })).toThrow(
-      'Invalid summary artifact: expected summary.json artifacts.browser_png to be a relative path or null',
-    )
-  })
-
-  it('throws when summary.json artifacts.dom_html is an absolute path', () => {
-    const artifactsDir = makeArtifactsDir()
-    const summary = makeValidSummary({ artifacts: { dom_html: path.join(path.sep, 'tmp', 'dom.html') } })
-    writeSummary(artifactsDir, summary)
-    writeReferencedArtifacts(artifactsDir, summary, { skip: [summary.artifacts.dom_html as string] })
-
-    expect(() => buildHarnessReviewPayload({ artifactsDir })).toThrow(
-      'Invalid summary artifact: expected summary.json artifacts.dom_html to be a relative path or null',
-    )
-  })
-
-  it('throws when summary.json judge inputs are missing or not an array', () => {
-    const artifactsDir = makeArtifactsDir()
-    const validSummary = makeValidSummary()
-    writeReferencedArtifacts(artifactsDir, validSummary)
-    writeSummary(
-      artifactsDir,
-      makeValidSummary({
-        judgeArtifacts: 'render.svg',
-      }),
-    )
-
-    expect(() => buildHarnessReviewPayload({ artifactsDir })).toThrow(
-      'Invalid summary artifact: expected summary.json judge.inputs.artifacts to contain an array',
+      `Invalid summary artifact: expected summary.json artifacts.${artifactKey} to be a relative path or null`,
     )
   })
 })

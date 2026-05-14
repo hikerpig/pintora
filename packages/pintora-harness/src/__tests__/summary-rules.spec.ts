@@ -89,12 +89,7 @@ describe('buildHarnessSummary', () => {
     expect(summary.status).toBe('suspicious')
     expect(summary.next_action).toBe('human_review_or_visual_judge')
     expect(summary.judge.required).toBe(true)
-    expect(summary.judge.inputs.artifacts).toEqual([
-      'render.svg',
-      'browser.png',
-      'findings.json',
-      'dom.html',
-    ])
+    expect(summary.judge.inputs.artifacts).toEqual(['render.svg', 'browser.png', 'findings.json', 'dom.html'])
   })
 
   it('maps missing viewBox to fail with repair_and_rerun', () => {
@@ -153,12 +148,7 @@ describe('buildHarnessSummary', () => {
         findings: 'findings.json',
       },
       metrics: makeMetrics({ x: 0, y: 0, width: 100, height: 80 }),
-      findings: [
-        { message: 'first finding' },
-        {},
-        { message: 'third finding' },
-        { message: 'ignored finding' },
-      ],
+      findings: [{ message: 'first finding' }, {}, { message: 'third finding' }, { message: 'ignored finding' }],
     })
 
     expect(summary.top_findings).toEqual(['first finding', 'unknown finding', 'third finding'])

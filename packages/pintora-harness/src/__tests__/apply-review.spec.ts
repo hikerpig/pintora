@@ -2,75 +2,28 @@ import * as fs from 'node:fs'
 import * as os from 'node:os'
 import * as path from 'node:path'
 import { runHarnessApplyReview } from '../review/apply-review'
+import { makeTempDir, readJson, writeJson, writeReview, writeSummary } from '../test-helpers/harness'
 
-function makeTempDir() {
-  return fs.mkdtempSync(path.join(os.tmpdir(), 'pintora-harness-apply-review-'))
+function makeApplyReviewPaths() {
+  const artifactsDir = makeTempDir('pintora-harness-apply-review-')
+  return {
+    artifactsDir,
+    reviewFile: path.join(artifactsDir, 'review.json'),
+    outFile: path.join(artifactsDir, 'review-decision.json'),
+  }
 }
 
-function writeSummary(artifactsDir: string, overrides?: Record<string, unknown>) {
-  fs.writeFileSync(
-    path.join(artifactsDir, 'summary.json'),
-    JSON.stringify(
-      {
-        run_id: 'test-run',
-        case_id: null,
-        diagram_type: null,
-        status: 'suspicious',
-        pipeline: ['render', 'inspect', 'summarize'],
-        artifacts: {
-          svg: 'render.svg',
-          png: null,
-          browser_png: null,
-          dom_html: null,
-          metrics: 'metrics.json',
-          findings: 'findings.json',
-        },
-        scores: {
-          legibility: null,
-          structural_clarity: null,
-          spatial_balance: null,
-          visual_taste: null,
-        },
-        top_findings: [],
-        next_action: 'human_review_or_visual_judge',
-        judge: {
-          required: true,
-          inputs: {
-            artifacts: ['render.svg', 'metrics.json', 'findings.json'],
-          },
-        },
-        ...overrides,
-      },
-      null,
-      2,
-    ),
-  )
-}
-
-function writeReview(reviewFile: string, overrides?: Record<string, unknown>) {
-  fs.writeFileSync(
-    reviewFile,
-    JSON.stringify(
-      {
-        adapter: 'manual-review-pack',
-        status: 'completed',
-        verdict: 'accept',
-        confidence: null,
-        summary: 'looks good',
-        artifacts: {},
-        ...overrides,
-      },
-      null,
-      2,
-    ),
-  )
+function applyReviewWith(overrides?: Record<string, unknown>) {
+  const paths = makeApplyReviewPaths()
+  writeSummary(paths.artifactsDir)
+  writeReview(paths.reviewFile, overrides)
+  runHarnessApplyReview(paths)
+  return readJson<{ next_step: { type: string; reason?: string; target?: string } }>(paths.outFile)
 }
 
 describe('runHarnessApplyReview', () => {
   it('reads summary and review, writes review-decision.json, and returns metadata', () => {
-    const artifactsDir = makeTempDir()
-    const reviewFile = path.join(artifactsDir, 'review.json')
-    const outFile = path.join(artifactsDir, 'review-decision.json')
+    const { artifactsDir, reviewFile, outFile } = makeApplyReviewPaths()
 
     writeSummary(artifactsDir)
     writeReview(reviewFile)
@@ -82,9 +35,7 @@ describe('runHarnessApplyReview', () => {
       review_status: 'consumed',
       decision: 'review-decision.json',
     })
-
-    const written = JSON.parse(fs.readFileSync(outFile, 'utf8'))
-    expect(written).toEqual({
+    expect(readJson(outFile)).toEqual({
       status: 'completed',
       review_status: 'consumed',
       source: {
@@ -97,52 +48,17 @@ describe('runHarnessApplyReview', () => {
     })
   })
 
-  it('falls back to repair when recommended_action is absent and verdict is reject', () => {
-    const artifactsDir = makeTempDir()
-    const reviewFile = path.join(artifactsDir, 'review.json')
-    const outFile = path.join(artifactsDir, 'review-decision.json')
-
-    writeSummary(artifactsDir)
-    writeReview(reviewFile, { verdict: 'reject', recommended_action: undefined })
-
-    runHarnessApplyReview({ artifactsDir, reviewFile, outFile })
-    const written = JSON.parse(fs.readFileSync(outFile, 'utf8'))
-    expect(written.next_step.type).toBe('repair')
+  it.each([
+    ['reject', 'repair'],
+    ['needs_human_review', 'escalate'],
+    ['inconclusive', 'escalate'],
+  ])('falls back from verdict %s to orchestration action %s', (verdict, action) => {
+    const written = applyReviewWith({ verdict })
+    expect(written.next_step.type).toBe(action)
   })
 
-  it('maps needs_human_review verdict to escalate', () => {
-    const artifactsDir = makeTempDir()
-    const reviewFile = path.join(artifactsDir, 'review.json')
-    const outFile = path.join(artifactsDir, 'review-decision.json')
-
-    writeSummary(artifactsDir)
-    writeReview(reviewFile, { verdict: 'needs_human_review' })
-
-    runHarnessApplyReview({ artifactsDir, reviewFile, outFile })
-    const written = JSON.parse(fs.readFileSync(outFile, 'utf8'))
-    expect(written.next_step.type).toBe('escalate')
-  })
-
-  it('maps inconclusive verdict to escalate', () => {
-    const artifactsDir = makeTempDir()
-    const reviewFile = path.join(artifactsDir, 'review.json')
-    const outFile = path.join(artifactsDir, 'review-decision.json')
-
-    writeSummary(artifactsDir)
-    writeReview(reviewFile, { verdict: 'inconclusive' })
-
-    runHarnessApplyReview({ artifactsDir, reviewFile, outFile })
-    const written = JSON.parse(fs.readFileSync(outFile, 'utf8'))
-    expect(written.next_step.type).toBe('escalate')
-  })
-
-  it('lets recommended_action override verdict', () => {
-    const artifactsDir = makeTempDir()
-    const reviewFile = path.join(artifactsDir, 'review.json')
-    const outFile = path.join(artifactsDir, 'review-decision.json')
-
-    writeSummary(artifactsDir)
-    writeReview(reviewFile, {
+  it('lets recommended_action override verdict and carries reason and target', () => {
+    const written = applyReviewWith({
       verdict: 'reject',
       recommended_action: {
         type: 'rerun',
@@ -151,8 +67,6 @@ describe('runHarnessApplyReview', () => {
       },
     })
 
-    runHarnessApplyReview({ artifactsDir, reviewFile, outFile })
-    const written = JSON.parse(fs.readFileSync(outFile, 'utf8'))
     expect(written.next_step).toEqual({
       type: 'rerun',
       reason: 'browser capture flaky',
@@ -161,12 +75,7 @@ describe('runHarnessApplyReview', () => {
   })
 
   it('maps reject recommended_action to repair', () => {
-    const artifactsDir = makeTempDir()
-    const reviewFile = path.join(artifactsDir, 'review.json')
-    const outFile = path.join(artifactsDir, 'review-decision.json')
-
-    writeSummary(artifactsDir)
-    writeReview(reviewFile, {
+    const written = applyReviewWith({
       recommended_action: {
         type: 'reject',
         reason: 'text overlaps',
@@ -174,8 +83,6 @@ describe('runHarnessApplyReview', () => {
       },
     })
 
-    runHarnessApplyReview({ artifactsDir, reviewFile, outFile })
-    const written = JSON.parse(fs.readFileSync(outFile, 'utf8'))
     expect(written.next_step.type).toBe('repair')
   })
 
@@ -184,92 +91,58 @@ describe('runHarnessApplyReview', () => {
     const reviewFile = path.join(artifactsDir, 'review.json')
     const outFile = path.join(artifactsDir, 'review-decision.json')
 
-    expect(() => runHarnessApplyReview({ artifactsDir, reviewFile, outFile })).toThrow(
-      'Directory does not exist',
-    )
+    expect(() => runHarnessApplyReview({ artifactsDir, reviewFile, outFile })).toThrow('Directory does not exist')
   })
 
   it('throws when summary.json is missing', () => {
-    const artifactsDir = makeTempDir()
-    const reviewFile = path.join(artifactsDir, 'review.json')
-    const outFile = path.join(artifactsDir, 'review-decision.json')
+    const { artifactsDir, reviewFile, outFile } = makeApplyReviewPaths()
 
     writeReview(reviewFile)
 
-    expect(() => runHarnessApplyReview({ artifactsDir, reviewFile, outFile })).toThrow(
-      'File does not exist',
-    )
+    expect(() => runHarnessApplyReview({ artifactsDir, reviewFile, outFile })).toThrow('File does not exist')
   })
 
   it('throws when review.json is missing', () => {
-    const artifactsDir = makeTempDir()
-    const reviewFile = path.join(artifactsDir, 'review.json')
-    const outFile = path.join(artifactsDir, 'review-decision.json')
+    const { artifactsDir, reviewFile, outFile } = makeApplyReviewPaths()
 
     writeSummary(artifactsDir)
 
-    expect(() => runHarnessApplyReview({ artifactsDir, reviewFile, outFile })).toThrow(
-      'File does not exist',
-    )
+    expect(() => runHarnessApplyReview({ artifactsDir, reviewFile, outFile })).toThrow('File does not exist')
   })
 
-  it("throws when review.status is not 'completed'", () => {
-    const artifactsDir = makeTempDir()
-    const reviewFile = path.join(artifactsDir, 'review.json')
-    const outFile = path.join(artifactsDir, 'review-decision.json')
-
-    writeSummary(artifactsDir)
-    writeReview(reviewFile, { status: 'failed' })
-
-    expect(() => runHarnessApplyReview({ artifactsDir, reviewFile, outFile })).toThrow(
-      "status must be 'completed'",
-    )
-  })
-
-  it('throws when verdict is missing or invalid', () => {
-    const artifactsDir = makeTempDir()
-    const reviewFile = path.join(artifactsDir, 'review.json')
-    const outFile = path.join(artifactsDir, 'review-decision.json')
-
-    writeSummary(artifactsDir)
-    writeReview(reviewFile, { verdict: undefined })
-
-    expect(() => runHarnessApplyReview({ artifactsDir, reviewFile, outFile })).toThrow(
-      'verdict is not valid',
-    )
-  })
-
-  it('throws when recommended_action.type is invalid', () => {
-    const artifactsDir = makeTempDir()
-    const reviewFile = path.join(artifactsDir, 'review.json')
-    const outFile = path.join(artifactsDir, 'review-decision.json')
-
-    writeSummary(artifactsDir)
-    writeReview(reviewFile, {
-      recommended_action: { type: 'deploy_to_production' },
-    })
-
-    expect(() => runHarnessApplyReview({ artifactsDir, reviewFile, outFile })).toThrow(
+  it.each([
+    ['review.status', { status: 'failed' }, "status must be 'completed'"],
+    ['review.verdict', { verdict: undefined }, 'verdict is not valid'],
+    [
+      'recommended_action.type',
+      { recommended_action: { type: 'deploy_to_production' } },
       'recommended_action.type is not valid',
-    )
+    ],
+    [
+      'recommended_action.target',
+      { recommended_action: { type: 'repair', target: 'deploy_to_production' } },
+      'recommended_action.target is not valid',
+    ],
+  ])('throws when %s is invalid', (_name, reviewOverrides, expectedMessage) => {
+    const { artifactsDir, reviewFile, outFile } = makeApplyReviewPaths()
+
+    writeSummary(artifactsDir)
+    writeReview(reviewFile, reviewOverrides)
+
+    expect(() => runHarnessApplyReview({ artifactsDir, reviewFile, outFile })).toThrow(expectedMessage)
   })
 
   it('throws when run_id context mismatches', () => {
-    const artifactsDir = makeTempDir()
-    const reviewFile = path.join(artifactsDir, 'review.json')
-    const outFile = path.join(artifactsDir, 'review-decision.json')
+    const { artifactsDir, reviewFile, outFile } = makeApplyReviewPaths()
 
     writeSummary(artifactsDir, { run_id: 'run-a' })
     writeReview(reviewFile, { run_id: 'run-b' })
 
-    expect(() => runHarnessApplyReview({ artifactsDir, reviewFile, outFile })).toThrow(
-      'Context mismatch',
-    )
+    expect(() => runHarnessApplyReview({ artifactsDir, reviewFile, outFile })).toThrow('Context mismatch')
   })
 
   it('writes to a nested output path', () => {
-    const artifactsDir = makeTempDir()
-    const reviewFile = path.join(artifactsDir, 'review.json')
+    const { artifactsDir, reviewFile } = makeApplyReviewPaths()
     const outFile = path.join(artifactsDir, 'nested', 'decision.json')
 
     writeSummary(artifactsDir)
@@ -281,47 +154,15 @@ describe('runHarnessApplyReview', () => {
     expect(result.decision).toBe('decision.json')
   })
 
-  it('throws when summary.json is not an object', () => {
-    const artifactsDir = makeTempDir()
-    const reviewFile = path.join(artifactsDir, 'review.json')
-    const outFile = path.join(artifactsDir, 'review-decision.json')
+  it.each([
+    ['summary.json is not an object', [1, 2, 3], 'Invalid summary: expected an object'],
+    ['summary.json run_id is not a string', { run_id: 123 }, 'Invalid summary: run_id must be a string'],
+  ])('throws when %s', (_name, summary, expectedMessage) => {
+    const { artifactsDir, reviewFile, outFile } = makeApplyReviewPaths()
 
-    fs.writeFileSync(path.join(artifactsDir, 'summary.json'), JSON.stringify([1, 2, 3]))
+    writeJson(path.join(artifactsDir, 'summary.json'), summary)
     writeReview(reviewFile)
 
-    expect(() => runHarnessApplyReview({ artifactsDir, reviewFile, outFile })).toThrow(
-      'Invalid summary: expected an object',
-    )
-  })
-
-  it('throws when summary.json run_id is not a string', () => {
-    const artifactsDir = makeTempDir()
-    const reviewFile = path.join(artifactsDir, 'review.json')
-    const outFile = path.join(artifactsDir, 'review-decision.json')
-
-    fs.writeFileSync(path.join(artifactsDir, 'summary.json'), JSON.stringify({ run_id: 123 }))
-    writeReview(reviewFile)
-
-    expect(() => runHarnessApplyReview({ artifactsDir, reviewFile, outFile })).toThrow(
-      'Invalid summary: run_id must be a string',
-    )
-  })
-
-  it('throws when recommended_action.target is invalid', () => {
-    const artifactsDir = makeTempDir()
-    const reviewFile = path.join(artifactsDir, 'review.json')
-    const outFile = path.join(artifactsDir, 'review-decision.json')
-
-    writeSummary(artifactsDir)
-    writeReview(reviewFile, {
-      recommended_action: {
-        type: 'repair',
-        target: 'deploy_to_production',
-      },
-    })
-
-    expect(() => runHarnessApplyReview({ artifactsDir, reviewFile, outFile })).toThrow(
-      'recommended_action.target is not valid',
-    )
+    expect(() => runHarnessApplyReview({ artifactsDir, reviewFile, outFile })).toThrow(expectedMessage)
   })
 })

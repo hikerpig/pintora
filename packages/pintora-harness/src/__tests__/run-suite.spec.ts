@@ -54,17 +54,11 @@ describe('runHarnessSuite', () => {
 
     const caseA = path.join(artifactsDir, 'er.relationship-spacing-01')
     fs.mkdirSync(caseA, { recursive: true })
-    fs.writeFileSync(
-      path.join(caseA, 'review-decision.json'),
-      JSON.stringify({ next_step: { type: 'accept' } })
-    )
+    fs.writeFileSync(path.join(caseA, 'review-decision.json'), JSON.stringify({ next_step: { type: 'accept' } }))
 
     const caseB = path.join(artifactsDir, 'sequence.lifeline-label-separation-01')
     fs.mkdirSync(caseB, { recursive: true })
-    fs.writeFileSync(
-      path.join(caseB, 'review-decision.json'),
-      JSON.stringify({ next_step: { type: 'repair' } })
-    )
+    fs.writeFileSync(path.join(caseB, 'review-decision.json'), JSON.stringify({ next_step: { type: 'repair' } }))
 
     const result = await runHarnessSuite({
       cwd: process.cwd(),

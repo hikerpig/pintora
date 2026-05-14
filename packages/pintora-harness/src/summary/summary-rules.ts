@@ -68,7 +68,10 @@ function deriveTopFindings(findings: Array<Partial<HarnessFinding> & { message?:
   return findings.slice(0, 3).map(finding => finding.message?.trim() || 'unknown finding')
 }
 
-function deriveScores(status: HarnessStatus, findings: Array<Partial<HarnessFinding> & { message?: string }>): SummaryScores {
+function deriveScores(
+  status: HarnessStatus,
+  findings: Array<Partial<HarnessFinding> & { message?: string }>,
+): SummaryScores {
   if (status === 'fail') {
     return {
       legibility: 0,

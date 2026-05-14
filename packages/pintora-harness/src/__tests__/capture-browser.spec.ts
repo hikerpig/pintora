@@ -2,12 +2,11 @@ import * as mockFs from 'node:fs'
 import * as mockOs from 'node:os'
 import * as mockPath from 'node:path'
 import { DEFAULT_CAPTURE_VIEWPORT } from '../contracts/browser'
+import { capturePreviewArtifacts } from '../browser/browser-capture'
 import { runHarnessCaptureBrowser } from '../browser/capture-browser'
 
-var mockCapturePreviewArtifacts: jest.Mock
-
 jest.mock('../browser/browser-capture', () => ({
-  capturePreviewArtifacts: (mockCapturePreviewArtifacts = jest.fn(async ({ outDir }) => {
+  capturePreviewArtifacts: jest.fn(async ({ outDir }) => {
     mockFs.mkdirSync(outDir, { recursive: true })
     mockFs.writeFileSync(mockPath.join(outDir, 'browser.png'), 'png-bytes')
     mockFs.writeFileSync(mockPath.join(outDir, 'dom.html'), '<html></html>')
@@ -15,11 +14,12 @@ jest.mock('../browser/browser-capture', () => ({
       screenshotPath: mockPath.join(outDir, 'browser.png'),
       domPath: mockPath.join(outDir, 'dom.html'),
     }
-  })),
+  }),
 }))
 
 describe('runHarnessCaptureBrowser', () => {
   it('writes browser artifacts for a registry case', async () => {
+    const mockCapturePreviewArtifacts = jest.mocked(capturePreviewArtifacts)
     const outDir = mockFs.mkdtempSync(mockPath.join(mockOs.tmpdir(), 'pintora-capture-browser-'))
     const result = await runHarnessCaptureBrowser({
       cwd: process.cwd(),
@@ -46,7 +46,9 @@ describe('runHarnessCaptureBrowser', () => {
 describe('capturePreviewArtifacts', () => {
   it('waits for preview stability before capturing artifacts', async () => {
     const callOrder: string[] = []
-    const { waitForStablePreview } = jest.requireActual('../browser/browser-capture') as typeof import('../browser/browser-capture')
+    const { waitForStablePreview } = jest.requireActual(
+      '../browser/browser-capture',
+    ) as typeof import('../browser/browser-capture')
     const page = {
       waitForSelector: jest.fn(async (selector: string) => {
         callOrder.push(`waitForSelector:${selector}`)
@@ -55,11 +57,10 @@ describe('capturePreviewArtifacts', () => {
         callOrder.push('evaluate:fonts.ready')
       }),
       locator: jest.fn(() => ({
-        boundingBox: jest
-          .fn(async () => {
-            callOrder.push('boundingBox:100x80')
-            return { width: 100, height: 80 }
-          }),
+        boundingBox: jest.fn(async () => {
+          callOrder.push('boundingBox:100x80')
+          return { width: 100, height: 80 }
+        }),
       })),
       waitForTimeout: jest.fn(async (ms: number) => {
         callOrder.push(`waitForTimeout:${ms}`)

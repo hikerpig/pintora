@@ -2,11 +2,7 @@ import * as fs from 'node:fs'
 import * as path from 'node:path'
 import { buildHarnessReviewPayload } from './review-payload'
 import { resolveHarnessReviewAdapter } from './review-adapter'
-import type {
-  HarnessReviewAdapterName,
-  HarnessReviewResult,
-  RunHarnessReviewCaseResult,
-} from './review-contracts'
+import type { HarnessReviewAdapterName, HarnessReviewResult, RunHarnessReviewCaseResult } from './review-contracts'
 
 function assertArtifactsDirExists(artifactsDir: string) {
   if (!fs.existsSync(artifactsDir)) {

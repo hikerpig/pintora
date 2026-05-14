@@ -10,8 +10,6 @@ describe('resolveHarnessReviewAdapter', () => {
   })
 
   it('throws for an unknown adapter name', () => {
-    expect(() => resolveHarnessReviewAdapter('unknown' as never)).toThrow(
-      'Unknown harness review adapter: unknown',
-    )
+    expect(() => resolveHarnessReviewAdapter('unknown' as never)).toThrow('Unknown harness review adapter: unknown')
   })
 })

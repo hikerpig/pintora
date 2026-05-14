@@ -7,10 +7,7 @@ describe('resolveSuiteCaseIds', () => {
       suite: 'smoke',
     })
 
-    expect(caseIds).toEqual([
-      'er.relationship-spacing-01',
-      'sequence.lifeline-label-separation-01',
-    ])
+    expect(caseIds).toEqual(['er.relationship-spacing-01', 'sequence.lifeline-label-separation-01'])
   })
 
   it('maps all to every registry case id', () => {

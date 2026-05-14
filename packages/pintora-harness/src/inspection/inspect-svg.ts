@@ -6,12 +6,7 @@ import { withSvgRoot } from '../inspection/svg-parse'
 import { buildSvgMetrics } from '../inspection/svg-metrics'
 import { deriveStatus } from '../summary/summary-rules'
 
-export async function runHarnessInspectSvg(opts: {
-  cwd: string
-  svgFile: string
-  caseId?: string
-  outDir: string
-}) {
+export async function runHarnessInspectSvg(opts: { cwd: string; svgFile: string; caseId?: string; outDir: string }) {
   const svgText = fs.readFileSync(opts.svgFile, 'utf8')
   const registryItem = opts.caseId ? loadCaseRegistry(opts.cwd).get(opts.caseId) : null
   if (opts.caseId && !registryItem) {
