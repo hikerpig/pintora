@@ -3,6 +3,8 @@ import * as path from 'path'
 
 describe('rolldown build output', () => {
   const libDir = path.join(__dirname, '../../lib')
+  const typesDir = path.join(__dirname, '../../types')
+  const dtsFile = path.join(typesDir, 'index.d.ts')
 
   describe('esm build', () => {
     const esmFile = path.join(libDir, 'pintora-standalone.esm.mjs')
@@ -49,6 +51,19 @@ describe('rolldown build output', () => {
     it('should include pintoraStandalone', () => {
       const content = fs.readFileSync(umdFile, 'utf-8')
       expect(content).toContain('pintoraStandalone')
+    })
+  })
+
+  describe('type declaration build', () => {
+    it('should generate package entry declaration file', () => {
+      expect(fs.existsSync(dtsFile)).toBe(true)
+    })
+
+    it('should include standalone exports', () => {
+      const content = fs.readFileSync(dtsFile, 'utf-8')
+      expect(content).toContain('PintoraStandalone')
+      expect(content).toContain('pintoraStandalone')
+      expect(content).toContain('export default pintoraStandalone')
     })
   })
 })
