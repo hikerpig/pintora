@@ -16,6 +16,12 @@ import type { HarnessSummary } from '../contracts/summary'
 
 const VALID_ACTION_TYPES: HarnessOrchestrationActionType[] = ['accept', 'repair', 'rerun', 'escalate']
 const VALID_TARGETS = ['diagram_source', 'render_pipeline', 'browser_capture'] as const
+const VALID_VERDICTS: ReadonlySet<HarnessReviewVerdict> = new Set([
+  'accept',
+  'reject',
+  'needs_human_review',
+  'inconclusive',
+])
 
 const VERDICT_FALLBACK: Record<HarnessReviewVerdict, HarnessOrchestrationActionType> = {
   accept: 'accept',
@@ -66,6 +72,9 @@ function assertValidReview(review: unknown): asserts review is HarnessReviewResu
   const r = review as Record<string, unknown>
   if (r.status !== 'completed') {
     throw new Error(`Invalid review: status must be 'completed', got ${r.status}`)
+  }
+  if (!VALID_VERDICTS.has(r.verdict as HarnessReviewVerdict)) {
+    throw new Error(`Invalid review: verdict is not valid: ${r.verdict}`)
   }
   if (r.recommended_action) {
     const action = r.recommended_action as Record<string, unknown>

@@ -24,12 +24,30 @@ function readCaseReviewDecision(artifactsDir: string): HarnessOrchestrationActio
   }
 }
 
+async function runWithConcurrency<T>(items: string[], maxConcurrency: number, worker: (item: string) => Promise<T>) {
+  const results = new Array<T>(items.length)
+  const requestedLimit = Number.isFinite(maxConcurrency) ? maxConcurrency : 1
+  const limit = Math.max(1, Math.floor(requestedLimit))
+  let nextIndex = 0
+
+  async function runNext() {
+    while (nextIndex < items.length) {
+      const currentIndex = nextIndex
+      nextIndex++
+      results[currentIndex] = await worker(items[currentIndex])
+    }
+  }
+
+  const workers = Array.from({ length: Math.min(limit, items.length) }, runNext)
+  await Promise.all(workers)
+  return results
+}
+
 export async function runHarnessSuite(opts: RunSuiteOptions): Promise<RunSuiteSummary> {
   const caseIds = resolveSuiteCaseIds({ cwd: opts.cwd, suite: opts.suite })
   if (caseIds.length === 0) throw new Error(`Harness suite ${opts.suite} resolved no cases`)
 
-  const cases: RunSuiteCaseResult[] = []
-  for (const caseId of caseIds) {
+  const cases = await runWithConcurrency(caseIds, opts.maxConcurrency, async (caseId): Promise<RunSuiteCaseResult> => {
     const caseArtifactsDir = path.join(opts.artifactsDir, caseId)
     try {
       const result = await runHarnessCase({
@@ -40,23 +58,23 @@ export async function runHarnessSuite(opts: RunSuiteOptions): Promise<RunSuiteSu
         viewport: opts.viewport,
         enableCaptureBrowser: opts.enableCaptureBrowser,
       })
-      cases.push({
+      return {
         caseId,
         status: result.status,
         summary: path.join(caseId, result.summary),
         captureBrowserTriggered: result.captureBrowserTriggered,
         reviewDecision: readCaseReviewDecision(caseArtifactsDir),
-      })
+      }
     } catch {
-      cases.push({
+      return {
         caseId,
         status: 'fail',
         summary: path.join(caseId, 'summary.json'),
         captureBrowserTriggered: false,
         reviewDecision: readCaseReviewDecision(caseArtifactsDir),
-      })
+      }
     }
-  }
+  })
 
   const summary: RunSuiteSummary = {
     suite: opts.suite,

@@ -79,4 +79,50 @@ describe('runHarnessSuite', () => {
     expect(result.needsRepair).toBe(1)
     expect(result.reviewPending).toBe(0)
   })
+
+  it('runs cases concurrently up to maxConcurrency', async () => {
+    const artifactsDir = fs.mkdtempSync(path.join(os.tmpdir(), 'pintora-harness-suite-'))
+    let releaseFirst: (() => void) | undefined
+
+    mockedRunHarnessCase.mockReset()
+    mockedRunHarnessCase.mockImplementationOnce(
+      () =>
+        new Promise(resolve => {
+          releaseFirst = () =>
+            resolve({
+              status: 'ok',
+              nextAction: 'done',
+              artifactsDir: '/tmp/one',
+              summary: 'summary.json',
+              captureBrowserTriggered: false,
+            })
+        }),
+    )
+    mockedRunHarnessCase.mockResolvedValueOnce({
+      status: 'ok',
+      nextAction: 'done',
+      artifactsDir: '/tmp/two',
+      summary: 'summary.json',
+      captureBrowserTriggered: false,
+    })
+
+    const suitePromise = runHarnessSuite({
+      cwd: process.cwd(),
+      suite: 'smoke',
+      artifactsDir,
+      enableCaptureBrowser: true,
+      maxConcurrency: 2,
+    })
+
+    await Promise.resolve()
+    expect(mockedRunHarnessCase).toHaveBeenCalledTimes(2)
+
+    releaseFirst?.()
+    const result = await suitePromise
+
+    expect(result.cases.map(item => item.caseId)).toEqual([
+      'er.relationship-spacing-01',
+      'sequence.lifeline-label-separation-01',
+    ])
+  })
 })

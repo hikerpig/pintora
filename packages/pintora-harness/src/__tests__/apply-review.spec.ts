@@ -226,6 +226,19 @@ describe('runHarnessApplyReview', () => {
     )
   })
 
+  it('throws when verdict is missing or invalid', () => {
+    const artifactsDir = makeTempDir()
+    const reviewFile = path.join(artifactsDir, 'review.json')
+    const outFile = path.join(artifactsDir, 'review-decision.json')
+
+    writeSummary(artifactsDir)
+    writeReview(reviewFile, { verdict: undefined })
+
+    expect(() => runHarnessApplyReview({ artifactsDir, reviewFile, outFile })).toThrow(
+      'verdict is not valid',
+    )
+  })
+
   it('throws when recommended_action.type is invalid', () => {
     const artifactsDir = makeTempDir()
     const reviewFile = path.join(artifactsDir, 'review.json')

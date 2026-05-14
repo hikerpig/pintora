@@ -14,6 +14,9 @@ export async function runHarnessInspectSvg(opts: {
 }) {
   const svgText = fs.readFileSync(opts.svgFile, 'utf8')
   const registryItem = opts.caseId ? loadCaseRegistry(opts.cwd).get(opts.caseId) : null
+  if (opts.caseId && !registryItem) {
+    throw new Error(`Unknown harness case: ${opts.caseId}`)
+  }
   const metrics = withSvgRoot(svgText, buildSvgMetrics)
   const findings = runHarnessRules(registryItem?.diagram_type, metrics)
   const status = deriveStatus(metrics.viewBox, metrics.rootChildCount, findings)

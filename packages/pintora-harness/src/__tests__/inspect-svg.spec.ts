@@ -72,4 +72,19 @@ describe('runHarnessInspectSvg', () => {
 
     expect(result.status).toBe('ok')
   })
+
+  it('throws when caseId is unknown', async () => {
+    const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), 'pintora-harness-inspect-'))
+    const svg = path.join(tmpDir, 'render.svg')
+    fs.writeFileSync(svg, '<svg viewBox="0 0 120 40"><text x="30" y="20">ok</text></svg>')
+
+    await expect(
+      runHarnessInspectSvg({
+        cwd: process.cwd(),
+        svgFile: svg,
+        caseId: 'sequence.missing-case',
+        outDir: tmpDir,
+      }),
+    ).rejects.toThrow('Unknown harness case: sequence.missing-case')
+  })
 })
