@@ -119,6 +119,75 @@ describe('runHarnessInspectAscii', () => {
     )
   })
 
+  it('reports suspicious findings for adjacent line glyphs that should share a corner cell', async () => {
+    const outDir = fs.mkdtempSync(path.join(os.tmpdir(), 'pintora-harness-ascii-inspect-'))
+    const textFile = path.join(outDir, 'render.txt')
+    const planFile = path.join(outDir, 'plan.json')
+
+    fs.writeFileSync(textFile, ['│─────────│', '▼         ▼'].join('\n'))
+    fs.writeFileSync(
+      planFile,
+      JSON.stringify({
+        width: 11,
+        height: 2,
+        ops: [
+          { type: 'line', from: { x: 0, y: 0 }, to: { x: 0, y: 1 } },
+          { type: 'line', from: { x: 1, y: 0 }, to: { x: 9, y: 0 } },
+          { type: 'line', from: { x: 10, y: 0 }, to: { x: 10, y: 1 } },
+        ],
+      }),
+    )
+
+    const result = await runHarnessInspectAscii({
+      textFile,
+      planFile,
+      outDir,
+    })
+
+    const metrics = JSON.parse(fs.readFileSync(path.join(outDir, 'ascii-metrics.json'), 'utf8'))
+    const findings = JSON.parse(fs.readFileSync(path.join(outDir, 'ascii-findings.json'), 'utf8'))
+
+    expect(result.status).toBe('suspicious')
+    expect(metrics.plan.adjacentLineJoinCount).toBe(2)
+    expect(findings).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          id: 'ascii-adjacent-line-join',
+        }),
+      ]),
+    )
+  })
+
+  it('does not treat non-rect line corners as box corner mismatches when a plan is available', async () => {
+    const outDir = fs.mkdtempSync(path.join(os.tmpdir(), 'pintora-harness-ascii-inspect-'))
+    const textFile = path.join(outDir, 'render.txt')
+    const planFile = path.join(outDir, 'plan.json')
+
+    fs.writeFileSync(textFile, ['┌──┐', '│A │', '└──┘', '┌──┐'].join('\n'))
+    fs.writeFileSync(
+      planFile,
+      JSON.stringify({
+        width: 4,
+        height: 4,
+        ops: [
+          { type: 'rect', x: 0, y: 0, width: 4, height: 3 },
+          { type: 'line', from: { x: 0, y: 3 }, to: { x: 3, y: 3 } },
+        ],
+      }),
+    )
+
+    const result = await runHarnessInspectAscii({
+      textFile,
+      planFile,
+      outDir,
+    })
+
+    const findings = JSON.parse(fs.readFileSync(path.join(outDir, 'ascii-findings.json'), 'utf8'))
+
+    expect(result.status).toBe('ok')
+    expect(findings.some((finding: any) => finding.id === 'ascii-box-corner-mismatch')).toBe(false)
+  })
+
   it('flags ER ASCII output that falls back to raw relationship text', async () => {
     const outDir = fs.mkdtempSync(path.join(os.tmpdir(), 'pintora-harness-er-inspect-'))
     fs.writeFileSync(path.join(outDir, 'render.txt'), 'CUSTOMER ||--o{ ORDER : places\n')

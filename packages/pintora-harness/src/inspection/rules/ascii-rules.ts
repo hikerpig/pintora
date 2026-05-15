@@ -4,8 +4,11 @@ import { AsciiMetricSnapshot } from '../ascii-metrics'
 export function runAsciiRules(metrics: AsciiMetricSnapshot): HarnessFinding[] {
   const findings: HarnessFinding[] = []
   const cornerCounts = Object.values(metrics.boxCornerCounts)
+  const hasMissingPlannedRectCorner = metrics.plan
+    ? cornerCounts.some(count => count < metrics.plan!.rectOpCount)
+    : cornerCounts.some(count => count !== cornerCounts[0])
 
-  if (cornerCounts.some(count => count !== cornerCounts[0])) {
+  if (hasMissingPlannedRectCorner) {
     findings.push({
       id: 'ascii-box-corner-mismatch',
       severity: 'error',
@@ -34,6 +37,14 @@ export function runAsciiRules(metrics: AsciiMetricSnapshot): HarnessFinding[] {
       id: 'ascii-switch-head-intrusion',
       severity: 'warning',
       message: 'switch head connector line intrudes into the switch label shape',
+    })
+  }
+
+  if (metrics.plan?.adjacentLineJoinCount) {
+    findings.push({
+      id: 'ascii-adjacent-line-join',
+      severity: 'warning',
+      message: 'ASCII output contains adjacent vertical and horizontal line glyphs where a shared corner is expected',
     })
   }
 

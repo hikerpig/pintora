@@ -36,26 +36,48 @@ function keyOf(directions: LineDirection[]) {
   return Array.from(new Set(directions)).sort().join(',')
 }
 
-function mergeLineGlyph(existing: string, directions: LineDirection[]) {
-  const existingDirections = GLYPH_DIRECTIONS.get(existing)
-  if (!existingDirections) return LINE_GLYPHS.get(keyOf(directions)) || existing
-  return LINE_GLYPHS.get(keyOf([...existingDirections, ...directions])) || existing
+const canvasLineDirections = new WeakMap<string[][], Map<string, Set<LineDirection>>>()
+
+function pointKey(x: number, y: number) {
+  return `${x},${y}`
+}
+
+function directionsAt(canvas: string[][], x: number, y: number) {
+  const key = pointKey(x, y)
+  const map = canvasLineDirections.get(canvas)
+  let directions = map?.get(key)
+  if (!directions) {
+    directions = new Set(GLYPH_DIRECTIONS.get(canvas[y][x]) || [])
+  }
+  return { directions, key, map }
+}
+
+function mergeLineGlyph(canvas: string[][], x: number, y: number, directions: LineDirection[]) {
+  const state = directionsAt(canvas, x, y)
+  directions.forEach(direction => state.directions.add(direction))
+  const glyph = LINE_GLYPHS.get(keyOf(Array.from(state.directions)))
+  if (!glyph) return canvas[y][x]
+  state.map?.set(state.key, state.directions)
+  return glyph
 }
 
 export function makeCanvas(width: number, height: number) {
-  return Array.from({ length: height }, () => Array.from({ length: width }, () => ' '))
+  const canvas = Array.from({ length: height }, () => Array.from({ length: width }, () => ' '))
+  canvasLineDirections.set(canvas, new Map())
+  return canvas
 }
 
 export function put(canvas: string[][], x: number, y: number, ch: string) {
   if (y < 0 || y >= canvas.length) return
   if (x < 0 || x >= canvas[y].length) return
   canvas[y][x] = ch
+  canvasLineDirections.get(canvas)?.delete(pointKey(x, y))
 }
 
 export function putLine(canvas: string[][], x: number, y: number, directions: LineDirection[]) {
   if (y < 0 || y >= canvas.length) return
   if (x < 0 || x >= canvas[y].length) return
-  canvas[y][x] = mergeLineGlyph(canvas[y][x], directions)
+  canvas[y][x] = mergeLineGlyph(canvas, x, y, directions)
 }
 
 export function putText(canvas: string[][], x: number, y: number, text: string) {

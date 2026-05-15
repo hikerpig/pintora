@@ -50,6 +50,22 @@ describe('renderTextDiagramPlan', () => {
     expect(text.split('\n')[2]).toBe(' ───┼───')
   })
 
+  it('keeps endpoint direction when merging shared line pivots into corners', () => {
+    const plan: TextDiagramPlan = {
+      width: 8,
+      height: 3,
+      ops: [
+        { type: 'line', from: { x: 1, y: 0 }, to: { x: 6, y: 0 } },
+        { type: 'line', from: { x: 1, y: 0 }, to: { x: 1, y: 2 } },
+        { type: 'line', from: { x: 6, y: 0 }, to: { x: 6, y: 2 } },
+      ],
+    }
+
+    const text = renderTextDiagramPlan(plan)
+
+    expect(text.split('\n')[0]).toBe(' ┌────┐')
+  })
+
   it('renders dashed rectangle borders when rect.stroke is dashed', () => {
     const plan: TextDiagramPlan = {
       width: 8,

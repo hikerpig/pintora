@@ -53,7 +53,7 @@ function boxBlock(label: string, stroke?: 'solid' | 'dashed'): ActivityTextBlock
   }
 }
 
-function switchHeadBlock(label: string): ActivityTextBlock {
+function decisionHeadBlock(label: string): ActivityTextBlock {
   const text = `< ${label.trim()} >`
   const width = Math.max(MIN_BOX_WIDTH, widthOf(text) + 4)
   const centerX = Math.floor(width / 2)
@@ -119,14 +119,14 @@ function connect(ops: TextDiagramOp[], from: Point, to: Point, label = '') {
   }
 }
 
-function connectSwitchBranchStart(ops: TextDiagramOp[], from: Point, to: Point, label = '') {
+function connectDecisionBranchStart(ops: TextDiagramOp[], from: Point, to: Point, label = '') {
   const busY = to.y - 2
   const arrowY = to.y - 1
   ops.push(lineOp({ x: from.x, y: from.y + 1 }, { x: from.x, y: busY }))
   if (to.x < from.x) {
-    ops.push(lineOp({ x: from.x, y: busY }, { x: to.x + 1, y: busY }))
+    ops.push(lineOp({ x: from.x, y: busY }, { x: to.x, y: busY }))
   } else if (to.x > from.x) {
-    ops.push(lineOp({ x: from.x, y: busY }, { x: to.x - 1, y: busY }))
+    ops.push(lineOp({ x: from.x, y: busY }, { x: to.x, y: busY }))
   }
 
   if (label) {
@@ -182,12 +182,12 @@ function stackBlocks(blocks: ActivityTextBlock[], labels: string[] = []): Activi
 function branchBlock(
   branches: Array<{ label: string; block: ActivityTextBlock }>,
   head: ActivityTextBlock,
-  opts: { alignMiddleBranchToHead?: boolean; drawJoin?: boolean; startConnector?: 'direct' | 'switch' } = {},
+  opts: { alignMiddleBranchToHead?: boolean; drawJoin?: boolean; startConnector?: 'decision' | 'direct' } = {},
 ) {
   const drawJoin = opts.drawJoin ?? true
   const startConnector = opts.startConnector || 'direct'
   const safeBranches = branches.length ? branches : [{ label: '', block: emptyBlock() }]
-  const branchStartY = head.height + STACK_GAP + (startConnector === 'switch' ? 1 : 0)
+  const branchStartY = head.height + STACK_GAP + (startConnector === 'decision' ? 1 : 0)
   let x = 0
   const placedBranches = safeBranches.map(branch => {
     const shifted = shiftBlock(branch.block, x, branchStartY)
@@ -221,8 +221,8 @@ function branchBlock(
   const ops = [...placedHead.ops, ...normalizedBranches.flatMap(branch => branch.block.ops)]
 
   normalizedBranches.forEach(branch => {
-    if (startConnector === 'switch') {
-      connectSwitchBranchStart(ops, placedHead.exit, branch.block.entry, branch.label)
+    if (startConnector === 'decision') {
+      connectDecisionBranchStart(ops, placedHead.exit, branch.block.entry, branch.label)
     } else {
       connect(ops, placedHead.exit, branch.block.entry, branch.label)
     }
@@ -251,7 +251,7 @@ function conditionBlock(condition: Condition, renderSteps: (steps: Step[]) => Ac
       block: renderSteps(condition.else.children),
     })
   }
-  return branchBlock(branches, boxBlock(condition.message))
+  return branchBlock(branches, decisionHeadBlock(condition.message), { startConnector: 'decision' })
 }
 
 function switchBlock(s: Switch, renderStep: (step: Step) => ActivityTextBlock, hasNext: boolean): ActivityTextBlock {
@@ -260,8 +260,8 @@ function switchBlock(s: Switch, renderStep: (step: Step) => ActivityTextBlock, h
       label: step.value.confirmLabel || '',
       block: renderStep(step),
     })),
-    switchHeadBlock(s.message || 'switch'),
-    { alignMiddleBranchToHead: true, drawJoin: hasNext, startConnector: 'switch' },
+    decisionHeadBlock(s.message || 'switch'),
+    { alignMiddleBranchToHead: true, drawJoin: hasNext, startConnector: 'decision' },
   )
 }
 

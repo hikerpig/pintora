@@ -190,6 +190,7 @@ describe('activity-artist', () => {
     const result = testDraw(code)
     const plan = result.graphicIR.rendererData?.ascii?.plan
     expect(plan).toBeTruthy()
+    const text = renderTextDiagramPlan(plan!)
 
     const switchLabel = plan!.ops.find(
       (op): op is TextDiagramTextOp => op.type === 'text' && op.text === '< renderer type >',
@@ -211,6 +212,9 @@ describe('activity-artist', () => {
     expect(switchLabel).toBeTruthy()
     expect(endRect).toBeTruthy()
     expect(hasVerticalLineCell(plan!, switchLabel!.x, switchLabel!.y + 1)).toBe(false)
+    expect(text).not.toMatch(/[│┆][─╌]{2,}/)
+    expect(text).not.toMatch(/[─╌]{2,}[│┆]/)
+    expect(text).toMatch(/┌[─╌]+┼[─╌]+┐/)
 
     const centerX = switchLabel!.x
     const mergeY = Math.max(
@@ -221,6 +225,37 @@ describe('activity-artist', () => {
     for (let y = mergeY + 1; y < endRect!.y; y++) {
       expect(hasLineCell(plan!, centerX, y)).toBe(true)
     }
+  })
+
+  it('renders if heads as decision shapes with a visible branch connector', () => {
+    const code = stripStartEmptyLines(`
+    activityDiagram
+    partition Init {
+      :read config;
+      :init internal services;
+      note left: init themes
+    }
+    :Diagram requested;
+    if (diagram registered ?) then
+      :get implementation;
+    else (no)
+      :print error;
+    endif
+    end
+    `)
+
+    const result = testDraw(code)
+    const plan = result.graphicIR.rendererData?.ascii?.plan
+    expect(plan).toBeTruthy()
+
+    const text = renderTextDiagramPlan(plan!)
+    const conditionLabel = plan!.ops.find(
+      (op): op is TextDiagramTextOp => op.type === 'text' && op.text === '< diagram registered ? >',
+    )
+    expect(conditionLabel).toBeTruthy()
+    expect(text).toContain('< diagram registered ? >')
+    expect(text).not.toContain('│ diagram registered ? │')
+    expect(hasVerticalLineCell(plan!, conditionLabel!.x, conditionLabel!.y + 2)).toBe(true)
   })
 
   it('draw fork', () => {
