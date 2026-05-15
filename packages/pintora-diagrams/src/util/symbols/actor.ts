@@ -22,10 +22,14 @@ symbolRegistry.register('actor', {
 function makeIcon({ width, height, x, y }: ContentArea) {
   const radius = Math.min(width, height) / 5
   const topY = y - height / 2
+  const bottomY = y + height / 2
   const leftX = x - radius * 1.5
   const rightX = x + radius * 1.5
-  const bodyHeight = radius * 1
+  const headCenterY = topY + radius
+  const neckY = headCenterY + radius
+  const shoulderY = neckY + radius * 1.5
   const legHeight = radius * 2
+  const hipY = bottomY - legHeight
   const mark = makeMark(
     'group',
     {},
@@ -34,18 +38,19 @@ function makeIcon({ width, height, x, y }: ContentArea) {
         makeMark('circle', {
           r: radius,
           x,
-          y: topY + radius,
+          y: headCenterY,
           width,
           height,
         }),
         makeMark('path', {
           path: [
-            ['M', leftX, y + radius / 3],
-            ['L', rightX, y + radius / 3],
-            ['M', x, y - radius / 2],
-            ['L', x, y + bodyHeight],
+            ['M', x, neckY],
+            ['L', x, hipY],
+            ['M', leftX, shoulderY],
+            ['L', rightX, shoulderY],
+            ['M', x, hipY],
             ['l', -radius, legHeight],
-            ['l', radius, -legHeight],
+            ['M', x, hipY],
             ['l', radius, legHeight],
           ],
         }),

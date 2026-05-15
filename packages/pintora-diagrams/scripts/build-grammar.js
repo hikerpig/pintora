@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-var-requires */
+/* eslint-disable @typescript-eslint/no-require-imports */
 const path = require('path')
 const { compileGrammar } = require('@pintora/development-kit')
 
@@ -13,6 +13,7 @@ const grammarFiles = [
   { input: 'src/gantt/parser/gantt.ne', output: 'src/gantt/parser/gantt.ts' },
   { input: 'src/dot/parser/dotDiagram.ne', output: 'src/dot/parser/dotDiagram.ts' },
   { input: 'src/class/parser/classDiagram.ne', output: 'src/class/parser/classDiagram.ts' },
+  { input: 'src/c4/parser/c4Diagram.ne', output: 'src/c4/parser/c4Diagram.ts' },
 ]
 
 grammarFiles.forEach(async ({ input, output }) => {

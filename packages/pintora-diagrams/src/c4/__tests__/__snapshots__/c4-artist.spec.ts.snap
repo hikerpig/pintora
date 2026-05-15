@@ -1,0 +1,1225 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`c4 artist renders a container diagram with a system boundary and database 1`] = `
+{
+  "mark": {
+    "attrs": {},
+    "children": [
+      {
+        "attrs": {},
+        "children": [
+          {
+            "attrs": {
+              "fill": "#fff",
+              "lineWidth": 1,
+              "radius": 4,
+              "stroke": "#3b4044",
+            },
+            "class": "c4__boundary-rect",
+            "type": "rect",
+          },
+          {
+            "attrs": {
+              "fill": "#3b4044",
+              "fontFamily": "Source Code Pro, sans-serif",
+              "fontSize": 14,
+              "fontStyle": "normal",
+              "fontWeight": "bold",
+              "text": "Internet Banking System",
+              "textAlign": "left",
+              "textBaseline": "top",
+            },
+            "class": "c4__boundary-label",
+            "type": "text",
+          },
+        ],
+        "class": "c4__boundary c4__boundary--system",
+        "itemId": "c4-boundary-banking",
+        "type": "group",
+      },
+      {
+        "attrs": {},
+        "children": [
+          {
+            "attrs": {
+              "fill": "#f5f1be",
+              "lineDash": undefined,
+              "lineWidth": 1,
+              "radius": 4,
+              "stroke": "#3b4044",
+            },
+            "class": "c4__element-rect",
+            "type": "rect",
+          },
+          {
+            "attrs": {
+              "fill": "#3b4044",
+              "fontFamily": "Source Code Pro, sans-serif",
+              "fontSize": 14,
+              "fontStyle": "italic",
+              "fontWeight": "normal",
+              "text": "<<container>>",
+              "textAlign": "center",
+              "textBaseline": "middle",
+            },
+            "type": "text",
+          },
+          {
+            "attrs": {
+              "fill": "#3b4044",
+              "fontFamily": "Source Code Pro, sans-serif",
+              "fontSize": 14,
+              "fontStyle": "normal",
+              "fontWeight": "bold",
+              "text": "Web Application",
+              "textAlign": "center",
+              "textBaseline": "middle",
+            },
+            "type": "text",
+          },
+          {
+            "attrs": {
+              "fill": "#3b4044",
+              "fontFamily": "Source Code Pro, sans-serif",
+              "fontSize": 14,
+              "fontStyle": "italic",
+              "fontWeight": "normal",
+              "text": "[React]",
+              "textAlign": "center",
+              "textBaseline": "middle",
+            },
+            "type": "text",
+          },
+          {
+            "attrs": {
+              "fill": "#3b4044",
+              "fontFamily": "Source Code Pro, sans-serif",
+              "fontSize": 14,
+              "fontStyle": "normal",
+              "fontWeight": "normal",
+              "text": "Delivers SPA",
+              "textAlign": "center",
+              "textBaseline": "middle",
+            },
+            "type": "text",
+          },
+        ],
+        "class": "c4__element c4__element--container",
+        "itemId": "c4-element-web",
+        "type": "group",
+      },
+      {
+        "attrs": {},
+        "children": [
+          {
+            "attrs": {
+              "fill": "#f5f1be",
+              "lineDash": undefined,
+              "lineWidth": 1,
+              "radius": 4,
+              "stroke": "#3b4044",
+            },
+            "class": "c4__element-rect",
+            "type": "rect",
+          },
+          {
+            "attrs": {
+              "fill": "#3b4044",
+              "fontFamily": "Source Code Pro, sans-serif",
+              "fontSize": 14,
+              "fontStyle": "italic",
+              "fontWeight": "normal",
+              "text": "<<container>>",
+              "textAlign": "center",
+              "textBaseline": "middle",
+            },
+            "type": "text",
+          },
+          {
+            "attrs": {
+              "fill": "#3b4044",
+              "fontFamily": "Source Code Pro, sans-serif",
+              "fontSize": 14,
+              "fontStyle": "normal",
+              "fontWeight": "bold",
+              "text": "API Application",
+              "textAlign": "center",
+              "textBaseline": "middle",
+            },
+            "type": "text",
+          },
+          {
+            "attrs": {
+              "fill": "#3b4044",
+              "fontFamily": "Source Code Pro, sans-serif",
+              "fontSize": 14,
+              "fontStyle": "italic",
+              "fontWeight": "normal",
+              "text": "[Spring Boot]",
+              "textAlign": "center",
+              "textBaseline": "middle",
+            },
+            "type": "text",
+          },
+          {
+            "attrs": {
+              "fill": "#3b4044",
+              "fontFamily": "Source Code Pro, sans-serif",
+              "fontSize": 14,
+              "fontStyle": "normal",
+              "fontWeight": "normal",
+              "text": "Handles business requests",
+              "textAlign": "center",
+              "textBaseline": "middle",
+            },
+            "type": "text",
+          },
+        ],
+        "class": "c4__element c4__element--container",
+        "itemId": "c4-element-api",
+        "type": "group",
+      },
+      {
+        "attrs": {},
+        "children": [
+          {
+            "attrs": {
+              "fill": "#f5f1be",
+              "lineDash": undefined,
+              "lineWidth": 1,
+              "radius": 4,
+              "stroke": "#3b4044",
+            },
+            "class": "c4__element-rect",
+            "type": "rect",
+          },
+          {
+            "attrs": {
+              "fill": "#3b4044",
+              "fontFamily": "Source Code Pro, sans-serif",
+              "fontSize": 14,
+              "fontStyle": "italic",
+              "fontWeight": "normal",
+              "text": "<<container>>",
+              "textAlign": "center",
+              "textBaseline": "middle",
+            },
+            "type": "text",
+          },
+          {
+            "attrs": {
+              "fill": "#3b4044",
+              "fontFamily": "Source Code Pro, sans-serif",
+              "fontSize": 14,
+              "fontStyle": "normal",
+              "fontWeight": "bold",
+              "text": "Database",
+              "textAlign": "center",
+              "textBaseline": "middle",
+            },
+            "type": "text",
+          },
+          {
+            "attrs": {
+              "fill": "#3b4044",
+              "fontFamily": "Source Code Pro, sans-serif",
+              "fontSize": 14,
+              "fontStyle": "italic",
+              "fontWeight": "normal",
+              "text": "[PostgreSQL]",
+              "textAlign": "center",
+              "textBaseline": "middle",
+            },
+            "type": "text",
+          },
+          {
+            "attrs": {
+              "fill": "#3b4044",
+              "fontFamily": "Source Code Pro, sans-serif",
+              "fontSize": 14,
+              "fontStyle": "normal",
+              "fontWeight": "normal",
+              "text": "Stores account data",
+              "textAlign": "center",
+              "textBaseline": "middle",
+            },
+            "type": "text",
+          },
+          {
+            "attrs": {},
+            "mark": {
+              "attrs": {},
+              "children": [
+                {
+                  "attrs": {
+                    "fill": "none",
+                    "lineWidth": 1,
+                    "stroke": "#3b4044",
+                  },
+                  "type": "path",
+                },
+                {
+                  "attrs": {
+                    "fill": "none",
+                    "lineWidth": 1,
+                    "stroke": "#3b4044",
+                  },
+                  "type": "ellipse",
+                },
+              ],
+              "type": "group",
+            },
+            "type": "symbol",
+          },
+        ],
+        "class": "c4__element c4__element--container",
+        "itemId": "c4-element-db",
+        "type": "group",
+      },
+      {
+        "attrs": {},
+        "children": [
+          {
+            "attrs": {
+              "fill": "#fdb05e",
+              "lineDash": undefined,
+              "lineWidth": 1,
+              "radius": 4,
+              "stroke": "#3b4044",
+            },
+            "class": "c4__element-rect",
+            "type": "rect",
+          },
+          {
+            "attrs": {
+              "fill": "#3b4044",
+              "fontFamily": "Source Code Pro, sans-serif",
+              "fontSize": 14,
+              "fontStyle": "italic",
+              "fontWeight": "normal",
+              "text": "<<person>>",
+              "textAlign": "center",
+              "textBaseline": "middle",
+            },
+            "type": "text",
+          },
+          {
+            "attrs": {
+              "fill": "#3b4044",
+              "fontFamily": "Source Code Pro, sans-serif",
+              "fontSize": 14,
+              "fontStyle": "normal",
+              "fontWeight": "bold",
+              "text": "Customer",
+              "textAlign": "center",
+              "textBaseline": "middle",
+            },
+            "type": "text",
+          },
+          {
+            "attrs": {},
+            "mark": {
+              "attrs": {},
+              "children": [
+                {
+                  "attrs": {
+                    "fill": "none",
+                    "lineWidth": 1.5,
+                    "stroke": "#3b4044",
+                  },
+                  "type": "circle",
+                },
+                {
+                  "attrs": {
+                    "fill": null,
+                    "lineWidth": 1.5,
+                    "stroke": "#3b4044",
+                  },
+                  "type": "path",
+                },
+              ],
+              "type": "group",
+            },
+            "type": "symbol",
+          },
+        ],
+        "class": "c4__element c4__element--person",
+        "itemId": "c4-element-customer",
+        "type": "group",
+      },
+      {
+        "attrs": {},
+        "children": [
+          {
+            "attrs": {
+              "lineCap": "round",
+              "lineWidth": 1,
+              "stroke": "#3b4044",
+            },
+            "class": "c4__rel-line",
+            "type": "path",
+          },
+          {
+            "attrs": {
+              "fill": "#fff",
+              "opacity": 0.85,
+            },
+            "class": "label-bg",
+            "type": "rect",
+          },
+          {
+            "attrs": {
+              "fill": "#3b4044",
+              "fontFamily": "Source Code Pro, sans-serif",
+              "fontSize": 14,
+              "fontStyle": "normal",
+              "fontWeight": "normal",
+              "text": "Uses [HTTPS]",
+              "textAlign": "center",
+              "textBaseline": "middle",
+            },
+            "class": "c4__rel-label",
+            "type": "text",
+          },
+          {
+            "attrs": {
+              "lineCap": "round",
+              "stroke": "#3b4044",
+            },
+            "class": "c4__rel-arrow",
+            "type": "path",
+          },
+        ],
+        "class": "c4__relationship",
+        "itemId": "c4-rel-0",
+        "type": "group",
+      },
+      {
+        "attrs": {},
+        "children": [
+          {
+            "attrs": {
+              "lineCap": "round",
+              "lineWidth": 1,
+              "stroke": "#3b4044",
+            },
+            "class": "c4__rel-line",
+            "type": "path",
+          },
+          {
+            "attrs": {
+              "fill": "#fff",
+              "opacity": 0.85,
+            },
+            "class": "label-bg",
+            "type": "rect",
+          },
+          {
+            "attrs": {
+              "fill": "#3b4044",
+              "fontFamily": "Source Code Pro, sans-serif",
+              "fontSize": 14,
+              "fontStyle": "normal",
+              "fontWeight": "normal",
+              "text": "Calls [JSON/HTTPS]",
+              "textAlign": "center",
+              "textBaseline": "middle",
+            },
+            "class": "c4__rel-label",
+            "type": "text",
+          },
+          {
+            "attrs": {
+              "lineCap": "round",
+              "stroke": "#3b4044",
+            },
+            "class": "c4__rel-arrow",
+            "type": "path",
+          },
+        ],
+        "class": "c4__relationship",
+        "itemId": "c4-rel-1",
+        "type": "group",
+      },
+      {
+        "attrs": {},
+        "children": [
+          {
+            "attrs": {
+              "lineCap": "round",
+              "lineWidth": 1,
+              "stroke": "#3b4044",
+            },
+            "class": "c4__rel-line",
+            "type": "path",
+          },
+          {
+            "attrs": {
+              "fill": "#fff",
+              "opacity": 0.85,
+            },
+            "class": "label-bg",
+            "type": "rect",
+          },
+          {
+            "attrs": {
+              "fill": "#3b4044",
+              "fontFamily": "Source Code Pro, sans-serif",
+              "fontSize": 14,
+              "fontStyle": "normal",
+              "fontWeight": "normal",
+              "text": "Reads/Writes [JDBC]",
+              "textAlign": "center",
+              "textBaseline": "middle",
+            },
+            "class": "c4__rel-label",
+            "type": "text",
+          },
+          {
+            "attrs": {
+              "lineCap": "round",
+              "stroke": "#3b4044",
+            },
+            "class": "c4__rel-arrow",
+            "type": "path",
+          },
+        ],
+        "class": "c4__relationship",
+        "itemId": "c4-rel-2",
+        "type": "group",
+      },
+    ],
+    "type": "group",
+  },
+}
+`;
+
+exports[`c4 artist renders a context diagram 1`] = `
+{
+  "mark": {
+    "attrs": {},
+    "children": [
+      {
+        "attrs": {},
+        "children": [
+          {
+            "attrs": {
+              "fill": "#fdb05e",
+              "lineDash": undefined,
+              "lineWidth": 1,
+              "radius": 4,
+              "stroke": "#3b4044",
+            },
+            "class": "c4__element-rect",
+            "type": "rect",
+          },
+          {
+            "attrs": {
+              "fill": "#3b4044",
+              "fontFamily": "Source Code Pro, sans-serif",
+              "fontSize": 14,
+              "fontStyle": "italic",
+              "fontWeight": "normal",
+              "text": "<<person>>",
+              "textAlign": "center",
+              "textBaseline": "middle",
+            },
+            "type": "text",
+          },
+          {
+            "attrs": {
+              "fill": "#3b4044",
+              "fontFamily": "Source Code Pro, sans-serif",
+              "fontSize": 14,
+              "fontStyle": "normal",
+              "fontWeight": "bold",
+              "text": "Customer",
+              "textAlign": "center",
+              "textBaseline": "middle",
+            },
+            "type": "text",
+          },
+          {
+            "attrs": {
+              "fill": "#3b4044",
+              "fontFamily": "Source Code Pro, sans-serif",
+              "fontSize": 14,
+              "fontStyle": "normal",
+              "fontWeight": "normal",
+              "text": "Uses online banking",
+              "textAlign": "center",
+              "textBaseline": "middle",
+            },
+            "type": "text",
+          },
+          {
+            "attrs": {},
+            "mark": {
+              "attrs": {},
+              "children": [
+                {
+                  "attrs": {
+                    "fill": "none",
+                    "lineWidth": 1.5,
+                    "stroke": "#3b4044",
+                  },
+                  "type": "circle",
+                },
+                {
+                  "attrs": {
+                    "fill": null,
+                    "lineWidth": 1.5,
+                    "stroke": "#3b4044",
+                  },
+                  "type": "path",
+                },
+              ],
+              "type": "group",
+            },
+            "type": "symbol",
+          },
+        ],
+        "class": "c4__element c4__element--person",
+        "itemId": "c4-element-customer",
+        "type": "group",
+      },
+      {
+        "attrs": {},
+        "children": [
+          {
+            "attrs": {
+              "fill": "#fdb05e",
+              "lineDash": undefined,
+              "lineWidth": 1,
+              "radius": 4,
+              "stroke": "#3b4044",
+            },
+            "class": "c4__element-rect",
+            "type": "rect",
+          },
+          {
+            "attrs": {
+              "fill": "#3b4044",
+              "fontFamily": "Source Code Pro, sans-serif",
+              "fontSize": 14,
+              "fontStyle": "italic",
+              "fontWeight": "normal",
+              "text": "<<system>>",
+              "textAlign": "center",
+              "textBaseline": "middle",
+            },
+            "type": "text",
+          },
+          {
+            "attrs": {
+              "fill": "#3b4044",
+              "fontFamily": "Source Code Pro, sans-serif",
+              "fontSize": 14,
+              "fontStyle": "normal",
+              "fontWeight": "bold",
+              "text": "Internet Banking System",
+              "textAlign": "center",
+              "textBaseline": "middle",
+            },
+            "type": "text",
+          },
+          {
+            "attrs": {
+              "fill": "#3b4044",
+              "fontFamily": "Source Code Pro, sans-serif",
+              "fontSize": 14,
+              "fontStyle": "normal",
+              "fontWeight": "normal",
+              "text": "Allows customers to view accounts",
+              "textAlign": "center",
+              "textBaseline": "middle",
+            },
+            "type": "text",
+          },
+        ],
+        "class": "c4__element c4__element--system",
+        "itemId": "c4-element-banking",
+        "type": "group",
+      },
+      {
+        "attrs": {},
+        "children": [
+          {
+            "attrs": {
+              "fill": "#fff",
+              "lineDash": [
+                4,
+                4,
+              ],
+              "lineWidth": 1,
+              "radius": 4,
+              "stroke": "#3b4044",
+            },
+            "class": "c4__element-rect",
+            "type": "rect",
+          },
+          {
+            "attrs": {
+              "fill": "#3b4044",
+              "fontFamily": "Source Code Pro, sans-serif",
+              "fontSize": 14,
+              "fontStyle": "italic",
+              "fontWeight": "normal",
+              "text": "<<system>>",
+              "textAlign": "center",
+              "textBaseline": "middle",
+            },
+            "type": "text",
+          },
+          {
+            "attrs": {
+              "fill": "#3b4044",
+              "fontFamily": "Source Code Pro, sans-serif",
+              "fontSize": 14,
+              "fontStyle": "normal",
+              "fontWeight": "bold",
+              "text": "E-mail System",
+              "textAlign": "center",
+              "textBaseline": "middle",
+            },
+            "type": "text",
+          },
+          {
+            "attrs": {
+              "fill": "#3b4044",
+              "fontFamily": "Source Code Pro, sans-serif",
+              "fontSize": 14,
+              "fontStyle": "normal",
+              "fontWeight": "normal",
+              "text": "Sends notifications",
+              "textAlign": "center",
+              "textBaseline": "middle",
+            },
+            "type": "text",
+          },
+        ],
+        "class": "c4__element c4__element--system",
+        "itemId": "c4-element-email",
+        "type": "group",
+      },
+      {
+        "attrs": {},
+        "children": [
+          {
+            "attrs": {
+              "lineCap": "round",
+              "lineWidth": 1,
+              "stroke": "#3b4044",
+            },
+            "class": "c4__rel-line",
+            "type": "path",
+          },
+          {
+            "attrs": {
+              "fill": "#fff",
+              "opacity": 0.85,
+            },
+            "class": "label-bg",
+            "type": "rect",
+          },
+          {
+            "attrs": {
+              "fill": "#3b4044",
+              "fontFamily": "Source Code Pro, sans-serif",
+              "fontSize": 14,
+              "fontStyle": "normal",
+              "fontWeight": "normal",
+              "text": "Uses [HTTPS]",
+              "textAlign": "center",
+              "textBaseline": "middle",
+            },
+            "class": "c4__rel-label",
+            "type": "text",
+          },
+          {
+            "attrs": {
+              "lineCap": "round",
+              "stroke": "#3b4044",
+            },
+            "class": "c4__rel-arrow",
+            "type": "path",
+          },
+        ],
+        "class": "c4__relationship",
+        "itemId": "c4-rel-0",
+        "type": "group",
+      },
+      {
+        "attrs": {},
+        "children": [
+          {
+            "attrs": {
+              "lineCap": "round",
+              "lineWidth": 1,
+              "stroke": "#3b4044",
+            },
+            "class": "c4__rel-line",
+            "type": "path",
+          },
+          {
+            "attrs": {
+              "fill": "#fff",
+              "opacity": 0.85,
+            },
+            "class": "label-bg",
+            "type": "rect",
+          },
+          {
+            "attrs": {
+              "fill": "#3b4044",
+              "fontFamily": "Source Code Pro, sans-serif",
+              "fontSize": 14,
+              "fontStyle": "normal",
+              "fontWeight": "normal",
+              "text": "Sends e-mail [SMTP]",
+              "textAlign": "center",
+              "textBaseline": "middle",
+            },
+            "class": "c4__rel-label",
+            "type": "text",
+          },
+          {
+            "attrs": {
+              "lineCap": "round",
+              "stroke": "#3b4044",
+            },
+            "class": "c4__rel-arrow",
+            "type": "path",
+          },
+        ],
+        "class": "c4__relationship",
+        "itemId": "c4-rel-1",
+        "type": "group",
+      },
+      {
+        "attrs": {
+          "fill": "#3b4044",
+          "fontFamily": "Source Code Pro, sans-serif",
+          "fontSize": 14,
+          "fontStyle": "normal",
+          "fontWeight": "bold",
+          "text": "System Context",
+          "textAlign": "center",
+        },
+        "class": "c4__title",
+        "type": "text",
+      },
+    ],
+    "type": "group",
+  },
+}
+`;
+
+exports[`c4 artist renders bidirectional and direction-hinted relationships 1`] = `
+{
+  "mark": {
+    "attrs": {},
+    "children": [
+      {
+        "attrs": {},
+        "children": [
+          {
+            "attrs": {
+              "fill": "#fff",
+              "lineWidth": 1,
+              "radius": 4,
+              "stroke": "#3b4044",
+            },
+            "class": "c4__boundary-rect",
+            "type": "rect",
+          },
+          {
+            "attrs": {
+              "fill": "#3b4044",
+              "fontFamily": "Source Code Pro, sans-serif",
+              "fontSize": 14,
+              "fontStyle": "normal",
+              "fontWeight": "bold",
+              "text": "API Application",
+              "textAlign": "left",
+              "textBaseline": "top",
+            },
+            "class": "c4__boundary-label",
+            "type": "text",
+          },
+        ],
+        "class": "c4__boundary c4__boundary--container",
+        "itemId": "c4-boundary-api",
+        "type": "group",
+      },
+      {
+        "attrs": {},
+        "children": [
+          {
+            "attrs": {
+              "fill": "#af71d0",
+              "lineDash": undefined,
+              "lineWidth": 1,
+              "radius": 4,
+              "stroke": "#3b4044",
+            },
+            "class": "c4__element-rect",
+            "type": "rect",
+          },
+          {
+            "attrs": {
+              "fill": "#3b4044",
+              "fontFamily": "Source Code Pro, sans-serif",
+              "fontSize": 14,
+              "fontStyle": "italic",
+              "fontWeight": "normal",
+              "text": "<<component>>",
+              "textAlign": "center",
+              "textBaseline": "middle",
+            },
+            "type": "text",
+          },
+          {
+            "attrs": {
+              "fill": "#3b4044",
+              "fontFamily": "Source Code Pro, sans-serif",
+              "fontSize": 14,
+              "fontStyle": "normal",
+              "fontWeight": "bold",
+              "text": "Account Controller",
+              "textAlign": "center",
+              "textBaseline": "middle",
+            },
+            "type": "text",
+          },
+          {
+            "attrs": {
+              "fill": "#3b4044",
+              "fontFamily": "Source Code Pro, sans-serif",
+              "fontSize": 14,
+              "fontStyle": "italic",
+              "fontWeight": "normal",
+              "text": "[TypeScript]",
+              "textAlign": "center",
+              "textBaseline": "middle",
+            },
+            "type": "text",
+          },
+        ],
+        "class": "c4__element c4__element--component",
+        "itemId": "c4-element-controller",
+        "type": "group",
+      },
+      {
+        "attrs": {},
+        "children": [
+          {
+            "attrs": {
+              "fill": "#af71d0",
+              "lineDash": undefined,
+              "lineWidth": 1,
+              "radius": 4,
+              "stroke": "#3b4044",
+            },
+            "class": "c4__element-rect",
+            "type": "rect",
+          },
+          {
+            "attrs": {
+              "fill": "#3b4044",
+              "fontFamily": "Source Code Pro, sans-serif",
+              "fontSize": 14,
+              "fontStyle": "italic",
+              "fontWeight": "normal",
+              "text": "<<component>>",
+              "textAlign": "center",
+              "textBaseline": "middle",
+            },
+            "type": "text",
+          },
+          {
+            "attrs": {
+              "fill": "#3b4044",
+              "fontFamily": "Source Code Pro, sans-serif",
+              "fontSize": 14,
+              "fontStyle": "normal",
+              "fontWeight": "bold",
+              "text": "Account Service",
+              "textAlign": "center",
+              "textBaseline": "middle",
+            },
+            "type": "text",
+          },
+          {
+            "attrs": {
+              "fill": "#3b4044",
+              "fontFamily": "Source Code Pro, sans-serif",
+              "fontSize": 14,
+              "fontStyle": "italic",
+              "fontWeight": "normal",
+              "text": "[TypeScript]",
+              "textAlign": "center",
+              "textBaseline": "middle",
+            },
+            "type": "text",
+          },
+        ],
+        "class": "c4__element c4__element--component",
+        "itemId": "c4-element-service",
+        "type": "group",
+      },
+      {
+        "attrs": {},
+        "children": [
+          {
+            "attrs": {
+              "lineCap": "round",
+              "lineWidth": 1,
+              "stroke": "#3b4044",
+            },
+            "class": "c4__rel-line",
+            "type": "path",
+          },
+          {
+            "attrs": {
+              "fill": "#fff",
+              "opacity": 0.85,
+            },
+            "class": "label-bg",
+            "type": "rect",
+          },
+          {
+            "attrs": {
+              "fill": "#3b4044",
+              "fontFamily": "Source Code Pro, sans-serif",
+              "fontSize": 14,
+              "fontStyle": "normal",
+              "fontWeight": "normal",
+              "text": "Calls",
+              "textAlign": "center",
+              "textBaseline": "middle",
+            },
+            "class": "c4__rel-label",
+            "type": "text",
+          },
+          {
+            "attrs": {
+              "lineCap": "round",
+              "stroke": "#3b4044",
+            },
+            "class": "c4__rel-arrow",
+            "type": "path",
+          },
+          {
+            "attrs": {
+              "lineCap": "round",
+              "stroke": "#3b4044",
+            },
+            "class": "c4__rel-arrow c4__rel-arrow--reverse",
+            "type": "path",
+          },
+        ],
+        "class": "c4__relationship",
+        "itemId": "c4-rel-0",
+        "type": "group",
+      },
+      {
+        "attrs": {},
+        "children": [
+          {
+            "attrs": {
+              "lineCap": "round",
+              "lineWidth": 1,
+              "stroke": "#3b4044",
+            },
+            "class": "c4__rel-line",
+            "type": "path",
+          },
+          {
+            "attrs": {
+              "fill": "#fff",
+              "opacity": 0.85,
+            },
+            "class": "label-bg",
+            "type": "rect",
+          },
+          {
+            "attrs": {
+              "fill": "#3b4044",
+              "fontFamily": "Source Code Pro, sans-serif",
+              "fontSize": 14,
+              "fontStyle": "normal",
+              "fontWeight": "normal",
+              "text": "Returns",
+              "textAlign": "center",
+              "textBaseline": "middle",
+            },
+            "class": "c4__rel-label",
+            "type": "text",
+          },
+          {
+            "attrs": {
+              "lineCap": "round",
+              "stroke": "#3b4044",
+            },
+            "class": "c4__rel-arrow",
+            "type": "path",
+          },
+        ],
+        "class": "c4__relationship",
+        "itemId": "c4-rel-1",
+        "type": "group",
+      },
+    ],
+    "type": "group",
+  },
+}
+`;
+
+exports[`c4 artist renders child-to-boundary relationships without sending them through dagre 1`] = `
+{
+  "mark": {
+    "attrs": {},
+    "children": [
+      {
+        "attrs": {},
+        "children": [
+          {
+            "attrs": {
+              "fill": "#fff",
+              "lineWidth": 1,
+              "radius": 4,
+              "stroke": "#3b4044",
+            },
+            "class": "c4__boundary-rect",
+            "type": "rect",
+          },
+          {
+            "attrs": {
+              "fill": "#3b4044",
+              "fontFamily": "Source Code Pro, sans-serif",
+              "fontSize": 14,
+              "fontStyle": "normal",
+              "fontWeight": "bold",
+              "text": "Internet Banking System",
+              "textAlign": "left",
+              "textBaseline": "top",
+            },
+            "class": "c4__boundary-label",
+            "type": "text",
+          },
+        ],
+        "class": "c4__boundary c4__boundary--system",
+        "itemId": "c4-boundary-banking",
+        "type": "group",
+      },
+      {
+        "attrs": {},
+        "children": [
+          {
+            "attrs": {
+              "fill": "#f5f1be",
+              "lineDash": undefined,
+              "lineWidth": 1,
+              "radius": 4,
+              "stroke": "#3b4044",
+            },
+            "class": "c4__element-rect",
+            "type": "rect",
+          },
+          {
+            "attrs": {
+              "fill": "#3b4044",
+              "fontFamily": "Source Code Pro, sans-serif",
+              "fontSize": 14,
+              "fontStyle": "italic",
+              "fontWeight": "normal",
+              "text": "<<container>>",
+              "textAlign": "center",
+              "textBaseline": "middle",
+            },
+            "type": "text",
+          },
+          {
+            "attrs": {
+              "fill": "#3b4044",
+              "fontFamily": "Source Code Pro, sans-serif",
+              "fontSize": 14,
+              "fontStyle": "normal",
+              "fontWeight": "bold",
+              "text": "API Application",
+              "textAlign": "center",
+              "textBaseline": "middle",
+            },
+            "type": "text",
+          },
+          {
+            "attrs": {
+              "fill": "#3b4044",
+              "fontFamily": "Source Code Pro, sans-serif",
+              "fontSize": 14,
+              "fontStyle": "italic",
+              "fontWeight": "normal",
+              "text": "[Spring Boot]",
+              "textAlign": "center",
+              "textBaseline": "middle",
+            },
+            "type": "text",
+          },
+        ],
+        "class": "c4__element c4__element--container",
+        "itemId": "c4-element-api",
+        "type": "group",
+      },
+      {
+        "attrs": {},
+        "children": [
+          {
+            "attrs": {
+              "lineCap": "round",
+              "lineWidth": 1,
+              "stroke": "#3b4044",
+            },
+            "class": "c4__rel-line",
+            "type": "path",
+          },
+          {
+            "attrs": {
+              "fill": "#fff",
+              "opacity": 0.85,
+            },
+            "class": "label-bg",
+            "type": "rect",
+          },
+          {
+            "attrs": {
+              "fill": "#3b4044",
+              "fontFamily": "Source Code Pro, sans-serif",
+              "fontSize": 14,
+              "fontStyle": "normal",
+              "fontWeight": "normal",
+              "text": "Runs inside",
+              "textAlign": "center",
+              "textBaseline": "middle",
+            },
+            "class": "c4__rel-label",
+            "type": "text",
+          },
+          {
+            "attrs": {
+              "lineCap": "round",
+              "stroke": "#3b4044",
+            },
+            "class": "c4__rel-arrow",
+            "type": "path",
+          },
+        ],
+        "class": "c4__relationship",
+        "itemId": "c4-rel-0",
+        "type": "group",
+      },
+    ],
+    "type": "group",
+  },
+}
+`;

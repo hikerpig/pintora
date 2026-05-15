@@ -220,6 +220,36 @@ componentDiagram
   `),
 }
 
+export const c4Example: DiagramExample = {
+  name: 'C4 Diagram',
+  description: 'Sample for a C4 container diagram',
+  code: stripStartEmptyLines(`
+C4Container
+title: Internet Banking - Containers
+
+Person(customer, "Customer", "Uses online banking")
+Person_Ext(support, "Customer Support", "Helps customers resolve issues")
+System_Ext(email, "E-mail System", "Sends notification e-mails")
+System_Ext(payments, "Payment Gateway", "Processes card payments")
+
+System_Boundary(banking, "Internet Banking System") {
+  Container(web, "Web Application", "React", "Delivers the single-page app")
+  Container(api, "API Application", "Spring Boot", "Handles business requests")
+  ContainerQueue(events, "Domain Events", "Kafka", "Publishes account and payment events")
+  ContainerDb(db, "Database", "PostgreSQL", "Stores customer and account data")
+}
+
+Rel(customer, web, "Uses", "HTTPS")
+Rel(support, web, "Assists with", "HTTPS")
+Rel(web, api, "Calls", "JSON/HTTPS")
+Rel(api, db, "Reads/Writes", "JDBC")
+Rel_R(api, events, "Publishes")
+Rel_D(events, email, "Triggers notifications")
+Rel_U(api, payments, "Charges cards")
+BiRel(api, payments, "Confirms payments", "HTTPS")
+`),
+}
+
 const activityExample: DiagramExample = {
   name: 'Activity Diagram',
   description: 'Sample for a activityDiagram',
@@ -377,6 +407,7 @@ export const EXAMPLES = {
   er: erExample,
   erLarge: erLargeExample,
   component: componentExample,
+  c4: c4Example,
   activity: activityExample,
   mindmap: mindmapExample,
   gantt: ganttExample,

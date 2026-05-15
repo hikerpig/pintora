@@ -7,6 +7,7 @@ import { dotDiagram, DotIR } from './dot'
 import { mindmap, MindmapIR } from './mindmap'
 import { gantt, GanttIR } from './gantt'
 import { classDiagram, ClassIR } from './class'
+import { c4Diagram, C4DiagramIR } from './c4'
 import { BaseDiagramIR } from './util/ir'
 import * as PARSER_SHARED from './util/parser-shared'
 import './type' // type augmentation
@@ -23,6 +24,7 @@ export const DIAGRAMS = {
   gantt,
   dotDiagram,
   classDiagram,
+  c4Diagram,
 }
 
 export type {
@@ -35,5 +37,16 @@ export type {
   MindmapIR,
   GanttIR,
   ClassIR,
+  C4DiagramIR,
 }
-export { sequenceDiagram, erDiagram, componentDiagram, dotDiagram, mindmap, gantt, classDiagram, PARSER_SHARED }
+export {
+  sequenceDiagram,
+  erDiagram,
+  componentDiagram,
+  dotDiagram,
+  mindmap,
+  gantt,
+  classDiagram,
+  c4Diagram,
+  PARSER_SHARED,
+}

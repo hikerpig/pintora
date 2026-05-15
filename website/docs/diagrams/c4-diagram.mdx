@@ -1,0 +1,105 @@
+---
+title: C4 Diagram
+---
+
+C4 diagrams describe software architecture using people, software systems, containers, components, and relationships.
+
+Pintora's C4 diagram syntax is macro-first. It is intended to be familiar to Mermaid C4 and C4-PlantUML users, while using Pintora's dagre-based automatic layout.
+
+## System Context
+
+```pintora play
+C4Context
+title: System Context
+
+Person(customer, "Customer", "Uses online banking")
+System(banking, "Internet Banking System", "Allows customers to view accounts")
+System_Ext(email, "E-mail System", "Sends notifications")
+
+Rel(customer, banking, "Uses", "HTTPS")
+Rel(banking, email, "Sends e-mail", "SMTP")
+```
+
+## Container
+
+```pintora play
+C4Container
+title: Internet Banking - Containers
+
+Person(customer, "Customer", "A retail banking customer")
+System_Boundary(banking, "Internet Banking System") {
+  Container(web, "Web Application", "React", "Delivers the single-page app")
+  Container(api, "API Application", "Spring Boot", "Handles business requests")
+  ContainerDb(db, "Database", "PostgreSQL", "Stores account data")
+}
+System_Ext(email, "E-mail System", "Sends notifications")
+
+Rel(customer, web, "Uses", "HTTPS")
+Rel(web, api, "Calls", "JSON/HTTPS")
+Rel(api, db, "Reads/Writes", "JDBC")
+Rel(api, email, "Sends messages", "SMTP")
+```
+
+## Component
+
+```pintora play
+C4Component
+title: API Application - Components
+
+Container_Boundary(api, "API Application") {
+  Component(controller, "Account Controller", "TypeScript", "Handles HTTP requests")
+  Component(service, "Account Service", "TypeScript", "Applies business rules")
+  ComponentDb(repository, "Account Repository", "TypeScript", "Reads account data")
+}
+
+Rel(controller, service, "Calls")
+Rel(service, repository, "Reads")
+```
+
+## Supported Macros
+
+| Category | Macros |
+| --- | --- |
+| Entries | `C4Context`, `C4Container`, `C4Component`, `c4Diagram` |
+| People | `Person`, `Person_Ext` |
+| Systems | `System`, `System_Ext`, `SystemDb`, `SystemQueue` |
+| Containers | `Container`, `Container_Ext`, `ContainerDb`, `ContainerQueue` |
+| Components | `Component`, `Component_Ext`, `ComponentDb`, `ComponentQueue` |
+| Boundaries | `Boundary`, `Enterprise_Boundary`, `System_Boundary`, `Container_Boundary` |
+| Relationships | `Rel`, `BiRel`, `Rel_U`, `Rel_Up`, `Rel_D`, `Rel_Down`, `Rel_L`, `Rel_Left`, `Rel_R`, `Rel_Right`, `Rel_Back` |
+
+## Arguments
+
+Element macros use positional arguments:
+
+```txt
+Container(alias, "Label", "Technology", "Description")
+```
+
+Named arguments can be used for common optional fields:
+
+```txt
+Person(customer, "Customer", $descr="Uses the service", $tags="person,external", $link="https://example.com")
+```
+
+Relationship macros use:
+
+```txt
+Rel(sourceAlias, targetAlias, "Label", "Technology")
+```
+
+## Layout Notes
+
+Pintora uses dagre automatic layout for C4 diagrams. The result may differ from PlantUML and Mermaid layouts.
+
+Direction-specific relationship macros such as `Rel_R` are parsed as relationship metadata. They do not force exact manual placement.
+
+## Unsupported C4-PlantUML Features
+
+Pintora C4 does not run PlantUML preprocessing. These features are not part of the current implementation:
+
+- `!include`, `!define`, procedures, and macro expansion
+- Sprites and icon libraries
+- Generated legends
+- Full tag style declarations such as `AddElementTag` and `AddRelTag`
+- Dynamic and deployment C4 diagrams
