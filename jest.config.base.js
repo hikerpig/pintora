@@ -2,7 +2,7 @@ module.exports = {
   testPathIgnorePatterns: ['/node_modules/', '/lib/'],
   coveragePathIgnorePatterns: ['node_modules', '__tests__'],
   transformIgnorePatterns: [
-    '/node_modules/.pnpm/(?!(d3-.*|internmap|@exodus\\+bytes|@asamuzakjp\\+.*|@csstools\\+.*|parse5)@)',
+    '/node_modules/.pnpm/(?!(d3-.*|internmap|@exodus\\+bytes|@asamuzakjp\\+.*|@csstools\\+.*|parse5|entities)@)',
   ],
   transform: {
     '\\.(mjs|[jt]sx?)$': [
