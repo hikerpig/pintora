@@ -222,6 +222,56 @@ What changed:
 - notes and activity decisions have reviewed compact frame templates
 - if a compact frame does not fit, ASCII falls back to geometry
 
+### TextDiagramPlan Drawing
+
+Some diagram artists can bypass SVG geometry recovery and attach a
+`rendererData.ascii.plan`. This plan is rendered by
+`packages/pintora-renderer/src/renderers/ascii/text-plan-renderer.ts` through
+`text-canvas.ts`.
+
+This path is intentionally grid-native. Artists should emit text, rect, fill,
+and axis-aligned line ops in cell coordinates rather than asking the renderer to
+repair sampled geometry.
+
+Current drawing rules:
+
+- Lines must be horizontal or vertical. Non-axis-aligned line ops are rejected.
+- Orthogonal turns and joins must share the same pivot cell. Adjacent glyphs like
+  `│──` or `──│` are considered malformed because the renderer cannot infer
+  whether the intended glyph is `┌`, `┐`, `└`, or `┘`.
+- Shared pivot cells are merged from direction sets, not from the visible glyph
+  alone. This preserves endpoint direction: a horizontal endpoint plus a
+  downward vertical line becomes `┌` or `┐`, not `┬`.
+- Text has higher visual priority than plain line drawing. A plan that places
+  text on planned line cells is still suspicious and should be represented with
+  explicit spacing or label lanes instead of relying on overwrites.
+- Rects are still the canonical representation for action-like boxes. Decision
+  heads should use a visually distinct frame, such as the sloped
+  `/...\\`, `< label >`, `\\.../` shape used by activity `if` and `switch`.
+
+Example of a malformed corner:
+
+```text
+│────────
+```
+
+Preferred plan geometry shares the corner cell and lets the renderer choose the
+glyph:
+
+```text
+┌────────
+```
+
+Activity-specific conventions built on these generic rules:
+
+- `if` and `switch` use the same decision head block so they do not look like
+  ordinary actions.
+- Decision branch connectors first leave the head vertically, then fan out on a
+  shared horizontal bus.
+- Branch starts and joins use shared pivot cells so top buses render as
+  `┌──┴──┐` / `┌──┼──┐` and merge buses render as `└──┴──┘`.
+- Terminal `switch` blocks do not draw a merge bus below the branch action boxes.
+
 ## API Surface
 
 Public-facing behavior remains small:

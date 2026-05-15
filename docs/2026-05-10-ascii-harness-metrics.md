@@ -54,7 +54,9 @@ type AsciiMetricSnapshot = {
     textOpCount: number
     rectOpCount: number
     lineOpCount: number
+    adjacentLineJoinCount: number
     opOutOfBoundsCount: number
+    switchHeadIntrusionCount: number
     textLineConflictCount: number
   }
 }
@@ -83,11 +85,21 @@ The `plan` block is `null` when no `plan.json` is provided. Without the plan, th
 
 `opCount`, `textOpCount`, `rectOpCount`, and `lineOpCount` describe the complexity of the plan. They are useful when comparing two versions of a case: a large drop or spike often indicates a pipeline regression.
 
+`adjacentLineJoinCount` counts rendered line fragments that look like adjacent
+vertical and horizontal pieces instead of a shared corner or junction cell. For
+example, `│──` and `──│` usually mean the plan used neighboring cells for a
+turn, so the renderer could not synthesize `┌`, `┐`, `└`, or `┘`.
+
 `opOutOfBoundsCount` counts plan operations that cannot fit inside the declared viewport:
 
 - text starts before column 0, ends after `plan.width`, or sits outside `plan.height`
 - line endpoints are outside the viewport
 - rect or fill ops extend beyond the viewport
+
+`switchHeadIntrusionCount` counts decision-style labels such as `< renderer type >`
+whose head shape is intruded by a vertical connector line immediately below the
+label row. It was introduced from activity `switch` and `if` regressions where a
+line visually ran through the decision head.
 
 `textLineConflictCount` counts grid cells occupied by both a text op and a line op. This is the main signal that exposed the initial ER ASCII problem: cardinality markers such as `||` and `o{` were placed as text on top of line cells, producing visual output like:
 
@@ -101,9 +113,11 @@ The `plan` block is `null` when no `plan.json` is provided. Without the plan, th
 
 | Finding | Severity | Trigger |
 | --- | --- | --- |
-| `ascii-box-corner-mismatch` | `error` | the four box corner counts are not equal |
+| `ascii-box-corner-mismatch` | `error` | with a plan, any rendered box corner count is less than `rectOpCount`; without a plan, the four box corner counts are not equal |
 | `ascii-op-out-of-bounds` | `error` | `opOutOfBoundsCount > 0` |
 | `ascii-text-line-conflict` | `warning` | `textLineConflictCount > 0` |
+| `ascii-switch-head-intrusion` | `warning` | `switchHeadIntrusionCount > 0` |
+| `ascii-adjacent-line-join` | `warning` | `adjacentLineJoinCount > 0` |
 
 `inspect-ascii` maps findings to status:
 
@@ -125,15 +139,27 @@ Rules should be diagram-agnostic where possible. The current checks operate on `
 
 Warnings are acceptable for early layout work. A warning lets the harness preserve an artifact and flag the case for review while not treating every low-fidelity issue as a hard failure.
 
+Line aesthetics should be tested as structural evidence, not as subjective taste.
+The harness flags adjacent line joins because they reveal a concrete plan defect:
+two line segments that should meet at one pivot cell were emitted into neighboring
+cells. The renderer can choose good glyphs only when the plan preserves the
+topology.
+
 ## Known Boundaries
 
 `textLineConflictCount` is intentionally conservative. Some future text-on-line cases may be valid if the renderer introduces semantic line labels. If that happens, the plan should represent label exclusion zones or intentional overlays instead of weakening the metric globally.
 
-The box corner check only proves corner counts balance. It does not prove every box is rectangular or that borders are continuous.
+The box corner check only proves planned rect corners are present. When a
+`plan.json` is available, extra `┌┐└┘` glyphs from connector turns are allowed.
+Without a plan, the harness falls back to the older balanced-corner heuristic.
+Neither mode proves every box is rectangular or that borders are continuous.
 
 The width model is grid-oriented, not font-measured. It is correct for terminal-style layout decisions, but it is not a browser typography measurement.
 
-The current metrics do not detect all visual overlaps. They focus on operation bounds and text-line conflicts. Text-text overlaps, line-rect routing conflicts, and relationship-to-entity semantic attachment are future extensions.
+The current metrics do not detect all visual overlaps. They focus on operation
+bounds, text-line conflicts, decision-head intrusion, and malformed adjacent line
+joins. Text-text overlaps, line-rect routing conflicts, and
+relationship-to-entity semantic attachment are future extensions.
 
 ## Example Interpretation
 
