@@ -3,9 +3,9 @@
   "private": true,
   "description": "Monorepo for pintora project",
   "workspaces": [
-    "./packages/*",
-    "./website",
-    "./demo"
+    "packages/**",
+    "demo",
+    "website"
   ],
   "scripts": {
     "ai:link": "node scripts/ai-sync.mjs link",

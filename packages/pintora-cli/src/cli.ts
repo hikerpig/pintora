@@ -1,4 +1,4 @@
-import { PintoraConfig } from '@pintora/standalone'
+import type { PintoraConfig } from '@pintora/standalone'
 import consola from 'consola'
 import * as fs from 'node:fs'
 import * as mime from 'mime-types'
@@ -30,7 +30,9 @@ type CliRenderArgs = {
 }
 
 // eslint-disable-next-line @typescript-eslint/no-unused-expressions
-yargs
+const parser = yargs
+  .exitProcess(false)
+  .strictCommands()
   .command<CliRenderArgs>({
     command: 'render',
     describe: 'Render DSL to diagram image',
@@ -69,8 +71,18 @@ yargs
     },
     handler: handleRenderCommand,
   })
+  .fail((message, error) => {
+    const output = message || error?.message
+    if (output) consola.error(output)
+    process.exitCode = 1
+  })
   .help()
-  .showHelpOnFail(true).argv
+  .showHelpOnFail(true)
+try {
+  parser.parse()
+} catch {
+  process.exitCode = process.exitCode || 1
+}
 
 async function handleRenderCommand(args: CliRenderArgs) {
   // consola.log('args', args)

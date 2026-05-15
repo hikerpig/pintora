@@ -1,0 +1,38 @@
+{
+  "name": "@pintora/harness",
+  "version": "0.8.1",
+  "private": true,
+  "description": "Internal harness tooling for Pintora",
+  "main": "lib/index.js",
+  "types": "lib/index.d.ts",
+  "files": [
+    "lib",
+    "CHANGELOG.md"
+  ],
+  "bin": {
+    "pintora-harness": "./bin/pintora-harness"
+  },
+  "scripts": {
+    "compile": "tsc",
+    "watch": "tsc -w",
+    "test": "jest --forceExit"
+  },
+  "dependencies": {
+    "@pintora/cli": "workspace:^0.8.1",
+    "@pintora/core": "workspace:^0.8.1",
+    "@pintora/diagrams": "workspace:^0.8.1",
+    "@pintora/renderer": "workspace:^0.8.1",
+    "@pintora/standalone": "workspace:^0.8.1",
+    "canvas": "^3.0.1",
+    "consola": "^3.0.0",
+    "jsdom": "^26.0.0",
+    "playwright": "^1.55.0",
+    "yargs": "^17.7.2"
+  },
+  "devDependencies": {
+    "@types/jsdom": "^21.0.0",
+    "@types/node": "^18.12.0",
+    "@types/yargs": "^17.0.33",
+    "typescript": "^5.9.0"
+  }
+}

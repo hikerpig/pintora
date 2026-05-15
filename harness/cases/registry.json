@@ -1,0 +1,94 @@
+{
+  "cases": [
+    {
+      "id": "er.relationship-spacing-01",
+      "diagram_type": "er",
+      "title": "ER horizontal marker should stay outside entity border",
+      "input_file": "er/relationship-spacing-01.pintora",
+      "tags": ["spacing", "cardinality", "layout"],
+      "checks": ["svg-structure", "entity-border-clearance", "relationship-label-lane-stability"],
+      "escalation_policy": {
+        "capture_browser_on": ["suspicious", "fail"]
+      },
+      "golden": {
+        "require_svg": true,
+        "require_browser_png": false
+      }
+    },
+    {
+      "id": "sequence.lifeline-label-separation-01",
+      "diagram_type": "sequence",
+      "title": "Sequence lifeline label should keep top spacing",
+      "input_file": "sequence/lifeline-label-separation-01.pintora",
+      "tags": ["spacing", "label", "lifeline"],
+      "checks": ["svg-structure", "lifeline-label-separation"],
+      "escalation_policy": {
+        "capture_browser_on": ["suspicious", "fail"]
+      },
+      "golden": {
+        "require_svg": true,
+        "require_browser_png": false
+      }
+    },
+    {
+      "id": "er.relationship-label-lane-01",
+      "diagram_type": "er",
+      "title": "ER relationship label should keep a stable lane",
+      "input_file": "er/relationship-label-lane-01.pintora",
+      "tags": ["label", "relationship", "lane"],
+      "checks": ["svg-structure", "relationship-label-lane-stability"],
+      "escalation_policy": {
+        "capture_browser_on": ["suspicious", "fail"]
+      },
+      "golden": {
+        "require_svg": true,
+        "require_browser_png": false
+      }
+    },
+    {
+      "id": "er.crowding-hotspot-01",
+      "diagram_type": "er",
+      "title": "ER crowded attributes should be preserved as a hotspot case",
+      "input_file": "er/crowding-hotspot-01.pintora",
+      "tags": ["crowding", "attributes", "layout"],
+      "checks": ["svg-structure", "crowding-hotspot"],
+      "escalation_policy": {
+        "capture_browser_on": ["suspicious", "fail"]
+      },
+      "golden": {
+        "require_svg": true,
+        "require_browser_png": false
+      }
+    },
+    {
+      "id": "sequence.message-label-collision-01",
+      "diagram_type": "sequence",
+      "title": "Sequence message labels should avoid collisions",
+      "input_file": "sequence/message-label-collision-01.pintora",
+      "tags": ["message", "label", "collision"],
+      "checks": ["svg-structure", "message-label-collision"],
+      "escalation_policy": {
+        "capture_browser_on": ["suspicious", "fail"]
+      },
+      "golden": {
+        "require_svg": true,
+        "require_browser_png": false
+      }
+    },
+    {
+      "id": "sequence.activation-stack-clarity-01",
+      "diagram_type": "sequence",
+      "title": "Sequence activations should remain distinguishable",
+      "input_file": "sequence/activation-stack-clarity-01.pintora",
+      "tags": ["activation", "stack", "clarity"],
+      "checks": ["svg-structure", "activation-stack-clarity"],
+      "escalation_policy": {
+        "capture_browser_on": ["suspicious", "fail"]
+      },
+      "golden": {
+        "require_svg": true,
+        "require_browser_png": false
+      }
+    }
+  ]
+}

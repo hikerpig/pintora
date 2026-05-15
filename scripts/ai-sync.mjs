@@ -6,6 +6,7 @@
 //   node scripts/ai-sync.mjs link claude     # only Claude Code
 //   node scripts/ai-sync.mjs status          # show link status per skill
 //   node scripts/ai-sync.mjs unlink          # remove our symlinks
+//   node scripts/ai-sync.mjs agents          # symlink AGENTS.md -> CLAUDE.md in every package
 //
 // Symlinks are created per-skill so existing third-party skills in the
 // tool directories (for example `.claude/skills/openspec-*`) are not
@@ -72,10 +73,44 @@ function unlink(tool) {
   }
 }
 
+function findAgentsFiles(dir) {
+  const results = []
+  for (const entry of readdirSync(dir, { withFileTypes: true })) {
+    const full = resolve(dir, entry.name)
+    if (entry.name === 'node_modules' || entry.name === '.git') continue
+    if (entry.isDirectory()) {
+      results.push(...findAgentsFiles(full))
+    } else if (entry.name === 'AGENTS.md') {
+      results.push(full)
+    }
+  }
+  return results
+}
+
+function agents() {
+  const files = findAgentsFiles(ROOT)
+  for (const agentsFile of files) {
+    const dir = dirname(agentsFile)
+    const claudeLink = resolve(dir, 'CLAUDE.md')
+    const stat = lstatSync(claudeLink, { throwIfNoEntry: false })
+    if (stat) {
+      if (!stat.isSymbolicLink()) {
+        console.error(`skip ${claudeLink}: not a symlink (real file present)`)
+        continue
+      }
+      unlinkSync(claudeLink)
+    }
+    symlinkSync('AGENTS.md', claudeLink, 'file')
+    console.log(`linked ${relative(ROOT, claudeLink)} -> AGENTS.md`)
+  }
+}
+
 const [cmd, tool] = process.argv.slice(2)
 const tools = tool ? [tool] : Object.keys(TARGETS)
 
-if (!tool || TARGETS[tool]) {
+if (cmd === 'agents') {
+  agents()
+} else if (!tool || TARGETS[tool]) {
   if (cmd === 'link') tools.forEach(link)
   else if (cmd === 'status') tools.forEach(status)
   else if (cmd === 'unlink') tools.forEach(unlink)
