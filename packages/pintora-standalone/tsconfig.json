@@ -8,7 +8,7 @@
     "allowJs": true,
     "resolveJsonModule": true,
     "declarationDir": "types",
-    "types": ["tinycolor2", "jest"]
+    "types": ["tinycolor2", "jest", "node"]
   },
   "references": [
     { "path": "../pintora-core" },
