@@ -81,6 +81,44 @@ describe('runHarnessInspectAscii', () => {
     )
   })
 
+  it('reports suspicious findings when a switch head connector intrudes into the head shape', async () => {
+    const outDir = fs.mkdtempSync(path.join(os.tmpdir(), 'pintora-harness-ascii-inspect-'))
+    const textFile = path.join(outDir, 'render.txt')
+    const planFile = path.join(outDir, 'plan.json')
+
+    fs.writeFileSync(textFile, [' /─────\\', ' < A >', ' \\──│──/', '    │'].join('\n'))
+    fs.writeFileSync(
+      planFile,
+      JSON.stringify({
+        width: 8,
+        height: 4,
+        ops: [
+          { type: 'text', x: 4, y: 1, text: '< A >', align: 'center' },
+          { type: 'line', from: { x: 4, y: 2 }, to: { x: 4, y: 3 } },
+        ],
+      }),
+    )
+
+    const result = await runHarnessInspectAscii({
+      textFile,
+      planFile,
+      outDir,
+    })
+
+    const metrics = JSON.parse(fs.readFileSync(path.join(outDir, 'ascii-metrics.json'), 'utf8'))
+    const findings = JSON.parse(fs.readFileSync(path.join(outDir, 'ascii-findings.json'), 'utf8'))
+
+    expect(result.status).toBe('suspicious')
+    expect(metrics.plan.switchHeadIntrusionCount).toBe(1)
+    expect(findings).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          id: 'ascii-switch-head-intrusion',
+        }),
+      ]),
+    )
+  })
+
   it('flags ER ASCII output that falls back to raw relationship text', async () => {
     const outDir = fs.mkdtempSync(path.join(os.tmpdir(), 'pintora-harness-er-inspect-'))
     fs.writeFileSync(path.join(outDir, 'render.txt'), 'CUSTOMER ||--o{ ORDER : places\n')

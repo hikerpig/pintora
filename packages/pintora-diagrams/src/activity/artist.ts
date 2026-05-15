@@ -36,6 +36,7 @@ import { getPointsCurvePath, getPointsLinearPath } from '../util/line-util'
 import { makeBounds, positionGroupContents, tryExpandBounds } from '../util/mark-positioner'
 import { getTextDimensionsInPresicion } from '../util/text'
 import { makeTextMark } from './artist-util'
+import { toActivityTextDiagramPlan } from './ascii'
 import { ActivityConf, getConf } from './config'
 import {
   AGroup,
@@ -135,11 +136,21 @@ const erArtist: IDiagramArtist<ActivityDiagramIR, ActivityConf> = {
       ...titleResult,
     })
 
-    return {
+    const graphicsIR: GraphicsIR = {
       mark: rootMark,
       width,
       height,
-    } as GraphicsIR
+    }
+    graphicsIR.rendererData = {
+      ...(graphicsIR.rendererData || {}),
+      ascii: {
+        ...(graphicsIR.rendererData?.ascii || {}),
+        layout: ir,
+        plan: toActivityTextDiagramPlan(ir),
+      },
+    }
+
+    return graphicsIR
   },
 }
 

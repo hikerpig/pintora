@@ -29,6 +29,14 @@ export function runAsciiRules(metrics: AsciiMetricSnapshot): HarnessFinding[] {
     })
   }
 
+  if (metrics.plan?.switchHeadIntrusionCount) {
+    findings.push({
+      id: 'ascii-switch-head-intrusion',
+      severity: 'warning',
+      message: 'switch head connector line intrudes into the switch label shape',
+    })
+  }
+
   return findings
 }
 

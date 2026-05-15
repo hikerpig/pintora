@@ -13,6 +13,7 @@ export type AsciiMetricSnapshot = {
     rectOpCount: number
     lineOpCount: number
     opOutOfBoundsCount: number
+    switchHeadIntrusionCount: number
     textLineConflictCount: number
   }
 }
@@ -98,6 +99,18 @@ function countTextLineConflicts(plan: TextDiagramPlan) {
   return conflicts
 }
 
+function countSwitchHeadIntrusions(plan: TextDiagramPlan) {
+  const verticalLineCells = new Set<string>()
+  plan.ops.forEach(op => {
+    if (op.type !== 'line' || op.from.x !== op.to.x) return
+    collectLineCells(op).forEach(cell => verticalLineCells.add(cell))
+  })
+
+  return plan.ops.filter(
+    op => op.type === 'text' && /^< .+ >$/.test(op.text) && verticalLineCells.has(pointKey(op.x, op.y + 1)),
+  ).length
+}
+
 export function buildAsciiMetrics(text: string, plan?: TextDiagramPlan | null): AsciiMetricSnapshot {
   const lines = text.split(/\n/)
   const boxCornerCounts = {
@@ -130,6 +143,7 @@ export function buildAsciiMetrics(text: string, plan?: TextDiagramPlan | null): 
           rectOpCount: plan.ops.filter(op => op.type === 'rect').length,
           lineOpCount: plan.ops.filter(op => op.type === 'line').length,
           opOutOfBoundsCount: plan.ops.filter(op => isOpOutOfBounds(op, plan)).length,
+          switchHeadIntrusionCount: countSwitchHeadIntrusions(plan),
           textLineConflictCount: countTextLineConflicts(plan),
         }
       : null,

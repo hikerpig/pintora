@@ -498,3 +498,26 @@ erDiagram
     expect(text).not.toMatch(/(?:○╟|╟|╢|╢○)[─╌]/)
   })
 })
+
+describe('activity ascii rendering', () => {
+  it('renders activity nodes and flow connectors', () => {
+    const text = renderToAscii(`
+activityDiagram
+  start
+  :Diagram requested;
+  if (diagram registered ?) then
+    :get implementation;
+  else (no)
+    :show missing diagram;
+  endif
+  end
+    `)
+
+    expect(text).toContain('Diagram requested')
+    expect(text).toContain('diagram registered ?')
+    expect(text).toContain('get implementation')
+    expect(text).toContain('show missing diagram')
+    expect(text).toMatch(/[│─]/)
+    expect(text).toMatch(/[▼▶]/)
+  })
+})
