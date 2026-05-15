@@ -69,6 +69,6 @@
     "microbundle": "^0.15.1",
     "rolldown": "1.0.0",
     "tsx": "^4.0.0",
-    "typescript": "^5.9.0"
+    "typescript": "^6.0.0"
   }
 }

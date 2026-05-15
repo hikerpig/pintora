@@ -6,7 +6,8 @@
     "strict": false,
     "checkJs": false,
     "allowJs": true,
-    "noImplicitThis": true
+    "noImplicitThis": true,
+    "types": ["jest"]
   },
   "references": [
     { "path": "../pintora-core" },

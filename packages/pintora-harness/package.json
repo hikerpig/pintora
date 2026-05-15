@@ -33,6 +33,6 @@
     "@types/jsdom": "^21.0.0",
     "@types/node": "^18.12.0",
     "@types/yargs": "^17.0.33",
-    "typescript": "^5.9.0"
+    "typescript": "^6.0.0"
   }
 }
