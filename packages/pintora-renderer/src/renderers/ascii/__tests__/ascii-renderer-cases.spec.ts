@@ -682,3 +682,24 @@ componentDiagram
     expect(text).not.toMatch(/─{2,}│/)
   })
 })
+
+describe('mindmap ascii rendering', () => {
+  it('renders mindmap nodes and left/right directional connectors', () => {
+    const text = renderToAscii(`
+mindmap
+title: ASCII Mindmap
++ Root
+++ Right Child
+-- Left Child
+--- Left Leaf
+    `)
+
+    expect(text).toContain('ASCII Mindmap')
+    expect(text).toContain('Root')
+    expect(text).toContain('Right Child')
+    expect(text).toContain('Left Child')
+    expect(text).toContain('Left Leaf')
+    expect(text).toMatch(/[▶◀]/)
+    expect(text).toMatch(/[─│]/)
+  })
+})

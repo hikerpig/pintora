@@ -20,6 +20,7 @@ import { setDevGlobal } from '../util/env'
 import { getFontConfig } from '../util/font-config'
 import { getPointsLinearPath } from '../util/line-util'
 import { makeBounds, positionGroupContents, TRANSFORM_GRAPH } from '../util/mark-positioner'
+import { toMindmapTextDiagramPlan } from './ascii'
 import db from './db'
 
 let conf: EnhancedConf<MindmapConf>
@@ -67,6 +68,11 @@ class MindmapArtist extends BaseArtist<MindmapIR, MindmapConf> {
       width,
       height,
       mark: rootMark,
+      rendererData: {
+        ascii: {
+          plan: toMindmapTextDiagramPlan(ir),
+        },
+      },
     }
   }
 }
