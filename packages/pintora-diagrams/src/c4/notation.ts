@@ -208,7 +208,8 @@ function createElementIcon(element: C4Element, conf: C4EnhancedConf): C4ElementI
 }
 
 export function makeC4BoundaryMark(boundary: C4Boundary, conf: C4EnhancedConf, font: IFont): C4NodeMark {
-  const label = boundary.description ? `${boundary.label} - ${boundary.description}` : boundary.label
+  const labelParts = [boundary.label, boundary.type, boundary.description].filter(Boolean)
+  const label = labelParts.join(' - ')
   const labelFont: IFont = { ...font, fontWeight: 'bold' }
   const labelDims = calculateTextDimensions(label, labelFont)
   const rect = makeMark(

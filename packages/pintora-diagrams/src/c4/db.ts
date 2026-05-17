@@ -43,13 +43,16 @@ export class C4Db extends BaseDb {
       case 'C4Component':
         this.diagramKind = 'component'
         break
+      case 'C4Dynamic':
+        this.diagramKind = 'dynamic'
+        break
+      case 'C4Deployment':
+        this.diagramKind = 'deployment'
+        break
       case 'C4Context':
       case 'c4Diagram':
         this.diagramKind = 'context'
         break
-      case 'C4Dynamic':
-      case 'C4Deployment':
-        throw new Error(`[c4] ${entry} is recognized but not supported by the first C4 implementation`)
       default:
         throw new Error(`[c4] unsupported diagram entry: ${entry}`)
     }

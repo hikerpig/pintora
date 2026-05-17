@@ -56,17 +56,50 @@ Rel(controller, service, "Calls")
 Rel(service, repository, "Reads")
 ```
 
+## Dynamic
+
+```pintora play
+C4Dynamic
+title: Sign-in Flow
+
+Container(web, "Web Application", "React")
+Container(api, "API Application", "Node.js")
+ContainerDb(db, "Database", "PostgreSQL")
+
+RelIndex(1, web, api, "Submits credentials", "JSON/HTTPS")
+RelIndex(2, api, db, "Reads user record", "SQL")
+RelIndex(3, api, web, "Returns session", "JSON/HTTPS")
+```
+
+## Deployment
+
+```pintora play
+C4Deployment
+title: Production Deployment
+
+Deployment_Node(region, "AWS Region", "us-east-1") {
+  Node(cluster, "EKS Cluster", "Kubernetes") {
+    Container(api, "API Application", "Node.js")
+  }
+  Node(databaseHost, "Database Host", "RDS") {
+    ContainerDb(db, "Database", "PostgreSQL")
+  }
+}
+
+Rel(api, db, "Reads/Writes", "SQL")
+```
+
 ## Supported Macros
 
-| Category | Macros |
-| --- | --- |
-| Entries | `C4Context`, `C4Container`, `C4Component`, `c4Diagram` |
-| People | `Person`, `Person_Ext` |
-| Systems | `System`, `System_Ext`, `SystemDb`, `SystemQueue` |
-| Containers | `Container`, `Container_Ext`, `ContainerDb`, `ContainerQueue` |
-| Components | `Component`, `Component_Ext`, `ComponentDb`, `ComponentQueue` |
-| Boundaries | `Boundary`, `Enterprise_Boundary`, `System_Boundary`, `Container_Boundary` |
-| Relationships | `Rel`, `BiRel`, `Rel_U`, `Rel_Up`, `Rel_D`, `Rel_Down`, `Rel_L`, `Rel_Left`, `Rel_R`, `Rel_Right`, `Rel_Back` |
+| Category      | Macros                                                                                                                    |
+| ------------- | ------------------------------------------------------------------------------------------------------------------------- |
+| Entries       | `C4Context`, `C4Container`, `C4Component`, `C4Dynamic`, `C4Deployment`, `c4Diagram`                                       |
+| People        | `Person`, `Person_Ext`                                                                                                    |
+| Systems       | `System`, `System_Ext`, `SystemDb`, `SystemQueue`                                                                         |
+| Containers    | `Container`, `Container_Ext`, `ContainerDb`, `ContainerQueue`                                                             |
+| Components    | `Component`, `Component_Ext`, `ComponentDb`, `ComponentQueue`                                                             |
+| Boundaries    | `Boundary`, `Enterprise_Boundary`, `System_Boundary`, `Container_Boundary`, `Deployment_Node`, `Node`, `Node_L`, `Node_R` |
+| Relationships | `Rel`, `BiRel`, `Rel_U`, `Rel_Up`, `Rel_D`, `Rel_Down`, `Rel_L`, `Rel_Left`, `Rel_R`, `Rel_Right`, `Rel_Back`, `RelIndex` |
 
 ## Arguments
 
@@ -88,6 +121,12 @@ Relationship macros use:
 Rel(sourceAlias, targetAlias, "Label", "Technology")
 ```
 
+Dynamic relationship macros use:
+
+```txt
+RelIndex(index, sourceAlias, targetAlias, "Label", "Technology")
+```
+
 ## Layout Notes
 
 Pintora uses dagre automatic layout for C4 diagrams. The result may differ from PlantUML and Mermaid layouts.
@@ -102,4 +141,3 @@ Pintora C4 does not run PlantUML preprocessing. These features are not part of t
 - Sprites and icon libraries
 - Generated legends
 - Full tag style declarations such as `AddElementTag` and `AddRelTag`
-- Dynamic and deployment C4 diagrams

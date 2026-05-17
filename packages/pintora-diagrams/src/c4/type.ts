@@ -1,13 +1,13 @@
 import { SetTitleAction, OverrideConfigAction, ParamAction } from '../util/config'
 import { BaseDiagramIR } from '../util/ir'
 
-export type C4DiagramKind = 'context' | 'container' | 'component'
+export type C4DiagramKind = 'context' | 'container' | 'component' | 'dynamic' | 'deployment'
 
 export type C4ElementKind = 'person' | 'system' | 'container' | 'component'
 
 export type C4Shape = 'person' | 'box' | 'database' | 'queue'
 
-export type C4BoundaryKind = 'generic' | 'enterprise' | 'system' | 'container'
+export type C4BoundaryKind = 'generic' | 'enterprise' | 'system' | 'container' | 'deploymentNode'
 
 export type C4DirectionHint = 'up' | 'down' | 'left' | 'right' | 'back'
 
@@ -53,6 +53,7 @@ export type C4Boundary = {
   id: string
   kind: C4BoundaryKind
   label: string
+  type?: string
   description?: string
   parent?: string
   tags: string[]
@@ -64,6 +65,7 @@ export type C4Boundary = {
 export type C4Relationship = {
   source: string
   target: string
+  index?: string
   label?: string
   technology?: string
   description?: string

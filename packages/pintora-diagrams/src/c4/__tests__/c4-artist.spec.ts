@@ -1,4 +1,5 @@
 import { calculateTextDimensions, diagramRegistry, Group, Mark, symbolRegistry } from '@pintora/core'
+import { EXAMPLES } from '@pintora/test-shared'
 import { prepareDiagramConfig, stripDrawResultForSnapshot, testDraw } from '../../__tests__/test-util'
 import { c4Diagram } from '../index'
 
@@ -136,6 +137,51 @@ Rel_R(service, controller, "Returns")
 
     expect(relationshipLines.length).toBeGreaterThanOrEqual(2)
     expect(stripDrawResultForSnapshot(result)).toMatchSnapshot()
+  })
+
+  it('renders dynamic relationship indexes in labels', () => {
+    const code = `
+C4Dynamic
+Container(web, "Web", "React")
+Container(api, "API", "Node.js")
+RelIndex(1, web, api, "Submits request", "JSON/HTTPS")
+`
+
+    const result = testDraw(code)
+    const rootMark = result.graphicIR.mark as Group
+    const relationship = findC4ElementGroup(rootMark, 'c4-rel-0')
+    const label = relationship.children.find(child => child.type === 'text' && child.class === 'c4__rel-label')!
+
+    expect(label.attrs.text).toBe('1. Submits request [JSON/HTTPS]')
+  })
+
+  it('renders deployment nodes as nested boundaries', () => {
+    const code = `
+C4Deployment
+Deployment_Node(region, "AWS Region", "us-east-1") {
+  Node(cluster, "EKS Cluster", "Kubernetes") {
+    Container(api, "API", "Node.js")
+  }
+}
+Rel(api, region, "Runs in")
+`
+
+    const result = testDraw(code)
+    const rootMark = result.graphicIR.mark as Group
+    const region = findC4ElementGroup(rootMark, 'c4-boundary-region')
+    const cluster = findC4ElementGroup(rootMark, 'c4-boundary-cluster')
+    const regionLabel = region.children.find(child => child.type === 'text' && child.class === 'c4__boundary-label')!
+    const clusterLabel = cluster.children.find(child => child.type === 'text' && child.class === 'c4__boundary-label')!
+
+    expect(region.class).toContain('c4__boundary--deploymentNode')
+    expect(cluster.class).toContain('c4__boundary--deploymentNode')
+    expect(regionLabel.attrs.text).toBe('AWS Region - us-east-1')
+    expect(clusterLabel.attrs.text).toBe('EKS Cluster - Kubernetes')
+  })
+
+  it('renders shared dynamic and deployment examples', () => {
+    expect(testDraw(EXAMPLES.c4Dynamic.code).graphicIR.mark).toBeTruthy()
+    expect(testDraw(EXAMPLES.c4Deployment.code).graphicIR.mark).toBeTruthy()
   })
 
   it('keeps the person icon inside its element box and separates element text rows', () => {

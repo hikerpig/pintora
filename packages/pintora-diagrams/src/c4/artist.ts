@@ -272,8 +272,13 @@ class C4Draw {
   }
 
   protected getRelationshipLabel(relationship: C4Relationship) {
-    if (relationship.label && relationship.technology) return `${relationship.label} [${relationship.technology}]`
-    return relationship.label || relationship.technology || ''
+    const label =
+      relationship.label && relationship.technology
+        ? `${relationship.label} [${relationship.technology}]`
+        : relationship.label || relationship.technology || ''
+
+    if (relationship.index && label) return `${relationship.index}. ${label}`
+    return relationship.index || label
   }
 
   protected applyRelationshipLayout(points: Point[], edgeData: EdgeData) {
@@ -317,7 +322,10 @@ class C4Draw {
   }
 
   protected shouldSkipRelationshipLayout(relationship: C4Relationship) {
-    return this.isAncestorOf(relationship.target, relationship.source) || this.isAncestorOf(relationship.source, relationship.target)
+    return (
+      this.isAncestorOf(relationship.target, relationship.source) ||
+      this.isAncestorOf(relationship.source, relationship.target)
+    )
   }
 
   protected isAncestorOf(ancestorId: string, nodeId: string) {

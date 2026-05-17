@@ -250,6 +250,57 @@ BiRel(api, payments, "Confirms payments", "HTTPS")
 `),
 }
 
+export const c4DynamicExample: DiagramExample = {
+  name: 'C4 Dynamic Diagram',
+  description: 'Sample for a C4 dynamic diagram',
+  code: stripStartEmptyLines(`
+C4Dynamic
+title: Internet Banking - Sign-in Flow
+
+Person(customer, "Customer", "Uses online banking")
+Container(web, "Web Application", "React", "Delivers the single-page app")
+Container(api, "API Application", "Spring Boot", "Handles business requests")
+ContainerDb(db, "Database", "PostgreSQL", "Stores customer and account data")
+System_Ext(email, "E-mail System", "Sends notification e-mails")
+
+RelIndex(1, customer, web, "Submits credentials", "HTTPS")
+RelIndex(2, web, api, "Authenticates", "JSON/HTTPS")
+RelIndex(3, api, db, "Reads user record", "JDBC")
+RelIndex(4, api, email, "Sends sign-in alert", "SMTP")
+RelIndex(5, api, web, "Returns session", "JSON/HTTPS")
+`),
+}
+
+export const c4DeploymentExample: DiagramExample = {
+  name: 'C4 Deployment Diagram',
+  description: 'Sample for a C4 deployment diagram',
+  code: stripStartEmptyLines(`
+C4Deployment
+title: Internet Banking - Production Deployment
+
+Person(customer, "Customer", "Uses online banking")
+
+Deployment_Node(aws, "AWS Account", "Production") {
+  Deployment_Node(region, "AWS Region", "us-east-1") {
+    Node(cluster, "EKS Cluster", "Kubernetes") {
+      Container(web, "Web Application", "React", "Serves the browser app")
+      Container(api, "API Application", "Spring Boot", "Handles business requests")
+    }
+    Node(databaseHost, "Database Host", "Amazon RDS") {
+      ContainerDb(db, "Database", "PostgreSQL", "Stores customer and account data")
+    }
+  }
+}
+
+System_Ext(email, "E-mail System", "Sends notification e-mails")
+
+Rel(customer, web, "Uses", "HTTPS")
+Rel(web, api, "Calls", "JSON/HTTPS")
+Rel(api, db, "Reads/Writes", "JDBC")
+Rel(api, email, "Sends notifications", "SMTP")
+`),
+}
+
 const activityExample: DiagramExample = {
   name: 'Activity Diagram',
   description: 'Sample for a activityDiagram',
@@ -408,6 +459,8 @@ export const EXAMPLES = {
   erLarge: erLargeExample,
   component: componentExample,
   c4: c4Example,
+  c4Dynamic: c4DynamicExample,
+  c4Deployment: c4DeploymentExample,
   activity: activityExample,
   mindmap: mindmapExample,
   gantt: ganttExample,

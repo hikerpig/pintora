@@ -183,6 +183,79 @@ BiRel(controller, service, "Calls")
     })
   })
 
+  it('parses C4Dynamic and preserves RelIndex order labels', () => {
+    parse(
+      stripStartEmptyLines(`
+C4Dynamic
+Container(web, "Web", "React")
+Container(api, "API", "Node.js")
+ContainerDb(db, "Database", "PostgreSQL")
+RelIndex(1, web, api, "Submits request", "JSON/HTTPS")
+RelIndex(2, api, db, "Reads data", "SQL")
+      `),
+    )
+
+    const ir = db.getDiagramIR()
+
+    expect(ir.diagramKind).toBe('dynamic')
+    expect(ir.relationships).toMatchObject([
+      {
+        source: 'web',
+        target: 'api',
+        index: '1',
+        label: 'Submits request',
+        technology: 'JSON/HTTPS',
+        itemId: 'c4-rel-0',
+      },
+      {
+        source: 'api',
+        target: 'db',
+        index: '2',
+        label: 'Reads data',
+        technology: 'SQL',
+        itemId: 'c4-rel-1',
+      },
+    ])
+  })
+
+  it('parses C4Deployment deployment nodes as nested boundaries', () => {
+    parse(
+      stripStartEmptyLines(`
+C4Deployment
+Deployment_Node(region, "AWS Region", "us-east-1") {
+  Node(cluster, "EKS Cluster", "Kubernetes") {
+    Container(api, "API", "Node.js")
+  }
+}
+Rel(api, region, "Runs in")
+      `),
+    )
+
+    const ir = db.getDiagramIR()
+
+    expect(ir.diagramKind).toBe('deployment')
+    expect(ir.boundaries.region).toMatchObject({
+      id: 'region',
+      kind: 'deploymentNode',
+      label: 'AWS Region',
+      type: 'us-east-1',
+      children: ['cluster'],
+      itemId: 'c4-boundary-region',
+    })
+    expect(ir.boundaries.cluster).toMatchObject({
+      id: 'cluster',
+      kind: 'deploymentNode',
+      label: 'EKS Cluster',
+      type: 'Kubernetes',
+      parent: 'region',
+      children: ['api'],
+    })
+    expect(ir.elements.api).toMatchObject({
+      id: 'api',
+      parent: 'cluster',
+    })
+  })
+
   it('throws for unresolved relationship endpoints', () => {
     expect(() => {
       parse(
@@ -195,14 +268,14 @@ Rel(customer, missing, "Uses")
     }).toThrow('[c4] relationship target is not declared: missing')
   })
 
-  it('throws for unsupported dynamic and deployment entries', () => {
+  it('throws for unsupported diagram entries', () => {
     expect(() => {
       parse(
         stripStartEmptyLines(`
-C4Dynamic
+C4Whatever
 Person(customer, "Customer")
         `),
       )
-    }).toThrow('[c4] C4Dynamic is recognized but not supported by the first C4 implementation')
+    }).toThrow('[c4] unsupported diagram entry: C4Whatever')
   })
 })

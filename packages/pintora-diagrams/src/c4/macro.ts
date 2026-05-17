@@ -20,6 +20,11 @@ type ElementMacroSpec = {
   external?: boolean
 }
 
+type BoundaryMacroSpec = {
+  kind: C4BoundaryKind
+  hasDeploymentNodeArgs?: boolean
+}
+
 const ELEMENT_MACROS: Record<string, ElementMacroSpec> = {
   Person: { kind: 'person', shape: 'person' },
   Person_Ext: { kind: 'person', shape: 'person', external: true },
@@ -37,11 +42,15 @@ const ELEMENT_MACROS: Record<string, ElementMacroSpec> = {
   ComponentQueue: { kind: 'component', shape: 'queue' },
 }
 
-const BOUNDARY_MACROS: Record<string, C4BoundaryKind> = {
-  Boundary: 'generic',
-  Enterprise_Boundary: 'enterprise',
-  System_Boundary: 'system',
-  Container_Boundary: 'container',
+const BOUNDARY_MACROS: Record<string, BoundaryMacroSpec> = {
+  Boundary: { kind: 'generic' },
+  Enterprise_Boundary: { kind: 'enterprise' },
+  System_Boundary: { kind: 'system' },
+  Container_Boundary: { kind: 'container' },
+  Deployment_Node: { kind: 'deploymentNode', hasDeploymentNodeArgs: true },
+  Node: { kind: 'deploymentNode', hasDeploymentNodeArgs: true },
+  Node_L: { kind: 'deploymentNode', hasDeploymentNodeArgs: true },
+  Node_R: { kind: 'deploymentNode', hasDeploymentNodeArgs: true },
 }
 
 const RELATION_MACROS: Record<string, C4DirectionHint | undefined> = {
@@ -56,6 +65,7 @@ const RELATION_MACROS: Record<string, C4DirectionHint | undefined> = {
   Rel_R: 'right',
   Rel_Right: 'right',
   Rel_Back: 'back',
+  RelIndex: undefined,
 }
 
 function parseArgs(args: C4MacroArg[]): ParsedArgs {
@@ -135,8 +145,8 @@ export function normalizeElementMacro(name: string, args: C4MacroArg[], parent?:
 }
 
 export function normalizeBoundaryMacro(name: string, args: C4MacroArg[], parent?: string): C4Boundary {
-  const kind = BOUNDARY_MACROS[name]
-  if (!kind) {
+  const spec = BOUNDARY_MACROS[name]
+  if (!spec) {
     throw new Error(`[c4] unsupported boundary macro: ${name}`)
   }
 
@@ -147,16 +157,18 @@ export function normalizeBoundaryMacro(name: string, args: C4MacroArg[], parent?
   }
 
   const label = readValue(parsed, 1, 'label') || id
-  const description = readValue(parsed, 2, 'descr')
+  const type = spec.hasDeploymentNodeArgs ? readValue(parsed, 2, 'type') : ''
+  const description = spec.hasDeploymentNodeArgs ? readValue(parsed, 3, 'descr') : readValue(parsed, 2, 'descr')
   const boundary: C4Boundary = {
     id,
-    kind,
+    kind: spec.kind,
     label,
     tags: readTags(parsed),
     children: [],
     itemId: `c4-boundary-${id}`,
   }
 
+  if (type) boundary.type = type
   if (description) boundary.description = description
   if (parent) boundary.parent = parent
   if (parsed.named.link) boundary.link = parsed.named.link
@@ -170,15 +182,16 @@ export function normalizeRelationshipMacro(name: string, args: C4MacroArg[], ind
   }
 
   const parsed = parseArgs(args)
-  const source = readValue(parsed, 0, 'from')
-  const target = readValue(parsed, 1, 'to')
+  const isIndexed = name === 'RelIndex'
+  const source = isIndexed ? readValue(parsed, 1, 'from') : readValue(parsed, 0, 'from')
+  const target = isIndexed ? readValue(parsed, 2, 'to') : readValue(parsed, 1, 'to')
   if (!source || !target) {
     throw new Error(`[c4] ${name} requires source and target aliases`)
   }
 
-  const label = readValue(parsed, 2, 'label')
-  const technology = readValue(parsed, 3, 'techn')
-  const description = readValue(parsed, 4, 'descr')
+  const label = isIndexed ? readValue(parsed, 3, 'label') : readValue(parsed, 2, 'label')
+  const technology = isIndexed ? readValue(parsed, 4, 'techn') : readValue(parsed, 3, 'techn')
+  const description = isIndexed ? readValue(parsed, 5, 'descr') : readValue(parsed, 4, 'descr')
   const directionHint = RELATION_MACROS[name]
   const relationship: C4Relationship = {
     source,
@@ -187,6 +200,7 @@ export function normalizeRelationshipMacro(name: string, args: C4MacroArg[], ind
     itemId: `c4-rel-${index}`,
   }
 
+  if (isIndexed) relationship.index = readValue(parsed, 0, 'index')
   if (label) relationship.label = label
   if (technology) relationship.technology = technology
   if (description) relationship.description = description

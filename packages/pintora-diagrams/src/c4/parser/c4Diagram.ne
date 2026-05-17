@@ -171,3 +171,4 @@ positionalValue ->
     %QUOTED_WORD {% (d) => macroArgValue(d[0]) %}
   | %IDENTIFIER {% (d) => macroArgValue(d[0]) %}
   | %DOLLAR_IDENTIFIER {% (d) => macroArgValue(d[0]) %}
+  | %NUMBER {% (d) => macroArgValue(d[0]) %}
