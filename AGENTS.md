@@ -4,13 +4,14 @@ Pintora is a TypeScript text-to-diagram library for browser and Node. The repo i
 
 ## Where to look
 
-| Task | Go to |
-|------|-------|
-| Edit code inside a package | `packages/<pkg>/AGENTS.md` |
-| Add a new diagram type (parser + artist + config) | [`.ai/skills/add-new-diagram/SKILL.md`](.ai/skills/add-new-diagram/SKILL.md) |
-| Cross-package architecture, data flow, terminology | [`.ai/docs/README.md`](.ai/docs/README.md) |
-| Why a past decision was made | [`.ai/docs/adr/README.md`](.ai/docs/adr/README.md) |
-| User-facing documentation | `website/docs/` |
+| Task                                               | Go to                                                                            |
+| -------------------------------------------------- | -------------------------------------------------------------------------------- |
+| Edit code inside a package                         | `packages/<pkg>/AGENTS.md`                                                       |
+| Add a new diagram type (parser + artist + config)  | [`.ai/skills/add-new-diagram/SKILL.md`](.ai/skills/add-new-diagram/SKILL.md)     |
+| Author ASCII `TextDiagramPlan` output              | [`.ai/docs/ascii-text-plan-authoring.md`](.ai/docs/ascii-text-plan-authoring.md) |
+| Cross-package architecture, data flow, terminology | [`.ai/docs/README.md`](.ai/docs/README.md)                                       |
+| Why a past decision was made                       | [`.ai/docs/adr/README.md`](.ai/docs/adr/README.md)                               |
+| User-facing documentation                          | `website/docs/`                                                                  |
 
 ## Repo quick-facts
 

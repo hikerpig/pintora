@@ -36,16 +36,16 @@ Graphics IR
 
 Key files:
 
-| Area | File |
-|------|------|
-| renderer entry | `packages/pintora-renderer/src/renderers/AsciiRenderer.ts` |
-| mark collection | `packages/pintora-renderer/src/renderers/ascii/mark-walker.ts` |
-| normalization | `packages/pintora-renderer/src/renderers/ascii/normalize-ops.ts` |
-| glyph merge | `packages/pintora-renderer/src/renderers/ascii/glyph.ts` |
+| Area             | File                                                                |
+| ---------------- | ------------------------------------------------------------------- |
+| renderer entry   | `packages/pintora-renderer/src/renderers/AsciiRenderer.ts`          |
+| mark collection  | `packages/pintora-renderer/src/renderers/ascii/mark-walker.ts`      |
+| normalization    | `packages/pintora-renderer/src/renderers/ascii/normalize-ops.ts`    |
+| glyph merge      | `packages/pintora-renderer/src/renderers/ascii/glyph.ts`            |
 | connector glyphs | `packages/pintora-renderer/src/renderers/ascii/connector-glyphs.ts` |
-| symbol glyphs | `packages/pintora-renderer/src/renderers/ascii/symbol-glyphs.ts` |
-| frame glyphs | `packages/pintora-renderer/src/renderers/ascii/frame-glyphs.ts` |
-| rasterization | `packages/pintora-renderer/src/renderers/ascii/rasterizer.ts` |
+| symbol glyphs    | `packages/pintora-renderer/src/renderers/ascii/symbol-glyphs.ts`    |
+| frame glyphs     | `packages/pintora-renderer/src/renderers/ascii/frame-glyphs.ts`     |
+| rasterization    | `packages/pintora-renderer/src/renderers/ascii/rasterizer.ts`       |
 
 Rendering layers:
 
@@ -60,14 +60,14 @@ ASCII quality depends on artists emitting semantics instead of only geometry.
 
 ### Roles
 
-| Role | Purpose |
-|------|---------|
-| `container` | text-bearing bounded region with inner rows and cols |
-| `backdrop` | clears lower content and may define a text region |
-| `separator` | line that text should avoid |
-| `decoration` | optional visual accent |
-| `connector` | shaft whose endpoints carry meaning |
-| `symbol` | compact semantic symbol with geometric fallback |
+| Role         | Purpose                                              |
+| ------------ | ---------------------------------------------------- |
+| `container`  | text-bearing bounded region with inner rows and cols |
+| `backdrop`   | clears lower content and may define a text region    |
+| `separator`  | line that text should avoid                          |
+| `decoration` | optional visual accent                               |
+| `connector`  | shaft whose endpoints carry meaning                  |
+| `symbol`     | compact semantic symbol with geometric fallback      |
 
 ### Semantic Extensions
 
@@ -229,48 +229,9 @@ Some diagram artists can bypass SVG geometry recovery and attach a
 `packages/pintora-renderer/src/renderers/ascii/text-plan-renderer.ts` through
 `text-canvas.ts`.
 
-This path is intentionally grid-native. Artists should emit text, rect, fill,
-and axis-aligned line ops in cell coordinates rather than asking the renderer to
-repair sampled geometry.
-
-Current drawing rules:
-
-- Lines must be horizontal or vertical. Non-axis-aligned line ops are rejected.
-- Orthogonal turns and joins must share the same pivot cell. Adjacent glyphs like
-  `│──` or `──│` are considered malformed because the renderer cannot infer
-  whether the intended glyph is `┌`, `┐`, `└`, or `┘`.
-- Shared pivot cells are merged from direction sets, not from the visible glyph
-  alone. This preserves endpoint direction: a horizontal endpoint plus a
-  downward vertical line becomes `┌` or `┐`, not `┬`.
-- Text has higher visual priority than plain line drawing. A plan that places
-  text on planned line cells is still suspicious and should be represented with
-  explicit spacing or label lanes instead of relying on overwrites.
-- Rects are still the canonical representation for action-like boxes. Decision
-  heads should use a visually distinct frame, such as the sloped
-  `/...\\`, `< label >`, `\\.../` shape used by activity `if` and `switch`.
-
-Example of a malformed corner:
-
-```text
-│────────
-```
-
-Preferred plan geometry shares the corner cell and lets the renderer choose the
-glyph:
-
-```text
-┌────────
-```
-
-Activity-specific conventions built on these generic rules:
-
-- `if` and `switch` use the same decision head block so they do not look like
-  ordinary actions.
-- Decision branch connectors first leave the head vertically, then fan out on a
-  shared horizontal bus.
-- Branch starts and joins use shared pivot cells so top buses render as
-  `┌──┴──┐` / `┌──┼──┐` and merge buses render as `└──┴──┘`.
-- Terminal `switch` blocks do not draw a merge bus below the branch action boxes.
+This path is intentionally grid-native. Current authoring rules and diagrams-side
+helpers live in
+[`../.ai/docs/ascii-text-plan-authoring.md`](../.ai/docs/ascii-text-plan-authoring.md).
 
 ## API Surface
 

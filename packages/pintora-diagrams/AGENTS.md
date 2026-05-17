@@ -9,19 +9,27 @@
 
 ## Internal layout
 
-| Path | Responsibility |
-|------|----------------|
-| `src/sequence/` | Sequence diagram |
-| `src/er/` | Entity-relationship diagram |
-| `src/component/` | Component diagram |
-| `src/activity/` | Activity diagram |
-| `src/mindmap/` | Mind map |
-| `src/gantt/` | Gantt diagram |
-| `src/dot/` | DOT diagram |
-| `src/class/` | Class diagram |
-| `src/usecase/` | Use-case diagram |
-| `src/util/` | Cross-diagram helpers (layout, text, shape). |
-| `src/__tests__/` | Integration snapshot tests. |
+| Path             | Responsibility                               |
+| ---------------- | -------------------------------------------- |
+| `src/sequence/`  | Sequence diagram                             |
+| `src/er/`        | Entity-relationship diagram                  |
+| `src/component/` | Component diagram                            |
+| `src/activity/`  | Activity diagram                             |
+| `src/mindmap/`   | Mind map                                     |
+| `src/gantt/`     | Gantt diagram                                |
+| `src/dot/`       | DOT diagram                                  |
+| `src/class/`     | Class diagram                                |
+| `src/usecase/`   | Use-case diagram                             |
+| `src/util/`      | Cross-diagram helpers (layout, text, shape). |
+| `src/__tests__/` | Integration snapshot tests.                  |
+
+## ASCII text plans
+
+When emitting `rendererData.ascii.plan`, follow
+[`../../.ai/docs/ascii-text-plan-authoring.md`](../../.ai/docs/ascii-text-plan-authoring.md).
+Use shared helpers from `src/util/text-diagram.ts` instead of duplicating text
+measurement, op builders, route snapping, or route drawing inside individual
+diagrams.
 
 ## Conventions (the diagram triple)
 
