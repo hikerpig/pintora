@@ -157,7 +157,7 @@ export async function runHarnessTraceRun(opts: TraceRunOptions): Promise<TraceRu
     compile: 'not_run',
     unit_tests: 'not_run',
     harness: 'not_run',
-    review: 'unknown',
+    review: 'not_run',
   }
   let status: TraceRunResult['status'] = 'completed'
   let harnessSummary: string | null = null

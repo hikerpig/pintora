@@ -145,7 +145,7 @@ describe('runHarnessTraceRun', () => {
       compile: 'pass',
       unit_tests: 'pass',
       harness: 'ok',
-      review: 'unknown',
+      review: 'not_run',
     })
     expect(manifest.artifacts).toMatchObject({
       task: 'task.md',
@@ -219,7 +219,7 @@ describe('runHarnessTraceRun', () => {
       compile: 'fail',
       unit_tests: 'skipped',
       harness: 'skipped',
-      review: 'unknown',
+      review: 'not_run',
     })
     expect(manifest.incomplete_reason).toBe('compile failed')
 
@@ -287,7 +287,7 @@ describe('runHarnessTraceRun', () => {
       compile: 'pass',
       unit_tests: 'fail',
       harness: 'skipped',
-      review: 'unknown',
+      review: 'not_run',
     })
     expect(manifest.incomplete_reason).toBe('unit tests failed')
 
@@ -331,7 +331,7 @@ describe('runHarnessTraceRun', () => {
       compile: 'pass',
       unit_tests: 'pass',
       harness: 'failed_to_start',
-      review: 'unknown',
+      review: 'not_run',
     })
     expect(manifest.incomplete_reason).toBe('suite unavailable')
 
