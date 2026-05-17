@@ -38,6 +38,8 @@ describe('buildHarnessSummary', () => {
 
     expect(summary.status).toBe('ok')
     expect(summary.next_action).toBe('done')
+    expect(summary.failure_signature).toBe(null)
+    expect(summary.suspected_component).toBe('packages/pintora-diagrams/src/sequence')
     expect(summary.scores).toEqual({
       legibility: 3,
       structural_clarity: 3,
@@ -170,5 +172,32 @@ describe('buildHarnessSummary', () => {
     })
 
     expect(summary.pipeline).toEqual(['render-svg', 'inspect-svg', 'capture-browser'])
+  })
+
+  it('adds ER failure signature and suspected component for suspicious summaries', () => {
+    const summary = buildHarnessSummary({
+      ...baseArgs,
+      diagram_type: 'er',
+      artifacts: {
+        svg: 'render.svg',
+        png: null,
+        browser_png: null,
+        dom_html: null,
+        metrics: 'metrics.json',
+        findings: 'findings.json',
+      },
+      metrics: makeMetrics({ x: 0, y: 0, width: 100, height: 80 }),
+      findings: [
+        {
+          id: 'relationship-label-lane-overlap',
+          severity: 'warning',
+          message: 'relationship label overlaps the lane',
+        },
+      ],
+    })
+
+    expect(summary.status).toBe('suspicious')
+    expect(summary.failure_signature).toBe('er.relationship-label-lane-overlap')
+    expect(summary.suspected_component).toBe('packages/pintora-diagrams/src/er')
   })
 })

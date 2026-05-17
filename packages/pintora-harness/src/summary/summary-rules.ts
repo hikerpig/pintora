@@ -21,11 +21,15 @@ export function buildHarnessSummary(opts: HarnessSummaryRulesInput): HarnessSumm
   const top_findings = deriveTopFindings(opts.findings)
   const scores = deriveScores(status, opts.findings)
   const judgeArtifacts = collectJudgeArtifacts(opts.artifacts)
+  const failure_signature = deriveFailureSignature(status, opts.diagram_type, opts.findings)
+  const suspected_component = deriveSuspectedComponent(opts.diagram_type)
 
   return {
     run_id: opts.run_id,
     case_id: opts.case_id,
     diagram_type: opts.diagram_type,
+    failure_signature,
+    suspected_component,
     status,
     pipeline,
     artifacts: opts.artifacts,
@@ -66,6 +70,33 @@ function derivePipeline(artifacts: SummaryArtifacts) {
 
 function deriveTopFindings(findings: Array<Partial<HarnessFinding> & { message?: string }>) {
   return findings.slice(0, 3).map(finding => finding.message?.trim() || 'unknown finding')
+}
+
+function deriveFailureSignature(
+  status: HarnessStatus,
+  diagramType: string | null,
+  findings: Array<Partial<HarnessFinding> & { message?: string }>,
+) {
+  const primaryFinding = findings[0]
+  if (status === 'ok' || !primaryFinding) return null
+
+  const findingSlug = slugify(primaryFinding.id || primaryFinding.message || 'unknown-finding')
+  return `${slugify(diagramType || 'unknown')}.${findingSlug}`
+}
+
+function deriveSuspectedComponent(diagramType: string | null) {
+  const normalizedDiagramType = slugify(diagramType || '')
+  if (normalizedDiagramType === 'er') return 'packages/pintora-diagrams/src/er'
+  if (normalizedDiagramType === 'sequence') return 'packages/pintora-diagrams/src/sequence'
+  return null
+}
+
+function slugify(value: string) {
+  return value
+    .trim()
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '')
 }
 
 function deriveScores(

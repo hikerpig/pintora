@@ -22,6 +22,8 @@ export type HarnessSummary = {
   run_id: string
   case_id: string | null
   diagram_type: string | null
+  failure_signature: string | null
+  suspected_component: string | null
   status: HarnessStatus
   pipeline: string[]
   artifacts: SummaryArtifacts
