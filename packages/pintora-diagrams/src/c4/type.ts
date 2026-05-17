@@ -41,7 +41,6 @@ export type C4RelationshipTagStyle = {
 
 export type C4Legend = {
   visible: boolean
-  position: 'right' | 'bottom'
 }
 
 export type C4MacroArg =

@@ -1,5 +1,6 @@
 import {
   calculateTextDimensions,
+  compact,
   createTranslation,
   Group,
   GSymbol,
@@ -35,14 +36,11 @@ type C4ElementTextRow = {
   text: string
   font: IFont
   gapBefore: number
+  dims?: TSize
 }
 
 const TEXT_ROW_GAP = 6
 const DESCRIPTION_GAP = 14
-
-function getLines(...values: Array<string | undefined>) {
-  return values.filter(Boolean) as string[]
-}
 
 function elementFill(element: C4Element, conf: C4EnhancedConf, style?: ResolvedC4ElementStyle) {
   if (style?.bgColor) return style.bgColor
@@ -73,16 +71,16 @@ function makeElementTextRows(element: C4Element, font: IFont): C4ElementTextRow[
   const technologyFont: IFont = { ...font, fontStyle: 'italic' }
   const rows: C4ElementTextRow[] = []
 
-  getLines(elementStereotype(element)).forEach(text => {
+  compact([elementStereotype(element)]).forEach(text => {
     rows.push({ text, font: stereotypeFont, gapBefore: rows.length ? TEXT_ROW_GAP : 0 })
   })
-  getLines(element.label).forEach(text => {
+  compact([element.label]).forEach(text => {
     rows.push({ text, font: headerFont, gapBefore: rows.length ? TEXT_ROW_GAP : 0 })
   })
-  getLines(element.technology ? `[${element.technology}]` : undefined).forEach(text => {
+  compact([element.technology ? `[${element.technology}]` : undefined]).forEach(text => {
     rows.push({ text, font: technologyFont, gapBefore: rows.length ? TEXT_ROW_GAP : 0 })
   })
-  getLines(element.description).forEach((text, index) => {
+  compact([element.description]).forEach((text, index) => {
     rows.push({ text, font, gapBefore: rows.length ? (index === 0 ? DESCRIPTION_GAP : TEXT_ROW_GAP) : 0 })
   })
 
@@ -93,6 +91,7 @@ function measureTextRows(rows: C4ElementTextRow[]) {
   return rows.reduce<TSize>(
     (size, row) => {
       const dims = calculateTextDimensions(row.text, row.font)
+      row.dims = dims
       return {
         width: Math.max(size.width, dims.width),
         height: size.height + row.gapBefore + dims.height,
@@ -165,7 +164,7 @@ export function makeC4ElementMark(
       texts.forEach((text, index) => {
         const row = textRows[index]
         cursorY += row.gapBefore
-        const dims = calculateTextDimensions(row.text, row.font)
+        const dims = row.dims!
         cursorY += dims.height / 2
         safeAssign(text.attrs, { x: x + iconWidth / 2, y: cursorY })
         cursorY += dims.height / 2
@@ -178,47 +177,28 @@ export function makeC4ElementMark(
   }
 }
 
+const ICON_SPECS: Record<string, { symbolName: string; width: number; height: number }> = {
+  person: { symbolName: 'actor', width: 22, height: 36 },
+  database: { symbolName: 'database', width: 22, height: 30 },
+  queue: { symbolName: 'queue', width: 24, height: 26 },
+}
+
 function createElementIcon(
   element: C4Element,
   conf: C4EnhancedConf,
   style?: ResolvedC4ElementStyle,
 ): C4ElementIcon | null {
+  const spec = ICON_SPECS[element.shape]
+  if (!spec) return null
+
   const iconColor = style?.fontColor || conf.textColor
-
-  if (element.shape === 'person') {
-    const width = 22
-    const height = 36
-    const symbol = symbolRegistry.create('actor', {
-      mode: 'icon',
-      contentArea: { x: 0, y: 0, width, height },
-      attrs: { stroke: iconColor, fill: 'none', lineWidth: conf.lineWidth },
-    })
-    return symbol ? { symbol, width, height } : null
-  }
-
-  if (element.shape === 'database') {
-    const width = 22
-    const height = 30
-    const symbol = symbolRegistry.create('database', {
-      mode: 'icon',
-      contentArea: { x: 0, y: 0, width, height },
-      attrs: { stroke: iconColor, fill: 'none', lineWidth: conf.lineWidth },
-    })
-    return symbol ? { symbol, width, height } : null
-  }
-
-  if (element.shape === 'queue') {
-    const width = 24
-    const height = 26
-    const symbol = symbolRegistry.create('queue', {
-      mode: 'icon',
-      contentArea: { x: 0, y: 0, width, height },
-      attrs: { stroke: iconColor, fill: 'none', lineWidth: conf.lineWidth },
-    })
-    return symbol ? { symbol, width, height } : null
-  }
-
-  return null
+  const { symbolName, width, height } = spec
+  const symbol = symbolRegistry.create(symbolName, {
+    mode: 'icon',
+    contentArea: { x: 0, y: 0, width, height },
+    attrs: { stroke: iconColor, fill: 'none', lineWidth: conf.lineWidth },
+  })
+  return symbol ? { symbol, width, height } : null
 }
 
 export function makeC4BoundaryMark(boundary: C4Boundary, conf: C4EnhancedConf, font: IFont): C4NodeMark {

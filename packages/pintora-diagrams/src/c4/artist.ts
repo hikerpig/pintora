@@ -53,8 +53,6 @@ type EdgeData = {
   onLayout(data: LayoutEdge<EdgeData>): void
 }
 
-type SkippedEdgeData = EdgeData
-
 class C4Artist extends BaseArtist<C4DiagramIR, C4Conf> {
   customDraw(ir: C4DiagramIR, config?: C4Conf, opts?: DiagramArtistOptions): GraphicsIR {
     const conf = getConf(ir, config)
@@ -159,8 +157,13 @@ class C4Draw {
   }
 
   protected drawBoundaries() {
+    const depthMap = new Map<string, number>()
+    Object.keys(this.ir.boundaries).forEach(id => {
+      depthMap.set(id, this.getBoundaryDepth(id))
+    })
+
     Object.values(this.ir.boundaries)
-      .sort((a, b) => this.getBoundaryDepth(b.id) - this.getBoundaryDepth(a.id))
+      .sort((a, b) => depthMap.get(b.id)! - depthMap.get(a.id)!)
       .forEach(boundary => {
         const nodeMark = makeC4BoundaryMark(boundary, this.conf, this.fontConfig)
         this.rootMark.children.unshift(nodeMark.group)
@@ -198,7 +201,7 @@ class C4Draw {
   }
 
   protected drawRelationships() {
-    const skippedEdges: SkippedEdgeData[] = []
+    const skippedEdges: EdgeData[] = []
 
     this.ir.relationships.forEach((relationship, index) => {
       const style = resolveRelationshipStyle(relationship, this.ir)
@@ -516,7 +519,7 @@ class C4Draw {
     return depth
   }
 
-  protected drawSkippedRelationships(skippedEdges: SkippedEdgeData[]) {
+  protected drawSkippedRelationships(skippedEdges: EdgeData[]) {
     skippedEdges.forEach(edgeData => {
       const { relationship } = edgeData
       const sourceNode = this.g.node(relationship.source) as LayoutNode | undefined

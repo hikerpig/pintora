@@ -48,12 +48,15 @@ export function resolveRelationshipStyle(relationship: C4Relationship, ir: C4Dia
   }, {})
 }
 
+const DASHED_LINE_DASH = [6, 4]
+const DOTTED_LINE_DASH = [2, 4]
+
 export function getLineDash(lineStyle?: C4RelationshipLineStyle) {
   switch (lineStyle) {
     case 'dashed':
-      return [6, 4]
+      return DASHED_LINE_DASH
     case 'dotted':
-      return [2, 4]
+      return DOTTED_LINE_DASH
     default:
       return undefined
   }

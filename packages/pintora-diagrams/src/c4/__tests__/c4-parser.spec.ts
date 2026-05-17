@@ -288,7 +288,6 @@ SHOW_LEGEND()
     })
     expect(ir.legend).toMatchObject({
       visible: true,
-      position: 'right',
     })
   })
 

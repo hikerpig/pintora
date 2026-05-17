@@ -27,13 +27,28 @@ import {
 
 type C4Node = C4Element | C4Boundary
 
-function cloneNodeForCompare<T extends C4Node>(node: T): Omit<T, 'itemId'> {
-  const { itemId, ...copy } = node
-  return copy
+function shallowEqual(a: Record<string, unknown>, b: Record<string, unknown>): boolean {
+  const keysA = Object.keys(a)
+  if (keysA.length !== Object.keys(b).length) return false
+  for (const key of keysA) {
+    const va = a[key]
+    const vb = b[key]
+    if (Array.isArray(va) && Array.isArray(vb)) {
+      if (va.length !== vb.length) return false
+      for (let i = 0; i < va.length; i++) {
+        if (va[i] !== vb[i]) return false
+      }
+    } else if (va !== vb) {
+      return false
+    }
+  }
+  return true
 }
 
 function sameNode(a: C4Node, b: C4Node) {
-  return JSON.stringify(cloneNodeForCompare(a)) === JSON.stringify(cloneNodeForCompare(b))
+  const { itemId: _a, ...copyA } = a
+  const { itemId: _b, ...copyB } = b
+  return shallowEqual(copyA as Record<string, unknown>, copyB as Record<string, unknown>)
 }
 
 export class C4Db extends BaseDb {
@@ -43,7 +58,7 @@ export class C4Db extends BaseDb {
   protected relationships: C4Relationship[] = []
   protected elementTags: Record<string, C4ElementTagStyle> = {}
   protected relationshipTags: Record<string, C4RelationshipTagStyle> = {}
-  protected legend = { visible: false, position: 'right' as const }
+  protected legend = { visible: false }
 
   setDiagramEntry(entry: string) {
     switch (entry) {
@@ -94,14 +109,14 @@ export class C4Db extends BaseDb {
     }
   }
 
-  protected addBoundaryAction(action: C4BoundaryMacroCall, parent?: string) {
+  protected addBoundaryAction(action: C4BoundaryMacroCall, parent?: string): string {
     const boundary = normalizeBoundaryMacro(action.name, action.args, parent)
     this.addBoundary(boundary)
 
     action.children.forEach(child => {
       if (child.type === 'boundaryMacro') {
-        this.addBoundaryAction(child, boundary.id)
-        boundary.children.push(normalizeBoundaryMacro(child.name, child.args, boundary.id).id)
+        const childId = this.addBoundaryAction(child, boundary.id)
+        boundary.children.push(childId)
       } else if (child.type === 'macro') {
         const childId = this.addMacroAction(child, boundary.id)
         if (childId) boundary.children.push(childId)
@@ -109,6 +124,8 @@ export class C4Db extends BaseDb {
         this.apply(child)
       }
     })
+
+    return boundary.id
   }
 
   protected addMacroAction(action: C4MacroCall, parent?: string) {
@@ -204,7 +221,7 @@ export class C4Db extends BaseDb {
     this.relationships = []
     this.elementTags = {}
     this.relationshipTags = {}
-    this.legend = { visible: false, position: 'right' }
+    this.legend = { visible: false }
   }
 }
 
