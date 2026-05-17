@@ -145,28 +145,30 @@ class C4Draw {
   }
 
   protected drawBoundaries() {
-    Object.values(this.ir.boundaries).forEach(boundary => {
-      const nodeMark = makeC4BoundaryMark(boundary, this.conf, this.fontConfig)
-      this.rootMark.children.unshift(nodeMark.group)
-      this.g.setNode(boundary.id, {
-        id: boundary.id,
-        minwidth: nodeMark.width,
-        margint: this.conf.boundaryPadding,
-        marginb: this.conf.boundaryPadding,
-        marginl: this.conf.boundaryPadding,
-        marginr: this.conf.boundaryPadding,
-        onLayout(data: LayoutNode) {
-          const width = Math.max(data.width, nodeMark.width)
-          data.outerLeft = data.x - width / 2
-          data.outerRight = data.x + width / 2
-          data.outerTop = data.y - data.height / 2
-          data.outerBottom = data.y + data.height / 2
-          data.outerWidth = width
-          data.outerHeight = data.height
-          nodeMark.onLayout(data.x, data.y, width, data.height)
-        },
+    Object.values(this.ir.boundaries)
+      .sort((a, b) => this.getBoundaryDepth(b.id) - this.getBoundaryDepth(a.id))
+      .forEach(boundary => {
+        const nodeMark = makeC4BoundaryMark(boundary, this.conf, this.fontConfig)
+        this.rootMark.children.unshift(nodeMark.group)
+        this.g.setNode(boundary.id, {
+          id: boundary.id,
+          minwidth: nodeMark.width,
+          margint: this.conf.boundaryPadding,
+          marginb: this.conf.boundaryPadding,
+          marginl: this.conf.boundaryPadding,
+          marginr: this.conf.boundaryPadding,
+          onLayout(data: LayoutNode) {
+            const width = Math.max(data.width, nodeMark.width)
+            data.outerLeft = data.x - width / 2
+            data.outerRight = data.x + width / 2
+            data.outerTop = data.y - data.height / 2
+            data.outerBottom = data.y + data.height / 2
+            data.outerWidth = width
+            data.outerHeight = data.height
+            nodeMark.onLayout(data.x, data.y, width, data.height)
+          },
+        })
       })
-    })
 
     Object.values(this.ir.elements).forEach(element => {
       if (element.parent && this.g.node(element.parent)) {
@@ -339,6 +341,16 @@ class C4Draw {
 
   protected getNodeParent(nodeId: string) {
     return this.ir.elements[nodeId]?.parent || this.ir.boundaries[nodeId]?.parent
+  }
+
+  protected getBoundaryDepth(boundaryId: string) {
+    let depth = 0
+    let parent = this.ir.boundaries[boundaryId]?.parent
+    while (parent) {
+      depth += 1
+      parent = this.ir.boundaries[parent]?.parent
+    }
+    return depth
   }
 
   protected drawSkippedRelationships(skippedEdges: SkippedEdgeData[]) {

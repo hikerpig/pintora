@@ -7,6 +7,10 @@ function findC4ElementGroup(rootMark: Group, itemId: string) {
   return rootMark.children.find((child): child is Group => child.type === 'group' && child.itemId === itemId)!
 }
 
+function findC4GroupIndex(rootMark: Group, itemId: string) {
+  return rootMark.children.findIndex(child => child.type === 'group' && child.itemId === itemId)
+}
+
 function getTranslation(mark: Mark) {
   const matrix = mark.matrix as number[] | undefined
   return {
@@ -177,6 +181,10 @@ Rel(api, region, "Runs in")
     expect(cluster.class).toContain('c4__boundary--deploymentNode')
     expect(regionLabel.attrs.text).toBe('AWS Region - us-east-1')
     expect(clusterLabel.attrs.text).toBe('EKS Cluster - Kubernetes')
+    expect(findC4GroupIndex(rootMark, 'c4-boundary-region')).toBeLessThan(
+      findC4GroupIndex(rootMark, 'c4-boundary-cluster'),
+    )
+    expect(findC4GroupIndex(rootMark, 'c4-boundary-cluster')).toBeLessThan(findC4GroupIndex(rootMark, 'c4-element-api'))
   })
 
   it('renders shared dynamic and deployment examples', () => {
