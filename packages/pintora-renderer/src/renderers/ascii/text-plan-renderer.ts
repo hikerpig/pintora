@@ -79,10 +79,11 @@ function drawLine(canvas: string[][], op: TextDiagramLineOp) {
 
 export function renderTextDiagramPlan(plan: TextDiagramPlan) {
   const canvas = makeCanvas(plan.width, plan.height)
+  const textOps: TextDiagramTextOp[] = []
 
   plan.ops.forEach(op => {
     if (op.type === 'text') {
-      putText(canvas, alignedTextX(op), op.y, op.text)
+      textOps.push(op)
     } else if (op.type === 'line') {
       drawLine(canvas, op)
     } else if (op.type === 'rect') {
@@ -90,6 +91,9 @@ export function renderTextDiagramPlan(plan: TextDiagramPlan) {
     } else if (op.type === 'fill') {
       fillCols(canvas, [op.x, op.x + op.width - 1], [op.y, op.y + op.height - 1], op.char)
     }
+  })
+  textOps.forEach(op => {
+    putText(canvas, alignedTextX(op), op.y, op.text)
   })
 
   return canvasToString(canvas)

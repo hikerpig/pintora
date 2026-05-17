@@ -63,6 +63,31 @@ function collectTextCells(op: TextDiagramTextOp) {
   return cells
 }
 
+function collectTextCellChars(op: TextDiagramTextOp) {
+  const cells = new Map<string, string>()
+  const startX = alignedTextX(op)
+  let cursorX = startX
+  Array.from(op.text).forEach(ch => {
+    const width = widthOf(ch)
+    for (let offset = 0; offset < width; offset++) cells.set(pointKey(cursorX + offset, op.y), ch)
+    cursorX += width
+  })
+  return cells
+}
+
+function collectRenderedCells(text: string) {
+  const cells = new Map<string, string>()
+  text.split(/\n/).forEach((line, y) => {
+    let cursorX = 0
+    Array.from(line).forEach(ch => {
+      const width = widthOf(ch)
+      for (let offset = 0; offset < width; offset++) cells.set(pointKey(cursorX + offset, y), ch)
+      cursorX += width
+    })
+  })
+  return cells
+}
+
 function isOpOutOfBounds(op: TextDiagramOp, plan: TextDiagramPlan) {
   if (op.type === 'text') {
     const x = alignedTextX(op)
@@ -83,8 +108,9 @@ function isOpOutOfBounds(op: TextDiagramOp, plan: TextDiagramPlan) {
   return op.x < 0 || op.y < 0 || op.x + op.width > plan.width || op.y + op.height > plan.height
 }
 
-function countTextLineConflicts(plan: TextDiagramPlan) {
+function countTextLineConflicts(text: string, plan: TextDiagramPlan) {
   const lineCells = new Set<string>()
+  const renderedCells = collectRenderedCells(text)
   plan.ops.forEach(op => {
     if (op.type !== 'line') return
     collectLineCells(op).forEach(cell => lineCells.add(cell))
@@ -93,8 +119,8 @@ function countTextLineConflicts(plan: TextDiagramPlan) {
   let conflicts = 0
   plan.ops.forEach(op => {
     if (op.type !== 'text') return
-    collectTextCells(op).forEach(cell => {
-      if (lineCells.has(cell)) conflicts += 1
+    collectTextCellChars(op).forEach((ch, cell) => {
+      if (lineCells.has(cell) && renderedCells.get(cell) !== ch) conflicts += 1
     })
   })
   return conflicts
@@ -114,8 +140,8 @@ function countSwitchHeadIntrusions(plan: TextDiagramPlan) {
 
 function countAdjacentLineJoins(text: string) {
   return text.split(/\n/).reduce((count, line) => {
-    const leftCornerLike = line.match(/[│┆][─╌]{2,}/g)?.length || 0
-    const rightCornerLike = line.match(/[─╌]{2,}[│┆]/g)?.length || 0
+    const leftCornerLike = line.match(/(?:│─{2,}|┆╌{2,})/g)?.length || 0
+    const rightCornerLike = line.match(/(?:─{2,}│|╌{2,}┆)/g)?.length || 0
     return count + leftCornerLike + rightCornerLike
   }, 0)
 }
@@ -154,7 +180,7 @@ export function buildAsciiMetrics(text: string, plan?: TextDiagramPlan | null): 
           adjacentLineJoinCount: countAdjacentLineJoins(text),
           opOutOfBoundsCount: plan.ops.filter(op => isOpOutOfBounds(op, plan)).length,
           switchHeadIntrusionCount: countSwitchHeadIntrusions(plan),
-          textLineConflictCount: countTextLineConflicts(plan),
+          textLineConflictCount: countTextLineConflicts(text, plan),
         }
       : null,
   }

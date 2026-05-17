@@ -521,3 +521,164 @@ activityDiagram
     expect(text).toMatch(/[▼▶]/)
   })
 })
+
+describe('component ascii rendering', () => {
+  it('renders groups, component/interface nodes, labels, and arrows', () => {
+    const text = renderToAscii(`
+componentDiagram
+  title: ASCII Component
+  package "Core" {
+    () GraphicsIR
+    [Diagram Registry] as registry
+  }
+  [registry] --> GraphicsIR : returns
+    `)
+
+    expect(text).toContain('ASCII Component')
+    expect(text).toContain('Core')
+    expect(text).toContain('[package]')
+    expect(text).toContain('GraphicsIR')
+    expect(text).toContain('Diagram Registry')
+    expect(text).toContain('returns')
+    expect(text).toMatch(/[│─]/)
+    expect(text).toMatch(/[▼▶]/)
+    expect(text).not.toContain('[registry] --> GraphicsIR : returns')
+  })
+
+  it('renders skipped child-parent relationships without hanging dagre', () => {
+    const text = renderToAscii(`
+componentDiagram
+  package "Foo" {
+    [Bar]
+  }
+  [Bar] ..> [Foo] : parent
+    `)
+
+    expect(text).toContain('Foo')
+    expect(text).toContain('Bar')
+    expect(text).toContain('parent')
+    expect(text).toMatch(/[╌┆]/)
+    expect(text).toMatch(/[▲▼◀▶]/)
+    expect(text.split('\n').length).toBeLessThanOrEqual(20)
+  })
+
+  it('renders reversed arrowheads from component relationships', () => {
+    const text = renderToAscii(`
+componentDiagram
+  [Client] <-- [Server] : responds
+    `)
+
+    expect(text).toContain('Client')
+    expect(text).toContain('Server')
+    expect(text).toContain('responds')
+    expect(text).toMatch(/[▲◀]/)
+  })
+
+  it('aligns vertical component edges with interface circles', () => {
+    const text = renderToAscii(`
+componentDiagram
+  [standalone] --> renderFn : call with GraphicsIR
+    `)
+    const lines = text.split('\n')
+    const arrowLine = lines.find(line => line.includes('▼')) || ''
+    const circleLine = lines.find(line => line.includes('○')) || ''
+
+    expect(text).toContain('standalone')
+    expect(text).toContain('renderFn')
+    expect(text).toContain('call with GraphicsIR')
+    expect(arrowLine.indexOf('▼')).toBe(circleLine.indexOf('○'))
+  })
+
+  it('keeps child-to-external group relationships compact', () => {
+    const text = renderToAscii(`
+componentDiagram
+  package "@pintora/diagrams" {
+    [...Multiple Diagrams...] as diagrams
+    [diagrams] --> IDiagram : implements
+  }
+    `)
+
+    expect(text).toContain('@pintora/diagrams')
+    expect(text).toContain('...Multiple Diagrams...')
+    expect(text).toContain('IDiagram')
+    expect(text).toContain('implements')
+    expect(text).toMatch(/[▼▶]/)
+    expect(text.split('\n').length).toBeLessThanOrEqual(11)
+  })
+
+  it('keeps component package internals compact with bottom padding', () => {
+    const text = renderToAscii(`
+componentDiagram
+  package "@pintora/core" {
+    () GraphicsIR
+    () IRenderer
+    () IDiagram
+    [Diagram Registry] as registry
+  }
+  [IDiagram] --> GraphicsIR : generate
+  [standalone] --> renderFn : call with GraphicsIR
+    `)
+    const lines = text.split('\n')
+    const registryLine = lines.findIndex(line => line.includes('Diagram Registry'))
+    const packageBottomLine = lines.findIndex(line => line.includes('┘') && line.includes('╌'))
+
+    expect(text).toContain('@pintora/core')
+    expect(text).toContain('generate')
+    expect(text).toContain('call with GraphicsIR')
+    expect(lines.length).toBeLessThanOrEqual(14)
+    expect(packageBottomLine).toBeGreaterThan(registryLine + 1)
+  })
+
+  it('does not move target nodes out of their own groups when compacting cross-group edges', () => {
+    const text = renderToAscii(`
+componentDiagram
+  package "@pintora/renderer" {
+    () "render()" as renderFn
+  }
+  package "@pintora/standalone" {
+    [standalone]
+  }
+  [standalone] --> renderFn : call with GraphicsIR
+    `)
+    const lines = text.split('\n')
+    const rendererTopLine = lines.findIndex(line => line.includes('renderer'))
+    const renderFnLine = lines.findIndex(line => line.includes('render()'))
+    const rendererBottomLine = lines.findIndex(
+      (line, index) => index > rendererTopLine && line.includes('┘') && line.includes('╌'),
+    )
+
+    expect(rendererTopLine).toBeGreaterThanOrEqual(0)
+    expect(renderFnLine).toBeGreaterThan(rendererTopLine)
+    expect(renderFnLine).toBeLessThan(rendererBottomLine)
+  })
+
+  it('renders package labels completely and joins relationship route corners', () => {
+    const text = renderToAscii(`
+componentDiagram
+  package "@pintora/core" {
+    () GraphicsIR
+    () IRenderer
+    () IDiagram
+  }
+  package "@pintora/diagrams" {
+    [...Multiple Diagrams...] as diagrams
+    [diagrams]
+    [diagrams] --> IDiagram : implements
+  }
+  package "@pintora/renderer" {
+    () "render()" as renderFn
+    [SVGRender]
+    [CanvasRender]
+    [SVGRender] --> IRenderer : implements
+    [CanvasRender] --> IRenderer : implements
+    IRenderer ..> GraphicsIR : accepts
+  }
+    `)
+
+    expect(text).toContain('@pintora/core')
+    expect(text).toContain('@pintora/diagrams')
+    expect(text).toContain('@pintora/renderer')
+    expect(text).not.toMatch(/│─{2,}/)
+    expect(text).not.toMatch(/─{2,}│/)
+  })
+})

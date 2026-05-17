@@ -13,17 +13,10 @@ import {
   Bounds,
   compact,
 } from '@pintora/core'
-import { ComponentDiagramIR, LineType, Relationship } from './db'
+import { CGroup, Component, ComponentDiagramIR, Interface, LineType, Relationship } from './db'
 import { ComponentConf, getConf } from './config'
 import type { EnhancedConf } from '../util/config'
-import {
-  createLayoutGraph,
-  getGraphSplinesOption,
-  LayoutEdge,
-  LayoutGraph,
-  LayoutNode,
-  LayoutNodeOption,
-} from '../util/graph'
+import { LayoutEdge, LayoutGraph, LayoutNode, LayoutNodeOption } from '../util/graph'
 import {
   makeMark,
   drawArrowTo,
@@ -37,13 +30,12 @@ import { getPointsCurvePath, getPointsLinearPath } from '../util/line-util'
 import { DagreWrapper } from '../util/dagre-wrapper'
 import { getFontConfig } from '../util/font-config'
 import { BaseArtist } from '../util/base-artist'
+import { buildComponentLayoutGraph } from './layout/graph-builder'
+import type { ComponentLayoutAdapter } from './layout/types'
+import { toComponentTextDiagramPlan } from './ascii'
 
 let conf: EnhancedConf<ComponentConf>
 let fontConfig: IFont
-
-function getEdgeName(relationship: Relationship) {
-  return `${relationship.from.name}_${relationship.to.name}_${relationship.message}`
-}
 
 type EdgeOnLayoutContext = {
   updateBounds(b: Bounds): void
@@ -148,34 +140,25 @@ class ComponentArtist extends BaseArtist<ComponentDiagramIR, ComponentConf> {
       children: [],
     }
 
-    const g = createLayoutGraph({
-      multigraph: true,
-      directed: true,
-      compound: true,
-    }).setGraph({
-      nodesep: 20,
-      edgesep: conf.edgesep,
-      ranksep: conf.ranksep,
-      splines: getGraphSplinesOption(conf.edgeType),
-      avoid_label_on_border: true,
-    })
-
+    const adapter = createSvgComponentLayoutAdapter(rootMark)
+    const { graph: g, skippedEdges } = buildComponentLayoutGraph(
+      ir,
+      {
+        nodesep: 20,
+        edgesep: conf.edgesep,
+        ranksep: conf.ranksep,
+        edgeType: conf.edgeType,
+      },
+      adapter,
+    )
     const dagreWrapper = new DagreWrapper(g)
-
-    drawComponentsTo(rootMark, ir, g)
-    drawInterfacesTo(rootMark, ir, g)
-
-    drawGroupsTo(rootMark, ir, g)
-
-    // add relationships
-    const { skippedEdges } = drawRelationshipsTo(rootMark, ir, g)
 
     dagreWrapper.doLayout()
 
     const { labelBounds } = adjustMarkInGraph(dagreWrapper)
 
     // Draw manually the edges that were skipped (child-parent relationships)
-    const skippedEdgeBounds = drawSkippedEdges(skippedEdges, g)
+    const skippedEdgeBounds = drawSkippedEdges(skippedEdges.map(edge => edge.data).filter(Boolean), g)
 
     // Merge all bounds: graph bounds, regular edge label bounds, and skipped edge bounds
     const gBounds = tryExpandBounds(tryExpandBounds(dagreWrapper.getGraphBounds(), labelBounds), skippedEdgeBounds)
@@ -204,426 +187,321 @@ class ComponentArtist extends BaseArtist<ComponentDiagramIR, ComponentConf> {
       mark: rootMark,
       width,
       height,
+      rendererData: {
+        ascii: {
+          plan: toComponentTextDiagramPlan(ir, conf),
+        },
+      },
     } as GraphicsIR
   }
 }
 const componentArtist = new ComponentArtist()
 
-function drawComponentsTo(parentMark: Group, ir: ComponentDiagramIR, g: LayoutGraph) {
-  const groups: Group[] = []
-  for (const component of Object.values(ir.components)) {
-    const id = component.name
-    const itemId = component.itemId
-    const label = component.label || component.name
-    const componentLabelDims = calculateTextDimensions(label || '', fontConfig)
-    const compWidth = Math.round(componentLabelDims.width + conf.componentPadding * 2)
-    const compHeight = Math.round(componentLabelDims.height + conf.componentPadding * 2)
-    const rectMark = makeMark(
-      'rect',
-      {
-        width: compWidth,
-        height: compHeight,
-        fill: conf.componentBackground,
-        stroke: conf.componentBorderColor,
-        lineWidth: conf.lineWidth,
-        radius: 4,
-      },
-      { class: 'component__component-rect' },
-    )
-
-    const textMark = makeMark('text', {
-      text: label,
-      fill: conf.textColor,
-      textAlign: 'center',
-      textBaseline: 'middle',
-      ...fontConfig,
-    })
-    const group = makeMark(
-      'group',
-      {},
-      {
-        children: [rectMark, textMark],
-        class: 'component__component',
-        itemId,
-      },
-    )
-    groups.push(group)
-    parentMark.children.push(group)
-
-    g.setNode(id, {
-      width: compWidth,
-      height: compHeight,
-      id,
-      onLayout(data: LayoutNode) {
-        const { x, y } = data // the center of the node
-        safeAssign(rectMark.attrs, { x: x - compWidth / 2, y: y - compHeight / 2 })
-        safeAssign(textMark.attrs, { x, y })
-      },
-    })
-  }
-}
-
-function drawInterfacesTo(parentMark: Group, ir: ComponentDiagramIR, g: LayoutGraph) {
-  const groups: Group[] = []
-  for (const interf of Object.values(ir.interfaces)) {
-    const id = interf.name
-    const itemId = interf.itemId
-    const label = interf.label || interf.name
-    const labelDims = calculateTextDimensions(label, fontConfig)
-    const interfaceSize = conf.interfaceSize
-    const circleMark = makeMark(
-      'circle',
-      {
-        x: 0,
-        y: 0,
-        r: interfaceSize / 2,
-        fill: conf.componentBackground,
-        stroke: conf.componentBorderColor,
-        lineWidth: conf.lineWidth,
-      },
-      { class: 'component__interface-circle', itemId },
-    )
-
-    const textMark = makeMark('text', {
-      text: label,
-      fill: conf.textColor,
-      textAlign: 'center',
-      textBaseline: 'top',
-      ...fontConfig,
-    })
-    const group = makeMark(
-      'group',
-      {},
-      {
-        children: [circleMark, textMark],
-        class: 'component__interface',
-        itemId,
-      },
-    )
-    groups.push(group)
-    parentMark.children.push(group)
-
-    const outerWidth = Math.max(interfaceSize, labelDims.width)
-    const nodeHeight = interfaceSize + labelDims.height
-    const layoutNode: LayoutNodeOption = {
-      width: interfaceSize,
-      height: nodeHeight,
-      id,
-      outerWidth,
-      onLayout(data: LayoutNode) {
-        const { x, y } = data // the center of the node
-        safeAssign(circleMark.attrs, { x, y: y - labelDims.height / 2 + 2 })
-        safeAssign(textMark.attrs, { x, y: y + 2 })
-      },
-    }
-
-    g.setNode(id, layoutNode)
-
-    if (labelDims.width > interfaceSize) {
-      const marginH = (labelDims.width - interfaceSize) / 2
-      layoutNode.marginl = marginH
-      layoutNode.marginr = marginH
-    }
-  }
-}
-
-function drawGroupsTo(parentMark: Group, ir: ComponentDiagramIR, g: LayoutGraph) {
-  for (const cGroup of Object.values(ir.groups)) {
-    const groupId = cGroup.name
-    const itemId = cGroup.itemId
-    const groupType = cGroup.groupType
-    // console.log('[draw] group', cGroup)
-
-    let bgMark: Rect | GSymbol
-    const symbolDef = symbolRegistry.get(groupType)
-    if (symbolDef) {
-      // wait till onLayout
-    } else {
-      bgMark = makeMark(
+function createSvgComponentLayoutAdapter(parentMark: Group): ComponentLayoutAdapter<SkippedEdgeData> {
+  return {
+    measureComponent(component: Component) {
+      const id = component.name
+      const itemId = component.itemId
+      const label = component.label || component.name
+      const componentLabelDims = calculateTextDimensions(label || '', fontConfig)
+      const compWidth = Math.round(componentLabelDims.width + conf.componentPadding * 2)
+      const compHeight = Math.round(componentLabelDims.height + conf.componentPadding * 2)
+      const rectMark = makeMark(
         'rect',
         {
-          fill: conf.groupBackground,
-          stroke: conf.groupBorderColor,
-          lineWidth: conf.groupBorderWidth,
-          radius: 2,
+          width: compWidth,
+          height: compHeight,
+          fill: conf.componentBackground,
+          stroke: conf.componentBorderColor,
+          lineWidth: conf.lineWidth,
+          radius: 4,
         },
-        { class: 'component__group-rect' },
+        { class: 'component__component-rect' },
       )
-    }
 
-    const groupLabel = cGroup.label || cGroup.name
-    const labelMark = makeMark(
-      'text',
-      {
-        text: groupLabel,
+      const textMark = makeMark('text', {
+        text: label,
         fill: conf.textColor,
         textAlign: 'center',
+        textBaseline: 'middle',
         ...fontConfig,
-        fontWeight: 'bold',
-      },
-      { class: 'component__group-label' },
-    )
-    let typeMark: Text | undefined
-    const typeText = `[${cGroup.groupType}]`
-    if (!conf.hideGroupType) {
-      typeMark = makeMark(
+      })
+      const group = makeMark(
+        'group',
+        {},
+        {
+          children: [rectMark, textMark],
+          class: 'component__component',
+          itemId,
+        },
+      )
+      parentMark.children.push(group)
+
+      return {
+        width: compWidth,
+        height: compHeight,
+        id,
+        onLayout(data: LayoutNode) {
+          const { x, y } = data
+          safeAssign(rectMark.attrs, { x: x - compWidth / 2, y: y - compHeight / 2 })
+          safeAssign(textMark.attrs, { x, y })
+        },
+      }
+    },
+
+    measureInterface(interf: Interface) {
+      const id = interf.name
+      const itemId = interf.itemId
+      const label = interf.label || interf.name
+      const labelDims = calculateTextDimensions(label, fontConfig)
+      const interfaceSize = conf.interfaceSize
+      const circleMark = makeMark(
+        'circle',
+        {
+          x: 0,
+          y: 0,
+          r: interfaceSize / 2,
+          fill: conf.componentBackground,
+          stroke: conf.componentBorderColor,
+          lineWidth: conf.lineWidth,
+        },
+        { class: 'component__interface-circle', itemId },
+      )
+
+      const textMark = makeMark('text', {
+        text: label,
+        fill: conf.textColor,
+        textAlign: 'center',
+        textBaseline: 'top',
+        ...fontConfig,
+      })
+      const group = makeMark(
+        'group',
+        {},
+        {
+          children: [circleMark, textMark],
+          class: 'component__interface',
+          itemId,
+        },
+      )
+      parentMark.children.push(group)
+
+      const outerWidth = Math.max(interfaceSize, labelDims.width)
+      const nodeHeight = interfaceSize + labelDims.height
+      const layoutNode: LayoutNodeOption = {
+        width: interfaceSize,
+        height: nodeHeight,
+        id,
+        outerWidth,
+        onLayout(data: LayoutNode) {
+          const { x, y } = data
+          safeAssign(circleMark.attrs, { x, y: y - labelDims.height / 2 + 2 })
+          safeAssign(textMark.attrs, { x, y: y + 2 })
+        },
+      }
+
+      if (labelDims.width > interfaceSize) {
+        const marginH = (labelDims.width - interfaceSize) / 2
+        layoutNode.marginl = marginH
+        layoutNode.marginr = marginH
+      }
+
+      return layoutNode
+    },
+
+    measureGroup(cGroup: CGroup) {
+      const groupId = cGroup.name
+      const itemId = cGroup.itemId
+      const groupType = cGroup.groupType
+
+      let bgMark: Rect | GSymbol
+      const symbolDef = symbolRegistry.get(groupType)
+      if (!symbolDef) {
+        bgMark = makeMark(
+          'rect',
+          {
+            fill: conf.groupBackground,
+            stroke: conf.groupBorderColor,
+            lineWidth: conf.groupBorderWidth,
+            radius: 2,
+          },
+          { class: 'component__group-rect' },
+        )
+      }
+
+      const groupLabel = cGroup.label || cGroup.name
+      const labelMark = makeMark(
         'text',
         {
-          text: typeText,
+          text: groupLabel,
           fill: conf.textColor,
+          textAlign: 'center',
           ...fontConfig,
-          textBaseline: 'hanging', // have to hack a little, otherwise label will collide with rect border in downloaded svg
+          fontWeight: 'bold',
         },
-        { class: 'component__type' },
+        { class: 'component__group-label' },
       )
-    }
-
-    const labelTextDims = calculateTextDimensions(groupLabel, { ...fontConfig, fontWeight: labelMark.attrs.fontWeight })
-
-    const nodeMarginConfig: Partial<LayoutNodeOption> = {}
-
-    if (symbolDef && symbolDef.symbolMargin) {
-      Object.assign(nodeMarginConfig, {
-        marginl: symbolDef.symbolMargin.left,
-        marginr: symbolDef.symbolMargin.right,
-        margint: symbolDef.symbolMargin.top,
-        marginb: symbolDef.symbolMargin.bottom,
-      })
-    }
-
-    const groupMinWidth = labelTextDims.width + 10
-
-    g.setNode(groupId, {
-      id: groupId,
-      minwidth: groupMinWidth,
-      ...nodeMarginConfig,
-      onLayout(data: LayoutNode) {
-        const { x, y, width, height } = data
-        const containerWidth = Math.max(width, labelTextDims.width + 10)
-        // console.log('[group] onLayout', data, 'containerWidth', containerWidth)
-        const node = g.node(groupId) as unknown as LayoutNode
-        if (bgMark && bgMark.type === 'rect') {
-          safeAssign(bgMark.attrs, { x: x - containerWidth / 2, y: y - height / 2, width: containerWidth, height })
-          group.children.unshift(bgMark)
-        } else {
-          const contentArea = { ...data, width: Math.max(data.width, containerWidth) }
-          bgMark = symbolRegistry.create(groupType, {
-            mode: 'container',
-            contentArea,
-            attrs: {
-              fill: conf.groupBackground,
-              stroke: conf.groupBorderColor,
-              lineWidth: conf.groupBorderWidth,
-            },
-          })
-          if (bgMark) {
-            // console.log('bgMark', groupId, bgMark, 'bounds', bgMark.symbolBounds)
-            // node.outerTop = bgMark.symbolBounds.top + y
-            // node.outerBottom = bgMark.symbolBounds.bottom + y
-            // node.outerLeft = bgMark.symbolBounds.left + x
-            // node.outerRight = bgMark.symbolBounds.right + x
-            node.outerHeight = bgMark.symbolBounds.height
-            node.outerWidth = bgMark.symbolBounds.width
-            group.children.unshift(bgMark)
-          }
-        }
-
-        const titleAnchorYOffset = labelTextDims.height + 5
-        safeAssign(labelMark.attrs, { x, y: y - height / 2 + titleAnchorYOffset })
-        // Store the title anchor offset for use by skipped edges (child->parent connections)
-        setNodeExtra(node, 'titleAnchorYOffset', titleAnchorYOffset)
-
-        if (typeMark) {
-          const typeTextDims = calculateTextDimensions(typeText, fontConfig)
-          safeAssign(typeMark.attrs, { x: x - containerWidth / 2 + 2, y: y + height / 2 - 2 - typeTextDims.height })
-        }
-
-        // debug
-        // const centerMark = makeCircleWithCoordInPoint(data)
-        // const leftMark = makeCircleWithCoordInPoint({ ...data, x: data.x - containerWidth / 2 })
-        // const rightMark = makeCircleWithCoordInPoint({ ...data, x: data.x + containerWidth / 2 })
-        // const topMark = makeCircleWithCoordInPoint({ ...data, y: data.y - data.height / 2 })
-        // const bottomMark = makeCircleWithCoordInPoint({ ...data, y: data.y + data.height / 2 })
-        // group.children.push(centerMark, leftMark, rightMark)
-        // group.children.push(centerMark, topMark, bottomMark)
-      },
-    })
-
-    for (const child of cGroup.children) {
-      if ('name' in child) {
-        const childNode: LayoutNodeOption = g.node(child.name)
-        if (childNode) {
-          g.setParent(childNode.id, groupId)
-
-          if (childNode.dummyBoxId) {
-            g.setParent(childNode.id, childNode.dummyBoxId)
-            g.setParent(childNode.dummyBoxId, groupId)
-          }
-        }
+      let typeMark: Text | undefined
+      const typeText = `[${cGroup.groupType}]`
+      if (!conf.hideGroupType) {
+        typeMark = makeMark(
+          'text',
+          {
+            text: typeText,
+            fill: conf.textColor,
+            ...fontConfig,
+            textBaseline: 'hanging',
+          },
+          { class: 'component__type' },
+        )
       }
-    }
 
-    const group = makeMark(
-      'group',
-      {},
-      {
-        children: compact([labelMark, typeMark]),
-        itemId,
-      },
-    )
-    parentMark.children.unshift(group)
+      const labelTextDims = calculateTextDimensions(groupLabel, {
+        ...fontConfig,
+        fontWeight: labelMark.attrs.fontWeight,
+      })
+      const nodeMarginConfig: Partial<LayoutNodeOption> = {}
+      if (symbolDef && symbolDef.symbolMargin) {
+        Object.assign(nodeMarginConfig, {
+          marginl: symbolDef.symbolMargin.left,
+          marginr: symbolDef.symbolMargin.right,
+          margint: symbolDef.symbolMargin.top,
+          marginb: symbolDef.symbolMargin.bottom,
+        })
+      }
+
+      const groupMinWidth = labelTextDims.width + 10
+      const group = makeMark(
+        'group',
+        {},
+        {
+          children: compact([labelMark, typeMark]),
+          itemId,
+        },
+      )
+      parentMark.children.unshift(group)
+
+      return {
+        id: groupId,
+        minwidth: groupMinWidth,
+        ...nodeMarginConfig,
+        onLayout(data: LayoutNode) {
+          const { x, y, width, height } = data
+          const containerWidth = Math.max(width, labelTextDims.width + 10)
+          const node = data as LayoutNode<NodeExtra>
+          if (bgMark && bgMark.type === 'rect') {
+            safeAssign(bgMark.attrs, { x: x - containerWidth / 2, y: y - height / 2, width: containerWidth, height })
+            group.children.unshift(bgMark)
+          } else {
+            const contentArea = { ...data, width: Math.max(data.width, containerWidth) }
+            bgMark = symbolRegistry.create(groupType, {
+              mode: 'container',
+              contentArea,
+              attrs: {
+                fill: conf.groupBackground,
+                stroke: conf.groupBorderColor,
+                lineWidth: conf.groupBorderWidth,
+              },
+            })
+            if (bgMark) {
+              node.outerHeight = bgMark.symbolBounds.height
+              node.outerWidth = bgMark.symbolBounds.width
+              group.children.unshift(bgMark)
+            }
+          }
+
+          const titleAnchorYOffset = labelTextDims.height + 5
+          safeAssign(labelMark.attrs, { x, y: y - height / 2 + titleAnchorYOffset })
+          setNodeExtra(node, 'titleAnchorYOffset', titleAnchorYOffset)
+
+          if (typeMark) {
+            const typeTextDims = calculateTextDimensions(typeText, fontConfig)
+            safeAssign(typeMark.attrs, { x: x - containerWidth / 2 + 2, y: y + height / 2 - 2 - typeTextDims.height })
+          }
+        },
+      }
+    },
+
+    makeRelationshipEdge(relationship: Relationship) {
+      return createSvgRelationshipData(parentMark, relationship).edgeData
+    },
+
+    onSkippedRelationship(relationship: Relationship) {
+      return createSvgRelationshipData(parentMark, relationship).skippedEdgeData
+    },
   }
 }
 
-function drawRelationshipsTo(parentMark: Group, ir: ComponentDiagramIR, g: LayoutGraph) {
-  // Helper function to check if a node is a child (direct or nested) of a group
-  const isChildOfGroup = (nodeName: string, groupName: string): boolean => {
-    const group = ir.groups[groupName]
-    if (!group) return false
-
-    // Check direct children first
-    const isDirectChild = group.children.some(child => 'name' in child && child.name === nodeName)
-    if (isDirectChild) return true
-
-    // Recursively check nested groups - handles grandchild -> ancestor relationships
-    for (const child of group.children) {
-      if ('name' in child && child.name in ir.groups) {
-        if (isChildOfGroup(nodeName, child.name)) return true
-      }
-    }
-
-    return false
+function createSvgRelationshipData(parentMark: Group, r: Relationship) {
+  const lineMark = makeMark(
+    'path',
+    {
+      path: [],
+      stroke: conf.relationLineColor,
+      lineCap: 'round',
+    },
+    { class: 'component__rel-line' },
+  )
+  if ([LineType.DOTTED_ARROW, LineType.DOTTED].includes(r.line.lineType)) {
+    lineMark.attrs.lineDash = [4, 4]
+  }
+  let relText: Text | undefined
+  let relTextBg: Rect | undefined
+  let labelDims: TSize | undefined
+  if (r.message) {
+    labelDims = calculateTextDimensions(r.message, fontConfig)
+    relText = makeMark(
+      'text',
+      {
+        text: r.message,
+        fill: conf.textColor,
+        textAlign: 'center',
+        textBaseline: 'middle',
+        ...fontConfig,
+      },
+      { class: 'component__rel-text' },
+    )
+    relTextBg = makeLabelBg(labelDims, { x: 0, y: 0 }, { fill: conf.labelBackground })
   }
 
-  const skippedEdges: SkippedEdgeData[] = []
+  const shouldDrawArrow = r.line.lineType !== LineType.STRAIGHT
+  const relationGroupMark = makeMark(
+    'group',
+    {},
+    {
+      children: [lineMark, relTextBg, relText].filter(o => Boolean(o)),
+    },
+  )
+  parentMark.children.push(relationGroupMark)
 
-  ir.relationships.forEach(function (r) {
-    // console.log('draw relationship', r)
-    const lineMark = makeMark(
-      'path',
-      {
-        path: [],
-        stroke: conf.relationLineColor,
-        lineCap: 'round',
-      },
-      { class: 'component__rel-line' },
-    )
-    if ([LineType.DOTTED_ARROW, LineType.DOTTED].includes(r.line.lineType)) {
-      lineMark.attrs.lineDash = [4, 4]
-    }
-    let relText: Text | undefined
-    let relTextBg: Rect | undefined
-    let labelDims: TSize | undefined
-    if (r.message) {
-      labelDims = calculateTextDimensions(r.message, fontConfig)
-      relText = makeMark(
-        'text',
-        {
-          text: r.message,
-          fill: conf.textColor,
-          textAlign: 'center',
-          textBaseline: 'middle',
-          ...fontConfig,
-        },
-        { class: 'component__rel-text' },
-      )
-      relTextBg = makeLabelBg(labelDims, { x: 0, y: 0 }, { fill: conf.labelBackground })
-    }
-
-    const isFromGroup = r.from.type === 'group'
-    const isToGroup = r.to.type === 'group'
-
-    // Check for problematic parent-child relationships that would cause dagre to hang
-    // When a child component connects to its parent group (or vice versa), dagre cannot
-    // handle this in compound graph layout - it causes an infinite loop
-    const isSourceChildOfTarget = isToGroup && isChildOfGroup(r.from.name, r.to.name)
-    const isTargetChildOfSource = isFromGroup && isChildOfGroup(r.to.name, r.from.name)
-    const shouldSkipEdge = isSourceChildOfTarget || isTargetChildOfSource
-
-    if (shouldSkipEdge) {
-      // Increase the child node's top margin to make room for the edge
-      // that will connect to the parent group's title area
-      if (isSourceChildOfTarget) {
-        const childNode = g.node(r.from.name)
-        if (childNode) {
-          childNode.margint = Math.min((childNode.margint || 0) + 20, 40)
-        }
-      } else if (isTargetChildOfSource) {
-        const childNode = g.node(r.to.name)
-        if (childNode) {
-          childNode.margint = Math.min((childNode.margint || 0) + 20, 40)
-        }
-      }
-    }
-
-    const shouldDrawArrow = r.line.lineType !== LineType.STRAIGHT
-
-    const relationGroupMark = makeMark(
-      'group',
-      {},
-      {
-        children: [lineMark, relTextBg, relText].filter(o => Boolean(o)),
-      },
-    )
-
-    // Only add edge to dagre if it's not a problematic parent-child relationship
-    if (!shouldSkipEdge) {
-      g.setEdge(r.from.name, r.to.name, {
-        name: getEdgeName(r),
-        relationship: r,
-        labelpos: 'r',
-        labelSize: labelDims,
-        onLayout(data, context) {
-          applyEdgeLayout({
-            points: data.points,
-            lineMark,
-            relText,
-            relTextBg,
-            labelDims,
-            shouldDrawArrow,
-            relationGroupMark,
-            updateBounds: context.updateBounds,
-          })
-        },
-      } as EdgeData)
-
-      // Add dummy edges for group connections (but only if not a problematic relationship)
-      if (isFromGroup || isToGroup) {
-        if (isToGroup) {
-          const toGroup = ir.groups[r.to.name]
-          const firstChild = toGroup?.children[0]
-          if (firstChild && 'name' in firstChild && firstChild.name !== r.from.name) {
-            if (!isChildOfGroup(r.from.name, r.to.name)) {
-              g.setEdge(r.from.name, firstChild.name, { isDummyEdge: true } as EdgeData)
-            }
-          }
-        } else if (isFromGroup) {
-          const fromGroup = ir.groups[r.from.name]
-          const firstChild = fromGroup?.children[0]
-          if (firstChild && 'name' in firstChild && firstChild.name !== r.to.name) {
-            if (!isChildOfGroup(r.to.name, r.from.name)) {
-              g.setEdge(firstChild.name, r.to.name, { isDummyEdge: true } as EdgeData)
-            }
-          }
-        }
-      }
-    } else {
-      // Collect skipped edges for manual drawing after layout
-      skippedEdges.push({
-        relationship: r,
+  const edgeData = {
+    relationship: r,
+    labelSize: labelDims,
+    onLayout(data, context) {
+      applyEdgeLayout({
+        points: data.points,
         lineMark,
-        relationGroupMark,
-        shouldDrawArrow,
         relText,
         relTextBg,
         labelDims,
+        shouldDrawArrow,
+        relationGroupMark,
+        updateBounds: context.updateBounds,
       })
-    }
+    },
+  } as EdgeData
 
-    parentMark.children.push(relationGroupMark)
-  })
+  const skippedEdgeData: SkippedEdgeData = {
+    relationship: r,
+    lineMark,
+    relationGroupMark,
+    shouldDrawArrow,
+    relText,
+    relTextBg,
+    labelDims,
+  }
 
-  return { skippedEdges }
+  return { edgeData, skippedEdgeData }
 }
 
 /**

@@ -3,7 +3,7 @@ import { BaseDiagramIR } from '../util/ir'
 import { OverrideConfigAction, ParamAction, SetTitleAction } from '../util/config'
 import { STYLE_ACTION_HANDLERS, type StylePayloads } from '../util/style-engine/parser'
 
-type Component = {
+export type Component = {
   name: string
   label?: string
   isGroup?: boolean
@@ -12,7 +12,7 @@ type Component = {
   itemId: string
 }
 
-type Interface = {
+export type Interface = {
   name: string
   label?: string
   parent?: string
@@ -20,7 +20,7 @@ type Interface = {
 }
 
 /** element group */
-type CGroup = {
+export type CGroup = {
   groupType: string
   name: string
   label?: string
@@ -29,9 +29,9 @@ type CGroup = {
   itemId: string
 }
 
-type ElementType = 'component' | 'interface' | 'group'
+export type ElementType = 'component' | 'interface' | 'group'
 
-type ElementRef = {
+export type ElementRef = {
   name: string
   type: ElementType
   parent?: string
@@ -48,7 +48,7 @@ export type Relationship = {
   }
 }
 
-type UMLElement = Component | Interface | CGroup | Relationship
+export type UMLElement = Component | Interface | CGroup | Relationship
 
 type ApplyPart =
   | ParamAction
