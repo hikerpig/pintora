@@ -77,11 +77,19 @@ function deriveFailureSignature(
   diagramType: string | null,
   findings: Array<Partial<HarnessFinding> & { message?: string }>,
 ) {
-  const primaryFinding = findings[0]
-  if (status === 'ok' || !primaryFinding) return null
+  const diagramSlug = slugify(diagramType || 'unknown') || 'unknown'
+  if (status === 'ok') return null
 
-  const findingSlug = slugify(primaryFinding.id || primaryFinding.message || 'unknown-finding')
-  return `${slugify(diagramType || 'unknown')}.${findingSlug}`
+  const primaryFinding = findings[0]
+  if (!primaryFinding) return `${diagramSlug}.svg-structure-fail`
+
+  const findingId = primaryFinding.id?.trim()
+  if (findingId) return `${diagramSlug}.${slugify(findingId)}`
+
+  const findingMessage = primaryFinding.message?.trim()
+  if (findingMessage) return `${diagramSlug}.message:${slugify(findingMessage)}`
+
+  return `${diagramSlug}.svg-structure-fail`
 }
 
 function deriveSuspectedComponent(diagramType: string | null) {

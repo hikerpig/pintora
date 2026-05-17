@@ -1,5 +1,7 @@
 import fs from 'fs'
+import path from 'path'
 import { execFileSync } from 'child_process'
+import { TextDecoder } from 'util'
 import type { TraceGitState } from './trace-contracts'
 
 function git(cwd: string, args: string[]) {
@@ -33,6 +35,46 @@ export function captureGitState(cwd: string): TraceGitState {
 }
 
 export function writeGitDiffFile(cwd: string, outFile: string) {
-  const diff = git(cwd, ['diff', '--no-ext-diff'])
-  fs.writeFileSync(outFile, diff)
+  const trackedDiff = git(cwd, ['diff', '--no-ext-diff'])
+  const untrackedDiff = buildUntrackedDiff(cwd)
+  fs.writeFileSync(outFile, trackedDiff + untrackedDiff)
+}
+
+function buildUntrackedDiff(cwd: string) {
+  const output = git(cwd, ['ls-files', '--others', '--exclude-standard', '-z'])
+  const files = output.split('\0').filter(Boolean)
+  if (files.length === 0) return ''
+
+  return files.map(filePath => renderUntrackedFileDiff(cwd, filePath)).join('')
+}
+
+function renderUntrackedFileDiff(cwd: string, filePath: string) {
+  const header = [
+    `diff --git a/${filePath} b/${filePath}`,
+    'new file mode 100644',
+    '--- /dev/null',
+    `+++ b/${filePath}`,
+  ]
+
+  const content = readUtf8TextFile(cwd, filePath)
+  if (content === null) {
+    return `\n${header.join('\n')}\n@@\n[untracked file skipped: binary or unreadable]\n`
+  }
+
+  const body = content
+    .split('\n')
+    .map(line => `+${line}`)
+    .join('\n')
+
+  return `\n${header.join('\n')}\n@@\n${body}${content.endsWith('\n') ? '' : '\n\\ No newline at end of file\n'}`
+}
+
+function readUtf8TextFile(cwd: string, filePath: string) {
+  try {
+    const buffer = fs.readFileSync(path.join(cwd, filePath))
+    if (buffer.includes(0)) return null
+    return new TextDecoder('utf-8', { fatal: true }).decode(Uint8Array.from(buffer))
+  } catch {
+    return null
+  }
 }

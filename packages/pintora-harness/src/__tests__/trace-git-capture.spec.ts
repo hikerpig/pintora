@@ -50,4 +50,16 @@ describe('git trace helpers', () => {
     expect(diff).toContain('-before')
     expect(diff).toContain('+after')
   })
+
+  it('includes untracked text files in git diff output', () => {
+    const cwd = makeGitRepo()
+    fs.writeFileSync(path.join(cwd, 'new-file.txt'), 'untracked content\n')
+    const outFile = path.join(cwd, 'trace.diff')
+
+    writeGitDiffFile(cwd, outFile)
+
+    const diff = fs.readFileSync(outFile, 'utf8')
+    expect(diff).toContain('new-file.txt')
+    expect(diff).toContain('untracked content')
+  })
 })

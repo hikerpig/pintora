@@ -97,6 +97,7 @@ describe('buildHarnessSummary', () => {
   it('maps missing viewBox to fail with repair_and_rerun', () => {
     const summary = buildHarnessSummary({
       ...baseArgs,
+      diagram_type: 'er',
       artifacts: {
         svg: null,
         png: null,
@@ -111,6 +112,7 @@ describe('buildHarnessSummary', () => {
 
     expect(summary.status).toBe('fail')
     expect(summary.next_action).toBe('repair_and_rerun')
+    expect(summary.failure_signature).toBe('er.svg-structure-fail')
     expect(summary.scores).toEqual({
       legibility: 0,
       structural_clarity: 0,
@@ -199,5 +201,30 @@ describe('buildHarnessSummary', () => {
     expect(summary.status).toBe('suspicious')
     expect(summary.failure_signature).toBe('er.relationship-label-lane-overlap')
     expect(summary.suspected_component).toBe('packages/pintora-diagrams/src/er')
+  })
+
+  it('uses message fallback for suspicious summaries with whitespace finding ids', () => {
+    const summary = buildHarnessSummary({
+      ...baseArgs,
+      diagram_type: 'er',
+      artifacts: {
+        svg: 'render.svg',
+        png: null,
+        browser_png: null,
+        dom_html: null,
+        metrics: 'metrics.json',
+        findings: 'findings.json',
+      },
+      metrics: makeMetrics({ x: 0, y: 0, width: 100, height: 80 }),
+      findings: [
+        {
+          id: '   ',
+          message: 'Label overlap',
+        },
+      ],
+    })
+
+    expect(summary.status).toBe('suspicious')
+    expect(summary.failure_signature).toBe('er.message:label-overlap')
   })
 })
