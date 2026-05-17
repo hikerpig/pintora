@@ -703,3 +703,35 @@ title: ASCII Mindmap
     expect(text).toMatch(/[─│]/)
   })
 })
+
+describe('gantt ascii rendering', () => {
+  it('renders title, sections, tasks, timeline bars, and mark dates', () => {
+    const text = renderToAscii(`
+gantt
+  title Release plan
+  dateFormat YYYY-MM-DD
+  axisFormat MM-DD
+  axisInterval 1d
+  markDate 2022-02-19
+
+  section Build
+  Spec : spec, 2022-02-17, 2022-02-19
+  Code : active, code, after spec, 2d
+  section Ship
+  Launch : milestone, launch, after code, 1d
+    `)
+
+    expect(text).toContain('Release plan')
+    expect(text).toContain('Build')
+    expect(text).toContain('Ship')
+    expect(text).toContain('Spec')
+    expect(text).toContain('Code')
+    expect(text).toContain('Launch')
+    expect(text).toContain('02-17')
+    expect(text).toContain('02-19')
+    expect(text).toContain('█')
+    expect(text).toContain('◆')
+    expect(text).toContain('┆')
+    expect(text).not.toContain('Spec : spec')
+  })
+})

@@ -22,6 +22,7 @@ import { setDevGlobal } from '../util/env'
 import { GanttConf, getConf } from './config'
 import { GanttIR, getAxisTimeInterval, isInvalidDate, Task } from './db'
 import { getFontConfig } from '../util/font-config'
+import { toGanttTextDiagramPlan } from './ascii'
 
 const artist = makeArtist<GanttIR, GanttConf>({
   draw(ir, config, opts) {
@@ -44,6 +45,11 @@ const artist = makeArtist<GanttIR, GanttConf>({
       mark: rootMark,
       width,
       height,
+      rendererData: {
+        ascii: {
+          plan: toGanttTextDiagramPlan(ir, { conf }),
+        },
+      },
     } as GraphicsIR
   },
 })
