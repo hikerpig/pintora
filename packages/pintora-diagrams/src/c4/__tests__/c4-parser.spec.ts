@@ -256,6 +256,55 @@ Rel(api, region, "Runs in")
     })
   })
 
+  it('parses tag declarations and explicit legend calls', () => {
+    parse(
+      stripStartEmptyLines(`
+C4Container
+AddElementTag("critical", $bgColor="#ffdddd", $fontColor="#550000", $borderColor="#cc0000", $shape=RoundedBoxShape(), $legendText="Critical element")
+AddRelTag("async", $textColor="#003366", $lineColor="#0066cc", $lineStyle=DashedLine(), $legendText="Async call")
+Container(api, "API", "Node.js", $tags="critical")
+ContainerQueue(events, "Events", "Kafka")
+Rel(api, events, "Publishes", $tags="async")
+SHOW_LEGEND()
+      `),
+    )
+
+    const ir = db.getDiagramIR()
+
+    expect(ir.elementTags.critical).toMatchObject({
+      tag: 'critical',
+      bgColor: '#ffdddd',
+      fontColor: '#550000',
+      borderColor: '#cc0000',
+      shape: 'roundedBox',
+      legendText: 'Critical element',
+    })
+    expect(ir.relationshipTags.async).toMatchObject({
+      tag: 'async',
+      textColor: '#003366',
+      lineColor: '#0066cc',
+      lineStyle: 'dashed',
+      legendText: 'Async call',
+    })
+    expect(ir.legend).toMatchObject({
+      visible: true,
+      position: 'right',
+    })
+  })
+
+  it('parses C4-PlantUML and Mermaid-style legend aliases', () => {
+    parse(
+      stripStartEmptyLines(`
+C4Dynamic
+Container(api, "API", "Node.js")
+SHOW_DYNAMIC_LEGEND()
+Legend
+      `),
+    )
+
+    expect(db.getDiagramIR().legend.visible).toBe(true)
+  })
+
   it('throws for unresolved relationship endpoints', () => {
     expect(() => {
       parse(

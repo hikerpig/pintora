@@ -13,6 +13,7 @@ import { makeMark } from '../util/artist-util'
 import { EnhancedConf } from '../util/config'
 import '../util/symbols'
 import { C4Conf } from './config'
+import { ResolvedC4ElementStyle } from './style'
 import { C4Boundary, C4Element } from './type'
 
 type C4EnhancedConf = EnhancedConf<C4Conf>
@@ -43,7 +44,8 @@ function getLines(...values: Array<string | undefined>) {
   return values.filter(Boolean) as string[]
 }
 
-function elementFill(element: C4Element, conf: C4EnhancedConf) {
+function elementFill(element: C4Element, conf: C4EnhancedConf, style?: ResolvedC4ElementStyle) {
+  if (style?.bgColor) return style.bgColor
   if (element.external) return conf.externalBackground
   return elementKindFill(element, conf)
 }
@@ -100,23 +102,29 @@ function measureTextRows(rows: C4ElementTextRow[]) {
   )
 }
 
-export function makeC4ElementMark(element: C4Element, conf: C4EnhancedConf, font: IFont): C4NodeMark {
-  const textRows = makeElementTextRows(element, font)
+export function makeC4ElementMark(
+  element: C4Element,
+  conf: C4EnhancedConf,
+  font: IFont,
+  style?: ResolvedC4ElementStyle,
+): C4NodeMark {
+  const styledElement = style?.techn && !element.technology ? { ...element, technology: style.techn } : element
+  const textRows = makeElementTextRows(styledElement, font)
   const textSize = measureTextRows(textRows)
   const hasIcon = element.shape === 'person' || element.shape === 'database' || element.shape === 'queue'
   const iconWidth = hasIcon ? 28 : 0
   const width = Math.max(textSize.width, 110) + conf.elementPadding * 2 + iconWidth
   const height = Math.max(textSize.height + conf.elementPadding * 2 + 8, 56)
-  const fill = elementFill(element, conf)
+  const fill = elementFill(element, conf, style)
 
   const rect = makeMark(
     'rect',
     {
       width,
       height,
-      radius: element.shape === 'queue' ? 14 : 4,
+      radius: style?.shape === 'roundedBox' || element.shape === 'queue' ? 14 : 4,
       fill,
-      stroke: conf.boundaryBorderColor,
+      stroke: style?.borderColor || conf.boundaryBorderColor,
       lineWidth: conf.lineWidth,
       lineDash: element.external ? [4, 4] : undefined,
     },
@@ -126,7 +134,7 @@ export function makeC4ElementMark(element: C4Element, conf: C4EnhancedConf, font
   const texts = textRows.map(row =>
     makeMark('text', {
       text: row.text,
-      fill: conf.textColor,
+      fill: style?.fontColor || conf.textColor,
       textAlign: 'center',
       textBaseline: 'middle',
       ...row.font,
@@ -134,7 +142,7 @@ export function makeC4ElementMark(element: C4Element, conf: C4EnhancedConf, font
   )
 
   const children: Mark[] = [rect, ...texts]
-  const icon = createElementIcon(element, conf)
+  const icon = createElementIcon(element, conf, style)
   if (icon) children.push(icon.symbol)
 
   const group = makeMark(
@@ -170,14 +178,20 @@ export function makeC4ElementMark(element: C4Element, conf: C4EnhancedConf, font
   }
 }
 
-function createElementIcon(element: C4Element, conf: C4EnhancedConf): C4ElementIcon | null {
+function createElementIcon(
+  element: C4Element,
+  conf: C4EnhancedConf,
+  style?: ResolvedC4ElementStyle,
+): C4ElementIcon | null {
+  const iconColor = style?.fontColor || conf.textColor
+
   if (element.shape === 'person') {
     const width = 22
     const height = 36
     const symbol = symbolRegistry.create('actor', {
       mode: 'icon',
       contentArea: { x: 0, y: 0, width, height },
-      attrs: { stroke: conf.textColor, fill: 'none', lineWidth: conf.lineWidth },
+      attrs: { stroke: iconColor, fill: 'none', lineWidth: conf.lineWidth },
     })
     return symbol ? { symbol, width, height } : null
   }
@@ -188,7 +202,7 @@ function createElementIcon(element: C4Element, conf: C4EnhancedConf): C4ElementI
     const symbol = symbolRegistry.create('database', {
       mode: 'icon',
       contentArea: { x: 0, y: 0, width, height },
-      attrs: { stroke: conf.textColor, fill: 'none', lineWidth: conf.lineWidth },
+      attrs: { stroke: iconColor, fill: 'none', lineWidth: conf.lineWidth },
     })
     return symbol ? { symbol, width, height } : null
   }
@@ -199,7 +213,7 @@ function createElementIcon(element: C4Element, conf: C4EnhancedConf): C4ElementI
     const symbol = symbolRegistry.create('queue', {
       mode: 'icon',
       contentArea: { x: 0, y: 0, width, height },
-      attrs: { stroke: conf.textColor, fill: 'none', lineWidth: conf.lineWidth },
+      attrs: { stroke: iconColor, fill: 'none', lineWidth: conf.lineWidth },
     })
     return symbol ? { symbol, width, height } : null
   }

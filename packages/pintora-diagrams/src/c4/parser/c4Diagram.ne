@@ -40,7 +40,7 @@ let lexer = moo.states({
     DOLLAR_IDENTIFIER: /\$[A-Za-z_][A-Za-z0-9_]*/,
     NUMBER: /[0-9]+(?:\.[0-9]+)?/,
     IDENTIFIER: /[A-Za-z_][A-Za-z0-9_]*/,
-    _COLOR: /#[a-zA-Z0-9]+/,
+    COLOR: /#[a-zA-Z0-9]+/,
     QUOTED_WORD: C4_QUOTED_WORD_REGEXP,
     ...configLexerMainState,
   },
@@ -94,6 +94,7 @@ statement ->
   | configOpenCloseStatement {% id %}
   | paramStatement {% id %}
   | comment {% id %}
+  | legendStatement {% id %}
   | boundaryMacro {% id %}
   | macroCall {% id %}
 
@@ -120,6 +121,13 @@ titleToken ->
   | %L_PAREN {% id %}
   | %R_PAREN {% id %}
   | %WS {% id %}
+
+legendStatement ->
+    "Legend" __ {%
+      function() {
+        return { type: 'macro', name: 'Legend', args: [] }
+      }
+    %}
 
 boundaryMacro ->
     macroHead _ %L_BRACE document _ %R_BRACE __ {%
@@ -169,6 +177,15 @@ positionalArg ->
 
 positionalValue ->
     %QUOTED_WORD {% (d) => macroArgValue(d[0]) %}
+  | styleFunctionValue {% id %}
   | %IDENTIFIER {% (d) => macroArgValue(d[0]) %}
   | %DOLLAR_IDENTIFIER {% (d) => macroArgValue(d[0]) %}
   | %NUMBER {% (d) => macroArgValue(d[0]) %}
+  | %COLOR {% (d) => macroArgValue(d[0]) %}
+
+styleFunctionValue ->
+    %IDENTIFIER _ %L_PAREN _ %R_PAREN {%
+      function(d) {
+        return tokenValue(d[0]) + '()'
+      }
+    %}

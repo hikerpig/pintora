@@ -5,6 +5,7 @@ import {
   GraphicsIR,
   Group,
   IFont,
+  Mark,
   Path,
   Point,
   Rect,
@@ -30,10 +31,18 @@ import { getPointsCurvePath, getPointsLinearPath } from '../util/line-util'
 import { makeBounds, tryExpandBounds } from '../util/mark-positioner'
 import { C4Conf, getConf } from './config'
 import { makeC4BoundaryMark, makeC4ElementMark } from './notation'
-import { C4DiagramIR, C4Relationship } from './type'
+import {
+  getLineDash,
+  getLineWidth,
+  ResolvedC4RelationshipStyle,
+  resolveElementStyle,
+  resolveRelationshipStyle,
+} from './style'
+import { C4DiagramIR, C4ElementTagStyle, C4Relationship, C4RelationshipTagStyle } from './type'
 
 type EdgeData = {
   relationship: C4Relationship
+  style: ResolvedC4RelationshipStyle
   labelSize?: TSize
   width?: number
   height?: number
@@ -60,6 +69,7 @@ class C4Draw {
   dagreWrapper: DagreWrapper<EdgeData>
   fontConfig: IFont
   labelBounds = makeBounds()
+  legendBounds = makeBounds()
 
   constructor(
     public ir: C4DiagramIR,
@@ -92,8 +102,12 @@ class C4Draw {
     this.dagreWrapper.callNodeOnLayout()
     this.dagreWrapper.callEdgeOnLayout()
     this.drawSkippedRelationships(skippedEdges)
+    this.drawLegend()
 
-    const gBounds = tryExpandBounds(this.dagreWrapper.getGraphBounds(), this.labelBounds)
+    const gBounds = tryExpandBounds(
+      tryExpandBounds(this.dagreWrapper.getGraphBounds(), this.labelBounds),
+      this.legendBounds,
+    )
     const titleMaker = new DiagramTitleMaker({
       title: this.ir.title,
       titleFont: this.fontConfig,
@@ -125,7 +139,7 @@ class C4Draw {
 
   protected drawElements() {
     Object.values(this.ir.elements).forEach(element => {
-      const nodeMark = makeC4ElementMark(element, this.conf, this.fontConfig)
+      const nodeMark = makeC4ElementMark(element, this.conf, this.fontConfig, resolveElementStyle(element, this.ir))
       this.rootMark.children.push(nodeMark.group)
       this.g.setNode(element.id, {
         id: element.id,
@@ -187,18 +201,22 @@ class C4Draw {
     const skippedEdges: SkippedEdgeData[] = []
 
     this.ir.relationships.forEach((relationship, index) => {
+      const style = resolveRelationshipStyle(relationship, this.ir)
+      const lineColor = style.lineColor || this.conf.relationLineColor
+      const lineDash = getLineDash(style.lineStyle)
       const lineMark = makeMark(
         'path',
         {
           path: [],
-          stroke: this.conf.relationLineColor,
+          stroke: lineColor,
           lineCap: 'round',
-          lineWidth: this.conf.lineWidth,
+          lineWidth: getLineWidth(this.conf.lineWidth, style.lineStyle),
+          ...(lineDash ? { lineDash } : {}),
         },
         { class: 'c4__rel-line' },
       )
 
-      const label = this.getRelationshipLabel(relationship)
+      const label = this.getRelationshipLabel(relationship, style)
       let relText: Text | undefined
       let relTextBg: Rect | undefined
       let labelSize: TSize | undefined
@@ -208,7 +226,7 @@ class C4Draw {
           'text',
           {
             text: label,
-            fill: this.conf.textColor,
+            fill: style.textColor || this.conf.textColor,
             textAlign: 'center',
             textBaseline: 'middle',
             ...this.fontConfig,
@@ -231,6 +249,7 @@ class C4Draw {
 
       const edgeData: EdgeData = {
         relationship,
+        style,
         labelSize,
         lineMark,
         relationGroupMark,
@@ -273,18 +292,19 @@ class C4Draw {
     }
   }
 
-  protected getRelationshipLabel(relationship: C4Relationship) {
+  protected getRelationshipLabel(relationship: C4Relationship, style: ResolvedC4RelationshipStyle = {}) {
+    const technology = relationship.technology || style.techn
     const label =
-      relationship.label && relationship.technology
-        ? `${relationship.label} [${relationship.technology}]`
-        : relationship.label || relationship.technology || ''
+      relationship.label && technology
+        ? `${relationship.label} [${technology}]`
+        : relationship.label || technology || ''
 
     if (relationship.index && label) return `${relationship.index}. ${label}`
     return relationship.index || label
   }
 
   protected applyRelationshipLayout(points: Point[], edgeData: EdgeData) {
-    const { relationship, lineMark, relText, relTextBg, labelSize, relationGroupMark } = edgeData
+    const { relationship, lineMark, relText, relTextBg, labelSize, relationGroupMark, style } = edgeData
     const path = this.conf.edgeType === 'curved' ? getPointsCurvePath(points) : getPointsLinearPath(points)
     lineMark.attrs.path = path
 
@@ -305,22 +325,165 @@ class C4Draw {
       })
     }
 
-    this.drawArrow(points, relationGroupMark, false)
+    const lineColor = style.lineColor || this.conf.relationLineColor
+    this.drawArrow(points, relationGroupMark, false, lineColor)
     if (relationship.bidirectional) {
-      this.drawArrow(points.slice().reverse(), relationGroupMark, true)
+      this.drawArrow(points.slice().reverse(), relationGroupMark, true, lineColor)
     }
   }
 
-  protected drawArrow(points: Point[], relationGroupMark: Group, reverse: boolean) {
+  protected drawArrow(points: Point[], relationGroupMark: Group, reverse: boolean, color: string) {
     if (points.length < 2) return
     const lastPoint = points[points.length - 1]
     const pointsForDirection = points.slice(-2)
     const arrowRad = calcDirection(pointsForDirection[0], pointsForDirection[1])
     const arrowMark = drawArrowTo(lastPoint, 8, arrowRad, {
-      color: this.conf.relationLineColor,
+      color,
     })
     arrowMark.class = reverse ? 'c4__rel-arrow c4__rel-arrow--reverse' : 'c4__rel-arrow'
     relationGroupMark.children.push(arrowMark)
+  }
+
+  protected drawLegend() {
+    if (!this.ir.legend.visible) return
+
+    const elementEntries = this.getUsedElementTagEntries()
+    const relationshipEntries = this.getUsedRelationshipTagEntries()
+    if (!elementEntries.length && !relationshipEntries.length) return
+
+    const titleFont: IFont = { ...this.fontConfig, fontWeight: 'bold' }
+    const rowGap = 8
+    const swatchWidth = 28
+    const swatchHeight = 16
+    const textGap = 8
+    const padding = 10
+    const title = 'Legend'
+    const rows = [
+      ...elementEntries.map(entry => ({ type: 'element' as const, ...entry })),
+      ...relationshipEntries.map(entry => ({ type: 'relationship' as const, ...entry })),
+    ]
+    const titleSize = calculateTextDimensions(title, titleFont)
+    const rowSizes = rows.map(row => calculateTextDimensions(row.label, this.fontConfig))
+    const rowHeights = rowSizes.map(size => Math.max(swatchHeight, size.height))
+    const contentWidth = Math.max(titleSize.width, ...rowSizes.map(size => swatchWidth + textGap + size.width))
+    const width = contentWidth + padding * 2
+    const rowsHeight = rowHeights.reduce((sum, height) => sum + height, 0)
+    const height = padding * 2 + titleSize.height + rowGap + rowsHeight + (rows.length - 1) * rowGap
+    const graphBounds = this.dagreWrapper.getGraphBounds()
+    const x = graphBounds.right + this.conf.diagramPadding * 2
+    const y = graphBounds.top
+
+    const children: Mark[] = [
+      makeMark(
+        'rect',
+        {
+          x,
+          y,
+          width,
+          height,
+          fill: this.conf.labelBackground,
+          stroke: this.conf.boundaryBorderColor,
+          lineWidth: this.conf.lineWidth,
+          radius: 4,
+        },
+        { class: 'c4__legend-rect' },
+      ),
+      makeMark(
+        'text',
+        {
+          x: x + padding,
+          y: y + padding,
+          text: title,
+          fill: this.conf.textColor,
+          textAlign: 'left',
+          textBaseline: 'top',
+          ...titleFont,
+        },
+        { class: 'c4__legend-title' },
+      ),
+    ]
+
+    let cursorY = y + padding + titleSize.height + rowGap
+    rows.forEach((row, index) => {
+      const rowHeight = rowHeights[index]
+      const rowCenterY = cursorY + rowHeight / 2
+      if (row.type === 'element') {
+        children.push(
+          makeMark(
+            'rect',
+            {
+              x: x + padding,
+              y: rowCenterY - swatchHeight / 2,
+              width: swatchWidth,
+              height: swatchHeight,
+              radius: row.style.shape === 'roundedBox' ? 6 : 2,
+              fill: row.style.bgColor || this.conf.containerBackground,
+              stroke: row.style.borderColor || this.conf.boundaryBorderColor,
+              lineWidth: this.conf.lineWidth,
+            },
+            { class: 'c4__legend-element-swatch' },
+          ),
+        )
+      } else {
+        const lineDash = getLineDash(row.style.lineStyle)
+        children.push(
+          makeMark(
+            'path',
+            {
+              path: [
+                ['M', x + padding, rowCenterY],
+                ['L', x + padding + swatchWidth, rowCenterY],
+              ],
+              stroke: row.style.lineColor || this.conf.relationLineColor,
+              lineWidth: getLineWidth(this.conf.lineWidth, row.style.lineStyle),
+              ...(lineDash ? { lineDash } : {}),
+            },
+            { class: 'c4__legend-rel-swatch' },
+          ),
+        )
+      }
+
+      children.push(
+        makeMark(
+          'text',
+          {
+            x: x + padding + swatchWidth + textGap,
+            y: rowCenterY,
+            text: row.label,
+            fill: row.type === 'relationship' ? row.style.textColor || this.conf.textColor : this.conf.textColor,
+            textAlign: 'left',
+            textBaseline: 'middle',
+            ...this.fontConfig,
+          },
+          { class: 'c4__legend-label' },
+        ),
+      )
+      cursorY += rowHeight + rowGap
+    })
+
+    this.rootMark.children.push(makeMark('group', {}, { class: 'c4__legend', children }))
+    tryExpandBounds(this.legendBounds, {
+      left: x,
+      right: x + width,
+      top: y,
+      bottom: y + height,
+      width,
+      height,
+    })
+  }
+
+  protected getUsedElementTagEntries(): Array<{ tag: string; label: string; style: C4ElementTagStyle }> {
+    const usedTags = new Set(Object.values(this.ir.elements).flatMap(element => element.tags))
+    return Object.values(this.ir.elementTags)
+      .filter(style => usedTags.has(style.tag))
+      .map(style => ({ tag: style.tag, label: style.legendText || style.tag, style }))
+  }
+
+  protected getUsedRelationshipTagEntries(): Array<{ tag: string; label: string; style: C4RelationshipTagStyle }> {
+    const usedTags = new Set(this.ir.relationships.flatMap(relationship => relationship.tags))
+    return Object.values(this.ir.relationshipTags)
+      .filter(style => usedTags.has(style.tag))
+      .map(style => ({ tag: style.tag, label: style.legendText || style.tag, style }))
   }
 
   protected shouldSkipRelationshipLayout(relationship: C4Relationship) {

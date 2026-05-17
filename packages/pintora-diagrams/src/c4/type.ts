@@ -11,6 +11,39 @@ export type C4BoundaryKind = 'generic' | 'enterprise' | 'system' | 'container' |
 
 export type C4DirectionHint = 'up' | 'down' | 'left' | 'right' | 'back'
 
+export type C4ElementTagShape = 'roundedBox' | 'eightSided'
+
+export type C4RelationshipLineStyle = 'solid' | 'dashed' | 'dotted' | 'bold'
+
+export type C4ElementTagStyle = {
+  tag: string
+  bgColor?: string
+  fontColor?: string
+  borderColor?: string
+  shadowing?: string
+  shape?: C4ElementTagShape
+  sprite?: string
+  techn?: string
+  legendText?: string
+  legendSprite?: string
+}
+
+export type C4RelationshipTagStyle = {
+  tag: string
+  textColor?: string
+  lineColor?: string
+  lineStyle?: C4RelationshipLineStyle
+  sprite?: string
+  techn?: string
+  legendText?: string
+  legendSprite?: string
+}
+
+export type C4Legend = {
+  visible: boolean
+  position: 'right' | 'bottom'
+}
+
 export type C4MacroArg =
   | {
       type: 'positional'
@@ -81,6 +114,9 @@ export type C4DiagramIR = BaseDiagramIR & {
   elements: Record<string, C4Element>
   boundaries: Record<string, C4Boundary>
   relationships: C4Relationship[]
+  elementTags: Record<string, C4ElementTagStyle>
+  relationshipTags: Record<string, C4RelationshipTagStyle>
+  legend: C4Legend
 }
 
 export type C4Action = C4MacroCall | C4BoundaryMacroCall | SetTitleAction | OverrideConfigAction | ParamAction

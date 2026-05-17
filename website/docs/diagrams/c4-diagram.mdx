@@ -89,6 +89,22 @@ Deployment_Node(region, "AWS Region", "us-east-1") {
 Rel(api, db, "Reads/Writes", "SQL")
 ```
 
+## Tag Styles And Legends
+
+```pintora play
+C4Container
+title: Styled Container Diagram
+
+AddElementTag("critical", $bgColor="#ffdddd", $fontColor="#550000", $borderColor="#cc0000", $shape=RoundedBoxShape(), $legendText="Critical element")
+AddRelTag("async", $textColor="#003366", $lineColor="#0066cc", $lineStyle=DashedLine(), $legendText="Async call")
+
+Container(api, "API Application", "Node.js", $tags="critical")
+ContainerQueue(events, "Domain Events", "Kafka")
+Rel(api, events, "Publishes", $tags="async")
+
+SHOW_LEGEND()
+```
+
 ## Supported Macros
 
 | Category      | Macros                                                                                                                    |
@@ -100,6 +116,8 @@ Rel(api, db, "Reads/Writes", "SQL")
 | Components    | `Component`, `Component_Ext`, `ComponentDb`, `ComponentQueue`                                                             |
 | Boundaries    | `Boundary`, `Enterprise_Boundary`, `System_Boundary`, `Container_Boundary`, `Deployment_Node`, `Node`, `Node_L`, `Node_R` |
 | Relationships | `Rel`, `BiRel`, `Rel_U`, `Rel_Up`, `Rel_D`, `Rel_Down`, `Rel_L`, `Rel_Left`, `Rel_R`, `Rel_Right`, `Rel_Back`, `RelIndex` |
+| Styling       | `AddElementTag`, `AddRelTag`                                                                                              |
+| Legends       | `SHOW_LEGEND`, `SHOW_DYNAMIC_LEGEND`, `Legend`                                                                            |
 
 ## Arguments
 
@@ -127,11 +145,44 @@ Dynamic relationship macros use:
 RelIndex(index, sourceAlias, targetAlias, "Label", "Technology")
 ```
 
+Tag style declarations use:
+
+```txt
+AddElementTag(tagStereo, ?bgColor, ?fontColor, ?borderColor, ?shadowing, ?shape, ?sprite, ?techn, ?legendText, ?legendSprite)
+AddRelTag(tagStereo, ?textColor, ?lineColor, ?lineStyle, ?sprite, ?techn, ?legendText, ?legendSprite)
+```
+
+Rendered style helpers include `RoundedBoxShape()`, `SolidLine()`, `DashedLine()`, `DottedLine()`, and `BoldLine()`. `EightSidedShape()` is parsed for compatibility, but currently renders as the default box shape.
+
+Generated legends are shown when `SHOW_LEGEND()`, `SHOW_DYNAMIC_LEGEND()`, or `Legend` is present. Only tag declarations that are used by elements or relationships are included.
+
+Element tag declarations currently affect:
+
+- `bgColor`
+- `fontColor`
+- `borderColor`
+- `RoundedBoxShape()`
+- `techn` when the element does not already define technology
+
+Relationship tag declarations currently affect:
+
+- `textColor`
+- `lineColor`
+- `SolidLine()`
+- `DashedLine()`
+- `DottedLine()`
+- `BoldLine()`
+- `techn` when the relationship does not already define technology
+
+If an element or relationship has multiple tags, later tags in `$tags` override earlier tags for the same style field.
+
 ## Layout Notes
 
 Pintora uses dagre automatic layout for C4 diagrams. The result may differ from PlantUML and Mermaid layouts.
 
 Direction-specific relationship macros such as `Rel_R` are parsed as relationship metadata. They do not force exact manual placement.
+
+Generated legends are laid out to the right of the diagram. They are not displayed unless a legend macro is present.
 
 ## Unsupported C4-PlantUML Features
 
@@ -139,5 +190,5 @@ Pintora C4 does not run PlantUML preprocessing. These features are not part of t
 
 - `!include`, `!define`, procedures, and macro expansion
 - Sprites and icon libraries
-- Generated legends
-- Full tag style declarations such as `AddElementTag` and `AddRelTag`
+- Shadow rendering for tag declarations
+- Eight-sided element shape rendering

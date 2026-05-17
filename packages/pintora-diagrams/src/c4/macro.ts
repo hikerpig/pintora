@@ -4,8 +4,12 @@ import {
   C4DirectionHint,
   C4Element,
   C4ElementKind,
+  C4ElementTagShape,
+  C4ElementTagStyle,
   C4MacroArg,
   C4Relationship,
+  C4RelationshipLineStyle,
+  C4RelationshipTagStyle,
   C4Shape,
 } from './type'
 
@@ -68,6 +72,24 @@ const RELATION_MACROS: Record<string, C4DirectionHint | undefined> = {
   RelIndex: undefined,
 }
 
+const ELEMENT_TAG_SHAPES: Record<string, C4ElementTagShape> = {
+  RoundedBoxShape: 'roundedBox',
+  'RoundedBoxShape()': 'roundedBox',
+  EightSidedShape: 'eightSided',
+  'EightSidedShape()': 'eightSided',
+}
+
+const RELATION_TAG_LINE_STYLES: Record<string, C4RelationshipLineStyle> = {
+  SolidLine: 'solid',
+  'SolidLine()': 'solid',
+  DashedLine: 'dashed',
+  'DashedLine()': 'dashed',
+  DottedLine: 'dotted',
+  'DottedLine()': 'dotted',
+  BoldLine: 'bold',
+  'BoldLine()': 'bold',
+}
+
 function parseArgs(args: C4MacroArg[]): ParsedArgs {
   const positional: string[] = []
   const named: Record<string, string> = {}
@@ -106,6 +128,18 @@ export function isBoundaryMacro(name: string) {
 
 export function isRelationshipMacro(name: string) {
   return Object.prototype.hasOwnProperty.call(RELATION_MACROS, name)
+}
+
+export function isElementTagMacro(name: string) {
+  return name === 'AddElementTag'
+}
+
+export function isRelationshipTagMacro(name: string) {
+  return name === 'AddRelTag'
+}
+
+export function isLegendMacro(name: string) {
+  return name === 'SHOW_LEGEND' || name === 'SHOW_DYNAMIC_LEGEND' || name === 'Legend'
 }
 
 export function normalizeElementMacro(name: string, args: C4MacroArg[], parent?: string): C4Element {
@@ -209,4 +243,70 @@ export function normalizeRelationshipMacro(name: string, args: C4MacroArg[], ind
   if (parsed.named.link) relationship.link = parsed.named.link
 
   return relationship
+}
+
+export function normalizeElementTagMacro(args: C4MacroArg[]): C4ElementTagStyle {
+  const parsed = parseArgs(args)
+  const tag = readValue(parsed, 0, 'tagStereo') || readValue(parsed, 0, 'tag')
+  if (!tag) {
+    throw new Error('[c4] AddElementTag requires a tag name as the first argument')
+  }
+
+  const shapeValue = readValue(parsed, 5, 'shape')
+  const style: C4ElementTagStyle = {
+    tag,
+  }
+
+  const bgColor = readValue(parsed, 1, 'bgColor')
+  const fontColor = readValue(parsed, 2, 'fontColor')
+  const borderColor = readValue(parsed, 3, 'borderColor')
+  const shadowing = readValue(parsed, 4, 'shadowing')
+  const sprite = readValue(parsed, 6, 'sprite')
+  const techn = readValue(parsed, 7, 'techn')
+  const legendText = readValue(parsed, 8, 'legendText')
+  const legendSprite = readValue(parsed, 9, 'legendSprite')
+
+  if (bgColor) style.bgColor = bgColor
+  if (fontColor) style.fontColor = fontColor
+  if (borderColor) style.borderColor = borderColor
+  if (shadowing) style.shadowing = shadowing
+  if (shapeValue && ELEMENT_TAG_SHAPES[shapeValue]) style.shape = ELEMENT_TAG_SHAPES[shapeValue]
+  if (sprite) style.sprite = sprite
+  if (techn) style.techn = techn
+  if (legendText) style.legendText = legendText
+  if (legendSprite) style.legendSprite = legendSprite
+
+  return style
+}
+
+export function normalizeRelationshipTagMacro(args: C4MacroArg[]): C4RelationshipTagStyle {
+  const parsed = parseArgs(args)
+  const tag = readValue(parsed, 0, 'tagStereo') || readValue(parsed, 0, 'tag')
+  if (!tag) {
+    throw new Error('[c4] AddRelTag requires a tag name as the first argument')
+  }
+
+  const lineStyleValue = readValue(parsed, 3, 'lineStyle')
+  const style: C4RelationshipTagStyle = {
+    tag,
+  }
+
+  const textColor = readValue(parsed, 1, 'textColor')
+  const lineColor = readValue(parsed, 2, 'lineColor')
+  const sprite = readValue(parsed, 4, 'sprite')
+  const techn = readValue(parsed, 5, 'techn')
+  const legendText = readValue(parsed, 6, 'legendText')
+  const legendSprite = readValue(parsed, 7, 'legendSprite')
+
+  if (textColor) style.textColor = textColor
+  if (lineColor) style.lineColor = lineColor
+  if (lineStyleValue && RELATION_TAG_LINE_STYLES[lineStyleValue]) {
+    style.lineStyle = RELATION_TAG_LINE_STYLES[lineStyleValue]
+  }
+  if (sprite) style.sprite = sprite
+  if (techn) style.techn = techn
+  if (legendText) style.legendText = legendText
+  if (legendSprite) style.legendSprite = legendSprite
+
+  return style
 }

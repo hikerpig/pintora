@@ -81,7 +81,6 @@ const configurator = makeConfigurator<C4Conf>({
     return interpreteConfigs(C4_PARAM_DIRECTIVE_RULES, configParams) as Partial<C4Conf>
   },
   getConfigFromTheme(t) {
-    console.log('groupBackground', t.groupBackground)
     return {
       personBackground: t.primaryColor,
       systemBackground: t.primaryColor,

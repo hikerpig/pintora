@@ -190,6 +190,71 @@ Rel(api, region, "Runs in")
   it('renders shared dynamic and deployment examples', () => {
     expect(testDraw(EXAMPLES.c4Dynamic.code).graphicIR.mark).toBeTruthy()
     expect(testDraw(EXAMPLES.c4Deployment.code).graphicIR.mark).toBeTruthy()
+    expect(testDraw(EXAMPLES.c4Styled.code).graphicIR.mark).toBeTruthy()
+  })
+
+  it('applies tag declarations to elements and relationships and renders a generated legend', () => {
+    const code = `
+C4Container
+AddElementTag("critical", $bgColor="#ffdddd", $fontColor="#550000", $borderColor="#cc0000", $shape=RoundedBoxShape(), $legendText="Critical element")
+AddElementTag("unused", $bgColor="#eeeeee", $legendText="Unused element")
+AddRelTag("async", $textColor="#003366", $lineColor="#0066cc", $lineStyle=DashedLine(), $legendText="Async call")
+Container(api, "API", "Node.js", $tags="critical")
+ContainerQueue(events, "Events", "Kafka")
+Rel(api, events, "Publishes", $tags="async")
+SHOW_LEGEND()
+`
+
+    const result = testDraw(code)
+    const rootMark = result.graphicIR.mark as Group
+    const apiGroup = findC4ElementGroup(rootMark, 'c4-element-api')
+    const apiRect = apiGroup.children.find(child => child.class === 'c4__element-rect')!
+    const apiTexts = apiGroup.children.filter(child => child.type === 'text')
+    const relationship = findC4ElementGroup(rootMark, 'c4-rel-0')
+    const relationshipLine = relationship.children.find(child => child.class === 'c4__rel-line')!
+    const relationshipLabel = relationship.children.find(
+      child => child.type === 'text' && child.class === 'c4__rel-label',
+    )!
+    const legend = rootMark.children.find(
+      (child): child is Group => child.type === 'group' && child.class === 'c4__legend',
+    )!
+    const legendTexts = legend.children.filter(child => child.type === 'text').map(child => child.attrs.text)
+
+    expect(apiRect.attrs.fill).toBe('#ffdddd')
+    expect(apiRect.attrs.stroke).toBe('#cc0000')
+    expect(apiRect.attrs.radius).toBeGreaterThan(4)
+    expect(apiTexts.every(text => text.attrs.fill === '#550000')).toBe(true)
+    expect(relationshipLine.attrs.stroke).toBe('#0066cc')
+    expect(relationshipLine.attrs.lineDash).toEqual([6, 4])
+    expect(relationshipLabel.attrs.fill).toBe('#003366')
+    expect(legendTexts).toContain('Legend')
+    expect(legendTexts).toContain('Critical element')
+    expect(legendTexts).toContain('Async call')
+    expect(legendTexts).not.toContain('Unused element')
+  })
+
+  it('vertically centers legend swatches with their labels', () => {
+    const code = `
+C4Container
+AddElementTag("critical", $bgColor="#ffdddd", $fontColor="#550000", $borderColor="#cc0000", $shape=RoundedBoxShape(), $legendText="Critical element")
+Person(customer, "Customer", "Uses online banking")
+Container(api, "API Application", "Spring Boot", "Handles business requests", $tags="critical")
+Rel(customer, api, "Uses", "HTTPS")
+SHOW_LEGEND()
+`
+
+    const result = testDraw(code)
+    const rootMark = result.graphicIR.mark as Group
+    const legend = rootMark.children.find(
+      (child): child is Group => child.type === 'group' && child.class === 'c4__legend',
+    )!
+    const label = legend.children.find(
+      child => child.type === 'text' && child.class === 'c4__legend-label' && child.attrs.text === 'Critical element',
+    )!
+    const swatch = legend.children.find(child => child.type === 'rect' && child.class === 'c4__legend-element-swatch')!
+
+    expect(label.attrs.textBaseline).toBe('middle')
+    expect(label.attrs.y).toBe(swatch.attrs.y + swatch.attrs.height / 2)
   })
 
   it('keeps the person icon inside its element box and separates element text rows', () => {

@@ -4,13 +4,17 @@
 
 Add a new Pintora diagram type for C4 architecture diagrams, with a macro-first DSL that is familiar to Mermaid C4 and C4-PlantUML users, while keeping Pintora's implementation model parser-driven, theme-aware, and rendered through the existing dagre layout utilities.
 
-The first release should make common static C4 diagrams usable:
+The supported C4 surface should make common static and flow/deployment views usable:
 
 - System context diagrams
 - Container diagrams
 - Component diagrams
+- Dynamic diagrams
+- Deployment diagrams
+- Tag-based styling declarations
+- Generated legends
 
-Dynamic and deployment diagrams are intentionally deferred so the first release does not become a PlantUML macro runtime.
+Pintora should remain a parser-driven diagram implementation rather than a PlantUML macro runtime. Compatibility work should focus on Mermaid/C4-PlantUML macro signatures that can be normalized into Pintora-owned IR.
 
 ## User-Facing DSL
 
@@ -25,9 +29,7 @@ C4Dynamic
 C4Deployment
 ```
 
-`C4Dynamic` and `C4Deployment` can be detected in the grammar only when useful for clear "not supported yet" errors, but they are not part of the first supported rendering scope.
-
-Example first-release input:
+Example input:
 
 ```txt
 C4Container
@@ -47,20 +49,35 @@ Rel(api, db, "Reads/Writes", "JDBC")
 Rel(api, email, "Sends messages", "SMTP")
 ```
 
-Supported macro families in the first release:
+Supported macro families:
 
-- Diagram entries: `C4Context`, `C4Container`, `C4Component`, plus `c4Diagram` as Pintora-native alias.
+- Diagram entries: `C4Context`, `C4Container`, `C4Component`, `C4Dynamic`, `C4Deployment`, plus `c4Diagram` as Pintora-native alias.
 - Elements: `Person`, `Person_Ext`, `System`, `System_Ext`, `SystemDb`, `SystemQueue`, `Container`, `Container_Ext`, `ContainerDb`, `ContainerQueue`, `Component`, `Component_Ext`, `ComponentDb`, `ComponentQueue`.
-- Boundaries: `Boundary`, `Enterprise_Boundary`, `System_Boundary`, `Container_Boundary`.
-- Relationships: `Rel`, `BiRel`, `Rel_U`, `Rel_Up`, `Rel_D`, `Rel_Down`, `Rel_L`, `Rel_Left`, `Rel_R`, `Rel_Right`, `Rel_Back`.
+- Boundaries: `Boundary`, `Enterprise_Boundary`, `System_Boundary`, `Container_Boundary`, `Deployment_Node`, `Node`, `Node_L`, `Node_R`.
+- Relationships: `Rel`, `BiRel`, `Rel_U`, `Rel_Up`, `Rel_D`, `Rel_Down`, `Rel_L`, `Rel_Left`, `Rel_R`, `Rel_Right`, `Rel_Back`, `RelIndex`.
+- Styling declarations: `AddElementTag`, `AddRelTag`.
+- Legend triggers: `SHOW_LEGEND`, `SHOW_DYNAMIC_LEGEND`, and bare `Legend`.
 - Optional arguments: positional arguments for core C4-PlantUML compatibility, plus named arguments for common optional fields such as `$descr`, `$techn`, `$tags`, and `$link`.
 
-Explicitly out of scope for the first release:
+Tag style declarations use the Mermaid/C4-PlantUML-compatible signatures:
+
+```txt
+AddElementTag(tagStereo, ?bgColor, ?fontColor, ?borderColor, ?shadowing, ?shape, ?sprite, ?techn, ?legendText, ?legendSprite)
+AddRelTag(tagStereo, ?textColor, ?lineColor, ?lineStyle, ?sprite, ?techn, ?legendText, ?legendSprite)
+```
+
+Supported rendered style fields:
+
+- Element tags: `bgColor`, `fontColor`, `borderColor`, `RoundedBoxShape()`, and `techn` when the element does not already define technology.
+- Relationship tags: `textColor`, `lineColor`, `SolidLine()`, `DashedLine()`, `DottedLine()`, `BoldLine()`, and `techn` when the relationship does not already define technology.
+- Generated legends use `legendText` when present, otherwise the tag name.
+
+Explicitly out of scope:
 
 - PlantUML preprocessing, includes, defines, procedures, and macro expansion.
 - Sprites and icon libraries.
-- Legend generation.
-- Full custom tag style declarations such as `AddElementTag` and `AddRelTag`.
+- Shadow rendering for tag declarations.
+- Eight-sided element shape rendering, even though `EightSidedShape()` is parsed for forward compatibility.
 - Manual layout commands such as `Lay_U`, except as a later best-effort constraint feature.
 - Sequence-style C4 diagrams.
 
@@ -78,6 +95,7 @@ packages/pintora-diagrams/src/c4/
   db.ts
   type.ts
   macro.ts
+  style.ts
   artist.ts
   config.ts
   notation.ts
@@ -95,7 +113,7 @@ packages/pintora-diagrams/src/__tests__/c4-artist.spec.ts
 
 The diagram should register as `c4Diagram` and use a pattern that matches macro-style entries:
 
-```ts
+```txt
 /^\s*(c4Diagram|C4Context|C4Container|C4Component|C4Dynamic|C4Deployment)/
 ```
 
@@ -106,11 +124,46 @@ Although the user-facing DSL is macro-first, the parser should normalize all inp
 Core types:
 
 ```ts
-type C4DiagramKind = 'context' | 'container' | 'component'
+type C4DiagramKind = 'context' | 'container' | 'component' | 'dynamic' | 'deployment'
 
 type C4ElementKind = 'person' | 'system' | 'container' | 'component'
 
 type C4Shape = 'person' | 'box' | 'database' | 'queue'
+
+type C4BoundaryKind = 'generic' | 'enterprise' | 'system' | 'container' | 'deploymentNode'
+
+type C4ElementTagShape = 'roundedBox' | 'eightSided'
+
+type C4RelationshipLineStyle = 'solid' | 'dashed' | 'dotted' | 'bold'
+
+type C4ElementTagStyle = {
+  tag: string
+  bgColor?: string
+  fontColor?: string
+  borderColor?: string
+  shadowing?: string
+  shape?: C4ElementTagShape
+  sprite?: string
+  techn?: string
+  legendText?: string
+  legendSprite?: string
+}
+
+type C4RelationshipTagStyle = {
+  tag: string
+  textColor?: string
+  lineColor?: string
+  lineStyle?: C4RelationshipLineStyle
+  sprite?: string
+  techn?: string
+  legendText?: string
+  legendSprite?: string
+}
+
+type C4Legend = {
+  visible: boolean
+  position: 'right' | 'bottom'
+}
 
 type C4Element = {
   id: string
@@ -128,8 +181,9 @@ type C4Element = {
 
 type C4Boundary = {
   id: string
-  kind: 'generic' | 'enterprise' | 'system' | 'container'
+  kind: C4BoundaryKind
   label: string
+  type?: string
   description?: string
   parent?: string
   tags: string[]
@@ -141,6 +195,7 @@ type C4Boundary = {
 type C4Relationship = {
   source: string
   target: string
+  index?: string
   label?: string
   technology?: string
   description?: string
@@ -156,6 +211,9 @@ type C4DiagramIR = BaseDiagramIR & {
   elements: Record<string, C4Element>
   boundaries: Record<string, C4Boundary>
   relationships: C4Relationship[]
+  elementTags: Record<string, C4ElementTagStyle>
+  relationshipTags: Record<string, C4RelationshipTagStyle>
+  legend: C4Legend
 }
 ```
 
@@ -166,6 +224,12 @@ type C4DiagramIR = BaseDiagramIR & {
 - `SystemQueue` becomes `{ kind: 'system', shape: 'queue' }`.
 - `Rel_R` becomes a relationship with `directionHint: 'right'`.
 - `BiRel` becomes one bidirectional relationship rather than two independent edges.
+- `RelIndex` becomes a relationship with an `index` field that is rendered in the label.
+- `Deployment_Node` and `Node` become deployment-node boundaries.
+- `AddElementTag` and `AddRelTag` become tag style declarations stored on the IR rather than immediately mutating elements.
+- `SHOW_LEGEND`, `SHOW_DYNAMIC_LEGEND`, and `Legend` set `legend.visible`.
+
+`style.ts` should resolve declared tag styles against individual elements and relationships. Later tags in `$tags` override earlier tags for the same field. A tag's `techn` value is a fallback only; it should not override technology explicitly declared on an element or relationship.
 
 ## Parser and DB Behavior
 
@@ -175,19 +239,25 @@ Parser responsibilities:
 
 - Parse diagram entry and optional `title: ...`.
 - Parse macro calls with positional string, identifier, and named arguments.
+- Parse color literals such as `#ffdddd`.
+- Parse style-helper function values such as `RoundedBoxShape()` and `DashedLine()` as macro argument values.
 - Parse boundary blocks with `{ ... }`.
+- Parse bare `Legend` as a legend macro.
 - Preserve statement order for stable snapshots and relationship index behavior.
 - Ignore blank lines and comments using existing shared parser helpers where possible.
 
 DB responsibilities:
 
 - Store elements, boundaries, and relationships.
+- Store element tag declarations, relationship tag declarations, and legend visibility.
 - Assign `parent` when elements or nested boundaries appear inside a boundary block.
 - Fill boundary `children` from nested declarations.
 - Reject duplicate aliases only when the duplicate changes semantic identity; repeated equivalent declarations should keep the first declaration.
-- Report unresolved relationship endpoints with a parse-time or DB finalization error. First release should not silently create unknown elements, because C4 macro users usually expect aliases to be declared explicitly.
+- Report unresolved relationship endpoints with a parse-time or DB finalization error. Pintora should not silently create unknown elements, because C4 macro users usually expect aliases to be declared explicitly.
 
 Named argument parsing should support both positional and named optional arguments in the same call. Named values override the corresponding optional positional field when both are present.
+
+Legend generation is explicit. Declaring tags does not display a legend by itself; one of `SHOW_LEGEND()`, `SHOW_DYNAMIC_LEGEND()`, or bare `Legend` must be present. The generated legend should include only declared tags that are actually used by elements or relationships.
 
 ## Rendering and Layout
 
@@ -210,6 +280,10 @@ Relationship direction hints should be best-effort. They can influence graph con
 
 Boundary rendering should reuse the compound graph pattern already used by component and dot diagrams. Parent-child relationship edges are a known dagre risk in compound graphs, so C4 should copy the component diagram's strategy: detect edges between a child and its containing boundary, skip them during dagre layout when necessary, then draw them manually after layout.
 
+Nested boundaries must render in depth order: outer boundaries first, inner boundaries second, elements last. This prevents parent deployment nodes from covering child deployment nodes.
+
+Legend rendering should run after dagre layout. The legend should be a separate group placed to the right of the graph and included in root bounds. Each row contains a swatch and a text label; row text should use middle baseline alignment so swatches and labels are vertically centered.
+
 ## Notation and Theme
 
 The visual notation should follow recognizable C4 conventions without hard-coded colors. All colors should come from `getConfig().themeConfig` or C4 config fields derived from theme variables.
@@ -221,6 +295,8 @@ Element layout:
 - Description: optional, wrapped inside the element.
 - External elements: same shape family with distinct border or background style.
 - Database and queue elements: use existing Pintora symbols where appropriate.
+- Element tag styles can override fill, text color, border color, rounded-box radius, and fallback technology.
+- Relationship tag styles can override line color, label color, dash pattern, line width for bold lines, and fallback technology.
 
 Config fields:
 
@@ -249,7 +325,7 @@ type C4Conf = BaseFontConfig & {
 }
 ```
 
-The first release should avoid adding new global theme variables unless they are clearly shared by other diagrams. A diagram-local config mapped from existing theme variables is enough.
+The C4 implementation should avoid adding new global theme variables unless they are clearly shared by other diagrams. A diagram-local config mapped from existing theme variables is enough.
 
 ## Documentation
 
@@ -258,19 +334,26 @@ The user documentation should be centered on migration from Mermaid C4 and C4-Pl
 - One `C4Context` example.
 - One `C4Container` example.
 - One `C4Component` example.
+- One `C4Dynamic` example.
+- One `C4Deployment` example.
+- One tag-style and generated-legend example.
 - A compatibility table listing supported and unsupported macros.
 - A note that Pintora uses dagre automatic layout, so layout may differ from PlantUML and Mermaid.
-- A note that sprites, legends, and full tag styling are not supported in the first release.
+- A note that sprites, shadow rendering, and eight-sided shape rendering are not supported.
+- A note that legends are explicit and only include tags that are actually used.
 
 ## Testing
 
 Parser tests:
 
-- Recognizes `C4Context`, `C4Container`, `C4Component`, and `c4Diagram`.
+- Recognizes `C4Context`, `C4Container`, `C4Component`, `C4Dynamic`, `C4Deployment`, and `c4Diagram`.
 - Parses positional arguments for elements and relationships.
 - Parses named optional arguments such as `$descr`, `$techn`, `$tags`, `$link`.
 - Parses nested boundaries.
 - Parses relation direction macros.
+- Parses `RelIndex`.
+- Parses deployment nodes as nested boundaries.
+- Parses `AddElementTag`, `AddRelTag`, style helper function values, colors, and legend aliases.
 - Rejects unresolved relationship aliases.
 
 Artist tests:
@@ -280,6 +363,12 @@ Artist tests:
 - Renders one component diagram with a container boundary and components.
 - Renders bidirectional relationships distinctly.
 - Renders relation labels and technology text.
+- Renders dynamic relationship indexes.
+- Renders nested deployment boundaries in depth order.
+- Applies element tag styles to fill, text color, border color, rounded box shape, and fallback technology.
+- Applies relationship tag styles to line color, label color, dash pattern, and fallback technology.
+- Renders generated legends for used tags only.
+- Vertically centers legend swatches and labels.
 - Produces stable snapshots without updating snapshots blindly.
 
 Verification commands:
@@ -303,7 +392,11 @@ Milestone 3: config, theme mapping, docs, and standalone registration.
 
 Milestone 4: compatibility polish for named arguments, external variants, and relation direction hints.
 
-Later milestones can add deployment diagrams, dynamic diagrams, tag style definitions, legend generation, and a Structurizr-like model/view layer.
+Milestone 5: dynamic and deployment diagrams.
+
+Milestone 6: tag style declarations and explicit generated legends.
+
+Later milestones can add sprite rendering, shadow rendering, eight-sided element shape rendering, manual layout constraints, and a Structurizr-like model/view layer.
 
 ## References
 

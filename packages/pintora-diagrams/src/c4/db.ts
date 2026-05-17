@@ -2,10 +2,15 @@ import { BaseDb } from '../util/base-db'
 import {
   isBoundaryMacro,
   isElementMacro,
+  isElementTagMacro,
+  isLegendMacro,
   isRelationshipMacro,
+  isRelationshipTagMacro,
   normalizeBoundaryMacro,
   normalizeElementMacro,
+  normalizeElementTagMacro,
   normalizeRelationshipMacro,
+  normalizeRelationshipTagMacro,
 } from './macro'
 import {
   C4Action,
@@ -14,8 +19,10 @@ import {
   C4DiagramIR,
   C4DiagramKind,
   C4Element,
+  C4ElementTagStyle,
   C4MacroCall,
   C4Relationship,
+  C4RelationshipTagStyle,
 } from './type'
 
 type C4Node = C4Element | C4Boundary
@@ -34,6 +41,9 @@ export class C4Db extends BaseDb {
   protected elements: Record<string, C4Element> = {}
   protected boundaries: Record<string, C4Boundary> = {}
   protected relationships: C4Relationship[] = []
+  protected elementTags: Record<string, C4ElementTagStyle> = {}
+  protected relationshipTags: Record<string, C4RelationshipTagStyle> = {}
+  protected legend = { visible: false, position: 'right' as const }
 
   setDiagramEntry(entry: string) {
     switch (entry) {
@@ -108,6 +118,23 @@ export class C4Db extends BaseDb {
       return element.id
     }
 
+    if (isElementTagMacro(action.name)) {
+      const tag = normalizeElementTagMacro(action.args)
+      this.elementTags[tag.tag] = tag
+      return ''
+    }
+
+    if (isRelationshipTagMacro(action.name)) {
+      const tag = normalizeRelationshipTagMacro(action.args)
+      this.relationshipTags[tag.tag] = tag
+      return ''
+    }
+
+    if (isLegendMacro(action.name)) {
+      this.legend.visible = true
+      return ''
+    }
+
     if (isRelationshipMacro(action.name)) {
       const relationship = normalizeRelationshipMacro(action.name, action.args, this.relationships.length)
       this.relationships.push(relationship)
@@ -162,6 +189,9 @@ export class C4Db extends BaseDb {
       elements: this.elements,
       boundaries: this.boundaries,
       relationships: this.relationships,
+      elementTags: this.elementTags,
+      relationshipTags: this.relationshipTags,
+      legend: this.legend,
       ...this.getBaseDiagramIR(),
     }
   }
@@ -172,6 +202,9 @@ export class C4Db extends BaseDb {
     this.elements = {}
     this.boundaries = {}
     this.relationships = []
+    this.elementTags = {}
+    this.relationshipTags = {}
+    this.legend = { visible: false, position: 'right' }
   }
 }
 

@@ -301,6 +301,27 @@ Rel(api, email, "Sends notifications", "SMTP")
 `),
 }
 
+export const c4StyledExample: DiagramExample = {
+  name: 'C4 Styled Diagram',
+  description: 'Sample for C4 tag styles and generated legends',
+  code: stripStartEmptyLines(`
+C4Container
+title: Internet Banking - Styled Containers
+
+AddElementTag("critical", $bgColor="#ffdddd", $fontColor="#550000", $borderColor="#cc0000", $shape=RoundedBoxShape(), $legendText="Critical element")
+AddRelTag("async", $textColor="#003366", $lineColor="#0066cc", $lineStyle=DashedLine(), $legendText="Async call")
+
+Person(customer, "Customer", "Uses online banking")
+Container(api, "API Application", "Spring Boot", "Handles business requests", $tags="critical")
+ContainerQueue(events, "Domain Events", "Kafka", "Publishes account and payment events")
+
+Rel(customer, api, "Uses", "HTTPS")
+Rel(api, events, "Publishes", $tags="async")
+
+SHOW_LEGEND()
+`),
+}
+
 const activityExample: DiagramExample = {
   name: 'Activity Diagram',
   description: 'Sample for a activityDiagram',
@@ -461,6 +482,7 @@ export const EXAMPLES = {
   c4: c4Example,
   c4Dynamic: c4DynamicExample,
   c4Deployment: c4DeploymentExample,
+  c4Styled: c4StyledExample,
   activity: activityExample,
   mindmap: mindmapExample,
   gantt: ganttExample,
