@@ -79,6 +79,16 @@ type TraceRunArgs = {
   'max-concurrency'?: number
 }
 
+type AnalyzeRunsArgs = {
+  runs: string
+  out: string
+}
+
+type BriefRunArgs = {
+  run: string
+  out: string
+}
+
 const parser = yargs(hideBin(process.argv))
   .scriptName('pintora-harness')
   .exitProcess(false)
@@ -185,6 +195,24 @@ const parser = yargs(hideBin(process.argv))
       'max-concurrency': { describe: 'Maximum parallel harness cases', type: 'number', default: 1 },
     },
     handler: handleTraceRunCommand,
+  })
+  .command<AnalyzeRunsArgs>({
+    command: 'analyze-runs',
+    describe: 'Analyze agent trace runs and emit an observability report',
+    builder: {
+      runs: { describe: 'Agent trace runs directory', type: 'string', demandOption: true },
+      out: { describe: 'Output report JSON file', type: 'string', demandOption: true },
+    },
+    handler: handleAnalyzeRunsCommand,
+  })
+  .command<BriefRunArgs>({
+    command: 'brief-run',
+    describe: 'Write a human-readable repair brief for one trace run',
+    builder: {
+      run: { describe: 'Agent trace run directory', type: 'string', demandOption: true },
+      out: { describe: 'Output markdown brief file', type: 'string', demandOption: true },
+    },
+    handler: handleBriefRunCommand,
   })
   .fail((message, error) => {
     const output = message || error?.message
@@ -357,6 +385,36 @@ async function handleTraceRunCommand(args: TraceRunArgs) {
         args['no-capture-browser']
       ),
       maxConcurrency: args['max-concurrency'] || 1,
+    })
+    process.stdout.write(`${JSON.stringify(result)}\n`)
+    process.exitCode = result.status === 'completed' ? 0 : 1
+  } catch (error) {
+    consola.error(error)
+    process.exitCode = 1
+  }
+}
+
+async function handleAnalyzeRunsCommand(args: AnalyzeRunsArgs) {
+  try {
+    const { runHarnessAnalyzeRuns } = require('./analysis/analyze-runs') as typeof import('./analysis/analyze-runs')
+    const result = await runHarnessAnalyzeRuns({
+      runsDir: args.runs,
+      outFile: args.out,
+    })
+    process.stdout.write(`${JSON.stringify(result)}\n`)
+    process.exitCode = result.status === 'completed' ? 0 : 1
+  } catch (error) {
+    consola.error(error)
+    process.exitCode = 1
+  }
+}
+
+async function handleBriefRunCommand(args: BriefRunArgs) {
+  try {
+    const { runHarnessBriefRun } = require('./analysis/brief-run') as typeof import('./analysis/brief-run')
+    const result = await runHarnessBriefRun({
+      runDir: args.run,
+      outFile: args.out,
     })
     process.stdout.write(`${JSON.stringify(result)}\n`)
     process.exitCode = result.status === 'completed' ? 0 : 1

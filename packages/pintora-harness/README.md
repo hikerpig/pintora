@@ -20,6 +20,9 @@ Human-oriented usage guide: see
 
 - `pintora-harness run-case --case er.relationship-spacing-01 --artifacts-dir artifacts/harness/dev/er.relationship-spacing-01`
 - `pintora-harness run-suite --suite smoke --artifacts-dir artifacts/harness/smoke-run`
+- `pintora-harness trace-run --task "manual smoke" --suite smoke --out artifacts/agent-runs`
+- `pintora-harness analyze-runs --runs artifacts/agent-runs --out artifacts/harness/observability-report.json`
+- `pintora-harness brief-run --run artifacts/agent-runs/<run-id> --out artifacts/agent-runs/<run-id>/repair-brief.md`
 
 ---
 
@@ -101,6 +104,22 @@ Example `review-decision.json`:
 | `recommended_action.type: escalate` | `escalate` |
 
 `recommended_action` takes priority over `verdict` when present.
+
+### Agent Trace
+
+- `manifest.json`
+- `task.md`
+- `env.json`
+- `git-before.diff`
+- `git-after.diff`
+- `commands.ndjson`
+- `decisions.ndjson`
+- `analysis.md`
+- `harness/suite.json`
+
+`trace-run` records a local evidence bundle for one agent verification cycle.
+`analyze-runs` aggregates many trace bundles into an observability report.
+`brief-run` turns one trace bundle into a human-readable repair brief.
 
 ---
 

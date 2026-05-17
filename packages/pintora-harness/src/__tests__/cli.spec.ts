@@ -163,4 +163,71 @@ describe('pintora-harness cli shell', () => {
     })
     expect(process.exitCode).toBe(0)
   })
+
+  it('dispatches analyze-runs to the analysis runner', async () => {
+    const mockRunHarnessAnalyzeRuns = jest.fn(async () => ({
+      status: 'completed',
+      report: 'observability-report.json',
+      totalRuns: 2,
+    }))
+
+    process.argv = [
+      'node',
+      'pintora-harness',
+      'analyze-runs',
+      '--runs',
+      '/tmp/agent-runs',
+      '--out',
+      '/tmp/observability-report.json',
+    ]
+
+    jest.mock('../analysis/analyze-runs', () => ({
+      runHarnessAnalyzeRuns: mockRunHarnessAnalyzeRuns,
+    }))
+
+    jest.isolateModules(() => {
+      require('../cli')
+    })
+
+    await new Promise(resolve => setImmediate(resolve))
+
+    expect(mockRunHarnessAnalyzeRuns).toHaveBeenCalledWith({
+      runsDir: '/tmp/agent-runs',
+      outFile: '/tmp/observability-report.json',
+    })
+    expect(process.exitCode).toBe(0)
+  })
+
+  it('dispatches brief-run to the brief runner', async () => {
+    const mockRunHarnessBriefRun = jest.fn(async () => ({
+      status: 'completed',
+      brief: 'repair-brief.md',
+    }))
+
+    process.argv = [
+      'node',
+      'pintora-harness',
+      'brief-run',
+      '--run',
+      '/tmp/agent-runs/run-one',
+      '--out',
+      '/tmp/agent-runs/run-one/repair-brief.md',
+    ]
+
+    jest.mock('../analysis/brief-run', () => ({
+      runHarnessBriefRun: mockRunHarnessBriefRun,
+    }))
+
+    jest.isolateModules(() => {
+      require('../cli')
+    })
+
+    await new Promise(resolve => setImmediate(resolve))
+
+    expect(mockRunHarnessBriefRun).toHaveBeenCalledWith({
+      runDir: '/tmp/agent-runs/run-one',
+      outFile: '/tmp/agent-runs/run-one/repair-brief.md',
+    })
+    expect(process.exitCode).toBe(0)
+  })
 })

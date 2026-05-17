@@ -183,6 +183,82 @@ Then inspect `commands.ndjson`. Each line records one command or phase:
 Use `analysis.md` for a quick human-readable rollup, but use JSON files when
 you need exact evidence.
 
+## Analyzing Many Runs
+
+After you have several trace runs, aggregate them:
+
+```bash
+node packages/pintora-harness/bin/pintora-harness analyze-runs \
+  --runs artifacts/agent-runs \
+  --out artifacts/harness/observability-report.json
+```
+
+The report answers questions that are hard to see from one run:
+
+- which cases are most often `suspicious` or `fail`
+- which `failure_signature` values repeat
+- which suspected components correlate with non-ok runs
+- how many predictions were confirmed, disconfirmed, inconclusive, or still
+  pending
+
+Important output fields:
+
+```json
+{
+  "total_runs": 12,
+  "complete_runs": 10,
+  "case_hotspots": [
+    {
+      "case_id": "er.relationship-label-lane-01",
+      "ok": 3,
+      "suspicious": 7,
+      "fail": 0
+    }
+  ],
+  "finding_hotspots": [
+    {
+      "failure_signature": "er.relationship-label-lane-overlap",
+      "count": 6
+    }
+  ],
+  "prediction_quality": {
+    "confirmed": 3,
+    "partially_confirmed": 1,
+    "disconfirmed": 1,
+    "inconclusive": 2,
+    "pending": 4
+  }
+}
+```
+
+Use this report to decide which harness cases deserve more attention and which
+failure signatures should become regression tests or repair briefs.
+
+## Decision Observability
+
+`trace-run` creates an empty `decisions.ndjson`. Add prediction events before
+or during an agent repair attempt:
+
+```json
+{"schema_version":1,"kind":"prediction","id":"prediction-001","claim":"Increasing ER label lane clearance should reduce label overlap.","expected_improve":["er.relationship-label-lane-01"],"expected_unchanged":["er.relationship-spacing-01"],"risk":"May widen the diagram."}
+```
+
+After review or comparison, append a result:
+
+```json
+{"schema_version":1,"kind":"prediction_result","prediction_ref":"prediction-001","result":"confirmed","evidence":["er.relationship-label-lane-01 moved suspicious -> ok"]}
+```
+
+Allowed result values:
+
+- `confirmed`
+- `partially_confirmed`
+- `disconfirmed`
+- `inconclusive`
+
+`analyze-runs` counts these entries in `prediction_quality`. Predictions
+without a matching result are counted as `pending`.
+
 ## Reading Case Summaries
 
 Each case has a `summary.json`:
@@ -276,6 +352,31 @@ node packages/pintora-harness/bin/pintora-harness apply-review \
 - `rerun`: rerun the harness
 - `escalate`: ask for stronger human or visual-model review
 
+## Repair Brief
+
+Use `brief-run` when you want to hand one run to a human reviewer or another
+agent:
+
+```bash
+node packages/pintora-harness/bin/pintora-harness brief-run \
+  --run artifacts/agent-runs/20260517-er-label-spacing \
+  --out artifacts/agent-runs/20260517-er-label-spacing/repair-brief.md
+```
+
+The brief includes:
+
+- task and run outcome
+- commands that ran
+- cases needing attention
+- failure signatures
+- suspected components
+- changed paths from `git-after.diff`
+- prediction claims from `decisions.ndjson`
+- recommended next steps
+
+Use the brief when you want the next agent to start from evidence instead of
+from a broad natural-language description.
+
 ## Recommended Human Workflow
 
 After an agent finishes a meaningful change:
@@ -366,10 +467,8 @@ Start `pnpm demo:dev`, then omit `--no-capture-browser`.
 
 ## Current Limitations
 
-- There is no `analyze-runs` command yet.
 - There is no `compare-runs` command yet.
 - There is no visual model judge integration yet.
 - Browser capture depends on a running preview server.
 - The smoke suite is intentionally small; use `--suite all` when you need
   broader coverage.
-

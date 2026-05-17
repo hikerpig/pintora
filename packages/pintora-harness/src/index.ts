@@ -35,6 +35,15 @@ export type {
 } from './trace/trace-contracts'
 export { runHarnessTraceRun } from './trace/trace-run'
 export { buildTraceRunId, slugifyTraceTask } from './trace/run-id'
+export type { AnalyzeRunsReport } from './analysis/analyze-runs'
+export { runHarnessAnalyzeRuns, buildAnalyzeRunsReport } from './analysis/analyze-runs'
+export { runHarnessBriefRun } from './analysis/brief-run'
+export type {
+  HarnessDecisionEvent,
+  PredictionQualityResult,
+  PredictionQualitySummary,
+} from './analysis/decision-observability'
+export { readDecisionEvents, summarizePredictionQuality } from './analysis/decision-observability'
 export type {
   HarnessOrchestrationAction,
   HarnessOrchestrationActionType,
