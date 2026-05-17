@@ -24,6 +24,14 @@ export function runAsciiRules(metrics: AsciiMetricSnapshot): HarnessFinding[] {
     })
   }
 
+  if (metrics.plan?.textRenderMismatchCount) {
+    findings.push({
+      id: 'ascii-text-render-mismatch',
+      severity: 'error',
+      message: 'rendered ASCII text does not match planned text cells',
+    })
+  }
+
   if (metrics.plan?.textLineConflictCount) {
     findings.push({
       id: 'ascii-text-line-conflict',
@@ -45,6 +53,14 @@ export function runAsciiRules(metrics: AsciiMetricSnapshot): HarnessFinding[] {
       id: 'ascii-adjacent-line-join',
       severity: 'warning',
       message: 'ASCII output contains adjacent vertical and horizontal line glyphs where a shared corner is expected',
+    })
+  }
+
+  if (metrics.plan?.lineCornerMissingCount) {
+    findings.push({
+      id: 'ascii-line-corner-missing',
+      severity: 'warning',
+      message: 'text diagram plan expects a solid line corner but the rendered glyph does not join the route',
     })
   }
 

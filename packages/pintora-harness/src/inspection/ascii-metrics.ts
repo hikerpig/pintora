@@ -15,9 +15,27 @@ export type AsciiMetricSnapshot = {
     adjacentLineJoinCount: number
     opOutOfBoundsCount: number
     switchHeadIntrusionCount: number
+    textRenderMismatchCount: number
     textLineConflictCount: number
+    lineCornerMissingCount: number
   }
 }
+
+type LineDirection = 'up' | 'right' | 'down' | 'left'
+
+const GLYPH_DIRECTIONS = new Map<string, LineDirection[]>([
+  ['─', ['left', 'right']],
+  ['│', ['up', 'down']],
+  ['┌', ['right', 'down']],
+  ['┐', ['left', 'down']],
+  ['└', ['right', 'up']],
+  ['┘', ['left', 'up']],
+  ['┬', ['left', 'right', 'down']],
+  ['┴', ['left', 'right', 'up']],
+  ['├', ['up', 'right', 'down']],
+  ['┤', ['up', 'left', 'down']],
+  ['┼', ['up', 'right', 'down', 'left']],
+])
 
 function widthOf(text: string) {
   return Array.from(text).reduce((sum, ch) => sum + (isWideChar(ch) ? 2 : 1), 0)
@@ -51,18 +69,6 @@ function collectLineCells(op: TextDiagramLineOp) {
   return cells
 }
 
-function collectTextCells(op: TextDiagramTextOp) {
-  const cells = new Set<string>()
-  const startX = alignedTextX(op)
-  let cursorX = startX
-  Array.from(op.text).forEach(ch => {
-    const width = widthOf(ch)
-    for (let offset = 0; offset < width; offset++) cells.add(pointKey(cursorX + offset, op.y))
-    cursorX += width
-  })
-  return cells
-}
-
 function collectTextCellChars(op: TextDiagramTextOp) {
   const cells = new Map<string, string>()
   const startX = alignedTextX(op)
@@ -86,6 +92,50 @@ function collectRenderedCells(text: string) {
     })
   })
   return cells
+}
+
+function addDirection(map: Map<string, Set<LineDirection>>, x: number, y: number, direction: LineDirection) {
+  const key = pointKey(x, y)
+  let directions = map.get(key)
+  if (!directions) {
+    directions = new Set()
+    map.set(key, directions)
+  }
+  directions.add(direction)
+}
+
+function collectSolidLineDirections(plan: TextDiagramPlan) {
+  const directionsByCell = new Map<string, Set<LineDirection>>()
+  plan.ops.forEach(op => {
+    if (op.type !== 'line' || op.stroke === 'dashed') return
+
+    const skipStart = Boolean(op.startHead)
+    const skipEnd = Boolean(op.endHead)
+    if (op.from.y === op.to.y) {
+      const y = op.from.y
+      const left = Math.min(op.from.x, op.to.x)
+      const right = Math.max(op.from.x, op.to.x)
+      for (let x = left; x <= right; x++) {
+        const isStart = x === op.from.x
+        const isEnd = x === op.to.x
+        if ((skipStart && isStart) || (skipEnd && isEnd)) continue
+        if (x > left) addDirection(directionsByCell, x, y, 'left')
+        if (x < right) addDirection(directionsByCell, x, y, 'right')
+      }
+    } else if (op.from.x === op.to.x) {
+      const x = op.from.x
+      const top = Math.min(op.from.y, op.to.y)
+      const bottom = Math.max(op.from.y, op.to.y)
+      for (let y = top; y <= bottom; y++) {
+        const isStart = y === op.from.y
+        const isEnd = y === op.to.y
+        if ((skipStart && isStart) || (skipEnd && isEnd)) continue
+        if (y > top) addDirection(directionsByCell, x, y, 'up')
+        if (y < bottom) addDirection(directionsByCell, x, y, 'down')
+      }
+    }
+  })
+  return directionsByCell
 }
 
 function isOpOutOfBounds(op: TextDiagramOp, plan: TextDiagramPlan) {
@@ -124,6 +174,42 @@ function countTextLineConflicts(text: string, plan: TextDiagramPlan) {
     })
   })
   return conflicts
+}
+
+function countTextRenderMismatches(text: string, plan: TextDiagramPlan) {
+  const renderedCells = collectRenderedCells(text)
+  let mismatches = 0
+  plan.ops.forEach(op => {
+    if (op.type !== 'text') return
+    collectTextCellChars(op).forEach((ch, cell) => {
+      if (renderedCells.get(cell) !== ch) mismatches += 1
+    })
+  })
+  return mismatches
+}
+
+function hasHorizontalDirection(directions: Set<LineDirection>) {
+  return directions.has('left') || directions.has('right')
+}
+
+function hasVerticalDirection(directions: Set<LineDirection>) {
+  return directions.has('up') || directions.has('down')
+}
+
+function renderedGlyphHasDirections(ch: string | undefined, expected: Set<LineDirection>) {
+  if (!ch) return false
+  const renderedDirections = new Set(GLYPH_DIRECTIONS.get(ch) || [])
+  return Array.from(expected).every(direction => renderedDirections.has(direction))
+}
+
+function countLineCornerMissing(text: string, plan: TextDiagramPlan) {
+  const renderedCells = collectRenderedCells(text)
+  let missing = 0
+  collectSolidLineDirections(plan).forEach((directions, cell) => {
+    if (!hasHorizontalDirection(directions) || !hasVerticalDirection(directions)) return
+    if (!renderedGlyphHasDirections(renderedCells.get(cell), directions)) missing += 1
+  })
+  return missing
 }
 
 function countSwitchHeadIntrusions(plan: TextDiagramPlan) {
@@ -180,7 +266,9 @@ export function buildAsciiMetrics(text: string, plan?: TextDiagramPlan | null): 
           adjacentLineJoinCount: countAdjacentLineJoins(text),
           opOutOfBoundsCount: plan.ops.filter(op => isOpOutOfBounds(op, plan)).length,
           switchHeadIntrusionCount: countSwitchHeadIntrusions(plan),
+          textRenderMismatchCount: countTextRenderMismatches(text, plan),
           textLineConflictCount: countTextLineConflicts(text, plan),
+          lineCornerMissingCount: countLineCornerMissing(text, plan),
         }
       : null,
   }

@@ -71,11 +71,50 @@ describe('runHarnessInspectAscii', () => {
 
     const findings = JSON.parse(fs.readFileSync(path.join(outDir, 'ascii-findings.json'), 'utf8'))
 
-    expect(result.status).toBe('suspicious')
+    expect(result.status).toBe('fail')
     expect(findings).toEqual(
       expect.arrayContaining([
         expect.objectContaining({
+          id: 'ascii-text-render-mismatch',
+        }),
+        expect.objectContaining({
           id: 'ascii-text-line-conflict',
+        }),
+      ]),
+    )
+  })
+
+  it('reports an error when rendered text does not match the text plan', async () => {
+    const outDir = fs.mkdtempSync(path.join(os.tmpdir(), 'pintora-harness-ascii-inspect-'))
+    const textFile = path.join(outDir, 'render.txt')
+    const planFile = path.join(outDir, 'plan.json')
+
+    fs.writeFileSync(textFile, '@pin│ora/core\n')
+    fs.writeFileSync(
+      planFile,
+      JSON.stringify({
+        width: 13,
+        height: 1,
+        ops: [{ type: 'text', x: 0, y: 0, text: '@pintora/core' }],
+      }),
+    )
+
+    const result = await runHarnessInspectAscii({
+      textFile,
+      planFile,
+      outDir,
+    })
+
+    const metrics = JSON.parse(fs.readFileSync(path.join(outDir, 'ascii-metrics.json'), 'utf8'))
+    const findings = JSON.parse(fs.readFileSync(path.join(outDir, 'ascii-findings.json'), 'utf8'))
+
+    expect(result.status).toBe('fail')
+    expect(metrics.plan.textRenderMismatchCount).toBe(1)
+    expect(findings).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          id: 'ascii-text-render-mismatch',
+          severity: 'error',
         }),
       ]),
     )
@@ -118,7 +157,7 @@ describe('runHarnessInspectAscii', () => {
     const textFile = path.join(outDir, 'render.txt')
     const planFile = path.join(outDir, 'plan.json')
 
-    fs.writeFileSync(textFile, [' /─────\\', ' < A >', ' \\──│──/', '    │'].join('\n'))
+    fs.writeFileSync(textFile, [' /─────\\', '  < A >', ' \\──│──/', '    │'].join('\n'))
     fs.writeFileSync(
       planFile,
       JSON.stringify({
@@ -188,6 +227,77 @@ describe('runHarnessInspectAscii', () => {
         }),
       ]),
     )
+  })
+
+  it('reports missing solid route corner glyphs from the text plan', async () => {
+    const outDir = fs.mkdtempSync(path.join(os.tmpdir(), 'pintora-harness-ascii-inspect-'))
+    const textFile = path.join(outDir, 'render.txt')
+    const planFile = path.join(outDir, 'plan.json')
+
+    fs.writeFileSync(textFile, ['│───', '│'].join('\n'))
+    fs.writeFileSync(
+      planFile,
+      JSON.stringify({
+        width: 4,
+        height: 2,
+        ops: [
+          { type: 'line', from: { x: 0, y: 0 }, to: { x: 0, y: 1 } },
+          { type: 'line', from: { x: 0, y: 0 }, to: { x: 3, y: 0 } },
+        ],
+      }),
+    )
+
+    const result = await runHarnessInspectAscii({
+      textFile,
+      planFile,
+      outDir,
+    })
+
+    const metrics = JSON.parse(fs.readFileSync(path.join(outDir, 'ascii-metrics.json'), 'utf8'))
+    const findings = JSON.parse(fs.readFileSync(path.join(outDir, 'ascii-findings.json'), 'utf8'))
+
+    expect(result.status).toBe('suspicious')
+    expect(metrics.plan.lineCornerMissingCount).toBe(1)
+    expect(findings).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          id: 'ascii-line-corner-missing',
+          severity: 'warning',
+        }),
+      ]),
+    )
+  })
+
+  it('does not require a corner glyph at arrowhead endpoints', async () => {
+    const outDir = fs.mkdtempSync(path.join(os.tmpdir(), 'pintora-harness-ascii-inspect-'))
+    const textFile = path.join(outDir, 'render.txt')
+    const planFile = path.join(outDir, 'plan.json')
+
+    fs.writeFileSync(textFile, ['│', '▼───'].join('\n'))
+    fs.writeFileSync(
+      planFile,
+      JSON.stringify({
+        width: 4,
+        height: 2,
+        ops: [
+          { type: 'line', from: { x: 0, y: 0 }, to: { x: 0, y: 1 }, endHead: 'filled' },
+          { type: 'line', from: { x: 0, y: 1 }, to: { x: 3, y: 1 } },
+        ],
+      }),
+    )
+
+    const result = await runHarnessInspectAscii({
+      textFile,
+      planFile,
+      outDir,
+    })
+
+    const metrics = JSON.parse(fs.readFileSync(path.join(outDir, 'ascii-metrics.json'), 'utf8'))
+    const findings = JSON.parse(fs.readFileSync(path.join(outDir, 'ascii-findings.json'), 'utf8'))
+
+    expect(result.status).toBe('ok')
+    expect(metrics.plan.lineCornerMissingCount).toBe(0)
+    expect(findings.some((finding: any) => finding.id === 'ascii-line-corner-missing')).toBe(false)
   })
 
   it('does not count solid lines crossing dashed borders as adjacent route corners', async () => {
