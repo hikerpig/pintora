@@ -1,4 +1,5 @@
 import type { TextDiagramArrowHead, TextDiagramOp, TextDiagramPlan } from '@pintora/core'
+import { fillOp, lineOp, rectOp, textOp } from '../../util/text-diagram'
 import type { SequenceLayoutSnapshot } from '../layout-snapshot'
 import { buildSequenceTextPlan, messageLabelStartCol, textLinesOf, widthOf } from './plan'
 import { buildSequenceTextPlanFromSnapshot } from './snapshot-plan'
@@ -10,22 +11,6 @@ function messageArrowHead(style: SequenceTextPlan['messages'][number]['style']):
 
 function messageStroke(style: SequenceTextPlan['messages'][number]['style']) {
   return style === 'dashed' || style === 'open-dashed' ? 'dashed' : 'solid'
-}
-
-function textOp(x: number, y: number, text: string, align?: 'left' | 'center' | 'right'): TextDiagramOp {
-  return align ? { type: 'text', x, y, text, align } : { type: 'text', x, y, text }
-}
-
-function lineOp(
-  from: { x: number; y: number },
-  to: { x: number; y: number },
-  extra: Pick<Extract<TextDiagramOp, { type: 'line' }>, 'stroke' | 'startHead' | 'endHead'> = {},
-): TextDiagramOp {
-  return { type: 'line', from, to, ...extra }
-}
-
-function rectOp(x: number, y: number, width: number, height: number): TextDiagramOp {
-  return { type: 'rect', x, y, width, height }
 }
 
 export function sequenceTextPlanToTextDiagramPlan(plan: SequenceTextPlan): TextDiagramPlan {
@@ -48,14 +33,15 @@ export function sequenceTextPlanToTextDiagramPlan(plan: SequenceTextPlan): TextD
   })
 
   plan.activations.forEach(activation => {
-    ops.push({
-      type: 'fill',
-      x: col(activation.barCols[0]),
-      y: row(activation.barRows[0]),
-      width: activation.barCols[1] - activation.barCols[0] + 1,
-      height: activation.barRows[1] - activation.barRows[0] + 1,
-      char: '|',
-    })
+    ops.push(
+      fillOp(
+        col(activation.barCols[0]),
+        row(activation.barRows[0]),
+        activation.barCols[1] - activation.barCols[0] + 1,
+        activation.barRows[1] - activation.barRows[0] + 1,
+        '|',
+      ),
+    )
   })
 
   const sortedBlocks = plan.blocks.slice().sort((a, b) => {

@@ -1,4 +1,11 @@
-import { lineOp, rectOp, textOp, translateTextDiagramOps, widthOf } from '../../util/text-diagram'
+import {
+  lineOp,
+  measureTextDiagramOps,
+  rectOp,
+  textOp,
+  translateTextDiagramOps,
+  widthOf,
+} from '../../util/text-diagram'
 
 type TextDiagramOp = import('@pintora/core').TextDiagramOp
 type TextDiagramPlan = import('@pintora/core').TextDiagramPlan
@@ -365,27 +372,6 @@ function attachNotes(block: ActivityTextBlock, notes: Note[], placement: string 
   }
 }
 
-function planSize(ops: TextDiagramOp[], fallbackWidth: number) {
-  let width = fallbackWidth
-  let height = 1
-  ops.forEach(op => {
-    if (op.type === 'text') {
-      const textWidth = widthOf(op.text)
-      const left =
-        op.align === 'center' ? op.x - Math.floor(textWidth / 2) : op.align === 'right' ? op.x - textWidth + 1 : op.x
-      width = Math.max(width, left + textWidth)
-      height = Math.max(height, op.y + 1)
-    } else if (op.type === 'rect' || op.type === 'fill') {
-      width = Math.max(width, op.x + op.width)
-      height = Math.max(height, op.y + op.height)
-    } else {
-      width = Math.max(width, op.from.x + 1, op.to.x + 1)
-      height = Math.max(height, op.from.y + 1, op.to.y + 1)
-    }
-  })
-  return { width: Math.max(1, width), height: Math.max(1, height) }
-}
-
 export function toActivityTextDiagramPlan(ir: ActivityDiagramIR): TextDiagramPlan {
   const notesByTarget = new Map<string, Note[]>()
   ir.notes.forEach(note => {
@@ -451,7 +437,7 @@ export function toActivityTextDiagramPlan(ir: ActivityDiagramIR): TextDiagramPla
   const fullBody = orphanNotes.length ? stackBlocks([body, ...orphanNotes]) : body
   const ops = fullBody.ops.slice()
   if (ir.title) ops.unshift(textOp(Math.floor(fullBody.width / 2), 0, ir.title, 'center'))
-  const size = planSize(ops, Math.max(fullBody.width, widthOf(ir.title || '')))
+  const size = measureTextDiagramOps(ops, Math.max(fullBody.width, widthOf(ir.title || '')))
 
   return {
     width: size.width,

@@ -1,4 +1,5 @@
 import type { TextDiagramOp, TextDiagramPlan } from '@pintora/core'
+import { drawRoute } from '../../util/text-diagram'
 import { buildDagreErAsciiLayout } from './dagre-layout'
 import { cardinalityMarker, relationshipStroke } from './relationship-layout'
 import { lineOp, rectOp, textOp } from './text'
@@ -23,12 +24,7 @@ function pushEntity(ops: TextDiagramOp[], entity: ErAsciiEntityBox) {
 }
 
 function pushRoute(ops: TextDiagramOp[], route: { x: number; y: number }[], stroke: 'solid' | 'dashed') {
-  for (let i = 1; i < route.length; i++) {
-    const from = route[i - 1]
-    const to = route[i]
-    if (from.x === to.x && from.y === to.y) continue
-    if (from.x === to.x || from.y === to.y) ops.push(lineOp(from, to, { stroke }))
-  }
+  ops.push(...drawRoute(route, { stroke }))
 }
 
 type EndpointSide = 'left' | 'right' | 'upper' | 'lower'

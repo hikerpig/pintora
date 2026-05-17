@@ -1,7 +1,7 @@
 import type { TextDiagramOp, TextDiagramPlan } from '@pintora/core'
 import { DagreWrapper } from '../../util/dagre-wrapper'
 import type { LayoutEdge, LayoutGraph, LayoutNode } from '../../util/graph'
-import { lineOp, rectOp, textOp, widthOf } from '../../util/text-diagram'
+import { alignedTextLeft, drawRoute, midpoint, rectOp, textOp, widthOf } from '../../util/text-diagram'
 import type { ComponentConf } from '../config'
 import { type ComponentDiagramIR, type Relationship } from '../db'
 import { buildComponentLayoutGraph } from '../layout/graph-builder'
@@ -145,18 +145,6 @@ function edgePoints(edge: ComponentAsciiEdgeData, source?: ComponentAsciiNodeBox
       { x: target.centerX, y: target.centerY },
     ]
   return []
-}
-
-function midpoint(points: ComponentAsciiPoint[]) {
-  if (!points.length) return { x: 0, y: 0 }
-  const middle = Math.floor(points.length / 2)
-  if (points.length % 2 === 1) return points[middle]
-  const previous = points[middle - 1]
-  const next = points[middle]
-  return {
-    x: Math.round((previous.x + next.x) / 2),
-    y: Math.round((previous.y + next.y) / 2),
-  }
 }
 
 function directRoute(source: ComponentAsciiNodeBox, target: ComponentAsciiNodeBox) {
@@ -356,12 +344,6 @@ function buildSkippedRelationshipEdges(
   })
 }
 
-function textLeft(x: number, text: string, align?: 'left' | 'center' | 'right') {
-  if (align === 'center') return x - Math.floor(widthOf(text) / 2)
-  if (align === 'right') return x - widthOf(text) + 1
-  return x
-}
-
 function collectBounds(
   nodes: ComponentAsciiNodeBox[],
   relationships: ComponentAsciiLayout['relationships'],
@@ -374,9 +356,9 @@ function collectBounds(
   relationships.forEach(edge => {
     points.push(...edge.route, edge.labelPoint)
     if (edge.message) {
-      points.push({ x: textLeft(edge.labelPoint.x, edge.message, 'center'), y: edge.labelPoint.y })
+      points.push({ x: alignedTextLeft(edge.labelPoint.x, edge.message, 'center'), y: edge.labelPoint.y })
       points.push({
-        x: textLeft(edge.labelPoint.x, edge.message, 'center') + widthOf(edge.message),
+        x: alignedTextLeft(edge.labelPoint.x, edge.message, 'center') + widthOf(edge.message),
         y: edge.labelPoint.y,
       })
     }
@@ -502,19 +484,7 @@ function pushGroup(ops: TextDiagramOp[], node: ComponentAsciiNodeBox, conf: Comp
 function pushRoute(ops: TextDiagramOp[], edge: ComponentAsciiLayout['relationships'][number]) {
   const stroke = lineStroke(edge.lineType)
   const heads = arrowHeads(edge.lineType, edge.isReversed)
-  for (let i = 1; i < edge.route.length; i++) {
-    const from = edge.route[i - 1]
-    const to = edge.route[i]
-    if (from.x === to.x && from.y === to.y) continue
-    if (from.x === to.x || from.y === to.y) {
-      const segmentExtra = {
-        stroke,
-        ...(i === 1 && heads.startHead ? { startHead: heads.startHead } : {}),
-        ...(i === edge.route.length - 1 && heads.endHead ? { endHead: heads.endHead } : {}),
-      }
-      ops.push(lineOp(from, to, segmentExtra))
-    }
-  }
+  ops.push(...drawRoute(edge.route, { stroke, ...heads }))
   if (edge.message) ops.push(textOp(edge.labelPoint.x, edge.labelPoint.y, edge.message, 'center'))
 }
 

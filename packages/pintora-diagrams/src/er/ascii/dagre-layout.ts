@@ -1,5 +1,6 @@
 import { createLayoutGraph, type LayoutEdge, type LayoutGraph, type LayoutNode } from '../../util/graph'
 import { DagreWrapper } from '../../util/dagre-wrapper'
+import { manhattanize, roundPoint, snapRouteEndpoints } from '../../util/text-diagram'
 import type { Relationship, ErDiagramIR } from '../db'
 import { buildEntityBoxes } from './entity-layout'
 import type {
@@ -85,78 +86,11 @@ function setInheritanceEdges(g: LayoutGraph, inheritances: ErDiagramIR['inherita
   })
 }
 
-function roundPoint(point: ErAsciiPoint): ErAsciiPoint {
-  return {
-    x: Math.round(point.x),
-    y: Math.round(point.y),
-  }
-}
-
 function edgePoints(edge: ErAsciiDagreEdgeData): ErAsciiPoint[] {
   return (edge.points || []).map(point => roundPoint(point))
 }
 
-function manhattanize(points: ErAsciiPoint[]) {
-  if (points.length <= 1) return points
-  const route: ErAsciiPoint[] = [points[0]]
-  for (let i = 1; i < points.length; i++) {
-    const previous = route[route.length - 1]
-    const next = points[i]
-    if (previous.x !== next.x && previous.y !== next.y) {
-      route.push({ x: previous.x, y: next.y })
-    }
-    route.push(next)
-  }
-  return route.filter((point, index) => {
-    const previous = route[index - 1]
-    return !previous || previous.x !== point.x || previous.y !== point.y
-  })
-}
-
-function clamp(num: number, min: number, max: number) {
-  return Math.max(min, Math.min(max, num))
-}
-
-function snapSourceEndpoint(box: ErAsciiEntityBox, point: ErAsciiPoint, next: ErAsciiPoint): ErAsciiPoint {
-  const dx = next.x - point.x
-  const dy = next.y - point.y
-  if (Math.abs(dx) > Math.abs(dy)) {
-    return {
-      x: dx > 0 ? box.right + 1 : box.left - 1,
-      y: clamp(point.y, box.top + 1, box.bottom - 1),
-    }
-  }
-  return {
-    x: clamp(point.x, box.left + 1, box.right - 1),
-    y: dy > 0 ? box.bottom + 1 : box.top - 1,
-  }
-}
-
-function snapTargetEndpoint(box: ErAsciiEntityBox, previous: ErAsciiPoint, point: ErAsciiPoint): ErAsciiPoint {
-  const dx = point.x - previous.x
-  const dy = point.y - previous.y
-  if (Math.abs(dx) > Math.abs(dy)) {
-    return {
-      x: dx > 0 ? box.left - 1 : box.right + 1,
-      y: clamp(point.y, box.top + 1, box.bottom - 1),
-    }
-  }
-  return {
-    x: clamp(point.x, box.left + 1, box.right - 1),
-    y: dy > 0 ? box.top - 1 : box.bottom + 1,
-  }
-}
-
-function snapRouteEndpoints(route: ErAsciiPoint[], source?: ErAsciiEntityBox, target?: ErAsciiEntityBox) {
-  if (route.length < 2) return route
-  const snapped = route.slice()
-  if (source) snapped[0] = snapSourceEndpoint(source, snapped[0], snapped[1])
-  if (target)
-    snapped[snapped.length - 1] = snapTargetEndpoint(target, snapped[snapped.length - 2], snapped[snapped.length - 1])
-  return manhattanize(snapped)
-}
-
-function midpoint(points: ErAsciiPoint[]) {
+function routeLabelPoint(points: ErAsciiPoint[]) {
   return points[Math.floor(points.length / 2)] || { x: 0, y: 0 }
 }
 
@@ -226,7 +160,9 @@ function buildRelationshipEdges(
     const target = entitiesById.get(rel.entityB)
     const rawRoute = manhattanize(edgePoints(edge).map(point => shiftPoint(point, bounds, titleOffset)))
     const route = snapRouteEndpoints(rawRoute, source, target)
-    const labelPoint = edge.labelPoint ? shiftPoint(roundPoint(edge.labelPoint), bounds, titleOffset) : midpoint(route)
+    const labelPoint = edge.labelPoint
+      ? shiftPoint(roundPoint(edge.labelPoint), bounds, titleOffset)
+      : routeLabelPoint(route)
     relationships.push({
       kind: 'relationship',
       sourceId: rel.entityA,
