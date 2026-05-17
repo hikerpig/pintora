@@ -64,6 +64,21 @@ type RunSuiteArgs = {
   'max-concurrency'?: number
 }
 
+type TraceRunArgs = {
+  task: string
+  suite: RunSuiteOptions['suite']
+  out: string
+  'run-id'?: string
+  'no-compile'?: boolean
+  compile?: boolean
+  'no-tests'?: boolean
+  tests?: boolean
+  'no-capture-browser'?: boolean
+  captureBrowser?: boolean
+  'capture-browser'?: boolean
+  'max-concurrency'?: number
+}
+
 const parser = yargs(hideBin(process.argv))
   .scriptName('pintora-harness')
   .exitProcess(false)
@@ -155,6 +170,21 @@ const parser = yargs(hideBin(process.argv))
       'max-concurrency': { describe: 'Maximum parallel cases', type: 'number', default: 1 },
     },
     handler: handleRunSuiteCommand,
+  })
+  .command<TraceRunArgs>({
+    command: 'trace-run',
+    describe: 'Run the agent trace harness workflow',
+    builder: {
+      task: { describe: 'Task title to trace', type: 'string', demandOption: true },
+      suite: { describe: 'Harness suite name', type: 'string', default: 'smoke' },
+      out: { describe: 'Trace run output directory', type: 'string', default: 'artifacts/agent-runs' },
+      'run-id': { describe: 'Trace run id', type: 'string' },
+      'no-compile': { describe: 'Skip pnpm compile', type: 'boolean', default: false },
+      'no-tests': { describe: 'Skip harness unit tests', type: 'boolean', default: false },
+      'no-capture-browser': { describe: 'Disable automatic browser escalation', type: 'boolean', default: false },
+      'max-concurrency': { describe: 'Maximum parallel harness cases', type: 'number', default: 1 },
+    },
+    handler: handleTraceRunCommand,
   })
   .fail((message, error) => {
     const output = message || error?.message
@@ -304,6 +334,32 @@ async function handleRunSuiteCommand(args: RunSuiteArgs) {
     })
     process.stdout.write(`${JSON.stringify(result)}\n`)
     process.exitCode = statusToExitCode(deriveSuiteStatus(result))
+  } catch (error) {
+    consola.error(error)
+    process.exitCode = 1
+  }
+}
+
+async function handleTraceRunCommand(args: TraceRunArgs) {
+  try {
+    const { runHarnessTraceRun } = require('./trace/trace-run') as typeof import('./trace/trace-run')
+    const result = await runHarnessTraceRun({
+      cwd: CWD,
+      task: args.task,
+      suite: args.suite,
+      outDir: args.out,
+      runId: args['run-id'],
+      skipCompile: args.compile === false || !!args['no-compile'],
+      skipTests: args.tests === false || !!args['no-tests'],
+      enableCaptureBrowser: !(
+        args.captureBrowser === false ||
+        args['capture-browser'] === false ||
+        args['no-capture-browser']
+      ),
+      maxConcurrency: args['max-concurrency'] || 1,
+    })
+    process.stdout.write(`${JSON.stringify(result)}\n`)
+    process.exitCode = result.status === 'completed' ? 0 : 1
   } catch (error) {
     consola.error(error)
     process.exitCode = 1

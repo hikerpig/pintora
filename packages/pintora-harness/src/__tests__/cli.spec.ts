@@ -111,4 +111,56 @@ describe('pintora-harness cli shell', () => {
     })
     expect(process.exitCode).toBe(0)
   })
+
+  it('dispatches trace-run to the trace runner', async () => {
+    const mockRunHarnessTraceRun = jest.fn(async () => ({
+      status: 'completed',
+      runId: '20260517-105200-manual-smoke-trace',
+      runDir: '/tmp/agent-runs/20260517-105200-manual-smoke-trace',
+      manifest: 'manifest.json',
+      harnessSummary: null,
+    }))
+
+    process.argv = [
+      'node',
+      'pintora-harness',
+      'trace-run',
+      '--task',
+      'Manual smoke trace',
+      '--suite',
+      'smoke',
+      '--out',
+      '/tmp/agent-runs',
+      '--run-id',
+      '20260517-105200-manual-smoke-trace',
+      '--no-compile',
+      '--no-tests',
+      '--no-capture-browser',
+      '--max-concurrency',
+      '1',
+    ]
+
+    jest.mock('../trace/trace-run', () => ({
+      runHarnessTraceRun: mockRunHarnessTraceRun,
+    }))
+
+    jest.isolateModules(() => {
+      require('../cli')
+    })
+
+    await new Promise(resolve => setImmediate(resolve))
+
+    expect(mockRunHarnessTraceRun).toHaveBeenCalledWith({
+      cwd: process.cwd(),
+      task: 'Manual smoke trace',
+      suite: 'smoke',
+      outDir: '/tmp/agent-runs',
+      runId: '20260517-105200-manual-smoke-trace',
+      skipCompile: true,
+      skipTests: true,
+      enableCaptureBrowser: false,
+      maxConcurrency: 1,
+    })
+    expect(process.exitCode).toBe(0)
+  })
 })
