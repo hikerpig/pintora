@@ -1,5 +1,8 @@
 # Harness CLI
 
+Human-oriented usage guide: see
+[`docs/agent-observability-harness-usage.md`](../../docs/agent-observability-harness-usage.md).
+
 ## Commands
 
 ### Individual Steps
