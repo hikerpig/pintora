@@ -40,6 +40,33 @@ describe('runHarnessInspectSvg', () => {
     expect(result.findingCount).toBeGreaterThan(0)
   })
 
+  it('uses transformed text coordinates for edge clearance checks', async () => {
+    const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), 'pintora-harness-inspect-'))
+    const svg = path.join(tmpDir, 'render.svg')
+    fs.writeFileSync(
+      svg,
+      [
+        '<svg viewBox="0 0 130 80">',
+        '<g transform="matrix(1,0,0,1,15,15)">',
+        '<text x="0" y="-0.595" transform="matrix(1,0,0,1,50,12.5)">PERSON</text>',
+        '</g>',
+        '</svg>',
+      ].join(''),
+    )
+
+    const result = await runHarnessInspectSvg({
+      cwd: process.cwd(),
+      svgFile: svg,
+      caseId: 'er.relationship-spacing-01',
+      outDir: tmpDir,
+    })
+    const metrics = JSON.parse(fs.readFileSync(path.join(tmpDir, 'metrics.json'), 'utf8'))
+
+    expect(result.status).toBe('ok')
+    expect(metrics.textNodes[0]).toMatchObject({ text: 'PERSON', x: 65, y: 26.905 })
+    expect(metrics.minTextToEdge).toBeGreaterThan(4)
+  })
+
   it('returns fail for an empty svg with viewBox and writes rootChildCount into metrics.json', async () => {
     const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), 'pintora-harness-inspect-'))
     const svg = path.join(tmpDir, 'render.svg')

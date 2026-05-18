@@ -14,7 +14,7 @@ describe('runHarnessCase e2e', () => {
       enableCaptureBrowser: false,
     })
 
-    expect(result.status).toBe('suspicious')
+    expect(result.status).toBe('ok')
     expect(fs.existsSync(path.join(artifactsDir, 'render.svg'))).toBe(true)
     expect(fs.existsSync(path.join(artifactsDir, 'metrics.json'))).toBe(true)
     expect(fs.existsSync(path.join(artifactsDir, 'findings.json'))).toBe(true)

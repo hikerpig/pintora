@@ -14,7 +14,7 @@ Pintora is a TypeScript text-to-diagram library for browser and Node. The repo i
 
 ## Repo quick-facts
 
-- 8 packages: `pintora-core` (registry + theme + config), `pintora-diagrams` (diagram implementations), `pintora-renderer`, `pintora-standalone`, `pintora-cli`, `pintora-target-wintercg`, `development-kit`, `test-shared`.
+- 9 packages: `pintora-core` (registry + theme + config), `pintora-diagrams` (diagram implementations), `pintora-renderer`, `pintora-standalone`, `pintora-cli`, `pintora-target-wintercg`, `pintora-harness` (agent observability harness), `development-kit`, `test-shared`.
 - Internal dependencies use pnpm workspace protocol.
 - Diagram types: sequence, er, component, activity, mindmap, gantt, dot, class, usecase.
 
