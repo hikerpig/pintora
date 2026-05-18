@@ -84,6 +84,11 @@ type AnalyzeRunsArgs = {
   out: string
 }
 
+type CompareRunsArgs = {
+  base: string
+  head: string
+}
+
 type BriefRunArgs = {
   run: string
   out: string
@@ -204,6 +209,15 @@ const parser = yargs(hideBin(process.argv))
       out: { describe: 'Output report JSON file', type: 'string', demandOption: true },
     },
     handler: handleAnalyzeRunsCommand,
+  })
+  .command<CompareRunsArgs>({
+    command: 'compare-runs',
+    describe: 'Compare two agent trace runs',
+    builder: {
+      base: { describe: 'Base trace run directory', type: 'string', demandOption: true },
+      head: { describe: 'Head trace run directory', type: 'string', demandOption: true },
+    },
+    handler: handleCompareRunsCommand,
   })
   .command<BriefRunArgs>({
     command: 'brief-run',
@@ -403,6 +417,21 @@ async function handleAnalyzeRunsCommand(args: AnalyzeRunsArgs) {
     })
     process.stdout.write(`${JSON.stringify(result)}\n`)
     process.exitCode = result.status === 'completed' ? 0 : 1
+  } catch (error) {
+    consola.error(error)
+    process.exitCode = 1
+  }
+}
+
+async function handleCompareRunsCommand(args: CompareRunsArgs) {
+  try {
+    const { runHarnessCompareRuns } = require('./analysis/compare-runs') as typeof import('./analysis/compare-runs')
+    const result = await runHarnessCompareRuns({
+      baseRunDir: args.base,
+      headRunDir: args.head,
+    })
+    process.stdout.write(`${JSON.stringify(result)}\n`)
+    process.exitCode = 0
   } catch (error) {
     consola.error(error)
     process.exitCode = 1

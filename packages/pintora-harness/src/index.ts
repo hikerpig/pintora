@@ -37,13 +37,28 @@ export { runHarnessTraceRun } from './trace/trace-run'
 export { buildTraceRunId, slugifyTraceTask } from './trace/run-id'
 export type { AnalyzeRunsReport } from './analysis/analyze-runs'
 export { runHarnessAnalyzeRuns, buildAnalyzeRunsReport } from './analysis/analyze-runs'
+export type {
+  CompareRunsCommandChange,
+  CompareRunsFindingChange,
+  CompareRunsMissingCase,
+  CompareRunsReport,
+  CompareRunsStatusTransition,
+  CompareRunsUnchangedCase,
+} from './analysis/compare-runs'
+export { runHarnessCompareRuns, buildCompareRunsReport } from './analysis/compare-runs'
 export { runHarnessBriefRun } from './analysis/brief-run'
 export type {
   HarnessDecisionEvent,
+  PredictionComparisonCase,
+  PredictionEvaluation,
   PredictionQualityResult,
   PredictionQualitySummary,
 } from './analysis/decision-observability'
-export { readDecisionEvents, summarizePredictionQuality } from './analysis/decision-observability'
+export {
+  evaluatePredictionsAgainstComparison,
+  readDecisionEvents,
+  summarizePredictionQuality,
+} from './analysis/decision-observability'
 export type {
   HarnessOrchestrationAction,
   HarnessOrchestrationActionType,

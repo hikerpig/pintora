@@ -234,19 +234,62 @@ Important output fields:
 Use this report to decide which harness cases deserve more attention and which
 failure signatures should become regression tests or repair briefs.
 
+`rule_noise_candidates` is populated only after at least five reviewed
+`suspicious` examples for the same `failure_signature`. It treats reviewed
+`accept` decisions as possible false positives and reports the accepted share
+as `false_positive_rate`.
+
+## Comparing Two Runs
+
+Use `compare-runs` after making a repair and collecting a second trace:
+
+```bash
+node packages/pintora-harness/bin/pintora-harness compare-runs \
+  --base artifacts/agent-runs/20260518-before \
+  --head artifacts/agent-runs/20260518-after
+```
+
+The report includes:
+
+- `improved`: cases that moved toward `ok`
+- `regressed`: cases that moved away from `ok`
+- `unchanged`: cases with the same status
+- `missing`: cases present in only one run
+- `finding_changes`: changed `failure_signature` values
+- `command_changes`: changed command exit codes or summaries
+- `prediction_results`: automatic evaluation of head-run predictions when
+  base/head case evidence is available
+
+Regressions are reported in JSON but do not make the command fail. The command
+exits nonzero only when the input run directories are invalid.
+
 ## Decision Observability
 
 `trace-run` creates an empty `decisions.ndjson`. Add prediction events before
 or during an agent repair attempt:
 
 ```json
-{"schema_version":1,"kind":"prediction","id":"prediction-001","claim":"Increasing ER label lane clearance should reduce label overlap.","expected_improve":["er.relationship-label-lane-01"],"expected_unchanged":["er.relationship-spacing-01"],"risk":"May widen the diagram."}
+{
+  "schema_version": 1,
+  "kind": "prediction",
+  "id": "prediction-001",
+  "claim": "Increasing ER label lane clearance should reduce label overlap.",
+  "expected_improve": ["er.relationship-label-lane-01"],
+  "expected_unchanged": ["er.relationship-spacing-01"],
+  "risk": "May widen the diagram."
+}
 ```
 
 After review or comparison, append a result:
 
 ```json
-{"schema_version":1,"kind":"prediction_result","prediction_ref":"prediction-001","result":"confirmed","evidence":["er.relationship-label-lane-01 moved suspicious -> ok"]}
+{
+  "schema_version": 1,
+  "kind": "prediction_result",
+  "prediction_ref": "prediction-001",
+  "result": "confirmed",
+  "evidence": ["er.relationship-label-lane-01 moved suspicious -> ok"]
+}
 ```
 
 Allowed result values:
@@ -258,6 +301,20 @@ Allowed result values:
 
 `analyze-runs` counts these entries in `prediction_quality`. Predictions
 without a matching result are counted as `pending`.
+
+`compare-runs` can also evaluate predictions automatically. It compares
+`expected_improve` and `expected_unchanged` case ids from the head run's
+`decisions.ndjson` against the base/head case statuses:
+
+- `confirmed`: expected improvements improved and unchanged cases did not
+  regress
+- `partially_confirmed`: at least one expected improvement improved and no
+  critical regression occurred
+- `disconfirmed`: an expected improvement or unchanged case regressed
+- `inconclusive`: required case evidence is missing
+
+If an explicit `prediction_result` exists for the same prediction id, it takes
+priority over the automatic comparison result in `prediction_quality`.
 
 ## Reading Case Summaries
 
@@ -467,7 +524,6 @@ Start `pnpm demo:dev`, then omit `--no-capture-browser`.
 
 ## Current Limitations
 
-- There is no `compare-runs` command yet.
 - There is no visual model judge integration yet.
 - Browser capture depends on a running preview server.
 - The smoke suite is intentionally small; use `--suite all` when you need

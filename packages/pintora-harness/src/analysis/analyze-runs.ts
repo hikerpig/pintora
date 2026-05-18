@@ -20,6 +20,8 @@ export type AnalyzeRunsReport = {
   incomplete: Array<{ run_id: string; reason: string }>
 }
 
+const MIN_RULE_NOISE_SAMPLE_SIZE = 5
+
 export async function runHarnessAnalyzeRuns(opts: { runsDir: string; outFile: string }) {
   const records = listTraceRunDirs(opts.runsDir).map(readTraceRunRecord)
   const report = buildAnalyzeRunsReport(records)
@@ -37,6 +39,7 @@ export async function runHarnessAnalyzeRuns(opts: { runsDir: string; outFile: st
 export function buildAnalyzeRunsReport(records: TraceRunRecord[]): AnalyzeRunsReport {
   const caseCounts = new Map<string, CountBlock>()
   const findingCounts = new Map<string, number>()
+  const ruleNoiseCounts = new Map<string, { accepted: number; reviewed: number }>()
   const componentRisk = new Map<string, Set<string>>()
   const predictionQuality: PredictionQualitySummary = {
     confirmed: 0,
@@ -63,6 +66,12 @@ export function buildAnalyzeRunsReport(records: TraceRunRecord[]): AnalyzeRunsRe
       const signature = item.summary?.failure_signature
       if (item.status !== 'ok' && signature) {
         findingCounts.set(signature, (findingCounts.get(signature) || 0) + 1)
+      }
+      if (item.status === 'suspicious' && signature && item.reviewDecision) {
+        const count = ruleNoiseCounts.get(signature) || { accepted: 0, reviewed: 0 }
+        count.reviewed++
+        if (item.reviewDecision === 'accept') count.accepted++
+        ruleNoiseCounts.set(signature, count)
       }
 
       const suspectedComponent = item.summary?.suspected_component
@@ -97,7 +106,19 @@ export function buildAnalyzeRunsReport(records: TraceRunRecord[]): AnalyzeRunsRe
     finding_hotspots: Array.from(findingCounts.entries())
       .map(([failure_signature, count]) => ({ failure_signature, count }))
       .sort((a, b) => b.count - a.count || a.failure_signature.localeCompare(b.failure_signature)),
-    rule_noise_candidates: [],
+    rule_noise_candidates: Array.from(ruleNoiseCounts.entries())
+      .filter(([, counts]) => counts.reviewed >= MIN_RULE_NOISE_SAMPLE_SIZE && counts.accepted > 0)
+      .map(([finding_code, counts]) => ({
+        finding_code,
+        false_positive_rate: counts.accepted / counts.reviewed,
+        sample_size: counts.reviewed,
+      }))
+      .sort(
+        (a, b) =>
+          b.false_positive_rate - a.false_positive_rate ||
+          b.sample_size - a.sample_size ||
+          a.finding_code.localeCompare(b.finding_code),
+      ),
     component_risk: Array.from(componentRisk.entries())
       .map(([componentPath, runs]) => ({ path: componentPath, regression_runs: runs.size }))
       .sort((a, b) => b.regression_runs - a.regression_runs || a.path.localeCompare(b.path)),

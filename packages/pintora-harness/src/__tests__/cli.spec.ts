@@ -198,6 +198,55 @@ describe('pintora-harness cli shell', () => {
     expect(process.exitCode).toBe(0)
   })
 
+  it('dispatches compare-runs to the comparison runner', async () => {
+    const mockRunHarnessCompareRuns = jest.fn(async () => ({
+      schema_version: 1,
+      generated_at: '2026-05-18T10:00:00.000Z',
+      base: 'base-run',
+      head: 'head-run',
+      improved: [],
+      regressed: [],
+      unchanged: [],
+      missing: [],
+      finding_changes: [],
+      command_changes: [],
+      prediction_results: [],
+      prediction_quality: {
+        confirmed: 0,
+        partially_confirmed: 0,
+        disconfirmed: 0,
+        inconclusive: 0,
+        pending: 0,
+      },
+    }))
+
+    process.argv = [
+      'node',
+      'pintora-harness',
+      'compare-runs',
+      '--base',
+      '/tmp/agent-runs/base-run',
+      '--head',
+      '/tmp/agent-runs/head-run',
+    ]
+
+    jest.mock('../analysis/compare-runs', () => ({
+      runHarnessCompareRuns: mockRunHarnessCompareRuns,
+    }))
+
+    jest.isolateModules(() => {
+      require('../cli')
+    })
+
+    await new Promise(resolve => setImmediate(resolve))
+
+    expect(mockRunHarnessCompareRuns).toHaveBeenCalledWith({
+      baseRunDir: '/tmp/agent-runs/base-run',
+      headRunDir: '/tmp/agent-runs/head-run',
+    })
+    expect(process.exitCode).toBe(0)
+  })
+
   it('dispatches brief-run to the brief runner', async () => {
     const mockRunHarnessBriefRun = jest.fn(async () => ({
       status: 'completed',

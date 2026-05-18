@@ -22,6 +22,7 @@ Human-oriented usage guide: see
 - `pintora-harness run-suite --suite smoke --artifacts-dir artifacts/harness/smoke-run`
 - `pintora-harness trace-run --task "manual smoke" --suite smoke --out artifacts/agent-runs`
 - `pintora-harness analyze-runs --runs artifacts/agent-runs --out artifacts/harness/observability-report.json`
+- `pintora-harness compare-runs --base artifacts/agent-runs/<base-run> --head artifacts/agent-runs/<head-run>`
 - `pintora-harness brief-run --run artifacts/agent-runs/<run-id> --out artifacts/agent-runs/<run-id>/repair-brief.md`
 
 ---
@@ -91,17 +92,17 @@ Example `review-decision.json`:
 
 **Decision mapping rules:**
 
-| Source in `review.json` | `next_step.type` in `review-decision.json` |
-|---|---|
-| `verdict: accept` | `accept` |
-| `verdict: reject` | `repair` |
-| `verdict: needs_human_review` | `escalate` |
-| `verdict: inconclusive` | `escalate` |
-| `recommended_action.type: accept` | `accept` |
-| `recommended_action.type: reject` | `repair` |
-| `recommended_action.type: repair` | `repair` |
-| `recommended_action.type: rerun` | `rerun` |
-| `recommended_action.type: escalate` | `escalate` |
+| Source in `review.json`             | `next_step.type` in `review-decision.json` |
+| ----------------------------------- | ------------------------------------------ |
+| `verdict: accept`                   | `accept`                                   |
+| `verdict: reject`                   | `repair`                                   |
+| `verdict: needs_human_review`       | `escalate`                                 |
+| `verdict: inconclusive`             | `escalate`                                 |
+| `recommended_action.type: accept`   | `accept`                                   |
+| `recommended_action.type: reject`   | `repair`                                   |
+| `recommended_action.type: repair`   | `repair`                                   |
+| `recommended_action.type: rerun`    | `rerun`                                    |
+| `recommended_action.type: escalate` | `escalate`                                 |
 
 `recommended_action` takes priority over `verdict` when present.
 
@@ -119,6 +120,7 @@ Example `review-decision.json`:
 
 `trace-run` records a local evidence bundle for one agent verification cycle.
 `analyze-runs` aggregates many trace bundles into an observability report.
+`compare-runs` compares two trace bundles and reports improved, regressed, unchanged, missing, finding changes, command changes, and prediction results.
 `brief-run` turns one trace bundle into a human-readable repair brief.
 
 ---
