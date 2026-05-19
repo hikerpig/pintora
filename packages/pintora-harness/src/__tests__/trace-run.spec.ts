@@ -137,6 +137,14 @@ describe('runHarnessTraceRun', () => {
     expect(fs.existsSync(path.join(runDir, 'decisions.ndjson'))).toBe(true)
     expect(fs.existsSync(path.join(runDir, 'commands.ndjson'))).toBe(true)
     expect(fs.existsSync(path.join(runDir, 'analysis.md'))).toBe(true)
+    expect(fs.existsSync(path.join(runDir, 'agent-events.ndjson'))).toBe(true)
+    expect(fs.existsSync(path.join(runDir, 'constraints.json'))).toBe(true)
+    expect(fs.existsSync(path.join(runDir, 'agent-summary.md'))).toBe(true)
+    expect(fs.existsSync(path.join(runDir, 'constraint-gaps.md'))).toBe(true)
+    expect(JSON.parse(fs.readFileSync(path.join(runDir, 'constraints.json'), 'utf8'))).toEqual({
+      schema_version: 1,
+      constraints: [],
+    })
 
     const manifest = readJson<any>(path.join(runDir, 'manifest.json'))
     expect(manifest.run_id).toBe('run-success')
@@ -212,6 +220,8 @@ describe('runHarnessTraceRun', () => {
     expect(fs.existsSync(path.join(runDir, 'manifest.json'))).toBe(true)
     expect(fs.existsSync(path.join(runDir, 'commands.ndjson'))).toBe(true)
     expect(fs.existsSync(path.join(runDir, 'analysis.md'))).toBe(true)
+    expect(fs.existsSync(path.join(runDir, 'agent-events.ndjson'))).toBe(true)
+    expect(fs.existsSync(path.join(runDir, 'constraints.json'))).toBe(true)
     expect(mockedRunHarnessSuite).not.toHaveBeenCalled()
 
     const manifest = readJson<any>(path.join(runDir, 'manifest.json'))

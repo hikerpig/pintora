@@ -316,6 +316,29 @@ without a matching result are counted as `pending`.
 If an explicit `prediction_result` exists for the same prediction id, it takes
 priority over the automatic comparison result in `prediction_quality`.
 
+## Agent Activity Trace
+
+Use activity events when you want to understand how an agent followed project
+constraints during a development task.
+
+```bash
+node packages/pintora-harness/bin/pintora-harness trace-agent-event \
+  --run artifacts/agent-runs/<run-id> \
+  --kind constraint_check \
+  --phase context \
+  --summary "Read package AGENTS.md before editing harness package." \
+  --data '{"constraint_id":"package-agents-before-edit","status":"observed"}'
+```
+
+Then summarize:
+
+```bash
+node packages/pintora-harness/bin/pintora-harness summarize-agent-run \
+  --run artifacts/agent-runs/<run-id>
+```
+
+The activity trace is bounded process evidence, not a raw transcript.
+
 ## Reading Case Summaries
 
 Each case has a `summary.json`:

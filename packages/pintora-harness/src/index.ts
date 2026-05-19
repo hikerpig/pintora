@@ -38,6 +38,37 @@ export { buildTraceRunId, slugifyTraceTask } from './trace/run-id'
 export type { AnalyzeRunsReport } from './analysis/analyze-runs'
 export { runHarnessAnalyzeRuns, buildAnalyzeRunsReport } from './analysis/analyze-runs'
 export type {
+  ActivityEventData,
+  ActivityEventKind,
+  ActivityEventPhase,
+  AgentActivityEvent,
+  AgentConstraint,
+  AgentConstraintsFile,
+  ConstraintStatus,
+} from './activity/activity-contracts'
+export {
+  ACTIVITY_EVENT_KINDS,
+  ACTIVITY_EVENT_PHASES,
+  CONSTRAINT_STATUSES,
+  assertActivityEventKind,
+  assertActivityEventPhase,
+  assertConstraintStatus,
+  parseActivityEventData,
+} from './activity/activity-contracts'
+export {
+  AGENT_EVENTS_FILE,
+  AGENT_SUMMARY_FILE,
+  CONSTRAINTS_FILE,
+  CONSTRAINT_GAPS_FILE,
+  appendAgentActivityEvent,
+  buildAgentActivityEvent,
+  initializeAgentActivityFiles,
+  runHarnessTraceAgentEvent,
+} from './activity/activity-writer'
+export type { RunHarnessTraceAgentEventOptions } from './activity/activity-writer'
+export { readAgentActivityEvents, readAgentConstraints } from './activity/activity-reader'
+export { runHarnessSummarizeAgentRun } from './activity/summarize-agent-run'
+export type {
   CompareRunsCommandChange,
   CompareRunsFindingChange,
   CompareRunsMissingCase,

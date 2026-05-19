@@ -164,6 +164,76 @@ describe('pintora-harness cli shell', () => {
     expect(process.exitCode).toBe(0)
   })
 
+  it('dispatches trace-agent-event to the activity event runner', async () => {
+    const mockRunHarnessTraceAgentEvent = jest.fn(async () => ({
+      status: 'completed',
+      event: 'agent-events.ndjson',
+    }))
+
+    process.argv = [
+      'node',
+      'pintora-harness',
+      'trace-agent-event',
+      '--run',
+      '/tmp/agent-runs/run-one',
+      '--kind',
+      'constraint_check',
+      '--phase',
+      'context',
+      '--summary',
+      'Read package AGENTS.md before editing harness package.',
+      '--data',
+      '{"constraint_id":"package-agents-before-edit","status":"observed"}',
+    ]
+
+    jest.mock('../activity/activity-writer', () => ({
+      runHarnessTraceAgentEvent: mockRunHarnessTraceAgentEvent,
+    }))
+
+    jest.isolateModules(() => {
+      require('../cli')
+    })
+
+    await new Promise(resolve => setImmediate(resolve))
+
+    expect(mockRunHarnessTraceAgentEvent).toHaveBeenCalledWith({
+      runDir: '/tmp/agent-runs/run-one',
+      kind: 'constraint_check',
+      phase: 'context',
+      summary: 'Read package AGENTS.md before editing harness package.',
+      data: {
+        constraint_id: 'package-agents-before-edit',
+        status: 'observed',
+      },
+    })
+    expect(process.exitCode).toBe(0)
+  })
+
+  it('dispatches summarize-agent-run to the activity summary runner', async () => {
+    const mockRunHarnessSummarizeAgentRun = jest.fn(async () => ({
+      status: 'completed',
+      summary: 'agent-summary.md',
+      gaps: 'constraint-gaps.md',
+    }))
+
+    process.argv = ['node', 'pintora-harness', 'summarize-agent-run', '--run', '/tmp/agent-runs/run-one']
+
+    jest.mock('../activity/summarize-agent-run', () => ({
+      runHarnessSummarizeAgentRun: mockRunHarnessSummarizeAgentRun,
+    }))
+
+    jest.isolateModules(() => {
+      require('../cli')
+    })
+
+    await new Promise(resolve => setImmediate(resolve))
+
+    expect(mockRunHarnessSummarizeAgentRun).toHaveBeenCalledWith({
+      runDir: '/tmp/agent-runs/run-one',
+    })
+    expect(process.exitCode).toBe(0)
+  })
+
   it('dispatches analyze-runs to the analysis runner', async () => {
     const mockRunHarnessAnalyzeRuns = jest.fn(async () => ({
       status: 'completed',

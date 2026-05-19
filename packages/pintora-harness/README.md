@@ -21,6 +21,8 @@ Human-oriented usage guide: see
 - `pintora-harness run-case --case er.relationship-spacing-01 --artifacts-dir artifacts/harness/dev/er.relationship-spacing-01`
 - `pintora-harness run-suite --suite smoke --artifacts-dir artifacts/harness/smoke-run`
 - `pintora-harness trace-run --task "manual smoke" --suite smoke --out artifacts/agent-runs`
+- `pintora-harness trace-agent-event --run artifacts/agent-runs/<run-id> --kind constraint_check --phase context --summary "Read package AGENTS.md" --data '{"constraint_id":"package-agents-before-edit","status":"observed"}'`
+- `pintora-harness summarize-agent-run --run artifacts/agent-runs/<run-id>`
 - `pintora-harness analyze-runs --runs artifacts/agent-runs --out artifacts/harness/observability-report.json`
 - `pintora-harness compare-runs --base artifacts/agent-runs/<base-run> --head artifacts/agent-runs/<head-run>`
 - `pintora-harness brief-run --run artifacts/agent-runs/<run-id> --out artifacts/agent-runs/<run-id>/repair-brief.md`
@@ -119,9 +121,20 @@ Example `review-decision.json`:
 - `harness/suite.json`
 
 `trace-run` records a local evidence bundle for one agent verification cycle.
+`trace-agent-event` appends bounded process evidence to that trace bundle.
+`summarize-agent-run` writes a human-readable activity summary and constraint gap report.
 `analyze-runs` aggregates many trace bundles into an observability report.
 `compare-runs` compares two trace bundles and reports improved, regressed, unchanged, missing, finding changes, command changes, and prediction results.
 `brief-run` turns one trace bundle into a human-readable repair brief.
+
+### Agent Activity
+
+- `agent-events.ndjson`
+- `constraints.json`
+- `agent-summary.md`
+- `constraint-gaps.md`
+
+`trace-run` initializes these files. `trace-agent-event` appends bounded process evidence, and `summarize-agent-run` turns those events into a human-readable activity summary and constraint gap report.
 
 ---
 

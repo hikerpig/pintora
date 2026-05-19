@@ -79,6 +79,18 @@ type TraceRunArgs = {
   'max-concurrency'?: number
 }
 
+type TraceAgentEventArgs = {
+  run: string
+  kind: string
+  phase: string
+  summary: string
+  data: string
+}
+
+type SummarizeAgentRunArgs = {
+  run: string
+}
+
 type AnalyzeRunsArgs = {
   runs: string
   out: string
@@ -200,6 +212,26 @@ const parser = yargs(hideBin(process.argv))
       'max-concurrency': { describe: 'Maximum parallel harness cases', type: 'number', default: 1 },
     },
     handler: handleTraceRunCommand,
+  })
+  .command<TraceAgentEventArgs>({
+    command: 'trace-agent-event',
+    describe: 'Append one agent activity event to a trace run',
+    builder: {
+      run: { describe: 'Trace run directory', type: 'string', demandOption: true },
+      kind: { describe: 'Activity event kind', type: 'string', demandOption: true },
+      phase: { describe: 'Activity event phase', type: 'string', demandOption: true },
+      summary: { describe: 'Bounded event summary', type: 'string', demandOption: true },
+      data: { describe: 'JSON object event data', type: 'string', default: '{}' },
+    },
+    handler: handleTraceAgentEventCommand,
+  })
+  .command<SummarizeAgentRunArgs>({
+    command: 'summarize-agent-run',
+    describe: 'Write activity summary and constraint gap reports for one trace run',
+    builder: {
+      run: { describe: 'Trace run directory', type: 'string', demandOption: true },
+    },
+    handler: handleSummarizeAgentRunCommand,
   })
   .command<AnalyzeRunsArgs>({
     command: 'analyze-runs',
@@ -402,6 +434,42 @@ async function handleTraceRunCommand(args: TraceRunArgs) {
     })
     process.stdout.write(`${JSON.stringify(result)}\n`)
     process.exitCode = result.status === 'completed' ? 0 : 1
+  } catch (error) {
+    consola.error(error)
+    process.exitCode = 1
+  }
+}
+
+async function handleTraceAgentEventCommand(args: TraceAgentEventArgs) {
+  try {
+    const { parseActivityEventData } =
+      require('./activity/activity-contracts') as typeof import('./activity/activity-contracts')
+    const { runHarnessTraceAgentEvent } =
+      require('./activity/activity-writer') as typeof import('./activity/activity-writer')
+    const result = await runHarnessTraceAgentEvent({
+      runDir: args.run,
+      kind: args.kind,
+      phase: args.phase,
+      summary: args.summary,
+      data: parseActivityEventData(args.data),
+    })
+    process.stdout.write(`${JSON.stringify(result)}\n`)
+    process.exitCode = 0
+  } catch (error) {
+    consola.error(error)
+    process.exitCode = 1
+  }
+}
+
+async function handleSummarizeAgentRunCommand(args: SummarizeAgentRunArgs) {
+  try {
+    const { runHarnessSummarizeAgentRun } =
+      require('./activity/summarize-agent-run') as typeof import('./activity/summarize-agent-run')
+    const result = await runHarnessSummarizeAgentRun({
+      runDir: args.run,
+    })
+    process.stdout.write(`${JSON.stringify(result)}\n`)
+    process.exitCode = 0
   } catch (error) {
     consola.error(error)
     process.exitCode = 1

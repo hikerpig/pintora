@@ -5,6 +5,7 @@ import { runHarnessSuite } from '../orchestration/run-suite'
 import type { RunSuiteSummary } from '../orchestration/run-contracts'
 import { captureTraceEnvironment } from './env-capture'
 import { captureGitState, writeGitDiffFile } from './git-capture'
+import { initializeAgentActivityFiles } from '../activity/activity-writer'
 import { writeTraceManifest } from './manifest-writer'
 import { runTraceCommand } from './command-runner'
 import { buildTraceRunId } from './run-id'
@@ -164,6 +165,7 @@ export async function runHarnessTraceRun(opts: TraceRunOptions): Promise<TraceRu
   let incompleteReason: string | null = null
 
   fs.mkdirSync(runDir, { recursive: true })
+  initializeAgentActivityFiles(runDir)
   fs.writeFileSync(path.join(runDir, TASK_FILE), `${opts.task}\n`)
   fs.writeFileSync(path.join(runDir, DECISIONS_FILE), '')
   writeJsonFile(path.join(runDir, ENV_FILE), captureTraceEnvironment({ cwd: opts.cwd }))
