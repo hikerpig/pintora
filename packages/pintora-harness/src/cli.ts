@@ -91,6 +91,11 @@ type SummarizeAgentRunArgs = {
   run: string
 }
 
+type AnalyzeAgentRunsArgs = {
+  runs: string
+  out: string
+}
+
 type AnalyzeRunsArgs = {
   runs: string
   out: string
@@ -232,6 +237,15 @@ const parser = yargs(hideBin(process.argv))
       run: { describe: 'Trace run directory', type: 'string', demandOption: true },
     },
     handler: handleSummarizeAgentRunCommand,
+  })
+  .command<AnalyzeAgentRunsArgs>({
+    command: 'analyze-agent-runs',
+    describe: 'Analyze agent activity trace runs and emit an activity observability report',
+    builder: {
+      runs: { describe: 'Agent trace runs directory', type: 'string', demandOption: true },
+      out: { describe: 'Output report JSON file', type: 'string', demandOption: true },
+    },
+    handler: handleAnalyzeAgentRunsCommand,
   })
   .command<AnalyzeRunsArgs>({
     command: 'analyze-runs',
@@ -470,6 +484,22 @@ async function handleSummarizeAgentRunCommand(args: SummarizeAgentRunArgs) {
     })
     process.stdout.write(`${JSON.stringify(result)}\n`)
     process.exitCode = 0
+  } catch (error) {
+    consola.error(error)
+    process.exitCode = 1
+  }
+}
+
+async function handleAnalyzeAgentRunsCommand(args: AnalyzeAgentRunsArgs) {
+  try {
+    const { runHarnessAnalyzeAgentRuns } =
+      require('./activity/analyze-agent-runs') as typeof import('./activity/analyze-agent-runs')
+    const result = await runHarnessAnalyzeAgentRuns({
+      runsDir: args.runs,
+      outFile: args.out,
+    })
+    process.stdout.write(`${JSON.stringify(result)}\n`)
+    process.exitCode = result.status === 'completed' ? 0 : 1
   } catch (error) {
     consola.error(error)
     process.exitCode = 1

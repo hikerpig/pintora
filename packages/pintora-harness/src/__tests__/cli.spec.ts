@@ -234,6 +234,40 @@ describe('pintora-harness cli shell', () => {
     expect(process.exitCode).toBe(0)
   })
 
+  it('dispatches analyze-agent-runs to the activity analysis runner', async () => {
+    const mockRunHarnessAnalyzeAgentRuns = jest.fn(async () => ({
+      status: 'completed',
+      report: 'agent-observability-report.json',
+      totalRuns: 2,
+    }))
+
+    process.argv = [
+      'node',
+      'pintora-harness',
+      'analyze-agent-runs',
+      '--runs',
+      '/tmp/agent-runs',
+      '--out',
+      '/tmp/agent-observability-report.json',
+    ]
+
+    jest.mock('../activity/analyze-agent-runs', () => ({
+      runHarnessAnalyzeAgentRuns: mockRunHarnessAnalyzeAgentRuns,
+    }))
+
+    jest.isolateModules(() => {
+      require('../cli')
+    })
+
+    await new Promise(resolve => setImmediate(resolve))
+
+    expect(mockRunHarnessAnalyzeAgentRuns).toHaveBeenCalledWith({
+      runsDir: '/tmp/agent-runs',
+      outFile: '/tmp/agent-observability-report.json',
+    })
+    expect(process.exitCode).toBe(0)
+  })
+
   it('dispatches analyze-runs to the analysis runner', async () => {
     const mockRunHarnessAnalyzeRuns = jest.fn(async () => ({
       status: 'completed',

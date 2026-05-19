@@ -339,6 +339,24 @@ node packages/pintora-harness/bin/pintora-harness summarize-agent-run \
 
 The activity trace is bounded process evidence, not a raw transcript.
 
+After several runs, aggregate activity traces:
+
+```bash
+node packages/pintora-harness/bin/pintora-harness analyze-agent-runs \
+  --runs artifacts/agent-runs \
+  --out artifacts/harness/agent-observability-report.json
+```
+
+The report includes:
+
+- `constraint_observance`: observed, missed, conflicted, not applicable, and
+  unknown counts by constraint id
+- `frequent_gaps`: repeated missed or conflicted constraint summaries
+- `course_correction_patterns`: common correction triggers and next actions
+- `constraint_failure_correlation`: missed or conflicted constraints seen in
+  runs with non-ok harness outcomes
+- `warnings`: skipped malformed activity event lines
+
 ## Reading Case Summaries
 
 Each case has a `summary.json`:

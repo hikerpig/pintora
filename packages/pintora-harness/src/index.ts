@@ -67,6 +67,8 @@ export {
 } from './activity/activity-writer'
 export type { RunHarnessTraceAgentEventOptions } from './activity/activity-writer'
 export { readAgentActivityEvents, readAgentConstraints } from './activity/activity-reader'
+export type { AnalyzeAgentRunsReport } from './activity/analyze-agent-runs'
+export { buildAnalyzeAgentRunsReport, runHarnessAnalyzeAgentRuns } from './activity/analyze-agent-runs'
 export { runHarnessSummarizeAgentRun } from './activity/summarize-agent-run'
 export type {
   CompareRunsCommandChange,

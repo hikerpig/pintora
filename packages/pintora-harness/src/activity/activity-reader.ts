@@ -3,21 +3,39 @@ import * as path from 'node:path'
 import type { AgentActivityEvent, AgentConstraintsFile } from './activity-contracts'
 import { AGENT_EVENTS_FILE, CONSTRAINTS_FILE } from './activity-writer'
 
+export type AgentActivityReadWarning = {
+  file: string
+  message: string
+}
+
 export function readAgentActivityEvents(runDir: string): AgentActivityEvent[] {
+  return readAgentActivityEventsWithWarnings(runDir).events
+}
+
+export function readAgentActivityEventsWithWarnings(runDir: string): {
+  events: AgentActivityEvent[]
+  warnings: AgentActivityReadWarning[]
+  exists: boolean
+} {
   const filePath = path.join(runDir, AGENT_EVENTS_FILE)
-  if (!fs.existsSync(filePath)) return []
-  return fs
-    .readFileSync(filePath, 'utf8')
+  if (!fs.existsSync(filePath)) return { events: [], warnings: [], exists: false }
+  const events: AgentActivityEvent[] = []
+  const warnings: AgentActivityReadWarning[] = []
+  fs.readFileSync(filePath, 'utf8')
     .split('\n')
-    .map(line => line.trim())
-    .filter(Boolean)
-    .flatMap(line => {
+    .forEach((line, index) => {
+      const trimmed = line.trim()
+      if (!trimmed) return
       try {
-        return [JSON.parse(line) as AgentActivityEvent]
+        events.push(JSON.parse(trimmed) as AgentActivityEvent)
       } catch {
-        return []
+        warnings.push({
+          file: AGENT_EVENTS_FILE,
+          message: `Skipped malformed activity event line ${index + 1}`,
+        })
       }
     })
+  return { events, warnings, exists: true }
 }
 
 export function readAgentConstraints(runDir: string): AgentConstraintsFile {
