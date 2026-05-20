@@ -160,6 +160,7 @@ const parser = yargs(hideBin(process.argv))
     const output = message || error?.message
     if (output) consola.error(output)
     process.exitCode = 1
+    throw error || new Error(output || 'Invalid command')
   })
   .help()
   .showHelpOnFail(true)

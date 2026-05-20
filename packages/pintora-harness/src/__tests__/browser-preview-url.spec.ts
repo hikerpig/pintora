@@ -2,14 +2,17 @@ import { buildBrowserPreviewUrl, DEFAULT_PREVIEW_BASE_URL } from '../browser/bro
 
 describe('buildBrowserPreviewUrl', () => {
   it('uses the default preview base url and required params', () => {
+    const code = 'erDiagram\n  A ||--o{ B : owns'
     const url = buildBrowserPreviewUrl({
-      code: 'erDiagram\n  A ||--o{ B : owns',
+      code,
     })
+    const parsedUrl = new URL(url)
 
     expect(url.startsWith(DEFAULT_PREVIEW_BASE_URL)).toBe(true)
     expect(url).toContain('renderer=svg')
     expect(url).toContain('e2e=true')
     expect(url).toContain('code=')
+    expect(unescape(atob(decodeURIComponent(parsedUrl.searchParams.get('code') || '')))).toBe(code)
   })
 
   it('honors an explicit base url override', () => {

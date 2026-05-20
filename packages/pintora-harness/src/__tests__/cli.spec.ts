@@ -33,6 +33,22 @@ describe('pintora-harness cli shell', () => {
     expect(consoleSpy).toHaveBeenCalled()
   })
 
+  it('does not dispatch capture-browser when required args are missing', () => {
+    const mockRunHarnessCaptureBrowser = jest.fn()
+    process.argv = ['node', 'pintora-harness', 'capture-browser']
+
+    jest.mock('../browser/capture-browser', () => ({
+      runHarnessCaptureBrowser: mockRunHarnessCaptureBrowser,
+    }))
+
+    jest.isolateModules(() => {
+      require('../cli')
+    })
+
+    expect(mockRunHarnessCaptureBrowser).not.toHaveBeenCalled()
+    expect(process.exitCode).toBe(1)
+  })
+
   it('dispatches review-case to the review runner', async () => {
     const mockRunHarnessReviewCase = jest.fn(async () => ({
       adapter: 'manual-review-pack',
