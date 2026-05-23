@@ -2,14 +2,20 @@ import { BaseDb } from '../util/base-db'
 import {
   isBoundaryMacro,
   isElementMacro,
+  isElementStyleUpdateMacro,
   isElementTagMacro,
   isLegendMacro,
+  isLayoutConfigMacro,
   isRelationshipMacro,
+  isRelationshipStyleUpdateMacro,
   isRelationshipTagMacro,
   normalizeBoundaryMacro,
   normalizeElementMacro,
+  normalizeElementStyleUpdateMacro,
   normalizeElementTagMacro,
+  normalizeLayoutConfigMacro,
   normalizeRelationshipMacro,
+  normalizeRelationshipStyleUpdateMacro,
   normalizeRelationshipTagMacro,
 } from './macro'
 import {
@@ -19,9 +25,12 @@ import {
   C4DiagramIR,
   C4DiagramKind,
   C4Element,
+  C4ElementStyleOverride,
   C4ElementTagStyle,
+  C4LayoutConfig,
   C4MacroCall,
   C4Relationship,
+  C4RelationshipStyleOverride,
   C4RelationshipTagStyle,
 } from './type'
 
@@ -57,7 +66,10 @@ export class C4Db extends BaseDb {
   protected boundaries: Record<string, C4Boundary> = {}
   protected relationships: C4Relationship[] = []
   protected elementTags: Record<string, C4ElementTagStyle> = {}
+  protected elementStyleOverrides: Record<string, C4ElementStyleOverride> = {}
   protected relationshipTags: Record<string, C4RelationshipTagStyle> = {}
+  protected relationshipStyleOverrides: C4RelationshipStyleOverride[] = []
+  protected layoutConfig?: C4LayoutConfig
   protected legend = { visible: false }
 
   setDiagramEntry(entry: string) {
@@ -141,9 +153,25 @@ export class C4Db extends BaseDb {
       return ''
     }
 
+    if (isElementStyleUpdateMacro(action.name)) {
+      const override = normalizeElementStyleUpdateMacro(action.args)
+      this.elementStyleOverrides[override.elementId] = override
+      return ''
+    }
+
     if (isRelationshipTagMacro(action.name)) {
       const tag = normalizeRelationshipTagMacro(action.args)
       this.relationshipTags[tag.tag] = tag
+      return ''
+    }
+
+    if (isRelationshipStyleUpdateMacro(action.name)) {
+      this.relationshipStyleOverrides.push(normalizeRelationshipStyleUpdateMacro(action.args))
+      return ''
+    }
+
+    if (isLayoutConfigMacro(action.name)) {
+      this.layoutConfig = normalizeLayoutConfigMacro(action.args)
       return ''
     }
 
@@ -153,7 +181,12 @@ export class C4Db extends BaseDb {
     }
 
     if (isRelationshipMacro(action.name)) {
-      const relationship = normalizeRelationshipMacro(action.name, action.args, this.relationships.length)
+      const relationship = normalizeRelationshipMacro(
+        action.name,
+        action.args,
+        this.relationships.length,
+        Object.keys(this.relationshipTags),
+      )
       this.relationships.push(relationship)
       return ''
     }
@@ -198,6 +231,22 @@ export class C4Db extends BaseDb {
         throw new Error(`[c4] relationship target is not declared: ${rel.target}`)
       }
     })
+    Object.keys(this.elementStyleOverrides).forEach(elementId => {
+      if (!this.elements[elementId]) {
+        throw new Error(`[c4] UpdateElementStyle target is not declared: ${elementId}`)
+      }
+    })
+    this.relationshipStyleOverrides.forEach(style => {
+      if (
+        !this.relationships.some(
+          rel =>
+            (rel.source === style.source && rel.target === style.target) ||
+            (rel.bidirectional && rel.source === style.target && rel.target === style.source),
+        )
+      ) {
+        throw new Error(`[c4] UpdateRelStyle target relationship is not declared: ${style.source} -> ${style.target}`)
+      }
+    })
   }
 
   getDiagramIR(): C4DiagramIR {
@@ -207,7 +256,10 @@ export class C4Db extends BaseDb {
       boundaries: this.boundaries,
       relationships: this.relationships,
       elementTags: this.elementTags,
+      elementStyleOverrides: this.elementStyleOverrides,
       relationshipTags: this.relationshipTags,
+      relationshipStyleOverrides: this.relationshipStyleOverrides,
+      layoutConfig: this.layoutConfig,
       legend: this.legend,
       ...this.getBaseDiagramIR(),
     }
@@ -220,7 +272,10 @@ export class C4Db extends BaseDb {
     this.boundaries = {}
     this.relationships = []
     this.elementTags = {}
+    this.elementStyleOverrides = {}
     this.relationshipTags = {}
+    this.relationshipStyleOverrides = []
+    this.layoutConfig = undefined
     this.legend = { visible: false }
   }
 }

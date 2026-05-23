@@ -52,10 +52,11 @@ Rel(api, email, "Sends messages", "SMTP")
 Supported macro families:
 
 - Diagram entries: `C4Context`, `C4Container`, `C4Component`, `C4Dynamic`, `C4Deployment`, plus `c4Diagram` as Pintora-native alias.
-- Elements: `Person`, `Person_Ext`, `System`, `System_Ext`, `SystemDb`, `SystemQueue`, `Container`, `Container_Ext`, `ContainerDb`, `ContainerQueue`, `Component`, `Component_Ext`, `ComponentDb`, `ComponentQueue`.
+- Elements: `Person`, `Person_Ext`, `System`, `System_Ext`, `SystemDb`, `SystemDb_Ext`, `SystemQueue`, `SystemQueue_Ext`, `Container`, `Container_Ext`, `ContainerDb`, `ContainerDb_Ext`, `ContainerQueue`, `ContainerQueue_Ext`, `Component`, `Component_Ext`, `ComponentDb`, `ComponentDb_Ext`, `ComponentQueue`, `ComponentQueue_Ext`.
 - Boundaries: `Boundary`, `Enterprise_Boundary`, `System_Boundary`, `Container_Boundary`, `Deployment_Node`, `Node`, `Node_L`, `Node_R`.
 - Relationships: `Rel`, `BiRel`, `Rel_U`, `Rel_Up`, `Rel_D`, `Rel_Down`, `Rel_L`, `Rel_Left`, `Rel_R`, `Rel_Right`, `Rel_Back`, `RelIndex`.
-- Styling declarations: `AddElementTag`, `AddRelTag`.
+- Styling declarations: `AddElementTag`, `AddRelTag`, `UpdateElementStyle`, `UpdateRelStyle`.
+- Layout compatibility metadata: `UpdateLayoutConfig`.
 - Legend triggers: `SHOW_LEGEND`, `SHOW_DYNAMIC_LEGEND`, and bare `Legend`.
 - Optional arguments: positional arguments for core C4-PlantUML compatibility, plus named arguments for common optional fields such as `$descr`, `$techn`, `$tags`, and `$link`.
 
@@ -64,12 +65,16 @@ Tag style declarations use the Mermaid/C4-PlantUML-compatible signatures:
 ```txt
 AddElementTag(tagStereo, ?bgColor, ?fontColor, ?borderColor, ?shadowing, ?shape, ?sprite, ?techn, ?legendText, ?legendSprite)
 AddRelTag(tagStereo, ?textColor, ?lineColor, ?lineStyle, ?sprite, ?techn, ?legendText, ?legendSprite)
+UpdateElementStyle(elementName, ?bgColor, ?fontColor, ?borderColor, ?shadowing, ?shape, ?sprite, ?techn, ?legendText, ?legendSprite)
+UpdateRelStyle(from, to, ?textColor, ?lineColor, ?offsetX, ?offsetY)
+UpdateLayoutConfig(?c4ShapeInRow, ?c4BoundaryInRow)
 ```
 
 Supported rendered style fields:
 
 - Element tags: `bgColor`, `fontColor`, `borderColor`, `RoundedBoxShape()`, and `techn` when the element does not already define technology.
 - Relationship tags: `textColor`, `lineColor`, `SolidLine()`, `DashedLine()`, `DottedLine()`, `BoldLine()`, and `techn` when the relationship does not already define technology.
+- Direct update styles: `UpdateElementStyle` overrides matching element tag style fields; `UpdateRelStyle` overrides matching relationship `textColor` and `lineColor`.
 - Generated legends use `legendText` when present, otherwise the tag name.
 
 Explicitly out of scope:
@@ -78,6 +83,8 @@ Explicitly out of scope:
 - Sprites and icon libraries.
 - Shadow rendering for tag declarations.
 - Eight-sided element shape rendering, even though `EightSidedShape()` is parsed for forward compatibility.
+- `UpdateRelStyle` relationship label offsets, even though `offsetX` and `offsetY` are parsed for compatibility.
+- `UpdateLayoutConfig` row layout effects, even though the values are stored as compatibility metadata.
 - Manual layout commands such as `Lay_U`, except as a later best-effort constraint feature.
 - Sequence-style C4 diagrams.
 
@@ -160,6 +167,24 @@ type C4RelationshipTagStyle = {
   legendSprite?: string
 }
 
+type C4ElementStyleOverride = C4ElementTagStyle & {
+  elementId: string
+}
+
+type C4RelationshipStyleOverride = {
+  source: string
+  target: string
+  textColor?: string
+  lineColor?: string
+  offsetX?: string
+  offsetY?: string
+}
+
+type C4LayoutConfig = {
+  c4ShapeInRow?: number
+  c4BoundaryInRow?: number
+}
+
 type C4Legend = {
   visible: boolean
   position: 'right' | 'bottom'
@@ -212,7 +237,10 @@ type C4DiagramIR = BaseDiagramIR & {
   boundaries: Record<string, C4Boundary>
   relationships: C4Relationship[]
   elementTags: Record<string, C4ElementTagStyle>
+  elementStyleOverrides: Record<string, C4ElementStyleOverride>
   relationshipTags: Record<string, C4RelationshipTagStyle>
+  relationshipStyleOverrides: C4RelationshipStyleOverride[]
+  layoutConfig?: C4LayoutConfig
   legend: C4Legend
 }
 ```
@@ -220,13 +248,15 @@ type C4DiagramIR = BaseDiagramIR & {
 `macro.ts` should contain normalization helpers that map macro names and argument lists to these types. Examples:
 
 - `Person_Ext` becomes `{ kind: 'person', shape: 'person', external: true }`.
-- `ContainerDb` becomes `{ kind: 'container', shape: 'database' }`.
+- `ContainerDb` becomes `{ kind: 'container', shape: 'database' }`; `_Ext` DB/queue variants set `external: true`.
 - `SystemQueue` becomes `{ kind: 'system', shape: 'queue' }`.
 - `Rel_R` becomes a relationship with `directionHint: 'right'`.
 - `BiRel` becomes one bidirectional relationship rather than two independent edges.
 - `RelIndex` becomes a relationship with an `index` field that is rendered in the label.
 - `Deployment_Node` and `Node` become deployment-node boundaries.
 - `AddElementTag` and `AddRelTag` become tag style declarations stored on the IR rather than immediately mutating elements.
+- `UpdateElementStyle` and `UpdateRelStyle` become direct style overrides stored on the IR and applied after tag style resolution.
+- `UpdateLayoutConfig` becomes layout compatibility metadata stored on the IR. It is not consumed by the dagre artist.
 - `SHOW_LEGEND`, `SHOW_DYNAMIC_LEGEND`, and `Legend` set `legend.visible`.
 
 `style.ts` should resolve declared tag styles against individual elements and relationships. Later tags in `$tags` override earlier tags for the same field. A tag's `techn` value is a fallback only; it should not override technology explicitly declared on an element or relationship.

@@ -130,6 +130,49 @@ Rel(customer, api, "Uses", $techn="HTTPS", $tags="critical")
     })
   })
 
+  it('parses external database and queue element variants', () => {
+    parse(
+      stripStartEmptyLines(`
+C4Container
+SystemDb_Ext(systemDb, "External System DB", "Stores external data")
+SystemQueue_Ext(systemQueue, "External System Queue", "Queues external events")
+ContainerDb_Ext(containerDb, "External Container DB", "PostgreSQL", "Stores app data")
+ContainerQueue_Ext(containerQueue, "External Container Queue", "Kafka", "Queues app events")
+ComponentDb_Ext(componentDb, "External Component DB", "SQLite", "Stores component data")
+ComponentQueue_Ext(componentQueue, "External Component Queue", "Redis", "Queues component events")
+    `),
+    )
+
+    const ir = db.getDiagramIR()
+
+    expect(ir.elements.systemDb).toMatchObject({ kind: 'system', shape: 'database', external: true })
+    expect(ir.elements.systemQueue).toMatchObject({ kind: 'system', shape: 'queue', external: true })
+    expect(ir.elements.containerDb).toMatchObject({
+      kind: 'container',
+      shape: 'database',
+      external: true,
+      technology: 'PostgreSQL',
+    })
+    expect(ir.elements.containerQueue).toMatchObject({
+      kind: 'container',
+      shape: 'queue',
+      external: true,
+      technology: 'Kafka',
+    })
+    expect(ir.elements.componentDb).toMatchObject({
+      kind: 'component',
+      shape: 'database',
+      external: true,
+      technology: 'SQLite',
+    })
+    expect(ir.elements.componentQueue).toMatchObject({
+      kind: 'component',
+      shape: 'queue',
+      external: true,
+      technology: 'Redis',
+    })
+  })
+
   it('parses empty quoted optional arguments and richer title text', () => {
     parse(
       stripStartEmptyLines(`
@@ -218,6 +261,22 @@ RelIndex(2, api, db, "Reads data", "SQL")
     ])
   })
 
+  it('treats RelIndex fifth positional argument as tags when it matches declared relationship tags', () => {
+    parse(
+      stripStartEmptyLines(`
+C4Dynamic
+AddRelTag("async", $lineColor="#0066cc", $lineStyle=DashedLine())
+Container(web, "Web", "React")
+Container(api, "API", "Node.js")
+RelIndex(1, web, api, "Calls", "async")
+    `),
+    )
+
+    const rel = db.getDiagramIR().relationships[0]
+    expect(rel.tags).toEqual(['async'])
+    expect(rel.technology).toBeUndefined()
+  })
+
   it('parses C4Deployment deployment nodes as nested boundaries', () => {
     parse(
       stripStartEmptyLines(`
@@ -256,6 +315,22 @@ Rel(api, region, "Runs in")
     })
   })
 
+  it('parses regular boundary type separately from description', () => {
+    parse(
+      stripStartEmptyLines(`
+C4Context
+Boundary(edge, "Edge Zone", "Network zone", $descr="Public subnet") {
+  System(api, "API")
+}
+    `),
+    )
+
+    expect(db.getDiagramIR().boundaries.edge).toMatchObject({
+      type: 'Network zone',
+      description: 'Public subnet',
+    })
+  })
+
   it('parses tag declarations and explicit legend calls', () => {
     parse(
       stripStartEmptyLines(`
@@ -288,6 +363,61 @@ SHOW_LEGEND()
     })
     expect(ir.legend).toMatchObject({
       visible: true,
+    })
+  })
+
+  it('parses UpdateElementStyle declarations', () => {
+    parse(
+      stripStartEmptyLines(`
+C4Container
+Container(api, "API", "Node.js")
+UpdateElementStyle(api, $bgColor="#ddeeff", $fontColor="#001144", $borderColor="#003399", $shape=RoundedBoxShape(), $techn="Express")
+    `),
+    )
+
+    expect(db.getDiagramIR().elementStyleOverrides.api).toMatchObject({
+      elementId: 'api',
+      bgColor: '#ddeeff',
+      fontColor: '#001144',
+      borderColor: '#003399',
+      shape: 'roundedBox',
+      techn: 'Express',
+    })
+  })
+
+  it('parses UpdateRelStyle declarations', () => {
+    parse(
+      stripStartEmptyLines(`
+C4Container
+Container(api, "API", "Node.js")
+Container(db, "DB", "PostgreSQL")
+Rel(api, db, "Reads")
+UpdateRelStyle(api, db, $textColor="#003366", $lineColor="#0066cc", $offsetX="10", $offsetY="-5")
+    `),
+    )
+
+    expect(db.getDiagramIR().relationshipStyleOverrides[0]).toMatchObject({
+      source: 'api',
+      target: 'db',
+      textColor: '#003366',
+      lineColor: '#0066cc',
+      offsetX: '10',
+      offsetY: '-5',
+    })
+  })
+
+  it('parses UpdateLayoutConfig as compatibility metadata', () => {
+    parse(
+      stripStartEmptyLines(`
+C4Container
+UpdateLayoutConfig(3, 1)
+Container(api, "API", "Node.js")
+    `),
+    )
+
+    expect(db.getDiagramIR().layoutConfig).toEqual({
+      c4ShapeInRow: 3,
+      c4BoundaryInRow: 1,
     })
   })
 

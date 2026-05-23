@@ -159,6 +159,24 @@ RelIndex(1, web, api, "Submits request", "JSON/HTTPS")
     expect(label.attrs.text).toBe('1. Submits request [JSON/HTTPS]')
   })
 
+  it('applies relationship tag styles from RelIndex fifth positional argument', () => {
+    const code = `
+C4Dynamic
+AddRelTag("async", $lineColor="#0066cc", $lineStyle=DashedLine())
+Container(web, "Web", "React")
+Container(api, "API", "Node.js")
+RelIndex(1, web, api, "Calls", "async")
+`
+
+    const result = testDraw(code)
+    const rootMark = result.graphicIR.mark as Group
+    const relationship = findC4ElementGroup(rootMark, 'c4-rel-0')
+    const line = relationship.children.find(child => child.class === 'c4__rel-line')!
+
+    expect(line.attrs.stroke).toBe('#0066cc')
+    expect(line.attrs.lineDash).toEqual([6, 4])
+  })
+
   it('renders deployment nodes as nested boundaries', () => {
     const code = `
 C4Deployment
@@ -231,6 +249,46 @@ SHOW_LEGEND()
     expect(legendTexts).toContain('Critical element')
     expect(legendTexts).toContain('Async call')
     expect(legendTexts).not.toContain('Unused element')
+  })
+
+  it('applies UpdateElementStyle after tag styles', () => {
+    const code = `
+C4Container
+AddElementTag("critical", $bgColor="#ffdddd", $fontColor="#550000")
+Container(api, "API", "", $tags="critical")
+UpdateElementStyle(api, $bgColor="#ddeeff", $fontColor="#001144", $borderColor="#003399", $shape=RoundedBoxShape(), $techn="Express")
+`
+
+    const result = testDraw(code)
+    const rootMark = result.graphicIR.mark as Group
+    const apiGroup = findC4ElementGroup(rootMark, 'c4-element-api')
+    const rect = apiGroup.children.find(child => child.class === 'c4__element-rect')!
+    const texts = apiGroup.children.filter(child => child.type === 'text')
+
+    expect(rect.attrs.fill).toBe('#ddeeff')
+    expect(rect.attrs.stroke).toBe('#003399')
+    expect(rect.attrs.radius).toBeGreaterThan(4)
+    expect(texts.every(text => text.attrs.fill === '#001144')).toBe(true)
+    expect(texts.map(text => text.attrs.text)).toContain('[Express]')
+  })
+
+  it('applies UpdateRelStyle to matching relationships', () => {
+    const code = `
+C4Container
+Container(api, "API", "Node.js")
+Container(db, "DB", "PostgreSQL")
+Rel(api, db, "Reads")
+UpdateRelStyle(api, db, $textColor="#003366", $lineColor="#0066cc")
+`
+
+    const result = testDraw(code)
+    const rootMark = result.graphicIR.mark as Group
+    const relationship = findC4ElementGroup(rootMark, 'c4-rel-0')
+    const line = relationship.children.find(child => child.class === 'c4__rel-line')!
+    const label = relationship.children.find(child => child.type === 'text' && child.class === 'c4__rel-label')!
+
+    expect(line.attrs.stroke).toBe('#0066cc')
+    expect(label.attrs.fill).toBe('#003366')
   })
 
   it('vertically centers legend swatches with their labels', () => {

@@ -318,6 +318,10 @@ ContainerQueue(events, "Domain Events", "Kafka", "Publishes account and payment 
 Rel(customer, api, "Uses", "HTTPS")
 Rel(api, events, "Publishes", $tags="async")
 
+UpdateElementStyle(api, $borderColor="#003399")
+UpdateRelStyle(api, events, $lineColor="#0066cc", $textColor="#003366")
+UpdateLayoutConfig(3, 1)
+
 SHOW_LEGEND()
 `),
 }

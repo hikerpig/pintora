@@ -4,11 +4,14 @@ import {
   C4DirectionHint,
   C4Element,
   C4ElementKind,
+  C4ElementStyleOverride,
   C4ElementTagShape,
   C4ElementTagStyle,
+  C4LayoutConfig,
   C4MacroArg,
   C4Relationship,
   C4RelationshipLineStyle,
+  C4RelationshipStyleOverride,
   C4RelationshipTagStyle,
   C4Shape,
 } from './type'
@@ -35,15 +38,21 @@ const ELEMENT_MACROS: Record<string, ElementMacroSpec> = {
   System: { kind: 'system', shape: 'box' },
   System_Ext: { kind: 'system', shape: 'box', external: true },
   SystemDb: { kind: 'system', shape: 'database' },
+  SystemDb_Ext: { kind: 'system', shape: 'database', external: true },
   SystemQueue: { kind: 'system', shape: 'queue' },
+  SystemQueue_Ext: { kind: 'system', shape: 'queue', external: true },
   Container: { kind: 'container', shape: 'box' },
   Container_Ext: { kind: 'container', shape: 'box', external: true },
   ContainerDb: { kind: 'container', shape: 'database' },
+  ContainerDb_Ext: { kind: 'container', shape: 'database', external: true },
   ContainerQueue: { kind: 'container', shape: 'queue' },
+  ContainerQueue_Ext: { kind: 'container', shape: 'queue', external: true },
   Component: { kind: 'component', shape: 'box' },
   Component_Ext: { kind: 'component', shape: 'box', external: true },
   ComponentDb: { kind: 'component', shape: 'database' },
+  ComponentDb_Ext: { kind: 'component', shape: 'database', external: true },
   ComponentQueue: { kind: 'component', shape: 'queue' },
+  ComponentQueue_Ext: { kind: 'component', shape: 'queue', external: true },
 }
 
 const BOUNDARY_MACROS: Record<string, BoundaryMacroSpec> = {
@@ -109,8 +118,8 @@ function readValue(parsed: ParsedArgs, index: number, name: string) {
   return parsed.named[name] || parsed.positional[index] || ''
 }
 
-function readTags(parsed: ParsedArgs) {
-  const raw = parsed.named.tags || ''
+function readTags(parsed: ParsedArgs, rawOverride?: string) {
+  const raw = rawOverride || parsed.named.tags || ''
   if (!raw) return []
   return raw
     .split(/[,+]/)
@@ -134,12 +143,24 @@ export function isElementTagMacro(name: string) {
   return name === 'AddElementTag'
 }
 
+export function isElementStyleUpdateMacro(name: string) {
+  return name === 'UpdateElementStyle'
+}
+
 export function isRelationshipTagMacro(name: string) {
   return name === 'AddRelTag'
 }
 
+export function isRelationshipStyleUpdateMacro(name: string) {
+  return name === 'UpdateRelStyle'
+}
+
 export function isLegendMacro(name: string) {
   return name === 'SHOW_LEGEND' || name === 'SHOW_DYNAMIC_LEGEND' || name === 'Legend'
+}
+
+export function isLayoutConfigMacro(name: string) {
+  return name === 'UpdateLayoutConfig'
 }
 
 export function normalizeElementMacro(name: string, args: C4MacroArg[], parent?: string): C4Element {
@@ -191,8 +212,10 @@ export function normalizeBoundaryMacro(name: string, args: C4MacroArg[], parent?
   }
 
   const label = readValue(parsed, 1, 'label') || id
-  const type = spec.hasDeploymentNodeArgs ? readValue(parsed, 2, 'type') : ''
-  const description = spec.hasDeploymentNodeArgs ? readValue(parsed, 3, 'descr') : readValue(parsed, 2, 'descr')
+  const type =
+    spec.hasDeploymentNodeArgs || name === 'Boundary' ? readValue(parsed, 2, 'type') : parsed.named.type || ''
+  const description =
+    spec.hasDeploymentNodeArgs || name === 'Boundary' ? readValue(parsed, 3, 'descr') : readValue(parsed, 2, 'descr')
   const boundary: C4Boundary = {
     id,
     kind: spec.kind,
@@ -210,7 +233,12 @@ export function normalizeBoundaryMacro(name: string, args: C4MacroArg[], parent?
   return boundary
 }
 
-export function normalizeRelationshipMacro(name: string, args: C4MacroArg[], index: number): C4Relationship {
+export function normalizeRelationshipMacro(
+  name: string,
+  args: C4MacroArg[],
+  index: number,
+  knownRelationshipTags: string[] = [],
+): C4Relationship {
   if (!isRelationshipMacro(name)) {
     throw new Error(`[c4] unsupported relationship macro: ${name}`)
   }
@@ -224,13 +252,27 @@ export function normalizeRelationshipMacro(name: string, args: C4MacroArg[], ind
   }
 
   const label = isIndexed ? readValue(parsed, 3, 'label') : readValue(parsed, 2, 'label')
-  const technology = isIndexed ? readValue(parsed, 4, 'techn') : readValue(parsed, 3, 'techn')
-  const description = isIndexed ? readValue(parsed, 5, 'descr') : readValue(parsed, 4, 'descr')
+  const relIndexFifth = isIndexed ? parsed.positional[4] || '' : ''
+  const relIndexTags =
+    isIndexed && relIndexFifth && relIndexFifth.split(/[,+]/).some(tag => knownRelationshipTags.includes(tag.trim()))
+      ? relIndexFifth
+      : ''
+  const rawTags = parsed.named.tags || relIndexTags
+  const technology = isIndexed
+    ? relIndexTags
+      ? readValue(parsed, 5, 'techn')
+      : readValue(parsed, 4, 'techn')
+    : readValue(parsed, 3, 'techn')
+  const description = isIndexed
+    ? relIndexTags
+      ? readValue(parsed, 6, 'descr')
+      : readValue(parsed, 5, 'descr')
+    : readValue(parsed, 4, 'descr')
   const directionHint = RELATION_MACROS[name]
   const relationship: C4Relationship = {
     source,
     target,
-    tags: readTags(parsed),
+    tags: readTags(parsed, rawTags),
     itemId: `c4-rel-${index}`,
   }
 
@@ -279,6 +321,20 @@ export function normalizeElementTagMacro(args: C4MacroArg[]): C4ElementTagStyle 
   return style
 }
 
+export function normalizeElementStyleUpdateMacro(args: C4MacroArg[]): C4ElementStyleOverride {
+  const parsed = parseArgs(args)
+  const elementId = readValue(parsed, 0, 'elementName')
+  if (!elementId) {
+    throw new Error('[c4] UpdateElementStyle requires an element alias as the first argument')
+  }
+
+  const { tag: _tag, ...tagStyle } = normalizeElementTagMacro([
+    { type: 'positional', value: elementId },
+    ...args.slice(1),
+  ])
+  return { ...tagStyle, elementId }
+}
+
 export function normalizeRelationshipTagMacro(args: C4MacroArg[]): C4RelationshipTagStyle {
   const parsed = parseArgs(args)
   const tag = readValue(parsed, 0, 'tagStereo') || readValue(parsed, 0, 'tag')
@@ -309,4 +365,39 @@ export function normalizeRelationshipTagMacro(args: C4MacroArg[]): C4Relationshi
   if (legendSprite) style.legendSprite = legendSprite
 
   return style
+}
+
+export function normalizeRelationshipStyleUpdateMacro(args: C4MacroArg[]): C4RelationshipStyleOverride {
+  const parsed = parseArgs(args)
+  const source = readValue(parsed, 0, 'from')
+  const target = readValue(parsed, 1, 'to')
+  if (!source || !target) {
+    throw new Error('[c4] UpdateRelStyle requires source and target aliases')
+  }
+
+  const style: C4RelationshipStyleOverride = {
+    source,
+    target,
+  }
+  const textColor = readValue(parsed, 2, 'textColor')
+  const lineColor = readValue(parsed, 3, 'lineColor')
+  const offsetX = readValue(parsed, 4, 'offsetX')
+  const offsetY = readValue(parsed, 5, 'offsetY')
+
+  if (textColor) style.textColor = textColor
+  if (lineColor) style.lineColor = lineColor
+  if (offsetX) style.offsetX = offsetX
+  if (offsetY) style.offsetY = offsetY
+
+  return style
+}
+
+export function normalizeLayoutConfigMacro(args: C4MacroArg[]): C4LayoutConfig {
+  const parsed = parseArgs(args)
+  const shape = readValue(parsed, 0, 'c4ShapeInRow')
+  const boundary = readValue(parsed, 1, 'c4BoundaryInRow')
+  return {
+    ...(shape ? { c4ShapeInRow: Number(shape) } : {}),
+    ...(boundary ? { c4BoundaryInRow: Number(boundary) } : {}),
+  }
 }

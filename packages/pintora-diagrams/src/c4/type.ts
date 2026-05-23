@@ -28,6 +28,10 @@ export type C4ElementTagStyle = {
   legendSprite?: string
 }
 
+export type C4ElementStyleOverride = C4ElementTagStyle & {
+  elementId: string
+}
+
 export type C4RelationshipTagStyle = {
   tag: string
   textColor?: string
@@ -37,6 +41,20 @@ export type C4RelationshipTagStyle = {
   techn?: string
   legendText?: string
   legendSprite?: string
+}
+
+export type C4RelationshipStyleOverride = {
+  source: string
+  target: string
+  textColor?: string
+  lineColor?: string
+  offsetX?: string
+  offsetY?: string
+}
+
+export type C4LayoutConfig = {
+  c4ShapeInRow?: number
+  c4BoundaryInRow?: number
 }
 
 export type C4Legend = {
@@ -114,7 +132,10 @@ export type C4DiagramIR = BaseDiagramIR & {
   boundaries: Record<string, C4Boundary>
   relationships: C4Relationship[]
   elementTags: Record<string, C4ElementTagStyle>
+  elementStyleOverrides: Record<string, C4ElementStyleOverride>
   relationshipTags: Record<string, C4RelationshipTagStyle>
+  relationshipStyleOverrides: C4RelationshipStyleOverride[]
+  layoutConfig?: C4LayoutConfig
   legend: C4Legend
 }
 

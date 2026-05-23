@@ -102,6 +102,10 @@ Container(api, "API Application", "Node.js", $tags="critical")
 ContainerQueue(events, "Domain Events", "Kafka")
 Rel(api, events, "Publishes", $tags="async")
 
+UpdateElementStyle(api, $borderColor="#003399")
+UpdateRelStyle(api, events, $lineColor="#0066cc", $textColor="#003366")
+UpdateLayoutConfig(3, 1)
+
 SHOW_LEGEND()
 ```
 
@@ -111,12 +115,12 @@ SHOW_LEGEND()
 | ------------- | ------------------------------------------------------------------------------------------------------------------------- |
 | Entries       | `C4Context`, `C4Container`, `C4Component`, `C4Dynamic`, `C4Deployment`, `c4Diagram`                                       |
 | People        | `Person`, `Person_Ext`                                                                                                    |
-| Systems       | `System`, `System_Ext`, `SystemDb`, `SystemQueue`                                                                         |
-| Containers    | `Container`, `Container_Ext`, `ContainerDb`, `ContainerQueue`                                                             |
-| Components    | `Component`, `Component_Ext`, `ComponentDb`, `ComponentQueue`                                                             |
+| Systems       | `System`, `System_Ext`, `SystemDb`, `SystemDb_Ext`, `SystemQueue`, `SystemQueue_Ext`                                      |
+| Containers    | `Container`, `Container_Ext`, `ContainerDb`, `ContainerDb_Ext`, `ContainerQueue`, `ContainerQueue_Ext`                    |
+| Components    | `Component`, `Component_Ext`, `ComponentDb`, `ComponentDb_Ext`, `ComponentQueue`, `ComponentQueue_Ext`                    |
 | Boundaries    | `Boundary`, `Enterprise_Boundary`, `System_Boundary`, `Container_Boundary`, `Deployment_Node`, `Node`, `Node_L`, `Node_R` |
 | Relationships | `Rel`, `BiRel`, `Rel_U`, `Rel_Up`, `Rel_D`, `Rel_Down`, `Rel_L`, `Rel_Left`, `Rel_R`, `Rel_Right`, `Rel_Back`, `RelIndex` |
-| Styling       | `AddElementTag`, `AddRelTag`                                                                                              |
+| Styling       | `AddElementTag`, `AddRelTag`, `UpdateElementStyle`, `UpdateRelStyle`, `UpdateLayoutConfig`                                |
 | Legends       | `SHOW_LEGEND`, `SHOW_DYNAMIC_LEGEND`, `Legend`                                                                            |
 
 ## Arguments
@@ -151,6 +155,20 @@ Tag style declarations use:
 AddElementTag(tagStereo, ?bgColor, ?fontColor, ?borderColor, ?shadowing, ?shape, ?sprite, ?techn, ?legendText, ?legendSprite)
 AddRelTag(tagStereo, ?textColor, ?lineColor, ?lineStyle, ?sprite, ?techn, ?legendText, ?legendSprite)
 ```
+
+### Style Updates
+
+Direct style update macros use:
+
+```txt
+UpdateElementStyle(elementName, ?bgColor, ?fontColor, ?borderColor, ?shadowing, ?shape, ?sprite, ?techn, ?legendText, ?legendSprite)
+UpdateRelStyle(from, to, ?textColor, ?lineColor, ?offsetX, ?offsetY)
+UpdateLayoutConfig(?c4ShapeInRow, ?c4BoundaryInRow)
+```
+
+`UpdateElementStyle` and `UpdateRelStyle` are applied after tag styles for matching elements and relationships.
+`UpdateLayoutConfig` is parsed as Mermaid compatibility metadata, but Pintora still uses dagre automatic layout.
+`offsetX` and `offsetY` on `UpdateRelStyle` are parsed but not rendered yet.
 
 Rendered style helpers include `RoundedBoxShape()`, `SolidLine()`, `DashedLine()`, `DottedLine()`, and `BoldLine()`. `EightSidedShape()` is parsed for compatibility, but currently renders as the default box shape.
 
@@ -192,3 +210,5 @@ Pintora C4 does not run PlantUML preprocessing. These features are not part of t
 - Sprites and icon libraries
 - Shadow rendering for tag declarations
 - Eight-sided element shape rendering
+- Manual row layout from `UpdateLayoutConfig`
+- Relationship label offsets from `UpdateRelStyle`
