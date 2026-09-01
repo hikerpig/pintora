@@ -663,8 +663,8 @@ importers:
         specifier: ^5.3.2
         version: 5.3.3
       docusaurus-plugin-llms:
-        specifier: ^0.3.0
-        version: 0.3.0(@docusaurus/core@3.7.0(@docusaurus/faster@3.7.0(@docusaurus/types@3.7.0(@swc/core@1.15.18(@swc/helpers@0.5.18))(esbuild@0.27.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@swc/helpers@0.5.18)(esbuild@0.27.0))(@mdx-js/react@3.0.0(@types/react@18.0.12)(react@18.2.0))(@rspack/core@1.7.5(@swc/helpers@0.5.18))(@swc/core@1.15.18(@swc/helpers@0.5.18))(esbuild@0.27.0)(eslint@10.0.0(jiti@2.6.1))(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(typescript@6.0.3))
+        specifier: ^0.6.0
+        version: 0.6.0(@docusaurus/core@3.7.0(@docusaurus/faster@3.7.0(@docusaurus/types@3.7.0(@swc/core@1.15.18(@swc/helpers@0.5.18))(esbuild@0.27.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@swc/helpers@0.5.18)(esbuild@0.27.0))(@mdx-js/react@3.0.0(@types/react@18.0.12)(react@18.2.0))(@rspack/core@1.7.5(@swc/helpers@0.5.18))(@swc/core@1.15.18(@swc/helpers@0.5.18))(esbuild@0.27.0)(eslint@10.0.0(jiti@2.6.1))(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(typescript@6.0.3))
       typescript:
         specifier: ^6.0.0
         version: 6.0.3
@@ -5565,8 +5565,8 @@ packages:
       less: '>=4.0.0'
       less-loader: '>=10.0.0'
 
-  docusaurus-plugin-llms@0.3.0:
-    resolution: {integrity: sha512-JuADAJA2fjTv1U4XQUoIu1LyjISDzxFhRK5HbCZiHum4HlmdPwyx8NBXsi+LfdUyjK9acbZgazGsHPhdwEZs0g==}
+  docusaurus-plugin-llms@0.6.0:
+    resolution: {integrity: sha512-v9I6QEJLujkmtKjfWZ/SniWu7oOGZd0JUkyxO5MaFU09+qZHjQuraYuJZ+2AoZdesrrcktgDmZtqPL/sJtHe6A==}
     engines: {node: '>=18.0'}
     peerDependencies:
       '@docusaurus/core': ^3.0.0
@@ -7987,6 +7987,10 @@ packages:
 
   minimatch@3.1.2:
     resolution: {integrity: sha512-J7p63hRiAjw1NDEww1W7i37+ByIrOWO5XQQAzZ3VOcL0PNybwpfmV/N05zFAzwQ9USyEcX6t3UO+K5aqBQOIHw==}
+
+  minimatch@9.0.3:
+    resolution: {integrity: sha512-RHiac9mvaRw0x3AYRgDC1CxAP7HTcNrrECeA8YYJeWnpo+2Q5CegtZjaotWTWxDG3UeGA1coE05iH1mPjT/2mg==}
+    engines: {node: '>=16 || 14 >=14.17'}
 
   minimatch@9.0.5:
     resolution: {integrity: sha512-G6T0ZX48xgozx7587koeX9Ys2NYy6Gmv//P89sEte9V9whIapMNF4idKxnW2QtCcLiTWlb/wfCabAtAFWhhBow==}
@@ -10415,6 +10419,7 @@ packages:
   tsconfck@3.1.4:
     resolution: {integrity: sha512-kdqWFGVJqe+KGYvlSO9NIaWn9jT1Ny4oKVzAJsKii5eoE9snzTJzL4+MMVOMn+fikWGFmKEylcXL710V/kIPJQ==}
     engines: {node: ^18 || >=20}
+    deprecated: unmaintained
     hasBin: true
     peerDependencies:
       typescript: ^5.0.0
@@ -11083,6 +11088,11 @@ packages:
   yaml@1.10.2:
     resolution: {integrity: sha512-r3vXyErRCYJ7wg28yvBY5VSoAF8ZvlcW9/BwUzEtUsjvX/DKs24dIkuwjtuprwJJHsbyUbLApepYTR1BN4uHrg==}
     engines: {node: '>= 6'}
+
+  yaml@2.8.1:
+    resolution: {integrity: sha512-lcYcMxX2PO9XMGvAJkJ3OsNMw+/7FKes7/hgerGUYWIoWu5j/+YQqcZr5JnPZWzOsEBgMbSbiSTn/dv/69Mkpw==}
+    engines: {node: '>= 14.6'}
+    hasBin: true
 
   yaml@2.8.2:
     resolution: {integrity: sha512-mplynKqc1C2hTVYxd0PU2xQAc22TI1vShAYGksCCfxbn/dFwnHTNi1bvYsBTkhdUNtGIf5xNOg938rrSSYvS9A==}
@@ -14310,9 +14320,9 @@ snapshots:
 
   '@napi-rs/wasm-runtime@1.0.7':
     dependencies:
-      '@emnapi/core': 1.10.0
-      '@emnapi/runtime': 1.10.0
-      '@tybys/wasm-util': 0.10.1
+      '@emnapi/core': 1.11.0
+      '@emnapi/runtime': 1.11.0
+      '@tybys/wasm-util': 0.10.2
     optional: true
 
   '@napi-rs/wasm-runtime@1.1.1':
@@ -17270,12 +17280,12 @@ snapshots:
       less: 4.2.0
       less-loader: 12.0.0(less@4.2.0)(webpack@5.97.1(@swc/core@1.15.18(@swc/helpers@0.5.18))(esbuild@0.27.0))
 
-  docusaurus-plugin-llms@0.3.0(@docusaurus/core@3.7.0(@docusaurus/faster@3.7.0(@docusaurus/types@3.7.0(@swc/core@1.15.18(@swc/helpers@0.5.18))(esbuild@0.27.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@swc/helpers@0.5.18)(esbuild@0.27.0))(@mdx-js/react@3.0.0(@types/react@18.0.12)(react@18.2.0))(@rspack/core@1.7.5(@swc/helpers@0.5.18))(@swc/core@1.15.18(@swc/helpers@0.5.18))(esbuild@0.27.0)(eslint@10.0.0(jiti@2.6.1))(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(typescript@6.0.3)):
+  docusaurus-plugin-llms@0.6.0(@docusaurus/core@3.7.0(@docusaurus/faster@3.7.0(@docusaurus/types@3.7.0(@swc/core@1.15.18(@swc/helpers@0.5.18))(esbuild@0.27.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@swc/helpers@0.5.18)(esbuild@0.27.0))(@mdx-js/react@3.0.0(@types/react@18.0.12)(react@18.2.0))(@rspack/core@1.7.5(@swc/helpers@0.5.18))(@swc/core@1.15.18(@swc/helpers@0.5.18))(esbuild@0.27.0)(eslint@10.0.0(jiti@2.6.1))(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(typescript@6.0.3)):
     dependencies:
       '@docusaurus/core': 3.7.0(@docusaurus/faster@3.7.0(@docusaurus/types@3.7.0(@swc/core@1.15.18(@swc/helpers@0.5.18))(esbuild@0.27.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@swc/helpers@0.5.18)(esbuild@0.27.0))(@mdx-js/react@3.0.0(@types/react@18.0.12)(react@18.2.0))(@rspack/core@1.7.5(@swc/helpers@0.5.18))(@swc/core@1.15.18(@swc/helpers@0.5.18))(esbuild@0.27.0)(eslint@10.0.0(jiti@2.6.1))(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(typescript@6.0.3)
       gray-matter: 4.0.3
-      minimatch: 9.0.5
-      yaml: 2.8.2
+      minimatch: 9.0.3
+      yaml: 2.8.1
 
   dom-converter@0.2.0:
     dependencies:
@@ -20511,6 +20521,10 @@ snapshots:
   minimatch@3.1.2:
     dependencies:
       brace-expansion: 1.1.12
+
+  minimatch@9.0.3:
+    dependencies:
+      brace-expansion: 2.0.2
 
   minimatch@9.0.5:
     dependencies:
@@ -23974,6 +23988,8 @@ snapshots:
   yallist@3.1.1: {}
 
   yaml@1.10.2: {}
+
+  yaml@2.8.1: {}
 
   yaml@2.8.2: {}
 
