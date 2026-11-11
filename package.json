@@ -40,7 +40,7 @@
     ]
   },
   "devDependencies": {
-    "@changesets/changelog-git": "^0.2.1",
+    "@changesets/changelog-git": "^1.0.0",
     "@changesets/cli": "^2.29.8",
     "@swc/core": "^1.15.18",
     "@types/eslint__js": "^8.42.0",
