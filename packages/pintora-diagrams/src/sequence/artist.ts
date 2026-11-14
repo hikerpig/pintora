@@ -174,8 +174,9 @@ class SequenceArtist extends BaseArtist<SequenceDiagramIR, SequenceConf> {
         case LINETYPE.ALT_END:
         case LINETYPE.OPT_END:
         case LINETYPE.PAR_END:
-          loopModel = model.endLoop()
           const label = GROUP_LABEL_MAP[msg.type]
+          model.fillEmptyLoop(label)
+          loopModel = model.endLoop()
           drawLoopTo(context, loopModel, label)
           model.bumpVerticalPos(loopModel.stopy - model.verticalPos)
           model.loops.push(loopModel)
@@ -459,6 +460,30 @@ class Model {
   }
   endLoop() {
     return this.sequenceItems.pop()
+  }
+  /**
+   * A group with no message or note inside never gets its bounds from `updateBounds`,
+   * so give it an empty content box at the current position, starting at the first participant,
+   * wide enough for its label and title.
+   */
+  fillEmptyLoop(label: string) {
+    const loop = this.sequenceItems[this.sequenceItems.length - 1]
+    if (!loop || loop.stopy !== undefined) return
+
+    let startx = Infinity
+    this.actorAttrsMap.forEach(attrs => {
+      startx = Math.min(startx, attrs.x + attrs.width / 2)
+    })
+    if (!Number.isFinite(startx)) startx = 0
+
+    const fontConfig = messageFont(conf)
+    const labelWidth = Math.max(
+      calculateTextDimensions(label, fontConfig).width + 2 * conf.boxTextMargin,
+      conf.labelBoxWidth,
+    )
+    const titleWidth = loop.title ? calculateTextDimensions(loop.title, fontConfig).width : 0
+    const width = Math.max(loop.width || 0, 2 * labelWidth + titleWidth - 2 * conf.boxMargin)
+    this.updateBounds(startx, this.verticalPos, startx + width, this.verticalPos)
   }
   addSectionToLoop(message: Message, width: number, fill?: string) {
     const loop = this.sequenceItems[this.sequenceItems.length - 1]
