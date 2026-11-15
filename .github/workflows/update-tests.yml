@@ -56,6 +56,7 @@ jobs:
           CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           PERCY_TOKEN: ${{ secrets.PERCY_TOKEN }}
+          PERCY_BROWSER_EXECUTABLE: /usr/bin/google-chrome
       - name: Bundle size report
         uses: nejcm/bundle-size-reporter-action@v1.4.1
         with:
