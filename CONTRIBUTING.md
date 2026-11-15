@@ -31,6 +31,7 @@ pnpm exec turbo run compile --graph=dep-graph.html
 
 ### Tooling
 
+- Node.js 26 (see `.node-version`)
 - [pnpm](https://pnpm.io/) as package manager.
 - [turborepo](https://turborepo.org/) to build packages. The cache system works well with Vercel deployments.
 - [Changeset](https://github.com/atlassian/changesets) for changes documentation, changelog generation, and release management.

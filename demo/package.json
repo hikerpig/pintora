@@ -44,8 +44,8 @@
     "usehooks-ts": "^3.0.0"
   },
   "devDependencies": {
-    "@percy/cli": "^1.31.8",
-    "@percy/cypress": "^3.1.7",
+    "@percy/cli": "^1.32.12",
+    "@percy/cypress": "^3.1.9",
     "@types/react": "^18.0.8",
     "@types/react-dom": "^18.0.3",
     "@types/throttle-debounce": "^5.0.0",

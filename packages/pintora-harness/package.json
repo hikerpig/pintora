@@ -23,7 +23,7 @@
     "@pintora/diagrams": "workspace:^0.8.1",
     "@pintora/renderer": "workspace:^0.8.1",
     "@pintora/standalone": "workspace:^0.8.1",
-    "canvas": "^3.0.1",
+    "canvas": "^3.2.3",
     "consola": "^3.0.0",
     "jsdom": "^29.0.0",
     "playwright": "^1.55.0",
