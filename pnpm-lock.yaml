@@ -251,14 +251,14 @@ importers:
         specifier: workspace:^0.8.1
         version: link:../pintora-standalone
       canvas:
-        specifier: ^3.0.1
-        version: 3.0.1
+        specifier: ^3.2.3
+        version: 3.2.3
       consola:
         specifier: ^3.0.0
         version: 3.2.3
       jsdom:
         specifier: ^29.0.0
-        version: 29.1.1(canvas@3.0.1)
+        version: 29.1.1(canvas@3.2.3)
       mime-types:
         specifier: ^3.0.0
         version: 3.0.1
@@ -387,7 +387,7 @@ importers:
         version: 0.5.0(esbuild@0.27.0)
       jest-environment-jsdom:
         specifier: ^30.0.0
-        version: 30.2.0(canvas@3.0.1)
+        version: 30.2.0(canvas@3.2.3)
       shell-exec:
         specifier: ^1.0.2
         version: 1.0.2
@@ -413,14 +413,14 @@ importers:
         specifier: workspace:^0.8.1
         version: link:../pintora-standalone
       canvas:
-        specifier: ^3.0.1
-        version: 3.0.1
+        specifier: ^3.2.3
+        version: 3.2.3
       consola:
         specifier: ^3.0.0
         version: 3.2.3
       jsdom:
         specifier: ^29.0.0
-        version: 29.1.1(canvas@3.0.1)
+        version: 29.1.1(canvas@3.2.3)
       playwright:
         specifier: ^1.55.0
         version: 1.60.0
@@ -3016,7 +3016,6 @@ packages:
   '@rolldown/binding-darwin-arm64@1.0.0':
     resolution: {integrity: sha512-6XcD+8k0gPVItNagEw78/qqcBDwKcwDYS8V2hRmVsfUSIrd8cWe/CBvRDI5toqFyPfj+FJr6t8U6Xj2P2prEew==}
     engines: {node: ^20.19.0 || >=22.12.0}
-    cpu: [arm64]
     os: [darwin]
 
   '@rolldown/binding-darwin-arm64@1.0.0-rc.9':
@@ -4750,8 +4749,8 @@ packages:
   caniuse-lite@1.0.30001766:
     resolution: {integrity: sha512-4C0lfJ0/YPjJQHagaE9x2Elb69CIqEPZeG0anQt9SIvIoOH4a4uaRl73IavyO+0qZh6MDLH//DrXThEYKHkmYA==}
 
-  canvas@3.0.1:
-    resolution: {integrity: sha512-PcpVF4f8RubAeN/jCQQ/UymDKzOiLmRPph8fOTzDnlsUihkO/AUlxuhaa7wGRc3vMcCbV1fzuvyu5cWZlIcn1w==}
+  canvas@3.2.3:
+    resolution: {integrity: sha512-PzE5nJZPz72YUAfo8oTp0u3fqqY7IzlTubneAihqDYAUcBk7ryeCmBbdJBEdaH0bptSOe2VT2Zwcb3UaFyaSWw==}
     engines: {node: ^18.12.0 || >= 20.9.0}
 
   capture-exit@2.0.0:
@@ -5397,10 +5396,6 @@ packages:
   decode-uri-component@0.2.0:
     resolution: {integrity: sha512-hjf+xovcEn31w/EUYdTXQh/8smFL/dzYjohQGEIgjyNavaJfBY2p5F527Bo1VPATxv0VYTUC2bOcXvqFwk78Og==}
     engines: {node: '>=0.10'}
-
-  decompress-response@4.2.1:
-    resolution: {integrity: sha512-jOSne2qbyE+/r8G1VU+G/82LBs2Fs4LAsTiLSHOCOMZQl2OKZ6i8i4IyHemTe+/yIXOtTcRQMzPcgyhoFlqPkw==}
-    engines: {node: '>=8'}
 
   decompress-response@6.0.0:
     resolution: {integrity: sha512-aW35yZM6Bb/4oJlZncMH2LCoZtJXTRxES17vE3hoRiowU2kWHaJKFkSBDnDR+cm9J+9QhXmREyIfv0pji9ejCQ==}
@@ -6646,6 +6641,7 @@ packages:
   image-size@0.5.5:
     resolution: {integrity: sha512-6TDAlDPZxUFCv+fuOkIoXT/V/f3Qbq8e37p+YOiYrUv3v9cc3/6x78VdfPgFVaB9dZYeLUfKgHRebpkm/oP2VQ==}
     engines: {node: '>=0.10.0'}
+    deprecated: Please migrate to image-size@2.x
     hasBin: true
 
   image-size@1.1.1:
@@ -7957,10 +7953,6 @@ packages:
     resolution: {integrity: sha512-VP79XUPxV2CigYP3jWwAUFSku2aKqBH7uTAapFWCBqutsbmDo96KY5o8uh6U+/YSIn5OxJnXp73beVkpqMIGhA==}
     engines: {node: '>=18'}
 
-  mimic-response@2.1.0:
-    resolution: {integrity: sha512-wXqjST+SLt7R009ySCglWBCFpjUygmCIfD790/kVbiGmUgfYGuB14PiTd5DwVxSV4NcYHjzMkoj5LjQZwTQLEA==}
-    engines: {node: '>=8'}
-
   mimic-response@3.1.0:
     resolution: {integrity: sha512-z0yWI+4FDrrweS8Zmt4Ej5HdJmky15+L2e6Wgn3+iK5fWzb6T3fhNFq2+MeTRb064c6Wr4N/wv0DzQTjNzHNGQ==}
     engines: {node: '>=10'}
@@ -8045,8 +8037,8 @@ packages:
     resolution: {integrity: sha512-fpoe2T0RbHwBTBUOftAfBPaDEi06ufaUai0mE6Yn1kacc3SnTErfb/h+X94VXzI64rKFHYImXSvdwGGCmwOqCA==}
     engines: {node: '>=0.10.0'}
 
-  napi-build-utils@1.0.2:
-    resolution: {integrity: sha512-ONmRUqK7zj7DWX0D9ADe03wbwOBZxNAfF20PlGfCWQcD3+/MakShIHrMqx9YwPTfxDdF1zLeL+RGZiR9kGMLdg==}
+  napi-build-utils@2.0.0:
+    resolution: {integrity: sha512-GEbrYkbfF7MoNaoh2iGG84Mnf/WZfB0GdGEsM8wz7Expx/LlWf5U8t9nvJKXSp3qr5IsEbK04cBGhol/KwOsWA==}
 
   napi-postinstall@0.3.4:
     resolution: {integrity: sha512-PHI5f1O0EP5xJ9gQmFGMS6IZcrVvTjpXjz7Na41gTE7eE2hK11lg04CECCYEEjdc17EV4DO+fkGEtt7TpTaTiQ==}
@@ -9088,8 +9080,8 @@ packages:
     resolution: {integrity: sha512-OW/rX8O/jXnm82Ey1k44pObPtdblfiuWnrd8X7GJ7emImCOstunGbXUpp7HdBrFQX6rJzn3sPT397Wp5aCwCHg==}
     engines: {node: ^10 || ^12 || >=14}
 
-  prebuild-install@7.1.2:
-    resolution: {integrity: sha512-UnNke3IQb6sgarcZIDU3gbMeTp/9SSU1DAIkil7PrqG1vZlBtY5msYccSKSHDqa3hNg436IXK+SNImReuA1wEQ==}
+  prebuild-install@7.1.3:
+    resolution: {integrity: sha512-8Mf2cbV7x1cXPUILADGI3wuhfqWvtiLA1iclTDbFRZkgRQS0NqsPZphna9V+HyTEadheuPmjaJMsbzKQFOzLug==}
     engines: {node: '>=10'}
     deprecated: No longer maintained. Please contact the author of the relevant native addon; alternatives are available.
     hasBin: true
@@ -9845,9 +9837,6 @@ packages:
 
   simple-concat@1.0.1:
     resolution: {integrity: sha512-cSFtAPtRhljv69IK0hTVZQ+OfE9nePi/rtJmw5UjHeVyVroEqJXP1sFztKUy1qU+xvz3u/sfYJLa947b7nAN2Q==}
-
-  simple-get@3.1.1:
-    resolution: {integrity: sha512-CQ5LTKGfCpvE1K0n2us+kuMPbk/q0EKl82s4aheV9oXjFEz6W/Y7oQFVJuU6QG77hRT4Ghb5RURteF5vnWjupA==}
 
   simple-get@4.0.1:
     resolution: {integrity: sha512-brv7p5WgH0jmQJr1ZDDfKDOSeWWg+OVypG99A/5vYGPqJ6pxiaHLy8nxtFjBA7oMa01ebA9gfh1uMCFqOuXxvA==}
@@ -13925,7 +13914,7 @@ snapshots:
 
   '@jest/diff-sequences@30.3.0': {}
 
-  '@jest/environment-jsdom-abstract@30.2.0(canvas@3.0.1)(jsdom@26.1.0(canvas@3.0.1))':
+  '@jest/environment-jsdom-abstract@30.2.0(canvas@3.2.3)(jsdom@26.1.0(canvas@3.2.3))':
     dependencies:
       '@jest/environment': 30.2.0
       '@jest/fake-timers': 30.2.0
@@ -13934,9 +13923,9 @@ snapshots:
       '@types/node': 16.11.39
       jest-mock: 30.2.0
       jest-util: 30.2.0
-      jsdom: 26.1.0(canvas@3.0.1)
+      jsdom: 26.1.0(canvas@3.2.3)
     optionalDependencies:
-      canvas: 3.0.1
+      canvas: 3.2.3
 
   '@jest/environment@30.2.0':
     dependencies:
@@ -14310,9 +14299,9 @@ snapshots:
 
   '@napi-rs/wasm-runtime@1.0.7':
     dependencies:
-      '@emnapi/core': 1.10.0
-      '@emnapi/runtime': 1.10.0
-      '@tybys/wasm-util': 0.10.1
+      '@emnapi/core': 1.11.0
+      '@emnapi/runtime': 1.11.0
+      '@tybys/wasm-util': 0.10.2
     optional: true
 
   '@napi-rs/wasm-runtime@1.1.1':
@@ -16405,11 +16394,10 @@ snapshots:
 
   caniuse-lite@1.0.30001766: {}
 
-  canvas@3.0.1:
+  canvas@3.2.3:
     dependencies:
       node-addon-api: 7.1.1
-      prebuild-install: 7.1.2
-      simple-get: 3.1.1
+      prebuild-install: 7.1.3
 
   capture-exit@2.0.0:
     dependencies:
@@ -17126,10 +17114,6 @@ snapshots:
       character-entities: 2.0.2
 
   decode-uri-component@0.2.0: {}
-
-  decompress-response@4.2.1:
-    dependencies:
-      mimic-response: 2.1.0
 
   decompress-response@6.0.0:
     dependencies:
@@ -19100,15 +19084,15 @@ snapshots:
       jest-util: 30.3.0
       pretty-format: 30.3.0
 
-  jest-environment-jsdom@30.2.0(canvas@3.0.1):
+  jest-environment-jsdom@30.2.0(canvas@3.2.3):
     dependencies:
       '@jest/environment': 30.2.0
-      '@jest/environment-jsdom-abstract': 30.2.0(canvas@3.0.1)(jsdom@26.1.0(canvas@3.0.1))
+      '@jest/environment-jsdom-abstract': 30.2.0(canvas@3.2.3)(jsdom@26.1.0(canvas@3.2.3))
       '@types/jsdom': 21.1.7
       '@types/node': 16.11.39
-      jsdom: 26.1.0(canvas@3.0.1)
+      jsdom: 26.1.0(canvas@3.2.3)
     optionalDependencies:
-      canvas: 3.0.1
+      canvas: 3.2.3
     transitivePeerDependencies:
       - bufferutil
       - supports-color
@@ -19462,7 +19446,7 @@ snapshots:
 
   jsbn@0.1.1: {}
 
-  jsdom@26.1.0(canvas@3.0.1):
+  jsdom@26.1.0(canvas@3.2.3):
     dependencies:
       cssstyle: 4.2.1
       data-urls: 5.0.0
@@ -19485,13 +19469,13 @@ snapshots:
       ws: 8.18.0
       xml-name-validator: 5.0.0
     optionalDependencies:
-      canvas: 3.0.1
+      canvas: 3.2.3
     transitivePeerDependencies:
       - bufferutil
       - supports-color
       - utf-8-validate
 
-  jsdom@29.1.1(canvas@3.0.1):
+  jsdom@29.1.1(canvas@3.2.3):
     dependencies:
       '@asamuzakjp/css-color': 5.1.11
       '@asamuzakjp/dom-selector': 7.1.1
@@ -19515,7 +19499,7 @@ snapshots:
       whatwg-url: 16.0.1
       xml-name-validator: 5.0.0
     optionalDependencies:
-      canvas: 3.0.1
+      canvas: 3.2.3
     transitivePeerDependencies:
       - '@noble/hashes'
 
@@ -20486,8 +20470,6 @@ snapshots:
 
   mimic-function@5.0.1: {}
 
-  mimic-response@2.1.0: {}
-
   mimic-response@3.1.0: {}
 
   mimic-response@4.0.0: {}
@@ -20564,7 +20546,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  napi-build-utils@1.0.2: {}
+  napi-build-utils@2.0.0: {}
 
   napi-postinstall@0.3.4: {}
 
@@ -21601,14 +21583,14 @@ snapshots:
       picocolors: 1.1.1
       source-map-js: 1.2.1
 
-  prebuild-install@7.1.2:
+  prebuild-install@7.1.3:
     dependencies:
       detect-libc: 2.0.3
       expand-template: 2.0.3
       github-from-package: 0.0.0
       minimist: 1.2.8
       mkdirp-classic: 0.5.3
-      napi-build-utils: 1.0.2
+      napi-build-utils: 2.0.0
       node-abi: 3.71.0
       pump: 3.0.0
       rc: 1.2.8
@@ -22514,12 +22496,6 @@ snapshots:
   signal-exit@4.1.0: {}
 
   simple-concat@1.0.1: {}
-
-  simple-get@3.1.1:
-    dependencies:
-      decompress-response: 4.2.1
-      once: 1.4.0
-      simple-concat: 1.0.1
 
   simple-get@4.0.1:
     dependencies:
