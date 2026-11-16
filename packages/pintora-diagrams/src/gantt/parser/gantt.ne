@@ -22,7 +22,10 @@ const ATTR_KEYWORDS = ['title', 'dateFormat', 'axisFormat', 'axisInterval']
 const OTHER_KEYWORDS = ['section', 'markDate', 'excludes', 'includes']
 
 const keywordRules = [...ATTR_KEYWORDS, ...OTHER_KEYWORDS].reduce((acc, text) => {
-  const pattern = new RegExp(`${text}`)
+  // A keyword only counts at the start of a line and as a whole word,
+  // so task labels like 'Intersection work' or 'titleScreen' stay plain text.
+  // moo compiles rules with the `m` flag, so `^` is the start of a line.
+  const pattern = new RegExp(`(?<=^[ \\t]*)${text}(?=[ \\t])`)
   acc[text.toUpperCase()] = {
     match: pattern,
     push: 'attr'
