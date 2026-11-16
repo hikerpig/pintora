@@ -25,10 +25,12 @@ import {
 } from '../../util/parser-shared'
 import db, { ApplyParam } from '../db'
 
+// A placement is a whole word, so actor names like 'Rover' or 'hover_svc'
+// stay plain text. moo compiles rules with the `m` flag, so `^` is the start of a line.
 const _PLACEMENT = [
-  { match: /left\sof/, type: () => 'LEFT_OF' },
-  { match: /right\sof/, type: () => 'RIGHT_OF' },
-  { match: /over/, type: () => 'OVER' },
+  { match: /(?<=^|[ \t])left\sof(?=[ \t])/, type: () => 'LEFT_OF' },
+  { match: /(?<=^|[ \t])right\sof(?=[ \t])/, type: () => 'RIGHT_OF' },
+  { match: /(?<=^|[ \t])over(?=[ \t])/, type: () => 'OVER' },
 ]
 
 let lexer = moo.states({
