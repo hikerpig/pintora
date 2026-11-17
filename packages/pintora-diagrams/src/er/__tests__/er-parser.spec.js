@@ -122,6 +122,26 @@ erDiagram
       },
     ])
   })
+  it('does not read `inherit` inside a name as the inherit keyword', () => {
+    parse(
+      stripStartEmptyLines(`
+erDiagram
+  inheritance_log {
+    string inheritor
+  }
+  disinherited ||--o{ inheritance_log : inherits
+  heir inherit disinherited
+    `),
+    )
+    const ir = db.getDiagramIR()
+    expect(Object.keys(ir.entities).sort()).toEqual(['disinherited', 'heir', 'inheritance_log'])
+    expect(ir.entities.inheritance_log.attributes).toMatchObject([
+      { attributeType: 'string', attributeName: 'inheritor' },
+    ])
+    expect(ir.relationships).toMatchObject([{ entityA: 'disinherited', entityB: 'inheritance_log', roleA: 'inherits' }])
+    expect(ir.inheritances).toMatchObject([{ sup: 'disinherited', sub: 'heir' }])
+  })
+
   it('can parse comments', () => {
     parse(
       stripStartEmptyLines(`

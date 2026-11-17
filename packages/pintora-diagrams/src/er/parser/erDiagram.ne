@@ -34,7 +34,7 @@ let lexer = moo.compile({
   COLON: /:/,
   LEFT_BRACE: /\{/,
   RIGHT_BRACE: /\}/,
-  INHERIT: /inherit/,
+  INHERIT: /(?<=[ \t])inherit(?=[ \t])/, // only as a whole word between entity names
   PARAM_DIRECTIVE: /@param/, // for config.ne
   COMMENT_LINE: COMMENT_LINE_REGEXP,
   CONFIG_DIRECTIVE,
