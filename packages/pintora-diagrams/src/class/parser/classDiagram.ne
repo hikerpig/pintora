@@ -32,11 +32,21 @@ const COMMON_TOKEN_RULES = {
   VALID_TEXT: { match: VALID_TEXT_REGEXP, fallback: true },
 }
 
+// A placement is only a whole word, so `laptop ofType` or `int left offset` stay text
 const _PLACEMENT = [
-  { match: /left\sof/, type: () => 'LEFT_OF' },
-  { match: /right\sof/, type: () => 'RIGHT_OF' },
-  { match: /top\sof/, type: () => 'TOP_OF' },
-  { match: /bottom\sof/, type: () => 'BOTTOM_OF' },
+  { match: /(?<=^|[ \t])left\sof(?=[ \t])/, type: () => 'LEFT_OF' },
+  { match: /(?<=^|[ \t])right\sof(?=[ \t])/, type: () => 'RIGHT_OF' },
+  { match: /(?<=^|[ \t])top\sof(?=[ \t])/, type: () => 'TOP_OF' },
+  { match: /(?<=^|[ \t])bottom\sof(?=[ \t])/, type: () => 'BOTTOM_OF' },
+]
+
+// Inside a multiline note, only the placement right after `@start_note` counts,
+// so the note text itself can say `left of`
+const _NOTE_PLACEMENT = [
+  { match: /(?<=@start_note[ \t]+)left\sof(?=[ \t])/, type: () => 'LEFT_OF' },
+  { match: /(?<=@start_note[ \t]+)right\sof(?=[ \t])/, type: () => 'RIGHT_OF' },
+  { match: /(?<=@start_note[ \t]+)top\sof(?=[ \t])/, type: () => 'TOP_OF' },
+  { match: /(?<=@start_note[ \t]+)bottom\sof(?=[ \t])/, type: () => 'BOTTOM_OF' },
 ]
 
 let lexer = moo.states({
@@ -47,14 +57,13 @@ let lexer = moo.states({
     COLOR: COLOR_REGEXP,
     SEMICOLON: /;/,
     COLON: /:/,
-    CLASS_DIAGRAM: /classDiagram/,
+    CLASS_DIAGRAM: /(?<=^[ \t]*)classDiagram(?=\s|$)/,
     L_PAREN: L_PAREN_REGEXP,
     R_PAREN: R_PAREN_REGEXP,
     L_BRACKET: { match: /\{/ },
     R_BRACKET: { match: /\}/ },
     TEXT_WITH_ANGLE_BRACKETS: { match: /\<\<(?:.*)\>\>/ },
     EQ: { match: /=/ },
-    SUBGRAPH: { match: /subgraph/ },
     NOTE: textToCaseInsensitiveRegex('@note'),
     START_NOTE: {
       match: /@start_note\s/,
@@ -75,7 +84,7 @@ let lexer = moo.states({
       match: textToCaseInsensitiveRegex('@end_note'),
       pop: 1,
     },
-    _PLACEMENT,
+    _PLACEMENT: _NOTE_PLACEMENT,
     NL: MOO_NEWLINE,
     VALID_TEXT: { match: VALID_TEXT_REGEXP, fallback: true },
   }
