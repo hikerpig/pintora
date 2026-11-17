@@ -151,6 +151,30 @@ describe('gantt parser', () => {
     ])
   })
 
+  it('should not read keywords inside task labels as statements', () => {
+    const example = stripStartEmptyLines(`
+    gantt
+    title Plan
+    section Intersection works
+    Design title page : t-a, 2022-03-01, 1d
+    Cross-section review : t-b, after t-a, 1d
+    Fix includes order : t-c, after t-b, 1d
+    titleScreen : t-d, after t-c, 1d
+    excludesList : t-e, after t-d, 1d
+    `)
+    parse(example)
+    const ir = db.getDiagramIR()
+    expect(ir.attrs.title).toBe('Plan')
+    expect(ir.attrs.excludes).toEqual([])
+    expect(Object.values(ir.tasks).map(t => [t.label, t.section])).toMatchObject([
+      ['Design title page', 'Intersection works'],
+      ['Cross-section review', 'Intersection works'],
+      ['Fix includes order', 'Intersection works'],
+      ['titleScreen', 'Intersection works'],
+      ['excludesList', 'Intersection works'],
+    ])
+  })
+
   it('should be able to parse deferred id', () => {
     // issue #386
     const example = stripStartEmptyLines(`
