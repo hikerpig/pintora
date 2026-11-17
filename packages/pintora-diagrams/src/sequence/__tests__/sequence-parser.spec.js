@@ -80,6 +80,28 @@ sequenceDiagram
     expect(result.notes[0].actor).toEqual(['A', 'B'])
   })
 
+  it('does not read placement words inside participant names', () => {
+    const example = stripStartEmptyLines(`
+    sequenceDiagram
+    participant hover_svc
+    Rover->>overlord: hi
+    overlord-->>hover_svc: ok
+    note over Rover,overlord: both
+    note left of hover_svc: left
+    `)
+    parse(example)
+    const result = db.getDiagramIR()
+    expect(Object.keys(result.actors)).toEqual(['hover_svc', 'Rover', 'overlord'])
+    expect(result.messages.slice(0, 2).map(m => [m.from, m.to, m.text])).toEqual([
+      ['Rover', 'overlord', 'hi'],
+      ['overlord', 'hover_svc', 'ok'],
+    ])
+    expect(result.notes.map(n => [n.actor, n.text])).toEqual([
+      [['Rover', 'overlord'], 'both'],
+      ['hover_svc', 'left'],
+    ])
+  })
+
   it('can parse note over with one participant', () => {
     const example = stripStartEmptyLines(`
     sequenceDiagram
