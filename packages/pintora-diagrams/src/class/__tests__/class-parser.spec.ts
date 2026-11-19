@@ -167,6 +167,26 @@ classDiagram
     expect(messageText).toEqual('aaa note -\nbbb')
   })
 
+  it('does not read keywords inside names and note text as keywords', () => {
+    const example = stripStartEmptyLines(`
+classDiagram
+  class Graph {
+    List~Graph~ subgraphs
+  }
+  class classDiagramRenderer
+  Shop --> Deal : top offers
+  @start_note left of Graph
+  drawn left of the canvas
+  @end_note
+    `)
+    parse(example)
+    const ir = db.getDiagramIR()
+    expect(ir.classes['Graph'].members).toMatchObject([{ raw: 'List~Graph~ subgraphs' }])
+    expect(ir.classes['classDiagramRenderer']).toMatchObject({ name: 'classDiagramRenderer' })
+    expect(ir.relations).toMatchObject([{ left: 'Shop', right: 'Deal', label: 'top offers' }])
+    expect(ir.notes).toMatchObject([{ placement: 'LEFT_OF', target: 'Graph', text: 'drawn left of the canvas' }])
+  })
+
   it('can parse title', () => {
     const multilineNoteExample = stripStartEmptyLines(`
 classDiagram
