@@ -663,8 +663,8 @@ importers:
         specifier: ^5.3.2
         version: 5.3.3
       docusaurus-plugin-llms:
-        specifier: ^0.3.0
-        version: 0.3.0(@docusaurus/core@3.7.0(@docusaurus/faster@3.7.0(@docusaurus/types@3.7.0(@swc/core@1.15.18(@swc/helpers@0.5.18))(esbuild@0.27.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@swc/helpers@0.5.18)(esbuild@0.27.0))(@mdx-js/react@3.0.0(@types/react@18.0.12)(react@18.2.0))(@rspack/core@1.7.5(@swc/helpers@0.5.18))(@swc/core@1.15.18(@swc/helpers@0.5.18))(esbuild@0.27.0)(eslint@10.0.0(jiti@2.6.1))(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(typescript@6.0.3))
+        specifier: ^0.6.0
+        version: 0.6.2(@docusaurus/core@3.7.0(@docusaurus/faster@3.7.0(@docusaurus/types@3.7.0(@swc/core@1.15.18(@swc/helpers@0.5.18))(esbuild@0.27.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@swc/helpers@0.5.18)(esbuild@0.27.0))(@mdx-js/react@3.0.0(@types/react@18.0.12)(react@18.2.0))(@rspack/core@1.7.5(@swc/helpers@0.5.18))(@swc/core@1.15.18(@swc/helpers@0.5.18))(esbuild@0.27.0)(eslint@10.0.0(jiti@2.6.1))(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(typescript@6.0.3))
       typescript:
         specifier: ^6.0.0
         version: 6.0.3
@@ -3071,6 +3071,7 @@ packages:
   '@rolldown/binding-darwin-arm64@1.0.0':
     resolution: {integrity: sha512-6XcD+8k0gPVItNagEw78/qqcBDwKcwDYS8V2hRmVsfUSIrd8cWe/CBvRDI5toqFyPfj+FJr6t8U6Xj2P2prEew==}
     engines: {node: ^20.19.0 || >=22.12.0}
+    cpu: [arm64]
     os: [darwin]
 
   '@rolldown/binding-darwin-arm64@1.0.0-rc.9':
@@ -5647,8 +5648,8 @@ packages:
       less: '>=4.0.0'
       less-loader: '>=10.0.0'
 
-  docusaurus-plugin-llms@0.3.0:
-    resolution: {integrity: sha512-JuADAJA2fjTv1U4XQUoIu1LyjISDzxFhRK5HbCZiHum4HlmdPwyx8NBXsi+LfdUyjK9acbZgazGsHPhdwEZs0g==}
+  docusaurus-plugin-llms@0.6.2:
+    resolution: {integrity: sha512-Qf0Hq96chaOQ+vq8w115xrRb2bfqPQO0j3YJGpvXFNeqjvd1nDAT8lZAsSEpOXfDUhi4UFqaQ1oCkb9e6p0Law==}
     engines: {node: '>=18.0'}
     peerDependencies:
       '@docusaurus/core': ^3.0.0
@@ -8161,6 +8162,10 @@ packages:
   minimatch@3.1.2:
     resolution: {integrity: sha512-J7p63hRiAjw1NDEww1W7i37+ByIrOWO5XQQAzZ3VOcL0PNybwpfmV/N05zFAzwQ9USyEcX6t3UO+K5aqBQOIHw==}
 
+  minimatch@9.0.3:
+    resolution: {integrity: sha512-RHiac9mvaRw0x3AYRgDC1CxAP7HTcNrrECeA8YYJeWnpo+2Q5CegtZjaotWTWxDG3UeGA1coE05iH1mPjT/2mg==}
+    engines: {node: '>=16 || 14 >=14.17'}
+
   minimatch@9.0.5:
     resolution: {integrity: sha512-G6T0ZX48xgozx7587koeX9Ys2NYy6Gmv//P89sEte9V9whIapMNF4idKxnW2QtCcLiTWlb/wfCabAtAFWhhBow==}
     engines: {node: '>=16 || 14 >=14.17'}
@@ -10630,6 +10635,7 @@ packages:
   tsconfck@3.1.4:
     resolution: {integrity: sha512-kdqWFGVJqe+KGYvlSO9NIaWn9jT1Ny4oKVzAJsKii5eoE9snzTJzL4+MMVOMn+fikWGFmKEylcXL710V/kIPJQ==}
     engines: {node: ^18 || >=20}
+    deprecated: unmaintained
     hasBin: true
     peerDependencies:
       typescript: ^5.0.0
@@ -11310,8 +11316,8 @@ packages:
     resolution: {integrity: sha512-r3vXyErRCYJ7wg28yvBY5VSoAF8ZvlcW9/BwUzEtUsjvX/DKs24dIkuwjtuprwJJHsbyUbLApepYTR1BN4uHrg==}
     engines: {node: '>= 6'}
 
-  yaml@2.8.2:
-    resolution: {integrity: sha512-mplynKqc1C2hTVYxd0PU2xQAc22TI1vShAYGksCCfxbn/dFwnHTNi1bvYsBTkhdUNtGIf5xNOg938rrSSYvS9A==}
+  yaml@2.8.1:
+    resolution: {integrity: sha512-lcYcMxX2PO9XMGvAJkJ3OsNMw+/7FKes7/hgerGUYWIoWu5j/+YQqcZr5JnPZWzOsEBgMbSbiSTn/dv/69Mkpw==}
     engines: {node: '>= 14.6'}
     hasBin: true
 
@@ -14665,11 +14671,8 @@ snapshots:
     dependencies:
       '@percy/cli-command': 1.32.12(typescript@6.0.3)
     transitivePeerDependencies:
-      - bufferutil
       - supports-color
       - typescript
-      - utf-8-validate
-      - worker-loader
 
   '@percy/cli-command@1.32.12(typescript@6.0.3)':
     dependencies:
@@ -14690,11 +14693,8 @@ snapshots:
     dependencies:
       '@percy/cli-command': 1.32.12(typescript@6.0.3)
     transitivePeerDependencies:
-      - bufferutil
       - supports-color
       - typescript
-      - utf-8-validate
-      - worker-loader
 
   '@percy/cli-doctor@1.32.12(typescript@6.0.3)':
     dependencies:
@@ -14740,11 +14740,8 @@ snapshots:
       '@percy/cli-command': 1.32.12(typescript@6.0.3)
       yaml: 2.9.0
     transitivePeerDependencies:
-      - bufferutil
       - supports-color
       - typescript
-      - utf-8-validate
-      - worker-loader
 
   '@percy/cli-upload@1.32.12(typescript@6.0.3)':
     dependencies:
@@ -14752,11 +14749,8 @@ snapshots:
       fast-glob: 3.3.2
       probe-image-size: 7.5.0
     transitivePeerDependencies:
-      - bufferutil
       - supports-color
       - typescript
-      - utf-8-validate
-      - worker-loader
 
   '@percy/cli@1.32.12(typescript@6.0.3)':
     dependencies:
@@ -17650,12 +17644,12 @@ snapshots:
       less: 4.2.0
       less-loader: 12.0.0(less@4.2.0)(webpack@5.97.1(@swc/core@1.15.18(@swc/helpers@0.5.18))(esbuild@0.27.0))
 
-  docusaurus-plugin-llms@0.3.0(@docusaurus/core@3.7.0(@docusaurus/faster@3.7.0(@docusaurus/types@3.7.0(@swc/core@1.15.18(@swc/helpers@0.5.18))(esbuild@0.27.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@swc/helpers@0.5.18)(esbuild@0.27.0))(@mdx-js/react@3.0.0(@types/react@18.0.12)(react@18.2.0))(@rspack/core@1.7.5(@swc/helpers@0.5.18))(@swc/core@1.15.18(@swc/helpers@0.5.18))(esbuild@0.27.0)(eslint@10.0.0(jiti@2.6.1))(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(typescript@6.0.3)):
+  docusaurus-plugin-llms@0.6.2(@docusaurus/core@3.7.0(@docusaurus/faster@3.7.0(@docusaurus/types@3.7.0(@swc/core@1.15.18(@swc/helpers@0.5.18))(esbuild@0.27.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@swc/helpers@0.5.18)(esbuild@0.27.0))(@mdx-js/react@3.0.0(@types/react@18.0.12)(react@18.2.0))(@rspack/core@1.7.5(@swc/helpers@0.5.18))(@swc/core@1.15.18(@swc/helpers@0.5.18))(esbuild@0.27.0)(eslint@10.0.0(jiti@2.6.1))(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(typescript@6.0.3)):
     dependencies:
       '@docusaurus/core': 3.7.0(@docusaurus/faster@3.7.0(@docusaurus/types@3.7.0(@swc/core@1.15.18(@swc/helpers@0.5.18))(esbuild@0.27.0)(react-dom@18.2.0(react@18.2.0))(react@18.2.0))(@swc/helpers@0.5.18)(esbuild@0.27.0))(@mdx-js/react@3.0.0(@types/react@18.0.12)(react@18.2.0))(@rspack/core@1.7.5(@swc/helpers@0.5.18))(@swc/core@1.15.18(@swc/helpers@0.5.18))(esbuild@0.27.0)(eslint@10.0.0(jiti@2.6.1))(react-dom@18.2.0(react@18.2.0))(react@18.2.0)(typescript@6.0.3)
       gray-matter: 4.0.3
-      minimatch: 9.0.5
-      yaml: 2.8.2
+      minimatch: 9.0.3
+      yaml: 2.8.1
 
   dom-converter@0.2.0:
     dependencies:
@@ -20984,6 +20978,10 @@ snapshots:
   minimatch@3.1.2:
     dependencies:
       brace-expansion: 1.1.12
+
+  minimatch@9.0.3:
+    dependencies:
+      brace-expansion: 2.0.2
 
   minimatch@9.0.5:
     dependencies:
@@ -24533,7 +24531,7 @@ snapshots:
 
   yaml@1.10.2: {}
 
-  yaml@2.8.2: {}
+  yaml@2.8.1: {}
 
   yaml@2.9.0: {}
 
