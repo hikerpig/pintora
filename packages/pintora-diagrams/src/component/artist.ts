@@ -327,6 +327,9 @@ function drawInterfacesTo(parentMark: Group, ir: ComponentDiagramIR, g: LayoutGr
   }
 }
 
+/** Extra vertical space in a group that has no children, between its label and its type text */
+const EMPTY_GROUP_PADDING = 10
+
 function drawGroupsTo(parentMark: Group, ir: ComponentDiagramIR, g: LayoutGraph) {
   for (const cGroup of Object.values(ir.groups)) {
     const groupId = cGroup.name
@@ -379,6 +382,7 @@ function drawGroupsTo(parentMark: Group, ir: ComponentDiagramIR, g: LayoutGraph)
     }
 
     const labelTextDims = calculateTextDimensions(groupLabel, { ...fontConfig, fontWeight: labelMark.attrs.fontWeight })
+    const typeTextDims = typeMark ? calculateTextDimensions(typeText, fontConfig) : { width: 0, height: 0 }
 
     const nodeMarginConfig: Partial<LayoutNodeOption> = {}
 
@@ -434,7 +438,6 @@ function drawGroupsTo(parentMark: Group, ir: ComponentDiagramIR, g: LayoutGraph)
         setNodeExtra(node, 'titleAnchorYOffset', titleAnchorYOffset)
 
         if (typeMark) {
-          const typeTextDims = calculateTextDimensions(typeText, fontConfig)
           safeAssign(typeMark.attrs, { x: x - containerWidth / 2 + 2, y: y + height / 2 - 2 - typeTextDims.height })
         }
 
@@ -449,10 +452,12 @@ function drawGroupsTo(parentMark: Group, ir: ComponentDiagramIR, g: LayoutGraph)
       },
     })
 
+    let hasChildNode = false
     for (const child of cGroup.children) {
       if ('name' in child) {
         const childNode: LayoutNodeOption = g.node(child.name)
         if (childNode) {
+          hasChildNode = true
           g.setParent(childNode.id, groupId)
 
           if (childNode.dummyBoxId) {
@@ -461,6 +466,14 @@ function drawGroupsTo(parentMark: Group, ir: ComponentDiagramIR, g: LayoutGraph)
           }
         }
       }
+    }
+
+    if (!hasChildNode) {
+      // A group with nothing inside is a plain node for dagre, which needs a size,
+      // otherwise its position and size become NaN. Make it just big enough for the label and type.
+      const groupNode = g.node(groupId) as LayoutNodeOption
+      groupNode.width = Math.max(groupMinWidth, typeTextDims.width + 4)
+      groupNode.height = labelTextDims.height + 5 + typeTextDims.height + 2 + EMPTY_GROUP_PADDING
     }
 
     const group = makeMark(

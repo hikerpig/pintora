@@ -63,4 +63,66 @@ describe('component-artist', () => {
     expect(lineMarks[0].attrs.path).toBeTruthy()
     expect(lineMarks[0].attrs.path.length).toBeGreaterThan(0)
   })
+  describe('empty groups', () => {
+    function findNonFiniteNumbers(value, path = 'graphicIR', found = []) {
+      if (typeof value === 'number') {
+        if (!Number.isFinite(value)) found.push(path)
+      } else if (Array.isArray(value)) {
+        value.forEach((item, i) => findNonFiniteNumbers(item, `${path}[${i}]`, found))
+      } else if (value && typeof value === 'object') {
+        Object.entries(value).forEach(([key, item]) => findNonFiniteNumbers(item, `${path}.${key}`, found))
+      }
+      return found
+    }
+
+    function findMarks(mark, test, found = []) {
+      if (test(mark)) found.push(mark)
+      ;(mark.children || []).forEach(child => findMarks(child, test, found))
+      return found
+    }
+
+    const groupTypes = ['package', 'node', 'folder', 'frame', 'cloud', 'database', 'rectangle', 'component']
+    groupTypes.forEach(groupType => {
+      it(`draws an empty ${groupType} with finite geometry`, () => {
+        const code = `
+      componentDiagram
+      ${groupType} "Empty" {
+      }
+      [A] --> [B]
+    `
+        const result = testDraw(code)
+        expect(findNonFiniteNumbers(result.graphicIR)).toEqual([])
+      })
+    })
+
+    it('draws an empty group inside another group with finite geometry', () => {
+      const code = `
+      componentDiagram
+      package "Outer" {
+        package "Inner" {
+        }
+      }
+    `
+      const result = testDraw(code)
+      expect(findNonFiniteNumbers(result.graphicIR)).toEqual([])
+    })
+
+    it('keeps the label and the type of an empty group inside its box', () => {
+      const code = `
+      componentDiagram
+      rectangle "Empty" {
+      }
+    `
+      const result = testDraw(code)
+      const [rect] = findMarks(result.graphicIR.mark, m => m.class === 'component__group-rect')
+      const [label] = findMarks(result.graphicIR.mark, m => m.class === 'component__group-label')
+      const [type] = findMarks(result.graphicIR.mark, m => m.class === 'component__type')
+      expect(rect.attrs.width).toBeGreaterThan(0)
+      expect(rect.attrs.height).toBeGreaterThan(0)
+      for (const text of [label, type]) {
+        expect(text.attrs.y).toBeGreaterThan(rect.attrs.y)
+        expect(text.attrs.y).toBeLessThan(rect.attrs.y + rect.attrs.height)
+      }
+    })
+  })
 })
