@@ -629,8 +629,8 @@ importers:
         specifier: ^1.0.1
         version: 1.0.1
       prism-react-renderer:
-        specifier: ^1.2.1
-        version: 1.3.1(react@18.2.0)
+        specifier: ^2.0.0
+        version: 2.3.0(react@18.2.0)
       react:
         specifier: ^18.0.0
         version: 18.2.0
@@ -3071,6 +3071,7 @@ packages:
   '@rolldown/binding-darwin-arm64@1.0.0':
     resolution: {integrity: sha512-6XcD+8k0gPVItNagEw78/qqcBDwKcwDYS8V2hRmVsfUSIrd8cWe/CBvRDI5toqFyPfj+FJr6t8U6Xj2P2prEew==}
     engines: {node: ^20.19.0 || >=22.12.0}
+    cpu: [arm64]
     os: [darwin]
 
   '@rolldown/binding-darwin-arm64@1.0.0-rc.9':
@@ -9336,11 +9337,6 @@ packages:
     resolution: {integrity: sha512-28iF6xPQrP8Oa6uxE6a1biz+lWeTOAPKggvjB8HAs6nVMKZwf5bG++632Dx614hIWgUPkgivRfG+a8uAXGTIbA==}
     engines: {node: '>=4'}
 
-  prism-react-renderer@1.3.1:
-    resolution: {integrity: sha512-xUeDMEz074d0zc5y6rxiMp/dlC7C+5IDDlaEUlcBOFE2wddz7hz5PNupb087mPwTt7T9BrFmewObfCBuf/LKwQ==}
-    peerDependencies:
-      react: '>=0.14.9'
-
   prism-react-renderer@2.3.0:
     resolution: {integrity: sha512-UYRg2TkVIaI6tRVHC5OJ4/BxqPUxJkJvq/odLT/ykpt1zGYXooNperUxQcCvi87LyRnR4nCh81ceOA+e7nrydg==}
     peerDependencies:
@@ -10630,6 +10626,7 @@ packages:
   tsconfck@3.1.4:
     resolution: {integrity: sha512-kdqWFGVJqe+KGYvlSO9NIaWn9jT1Ny4oKVzAJsKii5eoE9snzTJzL4+MMVOMn+fikWGFmKEylcXL710V/kIPJQ==}
     engines: {node: ^18 || >=20}
+    deprecated: unmaintained
     hasBin: true
     peerDependencies:
       typescript: ^5.0.0
@@ -14665,11 +14662,8 @@ snapshots:
     dependencies:
       '@percy/cli-command': 1.32.12(typescript@6.0.3)
     transitivePeerDependencies:
-      - bufferutil
       - supports-color
       - typescript
-      - utf-8-validate
-      - worker-loader
 
   '@percy/cli-command@1.32.12(typescript@6.0.3)':
     dependencies:
@@ -14690,11 +14684,8 @@ snapshots:
     dependencies:
       '@percy/cli-command': 1.32.12(typescript@6.0.3)
     transitivePeerDependencies:
-      - bufferutil
       - supports-color
       - typescript
-      - utf-8-validate
-      - worker-loader
 
   '@percy/cli-doctor@1.32.12(typescript@6.0.3)':
     dependencies:
@@ -14740,11 +14731,8 @@ snapshots:
       '@percy/cli-command': 1.32.12(typescript@6.0.3)
       yaml: 2.9.0
     transitivePeerDependencies:
-      - bufferutil
       - supports-color
       - typescript
-      - utf-8-validate
-      - worker-loader
 
   '@percy/cli-upload@1.32.12(typescript@6.0.3)':
     dependencies:
@@ -14752,11 +14740,8 @@ snapshots:
       fast-glob: 3.3.2
       probe-image-size: 7.5.0
     transitivePeerDependencies:
-      - bufferutil
       - supports-color
       - typescript
-      - utf-8-validate
-      - worker-loader
 
   '@percy/cli@1.32.12(typescript@6.0.3)':
     dependencies:
@@ -22149,10 +22134,6 @@ snapshots:
       parse-ms: 2.1.0
 
   pretty-time@1.1.0: {}
-
-  prism-react-renderer@1.3.1(react@18.2.0):
-    dependencies:
-      react: 18.2.0
 
   prism-react-renderer@2.3.0(react@18.2.0):
     dependencies:
