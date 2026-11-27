@@ -80,6 +80,41 @@ sequenceDiagram
     expect(result.notes[0].actor).toEqual(['A', 'B'])
   })
 
+  it('does not add extra participants for multiline note over', () => {
+    const example = stripStartEmptyLines(`
+sequenceDiagram
+  A->>B: hi
+  @start_note over A,B
+  first
+  @end_note
+  @start_note over A, B
+  second
+  @end_note
+    `)
+    parse(example)
+    const result = db.getDiagramIR()
+    expect(Object.keys(result.actors)).toEqual(['A', 'B'])
+    expect(result.notes.map(n => n.actor)).toEqual([
+      ['A', 'B'],
+      ['A', 'B'],
+    ])
+  })
+
+  it('can parse multiline note over with one participant', () => {
+    const example = stripStartEmptyLines(`
+sequenceDiagram
+  participant John
+  @start_note over John
+  Text in note
+  @end_note
+    `)
+    parse(example)
+    const result = db.getDiagramIR()
+    expect(Object.keys(result.actors)).toEqual(['John'])
+    expect(result.notes[0].actor).toEqual(['John', 'John'])
+    expect(result.notes[0].text).toEqual('Text in note')
+  })
+
   it('does not read placement words inside participant names', () => {
     const example = stripStartEmptyLines(`
     sequenceDiagram

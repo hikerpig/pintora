@@ -328,9 +328,12 @@ noteStatement->
 	| ("note" | %START_NOTE) %OVER actor_pair %NL multilineNoteText %NL {%
       function(d) {
         // console.log('[note multi]\n', d)
-        const actors = [d[2][0].actor.trim(), d[2][1].actor]
+        // the note lexer state has no WS token, so names keep their spaces
+        const pair = d[2].map(a => ({ ...a, actor: a.actor.trim() }))
+        const a1 = pair[0].actor
+        const a2 = pair[1] ? pair[1].actor : a1
         const message = yy.parseMessage(d[4])
-        return [d[2], { type:'addNote', placement: yy.PLACEMENT.OVER, actor: actors, text: message }]
+        return [pair, { type:'addNote', placement: yy.PLACEMENT.OVER, actor: [a1, a2], text: message }]
       }
     %}
 
